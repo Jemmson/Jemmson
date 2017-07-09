@@ -15,7 +15,7 @@
                           {{ csrf_field() }}
 
                           <label for="job-name">Job Name *
-                              <input name="job-name" type="text" id="job-name" class="form-control">
+                              <input name="jobName" type="text" id="job-name" class="form-control">
                           </label>
 
                           <label for="email">Email *
