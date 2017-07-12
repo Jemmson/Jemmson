@@ -17,7 +17,7 @@ class InitiateBid extends Controller
         dd($request);
 
         // send a passwordless link if the email is not in the system
-        // this link will then redirect them to the bid page
+        // this link will then redirect them to the registration page
 
         // send a notification along with the passwordless link if the customer or sub is in the system
 

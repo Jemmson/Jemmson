@@ -9,8 +9,9 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Dashboard</div>
 
+
                     <div class="panel-body">
-                        Your application's dashboard.
+                        <a href="/contractors/initiate-bid">Initiate Bid</a>
                     </div>
                 </div>
             </div>
