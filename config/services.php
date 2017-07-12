@@ -24,6 +24,7 @@ return [
     ],
 
     'sparkpost' => [
+        'secret' => env('SPARKPOST_SECRET'), // TODO: change to production key 
     ],
 
     'ses' => [

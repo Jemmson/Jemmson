@@ -6,11 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-    private $user = [];
+
 class PasswordlessBidPageLogin extends Mailable
 {
     use Queueable, SerializesModels;
-
+    private $user = [];
     /**
      * Create a new message instance.
      *
@@ -30,6 +30,7 @@ class PasswordlessBidPageLogin extends Mailable
     public function build()
     {
         return $this->view('emails.passwordlessbidpagelogin')
+                      ->subject(__('email.passwordless.subject'))
                       ->with($this->user);
     }
 }
