@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-
+    private $user = [];
 class PasswordlessBidPageLogin extends Mailable
 {
     use Queueable, SerializesModels;
@@ -19,7 +19,7 @@ class PasswordlessBidPageLogin extends Mailable
     public function __construct($user)
     {
         // user information email, phone, job name
-        $this->user = ['email' => $user->email, 'jobName' => $user->jobName, 'link' => $user->link];
+        $this->user = $user;
     }
 
     /**
@@ -30,8 +30,6 @@ class PasswordlessBidPageLogin extends Mailable
     public function build()
     {
         return $this->view('emails.passwordlessbidpagelogin')
-                      ->with(['email' => $this->user['email'],
-                              'jobName' => $this->user['jobName'],
-                              'link' => $this->user['link']]);
+                      ->with($this->user);
     }
 }

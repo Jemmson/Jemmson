@@ -23,6 +23,9 @@ return [
         'secret' => env('MAILGUN_SECRET'),
     ],
 
+    'sparkpost' => [
+    ],
+
     'ses' => [
         'key'    => env('SES_KEY'),
         'secret' => env('SES_SECRET'),
