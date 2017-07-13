@@ -19,8 +19,8 @@ Route::get('/home', 'HomeController@show');
 Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
 Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
 
-Route::get('/contractor/bid-list', 'BidListController@index');
+Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
 
 
 // customer routes
-Route::get('/bidlist', 'BidListController@index');
+Route::get('/customer/bid-list', 'BidListController@customerIndex');

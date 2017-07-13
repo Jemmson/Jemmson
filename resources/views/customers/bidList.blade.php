@@ -10,12 +10,31 @@
                     <div class="panel-heading">{{ __('headings.bidlist.main') }}</div>
 
                     <div class="panel-body">
-                      @if ($bids)
-                        @foreach ($bids as $key => $bid)
-                          <div><label>{{$bid['jobName']}} &nbsp</label><button class="btn info-btn" type="button" name="button">{{$bid['status']}}</button></div>
-                          <br>
-                        @endforeach
-                      @endif
+                      <table class="table">
+                        <tr>
+                          <td>Job Name</td>
+                          <td>Price</td>
+                          <td>Completion Date</td>
+                          <td>Status</td>
+                        </tr>
+                        <tbody>
+                          @if ($bids)
+                            @foreach ($bids as $key => $bid)
+                              <tr>
+                                <td>{{ $bid['jobName'] }}</td>
+                                <td>${{ $bid['price']}} </td>
+                                <td>{{ $bid['completionDate']}}</td>
+                                <td>
+                                  <select class="" onChange="onBidStatusChange({{$bid['id']}})">
+                                    <option value="completed">Completed</option>
+                                    <option value="initiated">Initiated</option>
+                                  </select>
+                                </td>
+                              </tr>
+                            @endforeach
+                          @endif
+                        </tbody>
+                      </table>
                     </div>
                 </div>
             </div>
