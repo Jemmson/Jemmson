@@ -12,7 +12,7 @@
                     <div class="panel-body">
                       @if ($bids)
                         @foreach ($bids as $key => $bid)
-                          <div><label>{{$bid['jobName']}}  &nbsp</label><button class="btn info-btn" type="button" name="button">{{$bid['status']}}</button></div>
+                          <div><label>{{$bid['jobName']}} &nbsp</label><button class="btn info-btn" type="button" name="button">{{$bid['status']}}</button></div>
                           <br>
                         @endforeach
                       @endif
