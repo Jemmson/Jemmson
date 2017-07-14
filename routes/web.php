@@ -15,7 +15,6 @@ Route::get('/', 'WelcomeController@show');
 
 Route::get('/home', 'HomeController@show');
 
-Route::get('/contractors/initiate-bid', 'InitiateBid@index');
-Route::get('/initiate-bid/{email}/{phone}', 'InitiateBid@send');
-
-
+// contractor routes
+Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
+Route::post('/contractor/initiate-bid', 'InitiateBidController@send');

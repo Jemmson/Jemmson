@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class InitiateBid extends Controller
+class InitiateBidController extends Controller
 {
     //
     public function index()
@@ -15,7 +15,7 @@ class InitiateBid extends Controller
     public function send(Request $request)
     {
         dd($request);
-
+        $request->job_name;
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the registration page
 
