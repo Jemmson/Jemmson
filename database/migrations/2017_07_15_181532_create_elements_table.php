@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJobsTasksContractorsTable extends Migration
+class CreateElementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateJobsTasksContractorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('jobsTasksContractors', function (Blueprint $table) {
+        //
+        Schema::table('elements', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('jobId');
-            $table->bigInteger('taskId');
-            $table->bigInteger('contractorId');
+            $table->string('element_id_name');
+            $table->integer('page_id');
+            $table->integer('user_id');
+            $table->dateTime('time_entered');
+            $table->dateTime('time_left');
             $table->timestamps();
         });
     }
@@ -29,7 +32,8 @@ class CreateJobsTasksContractorsTable extends Migration
      */
     public function down()
     {
-        Schema::table('jobsTasksContractors', function (Blueprint $table) {
+        //
+        Schema::table('elements', function (Blueprint $table) {
             //
         });
     }

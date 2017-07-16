@@ -16,18 +16,22 @@ class CreateJobsTable extends Migration
         Schema::table('jobs', function (Blueprint $table) {
             //
             $table->increments('id');
-            $table->bigInteger('customerId');
-            $table->bigInteger('contractorId');
-            $table->string('addressLine1');
-            $table->string('addressLine2');
+            $table->bigInteger('customer_id');
+            $table->bigInteger('contractor_id');
+            $table->string('address_line_1');
+            $table->string('address_line_2');
             $table->string('city');
             $table->string('state');
             $table->string('zip');
-            $table->dateTime('initiatedBidDate');
-            $table->dateTime('completedBid');
-            $table->dateTime('initiatedBidDate');
-            $table->dateTime('agreedStartDate');
-            $table->dateTime('agreedEndDate');
+            $table->dateTime('initiated_bid_date');
+            $table->dateTime('completed_bid');
+            $table->dateTime('initiated_bid_date');
+            $table->integer('bid_price');
+            $table->integer('bid_price');
+            $table->dateTime('agreed_start_date');
+            $table->dateTime('agreed_end_date');
+            $table->dateTime('actual_end_date');
+            $table->dateTime('actual_end_date');
             $table->timestamps();
         });
     }

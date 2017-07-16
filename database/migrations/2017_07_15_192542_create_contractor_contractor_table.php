@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJobsCustomersContractorsSubsTable extends Migration
+class CreateContractorContractorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateJobsCustomersContractorsSubsTable extends Migration
      */
     public function up()
     {
-        Schema::table('jobCustomerContractorSub', function (Blueprint $table) {
-            //
+        //
+        Schema::table('contractor_contractor', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('customerId');
-            $table->bigInteger('contractorId');
-            $table->bigInteger('jobId');
-            $table->bigInteger('subContractorId');
+            $table->integer('contractor_id');
+            $table->integer('subcontractor_id');
             $table->timestamps();
         });
     }
@@ -31,7 +29,8 @@ class CreateJobsCustomersContractorsSubsTable extends Migration
      */
     public function down()
     {
-        Schema::table('jobCustomerContractorSub', function (Blueprint $table) {
+        //
+        Schema::table('contractor_contractor', function (Blueprint $table) {
             //
         });
     }

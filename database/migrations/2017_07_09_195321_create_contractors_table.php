@@ -16,11 +16,11 @@ class CreateContractorsTable extends Migration
         Schema::table('contractors', function (Blueprint $table) {
             //
             $table->increments('id');
-            $table->bigInteger('userId');
-            $table->boolean('smsText');
-            $table->string('preferredMethodOfContact');
-            $table->string('addressLine1');
-            $table->string('addressLine2');
+            $table->bigInteger('user_id');
+            $table->boolean('sms_text');
+            $table->string('preferred_method_of_contact');
+            $table->string('address_line_1');
+            $table->string('address_line_2');
             $table->string('city');
             $table->string('state');
             $table->string('zip');

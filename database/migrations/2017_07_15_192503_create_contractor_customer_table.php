@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTimeTable extends Migration
+class CreateContractorCustomerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateTimeTable extends Migration
      */
     public function up()
     {
-        Schema::table('time', function (Blueprint $table) {
+        //
+        Schema::table('contractor_customer', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contractor_id');
-            $table->integer('job_id');
-            $table->integer('task_id');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->integer('customer_id');
             $table->timestamps();
         });
     }
@@ -31,7 +29,8 @@ class CreateTimeTable extends Migration
      */
     public function down()
     {
-        Schema::table('time', function (Blueprint $table) {
+        //
+        Schema::table('contractor_customer', function (Blueprint $table) {
             //
         });
     }
