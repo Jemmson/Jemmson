@@ -26,12 +26,9 @@ class CreateJobsTable extends Migration
             $table->string('zip');
             $table->dateTime('initiated_bid_date');
             $table->dateTime('completed_bid');
-            $table->dateTime('initiated_bid_date');
-            $table->integer('bid_price');
             $table->integer('bid_price');
             $table->dateTime('agreed_start_date');
             $table->dateTime('agreed_end_date');
-            $table->dateTime('actual_end_date');
             $table->dateTime('actual_end_date');
             $table->timestamps();
         });
