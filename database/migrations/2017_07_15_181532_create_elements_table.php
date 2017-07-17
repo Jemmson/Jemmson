@@ -13,8 +13,10 @@ class CreateElementsTable extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('elements', function (Blueprint $table) {
+        // This table represents the dom elements on a given page.
+        // this table is used to understand user analytics to improve
+        // the application
+        Schema::create('elements', function (Blueprint $table) {
             $table->increments('id');
             $table->string('element_id_name');
             $table->integer('page_id');
@@ -33,7 +35,7 @@ class CreateElementsTable extends Migration
     public function down()
     {
         //
-        Schema::table('elements', function (Blueprint $table) {
+        Schema::down('elements', function (Blueprint $table) {
             //
         });
     }

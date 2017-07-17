@@ -13,8 +13,9 @@ class CreateFeedbackTable extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('feedback', function (Blueprint $table) {
+        // This table is used to record the feedback of the contractors
+        // and customers to improve the site.
+        Schema::create('feedback', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->text('comment');
@@ -32,7 +33,7 @@ class CreateFeedbackTable extends Migration
     public function down()
     {
         //
-        Schema::table('feedback', function (Blueprint $table) {
+        Schema::drop('feedback', function (Blueprint $table) {
             //
         });
     }

@@ -13,7 +13,11 @@ class CreateTasksTable extends Migration
      */
     public function up()
     {
-        Schema::table('tasks', function (Blueprint $table) {
+        // This table records all of the custom tasks that a
+        // contractor enters. these tasks are associated with a
+        // given job. also a standard task is associated with a
+        // task
+        Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('standard_task_id');
@@ -28,7 +32,7 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
-        Schema::table('tasks', function (Blueprint $table) {
+        Schema::drop('tasks', function (Blueprint $table) {
             //
         });
     }

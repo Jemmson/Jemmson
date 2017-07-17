@@ -13,8 +13,8 @@ class CreateContractorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('contractors', function (Blueprint $table) {
-            //
+        // this table keeps track of all of the users that are contractors
+        Schema::create('contractors', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('user_id');
             $table->boolean('sms_text');
@@ -35,7 +35,7 @@ class CreateContractorsTable extends Migration
      */
     public function down()
     {
-        Schema::table('contractors', function (Blueprint $table) {
+        Schema::drop('contractors', function (Blueprint $table) {
             //
         });
     }

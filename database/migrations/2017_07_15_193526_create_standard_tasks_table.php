@@ -13,7 +13,14 @@ class CreateStandardTasksTable extends Migration
      */
     public function up()
     {
-        //
+        // This table is used to create names for tasks that will be
+        // standard so that the contractor will be less likely in enter
+        // a custom task. this will help with find cross user statistics
+        Schema::create('standardTasks', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('task_name');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -24,5 +31,6 @@ class CreateStandardTasksTable extends Migration
     public function down()
     {
         //
+        Schema::down('standardTasks');
     }
 }

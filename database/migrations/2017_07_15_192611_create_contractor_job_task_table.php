@@ -13,8 +13,12 @@ class CreateContractorJobTaskTable extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('contractor_job_task', function (Blueprint $table) {
+        // this table refers to which contractor has which task for which job.
+        // a job can have many contractors working on it.
+        // each contractor can perform one or more tasks.
+        // each job will have more than one task that will need to be performed.
+
+        Schema::create('contractor_job_task', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('job_id');
@@ -31,7 +35,7 @@ class CreateContractorJobTaskTable extends Migration
     public function down()
     {
         //
-        Schema::table('contractor_job_task', function (Blueprint $table) {
+        Schema::down('contractor_job_task', function (Blueprint $table) {
             //
         });
     }

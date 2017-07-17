@@ -13,8 +13,9 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('pages', function (Blueprint $table) {
+        // this table is meant to keep track of the pages on the application
+        // this table is used for analytics purposes
+        Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
             $table->string('page_name');
             $table->timestamps();
@@ -29,7 +30,7 @@ class CreatePagesTable extends Migration
     public function down()
     {
         //
-        Schema::table('pages', function (Blueprint $table) {
+        Schema::drop('pages', function (Blueprint $table) {
             //
         });
     }

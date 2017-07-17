@@ -13,8 +13,10 @@ class CreateContractorCustomerTable extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('contractor_customer', function (Blueprint $table) {
+        // this table references the fact that a contractor can have
+        // more than one customer and a customer can have more than
+        // one contractor.
+        Schema::create('contractor_customer', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('customer_id');
@@ -30,7 +32,7 @@ class CreateContractorCustomerTable extends Migration
     public function down()
     {
         //
-        Schema::table('contractor_customer', function (Blueprint $table) {
+        Schema::down('contractor_customer', function (Blueprint $table) {
             //
         });
     }

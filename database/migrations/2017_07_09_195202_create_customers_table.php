@@ -13,7 +13,8 @@ class CreateCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
+        // this table keeps track of all of the users that are customers.
+        Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('user_id');
             $table->boolean('sms_text');
@@ -34,8 +35,6 @@ class CreateCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('customers');
     }
 }

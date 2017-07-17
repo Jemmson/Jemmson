@@ -13,8 +13,11 @@ class CreateContractorContractorTable extends Migration
      */
     public function up()
     {
-        //
-        Schema::table('contractor_contractor', function (Blueprint $table) {
+        // This table is meant to create an association between a particular
+        // contractor and the sub contractors that the contractor is associated with.
+        // a sub can be associated to more than one contractor and
+        // a contractor can be associated with more than one sub.
+        Schema::create('contractor_contractor', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('subcontractor_id');
@@ -30,7 +33,7 @@ class CreateContractorContractorTable extends Migration
     public function down()
     {
         //
-        Schema::table('contractor_contractor', function (Blueprint $table) {
+        Schema::down('contractor_contractor', function (Blueprint $table) {
             //
         });
     }

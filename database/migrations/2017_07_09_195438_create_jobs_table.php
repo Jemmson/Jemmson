@@ -13,8 +13,9 @@ class CreateJobsTable extends Migration
      */
     public function up()
     {
-        Schema::table('jobs', function (Blueprint $table) {
-            //
+        // This table keeps track of all of the jobs and each job
+        // has one customer and one or more contractors
+        Schema::create('jobs', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('customer_id');
             $table->bigInteger('contractor_id');
@@ -43,8 +44,6 @@ class CreateJobsTable extends Migration
      */
     public function down()
     {
-        Schema::table('jobs', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('jobs');
     }
 }

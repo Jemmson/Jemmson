@@ -13,7 +13,9 @@ class CreateTimeTable extends Migration
      */
     public function up()
     {
-        Schema::table('time', function (Blueprint $table) {
+        // This table is meant to record the time that a contractor
+        // spends on each particular task
+        Schema::create('time', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('job_id');
@@ -31,7 +33,7 @@ class CreateTimeTable extends Migration
      */
     public function down()
     {
-        Schema::table('time', function (Blueprint $table) {
+        Schema::drop('time', function (Blueprint $table) {
             //
         });
     }
