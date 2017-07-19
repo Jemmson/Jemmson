@@ -24,3 +24,25 @@ Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
 
 // customer routes
 Route::get('/customer/bid-list', 'BidListController@customerIndex');
+
+
+// passwordless login
+Route::get('/login/{token}', function($token) {
+    // find token in the db
+    $token = App\Token::where('token', $token)->first();
+    // invalid token
+    if(!$token){
+      return redirect('login')->withErrors(__('passwordless.invalid_token'));
+    }
+
+    // find user connected to token
+    $user = App\User::find($token->user_id);
+    // user not found or login user if they where found
+    if(!$user){
+      return redirect('login')->withErrors(__('passwordless.no_user'));
+    }else{
+      if($user->isValidToken($token->token)){
+        Auth::login($user);
+      }
+    }
+});

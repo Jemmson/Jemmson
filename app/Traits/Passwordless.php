@@ -1,7 +1,7 @@
 <?php
 namespace App\Traits;
 use App\Exceptions\InvalidTokenException;
-use App\Models\Token;
+use App\Token;
 use Illuminate\Support\Facades\App;
 trait Passwordless
 {

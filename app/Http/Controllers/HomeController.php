@@ -27,4 +27,12 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    /**
+     * Test different actions with a route
+     * @return [type] [description]
+     */
+    public function test(Request $request){
+
+    }
 }

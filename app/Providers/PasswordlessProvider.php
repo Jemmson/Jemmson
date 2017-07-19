@@ -10,12 +10,7 @@ class PasswordlessProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes(
-            [
-                __DIR__.'/../../config/passwordless.php' => config_path('passwordless.php'),
-                __DIR__.'/../../lang'                    => resource_path('lang/vendor/passwordless'),
-            ]
-        );
+
     }
     /**
      * Regsiter application components

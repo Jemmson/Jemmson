@@ -1,7 +1,8 @@
 <?php
-namespace App\Models;
+namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+
 class Token extends Model
 {
     protected $table = "user_tokens";
