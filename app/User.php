@@ -6,6 +6,7 @@ use Laravel\Spark\User as SparkUser;
 
 class User extends SparkUser
 {
+    use App\Traits\Passwordless;
     /**
      * The attributes that are mass assignable.
      *

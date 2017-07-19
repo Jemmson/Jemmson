@@ -180,6 +180,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Passwordless
+        App\Providers\PasswordlessProvider::class,
+
     ],
 
     /*
