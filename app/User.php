@@ -48,4 +48,24 @@ class User extends SparkUser
         'trial_ends_at' => 'datetime',
         'uses_two_factor_auth' => 'boolean',
     ];
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    public function contractors()
+    {
+        return $this->hasMany(Contractor::class);
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function elements()
+    {
+        return $this->belongsTo(Element::class);
+    }
 }
