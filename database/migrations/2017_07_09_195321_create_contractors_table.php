@@ -35,8 +35,6 @@ class CreateContractorsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('contractors', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('contractors');
     }
 }

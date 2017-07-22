@@ -23,3 +23,18 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Contractor::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        },
+        'sms_text' => $faker->boolean,
+        'preferred_method_of_contact' => $faker->word,
+        'address_line_1' => $faker->streetAddress,
+        'address_line_2' => $faker->word,
+        'city' => $faker->city,
+        'state' => 'AZ',
+        'zip' => $faker->postcode,
+    ];
+});
