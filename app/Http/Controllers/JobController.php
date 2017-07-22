@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Job;
+use App\User;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -46,7 +47,8 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        //
+        $contractor = User::find($job->contractor_id);
+        return view('customers.bid')->with(['job_name' => $job->job_name, 'created_at' => $job->created_at, 'contractor' => $contractor->name]);
     }
 
     /**

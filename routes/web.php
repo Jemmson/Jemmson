@@ -28,12 +28,13 @@ Route::group(['middleware' => 'auth'], function () {
 
   // customer routes
   Route::get('/customer/bid-list', 'BidListController@customerIndex');
+  Route::resource('/customer/job', 'JobController');
 }
 );
 
 
 // passwordless login
-Route::get('/login/{token}', function($token) {
+Route::get('/login/{token}/{job_id}', function($token, $job_id) {
     // find token in the db
     $token = App\Token::where('token', $token)->first();
     // invalid token
@@ -49,7 +50,7 @@ Route::get('/login/{token}', function($token) {
     }else{
       if($user->isValidToken($token->token)){
         Auth::login($user);
-        return redirect('home');
+        return redirect('/customer/job/'.$job_id);
       }
     }
 });
