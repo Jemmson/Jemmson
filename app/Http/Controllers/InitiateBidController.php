@@ -11,6 +11,8 @@ use App\User;
 use App\Job;
 use App\Mail\PasswordlessBidPageLogin;
 
+use App\Services\RandomPasswordService;
+
 class InitiateBidController extends Controller
 {
     //
@@ -21,14 +23,19 @@ class InitiateBidController extends Controller
 
     public function send(Request $request)
     {
-        //dd($request);
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
         // look to see if customer is in the db
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-          return redirect()->back()->with('error', 'User not found');
+          $pass = RandomPasswordService::randomPassword(); // TODO send password through email?
+
+          $user = User::create([
+              'name' => explode('@',$request->email)[0],
+              'email' => $request->email,
+              'password' => bcrypt($pass),
+          ]);
         }
 
         // create bid
@@ -50,7 +57,7 @@ class InitiateBidController extends Controller
 
     /**
      * create new job
-     * @var [type]
+     * @var [job id]
      */
     private function createBid($customer_id, $job_name){
       $job = new Job;
@@ -65,7 +72,5 @@ class InitiateBidController extends Controller
         Log::critical('Failed to create a bid: ' . $e);
         return -1;
       }
-
-
     }
 }
