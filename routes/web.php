@@ -13,17 +13,23 @@
 
 Route::get('/', 'WelcomeController@show');
 
-Route::get('/home', 'HomeController@show');
-
-// contractor routes
-Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
-Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
-
-Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
 
 
-// customer routes
-Route::get('/customer/bid-list', 'BidListController@customerIndex');
+Route::group(['middleware' => 'auth'], function () {
+
+  Route::get('/home', 'HomeController@show');
+
+  // contractor routes
+  Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
+  Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
+
+  Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
+
+
+  // customer routes
+  Route::get('/customer/bid-list', 'BidListController@customerIndex');
+}
+);
 
 
 // passwordless login
@@ -43,6 +49,7 @@ Route::get('/login/{token}', function($token) {
     }else{
       if($user->isValidToken($token->token)){
         Auth::login($user);
+        return redirect('home');
       }
     }
 });

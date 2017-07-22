@@ -37,7 +37,6 @@ class InitiateBidController extends Controller
         // send a notification along with the passwordless link if the customer or sub is in the system
         $resp = Mail::to($request->email)
               ->queue(new PasswordlessBidPageLogin($user)); // no response from queue or send
-        dd($token);
         return redirect('/contractor/bid-list');
     }
 }

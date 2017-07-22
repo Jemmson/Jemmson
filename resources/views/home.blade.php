@@ -10,7 +10,11 @@
                     <div class="panel-heading">Dashboard</div>
 
                     <div class="panel-body">
-                        Your application's dashboard.
+                        <ul>
+                          <li><a href="/contractor/initiate-bid">initiate bid</a></li>
+                          <li><a href="/contractor/bid-list">bid list</a></li>
+                          
+                        </ul>
                     </div>
                 </div>
             </div>
