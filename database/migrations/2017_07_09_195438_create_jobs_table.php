@@ -24,8 +24,8 @@ class CreateJobsTable extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
-            $table->dateTime('completed_bid')->nullable();
-            $table->integer('bid_price')->nullable();
+            $table->dateTime('completed_bid_date')->nullable();
+            $table->float('bid_price')->nullable();
             $table->dateTime('agreed_start_date')->nullable();
             $table->dateTime('agreed_end_date')->nullable();
             $table->dateTime('actual_end_date')->nullable();
