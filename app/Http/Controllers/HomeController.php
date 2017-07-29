@@ -25,6 +25,7 @@ class HomeController extends Controller
      */
     public function show()
     {
+        // this is the home page
         return view('home');
     }
 
