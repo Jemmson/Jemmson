@@ -24,6 +24,7 @@ class CreateCustomersTable extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
+            $table->text('notes');
             $table->timestamps();
         });
     }

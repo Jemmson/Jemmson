@@ -6,6 +6,7 @@ use Laravel\Spark\User as SparkUser;
 
 class User extends SparkUser
 {
+    use Traits\Passwordless;
     /**
      * The attributes that are mass assignable.
      *
@@ -14,6 +15,7 @@ class User extends SparkUser
     protected $fillable = [
         'name',
         'email',
+        'password'
     ];
 
     /**

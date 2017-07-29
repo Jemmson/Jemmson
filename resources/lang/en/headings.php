@@ -12,7 +12,10 @@ return [
     */
 
     'bidlist' => [
-      'main' => 'My Bids'
+      'main' => 'My Bids',
+    ],
+    'bid' => [
+      'main' => 'Active Bid',
     ],
 
 ];

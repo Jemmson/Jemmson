@@ -7,15 +7,11 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Dashboard</div>
-
+                    <div class="panel-heading">{{ __('headings.bid.main') }}</div>
 
                     <div class="panel-body">
-                        <ul>
-                          <li><a href="/contractor/initiate-bid">initiate bid</a></li>
-                          <li><a href="/contractor/bid-list">bid list</a></li>
-
-                        </ul>
+                      <h3>{{$job_name}}</h3>
+                      <h4>created at: {{$created_at}} by: {{$contractor}}</h4>
                     </div>
                 </div>
             </div>
