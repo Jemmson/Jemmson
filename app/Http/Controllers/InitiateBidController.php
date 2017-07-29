@@ -27,13 +27,28 @@ class InitiateBidController extends Controller
         // this link will then redirect them to the bid page
 
         // look to see if customer is in the db
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-          $pass = RandomPasswordService::randomPassword(); // TODO send password through email?
+        $email = $request->email;
+        $phone = $request->phone;
 
+        if($email == '' && $phone == ''){
+          return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
+        }
+
+        // find user
+        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        $pass = RandomPasswordService::randomPassword(); // TODO send password through email? no need since its a passwordless link
+
+        // send psw email
+        if (!$user && $email != '') {
           $user = User::create([
-              'name' => explode('@',$request->email)[0],
-              'email' => $request->email,
+              'name' => explode('@',$email)[0],
+              'email' => $email,
+              'password' => bcrypt($pass),
+          ]);
+        }elseif(!$user && $phone != ''){ // send psw phone
+          $user = User::create([
+              'name' => $phone,
+              'phone' => $phone,
               'password' => bcrypt($pass),
           ]);
         }
@@ -41,17 +56,24 @@ class InitiateBidController extends Controller
         // create bid
         $job_id = $this->createBid($user->id, $request->jobName);
         if($job_id == -1){
-          return redirect()->back()->with('error', 'Sorry couldn\'t create bid, please try again.');
+          return redirect()->back()->with('error', 'Sorry couldn\'t create the bid, please try again.');
         }
 
         // generate token and save it
         $token = $user->generateToken(true);
 
-        $user = ['email' => $request->email, 'link' => $token->token, 'job_name' => $request->jobName, 'job_id' => $job_id];
-        // send mail
-        // send a notification along with the passwordless link if the customer or sub is in the system
-        $resp = Mail::to($request->email)
-              ->queue(new PasswordlessBidPageLogin($user)); // no response from queue or send
+        if($email != ''){
+          $user = ['email' => $request->email, 'link' => $token->token, 'job_name' => $request->jobName, 'job_id' => $job_id];
+          // send mail
+          // send a notification along with the passwordless link if the customer or sub is in the system
+          $resp = Mail::to($request->email)
+                ->queue(new PasswordlessBidPageLogin($user)); // no response from queue or send
+        }
+
+        if($phone != ''){
+          // send passwordless link in text
+        }
+
         return redirect('/contractor/bid-list');
     }
 
