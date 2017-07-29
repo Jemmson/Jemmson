@@ -7,6 +7,8 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
+                    {{-- / --}}
+                    <span>{{ session('error') }}</span>
                     <div class="panel-heading">Initate Bid</div>
 
                     <div class="panel-body">
@@ -15,10 +17,10 @@
                           {{ csrf_field() }}
 
                           <label for="job-name">Job Name *
-                              <input name="jobName" type="text" id="job-name" class="form-control">
+                              <input name="jobName" type="text" id="job-name" class="form-control" required>
                           </label>
 
-                          <label for="email">Email *
+                          <label for="email">Email
                               <input name="email" type="email" id="email" class="form-control">
                           </label>
                           <label for="phone">Phone
