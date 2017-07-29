@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contractor extends Model
 {
-    //
+    // no empty comments
     public function user()
     {
         return $this->belongsTo(User::class);
