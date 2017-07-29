@@ -29,6 +29,7 @@ class CreateJobsTable extends Migration
             $table->dateTime('agreed_start_date')->nullable();
             $table->dateTime('agreed_end_date')->nullable();
             $table->dateTime('actual_end_date')->nullable();
+            $table->string('job_name');
             $table->timestamps();
         });
     }
