@@ -15,10 +15,10 @@
 
                         <!-- E-Mail Address -->
                         <div class="form-group">
-                            <label class="col-md-4 control-label">E-Mail Address</label>
+                            <label class="col-md-4 control-label">E-Mail Address/Phone</label>
 
                             <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" autofocus>
+                                <input type="text" class="form-control" name="username" value="{{ old('email') }}" autofocus>
                             </div>
                         </div>
 
