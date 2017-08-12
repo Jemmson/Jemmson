@@ -8,10 +8,12 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">{{ __('headings.customer.edit.main') }}</div>
-
+                    @include('spark::shared.errors')
                     <div class="panel-body">
-                      <form class="form-horizontal" role="form" method="PUT" action="/customer/{{$data['customer']->id}}">
+
+                      <form class="form-horizontal" role="form" method="POST" action="/customer/{{$data['customer']->id}}">
                           {{ csrf_field() }}
+                          <input type="hidden" name="_method" value="PUT">
                           <input type="hidden" name="job_id" value="{{$data['job_id']}}">
                           <!-- E-Address Line 1 -->
                           <div class="form-group">

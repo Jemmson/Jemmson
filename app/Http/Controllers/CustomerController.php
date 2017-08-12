@@ -16,20 +16,20 @@ class CustomerController extends Controller
     public function checkCustomerData()
     {
       $data = session()->get('data');
-      $user = $data['user'];
+      $user_id = $data['user_id'];
       $this->job_id = $data['job_id'];
 
       // find or create customer
       try {
-        $customer = Customer::where('user_id', "=", $user->id)->firstOrFail();
+        $customer = Customer::where('user_id', "=", $user_id)->firstOrFail();
       } catch (\Exception $e) {
-        Log::error('Customer Error: ' . $e->getMessage());
+        Log::error('Error Finding Customer: ' . $e->getMessage());
         $customer = new Customer;
-        $customer->user_id = $user->id;
+        $customer->user_id = $user_id;
         try {
           $customer->save();
         } catch (\Exception $e) {
-          Log::error('Saving Error: ' . $e->getMessage());
+          Log::error('Error Saving Customer: ' . $e->getMessage());
         }
       }
 
@@ -105,7 +105,25 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        dd($request, $customer);
+      $customer->address_line_1 = $request->address_line_1;
+      $customer->address_line_2 = $request->address_line_2;
+      $customer->city = $request->city;
+      $customer->state = $request->state;
+      $customer->zip = $request->zip;
+      $customer->preferred_method_of_contact = $request->preferred_method_of_contact;
+      $customer->sms_text = $request->sms_text == "on" ? 1 : 0;
+
+      try {
+        $customer->save();
+      } catch (\Exception $e) {
+        Log::error('Error Saving Customer: ' . $e->getMessage());
+        return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors([__('error.data.updated')]);
+      }
+      // if theres a job id show that job
+      if($request->job_id != null){
+        return redirect('/customer/job/'.$request->job_id)->with('success', __('success.data.updated'));
+      }
+      return view('home')->with('success', __('success.data.updated'));
     }
 
     /**

@@ -53,7 +53,7 @@ Route::get('/login/{token}/{job_id}', function($token, $job_id) {
     }else{
       if($user->isValidToken($token->token)){
         Auth::login($user);
-        return redirect('/customer/check')->with('data', ['user' => $user, 'job_id' => $job_id]);
+        return redirect('/customer/check')->with('data', ['user_id' => $user->id, 'job_id' => $job_id]);
       }
     }
 });
