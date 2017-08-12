@@ -22,12 +22,13 @@ Route::group(['middleware' => 'auth'], function () {
   // contractor routes
   Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
   Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
-
   Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
 
 
   // customer routes
   Route::get('/customer/bid-list', 'BidListController@customerIndex');
+  Route::get('/customer/check', 'CustomerController@checkCustomerData');
+  Route::resource('/customer', 'CustomerController');
   Route::resource('/customer/job', 'JobController');
 }
 );
@@ -50,7 +51,7 @@ Route::get('/login/{token}/{job_id}', function($token, $job_id) {
     }else{
       if($user->isValidToken($token->token)){
         Auth::login($user);
-        return redirect('/customer/job/'.$job_id);
+        return redirect('/customer/check')->with('data', ['user' => $user, 'job_id' => $job_id]);
       }
     }
 });
