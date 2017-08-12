@@ -13,7 +13,9 @@
 
 Route::get('/', 'WelcomeController@show');
 
-
+// login routes
+Route::get('login', 'Auth\LoginController@show');
+Route::post('login', 'Auth\LoginController@login');
 
 Route::group(['middleware' => 'auth'], function () {
 
