@@ -37,7 +37,7 @@ class InitiateBidController extends Controller
 
         // find user
         $user = User::where('email', $email)->orWhere('phone', $phone)->first();
-        $pass = RandomPasswordService::randomPassword(); // TODO send password through email? no need since its a passwordless link
+        $pass = RandomPasswordService::randomPassword(); 
 
         // send psw email
         if (!$user && $email != '') {
