@@ -10,12 +10,19 @@
                     <div class="panel-heading">{{ __('headings.customer.edit.main') }}</div>
                     @include('spark::shared.errors')
                     <div class="panel-body">
-
                       <form class="form-horizontal" role="form" method="POST" action="/customer/{{$data['customer']->id}}">
                           {{ csrf_field() }}
                           <input type="hidden" name="_method" value="PUT">
                           <input type="hidden" name="job_id" value="{{$data['job_id']}}">
                           <!-- E-Address Line 1 -->
+                          <div class="form-group">
+                              <label class="col-md-4 control-label">Name</label>
+
+                              <div class="col-md-6">
+                                  <input type="test" class="form-control" name="name" value="{{ Auth::user()->name }}" autofocus>
+                              </div>
+                          </div>
+
                           <div class="form-group">
                               <label class="col-md-4 control-label">Address Line 1</label>
 

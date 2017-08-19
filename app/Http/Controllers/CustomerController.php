@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\User;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
@@ -17,7 +17,9 @@ class CustomerController extends Controller
     {
       $data = session()->get('data');
       $user_id = $data['user_id'];
-      $this->job_id = $data['job_id'];
+
+      if($data['job_id'] != null)
+        session()->put('job_id', $data['job_id']);
 
       // find or create customer
       try {
@@ -40,7 +42,7 @@ class CustomerController extends Controller
                                                  || !$customer->zip){
         return $this->edit($customer);
       }else{
-        return redirect('/customer/job/'.$this->job_id);
+        return redirect('/customer/job/'.session('job_id'));
       }
     }
     /**
@@ -93,7 +95,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-      return view('customers.edit')->with('data', ['customer' => $customer, 'job_id' => $this->job_id]);
+      return view('customers.edit')->with('data', ['customer' => $customer, 'job_id' => session('job_id')]);
     }
 
     /**
@@ -112,6 +114,17 @@ class CustomerController extends Controller
       $customer->zip = $request->zip;
       $customer->preferred_method_of_contact = $request->preferred_method_of_contact;
       $customer->sms_text = $request->sms_text == "on" ? 1 : 0;
+
+      if($request->name != null){
+        $user = User::find($customer->user_id);
+        $user->name = $request->name;
+        try {
+          $user->save();
+        } catch (\Exception $e) {
+          Log::error('Error Saving User: ' . $e->getMessage());
+        }
+
+      }
 
       try {
         $customer->save();
