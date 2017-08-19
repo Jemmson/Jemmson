@@ -4,9 +4,9 @@
  * https://simplesoftware.io/docs/simple-sms#docs-configuration for more information.
  */
 return [
-    'driver' => env('SMS_DRIVER', 'email'),
+    'driver' => env('SMS_DRIVER', 'twilio'),
 
-    'from' => env('SMS_FROM', 'Your Number or Email'),
+    'from' => env('SMS_FROM', '+14807718972'),
 
     'callfire' => [
         'app_login' => env('CALLFIRE_LOGIN', 'Your CallFire API Login'),

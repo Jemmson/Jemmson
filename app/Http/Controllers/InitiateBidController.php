@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use SimpleSoftwareIO\SMS\Facades\SMS;
 
 use App\User;
 use App\Job;
@@ -61,17 +62,22 @@ class InitiateBidController extends Controller
 
         // generate token and save it
         $token = $user->generateToken(true);
+        // generate data for views
+        $data = ['email' => $request->email, 'link' => $token->token, 'job_name' => $request->jobName, 'job_id' => $job_id, 'contractor' => Auth::user()->name];
 
         if($email != ''){
-          $user = ['email' => $request->email, 'link' => $token->token, 'job_name' => $request->jobName, 'job_id' => $job_id];
-          // send mail
-          // send a notification along with the passwordless link if the customer or sub is in the system
+          //send passwordless email
           $resp = Mail::to($request->email)
-                ->queue(new PasswordlessBidPageLogin($user)); // no response from queue or send
+               ->queue(new PasswordlessBidPageLogin($data)); // no response from queue or send
         }
 
         if($phone != ''){
-          // send passwordless link in text
+          // send sms passwordless link
+          session()->put('phone', $phone);
+          SMS::send('sms.passwordlessbidpagelogin', $data, function($sms) {
+            $sms->to(session('phone'));
+          });
+          session()->forget('phone');
         }
 
         return redirect('/contractor/bid-list');
