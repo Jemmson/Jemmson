@@ -12,7 +12,8 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravel/cashier": "~7.0",
-        "laravel/spark": "*@dev"
+        "laravel/spark": "*@dev",
+        "simplesoftwareio/simple-sms": "3.0.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

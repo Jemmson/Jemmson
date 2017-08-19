@@ -182,6 +182,8 @@ return [
 
         // Passwordless
         App\Providers\PasswordlessProvider::class,
+        // sms library
+        SimpleSoftwareIO\SMS\SMSServiceProvider::class,
 
     ],
 
@@ -231,6 +233,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'SMS' => SimpleSoftwareIO\SMS\Facades\SMS::class,
 
     ],
 
