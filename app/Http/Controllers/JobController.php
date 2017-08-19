@@ -48,7 +48,7 @@ class JobController extends Controller
     public function show(Job $job)
     {
         $contractor = User::find($job->contractor_id);
-        return view('customers.bid')->with(['job_name' => $job->job_name, 'created_at' => $job->created_at, 'contractor' => $contractor->name]);
+        return view('jobs.job')->with(['job' => $job, 'contractor' => $contractor->name]);
     }
 
     /**
@@ -59,7 +59,8 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        //
+        $contractor = User::find($job->contractor_id);
+        return view('jobs.edit_job')->with(['job' => $job, 'contractor' => $contractor->name]);
     }
 
     /**
@@ -71,7 +72,16 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        //
+        $job->agreed_start_date = $request->agreed_start_date;
+        $job->agreed_end_date = $request->agreed_end_date;
+        $job->bid_price = $request->bid_price;
+
+        try {
+          $job->save();
+        } catch (\Exception $e) {
+          Log::error('Error Saving Job: '. $e->getMessage());
+        }
+        return redirect()->back()->with('success', "Job Saved Successfully");
     }
 
     /**

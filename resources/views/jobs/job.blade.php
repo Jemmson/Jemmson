@@ -10,8 +10,8 @@
                     <div class="panel-heading">{{ __('headings.bid.main') }}</div>
 
                     <div class="panel-body">
-                      <h3>{{$job_name}}</h3>
-                      <h4>created at: {{$created_at}} by: {{$contractor}}</h4>
+                      <h3>{{$job->job_name}}</h3>
+                      <h4>created at: {{$job->created_at}} by: {{$contractor}}</h4>
                     </div>
                 </div>
             </div>
