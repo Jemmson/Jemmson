@@ -37,19 +37,26 @@ class InitiateBidController extends Controller
 
         // find user
         $user = User::where('email', $email)->orWhere('phone', $phone)->first();
-        $pass = RandomPasswordService::randomPassword(); 
+        $pass = RandomPasswordService::randomPassword();
 
         // send psw email
-        if (!$user && $email != '') {
+        if (!$user && $email != '' && $phone != '') {
           $user = User::create([
               'name' => explode('@',$email)[0],
               'email' => $email,
+              'phone' => $phone,
               'password' => bcrypt($pass),
           ]);
-        }elseif(!$user && $phone != ''){ // send psw phone
+        }elseif (!$user && $phone != ''){ // send psw phone
           $user = User::create([
               'name' => $phone,
               'phone' => $phone,
+              'password' => bcrypt($pass),
+          ]);
+        }elseif (!$user && $email != '') {
+          $user = User::create([
+              'name' => explode('@',$email)[0],
+              'email' => $email,
               'password' => bcrypt($pass),
           ]);
         }
