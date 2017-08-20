@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('/home', 'HomeController@show');
 
   // contractor routes
+  Route::get('/contractor/', 'ContractorController@index');
   Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
   Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
   Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
