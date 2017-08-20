@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
   Route::get('/customer/bid-list', 'BidListController@customerIndex');
   Route::get('/customer/check', 'CustomerController@checkCustomerData');
   Route::resource('/customer', 'CustomerController');
-  Route::resource('/customer/job', 'JobController');
+  Route::resource('/job', 'JobController');
 }
 );
 

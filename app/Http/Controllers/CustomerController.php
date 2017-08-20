@@ -42,7 +42,7 @@ class CustomerController extends Controller
                                                  || !$customer->zip){
         return $this->edit($customer);
       }else{
-        return redirect('/customer/job/'.session('job_id'));
+        return redirect('/job/'.session('job_id').'/edit');
       }
     }
     /**
@@ -134,7 +134,7 @@ class CustomerController extends Controller
       }
       // if theres a job id show that job
       if($request->job_id != null){
-        return redirect('/customer/job/'.$request->job_id)->with('success', __('success.data.updated'));
+        return redirect('/job/'.$request->job_id.'/edit')->with('success', __('success.data.updated'));
       }
       return view('home')->with('success', __('success.data.updated'));
     }

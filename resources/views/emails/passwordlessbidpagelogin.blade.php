@@ -1,4 +1,4 @@
-<h1>Link Sent to you!</h1>
-<p>Your email: {{ $email }}</p>
+<h1>Hello,</h1>
+<p>{{ $contractor }} has initated a bid.</p>
 <p>Job Name: {{ $job_name }}</p>
-<label for="">Link: {{ url('/login/' . $link . '/' . $job_id) }}</label>
+<label for="">View the bid here: {{ url('/login/' . $link . '/' . $job_id) }}</label>
