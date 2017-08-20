@@ -28,28 +28,35 @@ class InitiateBidController extends Controller
         // this link will then redirect them to the bid page
 
         // look to see if customer is in the db
-        $email = $request->email;
-        $phone = $request->phone;
+        $email = $request->email == '' ? -1 : $request->email;
+        $phone = $request->phone == '' ? -1 : $request->phone;
 
-        if($email == '' && $phone == ''){
+        if($email == -1 && $phone == -1){
           return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
         }
 
         // find user
         $user = User::where('email', $email)->orWhere('phone', $phone)->first();
-        $pass = RandomPasswordService::randomPassword(); 
+        $pass = RandomPasswordService::randomPassword();
 
         // send psw email
-        if (!$user && $email != '') {
+        if (!$user && $email != -1 && $phone != -1) {
           $user = User::create([
               'name' => explode('@',$email)[0],
               'email' => $email,
+              'phone' => $phone,
               'password' => bcrypt($pass),
           ]);
-        }elseif(!$user && $phone != ''){ // send psw phone
+        }elseif (!$user && $phone != -1){ // send psw phone
           $user = User::create([
               'name' => $phone,
               'phone' => $phone,
+              'password' => bcrypt($pass),
+          ]);
+        }elseif (!$user && $email != -1) {
+          $user = User::create([
+              'name' => explode('@',$email)[0],
+              'email' => $email,
               'password' => bcrypt($pass),
           ]);
         }
@@ -65,13 +72,13 @@ class InitiateBidController extends Controller
         // generate data for views
         $data = ['email' => $request->email, 'link' => $token->token, 'job_name' => $request->jobName, 'job_id' => $job_id, 'contractor' => Auth::user()->name];
 
-        if($email != ''){
+        if($email != -1){
           //send passwordless email
           $resp = Mail::to($request->email)
                ->queue(new PasswordlessBidPageLogin($data)); // no response from queue or send
         }
 
-        if($phone != ''){
+        if($phone != -1){
           // send sms passwordless link
           session()->put('phone', $phone);
           SMS::send('sms.passwordlessbidpagelogin', $data, function($sms) {
