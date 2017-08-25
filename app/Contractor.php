@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contractor extends Model
 {
-    //
+    // no empty comments
     public function user()
     {
+        //fix this here
         return $this->belongsTo(User::class);
     }
 
