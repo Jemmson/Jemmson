@@ -120,6 +120,8 @@ class CustomerController extends Controller
       if($request->password != $request->confirm_password && $password_updated == null){
         return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Passwords need to match']);
       }
+      if($request->password == '' || $request->confirm_password == '' && $password_updated == null){
+        return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Password field is required']);
       }
 
       $customer->address_line_1 = $request->address_line_1;
