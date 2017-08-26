@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use App\User;
+use App\Services\UpdateRecordsService;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -16,10 +18,17 @@ class CustomerController extends Controller
     public function checkCustomerData()
     {
       $data = session()->get('data');
-      $user_id = $data['user_id'];
 
-      if($data['job_id'] != null)
+      if ($data['user_id'] != null) {
+        $user_id = $data['user_id'];
+        session()->put('user_id', $data['user_id']);
+      }else{
+        $user_id = session('user_id');
+      }
+
+      if ($data['job_id'] != null) {
         session()->put('job_id', $data['job_id']);
+      }
 
       // find or create customer
       try {
@@ -107,6 +116,11 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
+      $password_updated = $request->password_updated;
+      if($request->password != $request->confirm_password && $password_updated == null){
+        return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Passwords need to match']);
+      }
+
       $customer->address_line_1 = $request->address_line_1;
       $customer->address_line_2 = $request->address_line_2;
       $customer->city = $request->city;
@@ -115,16 +129,17 @@ class CustomerController extends Controller
       $customer->preferred_method_of_contact = $request->preferred_method_of_contact;
       $customer->sms_text = $request->sms_text == "on" ? 1 : 0;
 
-      if($request->name != null){
-        $user = User::find($customer->user_id);
-        $user->name = $request->name;
-        try {
-          $user->save();
-        } catch (\Exception $e) {
-          Log::error('Error Saving User: ' . $e->getMessage());
-        }
+      $user = User::find($customer->user_id);
+      $user->name = UpdateRecordsService::shouldUpdate($request->name) ? $request->name : $user->name;
+      $user->password = $password_updated == null ? bcrypt($request->password) : $user->password;
+      $user->password_updated = 1;
 
+      try {
+        $user->save();
+      } catch (\Exception $e) {
+        Log::error('Error Saving User: ' . $e->getMessage());
       }
+
 
       try {
         $customer->save();
