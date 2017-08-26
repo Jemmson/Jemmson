@@ -45,18 +45,21 @@ class InitiateBidController extends Controller
               'name' => explode('@',$email)[0],
               'email' => $email,
               'phone' => $phone,
+              'password_updated' => false,
               'password' => bcrypt($pass),
           ]);
         }elseif (!$user && $phone != -1){ // send psw phone
           $user = User::create([
               'name' => $phone,
               'phone' => $phone,
+              'password_updated' => false,
               'password' => bcrypt($pass),
           ]);
         }elseif (!$user && $email != -1) {
           $user = User::create([
               'name' => explode('@',$email)[0],
               'email' => $email,
+              'password_updated' => false,
               'password' => bcrypt($pass),
           ]);
         }
