@@ -16,6 +16,7 @@ class User extends SparkUser
         'name',
         'email',
         'phone',
+        'password_updated',
         'password'
     ];
 
