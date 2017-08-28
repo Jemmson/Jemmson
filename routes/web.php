@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
 // passwordless login
 Route::get('/login/{token}/{job_id}', function($token, $job_id) {
     // find token in the db
-    $token = App\Token::where('token', $token)->first();
+    $token = App\PasswordlessToken::where('token', $token)->first();
     // invalid token
     if(!$token){
       return redirect('login')->withErrors(__('passwordless.invalid_token'));

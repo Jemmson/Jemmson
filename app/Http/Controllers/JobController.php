@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Job;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class JobController extends Controller
 {
@@ -72,6 +73,11 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
+        $this->validate($request, [
+          'agreed_start_date' => 'required',
+          'agreed_end_date' => 'required',
+          'bid_price' => 'required',
+        ]);
         $job->agreed_start_date = $request->agreed_start_date;
         $job->agreed_end_date = $request->agreed_end_date;
         $job->bid_price = $request->bid_price;

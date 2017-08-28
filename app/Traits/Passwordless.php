@@ -1,14 +1,14 @@
 <?php
 namespace App\Traits;
 use App\Exceptions\InvalidTokenException;
-use App\Token;
+use App\PasswordlessToken;
 use Illuminate\Support\Facades\App;
 trait Passwordless
 {
     /**
      * Validate attributes.
      *
-     * @param  string $token Token
+     * @param  string $token PasswordlessToken
      * @throws InvalidTokenException
      */
     public function validateToken($token)
@@ -20,7 +20,7 @@ trait Passwordless
     /**
      * Validate attributes.
      *
-     * @param  string $token Token
+     * @param  string $token PasswordlessToken
      * @return bool
      */
     public function isValidToken($token)
@@ -29,7 +29,7 @@ trait Passwordless
             return false;
         }
         /**
-         * @var $tokenModel Token
+         * @var $tokenModel PasswordlessToken
          */
         $tokenModel = $this->tokens()->where('token', $token)->first();
         return $tokenModel ? $tokenModel->isValid() : false;
@@ -39,7 +39,7 @@ trait Passwordless
      *
      * @param bool $save Generate token and save it.
      *
-     * @return Token
+     * @return PasswordlessToken
      */
     public function generateToken($save = false)
     {
@@ -49,10 +49,14 @@ trait Passwordless
             'user_id'    => $this->id,
             'created_at' => time()
         ];
-        $token = App::make(Token::class);
+        $token = App::make(PasswordlessToken::class);
         $token->fill($attributes);
         if ($save) {
-            $token->save();
+            try {
+              $token->save();
+            } catch (\Exception $e) {
+              Log::error('Error Saving User Token: '. $e->getMessage());
+            }
         }
         return $token;
     }
@@ -63,7 +67,7 @@ trait Passwordless
      */
     public function tokens()
     {
-        return $this->hasMany(Token::class, 'user_id', 'id');
+        return $this->hasMany(PasswordlessToken::class, 'user_id', 'id');
     }
     /**
      * Identifier name to be used with token.

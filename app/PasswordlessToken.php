@@ -3,15 +3,16 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class Token extends Model
+class PasswordlessToken extends Model
 {
     protected $table = "user_tokens";
     protected $fillable = [
         'token',
         'created_at',
+        'expires_at',
         'user_id',
     ];
-    protected $dates = ['created_at'];
+    protected $dates = ['created_at', 'expires_at'];
     /**
      * Is not used and not expired.
      *

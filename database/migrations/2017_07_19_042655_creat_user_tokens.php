@@ -21,6 +21,8 @@ class CreatUserTokens extends Migration
               ->unsigned();
           $table->timestamp('created_at')
               ->nullable();
+          $table->timestamp('expires_at')
+              ->nullable();
       }
       );
   }

@@ -19,15 +19,37 @@
                               <label class="col-md-4 control-label">Name</label>
 
                               <div class="col-md-6">
-                                  <input type="test" class="form-control" name="name" value="{{ Auth::user()->name }}" autofocus>
+                                  <input type="text" class="form-control" name="name" value="{{ Auth::user()->name }}" autofocus>
                               </div>
                           </div>
+
+                          @if (!Auth::user()->password_updated)
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Password</label>
+
+                                <div class="col-md-6">
+                                    <input type="password" class="form-control" name="password">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Confirm Password</label>
+
+                                <div class="col-md-6">
+                                    <input type="password" class="form-control" name="confirm_password">
+                                </div>
+                            </div>
+                          @else
+                            <input type="hidden" name="password_updated" value="1">
+                          @endif
+
+                          <br>
 
                           <div class="form-group">
                               <label class="col-md-4 control-label">Address Line 1</label>
 
                               <div class="col-md-6">
-                                  <input type="test" class="form-control" name="address_line_1" value="{{ $data['customer']->address_line_1 }}" autofocus>
+                                  <input type="text" class="form-control" name="address_line_1" value="{{ $data['customer']->address_line_1 }}">
                               </div>
                           </div>
 
@@ -36,7 +58,7 @@
                               <label class="col-md-4 control-label">Address Line 2</label>
 
                               <div class="col-md-6">
-                                  <input type="test" class="form-control" name="address_line_2" value="{{ $data['customer']->address_line_2 }}">
+                                  <input type="text" class="form-control" name="address_line_2" value="{{ $data['customer']->address_line_2 }}">
                               </div>
                           </div>
 

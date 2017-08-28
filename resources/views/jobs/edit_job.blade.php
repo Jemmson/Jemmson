@@ -32,21 +32,21 @@
                             <label class="col-md-4 control-label">Job Start Date</label>
 
                             <div class="col-md-6">
-                                <input type="date" class="form-control" name="agreed_start_date" value="{{ explode(' ', $job->agreed_start_date)[0] }}" autofocus>
+                                <input type="date" class="form-control" name="agreed_start_date" value="{{ explode(' ', $job->agreed_start_date)[0] }}" autofocus required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-4 control-label">Job End Date</label>
 
                             <div class="col-md-6">
-                                <input type="date" class="form-control" name="agreed_end_date" value="{{ explode(' ', $job->agreed_end_date)[0] }}">
+                                <input type="date" class="form-control" name="agreed_end_date" value="{{ explode(' ', $job->agreed_end_date)[0] }}" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-4 control-label">Job Price</label>
 
                             <div class="col-md-6">
-                                <input type="number" class="form-control" name="bid_price"  value="{{ $job->bid_price }}">
+                                <input type="number" class="form-control" name="bid_price"  value="{{ $job->bid_price }}" required>
                             </div>
                         </div>
                         <!-- Save Button -->
