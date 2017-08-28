@@ -80,7 +80,9 @@
         </a>
     </nav>
     </div>
-<div class="container" style="margin: 2em"></div>
+<div class="container" style="margin: 2em">
+    <h1>Jemmson App</h1>
+</div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
