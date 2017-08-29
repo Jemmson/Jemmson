@@ -1,7 +1,14 @@
 Vue.component('home', {
-    props: ['user'],
+  props: ['user'],
 
-    mounted() {
-        //
+  mounted() {
+    //
+  },
+
+  computed: {
+    upperName () {
+      return this.user.name.toUpperCase()
     }
+  }
+
 });
