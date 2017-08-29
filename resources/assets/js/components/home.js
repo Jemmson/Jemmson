@@ -3,10 +3,15 @@ Vue.component('home', {
 
   mounted() {
     //
+
+    axios.get('/api/test')
+      .then(response => {
+        console.log(response.data);
+      });
   },
 
   computed: {
-    upperName () {
+    upperName() {
       return this.user.name.toUpperCase()
     }
   }

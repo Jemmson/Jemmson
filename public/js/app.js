@@ -19517,6 +19517,10 @@ Vue.component('home', {
 
   mounted: function mounted() {
     //
+
+    axios.get('/api/test').then(function (response) {
+      console.log(response.data);
+    });
   },
 
 

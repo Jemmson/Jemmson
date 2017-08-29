@@ -24,6 +24,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+
+        $schedule->command('spark:kpi')->daily();
+
         // $schedule->command('inspire')
         //          ->hourly();
     }
