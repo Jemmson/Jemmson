@@ -63,5 +63,11 @@ class SparkServiceProvider extends ServiceProvider
             ->features([
                 'First', 'Second', 'Third'
             ]);
+
+        Spark::plan('Pro', 'pro-plan')
+            ->price(20)
+            ->features([
+                'First', 'Second', 'Third'
+            ]);
     }
 }
