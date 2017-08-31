@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::get('/home', 'HomeController@show');
+    Route::post('/home', 'HomeController@create');
 
     // contractor routes
     Route::get('/contractor/', 'ContractorController@index');

@@ -20,7 +20,7 @@ class RegistrationContractorTest extends DuskTestCase
         $faker = Factory::create();
         $user_info = [
             'company_name' => $faker->company,
-            'phone' => $faker->phoneNumber,
+            'phone_number' => $faker->phoneNumber,
             'address_line_1' => $faker->streetAddress,
             'city' => $faker->city,
             'state' => "AZ",
@@ -29,20 +29,20 @@ class RegistrationContractorTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user_info) {
             $browser->loginAs(User::find(1))->visit('/furtherInfo')
-                ->type('phone', $user_info['phone'])
+                ->type('phone_number', $user_info['phone_number'])
                 ->type('company_name', $user_info['company_name'])
-                ->type('street', $user_info['address_line_1'])
+                ->type('address_line_1', $user_info['address_line_1'])
                 ->type('city', $user_info['city'])
                 ->type('state', $user_info['state'])
-                ->type('zipcode', $user_info['zip'])
+                ->type('zip', $user_info['zip'])
                 ->check('email_contact')
                 ->check('phone_contact')
                 ->check('sms_text')
+                ->press('submit')
+                ->assertPathIs('/home')
                 ->pause(0);
-//                ->press('submit')
 //                ->assertSee('I am in further Info');
 //                ->pause(5000)
-//                ->assertPathIs('/home');
         });
     }
 }

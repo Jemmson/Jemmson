@@ -17,14 +17,17 @@ class CreateContractorsTable extends Migration
         Schema::create('contractors', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('user_id');
-            $table->boolean('sms_text')->nullable();
-            $table->string('preferred_method_of_contact')->nullable();
+            $table->string('email_method_of_contact')->nullable();
             $table->string('address_line_1')->nullable();
             $table->string('address_line_2')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->string('company_logo_name')->nullable();
+            $table->string('sms_method_of_contact')->nullable();
+            $table->string('phone_method_of_contact')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('company_name')->nullable();
             $table->timestamps();
         });
     }

@@ -13,8 +13,9 @@
 
         <form action="/home" method="post">
 
+            {{ csrf_field() }}
 
-            <input type="hidden" name="userid" value="{{ Auth::user()->id }}">
+            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
 
             <!-- Company Name -->
             <div class="form-group">
@@ -28,15 +29,23 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">Phone Number</label>
                 <div class="col-md-6">
-                    <input type="tel" class="form-control" name="phone" autofocus>
+                    <input type="tel" class="form-control" name="phone_number" autofocus>
                 </div>
             </div>
 
-            <!-- Address -->
+            <!-- Address Line 1 -->
             <div class="form-group">
-                <label class="col-md-4 control-label">Street</label>
+                <label class="col-md-4 control-label">Address Line 1</label>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="street" autofocus>
+                    <input type="text" class="form-control" name="address_line_1" autofocus>
+                </div>
+            </div>
+
+            <!-- Address Line 2 -->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Address Line 2</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="address_line_2" autofocus>
                 </div>
             </div>
 
@@ -60,7 +69,7 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">ZipCode</label>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="zipcode" autofocus>
+                    <input type="text" class="form-control" name="zip" autofocus>
                 </div>
             </div>
 
@@ -68,7 +77,7 @@
             <div class="form-group">
                 <label class="control-label">Please upload a company logo</label>
                 <br>
-                <input id="input-1" type="file" class="file">
+                <input id="input-1" name="file_name" type="file" class="file">
             </div>
 
             <h3>Preferred Method of Contact</h3>
@@ -79,7 +88,7 @@
                         <label class="col-md-4 control-label">Email</label>
 
                         <div class="col-md-6">
-                            <input type="checkbox" name="email_contact" value="email">
+                            <input type="checkbox" name="email_contact">
                         </div>
                     </div>
 
@@ -101,7 +110,8 @@
                 </div>
             </div>
 
-            <button type="submit" name="submit" class="btn btn-default btn-primary" style="margin-top: 1rem">Submit</button>
+            <button type="submit" name="submit" class="btn btn-default btn-primary" style="margin-top: 1rem">Submit
+            </button>
 
         </form>
 

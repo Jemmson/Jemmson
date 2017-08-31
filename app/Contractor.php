@@ -6,6 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contractor extends Model
 {
+    protected $fillable = [
+      'user_id',
+      'email_method_of_contact',
+      'address_line_1',
+      'address_line_2',
+      'city',
+      'state',
+      'zip',
+      'company_logo_name',
+      'sms_method_of_contact',
+      'phone_method_of_contact',
+      'phone_number',
+      'company_name',
+    ];
+
     //
     public function user()
     {
