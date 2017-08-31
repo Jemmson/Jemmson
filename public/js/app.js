@@ -18548,7 +18548,6 @@ module.exports = function(module) {
 /* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
 /*
  |--------------------------------------------------------------------------
  | Laravel Spark Bootstrap
@@ -18567,6 +18566,10 @@ module.exports = function(module) {
 __webpack_require__(265);
 
 __webpack_require__(159);
+
+Spark.forms.register = {
+  usertype: ''
+};
 
 var app = new Vue({
   mixins: [__webpack_require__(266)]
