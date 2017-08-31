@@ -51,6 +51,38 @@ class SparkServiceProvider extends ServiceProvider
      */
     public function booted()
     {
+
+        Spark::validateUsersWith(function () {
+            return [
+                'name' => 'required|max:255',
+//                'usertype' => 'in:contractor,customer',
+                'email' => 'required|email|max:255|unique:users',
+                'password' => 'required|confirmed|min:6',
+                'vat_id' => 'max:50|vat_id',
+                'terms' => 'required|accepted',
+            ];
+        });
+
+//        TODO: I need to figure out how to make usertype insert into the database
+
+//        Spark::createUsersWith(function ($request) {
+//            $user = Spark::user();
+//
+//            $data = $request->all();
+//
+//            $user->forceFill([
+//                'name' => $data['name'],
+//                'email' => $data['email'],
+////                'usertype' => $data['usertype'],
+//                'password' => bcrypt($data['password']),
+//                'last_read_announcements_at' => Carbon::now(),
+//                'trial_ends_at' => Carbon::now()->addDays(Spark::trialDays()),
+//            ])->save();
+//
+//            return $user;
+//        });
+
+
         Spark::useStripe()->noCardUpFront()->trialDays(10);
 
         Spark::freePlan()
