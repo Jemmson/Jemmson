@@ -45,7 +45,7 @@
                         <!-- Login Button -->
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button name="login" type="submit" class="btn btn-primary">
                                     <i class="fa m-r-xs fa-sign-in"></i>Login
                                 </button>
 

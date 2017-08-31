@@ -58,3 +58,8 @@ Route::get('/login/{token}/{job_id}', function($token, $job_id) {
       }
     }
 });
+
+//  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
+Route::get('/furtherInfo', function () {
+    return view('auth.furtherInfo');
+});

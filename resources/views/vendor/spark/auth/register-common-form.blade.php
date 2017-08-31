@@ -1,6 +1,6 @@
 <form class="form-horizontal" role="form">
-    @if (Spark::usesTeams() && Spark::onlyTeamPlans())
-        <!-- Team Name -->
+@if (Spark::usesTeams() && Spark::onlyTeamPlans())
+    <!-- Team Name -->
         <div class="form-group" :class="{'has-error': registerForm.errors.has('team')}" v-if=" ! invitation">
             <label class="col-md-4 control-label">{{ ucfirst(Spark::teamString()) }} Name</label>
 
@@ -13,8 +13,8 @@
             </div>
         </div>
 
-        @if (Spark::teamsIdentifiedByPath())
-            <!-- Team Slug (Only Shown When Using Paths For Teams) -->
+    @if (Spark::teamsIdentifiedByPath())
+        <!-- Team Slug (Only Shown When Using Paths For Teams) -->
             <div class="form-group" :class="{'has-error': registerForm.errors.has('team_slug')}" v-if=" ! invitation">
                 <label class="col-md-4 control-label">{{ ucfirst(Spark::teamString()) }} Slug</label>
 
@@ -30,10 +30,10 @@
                     </span>
                 </div>
             </div>
-        @endif
     @endif
+@endif
 
-    <!-- Name -->
+<!-- Name -->
     <div class="form-group" :class="{'has-error': registerForm.errors.has('name')}">
         <label class="col-md-4 control-label">Name</label>
 
@@ -59,6 +59,23 @@
         </div>
     </div>
 
+    <div class="form-group" :class="{'has-error': registerForm.errors.has('contractor')}">
+        <label class="col-md-4 control-label">Contractor</label>
+
+        <div class="col-md-6">
+            <input type="radio" name="usertype" value="contractor">
+        </div>
+    </div>
+
+    <div class="form-group" :class="{'has-error': registerForm.errors.has('customer')}">
+        <label class="col-md-4 control-label">Customer</label>
+
+        <div class="col-md-6">
+            <input type="radio" name="usertype" value="customer">
+
+        </div>
+    </div>
+
     <!-- Password -->
     <div class="form-group" :class="{'has-error': registerForm.errors.has('password')}">
         <label class="col-md-4 control-label">Password</label>
@@ -77,7 +94,8 @@
         <label class="col-md-4 control-label">Confirm Password</label>
 
         <div class="col-md-6">
-            <input type="password" class="form-control" name="password_confirmation" v-model="registerForm.password_confirmation">
+            <input type="password" class="form-control" name="password_confirmation"
+                   v-model="registerForm.password_confirmation">
 
             <span class="help-block" v-show="registerForm.errors.has('password_confirmation')">
                 @{{ registerForm.errors.get('password_confirmation') }}
@@ -104,7 +122,7 @@
 
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
-                <button class="btn btn-primary" @click.prevent="register" :disabled="registerForm.busy">
+                <button name=register class="btn btn-primary" @click.prevent="register" :disabled="registerForm.busy">
                     <span v-if="registerForm.busy">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
                     </span>
