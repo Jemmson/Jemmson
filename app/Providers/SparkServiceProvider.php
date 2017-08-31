@@ -73,7 +73,7 @@ class SparkServiceProvider extends ServiceProvider
 //            $user->forceFill([
 //                'name' => $data['name'],
 //                'email' => $data['email'],
-////                'usertype' => $data['usertype'],
+//                'usertype' => $data['usertype'],
 //                'password' => bcrypt($data['password']),
 //                'last_read_announcements_at' => Carbon::now(),
 //                'trial_ends_at' => Carbon::now()->addDays(Spark::trialDays()),
