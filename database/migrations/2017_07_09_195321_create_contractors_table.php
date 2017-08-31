@@ -24,6 +24,7 @@ class CreateContractorsTable extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
+            $table->string('company_logo_name')->nullable();
             $table->timestamps();
         });
     }
