@@ -55,7 +55,7 @@ class SparkServiceProvider extends ServiceProvider
         Spark::validateUsersWith(function () {
             return [
                 'name' => 'required|max:255',
-//                'usertype' => 'in:contractor,customer',
+                'usertype' => 'in:contractor,customer',
                 'email' => 'required|email|max:255|unique:users',
                 'password' => 'required|confirmed|min:6',
                 'vat_id' => 'max:50|vat_id',
