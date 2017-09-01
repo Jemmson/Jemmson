@@ -26,8 +26,20 @@ class HomeController extends Controller
      */
     public function show()
     {
+        $user = '';
+//        dd(Auth::user()->id);
+
+//        dd($contracto);
+//        dd($user->first()['user_id']);
+        if (Auth::user()->usertype == 'contractor') {
+            $user = Contractor::first()->where('user_id', Auth::user()->id)->get();
+            $user = $user->first();
+        } else if (Auth::user()->usertype == 'customer') {
+            $user = Customer::first()->where('user_id', Auth::user()->id)->get();
+            $user = $user->first();
+        }
         // this is the home page
-        return view('home');
+        return view('home', compact('user'));
     }
 
     /**

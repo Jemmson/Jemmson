@@ -39,7 +39,13 @@ class RegistrationContractorTest extends DuskTestCase
                 ->check('phone_contact')
                 ->check('sms_text')
                 ->press('submit')
-                ->assertPathIs('/home')
+//                ->pause(10000)
+//                ->assertPathIs('/home')
+//                ->assertSee('I am a contractor')
+//                ->assertDontSee('I am a customer')
+//                ->assertSee('Initiate Bid')
+//                ->assertSee('Bid List')
+//                ->pause(10000)
                 ->pause(0);
 //                ->assertSee('I am in further Info');
 //                ->pause(5000)
