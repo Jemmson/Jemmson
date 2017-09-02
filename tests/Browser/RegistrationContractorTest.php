@@ -47,7 +47,7 @@ class RegistrationContractorTest extends DuskTestCase
 //                ->assertSee('Initiate Bid')
 //                ->assertSee('Bid List')
 //                ->pause(10000)
-                ->pause(50000);
+                ->pause(0);
 //                ->assertSee('I am in further Info');
 //                ->pause(5000)
         });

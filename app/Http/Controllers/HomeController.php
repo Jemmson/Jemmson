@@ -73,6 +73,7 @@ class HomeController extends Controller
                 'company_name' => 'required',
             ]);
 
+//            TODO: need to add functionality for handling images for company logos if a contractor wants to add it
 
             Contractor::create([
                 'user_id' => request('user_id'),
