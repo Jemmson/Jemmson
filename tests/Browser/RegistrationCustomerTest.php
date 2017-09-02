@@ -42,7 +42,6 @@ class RegistrationCustomerTest extends DuskTestCase
                 ->check('sms_method_of_contact')
 //                ->pause(5000)
                 ->press('submit')
-                ->pause(5000)
                 ->assertPathIs('/home');
 //                ->press('submit')
 //                ->assertSee('I am in further Info');

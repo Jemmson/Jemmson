@@ -27,10 +27,7 @@ class HomeController extends Controller
     public function show()
     {
         $user = '';
-//        dd(Auth::user()->id);
 
-//        dd($contracto);
-//        dd($user->first()['user_id']);
         if (Auth::user()->usertype == 'contractor') {
             $user = Contractor::first()->where('user_id', Auth::user()->id)->get();
             $user = $user->first();
@@ -53,7 +50,7 @@ class HomeController extends Controller
 
     public function create(Request $request)
     {
-            // TODO: Need to make the user_id unique and update if the user is already in the table
+        // TODO: Need to make the user_id unique and update if the user is already in the table
 
         if (Auth::user()->usertype == 'contractor') {
 
@@ -62,7 +59,7 @@ class HomeController extends Controller
             // TODO: if sms or phone is selected then a phone number must be present
 
             $this->validate(request(), [
-                'user_id' => 'required|',
+                'user_id' => 'required',
 //            'email_method_of_contact' => 'required|min:2',
 //            'address_line_1' => 'required|min:2',
 //            'address_line_2' => 'required|min:2',
@@ -129,6 +126,8 @@ class HomeController extends Controller
 
 //        Customer::find(Auth::user()->user)
 
-        return view('/home');
+        return redirect()->to('/home');
+
+//        return view('/home');
     }
 }

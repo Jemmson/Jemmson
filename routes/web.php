@@ -21,6 +21,17 @@ Route::group(['middleware' => 'auth'], function () {
 
     //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
     Route::get('/furtherInfo', function () {
+
+
+        // TODO: The code below needs to be deleted when I can figure out how to save the usertype in the datebase
+//      ===============================
+        $user = Auth::user();
+//        $user->usertype = 'contractor';
+        $user->usertype = 'customer';
+        $user->save();
+//        dd($user);
+//      ==============================
+
         return view('auth.furtherInfo');
     });
 
