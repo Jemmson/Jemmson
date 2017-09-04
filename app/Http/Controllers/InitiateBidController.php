@@ -31,8 +31,8 @@ class InitiateBidController extends Controller
         $email = $request->email == '' ? -1 : $request->email;
         $phone = $request->phone == '' ? -1 : $request->phone;
 
-        if($email == -1 && $phone == -1){
-          return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
+        if ($email == -1 && $phone == -1) {
+            return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
         }
 
         // find user
@@ -41,33 +41,33 @@ class InitiateBidController extends Controller
 
         // send psw email
         if (!$user && $email != -1 && $phone != -1) {
-          $user = User::create([
-              'name' => explode('@',$email)[0],
-              'email' => $email,
-              'phone' => $phone,
-              'password_updated' => false,
-              'password' => bcrypt($pass),
-          ]);
-        }elseif (!$user && $phone != -1){ // send psw phone
-          $user = User::create([
-              'name' => $phone,
-              'phone' => $phone,
-              'password_updated' => false,
-              'password' => bcrypt($pass),
-          ]);
-        }elseif (!$user && $email != -1) {
-          $user = User::create([
-              'name' => explode('@',$email)[0],
-              'email' => $email,
-              'password_updated' => false,
-              'password' => bcrypt($pass),
-          ]);
+            $user = User::create([
+                'name' => explode('@', $email)[0],
+                'email' => $email,
+                'phone' => $phone,
+                'password_updated' => false,
+                'password' => bcrypt($pass),
+            ]);
+        } elseif (!$user && $phone != -1) { // send psw phone
+            $user = User::create([
+                'name' => $phone,
+                'phone' => $phone,
+                'password_updated' => false,
+                'password' => bcrypt($pass),
+            ]);
+        } elseif (!$user && $email != -1) {
+            $user = User::create([
+                'name' => explode('@', $email)[0],
+                'email' => $email,
+                'password_updated' => false,
+                'password' => bcrypt($pass),
+            ]);
         }
 
         // create bid
         $job_id = $this->createBid($user->id, $request->jobName);
-        if($job_id == -1){
-          return redirect()->back()->with('error', 'Sorry couldn\'t create the bid, please try again.');
+        if ($job_id == -1) {
+            return redirect()->back()->with('error', 'Sorry couldn\'t create the bid, please try again.');
         }
 
         // generate token and save it
@@ -75,19 +75,19 @@ class InitiateBidController extends Controller
         // generate data for views
         $data = ['email' => $request->email, 'link' => $token->token, 'job_name' => $request->jobName, 'job_id' => $job_id, 'contractor' => Auth::user()->name];
 
-        if($email != -1){
-          //send passwordless email
-          $resp = Mail::to($request->email)
-               ->queue(new PasswordlessBidPageLogin($data)); // no response from queue or send
+        if ($email != -1) {
+            //send passwordless email
+            $resp = Mail::to($request->email)
+                ->queue(new PasswordlessBidPageLogin($data)); // no response from queue or send
         }
 
-        if($phone != -1){
-          // send sms passwordless link
-          session()->put('phone', $phone);
-          SMS::send('sms.passwordlessbidpagelogin', $data, function($sms) {
-            $sms->to(session('phone'));
-          });
-          session()->forget('phone');
+        if ($phone != -1) {
+            // send sms passwordless link
+            session()->put('phone', $phone);
+            SMS::send('sms.passwordlessbidpagelogin', $data, function ($sms) {
+                $sms->to(session('phone'));
+            });
+            session()->forget('phone');
         }
 
         return redirect('/contractor/bid-list');
@@ -97,18 +97,19 @@ class InitiateBidController extends Controller
      * create new job
      * @var [job id]
      */
-    private function createBid($customer_id, $job_name){
-      $job = new Job;
-      $job->contractor_id = Auth::user()->id;
-      $job->customer_id = $customer_id;
-      $job->job_name = $job_name;
+    private function createBid($customer_id, $job_name)
+    {
+        $job = new Job;
+        $job->contractor_id = Auth::user()->id;
+        $job->customer_id = $customer_id;
+        $job->job_name = $job_name;
 
-      try {
-        $job->save();
-        return $job->id;
-      } catch (\Exception $e) {
-        Log::critical('Failed to create a bid: ' . $e);
-        return -1;
-      }
+        try {
+            $job->save();
+            return $job->id;
+        } catch (\Exception $e) {
+            Log::critical('Failed to create a bid: ' . $e);
+            return -1;
+        }
     }
 }
