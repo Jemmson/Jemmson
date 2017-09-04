@@ -29,7 +29,7 @@ class RegistrationContractorTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user_info) {
             $browser->loginAs(User::find(1))->visit('/furtherInfo')
-                ->pause(50000)
+//                ->pause(50000)
                 ->type('phone_number', $user_info['phone_number'])
                 ->type('company_name', $user_info['company_name'])
                 ->type('address_line_1', $user_info['address_line_1'])
@@ -41,13 +41,13 @@ class RegistrationContractorTest extends DuskTestCase
                 ->check('sms_text')
                 ->press('submit')
 //                ->pause(10000)
-//                ->assertPathIs('/home')
+                ->assertPathIs('/home');
 //                ->assertSee('I am a contractor')
 //                ->assertDontSee('I am a customer')
 //                ->assertSee('Initiate Bid')
 //                ->assertSee('Bid List')
 //                ->pause(10000)
-                ->pause(0);
+//                ->pause(50000);
 //                ->assertSee('I am in further Info');
 //                ->pause(5000)
         });

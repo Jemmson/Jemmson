@@ -26,8 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
         // TODO: The code below needs to be deleted when I can figure out how to save the usertype in the datebase
 //      ===============================
         $user = Auth::user();
-//        $user->usertype = 'contractor';
-        $user->usertype = 'customer';
+        $user->usertype = env('USER_TYPE');
         $user->save();
 //        dd($user);
 //      ==============================
