@@ -106,6 +106,25 @@
                             <div class="panel-body">
                                 <div class="col-md-12 panelTop">
                                     <div class="col-md-8">
+                                        <h2>My Sub Contractors</h2>
+                                        <p>Select me to look at your sub contractors</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 panelBottom">
+                                    <a href="">
+                                        <button class="btn btn-default btn-primary">
+                                            My Sub Contractors
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default  panel--styled">
+                            <div class="panel-body">
+                                <div class="col-md-12 panelTop">
+                                    <div class="col-md-8">
                                         <h2>Settings</h2>
                                         <p>Select me to look at your settings</p>
                                     </div>
