@@ -40,7 +40,7 @@ class RegistrationCustomerTest extends DuskTestCase
                 ->check('email_method_of_contact')
                 ->check('phone_method_of_contact')
                 ->check('sms_method_of_contact')
-//                ->pause(5000)
+                ->pause(50000)
                 ->press('submit')
                 ->assertPathIs('/home');
 //                ->press('submit')
