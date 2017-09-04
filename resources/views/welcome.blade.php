@@ -1,101 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Document</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+@extends('spark::layouts.app')
+
+@section('content')
     <style>
-        body, html {
-            background: url('/img/spark-bg.png');
-            background-repeat: repeat;
-            background-size: 300px 200px;
-            height: 100%;
-            margin: 0;
-        }
-
-        .full-height {
-            min-height: 100%;
-        }
-
-        .flex-column {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .flex-fill {
-            flex: 1;
-        }
-
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .links {
-            padding: 1em;
-            text-align: right;
-        }
-
-        .links a {
-            text-decoration: none;
-        }
-
-        .links button {
-            background-color: #3097D1;
-            border: 0;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-            font-family: 'Open Sans';
-            font-size: 14px;
-            font-weight: 600;
-            padding: 15px;
-            text-transform: uppercase;
-            width: 100px;
+        .margins {
+            margin: 1rem 1rem 1rem 1rem;
         }
     </style>
-</head>
-<body>
-<div class="full-height flex-column">
-    <nav class="links">
-        <a href="/login" style="margin-right: 15px;">
-            <button>
-                Login
-            </button>
-        </a>
-
-        <a href="/register">
-            <button>
-                Register
-            </button>
-        </a>
-    </nav>
+    <div class="container text-center">
+        <h1>Jemmson App</h1>
+        <div class="row" style="margin-top: 5rem">
+            <div class="col-md-6">
+                <div class="panel panel-default panel-flush">
+                    <div class="panel-heading">
+                        <h2>Are you a Customer?</h2>
+                    </div>
+                    <div class="panel-body">
+                        <p style="margin: 1rem 1rem 1rem 1rem; font-size: 2rem;">The Jemmson Application can offer you a great way to find a
+                            quality contractor that has a lot of great features.</p>
+                        <ol>
+                            <li style="font-size: 2rem;">Security</li>
+                            <li style="font-size: 2rem;">Job Tracking</li>
+                            <li style="font-size: 2rem;">In app messaging</li>
+                        </ol>
+                        <hr>
+                        <a href="/customerFeatures" class="btn btn-primary" style="margin-bottom: 2rem;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default panel-flush">
+                    <div class="panel-heading">
+                        <h2>Are you a Contractor?</h2>
+                    </div>
+                    <div class="panel-body">
+                        <p style="margin: 1rem 1rem 1rem 1rem; font-size: 2rem;">The Jemmson Application can offer you a great way to find a
+                            quality contractor that has a lot of great features.</p>
+                        <ol>
+                            <li style="font-size: 2rem;">Security</li>
+                            <li style="font-size: 2rem;">Job Tracking</li>
+                            <li style="font-size: 2rem;">In app messaging</li>
+                        </ol>
+                        <hr>
+                        <a href="/contractorFeatures" class="btn btn-primary" style="margin-bottom: 2rem;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-<div class="container" style="margin: 2em">
-    <h1>Jemmson App</h1>
-</div>
-
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-            integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
-            crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
-</body>
-</html>
-
+@endsection

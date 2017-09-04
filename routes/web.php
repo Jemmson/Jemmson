@@ -17,6 +17,14 @@ Route::get('/', 'WelcomeController@show');
 Route::get('login', 'Auth\LoginController@show');
 Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
 
+Route::get('/contractorFeatures/', function(){
+    return view('/public.contractorFeatures');
+});
+
+Route::get('/customerFeatures/', function(){
+    return view('/public.customerFeatures');
+});
+
 Route::group(['middleware' => 'auth'], function () {
 
     //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');

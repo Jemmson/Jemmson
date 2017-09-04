@@ -130,7 +130,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12 panelBottom">
-                                    <a href="">
+                                    <a href="/settings">
                                         <button class="btn btn-default btn-primary">
                                             Settings
                                         </button>
