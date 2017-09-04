@@ -25,11 +25,48 @@ Route::get('/customerFeatures/', function(){
     return view('/public.customerFeatures');
 });
 
+Route::get('/public/customerJobTracking', function(){
+    return view('/public.customerJobTracking');
+});
+
+Route::get('/public/customerSecurity', function(){
+    return view('/public.customerSecurity');
+});
+
+
+Route::get('/public/customerInvoiceManagement', function(){
+    return view('/public.customerInvoiceManagement');
+});
+
+
+Route::get('/public/customerCommunication', function(){
+    return view('/public.customerCommunication');
+});
+
+
+Route::get('/public/contractorJobTracking', function(){
+    return view('/public.contractorJobTracking');
+});
+
+
+Route::get('/public/contractorSecurity', function(){
+    return view('/public.contractorSecurity');
+});
+
+
+Route::get('/public/contractorInvoiceManagement', function(){
+    return view('/public.contractorInvoiceManagement');
+});
+
+
+Route::get('/public/contractorCommunication', function(){
+    return view('/public.contractorCommunication');
+});
+
 Route::group(['middleware' => 'auth'], function () {
 
     //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
     Route::get('/furtherInfo', function () {
-
 
         // TODO: The code below needs to be deleted when I can figure out how to save the usertype in the datebase
 //      ===============================
