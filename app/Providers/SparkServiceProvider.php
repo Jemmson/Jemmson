@@ -65,11 +65,14 @@ class SparkServiceProvider extends ServiceProvider
 
 //        TODO: I need to figure out how to make usertype insert into the database
 
-//        Spark::createUsersWith(function ($request) {
-//            $user = Spark::user();
-//
-//            $data = $request->all();
-//
+
+        Spark::createUsersWith(function ($request) {
+            $user = Spark::user();
+
+            $data = $request->all();
+
+            dd($data);
+
 //            $user->forceFill([
 //                'name' => $data['name'],
 //                'email' => $data['email'],
@@ -80,7 +83,7 @@ class SparkServiceProvider extends ServiceProvider
 //            ])->save();
 //
 //            return $user;
-//        });
+        });
 
 
         Spark::useStripe()->noCardUpFront()->trialDays(10);
