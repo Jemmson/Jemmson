@@ -36,8 +36,9 @@ class RegistrationTest extends DuskTestCase
 //                ->pause(1000)
                 ->press('register')
 //                ->assertSee('I am in further Info');
-//                ->pause(5000)
-                ->assertPathIs('/furtherInfo');
+                ->pause(1000)
+                ->assertPathIs('/furtherInfo')
+                ->pause(0);
         });
     }
 }

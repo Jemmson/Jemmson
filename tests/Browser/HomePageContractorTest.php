@@ -25,7 +25,7 @@ class HomePageContractorTest extends DuskTestCase
                     ->assertSee('Ratings')
                     ->assertSee('Settings')
                     ->assertDontSee('I am a customer')
-                    ->pause(5000);
+                    ->pause(0);
         });
     }
 }

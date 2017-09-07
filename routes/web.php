@@ -11,6 +11,8 @@
 |
 */
 
+use App\User;
+
 Route::get('/', 'WelcomeController@show');
 
 // login routes
@@ -70,9 +72,19 @@ Route::group(['middleware' => 'auth'], function () {
 
         // TODO: The code below needs to be deleted when I can figure out how to save the usertype in the datebase
 //      ===============================
-        $user = Auth::user();
-        $user->usertype = env('USER_TYPE');
-        $user->save();
+        if(Auth::User()->id == 61){
+            $user = User::find(61);
+            $user->usertype = 'customer';
+            $user->save();
+        } else if (Auth::User()->id == 1) {
+            $user = User::find(1);
+            $user->usertype = 'contractor';
+            $user->save();
+        } else {
+            $user = Auth::user();
+            $user->usertype = env('USER_TYPE');
+            $user->save();
+        }
 //        dd($user);
 //      ==============================
 

@@ -31,6 +31,7 @@ class RegistrationCustomerTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user_info) {
             $browser->loginAs(User::find(61))
                 ->visit('/furtherInfo')
+                ->pause(10000)
                 ->type('phone_number', $user_info['phone_number'])
                 ->type('address_line_1', $user_info['address_line_1'])
                 ->type('city', $user_info['city'])
@@ -40,7 +41,7 @@ class RegistrationCustomerTest extends DuskTestCase
                 ->check('email_method_of_contact')
                 ->check('phone_method_of_contact')
                 ->check('sms_method_of_contact')
-                ->pause(50000)
+                ->pause(0)
                 ->press('submit')
                 ->assertPathIs('/home');
 //                ->press('submit')
