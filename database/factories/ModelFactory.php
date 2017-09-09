@@ -28,13 +28,17 @@ $factory->define(App\Contractor::class, function (Faker\Generator $faker) {
         'user_id' => function () {
             return factory(App\User::class)->create()->id;
         },
-        'sms_text' => $faker->boolean,
-        'preferred_method_of_contact' => $faker->word,
+        'email_method_of_contact' => 'on',
         'address_line_1' => $faker->streetAddress,
         'address_line_2' => $faker->word,
         'city' => $faker->city,
         'state' => 'AZ',
         'zip' => $faker->postcode,
+        'company_logo_name' => $faker->word,
+        'sms_method_of_contact' => 'on',
+        'phone_method_of_contact' => 'on',
+        'phone_number' => $faker->phoneNumber,
+        'company_name' => $faker->word,
     ];
 });
 
@@ -43,13 +47,16 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
         'user_id' => function () {
             return factory(App\User::class)->create()->id;
         },
-        'sms_text' => $faker->boolean,
-        'preferred_method_of_contact' => $faker->word,
+        'email_method_of_contact' => 'on',
         'address_line_1' => $faker->streetAddress,
         'address_line_2' => $faker->word,
         'city' => $faker->city,
         'state' => 'AZ',
         'zip' => $faker->postcode,
+        'notes' => $faker->paragraph,
+        'phone_method_of_contact' => 'on',
+        'sms_method_of_contact' => 'on',
+        'phone_number' => $faker->phoneNumber,
     ];
 });
 
