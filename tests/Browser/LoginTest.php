@@ -1,9 +1,11 @@
 <?php
 
 namespace Tests\Browser;
-use App\Contractor;
+
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
+use App\Contractor;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class LoginTest extends DuskTestCase
@@ -15,18 +17,19 @@ class LoginTest extends DuskTestCase
      */
     public function testThatLogInElementsAreThere()
     {
+        $contractor = factory(Contractor::class)->create();
+
         $user = User::find($contractor->user_id);
         $user->usertype = "contractor";
         $user->save();
 
-        $this->browse(function (Browser $browser) use ($faker) {
+        $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
-                ->type('username', $faker->email)
+                ->type('username', $user->email)
                 ->type('password', 'secret')
                 ->press('login')
-                ->pause(5000)
-                ->assertPathIs('/home')
-                ->pause(0);
+                ->pause(0)
+                ->assertPathIs('/home');
         });
     }
 }
