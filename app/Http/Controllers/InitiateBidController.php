@@ -27,10 +27,11 @@ class InitiateBidController extends Controller
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
-        // look to see if customer is in the db
+        // look to see if request fields have been filled out
         $email = $request->email == '' ? -1 : $request->email;
         $phone = $request->phone == '' ? -1 : $request->phone;
 
+        // redirect back to the initiate bid page if they were missed
         if ($email == -1 && $phone == -1) {
             return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
         }
