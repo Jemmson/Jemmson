@@ -22,7 +22,7 @@ class InitiateBidTest extends DuskTestCase
         $job = [
             'name' => $faker->name,
             'email' => $faker->email,
-            'phone' => $faker->phoneNumber
+            'phone' => $faker->e164PhoneNumber
         ];
 
         $this->browse(function (Browser $browser) use ($job) {
@@ -33,7 +33,7 @@ class InitiateBidTest extends DuskTestCase
                 ->type('email', $job['email'])
                 ->type('phone', $job['phone'])
                 ->press('submit')
-                ->pause(0)
+                ->pause(3000)
                 ->assertPathIs('/contractor/bid-list');
         });
     }
