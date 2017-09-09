@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique()->nullable();
             $table->string('password', 60);
-            $table->boolean('password_updated');
             $table->rememberToken();
             $table->text('photo_url')->nullable();
             $table->tinyInteger('uses_two_factor_auth')->default(0);
@@ -42,6 +41,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('last_read_announcements_at')->nullable();
             $table->boolean('password_updated')->default(1);
+            $table->string('usertype');
             $table->timestamps();
         });
     }
