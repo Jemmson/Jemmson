@@ -139,6 +139,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default  panel--styled">
+                            <div class="panel-body">
+                                <div class="col-md-12 panelTop">
+                                    <div class="col-md-8">
+                                        <h2>Previous Bids</h2>
+                                        <p>Select me to look at your previous bids</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 panelBottom">
+                                    <a href="/previousbids">
+                                        <button class="btn btn-default btn-primary">
+                                            Previous Bids
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
