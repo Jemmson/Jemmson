@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Psr\Log\NullLogger;
 use SimpleSoftwareIO\SMS\Facades\SMS;
-
+use Swift_Events_TransportExceptionEventTest;
 use App\User;
 use App\Job;
 use App\Mail\PasswordlessBidPageLogin;
@@ -19,7 +21,7 @@ class InitiateBidController extends Controller
     //
     public function index()
     {
-        return view('/contractors/initiateBid');
+        return view('initiate-bid');
     }
 
     public function send(Request $request)
@@ -27,61 +29,46 @@ class InitiateBidController extends Controller
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
-        // look to see if request fields have been filled out
-        $email = $request->email == '' ? -1 : $request->email;
-        $phone = $request->phone == '' ? -1 : $request->phone;
+        $email = $request->email;
+        $phone = $request->phone;
+        $jobName = $request->jobName;
 
-        // redirect back to the initiate bid page if they were missed
-        if ($email == -1 && $phone == -1) {
-            return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
-        }
+        $this->validateInput($email, $phone);
 
         // find user
-        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
-        $pass = RandomPasswordService::randomPassword();
+        $user = $this->customerExistsInTheDatabase($email, $phone);
 
-        // send psw email
-        if (!$user && $email != -1 && $phone != -1) {
-            $user = User::create([
-                'name' => explode('@', $email)[0],
-                'email' => $email,
-                'phone' => $phone,
-                'password_updated' => false,
-                'password' => bcrypt($pass),
-            ]);
-        } elseif (!$user && $phone != -1) { // send psw phone
-            $user = User::create([
-                'name' => $phone,
-                'phone' => $phone,
-                'password_updated' => false,
-                'password' => bcrypt($pass),
-            ]);
-        } elseif (!$user && $email != -1) {
-            $user = User::create([
-                'name' => explode('@', $email)[0],
-                'email' => $email,
-                'password_updated' => false,
-                'password' => bcrypt($pass),
-            ]);
+        if ($user == false) {
+            $user = $this->createNewUser($email, $phone);
         }
 
-        // create bid
+        // create a bid
         $job_id = $this->createBid($user->id, $request->jobName);
-        if ($job_id == -1) {
-            return redirect()->back()->with('error', 'Sorry couldn\'t create the bid, please try again.');
-        }
 
         // generate token and save it
         $token = $user->generateToken(true);
-        // generate data for views
-        $data = ['email' => $request->email, 'link' => $token->token, 'job_name' => $request->jobName, 'job_id' => $job_id, 'contractor' => Auth::user()->name];
 
+        // generate data for views
+        $data = ['email' => $email, 'link' => $token->token, 'job_name' => $jobName, 'job_id' => $job_id, 'contractor' => Auth::user()->name];
+
+        $this->sendEmail($data, $email);
+
+        $this->sendText($data, $phone);
+
+        return redirect('/bid-list');
+    }
+
+    public function sendEmail($data, $email)
+    {
         if ($email != -1) {
             //send passwordless email
-            $resp = Mail::to($request->email)
+            $resp = Mail::to($email)
                 ->queue(new PasswordlessBidPageLogin($data)); // no response from queue or send
         }
+    }
 
+    public function sendText($data, $phone)
+    {
         if ($phone != -1) {
             // send sms passwordless link
             session()->put('phone', $phone);
@@ -90,15 +77,81 @@ class InitiateBidController extends Controller
             });
             session()->forget('phone');
         }
+    }
 
-        return redirect('/contractor/bid-list');
+    public function createNewUser($email, $phone)
+    {
+        if ($email == -1)
+            $email = NULL;
+
+        if ($phone == -1)
+            $phone = NULL;
+
+        $pass = RandomPasswordService::randomPassword();
+
+        return User::create([
+            'name' => explode('@', $email)[0],
+            'email' => $email,
+            'phone' => $phone,
+            'password_updated' => false,
+            'password' => bcrypt($pass),
+        ]);
+
+    }
+
+    public function customerExistsInTheDatabase($email, $phone)
+    {
+        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        $result = count($user);
+
+        if ($result === 1) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
+
+    public function validateInput($email, $phone)
+    {
+        // look to see if request fields have been filled out
+        $email = $email == '' ? -1 : $email;
+        $phone = $phone == '' ? -1 : $phone;
+
+        // TODO: need to handle this error (1/1) Swift_RfcComplianceException Address in mailbox given [] does not comply with RFC 2822, 3.6.2. when malformed email is present.
+
+        // redirect back to the initiate bid page if they were missed
+        if ($email == -1 && $phone == -1) {
+            try {
+//                dd('there was an error');
+//                return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
+//                return redirect()->action('InitiateBidController@index');
+                return view('initiate-bid');
+            } catch (\Swift_RfcComplianceException $e) {
+                dd($e);
+            }
+        }
+
+//        $rules = array(
+//            'phone' => 'required_without_all:email',
+//            'email' => 'required_without_all:phone',
+//        );
+//        $validator = Validator::make($request->all(), $rules);
+//
+//        if ($validator->fails()) {
+////            dd('validator fails');
+//            dd($validator);
+//            return redirect('initiate-bid')
+//                ->withErrors($validator)
+//                ->withInput();
+//        }
+
     }
 
     /**
      * create new job
      * @var [job id]
      */
-    private function createBid($customer_id, $job_name)
+    public function createBid($customer_id, $job_name)
     {
         $job = new Job;
         $job->contractor_id = Auth::user()->id;
@@ -110,7 +163,7 @@ class InitiateBidController extends Controller
             return $job->id;
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e);
-            return -1;
+            return redirect()->back()->with('error', 'Sorry couldn\'t create the bid, please try again.');
         }
     }
 }

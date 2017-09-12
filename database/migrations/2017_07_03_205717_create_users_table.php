@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique()->nullable();
             $table->string('password', 60);
-            $table->boolean('password_updated');
             $table->rememberToken();
             $table->text('photo_url')->nullable();
             $table->tinyInteger('uses_two_factor_auth')->default(0);
@@ -37,6 +36,7 @@ class CreateUsersTable extends Migration
             $table->string('billing_state')->nullable();
             $table->string('billing_zip', 25)->nullable();
             $table->string('billing_country', 2)->nullable();
+            $table->string('usertype')->nullable();
 //            $table->string('billing_country', 50)->nullable();
             $table->text('extra_billing_information')->nullable();
             $table->timestamp('trial_ends_at')->nullable();

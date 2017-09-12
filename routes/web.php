@@ -35,31 +35,25 @@ Route::get('/public/customerSecurity', function(){
     return view('/public.customerSecurity');
 });
 
-
 Route::get('/public/customerInvoiceManagement', function(){
     return view('/public.customerInvoiceManagement');
 });
-
 
 Route::get('/public/customerCommunication', function(){
     return view('/public.customerCommunication');
 });
 
-
 Route::get('/public/contractorJobTracking', function(){
     return view('/public.contractorJobTracking');
 });
-
 
 Route::get('/public/contractorSecurity', function(){
     return view('/public.contractorSecurity');
 });
 
-
 Route::get('/public/contractorInvoiceManagement', function(){
     return view('/public.contractorInvoiceManagement');
 });
-
 
 Route::get('/public/contractorCommunication', function(){
     return view('/public.contractorCommunication');
@@ -94,18 +88,28 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@show');
     Route::post('/home', 'HomeController@create');
 
+    // common routes
+    Route::get('/initiate-bid', 'InitiateBidController@index');
+    Route::post('/initiate-bid', 'InitiateBidController@send');
+    Route::get('/bid-list', 'BidListController@contractorIndex');
+    Route::get('/settings', 'Controller@create');
+    Route::get('/invoices', 'Controller@create');
+    Route::get('/current-job', 'Controller@create');
+    Route::get('/payments-and-review', 'Controller@create');
+    Route::get('/my-contractors', 'Controller@create');
+
     // contractor routes
-    Route::get('/contractor/', 'ContractorController@index');
-    Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
-    Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
-    Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
+//    Route::get('/contractor/', 'ContractorController@index');
+//    Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
+//    Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
+//    Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
 
 
     // customer routes
-    Route::get('/customer/bid-list', 'BidListController@customerIndex');
-    Route::get('/customer/check', 'CustomerController@checkCustomerData');
-    Route::resource('/customer', 'CustomerController');
-    Route::resource('/job', 'JobController');
+//    Route::get('/customer/bid-list', 'BidListController@customerIndex');
+//    Route::get('/customer/check', 'CustomerController@checkCustomerData');
+//    Route::resource('/customer', 'CustomerController');
+//    Route::resource('/job', 'JobController');
 }
 );
 

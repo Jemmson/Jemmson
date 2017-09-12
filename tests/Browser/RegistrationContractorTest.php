@@ -5,8 +5,10 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Faker\Factory;
 use App\User;
+use App\Contractor;
 
 class RegistrationContractorTest extends DuskTestCase
 {
@@ -52,4 +54,50 @@ class RegistrationContractorTest extends DuskTestCase
                 ->pause(0);
         });
     }
+
+//    public function testPikeShawnContractor()
+//    {
+//        $faker = Factory::create();
+//        $user_info = [
+//            'company_name' => $faker->company,
+//            'phone_number' => '480.703.4902',
+//            'address_line_1' => $faker->streetAddress,
+//            'city' => $faker->city,
+//            'state' => "AZ",
+//            'zip' => "85283",
+//        ];
+//
+//        $contractor = factory(Contractor::class)->create();
+//
+//        $user = User::find($contractor->user_id);
+//        $user->usertype = "contractor";
+//        $user->save();
+//
+//        dd();
+//
+//        $this->browse(function (Browser $browser) use ($user_info) {
+//            $browser->loginAs(User::find(1))->visit('/furtherInfo')
+////                ->pause(50000)
+//                ->type('phone_number', $user_info['phone_number'])
+//                ->type('company_name', $user_info['company_name'])
+//                ->type('address_line_1', $user_info['address_line_1'])
+//                ->type('city', $user_info['city'])
+//                ->type('state', $user_info['state'])
+//                ->type('zip', $user_info['zip'])
+//                ->check('email_contact')
+//                ->check('phone_contact')
+//                ->check('sms_text')
+//                ->press('submit')
+////                ->pause(10000)
+//                ->assertPathIs('/home')
+////                ->assertSee('I am a contractor')
+////                ->assertDontSee('I am a customer')
+////                ->assertSee('Initiate Bid')
+////                ->assertSee('Bid List')
+////                ->pause(10000)
+////                ->pause(50000);
+////                ->assertSee('I am in further Info');
+//                ->pause(0);
+//        });
+//    }
 }

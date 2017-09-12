@@ -28,7 +28,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12 panelBottom">
-                                    <a href="/contractor/initiate-bid">
+                                    <a href="/initiate-bid">
                                         <button class="btn btn-default btn-primary">
                                             Initiate Bid
                                         </button>
