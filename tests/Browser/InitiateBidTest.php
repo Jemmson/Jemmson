@@ -51,10 +51,6 @@ class InitiateBidTest extends DuskTestCase
                 ->press('submit')
 //                ->pause(0)
                 ->assertPathIs('/bid-list');
-//                ->assertSee($job['name'])
-//                ->assertSee($job['email'])
-//                ->assertSee($job['phone'])
-//                ->assertSee('initiated');
         });
 //        dd($user);
     }

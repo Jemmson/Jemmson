@@ -30,6 +30,7 @@ class LoginTest extends DuskTestCase
 //                ->pause(5000)
                 ->press('login')
                 ->pause(50000)
+                ->pause(0)
                 ->assertPathIs('/home');
         });
     }
