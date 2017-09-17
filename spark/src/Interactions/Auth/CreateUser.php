@@ -60,6 +60,7 @@ class CreateUser implements Contract
             'password' => 'required|confirmed|min:'.Spark::minimumPasswordLength(),
             'vat_id' => 'nullable|max:50|vat_id',
             'terms' => 'required|accepted',
+            'usertype' => 'required'
         ];
     }
 

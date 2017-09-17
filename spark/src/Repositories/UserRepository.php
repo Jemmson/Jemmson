@@ -83,6 +83,7 @@ class UserRepository implements UserRepositoryContract
             'password' => bcrypt($data['password']),
             'last_read_announcements_at' => Carbon::now(),
             'trial_ends_at' => Carbon::now()->addDays(Spark::trialDays()),
+            'usertype' => $data['usertype'],
         ])->save();
 
         return $user;

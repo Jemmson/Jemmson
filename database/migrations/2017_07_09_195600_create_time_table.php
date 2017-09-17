@@ -33,8 +33,6 @@ class CreateTimeTable extends Migration
      */
     public function down()
     {
-        Schema::drop('time', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('time');
     }
 }
