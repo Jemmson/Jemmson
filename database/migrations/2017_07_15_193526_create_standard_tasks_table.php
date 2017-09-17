@@ -31,6 +31,6 @@ class CreateStandardTasksTable extends Migration
     public function down()
     {
         //
-        Schema::down('standardTasks');
+        Schema::drop('standardTasks');
     }
 }

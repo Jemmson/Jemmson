@@ -32,6 +32,6 @@ class CreateJobTaskTable extends Migration
     public function down()
     {
         //
-        Schema::down('job_task');
+        Schema::drop('job_task');
     }
 }

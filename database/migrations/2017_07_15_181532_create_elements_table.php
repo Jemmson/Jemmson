@@ -35,8 +35,6 @@ class CreateElementsTable extends Migration
     public function down()
     {
         //
-        Schema::down('elements', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('elements');
     }
 }

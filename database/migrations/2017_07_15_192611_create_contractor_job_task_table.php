@@ -35,8 +35,6 @@ class CreateContractorJobTaskTable extends Migration
     public function down()
     {
         //
-        Schema::down('contractor_job_task', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('contractor_job_task');
     }
 }

@@ -33,8 +33,6 @@ class CreateFeedbackTable extends Migration
     public function down()
     {
         //
-        Schema::drop('feedback', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('feedback');
     }
 }

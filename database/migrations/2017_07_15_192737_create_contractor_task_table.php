@@ -34,6 +34,6 @@ class CreateContractorTaskTable extends Migration
     public function down()
     {
         //
-        Schema::down('contractor_task');
+        Schema::drop('contractor_task');
     }
 }

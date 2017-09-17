@@ -41,7 +41,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('last_read_announcements_at')->nullable();
             $table->boolean('password_updated')->default(1);
-            $table->string('usertype');
+            $table->string('usertype')->default('customer');
             $table->timestamps();
         });
     }
