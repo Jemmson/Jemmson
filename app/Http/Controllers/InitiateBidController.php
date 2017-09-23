@@ -87,12 +87,12 @@ class InitiateBidController extends Controller
 
     public function sendText($data, $phone)
     {
-            // send sms passwordless link
-            session()->put('phone', $phone);
-            SMS::send('sms.passwordlessbidpagelogin', $data, function ($sms) {
-                $sms->to(session('phone'));
-            });
-            session()->forget('phone');
+        // send sms passwordless link
+        session()->put('phone', $phone);
+        SMS::send('sms.passwordlessbidpagelogin', $data, function ($sms) {
+            $sms->to(session('phone'));
+        });
+        session()->forget('phone');
     }
 
     public function createNewUser($email, $phone)
