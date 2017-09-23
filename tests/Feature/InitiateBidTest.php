@@ -15,7 +15,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class InitiateBidTest extends TestCase
 {
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
 
     /** @test */
     public function sending_an_email_if_the_customer_is_in_the_database()
@@ -214,7 +214,7 @@ class InitiateBidTest extends TestCase
         $email = 'pike.shawn@gmail.com';
         $token = $faker->word;
         $jobName = $faker->word;
-        $job_id = $faker->numberBetween(1,99999);
+        $job_id = $faker->numberBetween(1, 99999);
 
         $contractor = factory(Contractor::class)->create();
         $user = User::find($contractor->user_id);
@@ -244,12 +244,12 @@ class InitiateBidTest extends TestCase
         $email = 'pike.shawn@gmail.com';
         $token = $faker->word;
         $jobName = $faker->word;
-        $job_id = $faker->numberBetween(1,99999);
+        $job_id = $faker->numberBetween(1, 99999);
 
         $contractor = factory(Contractor::class)->create();
         $user = User::find($contractor->user_id);
         $user->usertype = "contractor";
-        $user->phone = '480.703.4902';
+        $user->phone = '4807034902';
         $user->save();
         $this->actingAs($user);
 
@@ -263,7 +263,18 @@ class InitiateBidTest extends TestCase
             'contractor' => $user->name
         ];
 
-        $ib->sendText($data, $email);
+        $ib->sendText($data, $user->phone);
+
+    }
+
+    /** @test */
+    public function job_name_creation() {
+
+        $ib = new InitiateBidController;
+
+        $user = $this->creating_a_customer();
+
+        $this->assertNotEmpty($ib->jobName($user));
 
     }
 
