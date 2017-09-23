@@ -1,7 +1,8 @@
 @extends('spark::layouts.app')
 
 @section('content')
-    <home :user="user" inline-template>
+
+    @if(Auth::user()->usertype == 'contractor')
         <div class="container">
             <!-- Application Dashboard -->
             <div class="row">
@@ -42,5 +43,8 @@
                 </div>
             </div>
         </div>
-    </home>
+    @elseif(Auth::user()->usertype == 'customer')
+
+    @endif
+
 @endsection

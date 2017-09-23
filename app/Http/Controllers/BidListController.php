@@ -19,7 +19,7 @@ class BidListController extends Controller
                 ['id' => 65, 'jobName' => 'Restaurant #2 Work - Joe', 'status' => 'pending', 'price' => 547.00, 'tasksCompleted' => 3,  'totalTasks'  => 6, 'completionDate' => '09/16/2028'],
                 ['id' => 5467, 'jobName' => 'Backyard Work - Sarah', 'status' => 'initiated', 'price' => 346.99, 'tasksCompleted' => 0,  'totalTasks'  => 1, 'completionDate' => '12/01/2019']
               ];
-      return view('/contractors/bidlist')->with(['bids' => $bids]);
+      return view('/bid-list')->with(['bids' => $bids]);
 
   }
 

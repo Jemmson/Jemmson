@@ -34,9 +34,10 @@ class RegistrationTest extends DuskTestCase
                 ->type('password_confirmation', 'asdqwe')
                 ->check('terms')
 //                ->pause(1000)
+//                ->pause(10000)
                 ->press('register')
 //                ->assertSee('I am in further Info');
-                ->pause(1000)
+//                ->pause(10000)
                 ->assertPathIs('/furtherInfo')
                 ->pause(0);
         });

@@ -26,7 +26,6 @@ $factory->define(App\Contractor::class, function (Faker\Generator $faker) {
         'user_id' => function () {
             return factory(App\User::class)->create()->id;
         },
-        'sms_text' => $faker->boolean,
         'email_method_of_contact' => 'on',
         'address_line_1' => $faker->streetAddress,
         'address_line_2' => $faker->word,
@@ -46,8 +45,6 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
         'user_id' => function () {
             return factory(App\User::class)->create()->id;
         },
-        'sms_text' => $faker->boolean,
-        'preferred_method_of_contact' => $faker->word,
         'email_method_of_contact' => 'on',
         'address_line_1' => $faker->streetAddress,
         'address_line_2' => $faker->word,
