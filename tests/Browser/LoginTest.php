@@ -7,9 +7,13 @@ use Laravel\Dusk\Browser;
 use App\Contractor;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LoginTest extends DuskTestCase
 {
+
+    use RefreshDatabase;
+
     /**
      * A Dusk test example.
      *
@@ -29,7 +33,7 @@ class LoginTest extends DuskTestCase
                 ->type('password', 'secret')
 //                ->pause(5000)
                 ->press('login')
-                ->pause(50000)
+                ->pause(0)
                 ->pause(0)
                 ->assertPathIs('/home');
         });
