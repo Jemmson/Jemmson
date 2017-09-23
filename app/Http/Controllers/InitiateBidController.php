@@ -29,14 +29,27 @@ class InitiateBidController extends Controller
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
+//        dd($request->email);
+
         $email = $request->email;
         $phone = $request->phone;
         $jobName = $request->jobName;
 
-        $this->validateInput($email, $phone);
+        if (empty($email) && empty($phone)) {
+            return redirect('initiate-bid');
+        }
+
+        if (!empty($email)) {
+            $this->validate(request(), ['email' => 'email']);
+        }
+
+        if (!empty($phone)) {
+            $this->validate(request(), ['phone' => 'min:7|max:10']);
+        }
 
         // find user
         $user = $this->customerExistsInTheDatabase($email, $phone);
+
 
         if ($user == false) {
             $user = $this->createNewUser($email, $phone);
@@ -45,46 +58,49 @@ class InitiateBidController extends Controller
         // create a bid
         $job_id = $this->createBid($user->id, $request->jobName);
 
+
         // generate token and save it
         $token = $user->generateToken(true);
+
 
         // generate data for views
         $data = ['email' => $email, 'link' => $token->token, 'job_name' => $jobName, 'job_id' => $job_id, 'contractor' => Auth::user()->name];
 
-        $this->sendEmail($data, $email);
 
-        $this->sendText($data, $phone);
+        if (!empty($email)) {
+            $this->sendEmail($data, $email);
+        }
+
+        if (!empty($phone)) {
+            $this->sendText($data, $phone);
+        }
 
         return redirect('/bid-list');
     }
 
     public function sendEmail($data, $email)
     {
-        if ($email != -1) {
-            //send passwordless email
-            $resp = Mail::to($email)
-                ->queue(new PasswordlessBidPageLogin($data)); // no response from queue or send
-        }
+        //send passwordless email
+        $resp = Mail::to($email)
+            ->queue(new PasswordlessBidPageLogin($data)); // no response from queue or send
     }
 
     public function sendText($data, $phone)
     {
-        if ($phone != -1) {
             // send sms passwordless link
             session()->put('phone', $phone);
             SMS::send('sms.passwordlessbidpagelogin', $data, function ($sms) {
                 $sms->to(session('phone'));
             });
             session()->forget('phone');
-        }
     }
 
     public function createNewUser($email, $phone)
     {
-        if ($email == -1)
+        if (empty($email))
             $email = NULL;
 
-        if ($phone == -1)
+        if (empty($phone))
             $phone = NULL;
 
         $pass = RandomPasswordService::randomPassword();
@@ -111,41 +127,6 @@ class InitiateBidController extends Controller
         }
     }
 
-    public function validateInput($email, $phone)
-    {
-        // look to see if request fields have been filled out
-        $email = $email == '' ? -1 : $email;
-        $phone = $phone == '' ? -1 : $phone;
-
-        // TODO: need to handle this error (1/1) Swift_RfcComplianceException Address in mailbox given [] does not comply with RFC 2822, 3.6.2. when malformed email is present.
-
-        // redirect back to the initiate bid page if they were missed
-        if ($email == -1 && $phone == -1) {
-            try {
-//                dd('there was an error');
-//                return redirect()->back()->with('error', __('validation.missing.2', ['val1' => 'email', 'val2' => 'phone']));
-//                return redirect()->action('InitiateBidController@index');
-                return view('initiate-bid');
-            } catch (\Swift_RfcComplianceException $e) {
-                dd($e);
-            }
-        }
-
-//        $rules = array(
-//            'phone' => 'required_without_all:email',
-//            'email' => 'required_without_all:phone',
-//        );
-//        $validator = Validator::make($request->all(), $rules);
-//
-//        if ($validator->fails()) {
-////            dd('validator fails');
-//            dd($validator);
-//            return redirect('initiate-bid')
-//                ->withErrors($validator)
-//                ->withInput();
-//        }
-
-    }
 
     /**
      * create new job
