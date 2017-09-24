@@ -62,28 +62,11 @@ Route::get('/public/contractorCommunication', function(){
 Route::group(['middleware' => 'auth'], function () {
 
     //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
-    Route::get('/furtherInfo', function () {
-
-        // TODO: The code below needs to be deleted when I can figure out how to save the usertype in the datebase
-//      ===============================
-        if(Auth::User()->id == 61){
-            $user = User::find(61);
-            $user->usertype = 'customer';
-            $user->save();
-        } else if (Auth::User()->id == 1) {
-            $user = User::find(1);
-            $user->usertype = 'contractor';
-            $user->save();
-        } else {
-            $user = Auth::user();
-            $user->usertype = env('USER_TYPE');
-            $user->save();
+    Route::get(
+        '/furtherInfo', function () {
+            return view('auth.furtherInfo');
         }
-//        dd($user);
-//      ==============================
-
-        return view('auth.furtherInfo');
-    });
+    );
 
     Route::get('/home', 'HomeController@show');
     Route::post('/home', 'HomeController@create');
