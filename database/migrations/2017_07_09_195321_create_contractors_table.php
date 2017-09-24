@@ -16,7 +16,7 @@ class CreateContractorsTable extends Migration
         // this table keeps track of all of the users that are contractors
         Schema::create('contractors', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('user_id')->unique();
+            $table->integer('user_id')->unsigned(); // NOTICE: deleted unique since it will not work with the many relationship
             $table->string('email_method_of_contact')->nullable();
             $table->string('address_line_1')->nullable();
             $table->string('address_line_2')->nullable();
