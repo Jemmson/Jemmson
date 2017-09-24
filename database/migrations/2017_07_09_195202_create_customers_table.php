@@ -16,7 +16,7 @@ class CreateCustomersTable extends Migration
         // this table keeps track of all of the users that are customers.
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('user_id')->unique();
+            $table->integer('user_id')->unsigned(); // NOTICE: deleted unique since it will not work with the many relationship
             $table->string('email_method_of_contact')->nullable();
             $table->string('phone_method_of_contact')->nullable();
             $table->string('sms_method_of_contact')->nullable();

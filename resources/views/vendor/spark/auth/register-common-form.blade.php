@@ -59,20 +59,25 @@
         </div>
     </div>
 
-    <div class="form-group" :class="{'has-error': registerForm.errors.has('contractor')}">
+    <div class="form-group" :class="{'has-error': registerForm.errors.has('usertype')}">
         <label class="col-md-4 control-label">Contractor</label>
 
         <div class="col-md-6">
-            <input type="radio" name="usertype" value="contractor">
+            <input type="radio" name="usertype" value="contractor" v-model="registerForm.usertype">
+            <span class="help-block" v-show="registerForm.errors.has('usertype')">
+                @{{ registerForm.errors.get('usertype') }}
+            </span>
         </div>
     </div>
 
-    <div class="form-group" :class="{'has-error': registerForm.errors.has('customer')}">
+    <div class="form-group" :class="{'has-error': registerForm.errors.has('usertype')}">
         <label class="col-md-4 control-label">Customer</label>
 
         <div class="col-md-6">
-            <input type="radio" name="usertype" value="customer">
-
+            <input type="radio" name="usertype" value="customer" v-model="registerForm.usertype">
+            <span class="help-block" v-show="registerForm.errors.has('usertype')">
+                @{{ registerForm.errors.get('usertype') }}
+            </span>
         </div>
     </div>
 
