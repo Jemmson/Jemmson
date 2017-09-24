@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Contractor;
 use App\Customer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -26,15 +27,13 @@ class HomeController extends Controller
      */
     public function show()
     {
-        $user = '';
+        $user = Auth::user();
 
-        if (Auth::user()->usertype == 'contractor') {
-            $user = Contractor::first()->where('user_id', Auth::user()->id)->get();
-            $user = $user->first();
-        } else if (Auth::user()->usertype == 'customer') {
-            $user = Customer::first()->where('user_id', Auth::user()->id)->get();
-            $user = $user->first();
+        // if the required info is not set get it before showing home
+        if ($user->getDetails() === null) {
+            return redirect('furtherInfo');
         }
+        
         // this is the home page
         return view('home', compact('user'));
     }
@@ -94,7 +93,7 @@ class HomeController extends Controller
 
             // TODO: if email method of contact is selected then there must be an email address
             // TODO: if sms or phone is selected then a phone number must be present
-
+            Log::info('creating customer');
             $this->validate(request(), [
                 'user_id' => 'required',
 //            'email_method_of_contact' => 'required|min:2',
@@ -106,7 +105,7 @@ class HomeController extends Controller
 //            'sms_method_of_contact' => 'required|min:2',
 //            'phone_method_of_contact' => 'required|min:2',
 //            'phone_number' => 'required|min:2',
-                'email_method_of_contact' => 'required'
+//                'email_method_of_contact' => 'required'
             ]);
 
 

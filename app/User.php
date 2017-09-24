@@ -40,6 +40,7 @@ class User extends SparkUser
         'billing_zip',
         'billing_country',
         'extra_billing_information',
+        'usertype',
     ];
 
     /**
@@ -54,12 +55,12 @@ class User extends SparkUser
 
     public function customers()
     {
-        return $this->hasMany(Customer::class);
+        return $this->hasMany(Customer::class, 'user_id', 'id');
     }
 
     public function contractors()
     {
-        return $this->hasMany(Contractor::class);
+        return $this->hasMany(Contractor::class, 'user_id', 'id');
     }
 
     public function feedback()
@@ -70,5 +71,26 @@ class User extends SparkUser
     public function elements()
     {
         return $this->belongsTo(Element::class);
+    }
+
+    /**
+     * Get more details about this user
+     * whether they are a contractor or customer
+     * 
+     * Notice: We are assuming the correct details for this user 
+     * is the first record found TODO: is there a better
+     * way to do this?
+     *
+     * @return [obj] 
+     */
+    public function getDetails() 
+    {
+        if ($this->usertype === 'contractor') {
+            return $this->contractors()->first() != null ? $this->contractors()->first() : null;
+        } else {
+            //dd($this->customers()->first());
+            return $this->customers()->first() != null ? $this->customers()->first() : null;
+        }
+
     }
 }

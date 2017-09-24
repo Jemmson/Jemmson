@@ -3,8 +3,8 @@
 @section('content')
 
     @if(isset($user))
-
-        @if(Auth::user()->usertype == 'contractor')
+       
+        @if($user->usertype == 'contractor')
 
             <div class="container" style="margin-top: 2rem">
                 <div class="row" style="margin-top: 2rem">
@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-6">
-                        <h1>{{ $user->company_name }}</h1>
+                        <h1>{{ $user->getDetails()->company_name }}</h1>
                     </div>
                 </div>
                 <div class="row">
@@ -161,7 +161,7 @@
                 </div>
             </div>
 
-        @elseif (Auth::user()->usertype == 'customer')
+        @elseif ($user->usertype == 'customer')
 
             <div class="container" style="margin-top: 2rem">
                 <div class="row" style="margin-top: 2rem">
