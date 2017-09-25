@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Log;
 class JobController extends Controller
 {
     /**
+     * Construct
+     */
+    public function __construct()
+    {
+        $this->middleware('further.info', ['only' => 'edit']);
+    }
+    
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
