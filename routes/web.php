@@ -68,7 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
         }
     );
 
-    Route::get('/home', 'HomeController@show');
+    Route::get('/home', 'HomeController@show')->middleware('further.info');
     Route::post('/home', 'HomeController@create');
 
     // common routes
@@ -80,6 +80,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/current-job', 'Controller@create');
     Route::get('/payments-and-review', 'Controller@create');
     Route::get('/my-contractors', 'Controller@create');
+    Route::resource('/job', 'JobController');
 
     // contractor routes
 //    Route::get('/contractor/', 'ContractorController@index');
@@ -92,7 +93,6 @@ Route::group(['middleware' => 'auth'], function () {
 //    Route::get('/customer/bid-list', 'BidListController@customerIndex');
 //    Route::get('/customer/check', 'CustomerController@checkCustomerData');
 //    Route::resource('/customer', 'CustomerController');
-//    Route::resource('/job', 'JobController');
 }
 );
 
@@ -114,7 +114,7 @@ Route::get('/login/{token}/{job_id}', function ($token, $job_id) {
     } else {
         if ($user->isValidToken($token->token)) {
             Auth::login($user);
-            return redirect('/customer/check')->with('data', ['user_id' => $user->id, 'job_id' => $job_id]);
+            return redirect('/job/' . $job_id . '/edit');
         }
     }
 });
