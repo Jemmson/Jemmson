@@ -27,13 +27,8 @@ class HomeController extends Controller
      */
     public function show()
     {
-        $user = Auth::user();
-
-        // if the required info is not set get it before showing home
-        if ($user->getDetails() === null) {
-            return redirect('furtherInfo');
-        }
-        
+        $user = Auth::user();  
+              
         // this is the home page
         return view('home', compact('user'));
     }

@@ -12,49 +12,6 @@ use Illuminate\Support\Facades\Log;
 class CustomerController extends Controller
 {
     /**
-     * Check that we have all pertinent data
-     * @return view
-     */
-    public function checkCustomerData()
-    {
-      $data = session()->get('data');
-
-      if ($data['user_id'] != null) {
-        $user_id = $data['user_id'];
-        session()->put('user_id', $data['user_id']);
-      }else{
-        $user_id = session('user_id');
-      }
-
-      if ($data['job_id'] != null) {
-        session()->put('job_id', $data['job_id']);
-      }
-
-      // find or create customer
-      try {
-        $customer = Customer::where('user_id', "=", $user_id)->firstOrFail();
-      } catch (\Exception $e) {
-        Log::error('Error Finding Customer: ' . $e->getMessage());
-        $customer = new Customer;
-        $customer->user_id = $user_id;
-        try {
-          $customer->save();
-        } catch (\Exception $e) {
-          Log::error('Error Saving Customer: ' . $e->getMessage());
-        }
-      }
-
-      // if data is missing, get data
-      if(!$customer->preferred_method_of_contact || !$customer->address_line_1
-                                                 || !$customer->city
-                                                 || !$customer->state
-                                                 || !$customer->zip){
-        return $this->edit($customer);
-      }else{
-        return redirect('/job/'.session('job_id').'/edit');
-      }
-    }
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
