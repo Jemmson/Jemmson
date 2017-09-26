@@ -174,8 +174,8 @@ class InitiateBidTest extends DuskTestCase
                 ->type('email', $job['email'])
                 ->type('phone', $job['phone'])
                 ->press('submit')
-                ->pause(50000)
-                ->assertPathIs('/initiate-bid')
+                ->pause(0)
+                ->assertPathIs('/bid-list')
                 ->pause(0);
         });
     

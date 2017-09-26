@@ -18,8 +18,8 @@ class InitiateBidTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function sending_an_email_if_the_customer_is_in_the_database()
-    {
+//    public function sending_an_email_if_the_customer_is_in_the_database()
+//    {
 
 //        $ib = new InitiateBidController;
 
@@ -35,7 +35,7 @@ class InitiateBidTest extends TestCase
 //
 //        $this->assertEquals('phone', $phone);
 
-    }
+//    }
 
     /** @test */
     public function that_a_customer_exists_and_I_have_both_email_and_phone_number_and_that_the_application_returns_true()
