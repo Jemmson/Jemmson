@@ -196,7 +196,7 @@ class InitiateBidTest extends DuskTestCase
             'customerName' => $faker->name,
             'name' => $faker->name,
             'email' => "pike.shawn@gmail.com",
-            'phone' => "4807034902",
+            'phone' => "4808009252",
             'contractorId' => $user->id
         ];
 

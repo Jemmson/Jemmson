@@ -239,6 +239,13 @@ class InitiateBidTest extends TestCase
     /** @test */
     public function send_a_text_if_a_phone_number_was_given_by_the_contractor()
     {
+        $userToUpdate = User::where("phone", "=", "4807034902")->get();
+
+        if (!empty($userToUpdate[0])){
+            $userToUpdate->phone = "0000000000";
+            $userToUpdate->save();
+        }
+
 
         $faker = Factory::create();
         $email = 'pike.shawn@gmail.com';
