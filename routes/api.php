@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Http\Request;
+
 Route::group([
     'middleware' => 'auth:api'
 ], function () {
@@ -20,4 +22,15 @@ Route::group([
         return ['name' => 'Shawn'];
     });
 
+    Route::get('/search',function(){
+        $query = Input::get('query');
+        $users = \App\User::where('name','like','%'.$query.'%')->get();
+        return $users;
+    });
+});
+
+Route::get('/search',function(Request $request){
+    $query = $request->query('query');
+    $users = \App\User::where('name','like','%'.$query.'%')->get();
+    return $users;
 });

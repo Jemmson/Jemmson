@@ -183,6 +183,14 @@ class InitiateBidTest extends DuskTestCase
 
     public function createContractor()
     {
+
+        $userToUpdate = User::where("phone", "=", "4807034902")->get();
+
+        if (!empty($userToUpdate[0])){
+            $userToUpdate[0]->phone = "0000000000";
+            $userToUpdate[0]->save();
+        }
+
         $contractor = factory(Contractor::class)->create();
 
         $user = User::find($contractor->user_id);
@@ -196,7 +204,7 @@ class InitiateBidTest extends DuskTestCase
             'customerName' => $faker->name,
             'name' => $faker->name,
             'email' => "pike.shawn@gmail.com",
-            'phone' => "4808009252",
+            'phone' => "4807034902",
             'contractorId' => $user->id
         ];
 

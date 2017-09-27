@@ -10,27 +10,18 @@
                     <div class="panel panel-default">
                         {{-- / --}}
                         <span>{{ session('error') }}</span>
-                        <div class="panel-heading">Initate Bid</div>
+                        <div class="panel-heading">Initiate Bid</div>
 
                         <div class="panel-body">
                             <form action="/initiate-bid/" method="post">
 
                                 {{ csrf_field() }}
 
-                                <label for="customerName">Customer Name *
-                                    <input name="customerName" type="text" id="customerName" class="form-control" required>
-                                </label>
 
-                                <label for="job-name">Job Name
-                                    <input name="jobName" type="text" id="job-name" class="form-control">
-                                </label>
+                                    <initiate-bid></initiate-bid>
 
-                                <label for="email">Email
-                                    <input name="email" type="email" id="email" class="form-control">
-                                </label>
-                                <label for="phone">Phone
-                                    <input name="phone" type="text" id="phone" class="form-control">
-                                </label><br>
+
+
                                 <!--<div class="btn-group" data-toggle="buttons">-->
                                 <!--<label class="btn btn-info active">-->
                                 <!--<input type="radio" name="options" id="customer" autocomplete="off">Customer-->
@@ -39,7 +30,9 @@
                                 <!--<input type="radio" name="options" id="subcontractor" autocomplete="off">Sub Contractor-->
                                 <!--</label>-->
                                 <!--</div>-->
-                                <br>
+
+
+
                                 <button name="submit" class="btn btn-default btn-primary">Submit</button>
                             </form>
                         </div>

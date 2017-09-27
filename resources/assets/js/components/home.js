@@ -15,5 +15,4 @@ Vue.component('home', {
       return this.user.name.toUpperCase()
     }
   }
-
 });

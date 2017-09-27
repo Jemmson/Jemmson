@@ -242,8 +242,8 @@ class InitiateBidTest extends TestCase
         $userToUpdate = User::where("phone", "=", "4807034902")->get();
 
         if (!empty($userToUpdate[0])){
-            $userToUpdate->phone = "0000000000";
-            $userToUpdate->save();
+            $userToUpdate[0]->phone = "0000000000";
+            $userToUpdate[0]->save();
         }
 
 

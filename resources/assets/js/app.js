@@ -17,6 +17,10 @@ require('spark-bootstrap');
 
 require('./components/bootstrap');
 
+import InitiateBid from './components/InitiateBid.vue';
+
+Vue.component('initiate-bid', InitiateBid);
+
 Spark.forms.register = {
   usertype: ''
 };

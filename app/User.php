@@ -30,7 +30,6 @@ class User extends SparkUser
         'remember_token',
         'authy_id',
         'country_code',
-        'phone',
         'card_brand',
         'card_last_four',
         'card_country',
