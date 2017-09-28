@@ -45,6 +45,33 @@ class InitiateBidTest extends DuskTestCase
 //        dd($user);
     }
 
+    /** @test */
+    public function there_is_a_flash_message_on_the_bid_list_page()
+    {
+
+//        dd($job['contractorId']);
+//        $userId = $user->id;
+
+        $job = $this->createContractor();
+
+        $this->browse(function (Browser $browser) use ($job) {
+//            dd($user->id);
+            $browser->loginAs(User::find($job['contractorId']))
+                ->pause(0)
+                ->visit('/initiate-bid')
+                ->type('customerName', $job['customerName'])
+                ->type('jobName', $job['name'])
+                ->type('email', $job['email'])
+                ->type('phone', $job['phone'])
+                ->press('submit')
+                ->pause(0)
+                ->assertPathIs('/bid-list')
+                ->assertSee('Your bid was created')
+                ->pause(0);
+        });
+//        dd($user);
+    }
+
     public function test_if_there_is_no_customer_name_then_I_get_redirected_back_to_the_page()
     {
 

@@ -91,6 +91,8 @@ class InitiateBidController extends Controller
             $this->sendText($data, $phone);
         }
 
+        $request->session()->flash('status', 'Your bid was created');
+
         return redirect('/bid-list');
     }
 
