@@ -42032,8 +42032,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('ul', {
     staticClass: "list-group"
   }, _vm._l((_vm.results), function(result) {
-    return _c('li', {
+    return _c('button', {
       staticClass: "list-group-item",
+      attrs: {
+        "name": result.phone
+      },
       on: {
         "click": function($event) {
           _vm.fillFields(result)

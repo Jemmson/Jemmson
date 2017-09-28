@@ -5,9 +5,9 @@
                    class="form-control" required>
             <div class="panel-footer" v-if="results.length">
                 <ul class="list-group">
-                    <li class="list-group-item" v-for="result in results" @click="fillFields(result)">
+                    <button class="list-group-item" v-for="result in results" :name="result.phone" @click="fillFields(result)">
                         {{ result.name }}
-                    </li>
+                    </button>
                 </ul>
             </div>
 
