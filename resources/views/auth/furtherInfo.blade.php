@@ -8,6 +8,7 @@
 
     <div class="container">
         <h1 class="text-center">{{ Auth::user()->name }}</h1>
+         @include('spark::shared.errors')
 
         @if(Auth::user()->usertype == 'contractor')
 
@@ -76,6 +77,31 @@
                                     <input type="text" class="form-control" name="zip" autofocus>
                                 </div>
                             </div>
+
+                            @if($password_updated === 0)
+                                <h3>Update Password</h3>
+                                <div class="update_password" style="border: solid thin black">
+                                    <div class="update_password_inputs"
+                                         style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
+                                        <!-- Update password -->
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Password</label>
+
+                                            <div class="col-md-8">
+                                                <input type="password" name="password">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Confirm Password</label>
+
+                                            <div class="col-md-8">
+                                                <input type="password" name="password_confirmation">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            @endif
 
                             <div class="col-md-2"></div>
                             <div class="col-md-8">
@@ -195,6 +221,31 @@
                                 </div>
                             </div>
 
+                            @if($password_updated === 0)
+                            <h3>Update Password</h3>
+                            <div class="update_password" style="border: solid thin black">
+                                <div class="update_password_inputs"
+                                     style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
+                                    <!-- Update password -->
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Password</label>
+
+                                        <div class="col-md-8">
+                                            <input type="password" name="password">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Confirm Password</label>
+
+                                        <div class="col-md-8">
+                                            <input type="password" name="password_confirmation">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                            @endif   
+
                             <h3>Preferred Method of Contact</h3>
                             <div class="preferred_contact" style="border: solid thin black">
                                 <div class="preferred_contact_input"
@@ -225,7 +276,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                       
                             <button type="submit" name="submit" class="btn btn-default btn-primary"
                                     style="margin-top: 1rem">Submit
                             </button>

@@ -64,7 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
     //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
     Route::get(
         '/furtherInfo', function () {
-            return view('auth.furtherInfo');
+            return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
         }
     );
 
