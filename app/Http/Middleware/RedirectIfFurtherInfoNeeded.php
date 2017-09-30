@@ -19,7 +19,6 @@ class RedirectIfFurtherInfoNeeded
     {
 
         if (Auth::guard($guard)->check() && Auth::user()->getDetails() === null) {
-            // TODO: pass in wether the user needs to update their password
             // TODO: if they are coming from a passwordless link and further info was
             //       needed redirect them to the bid afterwords not just home, better way to do/not do this?
             return redirect('furtherInfo');

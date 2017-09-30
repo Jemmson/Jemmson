@@ -45,6 +45,17 @@ class HomeController extends Controller
     public function create(Request $request)
     {
         // TODO: Need to make the user_id unique and update if the user is already in the table
+        if (request('password') !== null) {
+            $this->validate(
+                $request,
+                [
+                    'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required|min:6'
+                ]
+            );
+
+            Auth::user()->updatePassword(request('password'));
+        }
 
         if (Auth::user()->usertype == 'contractor') {
 
@@ -118,7 +129,7 @@ class HomeController extends Controller
                 'phone_number' => request('phone_number'),
             ]);
         }
-
+        
 //        Customer::find(Auth::user()->user)
 
         return redirect()->to('/home');

@@ -92,4 +92,22 @@ class User extends SparkUser
         }
 
     }
+
+    /**
+     * Update user password
+     *
+     * @param [string] $password a password
+     * 
+     * @return void
+     */
+    public function updatePassword($password)
+    {
+        try {
+            $this->password = bcrypt($password);
+            $this->password_updated = true;
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Model User: ' . $e->getMessage());
+        }
+    }
 }
