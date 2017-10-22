@@ -74,7 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
     // common routes
     Route::get('/initiate-bid', 'InitiateBidController@index');
     Route::post('/initiate-bid', 'InitiateBidController@send');
-    Route::get('/bid-list', 'BidListController@contractorIndex');
+    Route::get('/bid-list', 'BidListController@index');
     Route::get('/settings', 'Controller@create');
     Route::get('/invoices', 'Controller@create');
     Route::get('/current-job', 'Controller@create');
