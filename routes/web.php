@@ -114,6 +114,7 @@ Route::get('/login/{token}/{job_id}', function ($token, $job_id) {
     } else {
         if ($user->isValidToken($token->token)) {
             Auth::login($user);
+            session(['job_id' => $job_id]);
             return redirect('/job/' . $job_id . '/edit');
         }
     }
