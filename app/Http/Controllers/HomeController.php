@@ -144,7 +144,7 @@ class HomeController extends Controller
     function redirectToJob()
     {
         $job_id = session('job_id'); 
-        dd($job_id);
+        //dd($job_id);
         if ($job_id !== null) {
             session(['job_id' => null]);
             return redirect('/job/' . $job_id . '/edit');
