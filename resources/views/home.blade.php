@@ -48,7 +48,7 @@
                                 </div>
 
                                 <div class="col-md-12 panelBottom">
-                                    <a href="/contractor/bid-list">
+                                    <a href="/bid-list">
                                         <button class="btn btn-default btn-primary">
                                             Bid List
                                         </button>
@@ -204,7 +204,7 @@
                                 </div>
 
                                 <div class="col-md-12 panelBottom">
-                                    <a href="">
+                                    <a href="/bid-list">
                                         <button class="btn btn-default btn-primary">
                                             Bid List
                                         </button>

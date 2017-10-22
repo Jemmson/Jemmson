@@ -21,7 +21,7 @@
         @endif
         @include('contractors.bidList')
     @elseif(Auth::user()->usertype == 'customer')
-
+        @include('customers.bidList')
     @endif
 
 @endsection
