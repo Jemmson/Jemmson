@@ -130,10 +130,24 @@ class HomeController extends Controller
             ]);
         }
         
-//        Customer::find(Auth::user()->user)
+        $this->redirectToJob();
 
         return redirect()->to('/home');
+    }
 
-//        return view('/home');
+    /**
+     * Redirect to job page if we have the id in a session
+     * this means they clicked a passwordless link
+     *
+     * @return void
+     */
+    function redirectToJob()
+    {
+        $job_id = session('job_id'); 
+        //dd($job_id);
+        if ($job_id !== null) {
+            session(['job_id' => null]);
+            return redirect('/job/' . $job_id . '/edit');
+        }
     }
 }

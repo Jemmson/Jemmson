@@ -25,7 +25,7 @@
                                 <td>{{ $bid['completionDate']}}</td>
                                 <td><label class="label label-{{ $styles->getBidStatusLabelColor($bid['status']) }}">{{ $bid['status']}}</label></td>
                                 <td>{{ $bid['tasksCompleted'] }}/{{ $bid['totalTasks'] }}</td>
-                                <td><a href="/bid/{{ $bid['id'] }}" class="btn btn-primary">Edit</a></td>
+                                <td><a href="/bid/{{ $bid['id'] }}/edit" class="btn btn-primary">Edit</a></td>
                               </tr>
                             @endforeach
                           @endif
