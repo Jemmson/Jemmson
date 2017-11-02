@@ -26,5 +26,6 @@
         crossorigin="anonymous"></script>
 <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
 <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+<script src="/js/app.js"></script>
 </body>
 </html>

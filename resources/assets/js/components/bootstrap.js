@@ -13,4 +13,5 @@ require('./../spark-components/bootstrap');
 
 require('./home');
 require('./registration');
+require('./InitiateBid.vue');
 // require('./Autocomplete.vue');
