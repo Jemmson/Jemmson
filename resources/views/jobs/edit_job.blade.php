@@ -1,6 +1,9 @@
 @extends('spark::layouts.app')
 
 @section('content')
+
+    <job></job>
+
 <home :user="user" inline-template>
     <div class="container">
         <!-- Application Dashboard -->
