@@ -2,8 +2,14 @@
     <div class="wrapper">
         <info-label label="Job Name" value="job123"></info-label>
         <!--<span>{{ new Date() | moment("dddd, MMMM Do YYYY") }}</span>-->
-        <input-value type="date" name="startDate" label="Start Date"></input-value>
-        <input-value type="date" name="dueDate" label="Due Date"></input-value>
+        <label for="startDate" class="control-label">
+            <input type="date" id="startDate" class="form-control">
+        </label>
+        <label for="dueDate" class="control-label">
+            <input type="date" id="dueDate" class="form-control">
+        </label>
+        <!--<input-value type="date" name="startDate" label="Start Date"></input-value>-->
+        <!--<input-value type="date" name="dueDate" label="Due Date"></input-value>-->
         <contracts></contracts>
         <currentTasksForJob :allTasks="allTasks"></currentTasksForJob>
         <button class="btn btn-primary-btn-large" @click="showAddTask()">Add Task</button>
@@ -12,7 +18,7 @@
 </template>
 
 <script>
-  import InputValue from './InputValue.vue'
+//  import InputValue from './InputValue.vue'
   import CurrentTasksForJob from './CurrentTasksForJob.vue'
   import InfoLabel from './InfoLabel'
   import Contracts from './Contracts.vue'
@@ -40,7 +46,7 @@
       }
     },
     components: {
-      InputValue,
+//      InputValue,
       InfoLabel,
       Contracts,
       Task,

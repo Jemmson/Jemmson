@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="price">
-            <input-value name="price" label="Price for Task"></input-value>
+            <!--<input-value name="price" label="Price for Task"></input-value>-->
         </div>
         <button class="btn btn-primary btn-large" @click="addTask()">Add Task</button>
     </div>
@@ -23,19 +23,20 @@
 
 <script>
   import axios from 'axios'
-  import InputValue from './InputValue.vue'
+//  import InputValue from './InputValue.vue'
 
   export default {
     name: 'Task',
     components: {
-      InputValue
+//      InputValue
     },
     data () {
       return {
         query: '',
         results: [],
         taskName: '',
-        price: ''
+        price: '',
+        task: ''
       }
     },
     methods: {

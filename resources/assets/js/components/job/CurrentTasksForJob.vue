@@ -17,7 +17,7 @@
     name: 'CurrentTasksForJob',
     props: {
       allTasks: {
-        type: Object
+        type: Array
       }
     },
     computed: {

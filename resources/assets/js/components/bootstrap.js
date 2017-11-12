@@ -15,4 +15,8 @@ require('./home');
 require('./registration');
 require('./InitiateBid.vue');
 require('./job/Job.vue');
+require('./job/Task.vue');
+require('./job/InfoLabel.vue');
+require('./job/Contracts.vue');
+require('./job/CurrentTasksForJob.vue');
 // require('./Autocomplete.vue');
