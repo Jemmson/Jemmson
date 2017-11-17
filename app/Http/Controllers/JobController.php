@@ -6,6 +6,7 @@ use App\Job;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class JobController extends Controller
 {
@@ -16,7 +17,7 @@ class JobController extends Controller
     {
         $this->middleware('further.info', ['only' => 'edit']);
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +41,7 @@ class JobController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -51,7 +52,7 @@ class JobController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Job  $job
+     * @param  \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function show(Job $job)
@@ -63,7 +64,7 @@ class JobController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Job  $job
+     * @param  \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function edit(Job $job)
@@ -72,28 +73,38 @@ class JobController extends Controller
         return view('jobs.edit_job')->with(['job' => $job, 'contractor' => $contractor->name]);
     }
 
+    public function updateJob(Request $request)
+    {
+        $dateType = $request->params["dateType"];
+        $job = Job::find(intval($request->params["id"]));
+        $date = new Carbon($request->params["date"]);
+        $job->$dateType = $date;
+        $job->save();
+        return 'Date Is Saved';
+    }
+
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Job  $job
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Job $job)
     {
         $this->validate($request, [
-          'agreed_start_date' => 'required',
-          'agreed_end_date' => 'required',
-          'bid_price' => 'required',
+            'agreed_start_date' => 'required',
+            'agreed_end_date' => 'required',
+            'bid_price' => 'required',
         ]);
         $job->agreed_start_date = $request->agreed_start_date;
         $job->agreed_end_date = $request->agreed_end_date;
         $job->bid_price = $request->bid_price;
 
         try {
-          $job->save();
+            $job->save();
         } catch (\Exception $e) {
-          Log::error('Error Saving Job: '. $e->getMessage());
+            Log::error('Error Saving Job: ' . $e->getMessage());
         }
         return redirect()->back()->with('success', "Job Saved Successfully");
     }
@@ -101,7 +112,7 @@ class JobController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Job  $job
+     * @param  \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function destroy(Job $job)

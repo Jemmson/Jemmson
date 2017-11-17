@@ -20116,8 +20116,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -20168,6 +20166,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+//
+//
+//
+//
 //
 //
 //
@@ -20371,6 +20373,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 //  import InputValue from './InputValue.vue'
 
@@ -20392,10 +20397,50 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       customContract: false,
       numberOfTasks: '',
       showTaskToAdd: false,
-      allTasks: [{ taskName: 'task1', price: 90 }, { taskName: 'task2', price: 50 }, { taskName: 'task3', price: 100 }]
+      allTasks: [{ taskName: 'task1', price: 90 }, { taskName: 'task2', price: 50 }, { taskName: 'task3', price: 100 }],
+      sDate: '',
+      eDate: ''
     };
   },
+  mounted: function mounted() {
+    this.sDate = this.startdate;
+  },
 
+  props: {
+    id: {
+      type: String
+    },
+    startdate: {
+      type: String
+    },
+    enddate: {
+      type: String
+    },
+    jobname: {
+      type: String
+    },
+    contractor: {
+      type: String
+    },
+    bidprice: {
+      type: String
+    },
+    tasks: {
+      type: String
+    },
+    customercontract: {
+      type: String
+    },
+    customer: {
+      type: String
+    },
+    subcontractor: {
+      type: String
+    },
+    subcontractorcontract: {
+      type: String
+    }
+  },
   components: {
     //      InputValue,
     InfoLabel: __WEBPACK_IMPORTED_MODULE_1__InfoLabel___default.a,
@@ -20409,6 +20454,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    mouseLeave: function mouseLeave() {
+      console.log(this.id);
+      console.log(this.startDate);
+      __WEBPACK_IMPORTED_MODULE_4_axios___default.a.post('/job/update', {
+        params: {
+          dateType: 'agreed_start_date',
+          date: this.sDate,
+          id: this.id
+        }
+      }).then(function (response) {
+        console.log(response.data);
+        //          this.results = response.data
+        //          this.$emit('taskIsAdded')
+      });
+    },
     showAddTask: function showAddTask() {
       this.$data.showTaskToAdd = true;
     },
@@ -28162,7 +28222,7 @@ __webpack_require__(284)
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(7)();
-exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr;\n    margin-right: auto;\n    margin-left: auto;\n    padding-left: 15px;\n    padding-right: 15px;\n    grid-column-gap: 10px;\n}\n@media (min-width: 768px)\n\n.wrapper {\n    width: 750px;\n}\n", ""]);
+exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 469px 200px 1fr 1fr 1fr;\n        grid-template-columns: 469px 200px 1fr 1fr 1fr;\n    margin-right: auto;\n    margin-left: auto;\n    padding-left: 15px;\n    padding-right: 15px;\n    grid-column-gap: 10px;\n    grid-row-gap: 20px;\n}\n.startDate[data-v-2a33f6c8] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.dueDate[data-v-2a33f6c8] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n    width: 200px;\n}\n.contracts[data-v-2a33f6c8] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.currentTasksForJob[data-v-2a33f6c8] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 5;\n}\nbutton[data-v-2a33f6c8] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.task[data-v-2a33f6c8] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n@media (min-width: 768px)\n\n.wrapper {\n    width: 750px;\n}\n", ""]);
 
 /***/ }),
 /* 297 */
@@ -43014,12 +43074,44 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "wrapper"
-  }, [_c('info-label', {
+  }, [_c('div'), _vm._v(" "), _c('info-label', {
     attrs: {
       "label": "Job Name",
       "value": "job123"
     }
-  }), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('contracts'), _vm._v(" "), _c('currentTasksForJob', {
+  }), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.sDate))]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.startdate))]), _vm._v(" "), _c('label', {
+    staticClass: "startDate control-label",
+    attrs: {
+      "for": "startDate"
+    }
+  }, [_vm._v("Job Start Date\n        "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sDate),
+      expression: "sDate"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "date",
+      "id": "startDate"
+    },
+    domProps: {
+      "value": (_vm.sDate)
+    },
+    on: {
+      "blur": function($event) {
+        _vm.mouseLeave()
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sDate = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('contracts', {
+    staticClass: "contracts"
+  }), _vm._v(" "), _c('currentTasksForJob', {
+    staticClass: "currentTasksForJob",
     attrs: {
       "allTasks": _vm.allTasks
     }
@@ -43037,6 +43129,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.showTaskToAdd),
       expression: "showTaskToAdd"
     }],
+    staticClass: "task",
     on: {
       "taskIsAdded": function($event) {
         _vm.updateTasksForJob()
@@ -43045,24 +43138,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })], 1)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('label', {
-    staticClass: "control-label",
-    attrs: {
-      "for": "startDate"
-    }
-  }, [_c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "date",
-      "id": "startDate"
-    }
-  })])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('label', {
-    staticClass: "control-label",
+    staticClass: "dueDate control-label",
     attrs: {
       "for": "dueDate"
     }
-  }, [_c('input', {
+  }, [_vm._v("Job End Date\n        "), _c('input', {
     staticClass: "form-control",
     attrs: {
       "type": "date",
@@ -43186,7 +43266,35 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', [_vm._m(0), _vm._v(" "), _c('label', {
+  return _c('div', [_c('div', [_c('div', {
+    staticClass: "btn-group"
+  }, [_vm._m(0), _vm._v(" "), _c('ul', {
+    staticClass: "dropdown-menu"
+  }, [_c('li', [_c('button', {
+    on: {
+      "click": function($event) {
+        _vm.selectedContract('simple')
+      }
+    }
+  }, [_vm._v("Simple")])]), _vm._v(" "), _c('li', [_c('button', {
+    on: {
+      "click": function($event) {
+        _vm.selectedContract('medium')
+      }
+    }
+  }, [_vm._v("Medium")])]), _vm._v(" "), _c('li', [_c('button', {
+    on: {
+      "click": function($event) {
+        _vm.selectedContract('complicated')
+      }
+    }
+  }, [_vm._v("Complicated")])]), _vm._v(" "), _c('li', [_c('button', {
+    on: {
+      "click": function($event) {
+        _vm.selectedContract('custom')
+      }
+    }
+  }, [_vm._v("Custom")])])])]), _vm._v(" "), _c('label', {
     staticClass: "contractSelection",
     on: {
       "click": _vm.showContract
@@ -43221,9 +43329,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Save")])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "btn-group"
-  }, [_c('button', {
+  return _c('button', {
     staticClass: "btn btn-default dropdown-toggle",
     attrs: {
       "type": "button",
@@ -43231,32 +43337,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-haspopup": "true",
       "aria-expanded": "false"
     }
-  }, [_vm._v("\n                Action "), _c('span', {
+  }, [_vm._v("\n                Select a Contract "), _c('span', {
     staticClass: "caret"
-  })]), _vm._v(" "), _c('ul', {
-    staticClass: "dropdown-menu"
-  }, [_c('li', [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Action")])]), _vm._v(" "), _c('li', [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Another action")])]), _vm._v(" "), _c('li', [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Something else here")])]), _vm._v(" "), _c('li', {
-    staticClass: "divider",
-    attrs: {
-      "role": "separator"
-    }
-  }), _vm._v(" "), _c('li', [_c('a', {
-    attrs: {
-      "href": "#"
-    }
-  }, [_vm._v("Separated link")])])])])
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {
