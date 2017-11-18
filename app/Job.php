@@ -21,7 +21,13 @@ class Job extends Model
     {
         return $this->belongsToMany(Job::class);
     }
-
+    
+    /**
+     * Return related JobActions Model - create it 
+     * if it doesn't exist
+     *
+     * @return JobActions model
+     */
     public function jobActions()
     {
         $jobActions = $this->hasOne(JobActions::class);
@@ -35,6 +41,11 @@ class Job extends Model
         return $jobActions;
     }
 
+    /**
+     * Accept the job
+     *
+     * @return bool did this action succeed
+     */
     public function acceptJob()
     {   
         if ($this->id == null) {
@@ -47,11 +58,18 @@ class Job extends Model
         $jobActions->job_accepted_updated_on = Carbon::now();
         try {
             $jobActions->save();
+            return true;
         } catch (\Exception $e) {
             Log::error('JobActions: ' . $e->getMessage());
+            return false;
         }
     }
 
+    /**
+     * Decline the job
+     *
+     * @return bool did this action succeed
+     */
     public function declineJob()
     {
         if ($this->id == null) {
@@ -64,11 +82,18 @@ class Job extends Model
         $jobActions->job_declined_updated_on = Carbon::now();
         try {
             $jobActions->save();
+            return true;
         } catch (\Exception $e) {
             Log::error('JobActions: ' . $e->getMessage());
+            return false;
         }
     }
     
+    /**
+     * Approve the job
+     *
+     * @return bool did this action succeed
+     */
     public function approveJob()
     {
         if ($this->id == null) {
@@ -81,11 +106,19 @@ class Job extends Model
         $jobActions->job_approved_updated_on = Carbon::now();
         try {
             $jobActions->save();
+            return true;
         } catch (\Exception $e) {
             Log::error('JobActions: ' . $e->getMessage());
+            return false;
         }
     }
 
+    /**
+     * Helper function to create a JobActions
+     * related to this Job model
+     *
+     * @return void
+     */
     public function createJobActions() {
 
         if ($this->id == null) {
