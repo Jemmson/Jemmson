@@ -210,6 +210,7 @@ class InitiateBidController extends Controller
 
         try {
             $job->save();
+            $job->acceptJob();
             return $job->id;
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e);
