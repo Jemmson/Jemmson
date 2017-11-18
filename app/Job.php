@@ -24,7 +24,15 @@ class Job extends Model
 
     public function jobActions()
     {
-        return $this->hasOne(JobActions::class)->get();
+        $jobActions = $this->hasOne(JobActions::class);
+        
+        if ($jobActions->exists()) {
+            $jobActions = $jobActions->get();
+        } else {
+            $jobActions = $this->createJobActions();
+        }
+
+        return $jobActions;
     }
 
     public function acceptJob()
@@ -34,13 +42,9 @@ class Job extends Model
         }
 
         $jobActions = $this->jobActions();
-        
-        if ($jobActions->id == null) {
-            $jobActions = $this->createJobActions();
-        }
 
         $jobActions->job_accepted = true;
-        $jobActions->job_accpeted_updated_on = Carbon::now();
+        $jobActions->job_accepted_updated_on = Carbon::now();
         try {
             $jobActions->save();
         } catch (\Exception $e) {
@@ -55,10 +59,6 @@ class Job extends Model
         }
 
         $jobActions = $this->jobActions();
-
-        if ($jobActions->id == null) {
-            $jobActions = $this->createJobActions();
-        }
 
         $jobActions->job_declined = true;
         $jobActions->job_declined_updated_on = Carbon::now();
@@ -76,10 +76,6 @@ class Job extends Model
         }
 
         $jobActions = $this->jobActions();
-
-        if ($jobActions->id == null) {
-            $jobActions = $this->createJobActions();
-        }
 
         $jobActions->job_approved = true;
         $jobActions->job_approved_updated_on = Carbon::now();
@@ -101,6 +97,7 @@ class Job extends Model
 
         try {
             $jobActions->save();
+            return $jobActions;
         } catch (\Exception $e) {
             Log::error('JobActions: ' . $e->getMessage());
         }
