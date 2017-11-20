@@ -70,10 +70,11 @@ class JobController extends Controller
     public function edit(Job $job)
     {
         $contractor = User::find($job->contractor_id);
-        return view('jobs.edit_job')->with(['job' => $job, 'contractor' => $contractor->name]);
+        $customer = User::find($job->customer_id);
+        return view('jobs.edit_job', compact('job', 'contractor', 'customer'));
     }
 
-    public function updateJob(Request $request)
+    public function updateJobDate(Request $request)
     {
         $dateType = $request->params["dateType"];
         $job = Job::find(intval($request->params["id"]));

@@ -1,27 +1,23 @@
 <template>
-    <div class="wrapper">
-        <div></div>
-        <info-label label="Job Name" value="job123"></info-label>
-        <!--<span>{{ new Date() | moment("dddd, MMMM Do YYYY") }}</span>-->
-        <pre>{{ sDate }}</pre>
-        <pre>{{ startdate }}</pre>
-        <label for="startDate" class="startDate control-label">Job Start Date
-            <input type="date" id="startDate" v-model="sDate" class="form-control" @blur="mouseLeave()">
-        </label>
-        <label for="dueDate" class="dueDate control-label">Job End Date
-            <input type="date" id="dueDate" class="form-control">
-        </label>
-        <!--<input-value type="date" name="startDate" label="Start Date"></input-value>-->
-        <!--<input-value type="date" name="dueDate" label="Due Date"></input-value>-->
-        <contracts class="contracts"></contracts>
-        <currentTasksForJob class="currentTasksForJob" :allTasks="allTasks"></currentTasksForJob>
-        <button class="btn btn-primary-btn-large" @click="showAddTask()">Add Task</button>
-        <task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>
+    <div>
+        <pre>{{ $store.state.job }}</pre>
+        <div class="wrapper">
+            <info-label label="Job Name" :value="jobName()"></info-label>
+            <jemm-date label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"
+            ></jemm-date>
+            <jemm-date label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"
+            ></jemm-date>
+            <contracts class="contracts"></contracts>
+            <currentTasksForJob class="currentTasksForJob" :allTasks="allTasks"></currentTasksForJob>
+            <button class="btn btn-primary-btn-large" @click="showAddTask()">Add Task</button>
+            <task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>
+        </div>
     </div>
 </template>
 
 <script>
   //  import InputValue from './InputValue.vue'
+  import JemmDate from './JemmDate.vue'
   import CurrentTasksForJob from './CurrentTasksForJob.vue'
   import InfoLabel from './InfoLabel'
   import Contracts from './Contracts.vue'
@@ -29,6 +25,7 @@
   //  import 'bootstrap/dist/css/bootstrap.css'
   //  import 'bootstrap-vue/dist/bootstrap-vue.css'
   import axios from 'axios'
+  import { mapMutations } from 'vuex'
   //  import UiDropdown from 'vue-ui'
 
   export default {
@@ -46,54 +43,39 @@
           {taskName: 'task2', price: 50},
           {taskName: 'task3', price: 100}
         ],
-        sDate: '',
-        eDate: ''
+        selectedDates: {
+          startDate: '',
+          endDate: ''
+        }
       }
     },
-    mounted () {
-      this.sDate = this.startdate
+    beforeMount: function () {
+//        console.log(this.simpleContract)
+//        console.log(this.id)
+//        console.log(this.job)
+//        console.log(this.customer)
+//        console.log(this.contractor)
+//        let jobObject = JSON.parse(this.job);
+//        console.log(jobObject.id)
+        this.loadJobStore()
     },
     props: {
-      id: {
-        type: String
-      },
-      startdate: {
-        type: String
-      },
-      enddate: {
-        type: String
-      },
-      jobname: {
-        type: String
+      job: {
+        type: String,
       },
       contractor: {
         type: String
       },
-      bidprice: {
-        type: String
-      },
-      tasks: {
-        type: String
-      },
-      customercontract: {
-        type: String
-      },
       customer: {
         type: String
-      },
-      subcontractor: {
-        type: String
-      },
-      subcontractorcontract: {
-        type: String
-      },
+      }
     },
     components: {
-//      InputValue,
       InfoLabel,
       Contracts,
       Task,
-      CurrentTasksForJob
+      CurrentTasksForJob,
+      JemmDate
     },
     computed: {
       date () {
@@ -101,21 +83,35 @@
       }
     },
     methods: {
-      mouseLeave: function () {
-        console.log (this.id)
-        console.log (this.startDate)
-        axios.post ('/job/update', {
-          params: {
-            dateType: 'agreed_start_date',
-            date: this.sDate,
-            id: this.id
-          }
-        }).then (response => {
-          console.log (response.data)
-//          this.results = response.data
-//          this.$emit('taskIsAdded')
-        })
+//      ...mapMutations([
+//          'loadJobStore'
+//      ]),
+      jobName () {
+        let jobName = JSON.parse(this.job)
+        return jobName.job_name
       },
+      loadJobStore () {
+        this.$store.commit('job/loadStore', this.job)
+      },
+//      mouseLeave: function () {
+//        console.log (this.id)
+//        console.log (this.startDate)
+//        axios.post ('/job/update', {
+//          params: {
+//            dateType: 'agreed_start_date',
+//            date: this.sDate,
+//            id: this.id
+//          }
+//        }).then (response => {
+//          console.log (response.data)
+////          this.results = response.data
+////          this.$emit('taskIsAdded')
+//        })
+//      },
+//      selectedDate (date) {
+//        console.log(date)
+//        console.log('I have been emmited')
+//      },
       showAddTask () {
         this.$data.showTaskToAdd = true
       },

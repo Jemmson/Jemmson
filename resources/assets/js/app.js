@@ -27,7 +27,7 @@ import Task from './components/job/Task.vue';
 Vue.component('task', Task);
 
 import InfoLabel from './components/job/InfoLabel.vue';
-Vue.component('i nfoLabel', InfoLabel);
+Vue.component('infoLabel', InfoLabel);
 
 import Contracts from './components/job/Contracts.vue';
 Vue.component('contracts', Contracts);
@@ -35,10 +35,13 @@ Vue.component('contracts', Contracts);
 import CurrentTasksForJob from './components/job/CurrentTasksForJob.vue';
 Vue.component('currentTasksForJob', CurrentTasksForJob);
 
+import { store } from './vuex/index';
+
 Spark.forms.register = {
   usertype: ''
 };
 
 var app = new Vue({
-  mixins: [require('spark')]
+  mixins: [require('spark')],
+  store
 });

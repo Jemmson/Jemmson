@@ -2,13 +2,7 @@
 
 @section('content')
 
-    <job id="{{ $job->id }}"
-         startdate="{{ explode(' ', $job->agreed_start_date)[0] }}"
-         enddate="{{ explode(' ', $job->agreed_end_date)[0] }}"
-         jobname="{{ $job->job_name }}"
-         contractor="{{ $contractor }}"
-         bidprice="{{ $job->bid_price }}"
-    ></job>
+    <job job="{{ $job }}" contractor="{{ $contractor }}" customer="{{ $customer }}"></job>
 
 <home :user="user" inline-template>
     <div class="container">
