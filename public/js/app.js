@@ -31331,11 +31331,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
   computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])('job', ['getAgreedStartDate', 'getAgreedEndDate', 'getId']), {
     theDate() {
-      if (this.dbcolumn === 'agreed_start_date') {
+      if (this.dateIsTheStartDate()) {
         //          debugger
         return this.getAgreedStartDate;
         //          return this.getAgreedStartDate
-      } else if (this.dbcolumn === 'agreed_end_date') {
+      } else if (this.dateIsTheEndDate()) {
         return this.getAgreedEndDate;
       }
 
@@ -31344,19 +31344,49 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       //        return this.$store.dispatch ('job/getInitialDate', this.dbcolumn)
     }
   }),
+  mounted() {
+    //      debugger
+    if (this.dateIsTheStartDate()) {
+      let end = this.getTheEndDateInMilliseconds();
+      this.initializeTheStartValue();
+      let currentDate = this.getTheCurrentDateInMilliseconds();
+      if (this.theSelectedEndDateIsBeforeTheStartDate(end, currentDate)) {
+        this.displayStartDateError();
+        this.resetTheDateToTheAgreedStartDate();
+      }
+    } else if (this.dateIsTheEndDate()) {
+      this.initializeTheEndValaue();
+      let start = this.getTheStartDateInMilliseconds();
+      let currentDate = this.getTheCurrentDateInMilliseconds();
+      if (this.theSelectedStartDateIsBeforeTheEndDate(start, currentDate)) {
+        this.displayEndDateError();
+        this.resetTheDateToTheAgreedEndDate();
+      }
+    }
+  },
   methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])('job', ['setDate']), {
+    initializeTheStartValue() {
+      this.resetTheDateToTheAgreedStartDate();
+    },
+    initializeTheEndValaue() {
+      this.resetTheDateToTheAgreedEndDate();
+    },
     mouseLeave() {
       this.displayValues(this.getId, this.thedate, this.serverurl);
-
       //        debugger
       if (this.thedate !== '') {
         this.checkTheDate();
-      } else if (this.dbcolumn === 'agreed_start_date') {
+      } else if (this.dateIsTheStartDate()) {
         this.resetTheDateToTheAgreedStartDate();
-      } else if (this.dbcolumn === 'agreed_end_date') {
+      } else if (this.dateIsTheEndDate()) {
         this.resetTheDateToTheAgreedEndDate();
       }
-      //        debugger
+    },
+    dateIsTheStartDate() {
+      return this.dbcolumn === 'agreed_start_date';
+    },
+    dateIsTheEndDate() {
+      return this.dbcolumn === 'agreed_end_date';
     },
     updateTheDatabase() {
       axios.post(this.serverurl, {
@@ -31400,20 +31430,36 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       console.log('the end date must be after the start date');
       this.thedate = this.getAgreedEndDate;
     },
+    getTheCurrentDateInMilliseconds() {
+      return this.getTimeInSeconds(this.thedate);
+    },
+    getTheStartDateInMilliseconds() {
+      return this.getTimeInSeconds(this.getAgreedStartDate);
+    },
+    getTheEndDateInMilliseconds() {
+      return this.getTimeInSeconds(this.getAgreedEndDate);
+    },
+    theSelectedStartDateIsBeforeTheEndDate(date1, date2) {
+      return date1 > date2;
+    },
+    theSelectedEndDateIsBeforeTheStartDate(date1, date2) {
+      return date1 < date2;
+    },
     checkTheDate() {
-      let currentDate = this.getTimeInSeconds(this.thedate);
-      if (this.dbcolumn === 'agreed_start_date') {
-        let end = this.getTimeInSeconds(this.getAgreedEndDate);
-        if (end < currentDate) {
+      //        debugger
+      let currentDate = this.getTheCurrentDateInMilliseconds();
+      if (this.dateIsTheStartDate()) {
+        let end = this.getTheEndDateInMilliseconds();
+        if (this.theSelectedEndDateIsBeforeTheStartDate(end, currentDate)) {
           this.displayStartDateError();
           this.resetTheDateToTheAgreedStartDate();
         } else {
           this.removeError();
           this.updateTheDatabase();
         }
-      } else if (this.dbcolumn === 'agreed_end_date') {
-        let start = this.getTimeInSeconds(this.getAgreedStartDate);
-        if (start > currentDate) {
+      } else if (this.dateIsTheEndDate()) {
+        let start = this.getTheStartDateInMilliseconds();
+        if (this.theSelectedStartDateIsBeforeTheEndDate(start, currentDate)) {
           this.displayEndDateError();
           this.resetTheDateToTheAgreedEndDate();
         } else {
@@ -31492,13 +31538,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   beforeMount: function () {
-    //        console.log(this.simpleContract)
-    //        console.log(this.id)
-    //        console.log(this.job)
-    //        console.log(this.customer)
-    //        console.log(this.contractor)
-    //        let jobObject = JSON.parse(this.job);
-    //        console.log(jobObject.id)
     this.loadJobStore();
   },
   props: {
@@ -31535,25 +31574,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     loadJobStore() {
       this.$store.commit('job/loadStore', this.job);
     },
-    //      mouseLeave: function () {
-    //        console.log (this.id)
-    //        console.log (this.startDate)
-    //        axios.post ('/job/update', {
-    //          params: {
-    //            dateType: 'agreed_start_date',
-    //            date: this.sDate,
-    //            id: this.id
-    //          }
-    //        }).then (response => {
-    //          console.log (response.data)
-    ////          this.results = response.data
-    ////          this.$emit('taskIsAdded')
-    //        })
-    //      },
-    //      selectedDate (date) {
-    //        console.log(date)
-    //        console.log('I have been emmited')
-    //      },
     showAddTask() {
       this.$data.showTaskToAdd = true;
     },
@@ -39394,7 +39414,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(4)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 312 */
@@ -54436,7 +54456,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "text-danger"
   }, [_vm._v("the start date must be before the end date")]) : _vm._e(), _vm._v(" "), (_vm.endDateError) ? _c('div', {
     staticClass: "text-danger"
-  }, [_vm._v("the end date must be after the start date")]) : _vm._e(), _vm._v(" "), _c('label', {
+  }, [_vm._v("the end date must be after the start date")]) : _vm._e(), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.theDate))]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.thedate))]), _vm._v(" "), _c('label', {
     staticClass: "startDate control-label",
     attrs: {
       "for": "startDate"

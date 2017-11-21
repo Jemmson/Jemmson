@@ -3,8 +3,8 @@
         <div v-if="startDateError" class="text-danger">the start date must be before the end date</div>
         <div v-if="endDateError" class="text-danger">the end date must be after the start date</div>
         <!--<span>{{ new Date() | moment("dddd, MMMM Do YYYY") }}</span>-->
-        <!--<pre>{{ theDate }}</pre>-->
-        <!--<pre>{{ thedate }}</pre>-->
+        <pre>{{ theDate }}</pre>
+        <pre>{{ thedate }}</pre>
         <label for="startDate" class="startDate control-label">{{ label }}
             <input type="date" id="startDate" v-model="thedate" class="form-control" @blur="mouseLeave()">
         </label>
@@ -44,11 +44,11 @@
         'getId'
       ]),
       theDate () {
-        if (this.dbcolumn === 'agreed_start_date') {
+        if (this.dateIsTheStartDate ()) {
 //          debugger
           return this.getAgreedStartDate
 //          return this.getAgreedStartDate
-        } else if (this.dbcolumn === 'agreed_end_date') {
+        } else if (this.dateIsTheEndDate ()) {
           return this.getAgreedEndDate
         }
 
@@ -57,23 +57,52 @@
 //        return this.$store.dispatch ('job/getInitialDate', this.dbcolumn)
       }
     },
+    mounted () {
+//      debugger
+      if (this.dateIsTheStartDate ()) {
+        let end = this.getTheEndDateInMilliseconds ()
+        this.initializeTheStartValue ()
+        let currentDate = this.getTheCurrentDateInMilliseconds ()
+        if (this.theSelectedEndDateIsBeforeTheStartDate (end, currentDate)) {
+          this.displayStartDateError ()
+          this.resetTheDateToTheAgreedStartDate ()
+        }
+      } else if (this.dateIsTheEndDate ()) {
+        this.initializeTheEndValaue ()
+        let start = this.getTheStartDateInMilliseconds ()
+        let currentDate = this.getTheCurrentDateInMilliseconds ()
+        if (this.theSelectedStartDateIsBeforeTheEndDate (start, currentDate)) {
+          this.displayEndDateError ()
+          this.resetTheDateToTheAgreedEndDate ()
+        }
+      }
+    },
     methods: {
       ...mapMutations ('job', [
         'setDate'
       ]),
+      initializeTheStartValue () {
+        this.resetTheDateToTheAgreedStartDate ()
+      },
+      initializeTheEndValaue () {
+        this.resetTheDateToTheAgreedEndDate ()
+      },
       mouseLeave () {
         this.displayValues (this.getId, this.thedate, this.serverurl)
-
 //        debugger
         if (this.thedate !== '') {
           this.checkTheDate ()
-        } else if (this.dbcolumn === 'agreed_start_date') {
+        } else if (this.dateIsTheStartDate ()) {
           this.resetTheDateToTheAgreedStartDate ()
-        } else if (this.dbcolumn === 'agreed_end_date') {
+        } else if (this.dateIsTheEndDate ()) {
           this.resetTheDateToTheAgreedEndDate ()
         }
-//        debugger
-
+      },
+      dateIsTheStartDate () {
+        return this.dbcolumn === 'agreed_start_date'
+      },
+      dateIsTheEndDate () {
+        return this.dbcolumn === 'agreed_end_date'
       },
       updateTheDatabase () {
         axios.post (this.serverurl, {
@@ -117,20 +146,36 @@
         console.log ('the end date must be after the start date')
         this.thedate = this.getAgreedEndDate
       },
+      getTheCurrentDateInMilliseconds () {
+        return this.getTimeInSeconds (this.thedate)
+      },
+      getTheStartDateInMilliseconds () {
+        return this.getTimeInSeconds (this.getAgreedStartDate)
+      },
+      getTheEndDateInMilliseconds () {
+        return this.getTimeInSeconds (this.getAgreedEndDate)
+      },
+      theSelectedStartDateIsBeforeTheEndDate (date1, date2) {
+        return date1 > date2
+      },
+      theSelectedEndDateIsBeforeTheStartDate (date1, date2) {
+        return date1 < date2
+      },
       checkTheDate () {
-        let currentDate = this.getTimeInSeconds (this.thedate)
-        if (this.dbcolumn === 'agreed_start_date') {
-          let end = this.getTimeInSeconds (this.getAgreedEndDate)
-          if (end < currentDate) {
+//        debugger
+        let currentDate = this.getTheCurrentDateInMilliseconds ()
+        if (this.dateIsTheStartDate ()) {
+          let end = this.getTheEndDateInMilliseconds ()
+          if (this.theSelectedEndDateIsBeforeTheStartDate (end, currentDate)) {
             this.displayStartDateError ()
             this.resetTheDateToTheAgreedStartDate ()
           } else {
             this.removeError ()
             this.updateTheDatabase ()
           }
-        } else if (this.dbcolumn === 'agreed_end_date') {
-          let start = this.getTimeInSeconds (this.getAgreedStartDate)
-          if (start > currentDate) {
+        } else if (this.dateIsTheEndDate ()) {
+          let start = this.getTheStartDateInMilliseconds ()
+          if (this.theSelectedStartDateIsBeforeTheEndDate (start, currentDate)) {
             this.displayEndDateError ()
             this.resetTheDateToTheAgreedEndDate ()
           } else {

@@ -25,7 +25,7 @@
   //  import 'bootstrap/dist/css/bootstrap.css'
   //  import 'bootstrap-vue/dist/bootstrap-vue.css'
   import axios from 'axios'
-  import { mapMutations } from 'vuex'
+  import {mapMutations} from 'vuex'
   //  import UiDropdown from 'vue-ui'
 
   export default {
@@ -50,14 +50,7 @@
       }
     },
     beforeMount: function () {
-//        console.log(this.simpleContract)
-//        console.log(this.id)
-//        console.log(this.job)
-//        console.log(this.customer)
-//        console.log(this.contractor)
-//        let jobObject = JSON.parse(this.job);
-//        console.log(jobObject.id)
-        this.loadJobStore()
+      this.loadJobStore ()
     },
     props: {
       job: {
@@ -87,31 +80,12 @@
 //          'loadJobStore'
 //      ]),
       jobName () {
-        let jobName = JSON.parse(this.job)
+        let jobName = JSON.parse (this.job)
         return jobName.job_name
       },
       loadJobStore () {
-        this.$store.commit('job/loadStore', this.job)
+        this.$store.commit ('job/loadStore', this.job)
       },
-//      mouseLeave: function () {
-//        console.log (this.id)
-//        console.log (this.startDate)
-//        axios.post ('/job/update', {
-//          params: {
-//            dateType: 'agreed_start_date',
-//            date: this.sDate,
-//            id: this.id
-//          }
-//        }).then (response => {
-//          console.log (response.data)
-////          this.results = response.data
-////          this.$emit('taskIsAdded')
-//        })
-//      },
-//      selectedDate (date) {
-//        console.log(date)
-//        console.log('I have been emmited')
-//      },
       showAddTask () {
         this.$data.showTaskToAdd = true
       },
