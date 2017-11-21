@@ -31483,13 +31483,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__CurrentTasksForJob_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__CurrentTasksForJob_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__InfoLabel__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__InfoLabel___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__InfoLabel__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Contracts_vue__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Contracts_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Contracts_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Task_vue__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Task_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_axios__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vuex__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Task_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Task_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuex__ = __webpack_require__(17);
 //
 //
 //
@@ -31512,7 +31510,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
+//  import Contracts from './Contracts.vue'
 
 //  import 'bootstrap/dist/css/bootstrap.css'
 //  import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -31524,10 +31522,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   name: 'Job',
   data() {
     return {
-      simpleContract: false,
-      mediumContract: false,
-      complicatedContract: false,
-      customContract: false,
+      //        simpleContract: false,
+      //        mediumContract: false,
+      //        complicatedContract: false,
+      //        customContract: false,
       numberOfTasks: '',
       showTaskToAdd: false,
       allTasks: [{ taskName: 'task1', price: 90 }, { taskName: 'task2', price: 50 }, { taskName: 'task3', price: 100 }],
@@ -31553,8 +31551,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   components: {
     InfoLabel: __WEBPACK_IMPORTED_MODULE_2__InfoLabel___default.a,
-    Contracts: __WEBPACK_IMPORTED_MODULE_3__Contracts_vue___default.a,
-    Task: __WEBPACK_IMPORTED_MODULE_4__Task_vue___default.a,
+    //      Contracts,
+    Task: __WEBPACK_IMPORTED_MODULE_3__Task_vue___default.a,
     CurrentTasksForJob: __WEBPACK_IMPORTED_MODULE_1__CurrentTasksForJob_vue___default.a,
     JemmDate: __WEBPACK_IMPORTED_MODULE_0__JemmDate_vue___default.a
   },
@@ -31578,7 +31576,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.$data.showTaskToAdd = true;
     },
     updateTasksForJob() {
-      __WEBPACK_IMPORTED_MODULE_5_axios___default.a.post('', {
+      __WEBPACK_IMPORTED_MODULE_4_axios___default.a.post('', {
         params: {
           query: this.query
         }
@@ -54307,8 +54305,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "serverurl": "/job/update",
       "dbcolumn": "agreed_end_date"
     }
-  }), _vm._v(" "), _c('contracts', {
-    staticClass: "contracts"
   }), _vm._v(" "), _c('currentTasksForJob', {
     staticClass: "currentTasksForJob",
     attrs: {

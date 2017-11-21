@@ -7,7 +7,7 @@
             ></jemm-date>
             <jemm-date label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"
             ></jemm-date>
-            <contracts class="contracts"></contracts>
+            <!--<contracts class="contracts"></contracts>-->
             <currentTasksForJob class="currentTasksForJob" :allTasks="allTasks"></currentTasksForJob>
             <button class="btn btn-primary-btn-large" @click="showAddTask()">Add Task</button>
             <task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>
@@ -20,7 +20,7 @@
   import JemmDate from './JemmDate.vue'
   import CurrentTasksForJob from './CurrentTasksForJob.vue'
   import InfoLabel from './InfoLabel'
-  import Contracts from './Contracts.vue'
+//  import Contracts from './Contracts.vue'
   import Task from './Task.vue'
   //  import 'bootstrap/dist/css/bootstrap.css'
   //  import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -32,10 +32,10 @@
     name: 'Job',
     data () {
       return {
-        simpleContract: false,
-        mediumContract: false,
-        complicatedContract: false,
-        customContract: false,
+//        simpleContract: false,
+//        mediumContract: false,
+//        complicatedContract: false,
+//        customContract: false,
         numberOfTasks: '',
         showTaskToAdd: false,
         allTasks: [
@@ -65,7 +65,7 @@
     },
     components: {
       InfoLabel,
-      Contracts,
+//      Contracts,
       Task,
       CurrentTasksForJob,
       JemmDate
