@@ -33,7 +33,7 @@ class Job extends Model
         $jobActions = $this->hasOne(JobActions::class);
         
         if ($jobActions->exists()) {
-            $jobActions = $jobActions->get();
+            $jobActions = $jobActions->first();
         } else {
             $jobActions = $this->createJobActions();
         }
@@ -60,7 +60,7 @@ class Job extends Model
             $jobActions->save();
             return true;
         } catch (\Exception $e) {
-            Log::error('JobActions: ' . $e->getMessage());
+            Log::error('JobActions: accept job - ' . $e->getMessage());
             return false;
         }
     }
@@ -84,7 +84,7 @@ class Job extends Model
             $jobActions->save();
             return true;
         } catch (\Exception $e) {
-            Log::error('JobActions: ' . $e->getMessage());
+            Log::error('JobActions: decline job - ' . $e->getMessage());
             return false;
         }
     }
@@ -108,7 +108,7 @@ class Job extends Model
             $jobActions->save();
             return true;
         } catch (\Exception $e) {
-            Log::error('JobActions: ' . $e->getMessage());
+            Log::error('JobActions: approve job - ' . $e->getMessage());
             return false;
         }
     }
@@ -132,7 +132,7 @@ class Job extends Model
             $jobActions->save();
             return $jobActions;
         } catch (\Exception $e) {
-            Log::error('JobActions: ' . $e->getMessage());
+            Log::error('JobActions: creating new JobActions - ' . $e->getMessage());
         }
     }
     
