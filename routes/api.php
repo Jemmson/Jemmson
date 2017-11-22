@@ -29,8 +29,14 @@ Route::group([
     });
 });
 
+// TODO: need to lock these routes down
+// based on user and the resources they 
+// try to edit
+
 Route::get('/search',function(Request $request){
     $query = $request->query('query');
     $users = \App\User::where('name','like','%'.$query.'%')->get();
     return $users;
 });
+
+Route::post('/job/action', 'JobController@action');

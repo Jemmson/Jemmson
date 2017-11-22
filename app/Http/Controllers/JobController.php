@@ -108,4 +108,32 @@ class JobController extends Controller
     {
         //
     }
+
+    public function action(Request $request)
+    {
+        $job = Job::find($request->job_id);
+        
+        if ($job == null) {
+            return ['status' => false, 'error' => 'Resource not found'];
+        }
+        
+        // do required action
+        switch ($request->action) {
+            case 'accept':
+                return ['status' => $job->acceptJob()];        
+                break;
+            case 'approve':
+                return ['status' => $job->approveJob()];        
+                break;
+            case 'decline':
+                return ['status' => $job->declineJob()];        
+                break;
+            default: 
+                return ['status' => false, 'error' => 'No action defined'];        
+                break;
+        }
+
+        return ['status' => false, 'error' => 'Whoops! something went wrong!'];
+        
+    }
 }
