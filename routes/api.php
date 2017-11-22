@@ -34,3 +34,5 @@ Route::get('/search',function(Request $request){
     $users = \App\User::where('name','like','%'.$query.'%')->get();
     return $users;
 });
+
+Route::post('/job/action', 'JobController@action');
