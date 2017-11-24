@@ -5,14 +5,16 @@
         <!--<span>{{ new Date() | moment("dddd, MMMM Do YYYY") }}</span>-->
         <pre>{{ theDate }}</pre>
         <pre>{{ thedate }}</pre>
-        <label for="startDate" class="startDate control-label">{{ label }}
-            <input type="date" id="startDate" v-model="thedate" class="form-control" @blur="mouseLeave()">
+        <label class="startDate control-label">{{ label }}
+            <!--<input type="date" value="2016-11-17">-->
+            <input type="date" :value="thedate" v-model="thedate" class="form-control" @blur="mouseLeave()">
         </label>
     </div>
 </template>
 
 <script>
   import {mapMutations, mapGetters} from 'vuex'
+  import * as ut from '../utilities/utilities.js'
 
   export default {
     name: '',
@@ -139,12 +141,10 @@
         this.$data.endDateError = false
       },
       resetTheDateToTheAgreedStartDate () {
-        console.log ('the start date must be before the end date')
-        this.thedate = this.getAgreedStartDate
+        this.thedate = ut.getTimeForDate(this.getAgreedStartDate)
       },
       resetTheDateToTheAgreedEndDate () {
-        console.log ('the end date must be after the start date')
-        this.thedate = this.getAgreedEndDate
+        this.thedate = ut.getTimeForDate(this.getAgreedEndDate)
       },
       getTheCurrentDateInMilliseconds () {
         return this.getTimeInSeconds (this.thedate)

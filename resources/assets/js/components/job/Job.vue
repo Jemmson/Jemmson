@@ -116,6 +116,11 @@
         grid-row-gap: 20px;
     }
 
+    label {
+        grid-column: 3 / 4;
+        grid-row: 1 / 2
+    }
+
     .startDate {
         grid-row-start: 2;
         grid-row-end: 3;
