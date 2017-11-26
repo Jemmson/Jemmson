@@ -20,7 +20,12 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('standard_task_id');
+            $table->integer('standard_task_id')->nullable();
+            $table->integer('contractor_id');
+            $table->float('proposed_cust_price')->nullable();
+            $table->float('average_cust_price')->nullable();
+            $table->float('proposed_sub_price')->nullable();
+            $table->float('average_sub_price')->nullable();
             $table->timestamps();
         });
     }

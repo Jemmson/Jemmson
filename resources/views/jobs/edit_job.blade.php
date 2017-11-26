@@ -2,6 +2,8 @@
 
 @section('content')
 
-    <job job="{{ $job }}" contractor="{{ $contractor }}" customer="{{ $customer }}"></job>
+    <job usertype="{{ $userType }}" job="{{ $job }}" contractor="{{ $contractor }}" customer="{{ $customer }}" tasks="{{ $tasks }}"></job>
+
+    <footer style="height: 10rem"></footer>
 
 @endsection

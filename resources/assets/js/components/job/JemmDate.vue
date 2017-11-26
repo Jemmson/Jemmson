@@ -3,8 +3,8 @@
         <div v-if="startDateError" class="text-danger">the start date must be before the end date</div>
         <div v-if="endDateError" class="text-danger">the end date must be after the start date</div>
         <!--<span>{{ new Date() | moment("dddd, MMMM Do YYYY") }}</span>-->
-        <pre>{{ theDate }}</pre>
-        <pre>{{ thedate }}</pre>
+        <!--<pre>{{ theDate }}</pre>-->
+        <!--<pre>{{ thedate }}</pre>-->
         <label class="startDate control-label">{{ label }}
             <!--<input type="date" value="2016-11-17">-->
             <input type="date" :value="thedate" v-model="thedate" class="form-control" @blur="mouseLeave()">

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Job;
 use App\User;
+use App\Task;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -71,7 +73,11 @@ class JobController extends Controller
     {
         $contractor = User::find($job->contractor_id);
         $customer = User::find($job->customer_id);
-        return view('jobs.edit_job', compact('job', 'contractor', 'customer'));
+        $job = Job::find(1);
+        $tasks = $job->tasks()->get();
+        $userType = Auth::user()->usertype;
+        return view('jobs.edit_job',
+            compact('job', 'contractor', 'customer', 'tasks', 'userType'));
     }
 
     public function updateJobDate(Request $request)

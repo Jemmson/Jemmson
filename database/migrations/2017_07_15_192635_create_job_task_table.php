@@ -20,6 +20,16 @@ class CreateJobTaskTable extends Migration
             $table->increments('id');
             $table->integer('job_id');
             $table->integer('task_id');
+            $table->float('cust_final_price')->nullable();
+            $table->float('sub_final_price')->nullable();
+            $table->float('sub_cont_proposed')->nullable();
+            $table->float('cont_sub_proposed')->nullable();
+            $table->float('cust_cont_proposed')->nullable();
+            $table->float('cont_cust_proposed')->nullable();
+            $table->boolean('sub_cont_accepted')->default(0);
+            $table->boolean('cont_sub_accepted')->default(0);
+            $table->boolean('cust_cont_accepted')->default(0);
+            $table->boolean('cont_cust_accepted')->default(0);
             $table->timestamps();
         });
     }

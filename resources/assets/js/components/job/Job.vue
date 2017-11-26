@@ -1,41 +1,35 @@
 <template>
     <div>
-        <pre>{{ $store.state.job }}</pre>
+        <!--<pre>{{ $store.state.job }}</pre>-->
+        <!--<pre>{{ getTasks }}</pre>-->
+        <!--<pre>{{ getUserType }}</pre>-->
+        <pre> {{ getCustomer }}</pre>
         <div class="wrapper">
-            <info-label label="Job Name" :value="jobName()"></info-label>
-            <jemm-date label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"
+            <h1 class="customerName">{{ customerName }}</h1>
+            <info-label class="infoLabel" label="Job Name" :value="jobName()"></info-label>
+            <jemm-date class="startDate" label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"
             ></jemm-date>
-            <jemm-date label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"
+            <jemm-date class="endDate" label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"
             ></jemm-date>
-            <!--<contracts class="contracts"></contracts>-->
-            <currentTasksForJob class="currentTasksForJob" :allTasks="allTasks"></currentTasksForJob>
-            <button class="btn btn-primary-btn-large" @click="showAddTask()">Add Task</button>
-            <task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>
         </div>
+        <currentTasksForJob :user="getUserType" class="currentTasksForJob" :allTasks="getTasks"></currentTasksForJob>
+        <button class="btn btn-primary btn-lg" @click="showAddTask()">Add Task</button>
+        <task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>
     </div>
 </template>
 
 <script>
-  //  import InputValue from './InputValue.vue'
   import JemmDate from './JemmDate.vue'
   import CurrentTasksForJob from './CurrentTasksForJob.vue'
   import InfoLabel from './InfoLabel'
-//  import Contracts from './Contracts.vue'
   import Task from './Task.vue'
-  //  import 'bootstrap/dist/css/bootstrap.css'
-  //  import 'bootstrap-vue/dist/bootstrap-vue.css'
   import axios from 'axios'
   import {mapMutations} from 'vuex'
-  //  import UiDropdown from 'vue-ui'
 
   export default {
     name: 'Job',
     data () {
       return {
-//        simpleContract: false,
-//        mediumContract: false,
-//        complicatedContract: false,
-//        customContract: false,
         numberOfTasks: '',
         showTaskToAdd: false,
         allTasks: [
@@ -61,7 +55,13 @@
       },
       customer: {
         type: String
-      }
+      },
+      tasks: {
+        type: String
+      },
+      usertype: {
+        type: String
+      },
     },
     components: {
       InfoLabel,
@@ -73,6 +73,22 @@
     computed: {
       date () {
         return this.$moment (new Date (), 'MMMM YYYY')
+      },
+      getCustomer () {
+        let customer = JSON.parse (this.customer)
+        return customer
+      },
+      customerName () {
+        let customer = JSON.parse (this.customer)
+        return customer.name
+      },
+      getTasks () {
+        return JSON.parse (this.tasks)
+      },
+      getUserType () {
+        console.log (this.usertype)
+        console.log (typeof this.usertype)
+        return this.usertype;
       }
     },
     methods: {
@@ -80,8 +96,8 @@
 //          'loadJobStore'
 //      ]),
       jobName () {
-        let jobName = JSON.parse (this.job)
-        return jobName.job_name
+        let customer = JSON.parse (this.customer)
+//        return customer.job_name
       },
       loadJobStore () {
         this.$store.commit ('job/loadStore', this.job)
@@ -106,14 +122,16 @@
 
 <style scoped>
     .wrapper {
+
         display: grid;
-        grid-template-columns: 469px 200px 1fr 1fr 1fr;
-        margin-right: auto;
-        margin-left: auto;
-        padding-left: 15px;
-        padding-right: 15px;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        /*margin-right: auto;*/
+        /*margin-left: auto;*/
+        margin-left: 36rem;
+        margin-right: 36rem;
         grid-column-gap: 10px;
         grid-row-gap: 20px;
+        /*border: solid black thin;*/
     }
 
     label {
@@ -161,7 +179,7 @@
         grid-row-start: 5;
         grid-row-end: 6;
         grid-column-start: 2;
-        grid-column-end: 3;
+        grid-column-end: 5;
     }
 
     @media (min-width: 768px)
@@ -169,4 +187,34 @@
     .wrapper {
         width: 750px;
     }
+
+    .customerName {
+        grid-column-start: 2;
+        grid-column-end: 3;
+    }
+
+    .infoLabel {
+        grid-column-start: 4;
+        grid-column-end: 5;
+    }
+
+    .startDate {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        grid-column-start: 2;
+        grid-column-end: 3;
+    }
+
+    .endDate {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        grid-column-start: 4;
+        grid-column-end: 5;
+    }
+
+    button {
+        margin-left: 36rem;
+        margin-right: 36rem;
+    }
+
 </style>
