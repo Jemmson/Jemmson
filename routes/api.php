@@ -40,3 +40,8 @@ Route::get('/search',function(Request $request){
 });
 
 Route::post('/job/action', 'JobController@action');
+Route::get('job', 'JobController@index');
+Route::get('job/{job}', 'JobController@show');
+Route::post('job', 'JobController@store');
+Route::put('job/{job}', 'JobController@update');
+Route::delete('job/{job}', 'JobController@delete');

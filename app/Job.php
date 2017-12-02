@@ -11,7 +11,16 @@ use App\JobActions;
 
 class Job extends Model
 {   
-    //
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [
+        'id',
+    ];
+
+//
 //    public function time()
 //    {
 //        return $this->hasMany(Time::class);

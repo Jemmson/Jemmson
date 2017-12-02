@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Job;
 use App\User;
 use App\Task;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Validator;
 
 class JobController extends Controller
 {
@@ -27,7 +29,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        //
+        return Job::all();
     }
 
     /**
@@ -47,8 +49,20 @@ class JobController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $validator = Validator::make($request->all(), [
+            'agreed_start_date' => 'required',
+            'agreed_end_date' => 'required',
+            'bid_price' => 'required'
+        ]);
+        Log::info($request->all());
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Missing fields'], 400);
+        }
+        
+        $job = Job::create($request->all());
+
+        return response()->json($job, 201);
     }
 
     /**
@@ -99,21 +113,9 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        $this->validate($request, [
-            'agreed_start_date' => 'required',
-            'agreed_end_date' => 'required',
-            'bid_price' => 'required',
-        ]);
-        $job->agreed_start_date = $request->agreed_start_date;
-        $job->agreed_end_date = $request->agreed_end_date;
-        $job->bid_price = $request->bid_price;
+        $job->update($request->all());
 
-        try {
-            $job->save();
-        } catch (\Exception $e) {
-            Log::error('Error Saving Job: ' . $e->getMessage());
-        }
-        return redirect()->back()->with('success', "Job Saved Successfully");
+        return response()->json($job, 200);
     }
 
     /**
@@ -124,7 +126,9 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        //
+        $article->delete();
+
+        return response()->json(null, 204);
     }
 
     public function action(Request $request)
@@ -138,20 +142,19 @@ class JobController extends Controller
         // do required action
         switch ($request->action) {
             case 'accept':
-                return ['status' => $job->acceptJob()];        
+                $job->acceptJob();
                 break;
             case 'approve':
-                return ['status' => $job->approveJob()];        
+                $job->approveJob();
                 break;
             case 'decline':
-                return ['status' => $job->declineJob()];        
+                $job->declineJob();
                 break;
             default: 
-                return ['status' => false, 'error' => 'No action defined'];        
+                return response()->json(['error' => 'action required'], 400);       
                 break;
         }
 
-        return ['status' => false, 'error' => 'Whoops! something went wrong!'];
-        
+        return response()->json($job->jobActions(), 200);        
     }
 }
