@@ -9,6 +9,9 @@
         <!--<pre>{{ showDetails[3].show }}</pre>-->
         <!--<pre>{{ showDetails[4].show }}</pre>-->
         <pre>{{ taskId }}</pre>
+        <div class="joblist" v-if="getUser === 'customer'">
+
+        </div>
         <div class="joblist" v-if="getUser === 'contractor'">
             <div class="wrapper1">
                 <div class="header">Task Name</div>
@@ -16,19 +19,21 @@
                 <div class="header">Final Sub Price</div>
                 <div></div>
             </div>
-            <div v-for="(task, index) in allTasks" :key="task.id">
-                <div class="wrapper1">
-                    <div class="taskName">{{ task.name }}</div>
-                    <div class="price">{{ task.cust_final_price }}</div>
-                    <div class="price">{{ task.sub_final_price }}</div>
-                    <button @click="initiateSub(task.id)" class="btn btn-sm btn-primary">Initiate Bid For Sub</button>
-                    <button class="btn btn-sm btn-primary" @click="showDetails[index].show = !showDetails[index].show">
-                        Details
-                    </button>
-                </div>
-                <div class="subwrapper" v-if="showDetails[index].show">
-                    <div class="customer">Customer</div>
-                    <div class="contractor">Contractor</div>
+            <div class="mainTaskWrapper">
+                <div v-for="(task, index) in allTasks" :key="task.id">
+                    <div class="wrapper1">
+                        <div class="taskName">{{ task.name }}</div>
+                        <div class="price">{{ task.cust_final_price }}</div>
+                        <div class="price">{{ task.sub_final_price }}</div>
+                        <button @click="initiateSub(task.id)" class="button btn btn-sm btn-primary">Initiate Bid For Sub</button>
+                        <button class="btn btn-sm btn-primary button" @click="showDetails[index].show = !showDetails[index].show">
+                            Details
+                        </button>
+                    </div>
+                    <div class="subwrapper" v-if="showDetails[index].show">
+                        <div class="customer">Customer</div>
+                        <div class="contractor">Contractor</div>
+                    </div>
                 </div>
             </div>
             <div class="alert-success" v-show="showNotificationSent">A notification was succesfully sent</div>
@@ -180,7 +185,7 @@
         this.showNotificationSent = true
         setTimeout (function () {
           this.showNotificationSent = false
-        }.bind(this), 1000)
+        }.bind(this), 3000)
       },
       autoComplete () {
         this.results = [];
@@ -222,17 +227,29 @@
 
     .wrapper1 {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-column-gap: 10px;
+    }
+
+    .button {
+        margin-left: 50px;
+        margin-right: 50px;
     }
 
     .joblist {
-        margin-left: 36rem;
-        margin-right: 36rem;
+        margin-left: 27rem;
+        margin-right: 27rem;
     }
 
     .subwrapper {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-row-gap: 100px;
+    }
+
+    .mainTaskWrapper {
+        display: grid;
+        grid-row-gap: 10px;
     }
 
     .customer {

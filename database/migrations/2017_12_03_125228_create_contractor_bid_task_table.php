@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContractorTaskTable extends Migration
+class CreateContractorBidTaskTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateContractorTaskTable extends Migration
      */
     public function up()
     {
-        // this table keeps track of the tasks that a contractor performs
-        // and what their initial price is for these tasks. This price
-        // will change to actual price based upon the negotiation the
-        // contractor has with the customer
-        Schema::create('contractor_task', function (Blueprint $table) {
+        Schema::create('contractor_bid_task', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('task_id');
-            $table->integer('base_price');
+            $table->float('bid_price');
+            $table->boolean('accepted');
             $table->timestamps();
         });
     }
@@ -33,7 +30,6 @@ class CreateContractorTaskTable extends Migration
      */
     public function down()
     {
-        //
-        Schema::drop('contractor_task');
+        Schema::dropIfExists('contractor_bid_task');
     }
 }
