@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Job;
 use App\User;
 use App\Task;
+use App\Customer;
+use App\Contractor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -71,13 +73,22 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        $contractor = User::find($job->contractor_id);
-        $customer = User::find($job->customer_id);
-        $job = Job::find(1);
+//        $contractor = User::find($job->contractor_id)->contractors()->get();
+        $contractor = Contractor::find($job->contractor_id)->get();
+//        $customer = User::find($job->customer_id)->customers()->get();
+        if (Customer::find($job->customer_id) == null) {
+            $customer = "[]";
+        } else {
+            $customer = Customer::find($job->customer_id)->get();
+        }
+        $customerUserData = User::find(1)->where('id', '=', $job->customer_id)->get();
         $tasks = $job->tasks()->get();
         $userType = Auth::user()->usertype;
+//        dd($customer);
+//        dd($contractor);
+//        dd($job->id);
         return view('jobs.edit_job',
-            compact('job', 'contractor', 'customer', 'tasks', 'userType'));
+            compact('job', 'contractor', 'customer', 'tasks', 'userType', 'customerUserData'));
     }
 
     public function updateJobDate(Request $request)
@@ -130,28 +141,28 @@ class JobController extends Controller
     public function action(Request $request)
     {
         $job = Job::find($request->job_id);
-        
+
         if ($job == null) {
             return ['status' => false, 'error' => 'Resource not found'];
         }
-        
+
         // do required action
         switch ($request->action) {
             case 'accept':
-                return ['status' => $job->acceptJob()];        
+                return ['status' => $job->acceptJob()];
                 break;
             case 'approve':
-                return ['status' => $job->approveJob()];        
+                return ['status' => $job->approveJob()];
                 break;
             case 'decline':
-                return ['status' => $job->declineJob()];        
+                return ['status' => $job->declineJob()];
                 break;
-            default: 
-                return ['status' => false, 'error' => 'No action defined'];        
+            default:
+                return ['status' => false, 'error' => 'No action defined'];
                 break;
         }
 
         return ['status' => false, 'error' => 'Whoops! something went wrong!'];
-        
+
     }
 }

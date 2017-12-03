@@ -10,7 +10,6 @@ use SimpleSoftwareIO\SMS\Facades\SMS;
 use App\User;
 use App\Job;
 use App\Mail\PasswordlessBidPageLogin;
-
 use App\Services\RandomPasswordService;
 
 class InitiateBidController extends Controller
