@@ -31103,6 +31103,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -71531,7 +71532,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('label', {
+  return _c('div', [_c('h1', {
+    staticClass: "text-center"
+  }, [_vm._v("Please Initiate a Bid With A Customer")]), _vm._v(" "), _c('label', {
     attrs: {
       "for": "customerName"
     }
@@ -71696,7 +71699,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('pre', [_vm._v(_vm._s(_vm.taskId))]), _vm._v(" "), (_vm.getUser === 'customer') ? _c('div', {
+  return _c('div', [(_vm.getUser === 'customer') ? _c('div', {
     staticClass: "joblist"
   }) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
     staticClass: "joblist"

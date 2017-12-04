@@ -8,7 +8,7 @@
         <!--<pre>{{ showDetails[2].show }}</pre>-->
         <!--<pre>{{ showDetails[3].show }}</pre>-->
         <!--<pre>{{ showDetails[4].show }}</pre>-->
-        <pre>{{ taskId }}</pre>
+        <!--<pre>{{ taskId }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
 
         </div>

@@ -133,6 +133,8 @@ class TaskController extends Controller
             ]
         );
 
+//        $user = User::create(['name' => 'joe', 'email' => 'asd@kdfsasasssj.com', 'phone' => '123123176', 'usertype' => 'contractor', 'password_updated' => false, 'password' => bcrypt('asdasd'),]);
+
         Contractor::create(
             [
                 'user_id' => $user->id

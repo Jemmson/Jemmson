@@ -165,6 +165,7 @@ class InitiateBidController extends Controller
                 'name' => explode('@', $email)[0],
                 'email' => $email,
                 'phone' => $phone,
+                'usertype' => 'customer',
                 'password_updated' => false,
                 'password' => bcrypt($pass),
             ]

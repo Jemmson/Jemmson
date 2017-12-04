@@ -19,6 +19,7 @@ class User extends SparkUser
         'email',
         'phone',
         'password_updated',
+        'usertype',
         'password'
     ];
 
@@ -40,8 +41,7 @@ class User extends SparkUser
         'billing_city',
         'billing_zip',
         'billing_country',
-        'extra_billing_information',
-        'usertype',
+        'extra_billing_information'
     ];
 
     /**

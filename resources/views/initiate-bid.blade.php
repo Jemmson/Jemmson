@@ -20,8 +20,6 @@
 
                                     <initiate-bid></initiate-bid>
 
-
-
                                 <!--<div class="btn-group" data-toggle="buttons">-->
                                 <!--<label class="btn btn-info active">-->
                                 <!--<input type="radio" name="options" id="customer" autocomplete="off">Customer-->
@@ -30,8 +28,6 @@
                                 <!--<input type="radio" name="options" id="subcontractor" autocomplete="off">Sub Contractor-->
                                 <!--</label>-->
                                 <!--</div>-->
-
-
 
                                 <button name="submit" class="btn btn-default btn-primary">Submit</button>
                             </form>
