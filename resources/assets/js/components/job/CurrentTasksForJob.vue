@@ -25,7 +25,7 @@
                         <div class="taskName">{{ task.name }}</div>
                         <div class="price">{{ task.cust_final_price }}</div>
                         <div class="price">{{ task.sub_final_price }}</div>
-                        <button @click="initiateSub(task.id)" class="button btn btn-sm btn-primary">
+                        <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
                             Initiate Bid For Sub
                         </button>
                         <button class="btn btn-sm btn-primary button"
@@ -44,26 +44,29 @@
                 Task Already exists and was not added for this contractor <span class="glyphicon glyphicon-remove-sign"
                                                                                 @click="hidewarning()"></span></div>
             <div v-show="initiateSubTask">
-                <div class="form-group">
-                    <label
-                            for="contractorName">Contractor Name</label>
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="contractorName"
-                            name="contractorName"
-                            :value="contractorName"
-                            :placeholder="contractorName"
-                            v-model="query"
-                            v-on:keyup="autoComplete"
-                    >
-                    <div class="panel-footer" v-if="results.length">
-                        <ul class="list-group">
-                            <button class="list-group-item" v-for="result in results" :name="result.phone"
-                                    @click="fillFields(result)">
-                                {{ result.name }}
-                            </button>
-                        </ul>
+                <div class="addBidTask">
+                    <h1 class="text-center">Task: {{ taskName }}</h1>
+                    <div class="form-group">
+                        <label
+                                for="contractorName">Contractor Name</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="contractorName"
+                                name="contractorName"
+                                :value="contractorName"
+                                :placeholder="contractorName"
+                                v-model="query"
+                                v-on:keyup="autoComplete"
+                        >
+                        <div class="panel-footer" v-if="results.length">
+                            <ul class="list-group">
+                                <button class="list-group-item" v-for="result in results" :name="result.phone"
+                                        @click="fillFields(result)">
+                                    {{ result.name }}
+                                </button>
+                            </ul>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label
@@ -124,7 +127,8 @@
         ],
         showNotificationSent: false,
         taskAlreadyExistsWarning: false,
-        taskId: ''
+        taskId: '',
+        taskName: ''
       }
     },
     props: {
@@ -150,9 +154,10 @@
       }
     },
     methods: {
-      initiateSub (taskId) {
+      initiateSub (taskId, taskName) {
         // show the sub task
         this.showSubTask (taskId)
+        this.taskName = taskName
         // set the task Id for the sub
       },
       hidewarning () {
@@ -237,6 +242,10 @@
 </script>
 
 <style scoped>
+
+    .addBidTask {
+        margin-top: 4rem;
+    }
 
     .wrapper1 {
         display: grid;

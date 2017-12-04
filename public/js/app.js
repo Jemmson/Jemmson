@@ -31363,6 +31363,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -31385,7 +31388,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       showDetails: [{ show: true }, { show: false }, { show: false }, { show: false }, { show: false }],
       showNotificationSent: false,
       taskAlreadyExistsWarning: false,
-      taskId: ''
+      taskId: '',
+      taskName: ''
     };
   },
   props: {
@@ -31411,9 +31415,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
-    initiateSub(taskId) {
+    initiateSub(taskId, taskName) {
       // show the sub task
       this.showSubTask(taskId);
+      this.taskName = taskName;
       // set the task Id for the sub
     },
     hidewarning() {
@@ -39710,7 +39715,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n.wrapper1[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n    grid-column-gap: 10px;\n}\n.button[data-v-4c93029a] {\n    margin-left: 50px;\n    margin-right: 50px;\n}\n.joblist[data-v-4c93029a] {\n    margin-left: 27rem;\n    margin-right: 27rem;\n}\n.subwrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n    grid-row-gap: 100px;\n}\n.mainTaskWrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    grid-row-gap: 10px;\n}\n.customer[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contractor[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contcustpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.contcustprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contsubpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.subpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.subaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contcustaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custstartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.substartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n\n", ""]);
+exports.push([module.i, "\n.addBidTask[data-v-4c93029a] {\n    margin-top: 4rem;\n}\n.wrapper1[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n    grid-column-gap: 10px;\n}\n.button[data-v-4c93029a] {\n    margin-left: 50px;\n    margin-right: 50px;\n}\n.joblist[data-v-4c93029a] {\n    margin-left: 27rem;\n    margin-right: 27rem;\n}\n.subwrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n    grid-row-gap: 100px;\n}\n.mainTaskWrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    grid-row-gap: 10px;\n}\n.customer[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contractor[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contcustpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.contcustprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contsubpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.subpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.subaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contcustaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custstartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.substartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n\n", ""]);
 
 /***/ }),
 /* 312 */
@@ -71712,7 +71717,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "button btn btn-sm btn-primary",
       on: {
         "click": function($event) {
-          _vm.initiateSub(task.id)
+          _vm.initiateSub(task.id, task.name)
         }
       }
     }, [_vm._v("\n                        Initiate Bid For Sub\n                    ")]), _vm._v(" "), _c('button', {
@@ -71760,6 +71765,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "initiateSubTask"
     }]
   }, [_c('div', {
+    staticClass: "addBidTask"
+  }, [_c('h1', {
+    staticClass: "text-center"
+  }, [_vm._v("Task: " + _vm._s(_vm.taskName))]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
   }, [_c('label', {
     attrs: {
@@ -71805,8 +71814,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.fillFields(result)
         }
       }
-    }, [_vm._v("\n                            " + _vm._s(result.name) + "\n                        ")])
-  }))]) : _vm._e(), _vm._v(" "), _c('div', {
+    }, [_vm._v("\n                                " + _vm._s(result.name) + "\n                            ")])
+  }))]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
   }, [_c('label', {
     attrs: {
