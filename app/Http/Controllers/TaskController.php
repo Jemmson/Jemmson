@@ -122,16 +122,35 @@ class TaskController extends Controller
 
         $pass = RandomPasswordService::randomPassword();
 
-        return User::create(
+        $user = User::create(
             [
                 'name' => explode('@', $email)[0],
                 'email' => $email,
                 'phone' => $phone,
+                'usertype' => 'contractor',
                 'password_updated' => false,
                 'password' => bcrypt($pass),
             ]
         );
 
+        Contractor::create(
+            [
+                'user_id' => $user->id
+            ]
+        );
+
+        return $user;
+
+    }
+
+    public function addBidEntryForTheSubContractor($contractor, $taskId)
+    {
+        if ($contractor->checkIfContractorSetBidForATask($contractor->id, $taskId)) {
+            $contractor->addContractorToBidForJobTable($contractor->id, $taskId);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function validateRequest($email, $phone)
@@ -163,8 +182,16 @@ class TaskController extends Controller
         // if not then create a new one
         $userData = $this->checkIfSubContractorExits($email, $phone);
 
+
         $user = $userData[0];
         $userExists = $userData[1];
+
+        $contractor = $user->contractors()->get()[0];
+
+        // add an entry in to the contractor bid table so that the sub can bid on the task
+        if ($this->addBidEntryForTheSubContractor($contractor, $taskId) === false) {
+             return "task already exists";
+        }
 
         //   send a code in the notification to use when they sign up
         // generate token and save it

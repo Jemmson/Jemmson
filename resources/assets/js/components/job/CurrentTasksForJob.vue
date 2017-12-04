@@ -25,8 +25,11 @@
                         <div class="taskName">{{ task.name }}</div>
                         <div class="price">{{ task.cust_final_price }}</div>
                         <div class="price">{{ task.sub_final_price }}</div>
-                        <button @click="initiateSub(task.id)" class="button btn btn-sm btn-primary">Initiate Bid For Sub</button>
-                        <button class="btn btn-sm btn-primary button" @click="showDetails[index].show = !showDetails[index].show">
+                        <button @click="initiateSub(task.id)" class="button btn btn-sm btn-primary">
+                            Initiate Bid For Sub
+                        </button>
+                        <button class="btn btn-sm btn-primary button"
+                                @click="showDetails[index].show = !showDetails[index].show">
                             Details
                         </button>
                     </div>
@@ -37,6 +40,9 @@
                 </div>
             </div>
             <div class="alert-success" v-show="showNotificationSent">A notification was succesfully sent</div>
+            <div class="alert-warning" v-show="taskAlreadyExistsWarning">
+                Task Already exists and was not added for this contractor <span class="glyphicon glyphicon-remove-sign"
+                                                                                @click="hidewarning()"></span></div>
             <div v-show="initiateSubTask">
                 <div class="form-group">
                     <label
@@ -117,6 +123,7 @@
           {show: false}
         ],
         showNotificationSent: false,
+        taskAlreadyExistsWarning: false,
         taskId: ''
       }
     },
@@ -148,6 +155,9 @@
         this.showSubTask (taskId)
         // set the task Id for the sub
       },
+      hidewarning () {
+        this.taskAlreadyExistsWarning = false
+      },
       sendNotificationToSubForParticularTask () {
         // send ajax notification for sub task initiation
         console.log ('sendNotificationToSubForParticularTask is being called')
@@ -159,10 +169,13 @@
         }).then (function (response) {
           console.log (JSON.stringify (response))
           console.log (response.data)
-          this.display ()
-          if (response.data !== 'success') {
-            this.checkValidation (response.data)
+//          if (response.data !== 'success') {
+//            this.checkValidation (response.data)
+//          }
+          if (response.data === 'task already exists') {
+            this.taskAlreadyExistsWarning = true
           } else {
+            this.display ()
           }
 //          debugger
           // display flash message was sent
@@ -185,7 +198,7 @@
         this.showNotificationSent = true
         setTimeout (function () {
           this.showNotificationSent = false
-        }.bind(this), 3000)
+        }.bind (this), 3000)
       },
       autoComplete () {
         this.results = [];

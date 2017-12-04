@@ -31357,6 +31357,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -31378,6 +31384,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       results: [],
       showDetails: [{ show: true }, { show: false }, { show: false }, { show: false }, { show: false }],
       showNotificationSent: false,
+      taskAlreadyExistsWarning: false,
       taskId: ''
     };
   },
@@ -31409,6 +31416,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.showSubTask(taskId);
       // set the task Id for the sub
     },
+    hidewarning() {
+      this.taskAlreadyExistsWarning = false;
+    },
     sendNotificationToSubForParticularTask() {
       // send ajax notification for sub task initiation
       console.log('sendNotificationToSubForParticularTask is being called');
@@ -31420,10 +31430,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }).then(function (response) {
         console.log(JSON.stringify(response));
         console.log(response.data);
-        this.display();
-        if (response.data !== 'success') {
-          this.checkValidation(response.data);
-        } else {}
+        //          if (response.data !== 'success') {
+        //            this.checkValidation (response.data)
+        //          }
+        if (response.data === 'task already exists') {
+          this.taskAlreadyExistsWarning = true;
+        } else {
+          this.display();
+        }
         //          debugger
         // display flash message was sent
       }.bind(this));
@@ -71701,7 +71715,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.initiateSub(task.id)
         }
       }
-    }, [_vm._v("Initiate Bid For Sub")]), _vm._v(" "), _c('button', {
+    }, [_vm._v("\n                        Initiate Bid For Sub\n                    ")]), _vm._v(" "), _c('button', {
       staticClass: "btn btn-sm btn-primary button",
       on: {
         "click": function($event) {
@@ -71724,6 +71738,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     staticClass: "alert-success"
   }, [_vm._v("A notification was succesfully sent")]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.taskAlreadyExistsWarning),
+      expression: "taskAlreadyExistsWarning"
+    }],
+    staticClass: "alert-warning"
+  }, [_vm._v("\n            Task Already exists and was not added for this contractor "), _c('span', {
+    staticClass: "glyphicon glyphicon-remove-sign",
+    on: {
+      "click": function($event) {
+        _vm.hidewarning()
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",

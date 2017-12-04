@@ -17,8 +17,8 @@ class CreateContractorBidTaskTable extends Migration
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('task_id');
-            $table->float('bid_price');
-            $table->boolean('accepted');
+            $table->float('bid_price')->nullable();
+            $table->boolean('accepted')->nullable()->default(0);
             $table->timestamps();
         });
     }
