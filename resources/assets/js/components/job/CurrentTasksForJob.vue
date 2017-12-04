@@ -9,6 +9,7 @@
         <!--<pre>{{ showDetails[3].show }}</pre>-->
         <!--<pre>{{ showDetails[4].show }}</pre>-->
         <!--<pre>{{ taskId }}</pre>-->
+        <!--<pre>{{ allTasks }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
 
         </div>
@@ -23,8 +24,12 @@
                 <div v-for="(task, index) in allTasks" :key="task.id">
                     <div class="wrapper1">
                         <div class="task taskName">{{ task.name }}</div>
-                        <div class="task price">{{ task.cust_final_price }}</div>
-                        <div class="task price">{{ task.sub_final_price }}</div>
+                        <!--<div class="task price">{{ task.cust_final_price }}</div>-->
+                        <input type="text" :value="task.pivot.cust_final_price">
+                        <!--<input type="text" :value="task.proposed_cust_price">-->
+                        <input type="text" :value="task.pivot.sub_final_price">
+                        <!--<input type="text" :value="task.proposed_sub_price">-->
+                        <!--<div class="task price">{{ task.sub_final_price }}</div>-->
                         <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
                             Initiate Bid For Sub
                         </button>
@@ -34,8 +39,14 @@
                         </button>
                     </div>
                     <div class="subwrapper" v-if="showDetails[index].show">
-                        <div class="customer">Customer</div>
-                        <div class="contractor">Contractor</div>
+                        <div class="task"></div>
+                        <div class="task">Sub</div>
+                        <div class="task">Price</div>
+                        <div class="task">Accept</div>
+                        <div></div>
+                        <div>Joe</div>
+                        <div>10.00</div>
+                        <button class="button btn btn-sm btn-primary">Accept</button>
                     </div>
                 </div>
             </div>
@@ -289,8 +300,8 @@
 
     .subwrapper {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-        grid-row-gap: 100px;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-row-gap: 5px;
     }
 
     .mainTaskWrapper {

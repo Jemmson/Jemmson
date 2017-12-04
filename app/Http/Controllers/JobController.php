@@ -73,9 +73,7 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-//        $contractor = User::find($job->contractor_id)->contractors()->get();
         $contractor = Contractor::find($job->contractor_id)->get();
-//        $customer = User::find($job->customer_id)->customers()->get();
         if (Customer::find($job->customer_id) == null) {
             $customer = "[]";
         } else {
@@ -84,9 +82,6 @@ class JobController extends Controller
         $customerUserData = User::find(1)->where('id', '=', $job->customer_id)->get();
         $tasks = $job->tasks()->get();
         $userType = Auth::user()->usertype;
-//        dd($customer);
-//        dd($contractor);
-//        dd($job->id);
         return view('jobs.edit_job',
             compact('job', 'contractor', 'customer', 'tasks', 'userType', 'customerUserData'));
     }
