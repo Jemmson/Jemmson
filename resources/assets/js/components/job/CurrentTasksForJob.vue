@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="currenttasksforjob">
         <!--<pre>{{ allTasks }}</pre>-->
         <!--<pre>{{ getUser }}</pre>-->
 
@@ -14,17 +14,17 @@
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
             <div class="wrapper1">
-                <div class="header">Task Name</div>
-                <div class="header">Final Customer Price</div>
-                <div class="header">Final Sub Price</div>
+                <div class="ctfheader">Task Name</div>
+                <div class="ctfheader">Final Customer Price</div>
+                <div class="ctfheader">Final Sub Price</div>
                 <div></div>
             </div>
             <div class="mainTaskWrapper">
                 <div v-for="(task, index) in allTasks" :key="task.id">
                     <div class="wrapper1">
-                        <div class="taskName">{{ task.name }}</div>
-                        <div class="price">{{ task.cust_final_price }}</div>
-                        <div class="price">{{ task.sub_final_price }}</div>
+                        <div class="task taskName">{{ task.name }}</div>
+                        <div class="task price">{{ task.cust_final_price }}</div>
+                        <div class="task price">{{ task.sub_final_price }}</div>
                         <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
                             Initiate Bid For Sub
                         </button>
@@ -245,12 +245,30 @@
 
     .addBidTask {
         margin-top: 4rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .currenttasksforjob {
+        background-color: white;
+        margin-left: 27rem;
+        margin-right: 27rem;
+        border-radius: 2.5%;
+        border: solid thin black;
+    }
+
+    .ctfheader {
+        font-weight: 900;
+        font-size: larger;
+        margin-top: 1rem;
+        margin-left:1rem;
     }
 
     .wrapper1 {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         grid-column-gap: 10px;
+        margin-bottom: 1rem;
     }
 
     .button {
@@ -259,8 +277,14 @@
     }
 
     .joblist {
-        margin-left: 27rem;
-        margin-right: 27rem;
+        /*margin-left: 27rem;*/
+        /*margin-right: 27rem;*/
+    }
+
+    .task {
+        font-size: medium;
+        font-weight: 400;
+        margin-left: 1rem;
     }
 
     .subwrapper {

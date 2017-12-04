@@ -6,7 +6,7 @@
         <!--<pre> {{ getCustomer }}</pre>-->
         <div class="customerRegisteredAlert" v-show="getCustomerObject">Customer Has Not Registered Yet</div>
         <div class="wrapper">
-            <h1 class="customerName">{{ getCustomerName }}</h1>
+            <h3 class="customerName">Customer Name: {{ getCustomerName }}</h3>
             <info-label class="infoLabel" label="Job Name" :value="jobName()"></info-label>
             <!--<jemm-date class="startDate" label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"-->
             <!--&gt;</jemm-date>-->
@@ -201,13 +201,14 @@
     }
 
     .customerName {
-        grid-column-start: 2;
-        grid-column-end: 3;
+        grid-column-start: 1;
+        grid-column-end: 4;
+        margin-bottom: 4rem;
     }
 
     .infoLabel {
         grid-column-start: 4;
-        grid-column-end: 5;
+        grid-column-end: 7;
     }
 
     .startDate {
