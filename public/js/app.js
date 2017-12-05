@@ -31378,6 +31378,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -31389,6 +31395,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   data() {
     return {
+      bidTasks: '',
       contractorName: '',
       email: '',
       initiateBidUrl: '/task/notify',
@@ -31439,6 +31446,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     hidewarning() {
       this.taskAlreadyExistsWarning = false;
     },
+    acceptBid() {
+      return true;
+    },
     sendNotificationToSubForParticularTask() {
       // send ajax notification for sub task initiation
       console.log('sendNotificationToSubForParticularTask is being called');
@@ -31460,6 +31470,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           console.log(response.data[0].contractor_id);
           console.log(response.data[0].contractorName[0]);
           console.log(response.data[0].contractorName[0].name);
+          this.bidTasks = response.data;
           this.display();
         }
         //          debugger
@@ -71776,9 +71787,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "task"
     }, [_vm._v("Price")]), _vm._v(" "), _c('div', {
       staticClass: "task"
-    }, [_vm._v("Accept")]), _vm._v(" "), _c('div'), _vm._v(" "), _c('div', [_vm._v("Joe")]), _vm._v(" "), _c('div', [_vm._v("10.00")]), _vm._v(" "), _c('button', {
+    }, [_vm._v("Accept")]), _vm._v(" "), _vm._l((_vm.bidTasks), function(bid) {
+      return _c('div', {
+        key: bid.id,
+        staticClass: "subwrapper"
+      }, [_c('div'), _vm._v(" "), _c('div', [_vm._v(_vm._s(bid.contractorName[0].name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('button', {
+        staticClass: "button btn btn-sm btn-primary",
+        attrs: {
+          "click": _vm.acceptBid(bid.id)
+        }
+      }, [_vm._v("Accept")])])
+    }), _vm._v(" "), _c('div'), _vm._v(" "), _c('div', [_vm._v("Joe")]), _vm._v(" "), _c('div', [_vm._v("10.00")]), _vm._v(" "), _c('button', {
       staticClass: "button btn btn-sm btn-primary"
-    }, [_vm._v("Accept")])]) : _vm._e()])
+    }, [_vm._v("Accept")])], 2) : _vm._e()])
   })), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",

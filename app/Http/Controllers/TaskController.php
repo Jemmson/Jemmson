@@ -150,6 +150,7 @@ class TaskController extends Controller
     public function getBidPrices($jobId)
     {
         $bidPrices = DB::select("select 
+                        bid_contractor_job_task.id,
                         bid_contractor_job_task.contractor_id, 
                         bid_contractor_job_task.task_id, 
                         bid_contractor_job_task.bid_price 

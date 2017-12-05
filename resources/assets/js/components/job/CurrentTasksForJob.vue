@@ -43,6 +43,12 @@
                         <div class="task">Sub</div>
                         <div class="task">Price</div>
                         <div class="task">Accept</div>
+                        <div class="subwrapper" v-for="bid in bidTasks" :key="bid.id">
+                            <div></div>
+                            <div>{{ bid.contractorName[0].name }}</div>
+                            <div>{{ bid.bid_price }}</div>
+                            <button :click="acceptBid(bid.id)" class="button btn btn-sm btn-primary">Accept</button>
+                        </div>
                         <div></div>
                         <div>Joe</div>
                         <div>10.00</div>
@@ -121,6 +127,7 @@
     },
     data () {
       return {
+        bidTasks: '',
         contractorName: '',
         email: '',
         initiateBidUrl: '/task/notify',
@@ -177,6 +184,9 @@
       hidewarning () {
         this.taskAlreadyExistsWarning = false
       },
+      acceptBid () {
+        return true
+      },
       sendNotificationToSubForParticularTask () {
         // send ajax notification for sub task initiation
         console.log ('sendNotificationToSubForParticularTask is being called')
@@ -194,10 +204,11 @@
             this.taskAlreadyExistsWarning = true
           } else {
             // let responseObject = JSON.parse (response.data)
-            console.log(typeof response.data)
-            console.log(response.data[0].contractor_id)
-            console.log(response.data[0].contractorName[0])
-            console.log(response.data[0].contractorName[0].name)
+            console.log (typeof response.data)
+            console.log (response.data[0].contractor_id)
+            console.log (response.data[0].contractorName[0])
+            console.log (response.data[0].contractorName[0].name)
+            this.bidTasks = response.data
             this.display ()
           }
 //          debugger
