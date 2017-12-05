@@ -31384,6 +31384,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -31395,6 +31425,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   data() {
     return {
+      allTasksData: '',
       bidTasks: '',
       contractorName: '',
       email: '',
@@ -31404,12 +31435,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       phone: '',
       query: '',
       results: [],
-      showDetails: [{ show: true }, { show: false }, { show: false }, { show: false }, { show: false }],
+      showDetails: [],
       showNotificationSent: false,
       taskAlreadyExistsWarning: false,
       taskId: '',
       taskName: ''
     };
+  },
+  mounted() {
+    this.allTasksData = this.allTasks;
+    this.setUpShowDetailsArray();
+    console.log('all tasks data');
+    console.log(this.allTasks);
   },
   props: {
     allTasks: {
@@ -31443,11 +31480,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.taskName = taskName;
       // set the task Id for the sub
     },
+    setUpShowDetailsArray() {
+      for (let i = 0; i < this.allTasks.length; i++) {
+        this.showDetails.push({ tableIndex: this.allTasks[i].id, show: false });
+      }
+    },
     hidewarning() {
       this.taskAlreadyExistsWarning = false;
     },
     acceptBid() {
       return true;
+    },
+    showTheDetails(index) {
+      this.hideAllTables();
+      for (let obj of this.showDetails) {
+        if (obj.tableIndex === index) {
+          obj.show = true;
+        }
+      }
+    },
+    hideAllTables() {
+      for (let obj of this.showDetails) {
+        obj.show = false;
+      }
     },
     sendNotificationToSubForParticularTask() {
       // send ajax notification for sub task initiation
@@ -39750,7 +39805,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n.addBidTask[data-v-4c93029a] {\n    margin-top: 4rem;\n    margin-left: 1rem;\n    margin-right: 1rem;\n}\n.currenttasksforjob[data-v-4c93029a] {\n    background-color: white;\n    margin-left: 27rem;\n    margin-right: 27rem;\n    border-radius: 2.5%;\n    border: solid thin black;\n}\n.ctfheader[data-v-4c93029a] {\n    font-weight: 900;\n    font-size: larger;\n    margin-top: 1rem;\n    margin-left: 1rem;\n}\n.wrapper1[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n    grid-column-gap: 10px;\n    margin-bottom: 1rem;\n}\n.button[data-v-4c93029a] {\n    margin-left: 50px;\n    margin-right: 50px;\n}\n.joblist[data-v-4c93029a] {\n    /*margin-left: 27rem;*/\n    /*margin-right: 27rem;*/\n}\n.task[data-v-4c93029a] {\n    font-size: medium;\n    font-weight: 400;\n    margin-left: 1rem;\n}\n.subwrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr;\n    grid-row-gap: 5px;\n}\n.mainTaskWrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    grid-row-gap: 10px;\n}\n.customer[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contractor[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contcustpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.contcustprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contsubpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.subpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.subaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contcustaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custstartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.substartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
 
 /***/ }),
 /* 312 */
@@ -71740,67 +71795,43 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "joblist"
   }) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
     staticClass: "joblist"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
-    staticClass: "mainTaskWrapper"
-  }, _vm._l((_vm.allTasks), function(task, index) {
-    return _c('div', {
+  }, [_c('div', {
+    staticClass: "container"
+  }, [_c('table', {
+    staticClass: "table"
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.allTasksData), function(task) {
+    return _c('tr', {
       key: task.id
-    }, [_c('div', {
-      staticClass: "wrapper1"
-    }, [_c('div', {
-      staticClass: "task taskName"
-    }, [_vm._v(_vm._s(task.name))]), _vm._v(" "), _c('input', {
+    }, [_c('td', [_vm._v(_vm._s(task.name))]), _vm._v(" "), _c('td', [_c('input', {
       attrs: {
         "type": "text"
       },
       domProps: {
         "value": task.pivot.cust_final_price
       }
-    }), _vm._v(" "), _c('input', {
+    })]), _vm._v(" "), _c('td', [_c('input', {
       attrs: {
         "type": "text"
       },
       domProps: {
         "value": task.pivot.sub_final_price
       }
-    }), _vm._v(" "), _c('button', {
+    })]), _vm._v(" "), _c('td', [_c('button', {
       staticClass: "button btn btn-sm btn-primary",
       on: {
         "click": function($event) {
           _vm.initiateSub(task.id, task.name)
         }
       }
-    }, [_vm._v("\n                        Initiate Bid For Sub\n                    ")]), _vm._v(" "), _c('button', {
+    }, [_vm._v("\n                            Initiate Bid For Sub\n                        ")])]), _vm._v(" "), _c('td', [_c('button', {
       staticClass: "btn btn-sm btn-primary button",
       on: {
         "click": function($event) {
-          _vm.showDetails[index].show = !_vm.showDetails[index].show
+          _vm.showTheDetails(task.id)
         }
       }
-    }, [_vm._v("\n                        Details\n                    ")])]), _vm._v(" "), (_vm.showDetails[index].show) ? _c('div', {
-      staticClass: "subwrapper"
-    }, [_c('div', {
-      staticClass: "task"
-    }), _vm._v(" "), _c('div', {
-      staticClass: "task"
-    }, [_vm._v("Sub")]), _vm._v(" "), _c('div', {
-      staticClass: "task"
-    }, [_vm._v("Price")]), _vm._v(" "), _c('div', {
-      staticClass: "task"
-    }, [_vm._v("Accept")]), _vm._v(" "), _vm._l((_vm.bidTasks), function(bid) {
-      return _c('div', {
-        key: bid.id,
-        staticClass: "subwrapper"
-      }, [_c('div'), _vm._v(" "), _c('div', [_vm._v(_vm._s(bid.contractorName[0].name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('button', {
-        staticClass: "button btn btn-sm btn-primary",
-        attrs: {
-          "click": _vm.acceptBid(bid.id)
-        }
-      }, [_vm._v("Accept")])])
-    }), _vm._v(" "), _c('div'), _vm._v(" "), _c('div', [_vm._v("Joe")]), _vm._v(" "), _c('div', [_vm._v("10.00")]), _vm._v(" "), _c('button', {
-      staticClass: "button btn btn-sm btn-primary"
-    }, [_vm._v("Accept")])], 2) : _vm._e()])
-  })), _vm._v(" "), _c('div', {
+    }, [_vm._v("\n                            Details\n                        ")])])])
+  }))]), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -71816,7 +71847,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "taskAlreadyExistsWarning"
     }],
     staticClass: "alert-warning"
-  }, [_vm._v("\n            Task Already exists and was not added for this contractor "), _c('span', {
+  }, [_vm._v("\n                Task Already exists and was not added for this contractor "), _c('span', {
     staticClass: "glyphicon glyphicon-remove-sign",
     on: {
       "click": function($event) {
@@ -71824,12 +71855,40 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   })]), _vm._v(" "), _c('div', {
+    staticClass: "wrapper"
+  }, [_vm._l((_vm.allTasksData), function(task, index) {
+    return _c('div', {
+      staticClass: "details"
+    }, [_c('div', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (_vm.showDetails[index].show),
+        expression: "showDetails[index].show"
+      }]
+    }, [_c('h1', {
+      staticClass: "text-center"
+    }, [_vm._v("Sub Details")]), _vm._v(" "), _c('table', {
+      staticClass: "table"
+    }, [_vm._m(1, true), _vm._v(" "), _c('tbody', _vm._l((_vm.bidTasks), function(bid) {
+      return (task.id === bid.task_id) ? _c('tr', {
+        key: bid.id,
+        staticClass: "table"
+      }, [_c('td', [_vm._v(_vm._s(bid.contractorName[0].name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
+        staticClass: "button btn btn-sm btn-primary",
+        attrs: {
+          "click": _vm.acceptBid(bid.id)
+        }
+      }, [_vm._v("Accept\n                                    ")])])]) : _vm._e()
+    }))])])])
+  }), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
       value: (_vm.initiateSubTask),
       expression: "initiateSubTask"
-    }]
+    }],
+    staticClass: "initiateBid"
   }, [_c('div', {
     staticClass: "addBidTask"
   }, [_c('h1', {
@@ -71880,7 +71939,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.fillFields(result)
         }
       }
-    }, [_vm._v("\n                                " + _vm._s(result.name) + "\n                            ")])
+    }, [_vm._v("\n                                        " + _vm._s(result.name) + "\n                                    ")])
   }))]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
   }, [_c('label', {
@@ -71949,17 +72008,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.sendNotificationToSubForParticularTask()
       }
     }
-  }, [_vm._v("Submit\n                    ")])])])])]) : _vm._e()])
+  }, [_vm._v("Submit\n                            ")])])])])], 2)])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "wrapper1"
-  }, [_c('div', {
-    staticClass: "ctfheader"
-  }, [_vm._v("Task Name")]), _vm._v(" "), _c('div', {
-    staticClass: "ctfheader"
-  }, [_vm._v("Final Customer Price")]), _vm._v(" "), _c('div', {
-    staticClass: "ctfheader"
-  }, [_vm._v("Final Sub Price")]), _vm._v(" "), _c('div')])
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")]), _vm._v(" "), _c('th'), _vm._v(" "), _c('th')])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Sub")]), _vm._v(" "), _c('th', [_vm._v("Price")]), _vm._v(" "), _c('th', [_vm._v("Accept")])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
