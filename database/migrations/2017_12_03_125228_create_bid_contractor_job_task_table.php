@@ -13,11 +13,12 @@ class CreateContractorBidTaskTable extends Migration
      */
     public function up()
     {
-        Schema::create('contractor_bid_task', function (Blueprint $table) {
+        Schema::create('bid_contractor_job_task', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contractor_id');
+            $table->integer('job_id');
             $table->integer('task_id');
-            $table->float('bid_price')->nullable();
+            $table->float('bid_price')->nullable()->default(0.00);
             $table->boolean('accepted')->nullable()->default(0);
             $table->timestamps();
         });
@@ -30,6 +31,6 @@ class CreateContractorBidTaskTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contractor_bid_task');
+        Schema::dropIfExists('bid_contractor_job_task');
     }
 }

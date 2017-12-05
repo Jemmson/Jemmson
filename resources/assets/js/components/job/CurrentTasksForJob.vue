@@ -148,6 +148,9 @@
       },
       user: {
         type: String
+      },
+      jobid: {
+        type: Number
       }
     },
     computed: {
@@ -179,18 +182,22 @@
         console.log ('sendNotificationToSubForParticularTask is being called')
         axios.post ('/task/notify', {
           taskId: this.taskId,
-          contractor: this.contractor,
+          jobId: this.jobid,
           phone: this.phone,
           email: this.email
         }).then (function (response) {
-          console.log (JSON.stringify (response))
           console.log (response.data)
-//          if (response.data !== 'success') {
-//            this.checkValidation (response.data)
-//          }
+          // if (response.data !== 'success') {
+          //   this.checkValidation (response.data)
+          // }
           if (response.data === 'task already exists') {
             this.taskAlreadyExistsWarning = true
           } else {
+            // let responseObject = JSON.parse (response.data)
+            console.log(typeof response.data)
+            console.log(response.data[0].contractor_id)
+            console.log(response.data[0].contractorName[0])
+            console.log(response.data[0].contractorName[0].name)
             this.display ()
           }
 //          debugger
@@ -272,7 +279,7 @@
         font-weight: 900;
         font-size: larger;
         margin-top: 1rem;
-        margin-left:1rem;
+        margin-left: 1rem;
     }
 
     .wrapper1 {

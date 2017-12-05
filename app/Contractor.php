@@ -8,18 +8,18 @@ use Illuminate\Support\Facades\DB;
 class Contractor extends Model
 {
     protected $fillable = [
-      'user_id',
-      'email_method_of_contact',
-      'address_line_1',
-      'address_line_2',
-      'city',
-      'state',
-      'zip',
-      'company_logo_name',
-      'sms_method_of_contact',
-      'phone_method_of_contact',
-      'phone_number',
-      'company_name',
+        'user_id',
+        'email_method_of_contact',
+        'address_line_1',
+        'address_line_2',
+        'city',
+        'state',
+        'zip',
+        'company_logo_name',
+        'sms_method_of_contact',
+        'phone_method_of_contact',
+        'phone_number',
+        'company_name',
     ];
 
     //
@@ -40,24 +40,26 @@ class Contractor extends Model
 
     public function tasks()
     {
-        return $this->belongsToMany(Task::class);
+        return $this->belongsToMany(Task::class)->withPivot('base_price')
+            ->withTimestamps();
     }
 
-    public function addContractorToBidForJobTable($contractorId, $taskId)
+    public function addContractorToBidForJobTable($contractorId, $taskId, $jobId)
     {
 
-        DB::table('contractor_bid_task')->insert(
-            ['contractor_id' => $contractorId, 'task_id' => $taskId]
+        DB::table('bid_contractor_job_task')->insert(
+            ['contractor_id' => $contractorId, 'task_id' => $taskId, "job_id" => $jobId]
         );
 
     }
 
-    public function checkIfContractorSetBidForATask($contractorId, $taskId)
+    public function checkIfContractorSetBidForATask($contractorId, $taskId, $jobId)
     {
-        if (empty(DB::table('contractor_bid_task')
+        if (empty(DB::table('bid_contractor_job_task')
             ->select('task_id')
             ->where('contractor_id', '=', $contractorId)
             ->where('task_id', '=', $taskId)
+            ->where('job_id', '=', $jobId)
             ->get()[0])) {
             return true;
         } else {
@@ -65,3 +67,5 @@ class Contractor extends Model
         }
     }
 }
+
+//DB::table('bid_contractor_job_task')->select('task_id')->where('contractor_id', '=', 5)->where('task_id', '=', 2)->where('job_id', '=', 1)->get()[0];

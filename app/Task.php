@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
+    protected $fillable = [
+        'name',
+        'standard_task_id'
+    ];
     //
 //    public function time()
 //    {
@@ -28,6 +32,15 @@ class Task extends Model
             ->withPivot(
                 'cust_final_price',
                 'sub_final_price'
+            )
+            ->withTimestamps();
+    }
+
+    public function Contractors()
+    {
+        return $this->belongsToMany('App\Contractor')
+            ->withPivot(
+                'base_price'
             )
             ->withTimestamps();
     }

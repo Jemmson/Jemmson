@@ -21,7 +21,7 @@ class CreateContractorTaskTable extends Migration
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('task_id');
-            $table->integer('base_price');
+            $table->integer('base_price')->default(0);
             $table->timestamps();
         });
     }

@@ -9,6 +9,7 @@ use App\Contractor;
 use App\User;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -133,6 +134,9 @@ class TaskController extends Controller
             ]
         );
 
+//    use App\Contractor; use App\Tasks; use App\User; use App\Task; $user = User::create(['name' => 'jim', 'email' => 'jim4@jim.com', 'phone' => '1234123127', 'usertype' => 'contractor', 'password_updated' => false, 'password' => bcrypt('1234'),]); $contractor = Contractor::create(['user_id' => $user->id]);$task = Task::create(["name" => "change orings2"]);$contractor->tasks()->attach($task);
+
+
         Contractor::create(
             [
                 'user_id' => $user->id
@@ -143,10 +147,48 @@ class TaskController extends Controller
 
     }
 
-    public function addBidEntryForTheSubContractor($contractor, $taskId)
+    public function getBidPrices($jobId)
     {
-        if ($contractor->checkIfContractorSetBidForATask($contractor->id, $taskId)) {
-            $contractor->addContractorToBidForJobTable($contractor->id, $taskId);
+        $bidPrices = DB::select("select 
+                        bid_contractor_job_task.contractor_id, 
+                        bid_contractor_job_task.task_id, 
+                        bid_contractor_job_task.bid_price 
+                      from 
+                        contractors 
+                      inner join 
+                        bid_contractor_job_task 
+                      on 
+                        bid_contractor_job_task.contractor_id=contractors.id 
+                      where 
+                        bid_contractor_job_task.job_id=$jobId");
+
+        $contractorNames = [];
+//
+        foreach ($bidPrices as $bidPrice) {
+            $contractorName = DB::select("select
+                        users.name
+                        from users
+                        inner join contractors
+                        on users.id = contractors.user_id
+                        where contractors.id = $bidPrice->contractor_id");
+            array_push($contractorNames, $contractorName);
+        }
+
+        $bidPriceLength = sizeof($bidPrices);
+        for ($i = 0; $i < $bidPriceLength; $i++) {
+            $bidPrices[$i]->contractorName = $contractorNames[$i];
+        }
+
+        $bidPrices = json_encode($bidPrices);
+
+        return $bidPrices;
+
+    }
+
+    public function addBidEntryForTheSubContractor($contractor, $taskId, $jobId)
+    {
+        if ($contractor->checkIfContractorSetBidForATask($contractor->id, $taskId, $jobId)) {
+            $contractor->addContractorToBidForJobTable($contractor->id, $taskId, $jobId);
             return true;
         } else {
             return false;
@@ -171,6 +213,9 @@ class TaskController extends Controller
         $phone = $request->phone;
         $email = $request->email;
         $taskId = $request->taskId;
+        $jobId = $request->jobId;
+
+//        return gettype($jobId);
 
         // check the validation
         $validation = $this->validateRequest($email, $phone);
@@ -188,10 +233,13 @@ class TaskController extends Controller
 
         $contractor = $user->contractors()->get()[0];
 
+//        return $this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId);
+
         // add an entry in to the contractor bid table so that the sub can bid on the task
-        if ($this->addBidEntryForTheSubContractor($contractor, $taskId) === false) {
+        if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
              return "task already exists";
         }
+
 
         //   send a code in the notification to use when they sign up
         // generate token and save it
@@ -199,9 +247,11 @@ class TaskController extends Controller
 
         //   this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
-//        $user->notify(new NotifySubOfTaskToBid());
         $user->notify(new NotifySubOfTaskToBid($taskId, $user, $token, $userExists));
 
-        return "success";
+
+        $bidPrices = $this->getBidPrices($jobId);
+
+        return $bidPrices;
     }
 }

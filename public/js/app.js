@@ -31410,6 +31410,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     user: {
       type: String
+    },
+    jobid: {
+      type: Number
     }
   },
   computed: {
@@ -31441,18 +31444,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       console.log('sendNotificationToSubForParticularTask is being called');
       __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/task/notify', {
         taskId: this.taskId,
-        contractor: this.contractor,
+        jobId: this.jobid,
         phone: this.phone,
         email: this.email
       }).then(function (response) {
-        console.log(JSON.stringify(response));
         console.log(response.data);
-        //          if (response.data !== 'success') {
-        //            this.checkValidation (response.data)
-        //          }
+        // if (response.data !== 'success') {
+        //   this.checkValidation (response.data)
+        // }
         if (response.data === 'task already exists') {
           this.taskAlreadyExistsWarning = true;
         } else {
+          // let responseObject = JSON.parse (response.data)
+          console.log(typeof response.data);
+          console.log(response.data[0].contractor_id);
+          console.log(response.data[0].contractorName[0]);
+          console.log(response.data[0].contractorName[0].name);
           this.display();
         }
         //          debugger
@@ -31828,6 +31835,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     date() {
       return this.$moment(new Date(), 'MMMM YYYY');
+    },
+    getJobId() {
+      let job = JSON.parse(this.job);
+      console.log(job.id);
+      return job.id;
     },
     getCustomer() {
       //        return JSON.parse (this.customer)
@@ -39727,7 +39739,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n.addBidTask[data-v-4c93029a] {\n    margin-top: 4rem;\n    margin-left: 1rem;\n    margin-right: 1rem;\n}\n.currenttasksforjob[data-v-4c93029a] {\n    background-color: white;\n    margin-left: 27rem;\n    margin-right: 27rem;\n    border-radius: 2.5%;\n    border: solid thin black;\n}\n.ctfheader[data-v-4c93029a] {\n    font-weight: 900;\n    font-size: larger;\n    margin-top: 1rem;\n    margin-left:1rem;\n}\n.wrapper1[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n    grid-column-gap: 10px;\n    margin-bottom: 1rem;\n}\n.button[data-v-4c93029a] {\n    margin-left: 50px;\n    margin-right: 50px;\n}\n.joblist[data-v-4c93029a] {\n    /*margin-left: 27rem;*/\n    /*margin-right: 27rem;*/\n}\n.task[data-v-4c93029a] {\n    font-size: medium;\n    font-weight: 400;\n    margin-left: 1rem;\n}\n.subwrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr;\n    grid-row-gap: 5px;\n}\n.mainTaskWrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    grid-row-gap: 10px;\n}\n.customer[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contractor[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contcustpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.contcustprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contsubpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.subpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.subaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contcustaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custstartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.substartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n\n", ""]);
+exports.push([module.i, "\n.addBidTask[data-v-4c93029a] {\n    margin-top: 4rem;\n    margin-left: 1rem;\n    margin-right: 1rem;\n}\n.currenttasksforjob[data-v-4c93029a] {\n    background-color: white;\n    margin-left: 27rem;\n    margin-right: 27rem;\n    border-radius: 2.5%;\n    border: solid thin black;\n}\n.ctfheader[data-v-4c93029a] {\n    font-weight: 900;\n    font-size: larger;\n    margin-top: 1rem;\n    margin-left: 1rem;\n}\n.wrapper1[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;\n    grid-column-gap: 10px;\n    margin-bottom: 1rem;\n}\n.button[data-v-4c93029a] {\n    margin-left: 50px;\n    margin-right: 50px;\n}\n.joblist[data-v-4c93029a] {\n    /*margin-left: 27rem;*/\n    /*margin-right: 27rem;*/\n}\n.task[data-v-4c93029a] {\n    font-size: medium;\n    font-weight: 400;\n    margin-left: 1rem;\n}\n.subwrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr 1fr 1fr;\n        grid-template-columns: 1fr 1fr 1fr 1fr;\n    grid-row-gap: 5px;\n}\n.mainTaskWrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    grid-row-gap: 10px;\n}\n.customer[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contractor[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contcustpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.contcustprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contsubpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubprice[data-v-4c93029a] {\n    -ms-grid-row: 2;\n        grid-row-start: 2;\n    grid-row-end: 3;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.subpricelabel[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subprice[data-v-4c93029a] {\n    -ms-grid-row: 3;\n        grid-row-start: 3;\n    grid-row-end: 4;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.subaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.contcustaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.contsubaccepted[data-v-4c93029a] {\n    -ms-grid-row: 4;\n        grid-row-start: 4;\n    grid-row-end: 5;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n.custstartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.custenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.substartdate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 3;\n        grid-column-start: 3;\n    grid-column-end: 4;\n}\n.subenddate[data-v-4c93029a] {\n    -ms-grid-row: 5;\n        grid-row-start: 5;\n    grid-row-end: 6;\n    -ms-grid-column: 4;\n        grid-column-start: 4;\n    grid-column-end: 5;\n}\n\n", ""]);
 
 /***/ }),
 /* 312 */
@@ -71693,6 +71705,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "currentTasksForJob",
     attrs: {
       "user": _vm.getUserType,
+      "jobid": _vm.getJobId,
       "allTasks": _vm.getTasks
     }
   })], 1)
