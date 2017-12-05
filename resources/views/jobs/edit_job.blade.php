@@ -5,6 +5,7 @@
     <job
             usertype="{{ $userType }}"
             job="{{ $job }}"
+            bids="{{ $bids }}"
             contractor="{{ $contractor }}"
             customer="{{ $customer }}"
             tasks="{{ $tasks }}"

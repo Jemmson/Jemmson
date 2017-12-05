@@ -73,6 +73,7 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
+        $bids = Task::getBidPrices($job->id);
         $contractor = Contractor::find($job->contractor_id)->get();
         if (Customer::find($job->customer_id) == null) {
             $customer = "[]";
@@ -83,7 +84,7 @@ class JobController extends Controller
         $tasks = $job->tasks()->get();
         $userType = Auth::user()->usertype;
         return view('jobs.edit_job',
-            compact('job', 'contractor', 'customer', 'tasks', 'userType', 'customerUserData'));
+            compact('job', 'contractor', 'customer', 'tasks', 'userType', 'customerUserData', 'bids'));
     }
 
     public function updateJobDate(Request $request)

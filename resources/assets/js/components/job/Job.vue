@@ -13,7 +13,7 @@
             <!--<jemm-date class="endDate" label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"-->
             <!--&gt;</jemm-date>-->
         </div>
-        <currentTasksForJob :user="getUserType" :jobid="getJobId" class="currentTasksForJob" :allTasks="getTasks"></currentTasksForJob>
+        <currentTasksForJob :bids="bids" :user="getUserType" :jobid="getJobId" class="currentTasksForJob" :allTasks="getTasks"></currentTasksForJob>
         <!--<button class="btn btn-primary btn-lg" @click="showAddTask()">Add Task</button>-->
         <!--<task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>-->
     </div>
@@ -49,6 +49,9 @@
       this.loadJobStore ()
     },
     props: {
+      bids: {
+        type: String,
+      },
       job: {
         type: String,
       },

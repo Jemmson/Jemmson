@@ -11,6 +11,7 @@
         <!--<pre>{{ taskId }}</pre>-->
         <!--<pre>{{ allTasks }}</pre>-->
         <!--<pre>{{ showDetails }}</pre>-->
+        <pre>{{ bids }}</pre>
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -29,7 +30,8 @@
                     <tr v-for="task in allTasksData" :key="task.id">
                         <td>{{ task.name }}</td>
                         <td><input type="text" :value="task.pivot.cust_final_price"></td>
-                        <td><input type="text" :value="task.pivot.sub_final_price"></td>
+                        <td v-if="task.pivot.sub_final_price > 0">{{ task.pivot.sub_final_price }}</td>
+                        <td v-else>Pending</td>
                         <td>
                             <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
                                 Initiate Bid For Sub
@@ -162,6 +164,8 @@
     },
     mounted () {
       this.allTasksData = this.allTasks
+      this.bidTasks = JSON.parse(this.bids)
+      console.log(typeof this.bidTasks)
       this.setUpShowDetailsArray ()
       console.log ('all tasks data')
       console.log (this.allTasks)
@@ -175,6 +179,9 @@
       },
       jobid: {
         type: Number
+      },
+      bids: {
+        type: String
       }
     },
     computed: {
@@ -189,6 +196,13 @@
         console.log (this.user)
         console.log (typeof this.user)
         return this.user
+      },
+      subFinalPrice(price){
+        if (price > 0) {
+          return price
+        } else {
+          return 'pending'
+        }
       }
     },
     methods: {
