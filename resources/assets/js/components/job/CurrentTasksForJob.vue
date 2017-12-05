@@ -42,20 +42,6 @@
                             </button>
                         </td>
                     </tr>
-                    <!--<tr v-if="showDetails[index].show">-->
-                    <!--<td>Sub</td>-->
-                    <!--<td>Price</td>-->
-                    <!--<td>Accept</td>-->
-                    <!--</tr>-->
-                    <!--<tr v-if="showDetails[index].show" v-for="bid in bidTasks" :key="bid.id">-->
-                    <!--<div v-if="task.id === bid.task_id">-->
-                    <!--<td>{{ bid.contractorName[0].name }}</td>-->
-                    <!--<td>{{ bid.bid_price }}</td>-->
-                    <!--<td>-->
-                    <!--<button :click="acceptBid(bid.id)" class="button btn btn-sm btn-primary">Accept</button>-->
-                    <!--</td>-->
-                    <!--</div>-->
-                    <!--</tr>-->
                     </tbody>
                 </table>
                 <div class="alert-success" v-show="showNotificationSent">A notification was succesfully sent</div>
@@ -66,7 +52,7 @@
                 <div class="wrapper">
                     <div class="details" v-for="(task, index) in allTasksData">
                         <div v-show="showDetails[index].show">
-                            <h1 class="text-center">Sub Details</h1>
+                            <h3 class="text-center">Sub Details</h3>
                             <table class="table">
                                 <thead>
                                 <tr>
