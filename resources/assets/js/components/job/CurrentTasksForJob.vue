@@ -400,6 +400,8 @@
         this.email = result.email
         this.phone = result.phone
         this.name = result.name
+        this.hasEmailError = false
+        this.hasPhoneError = false
       },
       showSubTask (taskId) {
         // if task id is the same then hide it
