@@ -11,7 +11,8 @@
         <!--<pre>{{ taskId }}</pre>-->
         <!--<pre>{{ allTasks }}</pre>-->
         <!--<pre>{{ showDetails }}</pre>-->
-        <pre>{{ bids }}</pre>
+        <!--<pre>{{ bids }}</pre>-->
+        <!--<pre>{{ bidTasks }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -30,7 +31,7 @@
                     <tr v-for="task in allTasksData" :key="task.id">
                         <td>{{ task.name }}</td>
                         <td><input type="text" :value="task.pivot.cust_final_price"></td>
-                        <td v-if="task.pivot.sub_final_price > 0">{{ task.pivot.sub_final_price }}</td>
+                        <td v-if="task.pivot.sub_final_price === 'accepted'">{{ task.pivot.sub_final_price }}</td>
                         <td v-else>Pending</td>
                         <td>
                             <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
@@ -50,7 +51,14 @@
                 <div class="alert-warning" v-show="taskAlreadyExistsWarning">
                     Task Already exists and was not added for this contractor <span
                         class="glyphicon glyphicon-remove-sign"
-                        @click="hidewarning()"></span></div>
+                        @click="hideTaskWarning()"></span>
+                </div>
+                <div class="alert-warning" v-show="possibleDuplicateUserAlert">
+                    This Contractor May Already Exist in the Database. Please use the drop down to select the correct
+                    name <span
+                        class="glyphicon glyphicon-remove-sign"
+                        @click="hideDuplicateUserWarning()"></span>
+                </div>
                 <div class="wrapper">
                     <div class="details" v-for="(task, index) in allTasksData">
                         <div v-show="showDetails[index].show">
@@ -61,6 +69,7 @@
                                     <th>Sub</th>
                                     <th>Price</th>
                                     <th>Accept</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -68,7 +77,11 @@
                                     <td>{{ bid.contractorName[0].name }}</td>
                                     <td>{{ bid.bid_price }}</td>
                                     <td>
-                                        <button :click="acceptBid(bid.id)" class="button btn btn-sm btn-primary">Accept
+                                        <button @click="acceptBid(bid.id)" class="button btn btn-sm btn-primary">Accept
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button @click="notify(bid.id)" class="button btn btn-sm btn-primary">Notify
                                         </button>
                                     </td>
                                 </tr>
@@ -78,10 +91,11 @@
                     </div>
                     <div class="initiateBid" v-show="initiateSubTask">
                         <div class="addBidTask">
-                            <h1 class="text-center">Task: {{ taskName }}</h1>
+                            <h3 class="text-center">Task: {{ taskName }}</h3>
                             <div class="form-group">
                                 <label
-                                        for="contractorName">Contractor Name</label>
+                                        for="contractorName">Contractor Name *</label>
+                                <span class="validationError" v-show="hasNameError">Please Enter A Name</span>
                                 <input
                                         type="text"
                                         class="form-control"
@@ -90,7 +104,10 @@
                                         :value="contractorName"
                                         :placeholder="contractorName"
                                         v-model="query"
+                                        v-bind:class="{ 'text-danger': hasNameError }"
+                                        required
                                         v-on:keyup="autoComplete"
+                                        @blur="mouseLeave('notNow')"
                                 >
                                 <div class="panel-footer" v-if="results.length">
                                     <ul class="list-group">
@@ -103,23 +120,33 @@
                             </div>
                             <div class="form-group">
                                 <label
-                                        for="phone">Phone</label>
+                                        for="phone">Phone *</label>
+                                <span class="validationError"
+                                      v-show="hasPhoneError">Please Enter A Valid Phone Number - xxx-xxx-xxxx</span>
                                 <input
                                         type="tel"
                                         class="form-control"
                                         id="phone"
                                         name="phone"
-                                        v-model="phone">
+                                        required
+                                        v-bind:class="{ 'text-danger': hasPhoneError }"
+                                        v-model="phone"
+                                        @blur="mouseLeave('phone')">
                             </div>
                             <div class="form-group">
                                 <label
-                                        for="email">Email</label>
+                                        for="email">Email *</label>
+                                <span class="validationError"
+                                      v-show="hasEmailError">Please Enter A Valid Email Address</span>
                                 <input
                                         type="email"
                                         class="form-control"
                                         id="email"
                                         name="email"
-                                        v-model="email">
+                                        required
+                                        v-bind:class="{ 'text-danger': hasEmailError }"
+                                        v-model="email"
+                                        @blur="mouseLeave('email')">
                             </div>
                             <div class="form-group">
                                 <button @click="sendNotificationToSubForParticularTask()" class="btn btn-sm btn-primary"
@@ -149,10 +176,18 @@
         bidTasks: '',
         contractorName: '',
         email: '',
+        emailInputPassed: false,
+        hasEmailError: false,
+        hasNameError: false,
+        hasPhoneError: false,
         initiateBidUrl: '/task/notify',
         initiateSubTask: false,
+        isActive: true,
         name: '',
+        nameInputPassed: false,
         phone: '',
+        phoneInputPassed: false,
+        possibleDuplicateUserAlert: false,
         query: '',
         results: [],
         showDetails: [],
@@ -164,8 +199,8 @@
     },
     mounted () {
       this.allTasksData = this.allTasks
-      this.bidTasks = JSON.parse(this.bids)
-      console.log(typeof this.bidTasks)
+      this.bidTasks = JSON.parse (this.bids)
+      // console.log(typeof this.bidTasks)
       this.setUpShowDetailsArray ()
       console.log ('all tasks data')
       console.log (this.allTasks)
@@ -197,7 +232,7 @@
         console.log (typeof this.user)
         return this.user
       },
-      subFinalPrice(price){
+      subFinalPrice (price) {
         if (price > 0) {
           return price
         } else {
@@ -217,10 +252,18 @@
           this.showDetails.push ({tableIndex: this.allTasks[i].id, show: false});
         }
       },
-      hidewarning () {
+      hideTaskWarning () {
         this.taskAlreadyExistsWarning = false
       },
-      acceptBid () {
+      hideDuplicateUserWarning () {
+        this.possibleDuplicateUserAlert = false
+      },
+      acceptBid (id) {
+        console.log (id)
+
+        // return true
+      },
+      notify (id) {
         return true
       },
       showTheDetails (index) {
@@ -239,39 +282,92 @@
       sendNotificationToSubForParticularTask () {
         // send ajax notification for sub task initiation
         console.log ('sendNotificationToSubForParticularTask is being called')
-        axios.post ('/task/notify', {
-          taskId: this.taskId,
-          jobId: this.jobid,
-          phone: this.phone,
-          email: this.email
-        }).then (function (response) {
-          console.log (response.data)
-          // if (response.data !== 'success') {
-          //   this.checkValidation (response.data)
-          // }
-          if (response.data === 'task already exists') {
-            this.taskAlreadyExistsWarning = true
-          } else {
-            // let responseObject = JSON.parse (response.data)
-            console.log (typeof response.data)
-            console.log (response.data[0].contractor_id)
-            console.log (response.data[0].contractorName[0])
-            console.log (response.data[0].contractorName[0].name)
-            this.bidTasks = response.data
-            this.display ()
-          }
+        if (this.emailInputPassed && this.phoneInputPassed && this.nameInputPassed) {
+          axios.post ('/task/notify', {
+            taskId: this.taskId,
+            jobId: this.jobid,
+            phone: this.phone,
+            email: this.email,
+            name: this.query
+          }).then (function (response) {
+            console.log (response.data)
+            if (typeof response.data === 'string' && response.data !== 'success') {
+              this.checkValidation (response.data)
+            } else if (response.data === 'task already exists') {
+              this.taskAlreadyExistsWarning = true
+            } else {
+              // let responseObject = JSON.parse (response.data)
+              console.log (typeof response.data)
+              console.log (response.data[0].contractor_id)
+              console.log (response.data[0].contractorName[0])
+              console.log (response.data[0].contractorName[0].name)
+              this.bidTasks = response.data
+              this.display ()
+            }
 //          debugger
-          // display flash message was sent
-        }.bind (this))
-      },
-      checkValidaton (responseData) {
-        if (responseData === 'allFieldsAreEmpty') {
-          // display message
-        } else if (responseData === 'email') {
-          // display message
-        } else if (responseData === 'phone') {
-          // display message
+            // display flash message was sent
+          }.bind (this))
         }
+      },
+      checkValidation (responseData) {
+        if (responseData === 'allFieldsAreEmpty') {
+          console.log (responseData)
+          this.hasEmailError = true
+          this.hasPhoneError = true
+        } else if (responseData === 'emailIsEmpty') {
+          console.log (responseData)
+          this.hasEmailError = true
+        } else if (responseData === 'phoneIsEmpty') {
+          console.log (responseData)
+          this.hasPhoneError = true
+        } else if (responseData === 'user may already exist in database') {
+          this.hasNameError = true
+          this.possibleDuplicateUserAlert = true
+          console.log (responseData)
+        }
+      },
+      mouseLeave(inputType) {
+        if (inputType === 'name') {
+          let nameRegex = '/^[a-zA-Z]+(([\',. -][a-zA-Z ])?[a-zA-Z]*)*$/'
+          if (this.name.match(nameRegex)) {
+            this.nameInputPassed = true
+            this.hasNameError = false
+          } else {
+            this.nameInputPassed = false
+            this.hasNameError = true
+          }
+        } else if (inputType === 'phone') {
+          this.manipulateThePhoneNumber()
+          let phoneRegex = new RegExp('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
+          if (this.phone.match(phoneRegex)) {
+            this.phoneInputPassed = true
+            this.hasPhoneError = false
+          } else {
+            this.phoneInputPassed = false
+            this.hasPhoneError = true
+          }
+        } else if (inputType === 'email') {
+          let emailRegex = '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
+          if (this.email.match(emailRegex)) {
+            this.emailInputPassed = true
+            this.hasEmailError = false
+          } else {
+            this.emailInputPassed = false
+            this.hasEmailError = true
+          }
+        }
+      },
+      manipulateThePhoneNumber () {
+        // let phoneRegex = new RegExp('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
+        // if (!this.phone.match(phoneRegex)) {
+        //   let res = this.phone.split('')
+        //   for (let obj of res) {
+        //     if ()
+        //   }
+        // } else {
+        //   this.phoneInputPassed = false
+        //   this.hasPhoneError = true
+        // }
       },
       display () {
 //        debugger
@@ -361,6 +457,15 @@
         grid-row-end: 2;
         grid-column-start: 2;
         grid-column-end: 3;
+    }
+
+    .text-danger {
+        background-color: rgba(255, 64, 47, 0.38);
+    }
+
+    .validationError {
+        margin-left: 1rem;
+        color: red;
     }
 
     /*.button {*/

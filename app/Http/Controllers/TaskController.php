@@ -157,6 +157,18 @@ class TaskController extends Controller
         }
     }
 
+    public function checkIfNameIsDifferentButPhoneAndEmailExistInTheDatabase($name, $phone, $email)
+    {
+        $n = DB::select("select name from users where name = ?", [$name]);
+        $e = DB::select("select email from users where email = ?", [$email]);
+        $p = DB::select("select phone from users where phone = ?", [$phone]);
+        if (empty($n) && (!empty($e) || !empty($p))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function validateRequest($email, $phone)
     {
         if (empty($email) && empty($phone)) {
@@ -176,6 +188,8 @@ class TaskController extends Controller
         $email = $request->email;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
+        $name = $request->name;
+
 
 //        return gettype($jobId);
 
@@ -184,6 +198,10 @@ class TaskController extends Controller
         if ($validation !== 'validationPassed') {
             return $validation;
         };
+
+        if ($this->checkIfNameIsDifferentButPhoneAndEmailExistInTheDatabase($name, $phone, $email)) {
+            return "user may already exist in database";
+        }
 
         // does the subcontractor exist?
         // if not then create a new one
@@ -199,7 +217,7 @@ class TaskController extends Controller
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
         if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
-             return "task already exists";
+            return "task already exists";
         }
 
 

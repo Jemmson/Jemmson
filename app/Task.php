@@ -52,7 +52,8 @@ class Task extends Model
                         bid_contractor_job_task.id,
                         bid_contractor_job_task.contractor_id, 
                         bid_contractor_job_task.task_id, 
-                        bid_contractor_job_task.bid_price 
+                        bid_contractor_job_task.bid_price,
+                        bid_contractor_job_task.accepted
                       from 
                         contractors 
                       inner join 

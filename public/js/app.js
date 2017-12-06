@@ -31402,6 +31402,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -31417,10 +31444,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       bidTasks: '',
       contractorName: '',
       email: '',
+      emailInputPassed: false,
+      hasEmailError: false,
+      hasNameError: false,
+      hasPhoneError: false,
       initiateBidUrl: '/task/notify',
       initiateSubTask: false,
+      isActive: true,
       name: '',
+      nameInputPassed: false,
       phone: '',
+      phoneInputPassed: false,
+      possibleDuplicateUserAlert: false,
       query: '',
       results: [],
       showDetails: [],
@@ -31433,7 +31468,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted() {
     this.allTasksData = this.allTasks;
     this.bidTasks = JSON.parse(this.bids);
-    console.log(typeof this.bidTasks);
+    // console.log(typeof this.bidTasks)
     this.setUpShowDetailsArray();
     console.log('all tasks data');
     console.log(this.allTasks);
@@ -31485,10 +31520,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.showDetails.push({ tableIndex: this.allTasks[i].id, show: false });
       }
     },
-    hidewarning() {
+    hideTaskWarning() {
       this.taskAlreadyExistsWarning = false;
     },
-    acceptBid() {
+    hideDuplicateUserWarning() {
+      this.possibleDuplicateUserAlert = false;
+    },
+    acceptBid(id) {
+      console.log(id);
+
+      // return true
+    },
+    notify(id) {
       return true;
     },
     showTheDetails(index) {
@@ -31507,39 +31550,92 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     sendNotificationToSubForParticularTask() {
       // send ajax notification for sub task initiation
       console.log('sendNotificationToSubForParticularTask is being called');
-      __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/task/notify', {
-        taskId: this.taskId,
-        jobId: this.jobid,
-        phone: this.phone,
-        email: this.email
-      }).then(function (response) {
-        console.log(response.data);
-        // if (response.data !== 'success') {
-        //   this.checkValidation (response.data)
-        // }
-        if (response.data === 'task already exists') {
-          this.taskAlreadyExistsWarning = true;
-        } else {
-          // let responseObject = JSON.parse (response.data)
-          console.log(typeof response.data);
-          console.log(response.data[0].contractor_id);
-          console.log(response.data[0].contractorName[0]);
-          console.log(response.data[0].contractorName[0].name);
-          this.bidTasks = response.data;
-          this.display();
-        }
-        //          debugger
-        // display flash message was sent
-      }.bind(this));
-    },
-    checkValidaton(responseData) {
-      if (responseData === 'allFieldsAreEmpty') {
-        // display message
-      } else if (responseData === 'email') {
-        // display message
-      } else if (responseData === 'phone') {
-        // display message
+      if (this.emailInputPassed && this.phoneInputPassed && this.nameInputPassed) {
+        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/task/notify', {
+          taskId: this.taskId,
+          jobId: this.jobid,
+          phone: this.phone,
+          email: this.email,
+          name: this.query
+        }).then(function (response) {
+          console.log(response.data);
+          if (typeof response.data === 'string' && response.data !== 'success') {
+            this.checkValidation(response.data);
+          } else if (response.data === 'task already exists') {
+            this.taskAlreadyExistsWarning = true;
+          } else {
+            // let responseObject = JSON.parse (response.data)
+            console.log(typeof response.data);
+            console.log(response.data[0].contractor_id);
+            console.log(response.data[0].contractorName[0]);
+            console.log(response.data[0].contractorName[0].name);
+            this.bidTasks = response.data;
+            this.display();
+          }
+          //          debugger
+          // display flash message was sent
+        }.bind(this));
       }
+    },
+    checkValidation(responseData) {
+      if (responseData === 'allFieldsAreEmpty') {
+        console.log(responseData);
+        this.hasEmailError = true;
+        this.hasPhoneError = true;
+      } else if (responseData === 'emailIsEmpty') {
+        console.log(responseData);
+        this.hasEmailError = true;
+      } else if (responseData === 'phoneIsEmpty') {
+        console.log(responseData);
+        this.hasPhoneError = true;
+      } else if (responseData === 'user may already exist in database') {
+        this.hasNameError = true;
+        this.possibleDuplicateUserAlert = true;
+        console.log(responseData);
+      }
+    },
+    mouseLeave(inputType) {
+      if (inputType === 'name') {
+        let nameRegex = '/^[a-zA-Z]+(([\',. -][a-zA-Z ])?[a-zA-Z]*)*$/';
+        if (this.name.match(nameRegex)) {
+          this.nameInputPassed = true;
+          this.hasNameError = false;
+        } else {
+          this.nameInputPassed = false;
+          this.hasNameError = true;
+        }
+      } else if (inputType === 'phone') {
+        this.manipulateThePhoneNumber();
+        let phoneRegex = new RegExp('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}');
+        if (this.phone.match(phoneRegex)) {
+          this.phoneInputPassed = true;
+          this.hasPhoneError = false;
+        } else {
+          this.phoneInputPassed = false;
+          this.hasPhoneError = true;
+        }
+      } else if (inputType === 'email') {
+        let emailRegex = '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])';
+        if (this.email.match(emailRegex)) {
+          this.emailInputPassed = true;
+          this.hasEmailError = false;
+        } else {
+          this.emailInputPassed = false;
+          this.hasEmailError = true;
+        }
+      }
+    },
+    manipulateThePhoneNumber() {
+      // let phoneRegex = new RegExp('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
+      // if (!this.phone.match(phoneRegex)) {
+      //   let res = this.phone.split('')
+      //   for (let obj of res) {
+      //     if ()
+      //   }
+      // } else {
+      //   this.phoneInputPassed = false
+      //   this.hasPhoneError = true
+      // }
     },
     display() {
       //        debugger
@@ -39808,7 +39904,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n    background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n    margin-left: 1rem;\n    color: red;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
 
 /***/ }),
 /* 312 */
@@ -71795,7 +71891,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "currenttasksforjob"
-  }, [_c('pre', [_vm._v(_vm._s(_vm.bids))]), _vm._v(" "), (_vm.getUser === 'customer') ? _c('div', {
+  }, [(_vm.getUser === 'customer') ? _c('div', {
     staticClass: "joblist"
   }) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
     staticClass: "joblist"
@@ -71813,7 +71909,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       domProps: {
         "value": task.pivot.cust_final_price
       }
-    })]), _vm._v(" "), (task.pivot.sub_final_price > 0) ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), _c('td', [_c('button', {
+    })]), _vm._v(" "), (task.pivot.sub_final_price === 'accepted') ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), _c('td', [_c('button', {
       staticClass: "button btn btn-sm btn-primary",
       on: {
         "click": function($event) {
@@ -71848,7 +71944,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "glyphicon glyphicon-remove-sign",
     on: {
       "click": function($event) {
-        _vm.hidewarning()
+        _vm.hideTaskWarning()
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.possibleDuplicateUserAlert),
+      expression: "possibleDuplicateUserAlert"
+    }],
+    staticClass: "alert-warning"
+  }, [_vm._v("\n                This Contractor May Already Exist in the Database. Please use the drop down to select the correct\n                name "), _c('span', {
+    staticClass: "glyphicon glyphicon-remove-sign",
+    on: {
+      "click": function($event) {
+        _vm.hideDuplicateUserWarning()
       }
     }
   })]), _vm._v(" "), _c('div', {
@@ -71873,10 +71984,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         staticClass: "table"
       }, [_c('td', [_vm._v(_vm._s(bid.contractorName[0].name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
         staticClass: "button btn btn-sm btn-primary",
-        attrs: {
-          "click": _vm.acceptBid(bid.id)
+        on: {
+          "click": function($event) {
+            _vm.acceptBid(bid.id)
+          }
         }
-      }, [_vm._v("Accept\n                                    ")])])]) : _vm._e()
+      }, [_vm._v("Accept\n                                    ")])]), _vm._v(" "), _c('td', [_c('button', {
+        staticClass: "button btn btn-sm btn-primary",
+        on: {
+          "click": function($event) {
+            _vm.notify(bid.id)
+          }
+        }
+      }, [_vm._v("Notify\n                                    ")])])]) : _vm._e()
     }))])])])
   }), _vm._v(" "), _c('div', {
     directives: [{
@@ -71888,7 +72008,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "initiateBid"
   }, [_c('div', {
     staticClass: "addBidTask"
-  }, [_c('h1', {
+  }, [_c('h3', {
     staticClass: "text-center"
   }, [_vm._v("Task: " + _vm._s(_vm.taskName))]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
@@ -71896,7 +72016,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "contractorName"
     }
-  }, [_vm._v("Contractor Name")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("Contractor Name *")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.hasNameError),
+      expression: "hasNameError"
+    }],
+    staticClass: "validationError"
+  }, [_vm._v("Please Enter A Name")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -71904,11 +72032,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "query"
     }],
     staticClass: "form-control",
+    class: {
+      'text-danger': _vm.hasNameError
+    },
     attrs: {
       "type": "text",
       "id": "contractorName",
       "name": "contractorName",
-      "placeholder": _vm.contractorName
+      "placeholder": _vm.contractorName,
+      "required": ""
     },
     domProps: {
       "value": _vm.contractorName,
@@ -71916,6 +72048,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "keyup": _vm.autoComplete,
+      "blur": function($event) {
+        _vm.mouseLeave('notNow')
+      },
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.query = $event.target.value
@@ -71943,7 +72078,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "phone"
     }
-  }, [_vm._v("Phone")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("Phone *")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.hasPhoneError),
+      expression: "hasPhoneError"
+    }],
+    staticClass: "validationError"
+  }, [_vm._v("Please Enter A Valid Phone Number - xxx-xxx-xxxx")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -71951,15 +72094,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "phone"
     }],
     staticClass: "form-control",
+    class: {
+      'text-danger': _vm.hasPhoneError
+    },
     attrs: {
       "type": "tel",
       "id": "phone",
-      "name": "phone"
+      "name": "phone",
+      "required": ""
     },
     domProps: {
       "value": (_vm.phone)
     },
     on: {
+      "blur": function($event) {
+        _vm.mouseLeave('phone')
+      },
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.phone = $event.target.value
@@ -71971,7 +72121,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "email"
     }
-  }, [_vm._v("Email")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("Email *")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.hasEmailError),
+      expression: "hasEmailError"
+    }],
+    staticClass: "validationError"
+  }, [_vm._v("Please Enter A Valid Email Address")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -71979,15 +72137,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "email"
     }],
     staticClass: "form-control",
+    class: {
+      'text-danger': _vm.hasEmailError
+    },
     attrs: {
       "type": "email",
       "id": "email",
-      "name": "email"
+      "name": "email",
+      "required": ""
     },
     domProps: {
       "value": (_vm.email)
     },
     on: {
+      "blur": function($event) {
+        _vm.mouseLeave('email')
+      },
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.email = $event.target.value
@@ -72009,7 +72174,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")]), _vm._v(" "), _c('th'), _vm._v(" "), _c('th')])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_vm._v("Sub")]), _vm._v(" "), _c('th', [_vm._v("Price")]), _vm._v(" "), _c('th', [_vm._v("Accept")])])])
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Sub")]), _vm._v(" "), _c('th', [_vm._v("Price")]), _vm._v(" "), _c('th', [_vm._v("Accept")]), _vm._v(" "), _c('th')])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
