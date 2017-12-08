@@ -13,6 +13,8 @@
         <!--<pre>{{ showDetails }}</pre>-->
         <!--<pre>{{ bids }}</pre>-->
         <!--<pre>{{ bidTasks }}</pre>-->
+        <!--<pre>{{ this.emailInputPassed }}</pre>-->
+        <!--<pre>{{ this.phoneInputPassed }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -282,7 +284,7 @@
       sendNotificationToSubForParticularTask () {
         // send ajax notification for sub task initiation
         console.log ('sendNotificationToSubForParticularTask is being called')
-        if (this.emailInputPassed && this.phoneInputPassed && this.nameInputPassed) {
+        if (this.emailInputPassed && this.phoneInputPassed) {
           axios.post ('/task/notify', {
             taskId: this.taskId,
             jobId: this.jobid,
@@ -293,8 +295,6 @@
             console.log (response.data)
             if (typeof response.data === 'string' && response.data !== 'success') {
               this.checkValidation (response.data)
-            } else if (response.data === 'task already exists') {
-              this.taskAlreadyExistsWarning = true
             } else {
               // let responseObject = JSON.parse (response.data)
               console.log (typeof response.data)
@@ -314,6 +314,8 @@
           console.log (responseData)
           this.hasEmailError = true
           this.hasPhoneError = true
+        } else if (responseData === 'task already exists') {
+          this.taskAlreadyExistsWarning = true
         } else if (responseData === 'emailIsEmpty') {
           console.log (responseData)
           this.hasEmailError = true
@@ -402,6 +404,8 @@
         this.name = result.name
         this.hasEmailError = false
         this.hasPhoneError = false
+        this.emailInputPassed = true
+        this.phoneInputPassed = true
       },
       showSubTask (taskId) {
         // if task id is the same then hide it
