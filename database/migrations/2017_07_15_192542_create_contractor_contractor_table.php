@@ -18,9 +18,9 @@ class CreateContractorContractorTable extends Migration
         // a sub can be associated to more than one contractor and
         // a contractor can be associated with more than one sub.
         Schema::create('contractor_contractor', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('subcontractor_id');
+            $table->primary(['contractor_id', 'subcontractor_id']);
             $table->timestamps();
         });
     }

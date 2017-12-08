@@ -19,10 +19,10 @@ class CreateContractorJobTaskTable extends Migration
         // each job will have more than one task that will need to be performed.
 
         Schema::create('contractor_job_task', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('job_id');
             $table->integer('task_id');
+            $table->primary(['contractor_id', 'job_id', 'task_id']);
             $table->timestamps();
         });
     }

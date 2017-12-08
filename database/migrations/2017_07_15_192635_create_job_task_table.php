@@ -17,11 +17,11 @@ class CreateJobTaskTable extends Migration
         // A job has many tasks and a particular task can be associated to a
         // particular job.
         Schema::create('job_task', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('job_id');
             $table->integer('task_id');
             $table->float('cust_final_price')->nullable();
             $table->float('sub_final_price')->nullable();
+            $table->primary(['job_id', 'task_id']);
             $table->timestamps();
         });
     }
