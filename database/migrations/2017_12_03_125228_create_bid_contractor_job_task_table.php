@@ -14,6 +14,7 @@ class CreateBidContractorJobTaskTable extends Migration
     public function up()
     {
         Schema::create('bid_contractor_job_task', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('job_id');
             $table->integer('task_id');
