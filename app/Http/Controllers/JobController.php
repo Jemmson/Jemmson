@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Job;
 use App\User;
 use App\Task;
-
+use App\Customer;
+use App\Contractor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -85,13 +86,17 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        $contractor = User::find($job->contractor_id);
-        $customer = User::find($job->customer_id);
-        $job = Job::find(1);
+        $contractor = Contractor::find($job->contractor_id)->get();
+        if (Customer::find($job->customer_id) == null) {
+            $customer = "[]";
+        } else {
+            $customer = Customer::find($job->customer_id)->get();
+        }
+        $customerUserData = User::find(1)->where('id', '=', $job->customer_id)->get();
         $tasks = $job->tasks()->get();
         $userType = Auth::user()->usertype;
         return view('jobs.edit_job',
-            compact('job', 'contractor', 'customer', 'tasks', 'userType'));
+            compact('job', 'contractor', 'customer', 'tasks', 'userType', 'customerUserData'));
     }
 
     public function updateJobDate(Request $request)
@@ -134,11 +139,11 @@ class JobController extends Controller
     public function action(Request $request)
     {
         $job = Job::find($request->job_id);
-        
+
         if ($job == null) {
             return ['status' => false, 'error' => 'Resource not found'];
         }
-        
+
         // do required action
         switch ($request->action) {
             case 'accept':

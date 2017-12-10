@@ -27,15 +27,7 @@ class Task extends Model
         return $this->belongsToMany('App\Job')
             ->withPivot(
                 'cust_final_price',
-                'sub_final_price',
-                'sub_cont_proposed',
-                'cont_sub_proposed',
-                'cust_cont_proposed',
-                'cont_cust_proposed',
-                'sub_cont_accepted',
-                'cont_sub_accepted',
-                'cust_cont_accepted',
-                'cont_cust_accepted'
+                'sub_final_price'
             )
             ->withTimestamps();
     }

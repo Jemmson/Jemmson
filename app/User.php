@@ -3,10 +3,12 @@
 namespace App;
 
 use Laravel\Spark\User as SparkUser;
+use Illuminate\Notifications\Notifiable;
 
 class User extends SparkUser
 {
     use Traits\Passwordless;
+    use Notifiable;
     /**
      * The attributes that are mass assignable.
      *
@@ -17,6 +19,7 @@ class User extends SparkUser
         'email',
         'phone',
         'password_updated',
+        'usertype',
         'password'
     ];
 
@@ -38,8 +41,7 @@ class User extends SparkUser
         'billing_city',
         'billing_zip',
         'billing_country',
-        'extra_billing_information',
-        'usertype',
+        'extra_billing_information'
     ];
 
     /**

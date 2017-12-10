@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\NotifySubOfTaskToBid;
+//use Illuminate\Notifications\Notifiable;
 use App\Task;
+use App\Contractor;
+use App\User;
 use Illuminate\Http\Request;
+use App\Services\RandomPasswordService;
 
 class TaskController extends Controller
 {
+
+//    use Notifiable;
+
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +23,7 @@ class TaskController extends Controller
     public function index()
     {
         //
+
     }
 
     /**
@@ -30,7 +39,7 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +50,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Task  $task
+     * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function show(Task $task)
@@ -52,7 +61,7 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Task  $task
+     * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function edit(Task $task)
@@ -63,8 +72,8 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Task  $task
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Task $task)
@@ -75,11 +84,124 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Task  $task
+     * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function destroy(Task $task)
     {
         //
+    }
+
+    public function checkIfSubContractorExits($email, $phone)
+    {
+        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        $result = count($user);
+        $userExists = false;
+
+        if ($result !== 1) {
+            $user = $this->createNewUser($email, $phone);
+            $userExists = false;
+        } else {
+            $userExists = true;
+        }
+
+        $userData = [$user, $userExists];
+
+        return $userData;
+    }
+
+    public function createNewUser($email, $phone)
+    {
+        if (empty($email)) {
+            $email = null;
+        }
+
+        if (empty($phone)) {
+            $phone = null;
+        }
+
+        $pass = RandomPasswordService::randomPassword();
+
+        $user = User::create(
+            [
+                'name' => explode('@', $email)[0],
+                'email' => $email,
+                'phone' => $phone,
+                'usertype' => 'contractor',
+                'password_updated' => false,
+                'password' => bcrypt($pass),
+            ]
+        );
+
+        Contractor::create(
+            [
+                'user_id' => $user->id
+            ]
+        );
+
+        return $user;
+
+    }
+
+    public function addBidEntryForTheSubContractor($contractor, $taskId)
+    {
+        if ($contractor->checkIfContractorSetBidForATask($contractor->id, $taskId)) {
+            $contractor->addContractorToBidForJobTable($contractor->id, $taskId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function validateRequest($email, $phone)
+    {
+        if (empty($email) && empty($phone)) {
+            return "allFieldsAreEmpty";
+        } else if (empty($email)) {
+            return "emailIsEmpty";
+        } else if (empty($phone)) {
+            return "phoneIsEmpty";
+        } else {
+            return "validationPassed";
+        }
+    }
+
+    public function notify(Request $request)
+    {
+        $phone = $request->phone;
+        $email = $request->email;
+        $taskId = $request->taskId;
+
+        // check the validation
+        $validation = $this->validateRequest($email, $phone);
+        if ($validation !== 'validationPassed') {
+            return $validation;
+        };
+
+        // does the subcontractor exist?
+        // if not then create a new one
+        $userData = $this->checkIfSubContractorExits($email, $phone);
+
+
+        $user = $userData[0];
+        $userExists = $userData[1];
+
+        $contractor = $user->contractors()->get()[0];
+
+        // add an entry in to the contractor bid table so that the sub can bid on the task
+        if ($this->addBidEntryForTheSubContractor($contractor, $taskId) === false) {
+             return "task already exists";
+        }
+
+        //   send a code in the notification to use when they sign up
+        // generate token and save it
+        $token = $user->generateToken(true);
+
+        //   this code will redirect them to the page with information on the task
+        // if so then send a notification to that contractor
+//        $user->notify(new NotifySubOfTaskToBid());
+        $user->notify(new NotifySubOfTaskToBid($taskId, $user, $token, $userExists));
+
+        return "success";
     }
 }

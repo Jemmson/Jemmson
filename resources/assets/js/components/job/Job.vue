@@ -3,23 +3,25 @@
         <!--<pre>{{ $store.state.job }}</pre>-->
         <!--<pre>{{ getTasks }}</pre>-->
         <!--<pre>{{ getUserType }}</pre>-->
-        <pre> {{ getCustomer }}</pre>
+        <!--<pre> {{ getCustomer }}</pre>-->
+        <div class="customerRegisteredAlert" v-show="getCustomerObject">Customer Has Not Registered Yet</div>
         <div class="wrapper">
-            <h1 class="customerName">{{ customerName }}</h1>
+            <h3 class="customerName">Customer Name: {{ getCustomerName }}</h3>
             <info-label class="infoLabel" label="Job Name" :value="jobName()"></info-label>
-            <jemm-date class="startDate" label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"
-            ></jemm-date>
-            <jemm-date class="endDate" label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"
-            ></jemm-date>
+            <!--<jemm-date class="startDate" label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"-->
+            <!--&gt;</jemm-date>-->
+            <!--<jemm-date class="endDate" label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"-->
+            <!--&gt;</jemm-date>-->
         </div>
         <currentTasksForJob :user="getUserType" class="currentTasksForJob" :allTasks="getTasks"></currentTasksForJob>
-        <button class="btn btn-primary btn-lg" @click="showAddTask()">Add Task</button>
-        <task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>
+        <!--<button class="btn btn-primary btn-lg" @click="showAddTask()">Add Task</button>-->
+        <!--<task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>-->
     </div>
 </template>
 
 <script>
   import JemmDate from './JemmDate.vue'
+  import _ from 'lodash'
   import CurrentTasksForJob from './CurrentTasksForJob.vue'
   import InfoLabel from './InfoLabel'
   import Task from './Task.vue'
@@ -62,6 +64,9 @@
       usertype: {
         type: String
       },
+      customeruserdata: {
+        type: String
+      },
     },
     components: {
       InfoLabel,
@@ -71,16 +76,22 @@
       JemmDate
     },
     computed: {
+      getCustomerObject () {
+//        console.log(this.customer)
+        return this.customer === '[]'
+      },
       date () {
         return this.$moment (new Date (), 'MMMM YYYY')
       },
       getCustomer () {
-        let customer = JSON.parse (this.customer)
-        return customer
+//        return JSON.parse (this.customer)
+//        return customer
       },
-      customerName () {
-        let customer = JSON.parse (this.customer)
-        return customer.name
+      getCustomerName () {
+        let cud = this.customeruserdata
+        let val = cud.substr(1, cud.length - 2)
+        let customerName = JSON.parse(val)
+        return customerName.name
       },
       getTasks () {
         return JSON.parse (this.tasks)
@@ -96,11 +107,12 @@
 //          'loadJobStore'
 //      ]),
       jobName () {
-        let customer = JSON.parse (this.customer)
-//        return customer.job_name
+        let job = JSON.parse (this.job)
+        console.log(job)
+        return job.job_name
       },
       loadJobStore () {
-        this.$store.commit ('job/loadStore', this.job)
+//        this.$store.commit ('job/loadStore', this.job)
       },
       showAddTask () {
         this.$data.showTaskToAdd = true
@@ -189,13 +201,14 @@
     }
 
     .customerName {
-        grid-column-start: 2;
-        grid-column-end: 3;
+        grid-column-start: 1;
+        grid-column-end: 4;
+        margin-bottom: 4rem;
     }
 
     .infoLabel {
         grid-column-start: 4;
-        grid-column-end: 5;
+        grid-column-end: 7;
     }
 
     .startDate {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="currenttasksforjob">
         <!--<pre>{{ allTasks }}</pre>-->
         <!--<pre>{{ getUser }}</pre>-->
 
@@ -8,107 +8,111 @@
         <!--<pre>{{ showDetails[2].show }}</pre>-->
         <!--<pre>{{ showDetails[3].show }}</pre>-->
         <!--<pre>{{ showDetails[4].show }}</pre>-->
+        <!--<pre>{{ taskId }}</pre>-->
+        <!--<pre>{{ allTasks }}</pre>-->
+        <div class="joblist" v-if="getUser === 'customer'">
 
+        </div>
         <div class="joblist" v-if="getUser === 'contractor'">
             <div class="wrapper1">
-                <div class="header">Task Name</div>
-                <div class="header">Final Customer Price</div>
-                <div class="header">Final Sub Price</div>
+                <div class="ctfheader">Task Name</div>
+                <div class="ctfheader">Final Customer Price</div>
+                <div class="ctfheader">Final Sub Price</div>
                 <div></div>
             </div>
-            <div v-for="(task, index) in allTasks">
-                <div class="wrapper1">
-                    <div class="taskName">{{ task.name }}</div>
-                    <div class="price">{{ task.cust_final_price }}</div>
-                    <div class="price">{{ task.sub_final_price }}</div>
-                    <button class="btn btn-sm btn-primary" @click="showDetails[index].show = !showDetails[index].show">Details
-                    </button>
-                </div>
-                <div class="subwrapper" v-if="showDetails[index].show">
-                    <div class="customer">Customer</div>
-                    <div class="contractor">Contractor</div>
-                    <label class="contcustpricelabel">Proposed Contractor Price</label>
-                    <div class="contcustprice">{{ task.cont_cust_proposed }}</div>
-                    <label class="contsubpricelabel">Proposed Contractor Price</label>
-                    <div class="contsubprice">{{ task.cont_sub_proposed }}</div>
-                    <label class="custpricelabel">Proposed Customer Price</label>
-                    <div class="custprice">{{ task.cust_cont_proposed }}</div>
-                    <label class="subpricelabel">Proposed SubContractor Price</label>
-                    <div class="subprice">{{ task.sub_cont_proposed }}</div>
-                    <button class="btn btn-sm btn-primary custaccepted">Customer Accepted</button>
-                    <button class="btn btn-sm btn-primary subaccepted">SubContractor Accepted</button>
-                    <button class="btn btn-sm btn-primary contcustaccepted">Contractor Accepted</button>
-                    <button class="btn btn-sm btn-primary contsubaccepted">Contractor Accepted</button>
-                    <!--<jemm-date class="startDate custstartdate" label="Task Start Date" serverurl="/job/update"-->
-                    <!--dbcolumn="agreed_start_date"-->
-                    <!--&gt;</jemm-date>-->
-                    <!--<jemm-date class="endDate custenddate" label="Task End Date" serverurl="/job/update"-->
-                    <!--dbcolumn="agreed_end_date"-->
-                    <!--&gt;</jemm-date>-->
-                    <!--<jemm-date class="startDate substartdate" label="Task Start Date" serverurl="/job/update"-->
-                    <!--dbcolumn="agreed_start_date"-->
-                    <!--&gt;</jemm-date>-->
-                    <!--<jemm-date class="endDate subenddate" label="Task End Date" serverurl="/job/update"-->
-                    <!--dbcolumn="agreed_end_date"-->
-                    <!--&gt;</jemm-date>-->
+            <div class="mainTaskWrapper">
+                <div v-for="(task, index) in allTasks" :key="task.id">
+                    <div class="wrapper1">
+                        <div class="task taskName">{{ task.name }}</div>
+                        <!--<div class="task price">{{ task.cust_final_price }}</div>-->
+                        <input type="text" :value="task.pivot.cust_final_price">
+                        <!--<input type="text" :value="task.proposed_cust_price">-->
+                        <input type="text" :value="task.pivot.sub_final_price">
+                        <!--<input type="text" :value="task.proposed_sub_price">-->
+                        <!--<div class="task price">{{ task.sub_final_price }}</div>-->
+                        <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
+                            Initiate Bid For Sub
+                        </button>
+                        <button class="btn btn-sm btn-primary button"
+                                @click="showDetails[index].show = !showDetails[index].show">
+                            Details
+                        </button>
                     </div>
-                    <!--<button class="btn btn-sm btn-primary">Accept</button>-->
-                    <!--<button class="btn btn-sm btn-primary">Edit</button>-->
-                    <!--<a href="#">Sub Info</a>-->
-                    <!--<div class="price">Price</div>-->
-                    <!--</div>-->
-                    <!--<div class="wrapper2">-->
-                    <!--<h3>Customer</h3>-->
-                    <!--<h3>SubContractor</h3>-->
-                    <!--<div class="header">Proposed Contractor Price For Customer</div>-->
+                    <div class="subwrapper" v-if="showDetails[index].show">
+                        <div class="task"></div>
+                        <div class="task">Sub</div>
+                        <div class="task">Price</div>
+                        <div class="task">Accept</div>
+                        <div></div>
+                        <div>Joe</div>
+                        <div>10.00</div>
+                        <button class="button btn btn-sm btn-primary">Accept</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alert-success" v-show="showNotificationSent">A notification was succesfully sent</div>
+            <div class="alert-warning" v-show="taskAlreadyExistsWarning">
+                Task Already exists and was not added for this contractor <span class="glyphicon glyphicon-remove-sign"
+                                                                                @click="hidewarning()"></span></div>
+            <div v-show="initiateSubTask">
+                <div class="addBidTask">
+                    <h1 class="text-center">Task: {{ taskName }}</h1>
+                    <div class="form-group">
+                        <label
+                                for="contractorName">Contractor Name</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="contractorName"
+                                name="contractorName"
+                                :value="contractorName"
+                                :placeholder="contractorName"
+                                v-model="query"
+                                v-on:keyup="autoComplete"
+                        >
+                        <div class="panel-footer" v-if="results.length">
+                            <ul class="list-group">
+                                <button class="list-group-item" v-for="result in results" :name="result.phone"
+                                        @click="fillFields(result)">
+                                    {{ result.name }}
+                                </button>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label
+                                for="phone">Phone</label>
+                        <input
+                                type="tel"
+                                class="form-control"
+                                id="phone"
+                                name="phone"
+                                v-model="phone">
+                    </div>
+                    <div class="form-group">
+                        <label
+                                for="email">Email</label>
+                        <input
+                                type="email"
+                                class="form-control"
+                                id="email"
+                                name="email"
+                                v-model="email">
+                    </div>
+                    <div class="form-group">
+                        <button @click="sendNotificationToSubForParticularTask()" class="btn btn-sm btn-primary"
+                                type="submit">Submit
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <!--<div class="wrapper">-->
-        <!--<div class="header">Task Name</div>-->
-        <!--<div class="header">Proposed Contractor Price For Customer</div>-->
-        <!--<div class="header">Proposed Customer Price</div>-->
-        <!--<div class="header">Accept Price Of Customer</div>-->
-        <!--<div class="header">Final Customer Price</div>-->
-        <!--<div class="header">Proposed Contractor Price For Sub</div>-->
-        <!--<div class="header">Proposed Sub Price</div>-->
-        <!--<div class="header">Accept Price Of Sub</div>-->
-        <!--<div class="header">Final Sub Price</div>-->
-        <!--<div class="header">Start Date</div>-->
-        <!--<div class="header">End Date</div>-->
-        <!--<div class="header">Delete</div>-->
-        <!--<div class="header">Edit</div>-->
-        <!--<div class="header">Sub Info</div>-->
-        <!--<div class="header">Status</div>-->
-        <!--</div>-->
-        <!--<div v-for="task in allTasks">-->
-        <!--<div class="wrapper">-->
-        <!--<div class="taskName">{{ task.name }}</div>-->
-        <!--<div class="price">{{ task.proposed_cust_price }}</div>-->
-        <!--<div class="price">{{ task.cust_cont_proposed }}</div>-->
-        <!--<div class="price">{{ task.proposed_sub_price }}</div>-->
-        <!--<div class="price">{{ task.sub_final_price }}</div>-->
-        <!--<div class="price">{{ task.cust_final_price }}</div>-->
-        <!--<jemm-date class="startDate" label="" serverurl="/job/update"-->
-        <!--dbcolumn="agreed_start_date"-->
-        <!--&gt;</jemm-date>-->
-        <!--<jemm-date class="endDate" label="" serverurl="/job/update" dbcolumn="agreed_end_date"-->
-        <!--&gt;</jemm-date>-->
-        <!--<button class="btn btn-sm btn-primary">Accept</button>-->
-        <!--<button class="btn btn-sm btn-primary">Edit</button>-->
-        <!--<a href="#">Sub Info</a>-->
-        <!--<div class="price">Price</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="total">-->
-        <!--<label>Total {{ totalPrice }}</label>-->
-        <!--</div>-->
-    </div>
     </div>
 </template>
 
 <script>
   import JemmDate from './JemmDate.vue'
+  import axios from 'axios'
 
   export default {
     name: 'CurrentTasksForJob',
@@ -117,13 +121,25 @@
     },
     data () {
       return {
+        contractorName: '',
+        email: '',
+        initiateBidUrl: '/task/notify',
+        initiateSubTask: false,
+        name: '',
+        phone: '',
+        query: '',
+        results: [],
         showDetails: [
           {show: true},
           {show: false},
           {show: false},
           {show: false},
           {show: false}
-        ]
+        ],
+        showNotificationSent: false,
+        taskAlreadyExistsWarning: false,
+        taskId: '',
+        taskName: ''
       }
     },
     props: {
@@ -147,25 +163,150 @@
         console.log (typeof this.user)
         return this.user
       }
+    },
+    methods: {
+      initiateSub (taskId, taskName) {
+        // show the sub task
+        this.showSubTask (taskId)
+        this.taskName = taskName
+        // set the task Id for the sub
+      },
+      hidewarning () {
+        this.taskAlreadyExistsWarning = false
+      },
+      sendNotificationToSubForParticularTask () {
+        // send ajax notification for sub task initiation
+        console.log ('sendNotificationToSubForParticularTask is being called')
+        axios.post ('/task/notify', {
+          taskId: this.taskId,
+          contractor: this.contractor,
+          phone: this.phone,
+          email: this.email
+        }).then (function (response) {
+          console.log (JSON.stringify (response))
+          console.log (response.data)
+//          if (response.data !== 'success') {
+//            this.checkValidation (response.data)
+//          }
+          if (response.data === 'task already exists') {
+            this.taskAlreadyExistsWarning = true
+          } else {
+            this.display ()
+          }
+//          debugger
+          // display flash message was sent
+        }.bind (this))
+      },
+      checkValidaton (responseData) {
+        if (responseData === 'allFieldsAreEmpty') {
+          // display message
+        } else if (responseData === 'email') {
+          // display message
+        } else if (responseData === 'phone') {
+          // display message
+        }
+      },
+      display () {
+//        debugger
+        // hide the initiate task box
+        this.initiateSubTask = false
+        // show flash message for one second
+        this.showNotificationSent = true
+        setTimeout (function () {
+          this.showNotificationSent = false
+        }.bind (this), 3000)
+      },
+      autoComplete () {
+        this.results = [];
+        if (this.query.length > 2) {
+          axios.get ('/api/search', {
+            params: {
+              query: this.query
+            }
+          }).then (response => {
+            console.log (response.data)
+            this.results = response.data
+          })
+        }
+      },
+      fillFields (result) {
+        console.log (result)
+        console.log (result.email)
+        console.log (result.phone)
+        console.log (result.name)
+        this.email = result.email
+        this.phone = result.phone
+        this.name = result.name
+      },
+      showSubTask (taskId) {
+        // if task id is the same then hide it
+        // if the task id is different then leave shown and update the taskId in the store
+        if (taskId === this.taskId) {
+          this.initiateSubTask = !this.initiateSubTask
+        } else {
+          this.initiateSubTask = true
+          this.taskId = taskId
+        }
+      }
     }
   }
 </script>
 
 <style scoped>
 
+    .addBidTask {
+        margin-top: 4rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .currenttasksforjob {
+        background-color: white;
+        margin-left: 27rem;
+        margin-right: 27rem;
+        border-radius: 2.5%;
+        border: solid thin black;
+    }
+
+    .ctfheader {
+        font-weight: 900;
+        font-size: larger;
+        margin-top: 1rem;
+        margin-left:1rem;
+    }
+
     .wrapper1 {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-column-gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .button {
+        margin-left: 50px;
+        margin-right: 50px;
     }
 
     .joblist {
-        margin-left: 36rem;
-        margin-right: 36rem;
+        /*margin-left: 27rem;*/
+        /*margin-right: 27rem;*/
+    }
+
+    .task {
+        font-size: medium;
+        font-weight: 400;
+        margin-left: 1rem;
     }
 
     .subwrapper {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-row-gap: 5px;
+    }
+
+    .mainTaskWrapper {
+        display: grid;
+        grid-row-gap: 10px;
     }
 
     .customer {
@@ -182,112 +323,112 @@
         grid-column-end: 4;
     }
 
-    .contcustpricelabel{
+    .contcustpricelabel {
         grid-row-start: 2;
         grid-row-end: 3;
         grid-column-start: 1;
         grid-column-end: 2;
     }
 
-    .contcustprice{
+    .contcustprice {
         grid-row-start: 2;
         grid-row-end: 3;
         grid-column-start: 2;
         grid-column-end: 3;
     }
 
-    .contsubpricelabel{
+    .contsubpricelabel {
         grid-row-start: 2;
         grid-row-end: 3;
         grid-column-start: 3;
         grid-column-end: 4;
     }
 
-    .contsubprice{
+    .contsubprice {
         grid-row-start: 2;
         grid-row-end: 3;
         grid-column-start: 4;
         grid-column-end: 5;
     }
 
-    .custpricelabel{
+    .custpricelabel {
         grid-row-start: 3;
         grid-row-end: 4;
         grid-column-start: 1;
         grid-column-end: 2;
     }
 
-    .custprice{
+    .custprice {
         grid-row-start: 3;
         grid-row-end: 4;
         grid-column-start: 2;
         grid-column-end: 3;
     }
 
-    .subpricelabel{
+    .subpricelabel {
         grid-row-start: 3;
         grid-row-end: 4;
         grid-column-start: 3;
         grid-column-end: 4;
     }
 
-    .subprice{
+    .subprice {
         grid-row-start: 3;
         grid-row-end: 4;
         grid-column-start: 4;
         grid-column-end: 5;
     }
 
-    .custaccepted{
+    .custaccepted {
         grid-row-start: 4;
         grid-row-end: 5;
         grid-column-start: 1;
         grid-column-end: 2;
     }
 
-    .subaccepted{
+    .subaccepted {
         grid-row-start: 4;
         grid-row-end: 5;
         grid-column-start: 2;
         grid-column-end: 3;
     }
 
-    .contcustaccepted{
+    .contcustaccepted {
         grid-row-start: 4;
         grid-row-end: 5;
         grid-column-start: 3;
         grid-column-end: 4;
     }
 
-    .contsubaccepted{
+    .contsubaccepted {
         grid-row-start: 4;
         grid-row-end: 5;
         grid-column-start: 4;
         grid-column-end: 5;
     }
 
-    .custstartdate{
+    .custstartdate {
         grid-row-start: 5;
         grid-row-end: 6;
         grid-column-start: 1;
         grid-column-end: 2;
     }
 
-    .custenddate{
+    .custenddate {
         grid-row-start: 5;
         grid-row-end: 6;
         grid-column-start: 2;
         grid-column-end: 3;
     }
 
-    .substartdate{
+    .substartdate {
         grid-row-start: 5;
         grid-row-end: 6;
         grid-column-start: 3;
         grid-column-end: 4;
     }
 
-    .subenddate{
+    .subenddate {
         grid-row-start: 5;
         grid-row-end: 6;
         grid-column-start: 4;
