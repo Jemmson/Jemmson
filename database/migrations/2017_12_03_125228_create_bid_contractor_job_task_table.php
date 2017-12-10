@@ -20,7 +20,7 @@ class CreateBidContractorJobTaskTable extends Migration
             $table->integer('task_id');
             $table->float('bid_price')->nullable()->default(0.00);
             $table->boolean('accepted')->nullable()->default(0);
-            $table->primary(['contractor_id', 'job_id', 'task_id']);
+//            $table->primary(['contractor_id', 'job_id', 'task_id']);
             $table->timestamps();
         });
     }

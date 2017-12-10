@@ -79,7 +79,7 @@
                                     <td>{{ bid.contractorName[0].name }}</td>
                                     <td>{{ bid.bid_price }}</td>
                                     <td>
-                                        <button @click="acceptBid(bid.id)" class="button btn btn-sm btn-primary">Accept
+                                        <button @click="acceptBid(bid.id, task.id)" class="button btn btn-sm btn-primary">Accept
                                         </button>
                                     </td>
                                     <td>
@@ -260,8 +260,9 @@
       hideDuplicateUserWarning () {
         this.possibleDuplicateUserAlert = false
       },
-      acceptBid (id) {
-        console.log (id)
+      acceptBid (id, taskId) {
+        console.log ("id: " + id)
+        console.log ("task id: " + taskId)
 
         // return true
       },
