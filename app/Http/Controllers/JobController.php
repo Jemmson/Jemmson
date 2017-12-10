@@ -126,7 +126,7 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        $article->delete();
+        $job->delete();
 
         return response()->json(null, 204);
     }
