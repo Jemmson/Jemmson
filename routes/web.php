@@ -81,8 +81,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/payments-and-review', 'Controller@create');
     Route::get('/my-contractors', 'Controller@create');
     Route::resource('/job', 'JobController');
-    Route::post('/job/update', 'JobController@updateJobDate');
-    Route::post('/task/notify', 'TaskController@notify');
 
     // contractor routes
 //    Route::get('/contractor/', 'ContractorController@index');

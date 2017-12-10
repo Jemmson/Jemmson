@@ -285,7 +285,7 @@
         // send ajax notification for sub task initiation
         console.log ('sendNotificationToSubForParticularTask is being called')
         if (this.emailInputPassed && this.phoneInputPassed) {
-          axios.post ('/task/notify', {
+          axios.post ('/api/task/notify', {
             taskId: this.taskId,
             jobId: this.jobid,
             phone: this.phone,

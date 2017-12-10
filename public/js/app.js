@@ -31553,7 +31553,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // send ajax notification for sub task initiation
       console.log('sendNotificationToSubForParticularTask is being called');
       if (this.emailInputPassed && this.phoneInputPassed) {
-        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/task/notify', {
+        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/task/notify', {
           taskId: this.taskId,
           jobId: this.jobid,
           phone: this.phone,
