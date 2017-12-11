@@ -56,12 +56,12 @@ class User extends SparkUser
 
     public function customers()
     {
-        return $this->hasMany(Customer::class, 'user_id', 'id');
+        return $this->hasOne(Customer::class, 'user_id', 'id');
     }
 
     public function contractors()
     {
-        return $this->hasMany(Contractor::class, 'user_id', 'id');
+        return $this->hasOne(Contractor::class, 'user_id', 'id');
     }
 
     public function feedback()

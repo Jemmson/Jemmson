@@ -25,6 +25,11 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class, 'id');
     }
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
     
     public function contractors()
     {

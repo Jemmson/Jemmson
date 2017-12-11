@@ -26,6 +26,16 @@ class Job extends Model
 //        return $this->hasMany(Time::class);
 //    }
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'id');
+    }
+
+    public function contractor()
+    {
+        return $this->belongsTo(Contractor::class, 'id');
+    }
+
     public function tasks()
     {
         return $this->belongsToMany('App\Task')

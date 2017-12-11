@@ -28,10 +28,16 @@ class Contractor extends Model
         return $this->belongsTo(User::class, 'id');
     }
 
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
+
     public function time()
     {
         return $this->hasMany(Time::class);
     }
+
 
     public function customers()
     {
