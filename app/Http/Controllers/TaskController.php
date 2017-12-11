@@ -235,4 +235,13 @@ class TaskController extends Controller
 
         return $bidPrices;
     }
+
+    public function accept(Request $request)
+    {
+        $bidId = $request->bidId;
+        $taskId = $request->taskId;
+        $jobId = $request->jobId;
+        DB::table('bid_contractor_job_task')->where('job_id', $jobId)->where('task_id', $taskId)->update(['accepted' => 0]);
+        DB::table('bid_contractor_job_task')->where('id', $bidId)   ->update(['accepted' => 1]);
+    }
 }

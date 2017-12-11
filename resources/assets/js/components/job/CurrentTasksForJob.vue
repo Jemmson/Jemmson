@@ -260,9 +260,29 @@
       hideDuplicateUserWarning () {
         this.possibleDuplicateUserAlert = false
       },
-      acceptBid (id, taskId) {
-        console.log ("id: " + id)
+      acceptBid (bidId, taskId, jobId) {
+        console.log ("id: " + bidId)
         console.log ("task id: " + taskId)
+        axios.post ('/api/task/accept', {
+          bidId: bidId,
+          jobId: this.jobid,
+          taskId: taskId
+        }).then (function (response) {
+          console.log (response.data)
+          // if (typeof response.data === 'string' && response.data !== 'success') {
+          //   this.checkValidation (response.data)
+          // } else {
+          //   // let responseObject = JSON.parse (response.data)
+          //   console.log (typeof response.data)
+          //   console.log (response.data[0].contractor_id)
+          //   console.log (response.data[0].contractorName[0])
+          //   console.log (response.data[0].contractorName[0].name)
+          //   this.bidTasks = response.data
+          //   this.display ()
+          // }
+         // debugger
+          // display flash message was sent
+        }.bind (this))
 
         // return true
       },
