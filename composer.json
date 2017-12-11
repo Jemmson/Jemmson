@@ -11,16 +11,17 @@
         "php": ">=5.6.4",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/cashier": "~7.0",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.5.*",
         "laravel/spark": "*@dev",
         "laravel/tinker": "~1.0",
         "simplesoftwareio/simple-sms": "3.0.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "laravel/dusk": "@dev",
+        "laravel/dusk": "2.0.0",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7"
+        "phpunit/phpunit": "~6.0",
+        "filp/whoops": "~2.0"
     },
     "autoload": {
         "classmap": [
@@ -49,6 +50,9 @@
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan optimize"
+        ],
+        "post-autoload-dump": [
+            "@php artisan package:discover"
         ]
     },
     "config": {
