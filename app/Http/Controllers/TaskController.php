@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
+use App\Notifications\NotifyCustomerThatBidIsFinished;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
 use App\Contractor;
+use App\Customer;
 use App\User;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
@@ -296,5 +298,20 @@ class TaskController extends Controller
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
         return $data;
+    }
+
+    public function finishedBidNotification(Request $request)
+    {
+        $jobId = $request->jobId;
+        $customerId = $request->customerId;
+
+//        return $customerId;
+
+        $user_id = Customer::where('id', $customerId)->get()->first()->user_id;
+        $user = User::where('id', $user_id)->get()->first();
+
+        return $user;
+
+        $user->notify(new NotifyCustomerThatBidIsFinished());
     }
 }

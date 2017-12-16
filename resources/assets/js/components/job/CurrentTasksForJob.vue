@@ -56,6 +56,18 @@
                         <td></td>
                         <td></td>
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary button"
+                                    @click="notifyCustomerOfFinishedBid()">
+                                Notify Customer of Finished Bid
+                            </button>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
                 <div class="alert-success" v-show="showNotificationSent">A notification was succesfully sent</div>
@@ -227,6 +239,9 @@
       jobid: {
         type: Number
       },
+      customerId: {
+        type: Number
+      },
       bids: {
         type: String
       }
@@ -267,12 +282,21 @@
         let total = 0;
         // debugger;
         for (let i = 0; i < atd.length; i++) {
-          total = total + parseInt(atd[i].pivot.cust_final_price)
+          total = total + parseInt (atd[i].pivot.cust_final_price)
         }
         return total
       }
     },
     methods: {
+      notifyCustomerOfFinishedBid() {
+        axios.post ('/api/task/finishedBidNotification', {
+          jobId: this.jobid,
+          customerId: this.customerId
+        }).then (function (response) {
+          console.log (response.data)
+          this.updateAllTasksData (response.data.price, response.data.taskId)
+        }.bind (this))
+      },
       initiateSub (taskId, taskName) {
         // show the sub task
         this.showSubTask (taskId)
@@ -392,7 +416,7 @@
           console.log (responseData)
         }
       },
-      updateCustomerPrice(price, taskId){
+      updateCustomerPrice (price, taskId) {
         axios.post ('/api/task/updateCustomerPrice', {
           jobId: this.jobid,
           taskId: taskId,

@@ -87,11 +87,11 @@ class JobController extends Controller
     public function edit(Job $job)
     {
         $bids = Task::getBidPrices($job->id);
-        $contractor = Contractor::find($job->contractor_id)->get();
+        $contractor = Contractor::find($job->contractor_id)->get()->first();
         if (Customer::find($job->customer_id) == null) {
             $customer = "[]";
         } else {
-            $customer = Customer::find($job->customer_id)->get();
+            $customer = Customer::find($job->customer_id)->get()->first();
         }
         $customerUserData = User::find(1)->where('id', '=', $job->customer_id)->get();
         $tasks = $job->tasks()->get();
