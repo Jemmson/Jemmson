@@ -207,6 +207,7 @@ class InitiateBidController extends Controller
         $job->contractor_id = Auth::user()->id;
         $job->customer_id = $customer_id;
         $job->job_name = $job_name;
+        $job->status = "initiated";
 
         try {
             $job->save();

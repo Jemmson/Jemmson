@@ -20,6 +20,7 @@ class TaskSeeder extends Seeder
                 $contractor = Contractor::find($i);
                 $data = [
                     'name' => $faker->name,
+                    'status' => "initiated",
                     'standard_task_id' => rand(1, 1000),
                     'contractor_id' => $contractor->id,
                     'proposed_cust_price' => rand(1, 1000),

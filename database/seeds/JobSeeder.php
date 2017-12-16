@@ -26,6 +26,7 @@ class JobSeeder extends Seeder
 
                 $data = [
                     'id' => ++$k,
+                    'status' => "initiated",
                     'customer_id' => $customer->id,
                     'contractor_id' => $contractor->id,
                     'address_line_1' => $faker->streetAddress,
