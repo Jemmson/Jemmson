@@ -93,4 +93,20 @@ class ApiTest extends TestCase
         $response->assertJson(['error' => 'Missing fields']);
     }
 
+     /**
+     * Update job
+     *
+     * @return void
+     */
+    public function test_job_update()
+    {
+        $job_name = 'Test Job # ' . rand(0,9999);
+        $response = $this->json('POST', 
+                               'api/job/1', 
+                               ['job_name' => $job_name,
+                                '_method' => 'PUT']);
+
+        $response->assertJson(['job_name' => $job_name]);
+    }
+
 }
