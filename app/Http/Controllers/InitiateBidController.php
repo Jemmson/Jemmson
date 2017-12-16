@@ -71,6 +71,15 @@ class InitiateBidController extends Controller
         // generate token and save it
         $token = $user->generateToken(true);
 
+        // if we fail to create a job or token redirect back 
+        // with error
+        if ($job_id == null || $token == null) {
+            // TODO: delete job/token if only one was created
+            return redirect()->back()->with(
+                'error',
+                'Sorry couldn\'t create the bid, please try again.'
+            );
+        }
 
         // generate data for views
         $data = [
@@ -213,10 +222,7 @@ class InitiateBidController extends Controller
             return $job->id;
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e);
-            return redirect()->back()->with(
-                'error',
-                'Sorry couldn\'t create the bid, please try again.'
-            );
+            return null;
         }
     }
 }
