@@ -15,6 +15,7 @@
         <!--<pre>{{ bidTasks }}</pre>-->
         <!--<pre>{{ this.emailInputPassed }}</pre>-->
         <!--<pre>{{ this.phoneInputPassed }}</pre>-->
+        <!--<pre>{{ allTasksData }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -33,7 +34,7 @@
                     <tr v-for="task in allTasksData" :key="task.id">
                         <td>{{ task.name }}</td>
                         <td><input type="text" :value="task.pivot.cust_final_price"></td>
-                        <td v-if="task.pivot.sub_final_price === 'accepted'">{{ task.pivot.sub_final_price }}</td>
+                        <td v-if="task.pivot.sub_final_price !== 0">{{ task.pivot.sub_final_price }}</td>
                         <td v-else>Pending</td>
                         <td>
                             <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
@@ -46,6 +47,13 @@
                                 Details
                             </button>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>Totals</td>
+                        <td></td>
+                        <td>{{ subTotal }}</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>
@@ -79,7 +87,7 @@
                                     <td>{{ bid.contractorName[0].name }}</td>
                                     <td>{{ bid.bid_price }}</td>
                                     <td>
-                                        <button @click="acceptBid(bid.id, task.id)" class="button btn btn-sm btn-primary">Accept
+                                        <button @click="acceptBid(bid.id, task.id, bid.bid_price)" class="button btn btn-sm btn-primary">Accept
                                         </button>
                                     </td>
                                     <td>
@@ -240,6 +248,17 @@
         } else {
           return 'pending'
         }
+      },
+      subTotal () {
+        let atd = this.allTasksData;
+        let total = 0;
+        // debugger;
+        for (let i = 0; i < atd.length; i++) {
+          if (atd[i].pivot.sub_final_price !== 'Pending') {
+            total = total + atd[i].pivot.sub_final_price
+          }
+        }
+        return total
       }
     },
     methods: {
@@ -260,15 +279,17 @@
       hideDuplicateUserWarning () {
         this.possibleDuplicateUserAlert = false
       },
-      acceptBid (bidId, taskId, jobId) {
+      acceptBid (bidId, taskId, price) {
         console.log ("id: " + bidId)
         console.log ("task id: " + taskId)
         axios.post ('/api/task/accept', {
           bidId: bidId,
           jobId: this.jobid,
-          taskId: taskId
+          taskId: taskId,
+          price: price
         }).then (function (response) {
           console.log (response.data)
+          this.updateAllTasksData(response.data.price, response.data.taskId)
           // if (typeof response.data === 'string' && response.data !== 'success') {
           //   this.checkValidation (response.data)
           // } else {
@@ -285,6 +306,15 @@
         }.bind (this))
 
         // return true
+      },
+      updateAllTasksData(price, id){
+        let atd = this.allTasksData;
+        // debugger;
+        for (let i = 0; i < atd.length; i++) {
+          if (atd[i].id === id) {
+            atd[i].pivot.sub_final_price = price
+          }
+        }
       },
       notify (id) {
         return true

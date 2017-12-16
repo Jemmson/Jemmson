@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Notifications\NotifySubOfTaskToBid;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
+use App\Job;
 use App\Contractor;
 use App\User;
 use Illuminate\Http\Request;
@@ -241,7 +242,19 @@ class TaskController extends Controller
         $bidId = $request->bidId;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
+        $price = $request->price;
         DB::table('bid_contractor_job_task')->where('job_id', $jobId)->where('task_id', $taskId)->update(['accepted' => 0]);
-        DB::table('bid_contractor_job_task')->where('id', $bidId)   ->update(['accepted' => 1]);
+        DB::table('bid_contractor_job_task')->where('id', $bidId)->update(['accepted' => 1]);
+
+
+        // set the sub price in the job task table
+        $job = Job::find($jobId);
+        $task = $job->tasks()->get()->where('id', '=', $taskId)->first();
+        $task->pivot->sub_final_price = $price;
+        $task->pivot->save();
+
+        $data = ["price" => $price, "taskId" => $taskId];
+        $data = json_encode($data);
+        return $data;
     }
 }
