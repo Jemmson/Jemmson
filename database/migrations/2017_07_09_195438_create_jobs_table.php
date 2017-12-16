@@ -16,7 +16,7 @@ class CreateJobsTable extends Migration
         // This table keeps track of all of the jobs and each job
         // has one customer and one or more contractors
         Schema::create('jobs', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->increments('id');
             $table->bigInteger('customer_id');
             $table->bigInteger('contractor_id');
             $table->string('address_line_1')->nullable();
@@ -30,7 +30,7 @@ class CreateJobsTable extends Migration
             $table->dateTime('agreed_end_date')->nullable();
             $table->dateTime('actual_end_date')->nullable();
             $table->string('job_name');
-            $table->primary(['id', 'customer_id', 'contractor_id']);
+            $table->unique(['id', 'customer_id', 'contractor_id']);
             $table->timestamps();
         });
     }
