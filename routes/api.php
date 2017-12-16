@@ -54,4 +54,5 @@ Route::post('job/update', 'JobController@updateJobDate');
 
 // Tasks
 Route::post('/task/notify', 'TaskController@notify');
+Route::post('/task/notifyAcceptedBid', 'TaskController@notifyAcceptedBid');
 Route::post('/task/accept', 'TaskController@accept');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Notifications\NotifySubOfTaskToBid;
+use App\Notifications\NotifySubOfAcceptedBid;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
@@ -235,6 +236,20 @@ class TaskController extends Controller
 
 
         return $bidPrices;
+    }
+
+    public function notifyAcceptedBid(Request $request)
+    {
+        $bidId = $request->bidId;
+        // find the sub that I am trying to notify
+
+        $con = DB::select("select contractor_id from bid_contractor_job_task where id = ?", [$bidId]);
+        $user_id = Contractor::where('id', $con[0]->contractor_id)->get()->first()->user_id;
+        $user = User::where('id', $user_id)->get()->first();
+
+//        return $user;
+
+        $user->notify(new NotifySubOfAcceptedBid());
     }
 
     public function accept(Request $request)
