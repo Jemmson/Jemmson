@@ -72033,7 +72033,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }]
     }, [_c('h3', {
       staticClass: "text-center"
-    }, [_vm._v("Sub Details")]), _vm._v(" "), _c('table', {
+    }, [_vm._v("Sub Details: " + _vm._s(task.name))]), _vm._v(" "), _c('table', {
       staticClass: "table"
     }, [_vm._m(1, true), _vm._v(" "), _c('tbody', _vm._l((_vm.bidTasks), function(bid) {
       return (task.id === bid.task_id) ? _c('tr', {

@@ -72,7 +72,7 @@
                 <div class="wrapper">
                     <div class="details" v-for="(task, index) in allTasksData">
                         <div v-show="showDetails[index].show">
-                            <h3 class="text-center">Sub Details</h3>
+                            <h3 class="text-center">Sub Details: {{ task.name }}</h3>
                             <table class="table">
                                 <thead>
                                 <tr>
