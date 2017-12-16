@@ -24,7 +24,10 @@ Route::group([
 
     Route::get('/search',function(){
         $query = Input::get('query');
-        $users = \App\User::where('name','like','%'.$query.'%')->get();
+        $users = \App\User::where([
+            ['name','like','%'.$query.'%'],
+            ['usertype', '=','customer'],
+        ])->get();
         return $users;
     });
 });

@@ -10,7 +10,6 @@ use SimpleSoftwareIO\SMS\Facades\SMS;
 use App\User;
 use App\Job;
 use App\Mail\PasswordlessBidPageLogin;
-
 use App\Services\RandomPasswordService;
 
 class InitiateBidController extends Controller
@@ -166,6 +165,7 @@ class InitiateBidController extends Controller
                 'name' => explode('@', $email)[0],
                 'email' => $email,
                 'phone' => $phone,
+                'usertype' => 'customer',
                 'password_updated' => false,
                 'password' => bcrypt($pass),
             ]

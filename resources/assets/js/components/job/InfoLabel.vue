@@ -1,7 +1,7 @@
 <template>
-    <label>{{ label }}:
+    <h3>{{ label }}:
         <span>{{ value }}</span>
-    </label>
+    </h3>
 </template>
 
 <script>
