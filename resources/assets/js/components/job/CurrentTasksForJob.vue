@@ -33,7 +33,8 @@
                     <tbody>
                     <tr v-for="task in allTasksData" :key="task.id">
                         <td>{{ task.name }}</td>
-                        <td><input type="text" :value="task.pivot.cust_final_price"></td>
+                        <td><input type="text" :value="task.pivot.cust_final_price"
+                                   @blur="updateCustomerPrice($event.target.value, task.id)"></td>
                         <td v-if="task.pivot.sub_final_price !== 0">{{ task.pivot.sub_final_price }}</td>
                         <td v-else>Pending</td>
                         <td>
@@ -50,7 +51,7 @@
                     </tr>
                     <tr>
                         <td>Totals</td>
-                        <td></td>
+                        <td>{{ customerTotal }}</td>
                         <td>{{ subTotal }}</td>
                         <td></td>
                         <td></td>
@@ -87,7 +88,8 @@
                                     <td>{{ bid.contractorName[0].name }}</td>
                                     <td>{{ bid.bid_price }}</td>
                                     <td>
-                                        <button @click="acceptBid(bid.id, task.id, bid.bid_price)" class="button btn btn-sm btn-primary">Accept
+                                        <button @click="acceptBid(bid.id, task.id, bid.bid_price)"
+                                                class="button btn btn-sm btn-primary">Accept
                                         </button>
                                     </td>
                                     <td>
@@ -259,6 +261,15 @@
           }
         }
         return total
+      },
+      customerTotal () {
+        let atd = this.allTasksData;
+        let total = 0;
+        // debugger;
+        for (let i = 0; i < atd.length; i++) {
+          total = total + parseInt(atd[i].pivot.cust_final_price)
+        }
+        return total
       }
     },
     methods: {
@@ -280,8 +291,8 @@
         this.possibleDuplicateUserAlert = false
       },
       acceptBid (bidId, taskId, price) {
-        console.log ("id: " + bidId)
-        console.log ("task id: " + taskId)
+        console.log ('id: ' + bidId)
+        console.log ('task id: ' + taskId)
         axios.post ('/api/task/accept', {
           bidId: bidId,
           jobId: this.jobid,
@@ -289,12 +300,12 @@
           price: price
         }).then (function (response) {
           console.log (response.data)
-          this.updateAllTasksData(response.data.price, response.data.taskId)
+          this.updateAllTasksData (response.data.price, response.data.taskId)
         }.bind (this))
 
         // return true
       },
-      updateAllTasksData(price, id){
+      updateAllTasksData (price, id) {
         let atd = this.allTasksData;
         // debugger;
         for (let i = 0; i < atd.length; i++) {
@@ -303,8 +314,17 @@
           }
         }
       },
+      updateAllTasksDataWithCustomerPrice (price, id) {
+        let atd = this.allTasksData;
+        // debugger;
+        for (let i = 0; i < atd.length; i++) {
+          if (atd[i].id === id) {
+            atd[i].pivot.cust_final_price = price
+          }
+        }
+      },
       notify (bidId) {
-        console.log ("id: " + bidId)
+        console.log ('id: ' + bidId)
         axios.post ('/api/task/notifyAcceptedBid', {
           bidId: bidId
         }).then (function (response) {
@@ -372,10 +392,20 @@
           console.log (responseData)
         }
       },
-      mouseLeave(inputType) {
+      updateCustomerPrice(price, taskId){
+        axios.post ('/api/task/updateCustomerPrice', {
+          jobId: this.jobid,
+          taskId: taskId,
+          price: price
+        }).then (function (response) {
+          console.log (response.data)
+          this.updateAllTasksDataWithCustomerPrice (response.data.price, response.data.taskId)
+        }.bind (this))
+      },
+      mouseLeave (inputType) {
         if (inputType === 'name') {
           let nameRegex = '/^[a-zA-Z]+(([\',. -][a-zA-Z ])?[a-zA-Z]*)*$/'
-          if (this.name.match(nameRegex)) {
+          if (this.name.match (nameRegex)) {
             this.nameInputPassed = true
             this.hasNameError = false
           } else {
@@ -383,9 +413,9 @@
             this.hasNameError = true
           }
         } else if (inputType === 'phone') {
-          this.manipulateThePhoneNumber()
-          let phoneRegex = new RegExp('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
-          if (this.phone.match(phoneRegex)) {
+          this.manipulateThePhoneNumber ()
+          let phoneRegex = new RegExp ('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
+          if (this.phone.match (phoneRegex)) {
             this.phoneInputPassed = true
             this.hasPhoneError = false
           } else {
@@ -394,7 +424,7 @@
           }
         } else if (inputType === 'email') {
           let emailRegex = '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
-          if (this.email.match(emailRegex)) {
+          if (this.email.match (emailRegex)) {
             this.emailInputPassed = true
             this.hasEmailError = false
           } else {
@@ -402,18 +432,6 @@
             this.hasEmailError = true
           }
         }
-      },
-      manipulateThePhoneNumber () {
-        // let phoneRegex = new RegExp('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
-        // if (!this.phone.match(phoneRegex)) {
-        //   let res = this.phone.split('')
-        //   for (let obj of res) {
-        //     if ()
-        //   }
-        // } else {
-        //   this.phoneInputPassed = false
-        //   this.hasPhoneError = true
-        // }
       },
       display () {
 //        debugger

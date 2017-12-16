@@ -136,9 +136,6 @@ class TaskController extends Controller
             ]
         );
 
-//    use App\Contractor; use App\Tasks; use App\User; use App\Task; $user = User::create(['name' => 'jim', 'email' => 'jim4@jim.com', 'phone' => '1234123127', 'usertype' => 'contractor', 'password_updated' => false, 'password' => bcrypt('1234'),]); $contractor = Contractor::create(['user_id' => $user->id]);$task = Task::create(["name" => "change orings2"]);$contractor->tasks()->attach($task);
-
-
         Contractor::create(
             [
                 'user_id' => $user->id
@@ -201,7 +198,9 @@ class TaskController extends Controller
             return $validation;
         };
 
-        if ($this->checkIfNameIsDifferentButPhoneAndEmailExistInTheDatabase($name, $phone, $email)) {
+        if ($this
+            ->checkIfNameIsDifferentButPhoneAndEmailExistInTheDatabase($name,
+                $phone, $email)) {
             return "user may already exist in database";
         }
 
@@ -243,8 +242,13 @@ class TaskController extends Controller
         $bidId = $request->bidId;
         // find the sub that I am trying to notify
 
-        $con = DB::select("select contractor_id from bid_contractor_job_task where id = ?", [$bidId]);
-        $user_id = Contractor::where('id', $con[0]->contractor_id)->get()->first()->user_id;
+        $con = DB::select("select contractor_id 
+                           from bid_contractor_job_task 
+                           where id = ?", [$bidId]);
+        $user_id = Contractor::where('id', $con[0]->contractor_id)
+            ->get()
+            ->first()
+            ->user_id;
         $user = User::where('id', $user_id)->get()->first();
 
 //        return $user;
@@ -258,8 +262,13 @@ class TaskController extends Controller
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $price = $request->price;
-        DB::table('bid_contractor_job_task')->where('job_id', $jobId)->where('task_id', $taskId)->update(['accepted' => 0]);
-        DB::table('bid_contractor_job_task')->where('id', $bidId)->update(['accepted' => 1]);
+        DB::table('bid_contractor_job_task')
+            ->where('job_id', $jobId)
+            ->where('task_id', $taskId)
+            ->update(['accepted' => 0]);
+        DB::table('bid_contractor_job_task')
+            ->where('id', $bidId)
+            ->update(['accepted' => 1]);
 
 
         // set the sub price in the job task table
@@ -267,6 +276,22 @@ class TaskController extends Controller
         $task = $job->tasks()->get()->where('id', '=', $taskId)->first();
         $task->pivot->sub_final_price = $price;
         $task->pivot->save();
+
+        $data = ["price" => $price, "taskId" => $taskId];
+        $data = json_encode($data);
+        return $data;
+    }
+
+    public function updateCustomerPrice(Request $request)
+    {
+        $price = $request->price;
+        $taskId = $request->taskId;
+        $jobId = $request->jobId;
+
+        DB::table('job_task')
+            ->where('job_id', $jobId)
+            ->where('task_id', $taskId)
+            ->update(['cust_final_price' => $price]);
 
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
