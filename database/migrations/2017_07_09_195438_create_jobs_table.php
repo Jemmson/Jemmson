@@ -30,7 +30,8 @@ class CreateJobsTable extends Migration
             $table->dateTime('agreed_end_date')->nullable();
             $table->dateTime('actual_end_date')->nullable();
             $table->string('job_name');
-            $table->unique(['id', 'customer_id', 'contractor_id']);
+            // FYI id will always be unique, I'm not sure what this accomplishes?
+            $table->unique(['id', 'customer_id', 'contractor_id']);  
             $table->timestamps();
         });
     }
