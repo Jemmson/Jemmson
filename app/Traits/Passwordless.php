@@ -56,6 +56,7 @@ trait Passwordless
               $token->save();
             } catch (\Exception $e) {
               Log::error('Error Saving User Token: '. $e->getMessage());
+              return null;
             }
         }
         return $token;
