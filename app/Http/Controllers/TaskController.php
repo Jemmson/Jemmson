@@ -310,7 +310,7 @@ class TaskController extends Controller
         $user_id = Customer::where('id', $customerId)->get()->first()->user_id;
         $user = User::where('id', $user_id)->get()->first();
 
-        return $user;
+//        return $user;
 
         $user->notify(new NotifyCustomerThatBidIsFinished());
     }

@@ -10,6 +10,7 @@ use SimpleSoftwareIO\SMS\Facades\SMS;
 use App\User;
 use App\Job;
 use App\Mail\PasswordlessBidPageLogin;
+use Illuminate\Support\Facades\DB;
 use App\Services\RandomPasswordService;
 
 class InitiateBidController extends Controller
@@ -71,6 +72,8 @@ class InitiateBidController extends Controller
         // generate token and save it
         $token = $user->generateToken(true);
 
+//        dd("jobId: $job_id token: $token");
+
         // if we fail to create a job or token redirect back 
         // with error
         if ($job_id == null || $token == null) {
@@ -119,7 +122,7 @@ class InitiateBidController extends Controller
     /**
      * Sending an Email to the customer or the contractor
      *
-     * @param array  $data  the data associated with the job
+     * @param array $data the data associated with the job
      * @param string $email the email address to send the mail to
      */
     public function sendEmail($data, $email)
@@ -134,7 +137,7 @@ class InitiateBidController extends Controller
     /**
      * Sending a text to the customer or the contractor
      *
-     * @param array  $data  the data associated with the job
+     * @param array $data the data associated with the job
      * @param string $phone the phone number of the customer
      */
     public function sendText($data, $phone)
@@ -143,8 +146,8 @@ class InitiateBidController extends Controller
         session()->put('phone', $phone);
         SMS::send(
             'sms.passwordlessbidpagelogin', $data, function ($sms) {
-                $sms->to(session('phone'));
-            }
+            $sms->to(session('phone'));
+        }
         );
         session()->forget('phone');
     }
@@ -206,22 +209,33 @@ class InitiateBidController extends Controller
      * Creating the bid
      *
      * @param string $customer_id the customers id
-     * @param string $job_name    the jobs name
+     * @param string $job_name the jobs name
      *
      * @return \Illuminate\Http\RedirectResponse|mixed
      */
     public function createBid($customer_id, $job_name)
     {
+        // not the best way but autoincrementing the id number
+        // TODO: find a better way but this works for now
+        $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
+
+//        dd($jobId[0]->id);
+//        dd($jobId);
+
         $job = new Job;
+        $job->id = $jobId[0]->id + 1;
         $job->contractor_id = Auth::user()->id;
         $job->customer_id = $customer_id;
         $job->job_name = $job_name;
         $job->status = "initiated";
 
+
         try {
             $job->save();
+//            dd($job);
             return $job->id;
         } catch (\Exception $e) {
+//            dd('Failed to create a bid: ' . $e);
             Log::critical('Failed to create a bid: ' . $e);
             return null;
         }

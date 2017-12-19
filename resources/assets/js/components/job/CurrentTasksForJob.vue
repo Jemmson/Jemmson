@@ -60,13 +60,55 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary button"
+                                    @click="showNewTask = !showNewTask">
+                                Add Task To Bid
+                            </button>
+                        </td>
                         <td>
                             <button class="btn btn-sm btn-primary button"
                                     @click="notifyCustomerOfFinishedBid()">
                                 Notify Customer of Finished Bid
                             </button>
                         </td>
+                    </tr>
+                    <tr v-show="showNewTask">
+                        <td>
+                            <div class="form-group">
+                                <label
+                                        for="taskname">Task Name</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="taskname"
+                                        name="taskname"
+                                        v-model="taskname">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label
+                                        for="taskprice">Task Price</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="taskprice"
+                                        name="taskprice"
+                                        v-model="taskprice">
+                            </div>
+                        </td>
+                        <td>
+                            <button
+                                    style="margin-top: 27px"
+                                    id="submitTask"
+                                    class="btn btn-default btn-primary"
+                                    v-on:click="addNewTask()">
+                                Submit
+                            </button>
+                        </td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>
@@ -215,6 +257,7 @@
         query: '',
         results: [],
         showDetails: [],
+        showNewTask: false,
         showNotificationSent: false,
         taskAlreadyExistsWarning: false,
         taskId: '',
