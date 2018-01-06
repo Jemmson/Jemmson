@@ -17,16 +17,16 @@ Route::group([
     'middleware' => 'auth:api'
 ], function () {
     //
-    
+
     Route::get('/test', function () {
         return ['name' => 'Shawn'];
     });
 
-    Route::get('/search',function(){
+    Route::get('/search', function () {
         $query = Input::get('query');
         $users = \App\User::where([
-            ['name','like','%'.$query.'%'],
-            ['usertype', '=','customer'],
+            ['name', 'like', '%' . $query . '%'],
+            ['usertype', '=', 'customer'],
         ])->get();
         return $users;
     });
@@ -36,10 +36,26 @@ Route::group([
 // based on user and the resources they 
 // try to edit
 
-Route::get('/search',function(Request $request){
+Route::get('/search', function (Request $request) {
     $query = $request->query('query');
-    $users = \App\User::where('name','like','%'.$query.'%')->get();
+    $users = \App\User::where('name', 'like', '%' . $query . '%')->get();
     return $users;
+});
+
+Route::post('/search/task', function (Request $request) {
+    $taskName = $request->taskname;
+//    $contId = $request->contractorId;
+
+    $jobId = $request->jobId;
+    $cont = DB::select("select contractor_id 
+                           from jobs 
+                           where id = ?", [$jobId]);
+    $contId = $cont[0]->contractor_id;
+
+    $tasks = \App\Task::where('name', 'like', '%' . $taskName . '%')
+        ->where('contractor_id', '=', $contId)
+        ->get();
+    return $tasks;
 });
 
 
@@ -58,3 +74,4 @@ Route::post('/task/notifyAcceptedBid', 'TaskController@notifyAcceptedBid');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/finishedBidNotification', 'TaskController@finishedBidNotification');
 Route::post('/task/accept', 'TaskController@accept');
+Route::post('/task/addTask', 'TaskController@addTask');

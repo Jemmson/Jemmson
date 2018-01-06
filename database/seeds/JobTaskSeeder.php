@@ -23,8 +23,8 @@ class JobTaskSeeder extends Seeder
                 $task = $job->tasks()->find($task->id);
                 $task->pivot->cust_final_price = rand(1, 1000);
                 $task->pivot->sub_final_price = rand(1, 1000);
+                $task->pivot->status = 'initiated';
                 $task->pivot->save();
-
             }
         }
     }

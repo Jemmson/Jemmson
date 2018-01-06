@@ -16,6 +16,8 @@
         <!--<pre>{{ this.emailInputPassed }}</pre>-->
         <!--<pre>{{ this.phoneInputPassed }}</pre>-->
         <!--<pre>{{ allTasksData }}</pre>-->
+        <pre>{{ task }}</pre>
+        <pre>{{ taskName }}</pre>
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -77,25 +79,36 @@
                         <td>
                             <div class="form-group">
                                 <label
-                                        for="taskname">Task Name</label>
+                                        for="taskName">Task Name</label>
                                 <input
                                         type="text"
                                         class="form-control"
-                                        id="taskname"
-                                        name="taskname"
-                                        v-model="taskname">
+                                        id="taskName"
+                                        name="taskName"
+                                        v-model="newTaskName"
+                                        v-on:keyup="getExistingTask"
+                                >
+                                <div class="panel-footer" v-if="taskResults.length">
+                                    <ul class="list-group">
+                                        <button class="list-group-item" v-for="result in taskResults"
+                                                :name="result.phone"
+                                                @click="fillTaskPrice(result)">
+                                            {{ result.name }}
+                                        </button>
+                                    </ul>
+                                </div>
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
                                 <label
-                                        for="taskprice">Task Price</label>
+                                        for="taskPrice">Task Price</label>
                                 <input
                                         type="text"
                                         class="form-control"
-                                        id="taskprice"
-                                        name="taskprice"
-                                        v-model="taskprice">
+                                        id="taskPrice"
+                                        name="taskPrice"
+                                        v-model="taskPrice">
                             </div>
                         </td>
                         <td>
@@ -251,17 +264,28 @@
         isActive: true,
         name: '',
         nameInputPassed: false,
+        newTaskName: '',
+        newTask: {
+          name: '',
+          price: ''
+        },
         phone: '',
         phoneInputPassed: false,
         possibleDuplicateUserAlert: false,
         query: '',
         results: [],
+        selectedTaskName: '',
+        selectedTaskPrice: '',
         showDetails: [],
         showNewTask: false,
         showNotificationSent: false,
+        task: {},
         taskAlreadyExistsWarning: false,
+        taskExists: false,
         taskId: '',
-        taskName: ''
+        taskName: '',
+        taskPrice: '',
+        taskResults: []
       }
     },
     mounted () {
@@ -283,6 +307,9 @@
         type: Number
       },
       customerId: {
+        type: Number
+      },
+      contractorId: {
         type: Number
       },
       bids: {
@@ -331,7 +358,52 @@
       }
     },
     methods: {
-      notifyCustomerOfFinishedBid() {
+      addNewTask () {
+        // I want the status to go from initiated to in progress when the first new task is added
+        // I want each task to be added to the the tasks table
+        // I want the task to associated to a job, customer, and contractor
+        console.log ('adding a new task method is being called')
+        // I want to add the existing task to the job
+        console.log (this.task)
+        this.checkIfTaskExists()
+        axios.post ('/api/task/addTask', {
+          taskId: this.task.id,
+          taskExists: this.taskExists,
+          jobId: this.jobid,
+          taskPrice: this.taskPrice,
+          taskName: this.taskName,
+          contractorId: this.contractorId
+          // user: this.user,
+          // customerId: this.customerId,
+          // taskName: this.newTask.name,
+          // taskPrice: this.newTask.price
+        }).then (function (response) {
+          console.log (response.data)
+          // if (typeof response.data === 'string' && response.data !== 'success') {
+          //   this.checkValidation (response.data)
+          // } else {
+          //   // let responseObject = JSON.parse (response.data)
+          //   console.log (typeof response.data)
+          //   console.log (response.data[0].contractor_id)
+          //   console.log (response.data[0].contractorName[0])
+          //   console.log (response.data[0].contractorName[0].name)
+          //   this.bidTasks = response.data
+          //   this.display ()
+          // }
+//          debugger
+          // display flash message was sent
+        }.bind (this))
+
+      },
+      checkIfTaskExists() {
+        if (this.selectedTaskPrice === this.taskPrice && this.selectedTaskName === this.newTaskName) {
+          this.taskExists = true
+        } else {
+          this.taskExists = false
+          this.task = {} // cant pass in a task if the task does not exist and I dont want to pass a prior selected task
+        }
+      },
+      notifyCustomerOfFinishedBid () {
         axios.post ('/api/task/finishedBidNotification', {
           jobId: this.jobid,
           customerId: this.customerId
@@ -520,6 +592,21 @@
           }).then (response => {
             console.log (response.data)
             this.results = response.data
+          }).bind (this)
+        }
+      },
+      getExistingTask () {
+        this.taskResults = [];
+        console.log (this.newTaskName)
+        console.log (this.jobid)
+        if (this.newTaskName.length > 2) {
+          axios.post ('/api/search/task', {
+            taskname: this.newTaskName,
+            jobId: this.jobid
+          }).then (response => {
+            console.log (response)
+            console.log (response.data)
+            this.taskResults = response.data
           })
         }
       },
@@ -535,6 +622,15 @@
         this.hasPhoneError = false
         this.emailInputPassed = true
         this.phoneInputPassed = true
+      },
+      fillTaskPrice (result) {
+        console.log (result)
+        this.taskExists = true
+        this.task = result
+        this.taskPrice = result.proposed_cust_price
+        this.newTaskName = result.name
+        this.selectedTaskName = result.name
+        this.selectedTaskPrice = result.proposed_cust_price
       },
       showSubTask (taskId) {
         // if task id is the same then hide it

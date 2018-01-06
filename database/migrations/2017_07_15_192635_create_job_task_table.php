@@ -19,6 +19,7 @@ class CreateJobTaskTable extends Migration
         Schema::create('job_task', function (Blueprint $table) {
             $table->integer('job_id');
             $table->integer('task_id');
+            $table->string('status')->nullable();
             $table->float('cust_final_price')->nullable();
             $table->float('sub_final_price')->nullable();
             $table->primary(['job_id', 'task_id']);

@@ -29,6 +29,7 @@ class ContractorJobTask extends Seeder
                             'contractor_id' => $contractor->id,
                             'job_id' => $job->id,
                             'task_id' => $task->id,
+//                            TODO: add the NOW() function to this or the timestamps
                         ]
                     );
                 }

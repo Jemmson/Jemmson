@@ -314,4 +314,83 @@ class TaskController extends Controller
 
         $user->notify(new NotifyCustomerThatBidIsFinished());
     }
+
+    public function addTask(Request $request)
+    {
+
+//        if task exists already then
+//        1. add the task to the job task table
+//        2. add the task to the contractor_job_task table with the general contractor Id
+//        3. change the task to the
+
+//        return $request->tex;
+//        return 'hello';
+
+//        return $request->taskId;
+
+        if ($request->taskExists) {
+            // 1. add the task to the job task table
+            $job = Job::find($request->jobId);
+            $task = Task::find($request->taskId);
+            $job->tasks()->attach($task);
+
+            $jt = $job->tasks()->where("task_id", "=", $request->taskId)->get()[0];
+            $jt->pivot->status = 'initiated';
+            $jt->pivot->cust_final_price = $request->taskPrice;
+            $jt->pivot->sub_final_price = 0;
+            $jt->pivot->save();
+
+            return 'true';
+        } else {
+
+            return $request->contractorId;
+
+            $task = Task::create(
+                [
+                    'name' => $request->name,
+                    'standard_task_id' => null,
+                    'contractor_id' => $request->contractorId,
+                    'proposed_cust_price' => $request->taskPrice,
+                    'average_cust_price' => $request->taskPrice,
+                    'proposed_sub_price' => null,
+                    'average_sub_price' => null,
+                ]
+            );
+
+            // Add the task to the task table for the given contractor
+            $job = Job::find($request->jobId);
+            $jt = $job->tasks()->where("task_id", "=", $task->id)->get()[0];
+            $jt->pivot->status = 'initiated';
+            $jt->pivot->cust_final_price = $request->taskPrice;
+            $jt->pivot->sub_final_price = 0;
+            $jt->pivot->save();
+
+            return 'false';
+        }
+//        return $request->tex;
+//        return $request;
+
+//        $taskName = $request->price;
+////        $proposedCustomerPrice = $request->taskId;
+//        $jobId = $request->jobId;
+//
+//        // add a new task to the task table if it does not exist already for that contractor
+//        $jobId = $request->jobId;
+//
+//        $con = DB::select("select contractor_id
+//                           from jobs
+//                           where id = ?", [$jobId]);
+//        $conId = $con[0]->contractor_id;
+
+        // associate the task to a job
+
+
+        // add the default contractor to that task
+
+
+        // change the status of the task to initiated
+
+
+        // change the status of the job to pending
+    }
 }

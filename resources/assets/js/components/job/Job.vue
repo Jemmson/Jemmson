@@ -13,7 +13,16 @@
             <!--<jemm-date class="endDate" label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"-->
             <!--&gt;</jemm-date>-->
         </div>
-        <currentTasksForJob :customerId="getCustomerId" :bids="bids" :user="getUserType" :jobid="getJobId" class="currentTasksForJob" :allTasks="getTasks"></currentTasksForJob>
+        <currentTasksForJob
+                :customerId="getCustomerId"
+                :bids="bids"
+                :user="getUserType"
+                :jobid="getJobId"
+                class="currentTasksForJob"
+                :allTasks="getTasks"
+                :contractorId="getContractorId"
+        >
+        </currentTasksForJob>
         <!--<button class="btn btn-primary btn-lg" @click="showAddTask()">Add Task</button>-->
         <!--<task class="task" v-show="showTaskToAdd" @taskIsAdded="updateTasksForJob()"></task>-->
     </div>
@@ -96,6 +105,12 @@
         let customer = JSON.parse(this.customer)
         console.log(customer.id)
         return customer.id
+      },
+      getContractorId () {
+        // debugger;
+        let contractor = JSON.parse(this.contractor)
+        console.log(contractor.id)
+        return contractor.id
       },
       getCustomer () {
 //        return JSON.parse (this.customer)
