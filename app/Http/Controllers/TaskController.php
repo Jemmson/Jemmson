@@ -334,38 +334,49 @@ class TaskController extends Controller
             $task = Task::find($request->taskId);
             $job->tasks()->attach($task);
 
-            $jt = $job->tasks()->where("task_id", "=", $request->taskId)->get()[0];
+            $jt = $job->tasks()->where("task_id", "=", $request->taskId)->where("job_id", "=", $request->jobId)->get()[0];
             $jt->pivot->status = 'initiated';
             $jt->pivot->cust_final_price = $request->taskPrice;
             $jt->pivot->sub_final_price = 0;
+            $jt->pivot->contractor_id = $request->contractorId;
             $jt->pivot->save();
 
-            return 'true';
+            return $job->tasks()->get();
         } else {
 
-            return $request->contractorId;
+//            return $request->contractorId;
 
             $task = Task::create(
                 [
-                    'name' => $request->name,
+                    'name' => $request->taskName,
                     'standard_task_id' => null,
                     'contractor_id' => $request->contractorId,
                     'proposed_cust_price' => $request->taskPrice,
-                    'average_cust_price' => $request->taskPrice,
-                    'proposed_sub_price' => null,
-                    'average_sub_price' => null,
+                    'proposed_sub_price' => $request->subTaskPrice
                 ]
             );
 
+//            $task = Task::create(
+//                [
+//                    'name' => 'asdds',
+//                    'standard_task_id' => null,
+//                    'contractor_id' => 1,
+//                    'proposed_cust_price' => 25,
+//                    'proposed_sub_price' => 45
+//                ]
+//            );
+
             // Add the task to the task table for the given contractor
             $job = Job::find($request->jobId);
-            $jt = $job->tasks()->where("task_id", "=", $task->id)->get()[0];
+            $job->tasks()->attach($task);
+            $jt = $job->tasks()->where("task_id", "=", $task->id)->where("job_id", "=", $request->jobId)->get()[0];
             $jt->pivot->status = 'initiated';
             $jt->pivot->cust_final_price = $request->taskPrice;
             $jt->pivot->sub_final_price = 0;
+            $jt->pivot->contractor_id = $request->contractorId;
             $jt->pivot->save();
 
-            return 'false';
+            return $job->tasks()->where('id', '=', $task->id)->get()[0];
         }
 //        return $request->tex;
 //        return $request;

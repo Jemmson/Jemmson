@@ -9,7 +9,12 @@ class Task extends Model
 {
     protected $fillable = [
         'name',
-        'standard_task_id'
+        'standard_task_id',
+        'contractor_id',
+        'proposed_cust_price',
+        'average_cust_price',
+        'proposed_sub_price',
+        'average_sub_price'
     ];
     //
 //    public function time()
@@ -31,9 +36,10 @@ class Task extends Model
     {
         return $this->belongsToMany('App\Job')
             ->withPivot(
+                'contractor_id',
+                'status',
                 'cust_final_price',
-                'sub_final_price',
-                'status'
+                'sub_final_price'
             )
             ->withTimestamps();
     }

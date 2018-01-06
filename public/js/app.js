@@ -31508,6 +31508,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -31547,6 +31560,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       showDetails: [],
       showNewTask: false,
       showNotificationSent: false,
+      subTaskPrice: '',
       task: {},
       taskAlreadyExistsWarning: false,
       taskExists: false,
@@ -31557,7 +31571,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   mounted() {
-    this.allTasksData = this.allTasks;
+    if (this.allTasksData === '') {
+      this.allTasksData = this.allTasks;
+    }
     this.bidTasks = JSON.parse(this.bids);
     // console.log(typeof this.bidTasks)
     this.setUpShowDetailsArray();
@@ -31633,20 +31649,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       console.log('adding a new task method is being called');
       // I want to add the existing task to the job
       console.log(this.task);
+      console.log(this.task.id);
+      console.log(this.taskExists);
+      console.log(this.jobid);
+      console.log(this.taskPrice);
+      console.log(this.newTaskName);
+      console.log(this.contractorId);
+      console.log(this.subTaskPrice);
+      // debugger
       this.checkIfTaskExists();
       __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/task/addTask', {
         taskId: this.task.id,
         taskExists: this.taskExists,
         jobId: this.jobid,
+        subTaskPrice: this.subTaskPrice,
         taskPrice: this.taskPrice,
-        taskName: this.taskName,
+        taskName: this.newTaskName,
         contractorId: this.contractorId
         // user: this.user,
         // customerId: this.customerId,
         // taskName: this.newTask.name,
         // taskPrice: this.newTask.price
       }).then(function (response) {
+        console.log(this.allTasksData);
         console.log(response.data);
+        this.allTasksData.push(response.data);
+        this.setUpShowDetailsArray();
+        console.log(this.allTasksData);
         // if (typeof response.data === 'string' && response.data !== 'success') {
         //   this.checkValidation (response.data)
         // } else {
@@ -31686,8 +31715,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // set the task Id for the sub
     },
     setUpShowDetailsArray() {
-      for (let i = 0; i < this.allTasks.length; i++) {
-        this.showDetails.push({ tableIndex: this.allTasks[i].id, show: false });
+      this.showDetails = [];
+      for (let i = 0; i < this.allTasksData.length; i++) {
+        this.showDetails.push({ tableIndex: this.allTasksData[i].id, show: false });
       }
     },
     hideTaskWarning() {
@@ -31739,6 +31769,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }.bind(this));
     },
     showTheDetails(index) {
+      //        debugger
       this.hideAllTables();
       for (let obj of this.showDetails) {
         if (obj.tableIndex === index) {
@@ -31799,6 +31830,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     updateCustomerPrice(price, taskId) {
+      console.log(price);
+      if (price === '') {
+        price = 0;
+      }
+      console.log(price);
       __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/api/task/updateCustomerPrice', {
         jobId: this.jobid,
         taskId: taskId,
@@ -31892,7 +31928,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             flag = true;
           }
         }
-        debugger;
+        // debugger
         if (flag === false) {
           newTasks.push(responseData[i]);
         }
@@ -40194,7 +40230,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n    background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n    margin-left: 1rem;\n    color: red;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n    background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n    margin-left: 1rem;\n    color: red;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
 
 /***/ }),
 /* 312 */
@@ -72183,7 +72219,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "currenttasksforjob"
-  }, [_c('pre', [_vm._v(_vm._s(_vm.task))]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.taskName))]), _vm._v(" "), (_vm.getUser === 'customer') ? _c('div', {
+  }, [_c('pre', [_vm._v(_vm._s(_vm.task))]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.newTaskName))]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.showDetails))]), _vm._v(" "), (_vm.getUser === 'customer') ? _c('div', {
     staticClass: "joblist"
   }) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
     staticClass: "joblist"
@@ -72291,9 +72327,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-group"
   }, [_c('label', {
     attrs: {
-      "for": "taskPrice"
+      "for": "custTaskPrice"
     }
-  }, [_vm._v("Task Price")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("Customer Task Price")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -72303,7 +72339,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-control",
     attrs: {
       "type": "text",
-      "id": "taskPrice",
+      "id": "custTaskPrice",
       "name": "taskPrice"
     },
     domProps: {
@@ -72313,6 +72349,34 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.taskPrice = $event.target.value
+      }
+    }
+  })])]), _vm._v(" "), _c('td', [_c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "subTaskPrice"
+    }
+  }, [_vm._v("Sub Task Price")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.subTaskPrice),
+      expression: "subTaskPrice"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "id": "subTaskPrice",
+      "name": "taskPrice"
+    },
+    domProps: {
+      "value": (_vm.subTaskPrice)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.subTaskPrice = $event.target.value
       }
     }
   })])]), _vm._v(" "), _c('td', [_c('button', {

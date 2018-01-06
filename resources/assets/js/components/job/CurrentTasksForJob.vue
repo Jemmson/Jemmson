@@ -17,7 +17,8 @@
         <!--<pre>{{ this.phoneInputPassed }}</pre>-->
         <!--<pre>{{ allTasksData }}</pre>-->
         <pre>{{ task }}</pre>
-        <pre>{{ taskName }}</pre>
+        <pre>{{ newTaskName }}</pre>
+        <pre>{{ showDetails }}</pre>
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -102,13 +103,25 @@
                         <td>
                             <div class="form-group">
                                 <label
-                                        for="taskPrice">Task Price</label>
+                                        for="custTaskPrice">Customer Task Price</label>
                                 <input
                                         type="text"
                                         class="form-control"
-                                        id="taskPrice"
+                                        id="custTaskPrice"
                                         name="taskPrice"
                                         v-model="taskPrice">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label
+                                        for="subTaskPrice">Sub Task Price</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="subTaskPrice"
+                                        name="taskPrice"
+                                        v-model="subTaskPrice">
                             </div>
                         </td>
                         <td>
@@ -279,6 +292,7 @@
         showDetails: [],
         showNewTask: false,
         showNotificationSent: false,
+        subTaskPrice: '',
         task: {},
         taskAlreadyExistsWarning: false,
         taskExists: false,
@@ -289,7 +303,9 @@
       }
     },
     mounted () {
-      this.allTasksData = this.allTasks
+      if (this.allTasksData === '') {
+        this.allTasksData = this.allTasks
+      }
       this.bidTasks = JSON.parse (this.bids)
       // console.log(typeof this.bidTasks)
       this.setUpShowDetailsArray ()
@@ -365,20 +381,33 @@
         console.log ('adding a new task method is being called')
         // I want to add the existing task to the job
         console.log (this.task)
+        console.log(this.task.id)
+        console.log(this.taskExists)
+        console.log(this.jobid)
+        console.log(this.taskPrice)
+        console.log(this.newTaskName)
+        console.log(this.contractorId)
+        console.log(this.subTaskPrice)
+        // debugger
         this.checkIfTaskExists ()
         axios.post ('/api/task/addTask', {
           taskId: this.task.id,
           taskExists: this.taskExists,
           jobId: this.jobid,
+          subTaskPrice: this.subTaskPrice,
           taskPrice: this.taskPrice,
-          taskName: this.taskName,
+          taskName: this.newTaskName,
           contractorId: this.contractorId
           // user: this.user,
           // customerId: this.customerId,
           // taskName: this.newTask.name,
           // taskPrice: this.newTask.price
         }).then (function (response) {
+          console.log(this.allTasksData)
           console.log (response.data)
+          this.allTasksData.push(response.data)
+          this.setUpShowDetailsArray()
+          console.log(this.allTasksData)
           // if (typeof response.data === 'string' && response.data !== 'success') {
           //   this.checkValidation (response.data)
           // } else {
@@ -419,8 +448,9 @@
         // set the task Id for the sub
       },
       setUpShowDetailsArray () {
-        for (let i = 0; i < this.allTasks.length; i++) {
-          this.showDetails.push ({tableIndex: this.allTasks[i].id, show: false});
+        this.showDetails = []
+        for (let i = 0; i < this.allTasksData.length; i++) {
+          this.showDetails.push ({tableIndex: this.allTasksData[i].id, show: false});
         }
       },
       hideTaskWarning () {
@@ -472,6 +502,7 @@
         }.bind (this))
       },
       showTheDetails (index) {
+//        debugger
         this.hideAllTables ()
         for (let obj of this.showDetails) {
           if (obj.tableIndex === index) {
@@ -532,6 +563,11 @@
         }
       },
       updateCustomerPrice (price, taskId) {
+        console.log(price)
+        if (price === '') {
+          price = 0
+        }
+        console.log(price)
         axios.post ('/api/task/updateCustomerPrice', {
           jobId: this.jobid,
           taskId: taskId,
@@ -625,7 +661,7 @@
               flag = true
             }
           }
-          debugger
+          // debugger
           if (flag === false) {
             newTasks.push(responseData[i])
           }
