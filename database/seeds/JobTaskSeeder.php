@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Job;
 use App\Task;
+use App\Contractor;
 
 class JobTaskSeeder extends Seeder
 {
@@ -18,9 +19,11 @@ class JobTaskSeeder extends Seeder
         for ($i = 1; $i < 5; $i++) {
             for ($j = 1; $j < 10; $j++) {
                 $job = Job::find($i);
+                $contractor = Contractor::find($i);
                 $task = Task::find($j);
                 $job->tasks()->attach($task);
                 $task = $job->tasks()->find($task->id);
+                $task->pivot->contractor_id = $contractor->id;
                 $task->pivot->cust_final_price = rand(1, 1000);
                 $task->pivot->sub_final_price = rand(1, 1000);
                 $task->pivot->status = 'initiated';
