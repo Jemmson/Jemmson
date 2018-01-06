@@ -365,7 +365,7 @@
         console.log ('adding a new task method is being called')
         // I want to add the existing task to the job
         console.log (this.task)
-        this.checkIfTaskExists()
+        this.checkIfTaskExists ()
         axios.post ('/api/task/addTask', {
           taskId: this.task.id,
           taskExists: this.taskExists,
@@ -395,7 +395,7 @@
         }.bind (this))
 
       },
-      checkIfTaskExists() {
+      checkIfTaskExists () {
         if (this.selectedTaskPrice === this.taskPrice && this.selectedTaskName === this.newTaskName) {
           this.taskExists = true
         } else {
@@ -552,7 +552,7 @@
             this.hasNameError = true
           }
         } else if (inputType === 'phone') {
-          this.manipulateThePhoneNumber ()
+          // this.manipulateThePhoneNumber ()
           let phoneRegex = new RegExp ('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
           if (this.phone.match (phoneRegex)) {
             this.phoneInputPassed = true
@@ -585,14 +585,14 @@
       autoComplete () {
         this.results = [];
         if (this.query.length > 2) {
-          axios.get ('/api/search', {
+          axios.get('/api/search', {
             params: {
               query: this.query
             }
-          }).then (response => {
+          }).then (function (response) {
             console.log (response.data)
             this.results = response.data
-          }).bind (this)
+          }.bind (this))
         }
       },
       getExistingTask () {
@@ -606,9 +606,49 @@
           }).then (response => {
             console.log (response)
             console.log (response.data)
-            this.taskResults = response.data
+            // TODO: remove this function once the query to only pull tasks not related to job is figured out
+            let newTasks = this.filterReturnedTasks(response.data, this.allTasks)
+            console.log(this.allTasks)
+            this.taskResults = newTasks
           })
         }
+      },
+      filterReturnedTasks (responseData, allTasks) {
+        let responseDataLength = responseData.length
+        let allTasksDataLength = allTasks.length
+        let newTasks = []
+
+        for (let i = 0; i < responseDataLength; i++) {
+          let flag = false
+          for (let j = 0; j < allTasksDataLength; j++) {
+            if (responseData[i].id === allTasks[j].id) {
+              flag = true
+            }
+          }
+          debugger
+          if (flag === false) {
+            newTasks.push(responseData[i])
+          }
+        }
+
+
+        // if (responseDataLength > allTasksDataLength) {
+        //
+        // } else {
+        //   for (let i = 0; i < responseDataLength; i++) {
+        //     let flag = false
+        //     for (let j = 0; i < allTasksDataLength; j++) {
+        //       if (responseData[i].id === allTasks[j].id) {
+        //         flag = true
+        //       }
+        //     }
+        //     if (flag === false) {
+        //       newTasks.push(responseData[i])
+        //     }
+        //   }
+        // }
+
+        return newTasks
       },
       fillFields (result) {
         console.log (result)
