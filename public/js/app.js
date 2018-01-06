@@ -72219,7 +72219,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "currenttasksforjob"
-  }, [_c('pre', [_vm._v(_vm._s(_vm.task))]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.newTaskName))]), _vm._v(" "), _c('pre', [_vm._v(_vm._s(_vm.showDetails))]), _vm._v(" "), (_vm.getUser === 'customer') ? _c('div', {
+  }, [(_vm.getUser === 'customer') ? _c('div', {
     staticClass: "joblist"
   }) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
     staticClass: "joblist"

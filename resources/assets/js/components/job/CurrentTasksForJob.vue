@@ -16,9 +16,9 @@
         <!--<pre>{{ this.emailInputPassed }}</pre>-->
         <!--<pre>{{ this.phoneInputPassed }}</pre>-->
         <!--<pre>{{ allTasksData }}</pre>-->
-        <pre>{{ task }}</pre>
-        <pre>{{ newTaskName }}</pre>
-        <pre>{{ showDetails }}</pre>
+        <!--<pre>{{ task }}</pre>-->
+        <!--<pre>{{ newTaskName }}</pre>-->
+        <!--<pre>{{ showDetails }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
