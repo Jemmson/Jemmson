@@ -15,10 +15,10 @@
         <!--<pre>{{ bidTasks }}</pre>-->
         <!--<pre>{{ this.emailInputPassed }}</pre>-->
         <!--<pre>{{ this.phoneInputPassed }}</pre>-->
-        <!--<pre>{{ allTasksData }}</pre>-->
+        <pre>{{ allTasksData }}</pre>
         <!--<pre>{{ task }}</pre>-->
         <!--<pre>{{ newTaskName }}</pre>-->
-        <pre>{{ showDetails }}</pre>
+        <!--<pre>{{ showDetails }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -35,7 +35,8 @@
                     </thead>
                     <tbody>
                     <tr v-for="task in allTasksData" :key="task.id">
-                        <td>{{ task.name }}</td>
+                        <td><input type="text" :value="task.name"
+                                   @blur="updateTaskName($event.target.value, task.id)"></td>
                         <td><input type="text" :value="task.pivot.cust_final_price"
                                    @blur="updateCustomerPrice($event.target.value, task.id)"></td>
                         <td v-if="task.pivot.sub_final_price !== 0">{{ task.pivot.sub_final_price }}</td>
@@ -51,12 +52,12 @@
                                 Details
                             </button>
                         </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary button"
-                                    @click="editTask(task.id)">
-                                Edit
-                            </button>
-                        </td>
+                        <!--<td>-->
+                        <!--<button class="btn btn-sm btn-primary button"-->
+                        <!--@click="editTask(task.id)">-->
+                        <!--Edit-->
+                        <!--</button>-->
+                        <!--</td>-->
                         <td>
                             <button class="btn btn-sm btn-primary button"
                                     @click="deleteTask(task.id)">
@@ -318,11 +319,11 @@
       if (this.allTasksData === '') {
         this.allTasksData = this.allTasks
       }
-      this.bidTasks = JSON.parse (this.bids)
+      this.bidTasks = JSON.parse(this.bids)
       // console.log(typeof this.bidTasks)
-      this.setUpShowDetailsArray ()
-      console.log ('all tasks data')
-      console.log (this.allTasks)
+      this.setUpShowDetailsArray()
+      console.log('all tasks data')
+      console.log(this.allTasks)
     },
     props: {
       allTasks: {
@@ -353,8 +354,8 @@
         return totalPrice
       },
       getUser () {
-        console.log (this.user)
-        console.log (typeof this.user)
+        console.log(this.user)
+        console.log(typeof this.user)
         return this.user
       },
       subFinalPrice (price) {
@@ -380,7 +381,7 @@
         let total = 0;
         // debugger;
         for (let i = 0; i < atd.length; i++) {
-          total = total + parseInt (atd[i].pivot.cust_final_price)
+          total = total + parseInt(atd[i].pivot.cust_final_price)
         }
         return total
       }
@@ -390,9 +391,9 @@
         // I want the status to go from initiated to in progress when the first new task is added
         // I want each task to be added to the the tasks table
         // I want the task to associated to a job, customer, and contractor
-        console.log ('adding a new task method is being called')
+        console.log('adding a new task method is being called')
         // I want to add the existing task to the job
-        console.log (this.task)
+        console.log(this.task)
         console.log(this.task.id)
         console.log(this.taskExists)
         console.log(this.jobid)
@@ -401,8 +402,8 @@
         console.log(this.contractorId)
         console.log(this.subTaskPrice)
         // debugger
-        this.checkIfTaskExists ()
-        axios.post ('/api/task/addTask', {
+        this.checkIfTaskExists()
+        axios.post('/api/task/addTask', {
           taskId: this.task.id,
           taskExists: this.taskExists,
           jobId: this.jobid,
@@ -414,9 +415,9 @@
           // customerId: this.customerId,
           // taskName: this.newTask.name,
           // taskPrice: this.newTask.price
-        }).then (function (response) {
+        }).then(function (response) {
           console.log(this.allTasksData)
-          console.log (response.data)
+          console.log(response.data)
           this.allTasksData.push(response.data)
           this.setUpShowDetailsArray()
           console.log(this.allTasksData)
@@ -433,7 +434,7 @@
           // }
 //          debugger
           // display flash message was sent
-        }.bind (this))
+        }.bind(this))
 
       },
       checkIfTaskExists () {
@@ -445,24 +446,24 @@
         }
       },
       notifyCustomerOfFinishedBid () {
-        axios.post ('/api/task/finishedBidNotification', {
+        axios.post('/api/task/finishedBidNotification', {
           jobId: this.jobid,
           customerId: this.customerId
-        }).then (function (response) {
-          console.log (response.data)
-          this.updateAllTasksData (response.data.price, response.data.taskId)
-        }.bind (this))
+        }).then(function (response) {
+          console.log(response.data)
+          this.updateAllTasksData(response.data.price, response.data.taskId)
+        }.bind(this))
       },
       initiateSub (taskId, taskName) {
         // show the sub task
-        this.showSubTask (taskId)
+        this.showSubTask(taskId)
         this.taskName = taskName
         // set the task Id for the sub
       },
       setUpShowDetailsArray () {
         this.showDetails = []
         for (let i = 0; i < this.allTasksData.length; i++) {
-          this.showDetails.push ({tableIndex: this.allTasksData[i].id, show: false});
+          this.showDetails.push({tableIndex: this.allTasksData[i].id, show: false});
         }
       },
       hideTaskWarning () {
@@ -472,17 +473,17 @@
         this.possibleDuplicateUserAlert = false
       },
       acceptBid (bidId, taskId, price) {
-        console.log ('id: ' + bidId)
-        console.log ('task id: ' + taskId)
-        axios.post ('/api/task/accept', {
+        console.log('id: ' + bidId)
+        console.log('task id: ' + taskId)
+        axios.post('/api/task/accept', {
           bidId: bidId,
           jobId: this.jobid,
           taskId: taskId,
           price: price
-        }).then (function (response) {
-          console.log (response.data)
-          this.updateAllTasksData (response.data.price, response.data.taskId)
-        }.bind (this))
+        }).then(function (response) {
+          console.log(response.data)
+          this.updateAllTasksData(response.data.price, response.data.taskId)
+        }.bind(this))
 
         // return true
       },
@@ -505,17 +506,17 @@
         }
       },
       notify (bidId) {
-        console.log ('id: ' + bidId)
-        axios.post ('/api/task/notifyAcceptedBid', {
+        console.log('id: ' + bidId)
+        axios.post('/api/task/notifyAcceptedBid', {
           bidId: bidId
-        }).then (function (response) {
-          console.log (response.data)
+        }).then(function (response) {
+          console.log(response.data)
           // this.updateAllTasksData(response.data.price, response.data.taskId)
-        }.bind (this))
+        }.bind(this))
       },
       showTheDetails (index) {
 //        debugger
-        this.hideAllTables ()
+        this.hideAllTables()
         for (let obj of this.showDetails) {
           if (obj.tableIndex === index) {
             obj.show = true
@@ -529,49 +530,49 @@
       },
       sendNotificationToSubForParticularTask () {
         // send ajax notification for sub task initiation
-        console.log ('sendNotificationToSubForParticularTask is being called')
+        console.log('sendNotificationToSubForParticularTask is being called')
         if (this.emailInputPassed && this.phoneInputPassed) {
-          axios.post ('/api/task/notify', {
+          axios.post('/api/task/notify', {
             taskId: this.taskId,
             jobId: this.jobid,
             phone: this.phone,
             email: this.email,
             name: this.query
-          }).then (function (response) {
-            console.log (response.data)
+          }).then(function (response) {
+            console.log(response.data)
             if (typeof response.data === 'string' && response.data !== 'success') {
-              this.checkValidation (response.data)
+              this.checkValidation(response.data)
             } else {
               // let responseObject = JSON.parse (response.data)
-              console.log (typeof response.data)
-              console.log (response.data[0].contractor_id)
-              console.log (response.data[0].contractorName[0])
-              console.log (response.data[0].contractorName[0].name)
+              console.log(typeof response.data)
+              console.log(response.data[0].contractor_id)
+              console.log(response.data[0].contractorName[0])
+              console.log(response.data[0].contractorName[0].name)
               this.bidTasks = response.data
-              this.display ()
+              this.display()
             }
 //          debugger
             // display flash message was sent
-          }.bind (this))
+          }.bind(this))
         }
       },
       checkValidation (responseData) {
         if (responseData === 'allFieldsAreEmpty') {
-          console.log (responseData)
+          console.log(responseData)
           this.hasEmailError = true
           this.hasPhoneError = true
         } else if (responseData === 'task already exists') {
           this.taskAlreadyExistsWarning = true
         } else if (responseData === 'emailIsEmpty') {
-          console.log (responseData)
+          console.log(responseData)
           this.hasEmailError = true
         } else if (responseData === 'phoneIsEmpty') {
-          console.log (responseData)
+          console.log(responseData)
           this.hasPhoneError = true
         } else if (responseData === 'user may already exist in database') {
           this.hasNameError = true
           this.possibleDuplicateUserAlert = true
-          console.log (responseData)
+          console.log(responseData)
         }
       },
       updateCustomerPrice (price, taskId) {
@@ -580,19 +581,38 @@
           price = 0
         }
         console.log(price)
-        axios.post ('/api/task/updateCustomerPrice', {
+        axios.post('/api/task/updateCustomerPrice', {
           jobId: this.jobid,
           taskId: taskId,
           price: price
-        }).then (function (response) {
-          console.log (response.data)
-          this.updateAllTasksDataWithCustomerPrice (response.data.price, response.data.taskId)
-        }.bind (this))
+        }).then(function (response) {
+          console.log(response.data)
+          this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
+        }.bind(this))
+      },
+      updateTaskName (taskName, taskId) {
+        console.log(taskName)
+        axios.post('/api/task/updateTaskName', {
+          jobId: this.jobid,
+          taskId: taskId,
+          taskName: taskName
+        }).then(function (response) {
+          console.log(response.data)
+          this.updateTaskNameInAllTasksData(taskName, taskId)
+        }.bind(this))
+      },
+      updateTaskNameInAllTasksData (taskName, taskId) {
+        for (let i = 0; i < this.allTasksData.length; i++) {
+          let obj = this.allTasksData[i];
+          if (obj.id === taskId) {
+            obj.name = taskName
+          }
+        }
       },
       mouseLeave (inputType) {
         if (inputType === 'name') {
           let nameRegex = '/^[a-zA-Z]+(([\',. -][a-zA-Z ])?[a-zA-Z]*)*$/'
-          if (this.name.match (nameRegex)) {
+          if (this.name.match(nameRegex)) {
             this.nameInputPassed = true
             this.hasNameError = false
           } else {
@@ -601,8 +621,8 @@
           }
         } else if (inputType === 'phone') {
           // this.manipulateThePhoneNumber ()
-          let phoneRegex = new RegExp ('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
-          if (this.phone.match (phoneRegex)) {
+          let phoneRegex = new RegExp('(1-?)?(([2-9]\\d{2})|[2-9]\\d{2})-?[2-9]\\d{2}-?\\d{4}')
+          if (this.phone.match(phoneRegex)) {
             this.phoneInputPassed = true
             this.hasPhoneError = false
           } else {
@@ -611,7 +631,7 @@
           }
         } else if (inputType === 'email') {
           let emailRegex = '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
-          if (this.email.match (emailRegex)) {
+          if (this.email.match(emailRegex)) {
             this.emailInputPassed = true
             this.hasEmailError = false
           } else {
@@ -626,9 +646,9 @@
         this.initiateSubTask = false
         // show flash message for one second
         this.showNotificationSent = true
-        setTimeout (function () {
+        setTimeout(function () {
           this.showNotificationSent = false
-        }.bind (this), 3000)
+        }.bind(this), 3000)
       },
       autoComplete () {
         this.results = [];
@@ -637,20 +657,23 @@
             params: {
               query: this.query
             }
-          }).then (function (response) {
-            console.log (response.data)
+          }).then(function (response) {
+            console.log(response.data)
             this.results = response.data
-          }.bind (this))
+          }.bind(this))
         }
+      },
+      editTask (taskId) {
+
       },
       deleteTask (taskId) {
         axios.post('/api/task/delete', {
           taskId: taskId,
           jobId: this.jobid
-        }).then (function (response) {
-          console.log (response.data)
+        }).then(function (response) {
+          console.log(response.data)
           this.removeTaskFromAllTaskData(taskId)
-        }.bind (this))
+        }.bind(this))
       },
       removeTaskFromAllTaskData(taskId) {
         for (let i = 0; i < this.allTasksData.length; i++) {
@@ -666,15 +689,15 @@
       },
       getExistingTask () {
         this.taskResults = [];
-        console.log (this.newTaskName)
-        console.log (this.jobid)
+        console.log(this.newTaskName)
+        console.log(this.jobid)
         if (this.newTaskName.length > 2) {
-          axios.post ('/api/search/task', {
+          axios.post('/api/search/task', {
             taskname: this.newTaskName,
             jobId: this.jobid
-          }).then (response => {
-            console.log (response)
-            console.log (response.data)
+          }).then(response => {
+            console.log(response)
+            console.log(response.data)
             // TODO: remove this function once the query to only pull tasks not related to job is figured out
             let newTasks = this.filterReturnedTasks(response.data, this.allTasks)
             console.log(this.allTasks)
@@ -720,10 +743,10 @@
         return newTasks
       },
       fillFields (result) {
-        console.log (result)
-        console.log (result.email)
-        console.log (result.phone)
-        console.log (result.name)
+        console.log(result)
+        console.log(result.email)
+        console.log(result.phone)
+        console.log(result.name)
         this.email = result.email
         this.phone = result.phone
         this.name = result.name
@@ -733,7 +756,7 @@
         this.phoneInputPassed = true
       },
       fillTaskPrice (result) {
-        console.log (result)
+        console.log(result)
         this.taskExists = true
         this.task = result
         this.taskPrice = result.proposed_cust_price

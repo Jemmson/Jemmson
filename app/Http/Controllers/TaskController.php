@@ -94,6 +94,7 @@ class TaskController extends Controller
      */
     public function destroy(Request $request)
     {
+        // TODO: fix this query so it uses eloqouent so that it does not face sql injection attacks
         // remove the task from the job
         $statement = "Delete from job_task where job_id = ".$request->jobId." AND task_id = ".$request->taskId;
         $totalDrugs = DB::delete($statement);
@@ -301,6 +302,21 @@ class TaskController extends Controller
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
         return $data;
+    }
+
+    public function updateTaskName(Request $request)
+    {
+        $taskName = $request->taskName;
+        $taskId = $request->taskId;
+        $jobId = $request->jobId;
+
+        DB::table('tasks')
+            ->where('id', $taskId)
+            ->update(['name' => $taskName]);
+
+//        $data = ["price" => $price, "taskId" => $taskId];
+//        $data = json_encode($data);
+//        return $data;
     }
 
     public function finishedBidNotification(Request $request)
