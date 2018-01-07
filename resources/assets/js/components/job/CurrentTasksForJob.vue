@@ -15,7 +15,7 @@
         <!--<pre>{{ bidTasks }}</pre>-->
         <!--<pre>{{ this.emailInputPassed }}</pre>-->
         <!--<pre>{{ this.phoneInputPassed }}</pre>-->
-        <pre>{{ allTasksData }}</pre>
+        <!--<pre>{{ allTasksData }}</pre>-->
         <!--<pre>{{ task }}</pre>-->
         <!--<pre>{{ newTaskName }}</pre>-->
         <!--<pre>{{ showDetails }}</pre>-->
@@ -300,6 +300,7 @@
         possibleDuplicateUserAlert: false,
         query: '',
         results: [],
+        selectedSubTaskPrice: '',
         selectedTaskName: '',
         selectedTaskPrice: '',
         showDetails: [],
@@ -411,34 +412,18 @@
           taskPrice: this.taskPrice,
           taskName: this.newTaskName,
           contractorId: this.contractorId
-          // user: this.user,
-          // customerId: this.customerId,
-          // taskName: this.newTask.name,
-          // taskPrice: this.newTask.price
         }).then(function (response) {
           console.log(this.allTasksData)
           console.log(response.data)
           this.allTasksData.push(response.data)
           this.setUpShowDetailsArray()
+          this.taskResults = ''
           console.log(this.allTasksData)
-          // if (typeof response.data === 'string' && response.data !== 'success') {
-          //   this.checkValidation (response.data)
-          // } else {
-          //   // let responseObject = JSON.parse (response.data)
-          //   console.log (typeof response.data)
-          //   console.log (response.data[0].contractor_id)
-          //   console.log (response.data[0].contractorName[0])
-          //   console.log (response.data[0].contractorName[0].name)
-          //   this.bidTasks = response.data
-          //   this.display ()
-          // }
-//          debugger
-          // display flash message was sent
         }.bind(this))
 
       },
       checkIfTaskExists () {
-        if (this.selectedTaskPrice === this.taskPrice && this.selectedTaskName === this.newTaskName) {
+        if (this.selectedTaskName === this.newTaskName) {
           this.taskExists = true
         } else {
           this.taskExists = false
@@ -759,10 +744,14 @@
         console.log(result)
         this.taskExists = true
         this.task = result
+        // input fields
         this.taskPrice = result.proposed_cust_price
         this.newTaskName = result.name
+        this.subTaskPrice = result.proposed_sub_price
+        // comparison values
         this.selectedTaskName = result.name
         this.selectedTaskPrice = result.proposed_cust_price
+        this.selectedSubTaskPrice = result.proposed_sub_price
       },
       showSubTask (taskId) {
         // if task id is the same then hide it

@@ -20,6 +20,20 @@ class Job extends Model
         'id',
     ];
 
+    protected $fillable = [
+        'address_line_1',
+        'address_line_2',
+        'city',
+        'state',
+        'zip',
+        'status',
+        'completed_bid_date',
+        'bid_price',
+        'agreed_start_date',
+        'actual_end_date',
+        'job_name'
+    ];
+
 //
 //    public function time()
 //    {
