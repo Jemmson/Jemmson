@@ -18,7 +18,7 @@
         <!--<pre>{{ allTasksData }}</pre>-->
         <!--<pre>{{ task }}</pre>-->
         <!--<pre>{{ newTaskName }}</pre>-->
-        <!--<pre>{{ showDetails }}</pre>-->
+        <pre>{{ showDetails }}</pre>
         <div class="joblist" v-if="getUser === 'customer'">
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
@@ -49,6 +49,18 @@
                             <button class="btn btn-sm btn-primary button"
                                     @click="showTheDetails(task.id)">
                                 Details
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary button"
+                                    @click="editTask(task.id)">
+                                Edit
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary button"
+                                    @click="deleteTask(task.id)">
+                                Delete
                             </button>
                         </td>
                     </tr>
@@ -629,6 +641,27 @@
             console.log (response.data)
             this.results = response.data
           }.bind (this))
+        }
+      },
+      deleteTask (taskId) {
+        axios.post('/api/task/delete', {
+          taskId: taskId,
+          jobId: this.jobid
+        }).then (function (response) {
+          console.log (response.data)
+          this.removeTaskFromAllTaskData(taskId)
+        }.bind (this))
+      },
+      removeTaskFromAllTaskData(taskId) {
+        for (let i = 0; i < this.allTasksData.length; i++) {
+          if (this.allTasksData[i].id === taskId) {
+            this.allTasksData.splice(i, 1)
+          }
+        }
+        for (let i = 0; i < this.showDetails.length; i++) {
+          if (this.showDetails[i].tableIndex === taskId) {
+            this.showDetails.splice(i, 1)
+          }
         }
       },
       getExistingTask () {

@@ -76,3 +76,4 @@ Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/finishedBidNotification', 'TaskController@finishedBidNotification');
 Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/addTask', 'TaskController@addTask');
+Route::post('/task/delete', 'TaskController@destroy');

@@ -92,9 +92,12 @@ class TaskController extends Controller
      * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(Request $request)
     {
-        //
+        // remove the task from the job
+        $statement = "Delete from job_task where job_id = ".$request->jobId." AND task_id = ".$request->taskId;
+        $totalDrugs = DB::delete($statement);
+//        \App\Task::destroy($request->taskId);
     }
 
     public function checkIfSubContractorExits($email, $phone)
