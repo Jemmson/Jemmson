@@ -329,6 +329,9 @@ class TaskController extends Controller
         $user_id = Customer::where('id', $customerId)->get()->first()->user_id;
         $user = User::where('id', $user_id)->get()->first();
 
+        $job = Job::find($jobId);
+        $this->switchJobStatusToInProgress($job, config('app.bidIsFinished'));
+
 //        return $user;
 
         $user->notify(new NotifyCustomerThatBidIsFinished());
@@ -354,7 +357,7 @@ class TaskController extends Controller
 
             $this->updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId);
 
-            $this->switchJobStatusToInProgress($job);
+            $this->switchJobStatusToInProgress($job, config('app.bidIsInProgress'));
 
             return $job->tasks()->where('id', '=', $taskId)->get()[0];
         } else {
@@ -375,7 +378,7 @@ class TaskController extends Controller
 
             $this->updateJobTaskTable($job, $task->id, $jobId, $taskPrice, $contractorId);
 
-            $this->switchJobStatusToInProgress($job);
+            $this->switchJobStatusToInProgress($job, config('app.bidIsInProgress'));
 
             return $job->tasks()->where('id', '=', $task->id)->get()[0];
         }
@@ -393,16 +396,16 @@ class TaskController extends Controller
         return $task;
     }
 
-    public function switchJobStatusToInProgress($job)
+    public function switchJobStatusToInProgress($job, $message)
     {
-        $job->status = 'Bid In Progress';
+        $job->status = $message;
         $job->save();
     }
 
     public function updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId)
     {
         $jt = $job->tasks()->where("task_id", "=", $taskId)->where("job_id", "=", $jobId)->get()[0];
-        $jt->pivot->status = 'initiated';
+        $jt->pivot->status = config('app.taskIsInitiated');
         $jt->pivot->cust_final_price = $taskPrice;
         $jt->pivot->sub_final_price = 0;
         $jt->pivot->contractor_id = $contractorId;
