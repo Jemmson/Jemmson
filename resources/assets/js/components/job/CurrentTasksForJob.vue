@@ -417,10 +417,13 @@
           console.log(response.data)
           this.allTasksData.push(response.data)
           this.setUpShowDetailsArray()
-          this.taskResults = ''
+          this.clearTaskResults()
           console.log(this.allTasksData)
         }.bind(this))
 
+      },
+      clearTaskResults () {
+        this.taskResults = ''
       },
       checkIfTaskExists () {
         if (this.selectedTaskName === this.newTaskName) {
@@ -752,6 +755,7 @@
         this.selectedTaskName = result.name
         this.selectedTaskPrice = result.proposed_cust_price
         this.selectedSubTaskPrice = result.proposed_sub_price
+        this.clearTaskResults()
       },
       showSubTask (taskId) {
         // if task id is the same then hide it
