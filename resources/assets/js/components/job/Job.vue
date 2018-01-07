@@ -18,6 +18,7 @@
                 :bids="bids"
                 :user="getUserType"
                 :jobid="getJobId"
+                :jobStatus="getJobStatus"
                 class="currentTasksForJob"
                 :allTasks="getTasks"
                 :contractorId="getContractorId"
@@ -99,6 +100,11 @@
         let job = JSON.parse(this.job)
         console.log(job.id)
         return job.id
+      },
+      getJobStatus () {
+        let job = JSON.parse(this.job)
+        console.log(job.status)
+        return job.status
       },
       getCustomerId () {
         // debugger;

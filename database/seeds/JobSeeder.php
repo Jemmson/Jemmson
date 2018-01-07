@@ -23,7 +23,6 @@ class JobSeeder extends Seeder
             for ($j = 1; $j < 10; $j++) {
                 $contractor = Contractor::find($i);
                 $customer = Customer::find($j);
-
                 $data = [
                     'id' => ++$k,
                     'status' => "initiated",

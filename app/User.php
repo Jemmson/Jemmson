@@ -54,12 +54,12 @@ class User extends SparkUser
         'uses_two_factor_auth' => 'boolean',
     ];
 
-    public function customers()
+    public function customer()
     {
         return $this->hasOne(Customer::class, 'user_id', 'id');
     }
 
-    public function contractors()
+    public function contractor()
     {
         return $this->hasOne(Contractor::class, 'user_id', 'id');
     }
@@ -75,36 +75,21 @@ class User extends SparkUser
     }
 
     /**
-     * Get all jobs this user is associated with
-     *
-     * @return void
-     */
-    public function jobs()
-    {
-        if ($this->usertype === 'contractor') {
-            return $this->hasMany(Job::class, 'contractor_id', 'id')->get();
-        } else {
-            return $this->hasMany(Job::class, 'customer_id', 'id')->get();
-        }
-    }
-
-    /**
      * Get more details about this user
      * whether they are a contractor or customer
-     * 
-     * Notice: We are assuming the correct details for this user 
-     * is the first record found TODO: is there a better
-     * way to do this?
      *
-     * @return [obj] 
+     * Notice: We are assuming the correct details for this user
+     * is the first record found TODO: is there a better a way to do this?
+     *
+     * @return [obj]
      */
-    public function getDetails() 
+    public function getDetails()
     {
         if ($this->usertype === 'contractor') {
-            return $this->contractors()->first() != null ? $this->contractors()->first() : null;
+            return $this->contractor()->first() != null ? $this->contractor()->first() : null;
         } else {
             //dd($this->customers()->first());
-            return $this->customers()->first() != null ? $this->customers()->first() : null;
+            return $this->customer()->first() != null ? $this->customer()->first() : null;
         }
 
     }
@@ -113,7 +98,7 @@ class User extends SparkUser
      * Update user password
      *
      * @param [string] $password a password
-     * 
+     *
      * @return void
      */
     public function updatePassword($password)

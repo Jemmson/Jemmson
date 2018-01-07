@@ -12,8 +12,11 @@ return [
     | any other location as required by the application or its packages.
     */
 
+    'bidIsApproved' => 'Bid Has Been Approved',
+    'bidIsCanceled' => 'Bid Has Been Canceled',
     'bidIsInProgress' => 'Bid In Progress',
     'bidIsFinished' => 'Waiting For Customer Approval',
+    'bidIsRejected' => 'Bid Has Been Rejected',
     'taskIsInitiated' => 'initiated',
 
     /*

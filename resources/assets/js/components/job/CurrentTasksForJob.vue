@@ -20,33 +20,81 @@
         <!--<pre>{{ newTaskName }}</pre>-->
         <!--<pre>{{ showDetails }}</pre>-->
         <div class="joblist" v-if="getUser === 'customer'">
+            <div class="container">
+                <div v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                    <h1>Bid Is In Progress</h1>
+                </div>
+                <div v-else-if="jobStatus === 'Waiting For Customer Approval'">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Task Name</th>
+                            <th>Final Customer Price</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="task in allTasksData" :key="task.id">
+                            <td>
+                                {{ task.name }}
+                            </td>
+                            <td>
+                                {{ task.pivot.cust_final_price }}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary button"
+                                        @click="acceptTask(task.id)">
+                                    Details
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <div class="joblist" v-if="getUser === 'contractor'">
             <div class="container">
                 <table class="table">
                     <thead>
-                    <tr>
+                    <tr v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
                         <th>Task Name</th>
                         <th>Final Customer Price</th>
                         <th>Final Sub Price</th>
                         <th></th>
                         <th></th>
                     </tr>
+                    <tr v-else>
+                        <th>Task Name</th>
+                        <th>Final Customer Price</th>
+                        <th>Final Sub Price</th>
+                    </tr>
                     </thead>
                     <tbody>
                     <tr v-for="task in allTasksData" :key="task.id">
-                        <td><input type="text" :value="task.name"
-                                   @blur="updateTaskName($event.target.value, task.id)"></td>
-                        <td><input type="text" :value="task.pivot.cust_final_price"
-                                   @blur="updateCustomerPrice($event.target.value, task.id)"></td>
+                        <!--<td>{{ jobStatus }}</td>-->
+                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                            <input type="text" :value="task.name"
+                                   @blur="updateTaskName($event.target.value, task.id)">
+                        </td>
+                        <td v-else>
+                            {{ task.name }}
+                        </td>
+                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                            <input type="text" :value="task.pivot.cust_final_price"
+                                   @blur="updateCustomerPrice($event.target.value, task.id)">
+                        </td>
+                        <td v-else>
+                            {{ task.pivot.cust_final_price }}
+                        </td>
                         <td v-if="task.pivot.sub_final_price !== 0">{{ task.pivot.sub_final_price }}</td>
                         <td v-else>Pending</td>
-                        <td>
+                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
                             <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
                                 Initiate Bid For Sub
                             </button>
                         </td>
-                        <td>
+                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
                             <button class="btn btn-sm btn-primary button"
                                     @click="showTheDetails(task.id)">
                                 Details
@@ -58,7 +106,7 @@
                         <!--Edit-->
                         <!--</button>-->
                         <!--</td>-->
-                        <td>
+                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
                             <button class="btn btn-sm btn-primary button"
                                     @click="deleteTask(task.id)">
                                 Delete
@@ -71,8 +119,9 @@
                         <td>{{ subTotal }}</td>
                         <td></td>
                         <td></td>
+                        <td></td>
                     </tr>
-                    <tr>
+                    <tr v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
                         <td></td>
                         <td></td>
                         <td></td>
@@ -88,6 +137,10 @@
                                 Notify Customer of Finished Bid
                             </button>
                         </td>
+                        <td></td>
+                    </tr>
+                    <tr v-else-if="jobStatus === 'Bid Has Been Approved'">
+
                     </tr>
                     <tr v-show="showNewTask">
                         <td>
@@ -335,6 +388,9 @@
       },
       jobid: {
         type: Number
+      },
+      jobStatus: {
+        type: String
       },
       customerId: {
         type: Number
