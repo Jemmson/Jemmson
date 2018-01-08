@@ -24,13 +24,12 @@
                 <div v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
                     <h1>Bid Is In Progress</h1>
                 </div>
-                <div v-else-if="jobStatus === 'Waiting For Customer Approval'">
+                <div v-else-if="jobStatus === 'Waiting For Customer Approval' || jobStatus === 'The Job Has Been Accepted'">
                     <table class="table">
                         <thead>
                         <tr>
                             <th>Task Name</th>
                             <th>Final Customer Price</th>
-                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -41,10 +40,17 @@
                             <td>
                                 {{ task.pivot.cust_final_price }}
                             </td>
+                        </tr>
+                        <tr>
+                            <td></td>
                             <td>
                                 <button class="btn btn-sm btn-primary button"
-                                        @click="acceptTask(task.id)">
-                                    Details
+                                        @click="declineJob()">
+                                    Decline Job
+                                </button>
+                                <button class="btn btn-sm btn-primary button"
+                                        @click="acceptJob()">
+                                    Accept Job
                                 </button>
                             </td>
                         </tr>
@@ -496,6 +502,36 @@
         }).then(function (response) {
           console.log(response.data)
           this.updateAllTasksData(response.data.price, response.data.taskId)
+        }.bind(this))
+      },
+      acceptTask (taskId) {
+        axios.post('/api/task/acceptTask', {
+          taskId: taskId,
+          contractorId: this.contractorId,
+          jobId: this.jobid
+        }).then(function (response) {
+          console.log(response.data)
+//          this.updateAllTasksData(response.data.price, response.data.taskId)
+        }.bind(this))
+      },
+      acceptJob () {
+        axios.post('/api/task/acceptJob', {
+//          taskId: taskId,
+          contractorId: this.contractorId,
+          jobId: this.jobid
+        }).then(function (response) {
+          console.log(response.data)
+//          this.updateAllTasksData(response.data.price, response.data.taskId)
+        }.bind(this))
+      },
+      declineJob () {
+        axios.post('/api/task/declineJob', {
+//          taskId: taskId,
+          contractorId: this.contractorId,
+          jobId: this.jobid
+        }).then(function (response) {
+          console.log(response.data)
+//          this.updateAllTasksData(response.data.price, response.data.taskId)
         }.bind(this))
       },
       initiateSub (taskId, taskName) {

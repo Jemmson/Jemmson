@@ -76,5 +76,8 @@ Route::post('/task/updateTaskName', 'TaskController@updateTaskName');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/finishedBidNotification', 'TaskController@finishedBidNotification');
 Route::post('/task/accept', 'TaskController@accept');
+Route::post('/task/acceptTask', 'TaskController@acceptTask');
+Route::post('/task/acceptJob', 'TaskController@acceptJob');
+Route::post('/task/declineJob', 'TaskController@declineJob');
 Route::post('/task/addTask', 'TaskController@addTask');
 Route::post('/task/delete', 'TaskController@destroy');

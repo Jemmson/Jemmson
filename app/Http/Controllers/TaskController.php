@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
 use App\Notifications\NotifyCustomerThatBidIsFinished;
+use App\Notifications\NotifyContractorOfAcceptedBid;
+use App\Notifications\NotifyContractorOfDeclinedBid;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
@@ -286,6 +288,64 @@ class TaskController extends Controller
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
         return $data;
+    }
+
+    public function acceptTask(Request $request)
+    {
+        $taskId = $request->taskId;
+        $jobId = $request->jobId;
+        $contractorId = $request->contractorId;
+
+        // TODO: Determine if I want to accept each individual task and not just the job as a whole
+//        DB::table('job_task')
+//            ->where('job_id', $jobId)
+//            ->where('task_id', $taskId)
+//            ->where('contractor_id', $contractorId)
+//            ->update(['status' => config('app.taskIsAccepted')]);
+
+        $user_id = Contractor::where('id', $contractorId)
+            ->get()
+            ->first()
+            ->user_id;
+        $user = User::where('id', $user_id)->get()->first();
+
+        $user->notify(new NotifyContractorOfAcceptedBid());
+    }
+
+    public function acceptJob(Request $request)
+    {
+        $jobId = $request->jobId;
+        $contractorId = $request->contractorId;
+
+        $job = Job::find($jobId);
+        $job->status = config('app.jobIsAccepted');
+        $job->save();
+
+        $user_id = Contractor::where('id', $contractorId)
+            ->get()
+            ->first()
+            ->user_id;
+        $user = User::where('id', $user_id)->get()->first();
+
+        $user->notify(new NotifyContractorOfAcceptedBid());
+    }
+
+    public function declineJob(Request $request)
+    {
+        $jobId = $request->jobId;
+        $contractorId = $request->contractorId;
+
+        $job = Job::find($jobId);
+        $job->status = config('app.jobIsDeclined');
+        $job->save();
+
+        $user_id = Contractor::where('id', $contractorId)
+            ->get()
+            ->first()
+            ->user_id;
+        $user = User::where('id', $user_id)->get()->first();
+
+        $user->notify(new NotifyContractorOfDeclinedBid());
     }
 
     public function updateCustomerPrice(Request $request)

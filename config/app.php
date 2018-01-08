@@ -17,7 +17,10 @@ return [
     'bidIsInProgress' => 'Bid In Progress',
     'bidIsFinished' => 'Waiting For Customer Approval',
     'bidIsRejected' => 'Bid Has Been Rejected',
+    'jobIsAccepted' => 'The Job Has Been Accepted',
+    'jobIsDeclined' => 'The Job Has Been Declined',
     'taskIsInitiated' => 'initiated',
+    'taskIsAccepted' => 'accepted',
 
     /*
     |--------------------------------------------------------------------------
