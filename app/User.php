@@ -89,6 +89,16 @@ class User extends SparkUser
     }
 
     /**
+     * Get all bids for proposed tasks from other contractors
+     *
+     * @return void
+     */
+    public function bidJobTasks()
+    {
+        return $this->hasMany(BidContractorJobTask::class, 'contractor_id', 'id')->get();
+    }
+
+    /**
      * Get more details about this user
      * whether they are a contractor or customer
      * 
