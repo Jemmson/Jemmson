@@ -53,6 +53,11 @@ class Task extends Model
             ->withTimestamps();
     }
 
+    public function BidContractorJobTask()
+    {
+        return $this->belongsTo('App\BidContractorJobTask');
+    }
+
     public static function getBidPrices($jobId)
     {
         $bidPrices = DB::select("select 

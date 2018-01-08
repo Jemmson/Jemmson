@@ -75,6 +75,30 @@ class User extends SparkUser
     }
 
     /**
+     * Get all jobs this user is associated with
+     *
+     * @return void
+     */
+    public function jobs()
+    {
+        if ($this->usertype === 'contractor') {
+            return $this->hasMany(Job::class, 'contractor_id', 'id')->get();
+        } else {
+            return $this->hasMany(Job::class, 'customer_id', 'id')->get();
+        }
+    }
+
+    /**
+     * Get all bids for proposed tasks from other contractors
+     *
+     * @return void
+     */
+    public function bidJobTasks()
+    {
+        return $this->hasMany(BidContractorJobTask::class, 'contractor_id', 'id')->get();
+    }
+
+    /**
      * Get more details about this user
      * whether they are a contractor or customer
      *

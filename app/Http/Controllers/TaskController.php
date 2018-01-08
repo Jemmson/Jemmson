@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
 use Illuminate\Support\Facades\DB;
 
+use Auth;
+
 class TaskController extends Controller
 {
 
@@ -29,8 +31,22 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        echo 'hello world';
+    }
 
+    public function bidContractorJobTasks()
+    {
+        $bidTasks = Auth::user()->bidJobTasks();
+        // TODO: do we need show job data in this page?
+        $tmpBidTasks = [];
+        foreach ($bidTasks as $bidTask) {
+           $tmpBidTasks[] = [
+                                'id' => $bidTask->id,
+                                'name' => $bidTask->task->name,
+                                'contractor_id' => $bidTask->task->contractor_id
+           ];
+        }
+        return view('tasks.index')->with(['tasks' => json_encode($tmpBidTasks)]);
     }
 
     /**
