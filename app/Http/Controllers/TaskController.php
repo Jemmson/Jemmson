@@ -125,7 +125,9 @@ class TaskController extends Controller
         $task = BidContractorJobTask::find($id);
         if ($task == null) {
             return response()->json(["message"=>"Couldn't find record.","errors"=>["error" =>["Couldn't find record."]]], 404);
-        } 
+        }else if($request->bid_price == 0) {
+            return response()->json(["message"=>"Price needs to be greater than 0.","errors"=>["error" =>[""]]], 412);
+        }
         $task->bid_price = $request->bid_price;
 
         try {

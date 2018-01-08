@@ -34238,12 +34238,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user', 'bidTasks'],
   data() {
     return {
-      tasks: [],
+      tasks: this.bidTasks,
       price: ''
     };
   },
@@ -34256,10 +34275,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       axios.put('/api/bid/task/' + id, {
         id: id,
         bid_price: bid_price
-      }).then(function (response) {
+      }).then(response => {
+        // TODO: security review
         console.log(response);
-      }).catch(function (error) {
-        console.log(error);
+
+        $('#price-' + id).prop('disabled', true);
+        $('#' + id).prop('disabled', true);
+
+        $('#success-' + id).css('display', 'block');
+        $('#success-' + id).text('Bid has been sent.');
+        setTimeout(() => {
+          $('#success-' + id).css('display', 'none');
+        }, 10000);
+      }).catch(error => {
+
+        console.log(error.response, '#error-' + id);
+
+        $('#error-' + id).css('display', 'block');
+        $('#error-' + id).text(error.response.data.message);
+        setTimeout(() => {
+          $('#error-' + id).css('display', 'none');
+        }, 10000);
       });
     }
   },
@@ -74047,7 +74083,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-body"
   }, [_c('table', {
     staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.bidTasks), function(bidTask) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.tasks), function(bidTask) {
     return _c('tr', {
       attrs: {
         "value": bidTask.id
@@ -74056,7 +74092,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "scope": "row"
       }
-    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.name))]), _vm._v(" "), _c('td', [_c('input', {
+    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.name))]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('input', {
       attrs: {
         "type": "text",
         "id": 'price-' + bidTask.id
@@ -74064,7 +74100,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       domProps: {
         "value": bidTask.bid_price
       }
-    })]), _vm._v(" "), _c('td', [_c('button', {
+    })]) : _c('div', [_c('input', {
+      attrs: {
+        "type": "text",
+        "id": 'price-' + bidTask.id,
+        "disabled": ""
+      },
+      domProps: {
+        "value": bidTask.bid_price
+      }
+    })])]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('button', {
       staticClass: "btn btn-primary",
       attrs: {
         "id": bidTask.id
@@ -74075,7 +74120,35 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.update($event)
         }
       }
-    }, [_vm._v("Submit")])])])
+    }, [_vm._v("Submit")])]) : _c('div', [_c('button', {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "id": bidTask.id,
+        "disabled": ""
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.update($event)
+        }
+      }
+    }, [_vm._v("Submit")])]), _vm._v(" "), _c('br'), _vm._v(" "), _c('span', {
+      staticClass: "help-block label label-danger",
+      staticStyle: {
+        "display": "none"
+      },
+      attrs: {
+        "id": 'error-' + bidTask.id
+      }
+    }), _vm._v(" "), _c('span', {
+      staticClass: "help-block label label-success",
+      staticStyle: {
+        "display": "none"
+      },
+      attrs: {
+        "id": 'success-' + bidTask.id
+      }
+    })])])
   }))])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', {
