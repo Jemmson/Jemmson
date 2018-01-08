@@ -27,8 +27,8 @@
                 <tr v-for="bidTask in bidTasks" v-bind:value="bidTask.id">
                   <th scope="row">{{ bidTask.id }}</th>
                   <td>{{ bidTask.name }}</td>
-                  <td><input type="text" /></td>
-                  <td><button class="btn btn-primary">Submit</button></td>
+                  <td><input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price"/></td>
+                  <td><button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id">Submit</button></td>
                 </tr>
               </tbody>
             </table>
@@ -44,9 +44,30 @@
     props: ['user', 'bidTasks'],
     data() {
       return {
-        example: ''
+        tasks: [],
+        price: ''
       }
     },
-    methods: {}
+    methods: {
+      update: function (e) {
+        let id = e.target.id;
+        let bid_price = $('#price-' + id).val();
+
+        console.log(id, bid_price);
+        axios.put('/api/bid/task/' + id, {
+            id: id,
+            bid_price: bid_price 
+          }).then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+      }
+    },
+    created: function () {
+      console.log('created');
+    }
   }
 </script>

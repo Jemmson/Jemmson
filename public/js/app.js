@@ -34243,10 +34243,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   props: ['user', 'bidTasks'],
   data() {
     return {
-      example: ''
+      tasks: [],
+      price: ''
     };
   },
-  methods: {}
+  methods: {
+    update: function (e) {
+      let id = e.target.id;
+      let bid_price = $('#price-' + id).val();
+
+      console.log(id, bid_price);
+      axios.put('/api/bid/task/' + id, {
+        id: id,
+        bid_price: bid_price
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  },
+  created: function () {
+    console.log('created');
+  }
 });
 
 /***/ }),
@@ -74011,34 +74030,6 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "currenttasksforjob"
-  }, [(_vm.getUser === 'customer') ? _c('div', {
-    staticClass: "joblist"
-  }, [_c('div', {
-    staticClass: "container"
-  }, [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('div', [_c('h1', [_vm._v("Bid Is In Progress")])]) : (_vm.jobStatus === 'Waiting For Customer Approval' || _vm.jobStatus === 'The Job Has Been Accepted') ? _c('div', [_c('table', {
-    staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
-    return _c('tr', {
-      key: task.id
-    }, [_c('td', [_vm._v("\n                            " + _vm._s(task.name) + "\n                        ")]), _vm._v(" "), _c('td', [_vm._v("\n                            " + _vm._s(task.pivot.cust_final_price) + "\n                        ")])])
-  }), _vm._v(" "), _c('tr', [_c('td'), _vm._v(" "), _c('td', [_c('button', {
-    staticClass: "btn btn-sm btn-primary button",
-    on: {
-      "click": function($event) {
-        _vm.declineJob()
-      }
-    }
-  }, [_vm._v("\n                                Decline Job\n                            ")]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-sm btn-primary button",
-    on: {
-      "click": function($event) {
-        _vm.acceptJob()
-      }
-    }
-  }, [_vm._v("\n                                Accept Job\n                            ")])])])], 2)])]) : _vm._e()])]) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
-    staticClass: "joblist"
-  }, [_c('div', {
     staticClass: "container"
   }, [_c('div', {
     staticClass: "row"
@@ -74056,333 +74047,35 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-body"
   }, [_c('table', {
     staticClass: "table"
-  }, [_c('thead', [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")]), _vm._v(" "), _c('th'), _vm._v(" "), _c('th')]) : _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")])])]), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.bidTasks), function(bidTask) {
     return _c('tr', {
-      key: task.id
-    }, [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
       attrs: {
-        "type": "text"
-      },
-      domProps: {
-        "value": task.name
-      },
-      on: {
-        "blur": function($event) {
-          _vm.updateTaskName($event.target.value, task.id)
-        }
+        "value": bidTask.id
       }
-    })]) : _c('td', [_vm._v("\n                        " + _vm._s(task.name) + "\n                    ")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
-      attrs: {
-        "type": "text"
-      },
-      domProps: {
-        "value": task.pivot.cust_final_price
-      },
-      on: {
-        "blur": function($event) {
-          _vm.updateCustomerPrice($event.target.value, task.id)
-        }
-      }
-    })]) : _c('td', [_vm._v("\n                        " + _vm._s(task.pivot.cust_final_price) + "\n                    ")]), _vm._v(" "), (task.pivot.sub_final_price !== 0) ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
-      staticClass: "button btn btn-sm btn-primary",
-      on: {
-        "click": function($event) {
-          _vm.initiateSub(task.id, task.name)
-        }
-      }
-    }, [_vm._v("\n                            Initiate Bid For Sub\n                        ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
-      staticClass: "btn btn-sm btn-primary button",
-      on: {
-        "click": function($event) {
-          _vm.showTheDetails(task.id)
-        }
-      }
-    }, [_vm._v("\n                            Details\n                        ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
-      staticClass: "btn btn-sm btn-primary button",
-      on: {
-        "click": function($event) {
-          _vm.deleteTask(task.id)
-        }
-      }
-    }, [_vm._v("\n                            Delete\n                        ")])]) : _vm._e()])
-  }), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Totals")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.customerTotal))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.subTotal))]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [_c('button', {
-    staticClass: "btn btn-sm btn-primary button",
-    on: {
-      "click": function($event) {
-        _vm.showNewTask = !_vm.showNewTask
-      }
-    }
-  }, [_vm._v("\n                            Add Task To Bid\n                        ")])]), _vm._v(" "), _c('td', [_c('button', {
-    staticClass: "btn btn-sm btn-primary button",
-    on: {
-      "click": function($event) {
-        _vm.notifyCustomerOfFinishedBid()
-      }
-    }
-  }, [_vm._v("\n                            Notify Customer of Finished Bid\n                        ")])]), _vm._v(" "), _c('td')]) : (_vm.jobStatus === 'Bid Has Been Approved') ? _c('tr') : _vm._e(), _vm._v(" "), _c('tr', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.showNewTask),
-      expression: "showNewTask"
-    }]
-  }, [_c('td', [_c('div', {
-    staticClass: "form-group"
-  }, [_c('label', {
-    attrs: {
-      "for": "taskName"
-    }
-  }, [_vm._v("Task Name")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.newTaskName),
-      expression: "newTaskName"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "id": "taskName",
-      "name": "taskName"
-    },
-    domProps: {
-      "value": (_vm.newTaskName)
-    },
-    on: {
-      "keyup": _vm.getExistingTask,
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.newTaskName = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.taskResults.length) ? _c('div', {
-    staticClass: "panel-footer"
-  }, [_c('ul', {
-    staticClass: "list-group"
-  }, _vm._l((_vm.taskResults), function(result) {
-    return _c('button', {
-      staticClass: "list-group-item",
-      attrs: {
-        "name": result.phone
-      },
-      on: {
-        "click": function($event) {
-          _vm.fillTaskPrice(result)
-        }
-      }
-    }, [_vm._v("\n                                        " + _vm._s(result.name) + "\n                                    ")])
-  }))]) : _vm._e()])]), _vm._v(" "), _c('td', [_c('div', {
-    staticClass: "form-group"
-  }, [_c('label', {
-    attrs: {
-      "for": "custTaskPrice"
-    }
-  }, [_vm._v("Customer Task Price")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.taskPrice),
-      expression: "taskPrice"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "id": "custTaskPrice",
-      "name": "taskPrice"
-    },
-    domProps: {
-      "value": (_vm.taskPrice)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.taskPrice = $event.target.value
-      }
-    }
-  })])]), _vm._v(" "), _c('td', [_c('div', {
-    staticClass: "form-group"
-  }, [_c('label', {
-    attrs: {
-      "for": "subTaskPrice"
-    }
-  }, [_vm._v("Sub Task Price")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.subTaskPrice),
-      expression: "subTaskPrice"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "id": "subTaskPrice",
-      "name": "taskPrice"
-    },
-    domProps: {
-      "value": (_vm.subTaskPrice)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.subTaskPrice = $event.target.value
-      }
-    }
-  })])]), _vm._v(" "), _c('td', [_c('button', {
-    staticClass: "btn btn-default btn-primary",
-    staticStyle: {
-      "margin-top": "27px"
-    },
-    attrs: {
-      "id": "submitTask"
-    },
-    on: {
-      "click": function($event) {
-        _vm.addNewTask()
-      }
-    }
-  }, [_vm._v("\n                            Submit\n                        ")])]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')])], 2)]), _vm._v(" "), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.showNotificationSent),
-      expression: "showNotificationSent"
-    }],
-    staticClass: "alert-success"
-  }, [_vm._v("A notification was succesfully sent")]), _vm._v(" "), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.taskAlreadyExistsWarning),
-      expression: "taskAlreadyExistsWarning"
-    }],
-    staticClass: "alert-warning"
-  }, [_vm._v("\n                Task Already exists and was not added for this contractor "), _c('span', {
-    staticClass: "glyphicon glyphicon-remove-sign",
-    on: {
-      "click": function($event) {
-        _vm.hideTaskWarning()
-      }
-    }
-  })]), _vm._v(" "), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.possibleDuplicateUserAlert),
-      expression: "possibleDuplicateUserAlert"
-    }],
-    staticClass: "alert-warning"
-  }, [_vm._v("\n                This Contractor May Already Exist in the Database. Please use the drop down to select the correct\n                name "), _c('span', {
-    staticClass: "glyphicon glyphicon-remove-sign",
-    on: {
-      "click": function($event) {
-        _vm.hideDuplicateUserWarning()
-      }
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "wrapper"
-  }, [_vm._l((_vm.allTasksData), function(task, index) {
-    return _c('div', {
-      staticClass: "details"
-    }, [_c('div', {
-      directives: [{
-        name: "show",
-        rawName: "v-show",
-        value: (_vm.showDetails[index].show),
-        expression: "showDetails[index].show"
-      }]
-    }, [_c('h3', {
-      staticClass: "text-center"
-    }, [_vm._v("Sub Details: " + _vm._s(task.name))]), _vm._v(" "), _c('table', {
-      staticClass: "table"
-    }, [_vm._m(1, true), _vm._v(" "), _c('tbody', _vm._l((_vm.bidTasks), function(bid) {
-      return (task.id === bid.task_id) ? _c('tr', {
-        key: bid.id,
-        staticClass: "table"
-      }, [_c('td', [_vm._v(_vm._s(bid.contractorName[0].name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
-        staticClass: "button btn btn-sm btn-primary",
-        on: {
-          "click": function($event) {
-            _vm.acceptBid(bid.id, task.id, bid.bid_price)
-          }
-        }
-      }, [_vm._v("Accept\n                                    ")])]), _vm._v(" "), _c('td', [_c('button', {
-        staticClass: "button btn btn-sm btn-primary",
-        on: {
-          "click": function($event) {
-            _vm.notify(bid.id)
-          }
-        }
-      }, [_vm._v("Notify\n                                    ")])])]) : _vm._e()
-    }))])])])
-  }), _vm._v(" "), _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.initiateSubTask),
-      expression: "initiateSubTask"
-    }],
-    staticClass: "initiateBid"
-  }, [_c('div', {
-    staticClass: "addBidTask"
-  }, [_c('h3', {
-    staticClass: "text-center"
-  }, [_vm._v("Task: " + _vm._s(_vm.taskName))]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
-  }, [_c('label', {
-    attrs: {
-      "for": "contractorName"
-    }
-  }, [_vm._v("Contractor Name *")]), _vm._v(" "), _c('span', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.hasNameError),
-      expression: "hasNameError"
-    }],
-    staticClass: "validationError"
-  }, [_vm._v("Please Enter A Name")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.query),
-      expression: "query"
-    }],
-    staticClass: "form-control",
-    class: {
-      'text-danger': _vm.hasNameError
-    },
-    attrs: {
-      "type": "text",
-      "id": "contractorName",
-      "name": "contractorName",
-      "placeholder": _vm.contractorName,
-      "required": ""
-    },
-    domProps: {
-      "value": _vm.contractorName,
-      "value": (_vm.query)
-    },
-    on: {
-      "keyup": _vm.autoComplete,
-      "blur": function($event) {
-        _vm.mouseLeave('notNow')
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.query = $event.target.value
-      }
-    }
-  }), _vm._v(" "), (_vm.results.length) ? _c('div', {
-    staticClass: "panel-footer"
-  }, [_c('ul', {
-    staticClass: "list-group"
-  }, _vm._l((_vm.results), function(result) {
-    return _c('button', {
-      staticClass: "list-group-item",
+    }, [_c('th', {
       attrs: {
         "scope": "row"
       }
-    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.name))]), _vm._v(" "), _vm._m(1, true), _vm._v(" "), _vm._m(2, true)])
+    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.name))]), _vm._v(" "), _c('td', [_c('input', {
+      attrs: {
+        "type": "text",
+        "id": 'price-' + bidTask.id
+      },
+      domProps: {
+        "value": bidTask.bid_price
+      }
+    })]), _vm._v(" "), _c('td', [_c('button', {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "id": bidTask.id
+      },
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.update($event)
+        }
+      }
+    }, [_vm._v("Submit")])])])
   }))])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', {
@@ -74402,18 +74095,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "scope": "col"
     }
   })])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('td', [_c('input', {
-    attrs: {
-      "type": "text"
-    }
-  }, [_vm._v("Submit\n                            ")])])])])], 2)])]) : _vm._e()])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('td', [_c('button', {
-    staticClass: "btn btn-primary"
-  }, [_vm._v("Submit")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
