@@ -70,6 +70,8 @@ Route::delete('job/{job}', 'JobController@delete');
 Route::post('job/update', 'JobController@updateJobDate');
 
 // Tasks
+Route::resource('task', 'TaskController');
+Route::put('bid/task/{id}', 'TaskController@updateBidContractorJobTask');
 Route::post('/task/notify', 'TaskController@notify');
 Route::post('/task/notifyAcceptedBid', 'TaskController@notifyAcceptedBid');
 Route::post('/task/updateTaskName', 'TaskController@updateTaskName');
