@@ -150,9 +150,9 @@ class InitiateBidController extends Controller
         $nexmo->message()->send([
             'to'   => '1' . $phone,
             'from' => env('NEXMO_FROM_NUMBER'),
-            'text' => 'Welcome To Jemmson
-                      '. '$contractor' . ' has initated a bid.
-                      Job Name: ' . ' $job_name ' . 'Login Link: '. url('/login/' . 'joojif' . '/' . '1')
+            'text' => 'Welcome To Jemmson'. '
+                       '.$data['contractor'] . ' has initated a bid.
+                      Job Name: ' . $data['job_name'] . ' Login Link: '. url('/login/' . $data['link'] . '/' . $data['job_id'])
         ]);
 
         session()->forget('phone');

@@ -34,6 +34,10 @@
                     <div v-else>
                       <input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price" disabled/>
                     </div>
+                    <span class="help-block label label-danger" v-bind:id="'error-' + bidTask.id" style="display: none;">
+                    </span>
+                    <span class="help-block label label-success" v-bind:id="'success-' + bidTask.id" style="display: none;">
+                    </span>
                   </td>
                   <td>
                     <div v-if="bidTask.bid_price == 0">
@@ -42,11 +46,6 @@
                     <div v-else>
                       <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" disabled>Submit</button>
                     </div>
-                    <br>
-                    <span class="help-block label label-danger" v-bind:id="'error-' + bidTask.id" style="display: none;">
-                    </span>
-                    <span class="help-block label label-success" v-bind:id="'success-' + bidTask.id" style="display: none;">
-                    </span>
                   </td>
                 </tr>
               </tbody>

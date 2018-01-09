@@ -21,6 +21,7 @@ class BidContractorJobTask extends Model
      */
     public function task()
     {
-        return $this->hasOne(Task::class, 'id', 'job_id');
+        return $this->belongsTo(Task::class, 'task_id');
     }
+
 }

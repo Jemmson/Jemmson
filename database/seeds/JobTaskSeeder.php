@@ -16,72 +16,98 @@ class JobTaskSeeder extends Seeder
     {
         //
         $faker = Faker\Factory::create();
-        for ($j = 1; $j < 5; $j++) {
-            $contractor = Contractor::find(1);
-            for ($k = 1; $k < 5; $k++) {
-                $job = Job::find($j);
-                $job->status = config('app.bidIsInProgress');
-                $job->save();
-                $task = Task::find($k);
-                $job->tasks()->attach($task);
-                $task = $job->tasks()->find($task->id);
-                $task->pivot->contractor_id = $contractor->id;
-                $task->pivot->cust_final_price = rand(1, 1000);
-                $task->pivot->sub_final_price = rand(1, 1000);
-                $task->pivot->status = config('app.taskIsInitiated');
-                $task->pivot->save();
-            }
-        }
 
-        for ($j = 10; $j < 14; $j++) {
-            $contractor = Contractor::find(2);
-            for ($k = 5; $k < 10; $k++) {
-                $job = Job::find($j);
-                $job->status = config('app.bidIsInProgress');
-                $job->save();
-                $task = Task::find($k);
-                $job->tasks()->attach($task);
-                $task = $job->tasks()->find($task->id);
-                $task->pivot->contractor_id = $contractor->id;
-                $task->pivot->cust_final_price = rand(1, 1000);
-                $task->pivot->sub_final_price = rand(1, 1000);
-                $task->pivot->status = config('app.taskIsInitiated');
-                $task->pivot->save();
-            }
-        }
+        $job = Job::find(1);
+        $job->status = config('app.bidIsInProgress');
+        $job->save();
+        $task = Task::find(1);
+        $job->tasks()->attach($task);
+        $task = $job->tasks()->find($task->id);
+        $task->pivot->contractor_id = 2;
+        $task->pivot->cust_final_price = rand(1, 1000);
+        $task->pivot->sub_final_price = rand(1, 1000);
+        $task->pivot->status = config('app.taskIsInitiated');
+        $task->pivot->save();
 
-        for ($j = 19; $j < 25; $j++) {
-            $contractor = Contractor::find(3);
-            for ($k = 10; $k < 15; $k++) {
-                $job = Job::find($j);
-                $job->status = config('app.bidIsInProgress');
-                $job->save();
-                $task = Task::find($k);
-                $job->tasks()->attach($task);
-                $task = $job->tasks()->find($task->id);
-                $task->pivot->contractor_id = $contractor->id;
-                $task->pivot->cust_final_price = rand(1, 1000);
-                $task->pivot->sub_final_price = rand(1, 1000);
-                $task->pivot->status = config('app.taskIsInitiated');
-                $task->pivot->save();
-            }
-        }
+        $job = Job::find(2);
+        $job->status = config('app.bidIsInProgress');
+        $job->save();
+        $task = Task::find(2);
+        $job->tasks()->attach($task);
+        $task = $job->tasks()->find($task->id);
+        $task->pivot->contractor_id = 1;
+        $task->pivot->cust_final_price = rand(1, 1000);
+        $task->pivot->sub_final_price = rand(1, 1000);
+        $task->pivot->status = config('app.taskIsInitiated');
+        $task->pivot->save();
 
-        for ($j = 28; $j < 32; $j++) {
-            $contractor = Contractor::find(4);
-            for ($k = 15; $k < 20; $k++) {
-                $job = Job::find($j);
-                $job->status = config('app.bidIsInProgress');
-                $job->save();
-                $task = Task::find($k);
-                $job->tasks()->attach($task);
-                $task = $job->tasks()->find($task->id);
-                $task->pivot->contractor_id = $contractor->id;
-                $task->pivot->cust_final_price = rand(1, 1000);
-                $task->pivot->sub_final_price = rand(1, 1000);
-                $task->pivot->status = config('app.taskIsInitiated');
-                $task->pivot->save();
-            }
-        }
+
+        // for ($j = 1; $j < 5; $j++) {
+        //     $contractor = Contractor::find(1);
+        //     for ($k = 1; $k < 5; $k++) {
+        //         $job = Job::find($j);
+        //         $job->status = config('app.bidIsInProgress');
+        //         $job->save();
+        //         $task = Task::find($k);
+        //         $job->tasks()->attach($task);
+        //         $task = $job->tasks()->find($task->id);
+        //         $task->pivot->contractor_id = $contractor->id;
+        //         $task->pivot->cust_final_price = rand(1, 1000);
+        //         $task->pivot->sub_final_price = rand(1, 1000);
+        //         $task->pivot->status = config('app.taskIsInitiated');
+        //         $task->pivot->save();
+        //     }
+        // }
+
+        // for ($j = 10; $j < 14; $j++) {
+        //     $contractor = Contractor::find(2);
+        //     for ($k = 5; $k < 10; $k++) {
+        //         $job = Job::find($j);
+        //         $job->status = config('app.bidIsInProgress');
+        //         $job->save();
+        //         $task = Task::find($k);
+        //         $job->tasks()->attach($task);
+        //         $task = $job->tasks()->find($task->id);
+        //         $task->pivot->contractor_id = $contractor->id;
+        //         $task->pivot->cust_final_price = rand(1, 1000);
+        //         $task->pivot->sub_final_price = rand(1, 1000);
+        //         $task->pivot->status = config('app.taskIsInitiated');
+        //         $task->pivot->save();
+        //     }
+        // }
+
+        // for ($j = 19; $j < 25; $j++) {
+        //     $contractor = Contractor::find(3);
+        //     for ($k = 10; $k < 15; $k++) {
+        //         $job = Job::find($j);
+        //         $job->status = config('app.bidIsInProgress');
+        //         $job->save();
+        //         $task = Task::find($k);
+        //         $job->tasks()->attach($task);
+        //         $task = $job->tasks()->find($task->id);
+        //         $task->pivot->contractor_id = $contractor->id;
+        //         $task->pivot->cust_final_price = rand(1, 1000);
+        //         $task->pivot->sub_final_price = rand(1, 1000);
+        //         $task->pivot->status = config('app.taskIsInitiated');
+        //         $task->pivot->save();
+        //     }
+        // }
+
+        // for ($j = 28; $j < 32; $j++) {
+        //     $contractor = Contractor::find(4);
+        //     for ($k = 15; $k < 20; $k++) {
+        //         $job = Job::find($j);
+        //         $job->status = config('app.bidIsInProgress');
+        //         $job->save();
+        //         $task = Task::find($k);
+        //         $job->tasks()->attach($task);
+        //         $task = $job->tasks()->find($task->id);
+        //         $task->pivot->contractor_id = $contractor->id;
+        //         $task->pivot->cust_final_price = rand(1, 1000);
+        //         $task->pivot->sub_final_price = rand(1, 1000);
+        //         $task->pivot->status = config('app.taskIsInitiated');
+        //         $task->pivot->save();
+        //     }
+        // }
     }
 }

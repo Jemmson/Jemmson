@@ -50,6 +50,17 @@ class Contractor extends Model
             ->withTimestamps();
     }
 
+    /**
+     * Get all tasks sent to the
+     * current contractor as bids
+     *
+     * @return void
+     */
+    public function bidJobTasks()
+    {
+        return $this->hasMany(BidContractorJobTask::class, 'contractor_id')->get();
+    }
+
     public function addContractorToBidForJobTable($contractorId, $taskId, $jobId)
     {
 

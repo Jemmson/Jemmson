@@ -33155,7 +33155,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -34197,7 +34196,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
 //
 //
 //
@@ -42054,7 +42052,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n    background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n    margin-left: 1rem;\n    color: red;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n    background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n    margin-left: 1rem;\n    color: red;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
 
 /***/ }),
 /* 318 */
@@ -74008,7 +74006,122 @@ module.exports = Component.exports
 /* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports={render:function(){},staticRenderFns:[]}
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('h1', {
+    staticClass: "text-center"
+  }, [_vm._v("Please Initiate a Bid With A Customer")]), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "customerName"
+    }
+  }, [_vm._v("Customer Name *")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.query),
+      expression: "query"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "customerName",
+      "id": "customerName",
+      "placeholder": _vm.name,
+      "type": "text",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.query)
+    },
+    on: {
+      "keyup": _vm.autoComplete,
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.query = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.results.length) ? _c('div', {
+    staticClass: "panel-footer"
+  }, [_c('ul', {
+    staticClass: "list-group"
+  }, _vm._l((_vm.results), function(result) {
+    return _c('button', {
+      staticClass: "list-group-item",
+      attrs: {
+        "name": result.phone
+      },
+      on: {
+        "click": function($event) {
+          _vm.fillFields(result)
+        }
+      }
+    }, [_vm._v("\n                    " + _vm._s(result.name) + "\n                ")])
+  }))]) : _vm._e(), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "email"
+    }
+  }, [_vm._v("Email\n        "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.email),
+      expression: "email"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "email",
+      "type": "email",
+      "id": "email"
+    },
+    domProps: {
+      "value": (_vm.email)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.email = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "phone"
+    }
+  }, [_vm._v("Phone\n        "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.phone),
+      expression: "phone"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "phone",
+      "type": "text",
+      "id": "phone"
+    },
+    domProps: {
+      "value": (_vm.phone)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.phone = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('br'), _vm._v(" "), _c('br')])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('label', {
+    attrs: {
+      "for": "job-name"
+    }
+  }, [_vm._v("Job Name\n        "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "jobName",
+      "type": "text",
+      "id": "job-name"
+    }
+  })])
+}]}
+module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
@@ -74109,7 +74222,23 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       domProps: {
         "value": bidTask.bid_price
       }
-    })])]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('button', {
+    })]), _vm._v(" "), _c('span', {
+      staticClass: "help-block label label-danger",
+      staticStyle: {
+        "display": "none"
+      },
+      attrs: {
+        "id": 'error-' + bidTask.id
+      }
+    }), _vm._v(" "), _c('span', {
+      staticClass: "help-block label label-success",
+      staticStyle: {
+        "display": "none"
+      },
+      attrs: {
+        "id": 'success-' + bidTask.id
+      }
+    })]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('button', {
       staticClass: "btn btn-primary",
       attrs: {
         "id": bidTask.id
@@ -74132,23 +74261,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.update($event)
         }
       }
-    }, [_vm._v("Submit")])]), _vm._v(" "), _c('br'), _vm._v(" "), _c('span', {
-      staticClass: "help-block label label-danger",
-      staticStyle: {
-        "display": "none"
-      },
-      attrs: {
-        "id": 'error-' + bidTask.id
-      }
-    }), _vm._v(" "), _c('span', {
-      staticClass: "help-block label label-success",
-      staticStyle: {
-        "display": "none"
-      },
-      attrs: {
-        "id": 'success-' + bidTask.id
-      }
-    })])])
+    }, [_vm._v("Submit")])])])])
   }))])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', {
@@ -74181,7 +74294,475 @@ if (false) {
 /* 341 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports={render:function(){},staticRenderFns:[]}
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "currenttasksforjob"
+  }, [(_vm.getUser === 'customer') ? _c('div', {
+    staticClass: "joblist"
+  }, [_c('div', {
+    staticClass: "container"
+  }, [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('div', [_c('h1', [_vm._v("Bid Is In Progress")])]) : (_vm.jobStatus === 'Waiting For Customer Approval' || _vm.jobStatus === 'The Job Has Been Accepted') ? _c('div', [_c('table', {
+    staticClass: "table"
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
+    return _c('tr', {
+      key: task.id
+    }, [_c('td', [_vm._v("\n                            " + _vm._s(task.name) + "\n                        ")]), _vm._v(" "), _c('td', [_vm._v("\n                            " + _vm._s(task.pivot.cust_final_price) + "\n                        ")])])
+  }), _vm._v(" "), _c('tr', [_c('td'), _vm._v(" "), _c('td', [_c('button', {
+    staticClass: "btn btn-sm btn-primary button",
+    on: {
+      "click": function($event) {
+        _vm.declineJob()
+      }
+    }
+  }, [_vm._v("\n                                Decline Job\n                            ")]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-sm btn-primary button",
+    on: {
+      "click": function($event) {
+        _vm.acceptJob()
+      }
+    }
+  }, [_vm._v("\n                                Accept Job\n                            ")])])])], 2)])]) : _vm._e()])]) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
+    staticClass: "joblist"
+  }, [_c('div', {
+    staticClass: "container"
+  }, [_c('table', {
+    staticClass: "table"
+  }, [_c('thead', [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")]), _vm._v(" "), _c('th'), _vm._v(" "), _c('th')]) : _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")])])]), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
+    return _c('tr', {
+      key: task.id
+    }, [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
+      attrs: {
+        "type": "text"
+      },
+      domProps: {
+        "value": task.name
+      },
+      on: {
+        "blur": function($event) {
+          _vm.updateTaskName($event.target.value, task.id)
+        }
+      }
+    })]) : _c('td', [_vm._v("\n                        " + _vm._s(task.name) + "\n                    ")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
+      attrs: {
+        "type": "text"
+      },
+      domProps: {
+        "value": task.pivot.cust_final_price
+      },
+      on: {
+        "blur": function($event) {
+          _vm.updateCustomerPrice($event.target.value, task.id)
+        }
+      }
+    })]) : _c('td', [_vm._v("\n                        " + _vm._s(task.pivot.cust_final_price) + "\n                    ")]), _vm._v(" "), (task.pivot.sub_final_price !== 0) ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+      staticClass: "button btn btn-sm btn-primary",
+      on: {
+        "click": function($event) {
+          _vm.initiateSub(task.id, task.name)
+        }
+      }
+    }, [_vm._v("\n                            Initiate Bid For Sub\n                        ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+      staticClass: "btn btn-sm btn-primary button",
+      on: {
+        "click": function($event) {
+          _vm.showTheDetails(task.id)
+        }
+      }
+    }, [_vm._v("\n                            Details\n                        ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+      staticClass: "btn btn-sm btn-primary button",
+      on: {
+        "click": function($event) {
+          _vm.deleteTask(task.id)
+        }
+      }
+    }, [_vm._v("\n                            Delete\n                        ")])]) : _vm._e()])
+  }), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Totals")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.customerTotal))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.subTotal))]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [_c('button', {
+    staticClass: "btn btn-sm btn-primary button",
+    on: {
+      "click": function($event) {
+        _vm.showNewTask = !_vm.showNewTask
+      }
+    }
+  }, [_vm._v("\n                            Add Task To Bid\n                        ")])]), _vm._v(" "), _c('td', [_c('button', {
+    staticClass: "btn btn-sm btn-primary button",
+    on: {
+      "click": function($event) {
+        _vm.notifyCustomerOfFinishedBid()
+      }
+    }
+  }, [_vm._v("\n                            Notify Customer of Finished Bid\n                        ")])]), _vm._v(" "), _c('td')]) : (_vm.jobStatus === 'Bid Has Been Approved') ? _c('tr') : _vm._e(), _vm._v(" "), _c('tr', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.showNewTask),
+      expression: "showNewTask"
+    }]
+  }, [_c('td', [_c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "taskName"
+    }
+  }, [_vm._v("Task Name")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.newTaskName),
+      expression: "newTaskName"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "id": "taskName",
+      "name": "taskName"
+    },
+    domProps: {
+      "value": (_vm.newTaskName)
+    },
+    on: {
+      "keyup": _vm.getExistingTask,
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.newTaskName = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.taskResults.length) ? _c('div', {
+    staticClass: "panel-footer"
+  }, [_c('ul', {
+    staticClass: "list-group"
+  }, _vm._l((_vm.taskResults), function(result) {
+    return _c('button', {
+      staticClass: "list-group-item",
+      attrs: {
+        "name": result.phone
+      },
+      on: {
+        "click": function($event) {
+          _vm.fillTaskPrice(result)
+        }
+      }
+    }, [_vm._v("\n                                        " + _vm._s(result.name) + "\n                                    ")])
+  }))]) : _vm._e()])]), _vm._v(" "), _c('td', [_c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "custTaskPrice"
+    }
+  }, [_vm._v("Customer Task Price")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.taskPrice),
+      expression: "taskPrice"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "id": "custTaskPrice",
+      "name": "taskPrice"
+    },
+    domProps: {
+      "value": (_vm.taskPrice)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.taskPrice = $event.target.value
+      }
+    }
+  })])]), _vm._v(" "), _c('td', [_c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "subTaskPrice"
+    }
+  }, [_vm._v("Sub Task Price")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.subTaskPrice),
+      expression: "subTaskPrice"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "id": "subTaskPrice",
+      "name": "taskPrice"
+    },
+    domProps: {
+      "value": (_vm.subTaskPrice)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.subTaskPrice = $event.target.value
+      }
+    }
+  })])]), _vm._v(" "), _c('td', [_c('button', {
+    staticClass: "btn btn-default btn-primary",
+    staticStyle: {
+      "margin-top": "27px"
+    },
+    attrs: {
+      "id": "submitTask"
+    },
+    on: {
+      "click": function($event) {
+        _vm.addNewTask()
+      }
+    }
+  }, [_vm._v("\n                            Submit\n                        ")])]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')])], 2)]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.showNotificationSent),
+      expression: "showNotificationSent"
+    }],
+    staticClass: "alert-success"
+  }, [_vm._v("A notification was succesfully sent")]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.taskAlreadyExistsWarning),
+      expression: "taskAlreadyExistsWarning"
+    }],
+    staticClass: "alert-warning"
+  }, [_vm._v("\n                Task Already exists and was not added for this contractor "), _c('span', {
+    staticClass: "glyphicon glyphicon-remove-sign",
+    on: {
+      "click": function($event) {
+        _vm.hideTaskWarning()
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.possibleDuplicateUserAlert),
+      expression: "possibleDuplicateUserAlert"
+    }],
+    staticClass: "alert-warning"
+  }, [_vm._v("\n                This Contractor May Already Exist in the Database. Please use the drop down to select the correct\n                name "), _c('span', {
+    staticClass: "glyphicon glyphicon-remove-sign",
+    on: {
+      "click": function($event) {
+        _vm.hideDuplicateUserWarning()
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "wrapper"
+  }, [_vm._l((_vm.allTasksData), function(task, index) {
+    return _c('div', {
+      staticClass: "details"
+    }, [_c('div', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (_vm.showDetails[index].show),
+        expression: "showDetails[index].show"
+      }]
+    }, [_c('h3', {
+      staticClass: "text-center"
+    }, [_vm._v("Sub Details: " + _vm._s(task.name))]), _vm._v(" "), _c('table', {
+      staticClass: "table"
+    }, [_vm._m(1, true), _vm._v(" "), _c('tbody', _vm._l((_vm.bidTasks), function(bid) {
+      return (task.id === bid.task_id) ? _c('tr', {
+        key: bid.id,
+        staticClass: "table"
+      }, [_c('td', [_vm._v(_vm._s(bid.contractorName[0].name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
+        staticClass: "button btn btn-sm btn-primary",
+        on: {
+          "click": function($event) {
+            _vm.acceptBid(bid.id, task.id, bid.bid_price)
+          }
+        }
+      }, [_vm._v("Accept\n                                    ")])]), _vm._v(" "), _c('td', [_c('button', {
+        staticClass: "button btn btn-sm btn-primary",
+        on: {
+          "click": function($event) {
+            _vm.notify(bid.id)
+          }
+        }
+      }, [_vm._v("Notify\n                                    ")])])]) : _vm._e()
+    }))])])])
+  }), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.initiateSubTask),
+      expression: "initiateSubTask"
+    }],
+    staticClass: "initiateBid"
+  }, [_c('div', {
+    staticClass: "addBidTask"
+  }, [_c('h3', {
+    staticClass: "text-center"
+  }, [_vm._v("Task: " + _vm._s(_vm.taskName))]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "contractorName"
+    }
+  }, [_vm._v("Contractor Name *")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.hasNameError),
+      expression: "hasNameError"
+    }],
+    staticClass: "validationError"
+  }, [_vm._v("Please Enter A Name")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.query),
+      expression: "query"
+    }],
+    staticClass: "form-control",
+    class: {
+      'text-danger': _vm.hasNameError
+    },
+    attrs: {
+      "type": "text",
+      "id": "contractorName",
+      "name": "contractorName",
+      "placeholder": _vm.contractorName,
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.query)
+    },
+    on: {
+      "keyup": _vm.autoComplete,
+      "blur": function($event) {
+        _vm.mouseLeave('notNow')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.query = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.results.length) ? _c('div', {
+    staticClass: "panel-footer"
+  }, [_c('ul', {
+    staticClass: "list-group"
+  }, _vm._l((_vm.results), function(result) {
+    return _c('button', {
+      staticClass: "list-group-item",
+      attrs: {
+        "name": result.phone
+      },
+      on: {
+        "click": function($event) {
+          _vm.fillFields(result)
+        }
+      }
+    }, [_vm._v("\n                                        " + _vm._s(result.name) + "\n                                    ")])
+  }))]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "phone"
+    }
+  }, [_vm._v("Phone *")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.hasPhoneError),
+      expression: "hasPhoneError"
+    }],
+    staticClass: "validationError"
+  }, [_vm._v("Please Enter A Valid Phone Number - xxx-xxx-xxxx")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.phone),
+      expression: "phone"
+    }],
+    staticClass: "form-control",
+    class: {
+      'text-danger': _vm.hasPhoneError
+    },
+    attrs: {
+      "type": "tel",
+      "id": "phone",
+      "name": "phone",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.phone)
+    },
+    on: {
+      "blur": function($event) {
+        _vm.mouseLeave('phone')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.phone = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "email"
+    }
+  }, [_vm._v("Email *")]), _vm._v(" "), _c('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.hasEmailError),
+      expression: "hasEmailError"
+    }],
+    staticClass: "validationError"
+  }, [_vm._v("Please Enter A Valid Email Address")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.email),
+      expression: "email"
+    }],
+    staticClass: "form-control",
+    class: {
+      'text-danger': _vm.hasEmailError
+    },
+    attrs: {
+      "type": "email",
+      "id": "email",
+      "name": "email",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.email)
+    },
+    on: {
+      "blur": function($event) {
+        _vm.mouseLeave('email')
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.email = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('button', {
+    staticClass: "btn btn-sm btn-primary",
+    attrs: {
+      "type": "submit"
+    },
+    on: {
+      "click": function($event) {
+        _vm.sendNotificationToSubForParticularTask()
+      }
+    }
+  }, [_vm._v("Submit\n                            ")])])])])], 2)])]) : _vm._e()])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Sub")]), _vm._v(" "), _c('th', [_vm._v("Price")]), _vm._v(" "), _c('th', [_vm._v("Accept")]), _vm._v(" "), _c('th')])])
+}]}
+module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
@@ -74253,7 +74834,39 @@ if (false) {
 /* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports={render:function(){},staticRenderFns:[]}
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [(_vm.startDateError) ? _c('div', {
+    staticClass: "text-danger"
+  }, [_vm._v("the start date must be before the end date")]) : _vm._e(), _vm._v(" "), (_vm.endDateError) ? _c('div', {
+    staticClass: "text-danger"
+  }, [_vm._v("the end date must be after the start date")]) : _vm._e(), _vm._v(" "), _c('label', {
+    staticClass: "startDate control-label"
+  }, [_vm._v(_vm._s(_vm.label) + "\n        "), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.thedate),
+      expression: "thedate"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "date"
+    },
+    domProps: {
+      "value": (_vm.thedate)
+    },
+    on: {
+      "blur": function($event) {
+        _vm.mouseLeave()
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.thedate = $event.target.value
+      }
+    }
+  })])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
