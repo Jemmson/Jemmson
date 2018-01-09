@@ -7,7 +7,7 @@
         <!--<pre>{{ thedate }}</pre>-->
         <label class="startDate control-label">{{ label }}
             <!--<input type="date" value="2016-11-17">-->
-            <input type="date" :value="thedate" v-model="thedate" class="form-control" @blur="mouseLeave()">
+            <input type="date" v-model="thedate" class="form-control" @blur="mouseLeave()">
         </label>
     </div>
 </template>

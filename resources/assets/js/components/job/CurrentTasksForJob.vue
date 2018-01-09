@@ -265,7 +265,6 @@
                                         class="form-control"
                                         id="contractorName"
                                         name="contractorName"
-                                        :value="contractorName"
                                         :placeholder="contractorName"
                                         v-model="query"
                                         v-bind:class="{ 'text-danger': hasNameError }"
