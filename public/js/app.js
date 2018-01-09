@@ -34255,7 +34255,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user', 'bidTasks'],
@@ -74223,7 +74222,23 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       domProps: {
         "value": bidTask.bid_price
       }
-    })])]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('button', {
+    })]), _vm._v(" "), _c('span', {
+      staticClass: "help-block label label-danger",
+      staticStyle: {
+        "display": "none"
+      },
+      attrs: {
+        "id": 'error-' + bidTask.id
+      }
+    }), _vm._v(" "), _c('span', {
+      staticClass: "help-block label label-success",
+      staticStyle: {
+        "display": "none"
+      },
+      attrs: {
+        "id": 'success-' + bidTask.id
+      }
+    })]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('button', {
       staticClass: "btn btn-primary",
       attrs: {
         "id": bidTask.id
@@ -74246,23 +74261,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.update($event)
         }
       }
-    }, [_vm._v("Submit")])]), _vm._v(" "), _c('br'), _vm._v(" "), _c('span', {
-      staticClass: "help-block label label-danger",
-      staticStyle: {
-        "display": "none"
-      },
-      attrs: {
-        "id": 'error-' + bidTask.id
-      }
-    }), _vm._v(" "), _c('span', {
-      staticClass: "help-block label label-success",
-      staticStyle: {
-        "display": "none"
-      },
-      attrs: {
-        "id": 'success-' + bidTask.id
-      }
-    })])])
+    }, [_vm._v("Submit")])])])])
   }))])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', {
