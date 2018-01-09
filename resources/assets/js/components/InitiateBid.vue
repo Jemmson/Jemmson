@@ -2,7 +2,7 @@
     <div>
         <h1 class="text-center">Please Initiate a Bid With A Customer</h1>
         <label for="customerName">Customer Name *</label>
-            <input name="customerName" id="customerName" :value="name" :placeholder="name" type="text" v-model="query" v-on:keyup="autoComplete"
+            <input name="customerName" id="customerName" :placeholder="name" type="text" v-model="query" v-on:keyup="autoComplete"
                    class="form-control" required>
             <div class="panel-footer" v-if="results.length">
                 <ul class="list-group">

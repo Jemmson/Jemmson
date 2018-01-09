@@ -74008,7 +74008,122 @@ module.exports = Component.exports
 /* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports={render:function(){},staticRenderFns:[]}
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('h1', {
+    staticClass: "text-center"
+  }, [_vm._v("Please Initiate a Bid With A Customer")]), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "customerName"
+    }
+  }, [_vm._v("Customer Name *")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.query),
+      expression: "query"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "customerName",
+      "id": "customerName",
+      "placeholder": _vm.name,
+      "type": "text",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.query)
+    },
+    on: {
+      "keyup": _vm.autoComplete,
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.query = $event.target.value
+      }
+    }
+  }), _vm._v(" "), (_vm.results.length) ? _c('div', {
+    staticClass: "panel-footer"
+  }, [_c('ul', {
+    staticClass: "list-group"
+  }, _vm._l((_vm.results), function(result) {
+    return _c('button', {
+      staticClass: "list-group-item",
+      attrs: {
+        "name": result.phone
+      },
+      on: {
+        "click": function($event) {
+          _vm.fillFields(result)
+        }
+      }
+    }, [_vm._v("\n                    " + _vm._s(result.name) + "\n                ")])
+  }))]) : _vm._e(), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "email"
+    }
+  }, [_vm._v("Email\n        "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.email),
+      expression: "email"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "email",
+      "type": "email",
+      "id": "email"
+    },
+    domProps: {
+      "value": (_vm.email)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.email = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "phone"
+    }
+  }, [_vm._v("Phone\n        "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.phone),
+      expression: "phone"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "name": "phone",
+      "type": "text",
+      "id": "phone"
+    },
+    domProps: {
+      "value": (_vm.phone)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.phone = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('br'), _vm._v(" "), _c('br')])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('label', {
+    attrs: {
+      "for": "job-name"
+    }
+  }, [_vm._v("Job Name\n        "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "name": "jobName",
+      "type": "text",
+      "id": "job-name"
+    }
+  })])
+}]}
+module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
