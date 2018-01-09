@@ -19,4 +19,7 @@ require('./job/Task.vue');
 require('./job/InfoLabel.vue');
 require('./job/Contracts.vue');
 require('./job/CurrentTasksForJob.vue');
+
+Vue.component('subcontractor-tasks', require('./task/SubContractorTasks.vue'));
+
 // require('./Autocomplete.vue');

@@ -1,5 +1,7 @@
-@extends('layouts.master')
+@extends('spark::layouts.app')
 
 @section('content')
-    <h1>Tasks Home Page</h1>
+    <!-- /assumed they have tasks? should we need to check if they are a subcontractor? -->
+    <subcontractor-tasks :user="user" :bid-tasks="{{ $tasks }}">
+    </subcontractor-tasks>
 @endsection

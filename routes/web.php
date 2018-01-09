@@ -80,6 +80,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/current-job', 'Controller@create');
     Route::get('/payments-and-review', 'Controller@create');
     Route::get('/my-contractors', 'Controller@create');
+    Route::get('/bid/tasks', 'TaskController@bidContractorJobTasks');
     Route::resource('/job', 'JobController');
 
     // contractor routes

@@ -144,11 +144,17 @@ class InitiateBidController extends Controller
     {
         // send sms passwordless link
         session()->put('phone', $phone);
-        SMS::send(
-            'sms.passwordlessbidpagelogin', $data, function ($sms) {
-            $sms->to(session('phone'));
-        }
-        );
+
+        $nexmo = app('Nexmo\Client');
+
+        $nexmo->message()->send([
+            'to'   => '1' . $phone,
+            'from' => env('NEXMO_FROM_NUMBER'),
+            'text' => 'Welcome To Jemmson
+                      '. '$contractor' . ' has initated a bid.
+                      Job Name: ' . ' $job_name ' . 'Login Link: '. url('/login/' . 'joojif' . '/' . '1')
+        ]);
+
         session()->forget('phone');
     }
 

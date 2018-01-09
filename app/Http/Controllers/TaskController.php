@@ -13,9 +13,13 @@ use App\Job;
 use App\Contractor;
 use App\Customer;
 use App\User;
+use App\BidContractorJobTask;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
 use Illuminate\Support\Facades\DB;
+
+use Auth;
+use Log;
 
 class TaskController extends Controller
 {
@@ -29,8 +33,23 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        echo 'hello world';
+    }
 
+    public function bidContractorJobTasks()
+    {
+        $bidTasks = Auth::user()->bidJobTasks();
+        // TODO: do we need show job data in this page?
+        $tmpBidTasks = [];
+        foreach ($bidTasks as $bidTask) {
+           $tmpBidTasks[] = [
+                                'id' => $bidTask->id,
+                                'bid_price' => $bidTask->bid_price,
+                                'name' => $bidTask->task->name,
+                                'contractor_id' => $bidTask->task->contractor_id
+           ];
+        }
+        return view('tasks.index')->with(['tasks' => json_encode($tmpBidTasks)]);
     }
 
     /**
@@ -85,7 +104,39 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        //$task->bid_price = $request->bid_price;
+
+        try {
+            $task->save();
+        } catch (\Exception $e) {
+            Log::error('Update Task:' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\BidContractorJobTask $task
+     * @return \Illuminate\Http\Response
+     */
+    public function updateBidContractorJobTask(Request $request, $id)
+    {
+        $task = BidContractorJobTask::find($id);
+        if ($task == null) {
+            return response()->json(["message"=>"Couldn't find record.","errors"=>["error" =>["Couldn't find record."]]], 404);
+        }else if($request->bid_price == 0) {
+            return response()->json(["message"=>"Price needs to be greater than 0.","errors"=>["error" =>[""]]], 412);
+        }
+        $task->bid_price = $request->bid_price;
+
+        try {
+            $task->save();
+        } catch (\Exception $e) {
+            Log::error('Update Task:' . $e->getMessage());
+            return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
+        }
+        return response()->json(["message"=>"Success"], 200);
     }
 
     /**
