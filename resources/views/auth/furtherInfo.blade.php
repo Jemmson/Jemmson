@@ -176,7 +176,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Address Line 1</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control" name="address_line_1" autofocus>
+                                    <input type="text" class="form-control" id="route" name="address_line_1" autofocus>
                                 </div>
                             </div>
 
@@ -187,12 +187,13 @@
                                     <input type="text" class="form-control" name="address_line_2" autofocus>
                                 </div>
                             </div>
-
+                            <input type="hidden" id="country" />
+                            <input type="hidden" id="street_number" />
                             <!-- City -->
                             <div class="form-group">
                                 <label class="col-md-3 control-label">City</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control" name="city" autofocus>
+                                    <input type="text" class="form-control" id="administrative_area_level_1" name="city" autofocus>
                                 </div>
                             </div>
 
@@ -200,7 +201,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">State</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control" name="state" autofocus>
+                                    <input type="text" class="form-control" id="locality" name="state" autofocus>
                                 </div>
                             </div>
 
@@ -208,7 +209,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">ZipCode</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control" name="zip" autofocus>
+                                    <input type="text" class="form-control" id="postal_code" name="zip" autofocus>
                                 </div>
                             </div>
 
@@ -289,4 +290,8 @@
 
     @endif
 
+@endsection
+@section('scripts')
+    @component('shared.google')
+    @endcomponent
 @endsection
