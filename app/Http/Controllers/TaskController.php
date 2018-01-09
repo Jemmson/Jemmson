@@ -38,7 +38,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->bidJobTasks();
+        $bidTasks = Auth::user()->contractor()->bidJobTasks();
         // TODO: do we need show job data in this page?
         $tmpBidTasks = [];
         foreach ($bidTasks as $bidTask) {
@@ -46,7 +46,7 @@ class TaskController extends Controller
                                 'id' => $bidTask->id,
                                 'bid_price' => $bidTask->bid_price,
                                 'name' => $bidTask->task->name,
-                                'contractor_id' => $bidTask->task->contractor_id
+                                'general_contractor_id' => $bidTask->task->contractor_id
            ];
         }
         return view('tasks.index')->with(['tasks' => json_encode($tmpBidTasks)]);
@@ -271,7 +271,7 @@ class TaskController extends Controller
         $user = $userData[0];
         $userExists = $userData[1];
 
-        $contractor = $user->contractors()->get()[0];
+        $contractor = $user->contractor();
 
 //        return $this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId);
 
