@@ -61,7 +61,7 @@ class User extends SparkUser
 
     public function contractor()
     {
-        return $this->hasOne(Contractor::class, 'user_id', 'id');
+        return $this->hasOne(Contractor::class, 'user_id', 'id')->first();
     }
 
     public function feedback()
@@ -86,16 +86,6 @@ class User extends SparkUser
         } else {
             return $this->hasMany(Job::class, 'customer_id', 'id')->get();
         }
-    }
-
-    /**
-     * Get all bids for proposed tasks from other contractors
-     *
-     * @return void
-     */
-    public function bidJobTasks()
-    {
-        return $this->hasMany(BidContractorJobTask::class, 'contractor_id', 'id')->get();
     }
 
     /**
