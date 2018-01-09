@@ -179,25 +179,6 @@
                             <div class="panel-body">
                                 <div class="col-md-12 panelTop">
                                     <div class="col-md-8">
-                                        <h2>Initiate Bid</h2>
-                                        <p>Select me to intiate a bid with a contractor</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 panelBottom">
-                                    <a href="">
-                                        <button class="btn btn-default btn-primary">
-                                            Initiate Bid
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="panel panel-default  panel--styled">
-                            <div class="panel-body">
-                                <div class="col-md-12 panelTop">
-                                    <div class="col-md-8">
                                         <h2>Bid List</h2>
                                         <p>Select me to look at all of your current bids</p>
                                     </div>
@@ -213,8 +194,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-6">
                         <div class="panel panel-default  panel--styled">
                             <div class="panel-body">
@@ -234,6 +213,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-6">
                         <div class="panel panel-default  panel--styled">
                             <div class="panel-body">

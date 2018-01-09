@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class LoginTest extends DuskTestCase
 {
 
-    use RefreshDatabase;
+//    use RefreshDatabase;
 
     /**
      * A Dusk test example.
