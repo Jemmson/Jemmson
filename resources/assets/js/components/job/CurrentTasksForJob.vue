@@ -59,7 +59,6 @@
     </div>
     <div class="joblist" v-if="getUser === 'contractor'">
       <div class="container">
-
         <div class="row">
           <div class="col-md-12">
             <div class="panel panel-default">
@@ -113,7 +112,7 @@
                       <!--</button>-->
                       <!--</td>-->
                       <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                        <button class="btn btn-sm btn-primary button" @click="deleteTask(task.id)">
+                        <button class="btn btn-sm btn-danger button" @click="deleteTask(task.id)">
                           Delete
                         </button>
                       </td>
@@ -136,7 +135,7 @@
                         </button>
                       </td>
                       <td>
-                        <button class="btn btn-sm btn-primary button" @click="notifyCustomerOfFinishedBid()">
+                        <button class="btn btn-sm btn-success button" @click="notifyCustomerOfFinishedBid()">
                           Notify Customer of Finished Bid
                         </button>
                       </td>
@@ -145,45 +144,59 @@
                     <tr v-else-if="jobStatus === 'Bid Has Been Approved'">
 
                     </tr>
-                    <tr v-show="showNewTask">
-                      <td>
-                        <div class="form-group">
-                          <label for="taskName">Task Name</label>
-                          <input type="text" class="form-control" id="taskName" name="taskName" v-model="newTaskName" v-on:keyup="getExistingTask">
-                          <div class="panel-footer" v-if="taskResults.length">
-                            <ul class="list-group">
-                              <button class="list-group-item" v-for="result in taskResults" :name="result.phone" @click="fillTaskPrice(result)">
-                                {{ result.name }}
-                              </button>
-                            </ul>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <label for="custTaskPrice">Customer Task Price</label>
-                          <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="taskPrice">
-                        </div>
-                      </td>
-                      <td>
-                        <div class="form-group">
-                          <label for="subTaskPrice">Sub Task Price</label>
-                          <input type="text" class="form-control" id="subTaskPrice" name="taskPrice" v-model="subTaskPrice">
-                        </div>
-                      </td>
-                      <td>
-                        <button style="margin-top: 27px" id="submitTask" class="btn btn-default btn-primary" v-on:click="addNewTask()">
-                          Submit
-                        </button>
-                      </td>
-                      <td></td>
-                      <td></td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+          <!-- /end col-md-12 -->
+          <div class="col-md-12">
+            <div class="panel panel-default" v-show="showNewTask">
+              <div class="panel-body">
+                <form>
+                  <div class="row">
+                    <div class="form-group col-md-6">
+                      <label for="taskName">Task Name</label>
+                      <input type="text" class="form-control" id="taskName" name="taskName" v-model="newTaskName" v-on:keyup="getExistingTask">
+                      <div class="panel-footer" v-if="taskResults.length">
+                        <ul class="list-group">
+                          <button class="list-group-item" v-for="result in taskResults" :name="result.phone" @click="fillTaskPrice(result)">
+                            {{ result.name }}
+                          </button>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="area">Locality</label>
+                      <input type="text" class="form-control" id="area" name="area" required v-model="area">
+                    </div>
+
+                    <div class="form-group col-md-12">
+                      <label for="start_date">Start Date</label>
+                      <input type="date" class="form-control" id="start_date" name="start_date" required v-model="start_date">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="custTaskPrice">Customer Task Price</label>
+                      <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="taskPrice">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="subTaskPrice">Sub Task Price</label>
+                      <input type="text" class="form-control" id="subTaskPrice" name="taskPrice" v-model="subTaskPrice">
+                    </div>
+                    <div class=" col-md-12">
+                      <button id="submitTask" class="btn btn-default btn-success" @click.prevent="addNewTask()">
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- /end col-md-12 -->
         </div>
         <!-- /end row -->
 
@@ -200,7 +213,7 @@
 
         <div class="row">
           <div class="col-md-6">
-            <div class="panel panel-default">
+            <div class="panel panel-default" v-show="showDetailsPanel">
               <div class="panel-body">
                 <div class="details" v-for="(task, index) in allTasksData">
                   <div v-show="showDetails[index].show">
@@ -219,11 +232,11 @@
                           <td>{{ bid.contractorName[0].name }}</td>
                           <td>{{ bid.bid_price }}</td>
                           <td>
-                            <button @click="acceptBid(bid.id, task.id, bid.bid_price)" class="button btn btn-sm btn-primary">Accept
+                            <button @click="acceptBid(bid.id, task.id, bid.bid_price)" class="button btn btn-sm btn-success">Accept
                             </button>
                           </td>
                           <td>
-                            <button @click="notify(bid.id)" class="button btn btn-sm btn-primary">Notify
+                            <button @click="notify(bid.id)" class="button btn btn-sm btn-warning">Notify
                             </button>
                           </td>
                         </tr>
@@ -236,7 +249,7 @@
           </div>
           <!-- /end col-md-6 -->
           <div class="col-md-6">
-            <div class="panel panel-default"  v-show="initiateSubTask">
+            <div class="panel panel-default" v-show="initiateSubTask">
               <div class="panel-body">
                 <div class="initiateBid">
                   <div class="addBidTask">
@@ -267,11 +280,7 @@
                         v-model="email" @blur="mouseLeave('email')">
                     </div>
                     <div class="form-group">
-                      <label for="area">Locality</label>
-                      <input type="area" class="form-control" id="area" name="area" required v-model="area" >
-                    </div>
-                    <div class="form-group">
-                      <button @click="sendNotificationToSubForParticularTask()" class="btn btn-sm btn-primary" type="submit">Submit
+                      <button @click="sendNotificationToSubForParticularTask()" class="btn btn-sm btn-success" type="submit">Submit
                       </button>
                     </div>
                   </div>
@@ -334,7 +343,9 @@
         taskId: '',
         taskName: '',
         taskPrice: '',
-        taskResults: []
+        taskResults: [],
+        showDetailsPanel: false,
+        start_date: '',
       }
     },
     mounted() {
@@ -435,7 +446,9 @@
           subTaskPrice: this.subTaskPrice,
           taskPrice: this.taskPrice,
           taskName: this.newTaskName,
-          contractorId: this.contractorId
+          contractorId: this.contractorId,
+          area: this.area,
+          start_date: this.start_date,
         }).then(function (response) {
           console.log(this.allTasksData)
           console.log(response.data)
@@ -497,6 +510,9 @@
         }.bind(this))
       },
       initiateSub (taskId, taskName) {
+        // hide add task panel TODO: should be animations for better UX
+        this.showNewTask = false;
+
         // show the sub task
         this.showSubTask(taskId)
         this.taskName = taskName
@@ -561,6 +577,12 @@
       },
       showTheDetails (index) {
         //        debugger
+
+        // hide add task panel TODO: should be animations for better UX
+        this.showNewTask = false;
+        // toggle details panel 
+        this.showDetailsPanel = true;
+        
         this.hideAllTables()
         for (let obj of this.showDetails) {
           if (obj.tableIndex === index) {
@@ -582,7 +604,6 @@
             jobId: this.jobid,
             phone: this.phone,
             email: this.email,
-            area: this.area,
             name: this.query
           }).then(function (response) {
             console.log(response.data)

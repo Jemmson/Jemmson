@@ -195,10 +195,10 @@ class TaskController extends Controller
 
     }
 
-    public function addBidEntryForTheSubContractor($contractor, $taskId, $jobId, $area)
+    public function addBidEntryForTheSubContractor($contractor, $taskId, $jobId)
     {
         if ($contractor->checkIfContractorSetBidForATask($contractor->id, $taskId, $jobId)) {
-            $contractor->addContractorToBidForJobTable($contractor->id, $taskId, $jobId, $area);
+            $contractor->addContractorToBidForJobTable($contractor->id, $taskId, $jobId);
             return true;
         } else {
             return false;
@@ -237,7 +237,6 @@ class TaskController extends Controller
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $name = $request->name;
-        $area = $request->area;
 
 
 //        return gettype($jobId);
@@ -267,7 +266,7 @@ class TaskController extends Controller
 //        return $this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId);
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
-        if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId, $area) === false) {
+        if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
             return "task already exists";
         }
 
@@ -448,6 +447,8 @@ class TaskController extends Controller
         $contractorId = $request->contractorId;
         $taskName = $request->taskName;
         $subTaskPrice = $request->subTaskPrice;
+        $area = $request->area;
+        $start_date = $request->start_date;
 
         if ($request->taskExists) {
             // 1. add the task to the job task table
@@ -457,7 +458,7 @@ class TaskController extends Controller
 
             $task = $this->updateTaskWithNewValuesIfValuesAreDifferent($task, $subTaskPrice, $taskPrice);
 
-            $this->updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId);
+            $this->updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId, $area, $start_date);
 
             $this->switchJobStatusToInProgress($job, config('app.bidIsInProgress'));
 
@@ -478,7 +479,7 @@ class TaskController extends Controller
             $job = Job::find($jobId);
             $job->tasks()->attach($task);
 
-            $this->updateJobTaskTable($job, $task->id, $jobId, $taskPrice, $contractorId);
+            $this->updateJobTaskTable($job, $task->id, $jobId, $taskPrice, $contractorId, $area, $start_date);
 
             $this->switchJobStatusToInProgress($job, config('app.bidIsInProgress'));
 
@@ -504,13 +505,15 @@ class TaskController extends Controller
         $job->save();
     }
 
-    public function updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId)
+    public function updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId, $area, $start_date)
     {
         $jt = $job->tasks()->where("task_id", "=", $taskId)->where("job_id", "=", $jobId)->get()[0];
         $jt->pivot->status = config('app.taskIsInitiated');
         $jt->pivot->cust_final_price = $taskPrice;
         $jt->pivot->sub_final_price = 0;
         $jt->pivot->contractor_id = $contractorId;
+        $jt->pivot->area = $area;
+        $jt->pivot->start_date = $start_date;
         $jt->pivot->save();
     }
 }

@@ -5,9 +5,21 @@
         <!--<pre>{{ getUserType }}</pre>-->
         <!--<pre> {{ getCustomer }}</pre>-->
         <div class="customerRegisteredAlert" v-show="getCustomerObject">Customer Has Not Registered Yet</div>
-        <div class="wrapper">
-            <h3 class="customerName">Customer Name: {{ customer.user.name }}</h3>
-            <info-label class="infoLabel" label="Job Name" :value="job.job_name"></info-label>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="col-md-6">
+                  <h3 class="customerName"><b>Customer Name:</b> {{ customer.user.name }}</h3>
+                  </div>
+                  <div class="col-md-6">
+                  <info-label class="infoLabel" label="Job Name" :value="job.job_name"></info-label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
             <!--<jemm-date class="startDate" label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"-->
             <!--&gt;</jemm-date>-->
             <!--<jemm-date class="endDate" label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"-->

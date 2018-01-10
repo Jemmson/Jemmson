@@ -19,6 +19,8 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Task Name</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">Area</th>
                   <th scope="col">Price</th>
                   <th scope="col"></th>
                 </tr>
@@ -27,6 +29,8 @@
                 <tr v-for="bidTask in tasks" v-bind:value="bidTask.id">
                   <th scope="row">{{ bidTask.id }}</th>
                   <td>{{ bidTask.task.name }}</td>
+                  <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
+                  <td>{{ bidTask.job_task.area }}</td>
                   <td>
                     <div v-if="bidTask.accepted == 0">
                       <input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price" />
@@ -67,6 +71,13 @@
       }
     },
     methods: {
+      prettyDate: function (date) {
+        if (date == null)
+          return '';
+        // return the date and ignore the time
+        date = date.split(' ');
+        return date[0];
+      },
       update: function (e) {
         let id = e.target.id;
         let bid_price = $('#price-' + id).val();

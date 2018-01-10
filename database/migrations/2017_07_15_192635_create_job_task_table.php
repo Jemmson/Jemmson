@@ -25,6 +25,8 @@ class CreateJobTaskTable extends Migration
             $table->string('status')->nullable();
             $table->float('cust_final_price')->nullable();
             $table->float('sub_final_price')->nullable();
+            $table->string('area')->nullable();
+            $table->timestamp('start_date')->nullable();
             $table->primary(['job_id', 'task_id']);
             $table->timestamps();
         });
