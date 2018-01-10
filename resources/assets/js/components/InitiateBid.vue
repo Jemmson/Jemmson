@@ -2,15 +2,23 @@
     <div>
         <h1 class="text-center">Please Initiate a Bid With A Customer</h1>
         <label for="customerName">Customer Name *</label>
-            <input name="customerName" id="customerName" :value="name" :placeholder="name" type="text" v-model="query" v-on:keyup="autoComplete"
-                   class="form-control" required>
-            <div class="panel-footer" v-if="results.length">
-                <ul class="list-group">
-                    <button class="list-group-item" v-for="result in results" :name="result.phone" @click="fillFields(result)">
-                        {{ result.name }}
-                    </button>
-                </ul>
-            </div>
+        <input
+                name="customerName"
+                id="customerName"
+                :value="name"
+                :placeholder="name"
+                type="text"
+                v-model="query"
+                v-on:keyup="autoComplete"
+                class="form-control" required>
+        <div class="panel-footer" v-if="results.length">
+            <ul class="list-group">
+                <button class="list-group-item" v-for="result in results" :name="result.phone"
+                        @click="fillFields(result)">
+                    {{ result.name }}
+                </button>
+            </ul>
+        </div>
 
         <label for="job-name">Job Name
             <input name="jobName" type="text" id="job-name" class="form-control">
@@ -30,7 +38,7 @@
   import axios from 'axios'
 
   export default {
-    data() {
+    data () {
       return {
         query: '',
         results: [],
@@ -40,24 +48,24 @@
       }
     },
     methods: {
-      autoComplete() {
+      autoComplete () {
         this.results = [];
         if (this.query.length > 2) {
-          axios.get('/api/search', {
+          axios.get ('/api/search', {
             params: {
               query: this.query
             }
-          }).then(response => {
-            console.log(response.data);
+          }).then (response => {
+            console.log (response.data);
             this.results = response.data;
           });
         }
       },
-      fillFields(result) {
-        console.log(result);
-        console.log(result.email);
-        console.log(result.phone);
-        console.log(result.name);
+      fillFields (result) {
+        console.log (result);
+        console.log (result.email);
+        console.log (result.phone);
+        console.log (result.name);
         this.email = result.email;
         this.phone = result.phone;
         this.name = result.name;
