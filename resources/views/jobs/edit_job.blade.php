@@ -4,12 +4,12 @@
 
     <job
             usertype="{{ $userType }}"
-            job="{{ $job }}"
-            bids="{{ $bids }}"
-            contractor="{{ $contractor }}"
-            customer="{{ $customer }}"
-            tasks="{{ $tasks }}"
-            customeruserdata="{{ $customerUserData }}">
+            p-job="{{ $job }}"
+            p-bids="{{ $bids }}"
+            p-contractor="{{ $contractor }}"
+            p-customer="{{ $customer }}"
+            p-tasks="{{ $tasks }}"
+            >
     </job>
 
     <footer style="height: 10rem"></footer>

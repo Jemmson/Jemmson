@@ -33112,49 +33112,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -33209,7 +33166,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     if (this.allTasksData === '') {
       this.allTasksData = this.allTasks;
     }
-    this.bidTasks = JSON.parse(this.bids);
+    this.bidTasks = this.bids;
     // console.log(typeof this.bidTasks)
     this.setUpShowDetailsArray();
     console.log('all tasks data');
@@ -33235,7 +33192,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       type: Number
     },
     bids: {
-      type: String
+      type: Array
     }
   },
   computed: {
@@ -33372,7 +33329,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     setUpShowDetailsArray() {
       this.showDetails = [];
       for (let i = 0; i < this.allTasksData.length; i++) {
-        this.showDetails.push({ tableIndex: this.allTasksData[i].id, show: false });
+        this.showDetails.push({
+          tableIndex: this.allTasksData[i].id,
+          show: false
+        });
       }
     },
     hideTaskWarning() {
@@ -33660,6 +33620,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.hasPhoneError = false;
       this.emailInputPassed = true;
       this.phoneInputPassed = true;
+
+      // clear results after user has 
+      // picked from the dropdown list
+      this.results = '';
     },
     fillTaskPrice(result) {
       console.log(result);
@@ -33973,32 +33937,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       selectedDates: {
         startDate: '',
         endDate: ''
-      }
+      },
+      bids: {},
+      job: {},
+      contractor: {},
+      customer: {},
+      tasks: {}
     };
   },
   beforeMount: function () {
     this.loadJobStore();
+    this.bids = JSON.parse(this.pBids);
+    this.job = JSON.parse(this.pJob);
+    this.contractor = JSON.parse(this.pContractor);
+    this.customer = JSON.parse(this.pCustomer);
+    this.tasks = JSON.parse(this.pTasks);
   },
   props: {
-    bids: {
+    pBids: {
       type: String
     },
-    job: {
+    pJob: {
       type: String
     },
-    contractor: {
+    pContractor: {
       type: String
     },
-    customer: {
+    pCustomer: {
       type: String
     },
-    tasks: {
+    pTasks: {
       type: String
     },
     usertype: {
-      type: String
-    },
-    customeruserdata: {
       type: String
     }
   },
@@ -34010,63 +33981,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     JemmDate: __WEBPACK_IMPORTED_MODULE_0__JemmDate_vue___default.a
   },
   computed: {
-    getCustomerObject() {
-      //        console.log(this.customer)
-      return this.customer === '[]';
-    },
     date() {
       return this.$moment(new Date(), 'MMMM YYYY');
     },
-    getJobId() {
-      let job = JSON.parse(this.job);
-      console.log(job.id);
-      return job.id;
-    },
-    getJobStatus() {
-      let job = JSON.parse(this.job);
-      console.log(job.status);
-      return job.status;
-    },
-    getCustomerId() {
-      // debugger;
-      let customer = JSON.parse(this.customer);
-      console.log(customer.id);
-      return customer.id;
-    },
-    getContractorId() {
-      // debugger;
-      let contractor = JSON.parse(this.contractor);
-      console.log(contractor.id);
-      return contractor.id;
-    },
-    getCustomer() {
-      //        return JSON.parse (this.customer)
-      //        return customer
-    },
-    getCustomerName() {
-      let cud = this.customeruserdata;
-      let val = cud.substr(1, cud.length - 2);
-      let customerName = JSON.parse(val);
-      return customerName.name;
-    },
-    getTasks() {
-      return JSON.parse(this.tasks);
-    },
-    getUserType() {
-      console.log(this.usertype);
-      console.log(typeof this.usertype);
-      return this.usertype;
+    getCustomerObject() {
+      //        console.log(this.customer)
+      return this.customer === '[]';
     }
   },
   methods: {
     //      ...mapMutations([
     //          'loadJobStore'
     //      ]),
-    jobName() {
-      let job = JSON.parse(this.job);
-      console.log(job);
-      return job.job_name;
-    },
     loadJobStore() {
       //        this.$store.commit ('job/loadStore', this.job)
     },
@@ -42052,7 +41978,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n    display: -ms-grid;\n    display: grid;\n    -ms-grid-columns: 1fr 1fr;\n        grid-template-columns: 1fr 1fr;\n    grid-column-gap: 20px;\n    margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 1;\n        grid-column-start: 1;\n    grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n    -ms-grid-row: 1;\n        grid-row-start: 1;\n    grid-row-end: 2;\n    -ms-grid-column: 2;\n        grid-column-start: 2;\n    grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n    background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n    margin-left: 1rem;\n    color: red;\n}\n\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n  display: -ms-grid;\n  display: grid;\n  -ms-grid-columns: 1fr 1fr;\n      grid-template-columns: 1fr 1fr;\n  grid-column-gap: 20px;\n  margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n  -ms-grid-row: 1;\n      grid-row-start: 1;\n  grid-row-end: 2;\n  -ms-grid-column: 1;\n      grid-column-start: 1;\n  grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n  -ms-grid-row: 1;\n      grid-row-start: 1;\n  grid-row-end: 2;\n  -ms-grid-column: 2;\n      grid-column-start: 2;\n  grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n  background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n  margin-left: 1rem;\n  color: red;\n}\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n", ""]);
 
 /***/ }),
 /* 318 */
@@ -74146,22 +74072,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "wrapper"
   }, [_c('h3', {
     staticClass: "customerName"
-  }, [_vm._v("Customer Name: " + _vm._s(_vm.getCustomerName))]), _vm._v(" "), _c('info-label', {
+  }, [_vm._v("Customer Name: " + _vm._s(_vm.customer.user.name))]), _vm._v(" "), _c('info-label', {
     staticClass: "infoLabel",
     attrs: {
       "label": "Job Name",
-      "value": _vm.jobName()
+      "value": _vm.job.job_name
     }
   })], 1), _vm._v(" "), _c('currentTasksForJob', {
     staticClass: "currentTasksForJob",
     attrs: {
-      "customerId": _vm.getCustomerId,
+      "customerId": _vm.customer.id,
       "bids": _vm.bids,
-      "user": _vm.getUserType,
-      "jobid": _vm.getJobId,
-      "jobStatus": _vm.getJobStatus,
-      "allTasks": _vm.getTasks,
-      "contractorId": _vm.getContractorId
+      "user": _vm.contractor.user.usertype,
+      "jobid": _vm.job.id,
+      "jobStatus": _vm.job.status,
+      "allTasks": _vm.tasks,
+      "contractorId": _vm.contractor.user.id
     }
   })], 1)
 },staticRenderFns: []}
@@ -74306,7 +74232,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._m(0), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
     return _c('tr', {
       key: task.id
-    }, [_c('td', [_vm._v("\n                            " + _vm._s(task.name) + "\n                        ")]), _vm._v(" "), _c('td', [_vm._v("\n                            " + _vm._s(task.pivot.cust_final_price) + "\n                        ")])])
+    }, [_c('td', [_vm._v("\n                " + _vm._s(task.name) + "\n              ")]), _vm._v(" "), _c('td', [_vm._v("\n                " + _vm._s(task.pivot.cust_final_price) + "\n              ")])])
   }), _vm._v(" "), _c('tr', [_c('td'), _vm._v(" "), _c('td', [_c('button', {
     staticClass: "btn btn-sm btn-primary button",
     on: {
@@ -74314,17 +74240,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.declineJob()
       }
     }
-  }, [_vm._v("\n                                Decline Job\n                            ")]), _vm._v(" "), _c('button', {
+  }, [_vm._v("\n                  Decline Job\n                ")]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-sm btn-primary button",
     on: {
       "click": function($event) {
         _vm.acceptJob()
       }
     }
-  }, [_vm._v("\n                                Accept Job\n                            ")])])])], 2)])]) : _vm._e()])]) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
+  }, [_vm._v("\n                  Accept Job\n                ")])])])], 2)])]) : _vm._e()])]) : _vm._e(), _vm._v(" "), (_vm.getUser === 'contractor') ? _c('div', {
     staticClass: "joblist"
   }, [_c('div', {
     staticClass: "container"
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-12"
+  }, [_c('div', {
+    staticClass: "panel panel-default"
+  }, [_c('div', {
+    staticClass: "panel-body"
   }, [_c('table', {
     staticClass: "table"
   }, [_c('thead', [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")]), _vm._v(" "), _c('th'), _vm._v(" "), _c('th')]) : _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")])])]), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
@@ -74342,7 +74276,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.updateTaskName($event.target.value, task.id)
         }
       }
-    })]) : _c('td', [_vm._v("\n                        " + _vm._s(task.name) + "\n                    ")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
+    })]) : _c('td', [_vm._v("\n                      " + _vm._s(task.name) + "\n                    ")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
       attrs: {
         "type": "text"
       },
@@ -74354,28 +74288,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.updateCustomerPrice($event.target.value, task.id)
         }
       }
-    })]) : _c('td', [_vm._v("\n                        " + _vm._s(task.pivot.cust_final_price) + "\n                    ")]), _vm._v(" "), (task.pivot.sub_final_price !== 0) ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+    })]) : _c('td', [_vm._v("\n                      " + _vm._s(task.pivot.cust_final_price) + "\n                    ")]), _vm._v(" "), (task.pivot.sub_final_price !== 0) ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
       staticClass: "button btn btn-sm btn-primary",
       on: {
         "click": function($event) {
           _vm.initiateSub(task.id, task.name)
         }
       }
-    }, [_vm._v("\n                            Initiate Bid For Sub\n                        ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+    }, [_vm._v("\n                        Initiate Bid For Sub\n                      ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
       staticClass: "btn btn-sm btn-primary button",
       on: {
         "click": function($event) {
           _vm.showTheDetails(task.id)
         }
       }
-    }, [_vm._v("\n                            Details\n                        ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+    }, [_vm._v("\n                        Details\n                      ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
       staticClass: "btn btn-sm btn-primary button",
       on: {
         "click": function($event) {
           _vm.deleteTask(task.id)
         }
       }
-    }, [_vm._v("\n                            Delete\n                        ")])]) : _vm._e()])
+    }, [_vm._v("\n                        Delete\n                      ")])]) : _vm._e()])
   }), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Totals")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.customerTotal))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.subTotal))]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [_c('button', {
     staticClass: "btn btn-sm btn-primary button",
     on: {
@@ -74383,14 +74317,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.showNewTask = !_vm.showNewTask
       }
     }
-  }, [_vm._v("\n                            Add Task To Bid\n                        ")])]), _vm._v(" "), _c('td', [_c('button', {
+  }, [_vm._v("\n                        Add Task To Bid\n                      ")])]), _vm._v(" "), _c('td', [_c('button', {
     staticClass: "btn btn-sm btn-primary button",
     on: {
       "click": function($event) {
         _vm.notifyCustomerOfFinishedBid()
       }
     }
-  }, [_vm._v("\n                            Notify Customer of Finished Bid\n                        ")])]), _vm._v(" "), _c('td')]) : (_vm.jobStatus === 'Bid Has Been Approved') ? _c('tr') : _vm._e(), _vm._v(" "), _c('tr', {
+  }, [_vm._v("\n                        Notify Customer of Finished Bid\n                      ")])]), _vm._v(" "), _c('td')]) : (_vm.jobStatus === 'Bid Has Been Approved') ? _c('tr') : _vm._e(), _vm._v(" "), _c('tr', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -74441,7 +74375,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.fillTaskPrice(result)
         }
       }
-    }, [_vm._v("\n                                        " + _vm._s(result.name) + "\n                                    ")])
+    }, [_vm._v("\n                              " + _vm._s(result.name) + "\n                            ")])
   }))]) : _vm._e()])]), _vm._v(" "), _c('td', [_c('div', {
     staticClass: "form-group"
   }, [_c('label', {
@@ -74511,7 +74445,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.addNewTask()
       }
     }
-  }, [_vm._v("\n                            Submit\n                        ")])]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')])], 2)]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                        Submit\n                      ")])]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')])], 2)])])])])]), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -74527,7 +74461,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "taskAlreadyExistsWarning"
     }],
     staticClass: "alert-warning"
-  }, [_vm._v("\n                Task Already exists and was not added for this contractor "), _c('span', {
+  }, [_vm._v("\n        Task Already exists and was not added for this contractor\n        "), _c('span', {
     staticClass: "glyphicon glyphicon-remove-sign",
     on: {
       "click": function($event) {
@@ -74542,7 +74476,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "possibleDuplicateUserAlert"
     }],
     staticClass: "alert-warning"
-  }, [_vm._v("\n                This Contractor May Already Exist in the Database. Please use the drop down to select the correct\n                name "), _c('span', {
+  }, [_vm._v("\n        This Contractor May Already Exist in the Database. Please use the drop down to select the correct name\n        "), _c('span', {
     staticClass: "glyphicon glyphicon-remove-sign",
     on: {
       "click": function($event) {
@@ -74550,8 +74484,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   })]), _vm._v(" "), _c('div', {
-    staticClass: "wrapper"
-  }, [_vm._l((_vm.allTasksData), function(task, index) {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-6"
+  }, [_c('div', {
+    staticClass: "panel panel-default"
+  }, [_c('div', {
+    staticClass: "panel-body"
+  }, _vm._l((_vm.allTasksData), function(task, index) {
     return _c('div', {
       staticClass: "details"
     }, [_c('div', {
@@ -74576,22 +74516,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
             _vm.acceptBid(bid.id, task.id, bid.bid_price)
           }
         }
-      }, [_vm._v("Accept\n                                    ")])]), _vm._v(" "), _c('td', [_c('button', {
+      }, [_vm._v("Accept\n                          ")])]), _vm._v(" "), _c('td', [_c('button', {
         staticClass: "button btn btn-sm btn-primary",
         on: {
           "click": function($event) {
             _vm.notify(bid.id)
           }
         }
-      }, [_vm._v("Notify\n                                    ")])])]) : _vm._e()
+      }, [_vm._v("Notify\n                          ")])])]) : _vm._e()
     }))])])])
-  }), _vm._v(" "), _c('div', {
+  }))])]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-6"
+  }, [_c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
       value: (_vm.initiateSubTask),
       expression: "initiateSubTask"
     }],
+    staticClass: "panel panel-default"
+  }, [_c('div', {
+    staticClass: "panel-body"
+  }, [_c('div', {
     staticClass: "initiateBid"
   }, [_c('div', {
     staticClass: "addBidTask"
@@ -74657,7 +74603,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.fillFields(result)
         }
       }
-    }, [_vm._v("\n                                        " + _vm._s(result.name) + "\n                                    ")])
+    }, [_vm._v("\n                          " + _vm._s(result.name) + "\n                        ")])
   }))]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
   }, [_c('label', {
@@ -74756,7 +74702,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.sendNotificationToSubForParticularTask()
       }
     }
-  }, [_vm._v("Submit\n                            ")])])])])], 2)])]) : _vm._e()])
+  }, [_vm._v("Submit\n                    ")])])])])])])])])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
