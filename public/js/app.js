@@ -33655,7 +33655,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       console.log(result.name);
       this.email = result.email;
       this.phone = result.phone;
-      this.name = result.name;
+      this.query = result.name;
       this.hasEmailError = false;
       this.hasPhoneError = false;
       this.emailInputPassed = true;
