@@ -1,327 +1,289 @@
 <template>
-    <div class="currenttasksforjob">
-        <!--<pre>{{ allTasks }}</pre>-->
-        <!--<pre>{{ getUser }}</pre>-->
+  <div class="currenttasksforjob">
+    <!--<pre>{{ allTasks }}</pre>-->
+    <!--<pre>{{ getUser }}</pre>-->
 
-        <!--<pre>{{ showDetails[0].show }}</pre>-->
-        <!--<pre>{{ showDetails[1].show }}</pre>-->
-        <!--<pre>{{ showDetails[2].show }}</pre>-->
-        <!--<pre>{{ showDetails[3].show }}</pre>-->
-        <!--<pre>{{ showDetails[4].show }}</pre>-->
-        <!--<pre>{{ taskId }}</pre>-->
-        <!--<pre>{{ allTasks }}</pre>-->
-        <!--<pre>{{ showDetails }}</pre>-->
-        <!--<pre>{{ bids }}</pre>-->
-        <!--<pre>{{ bidTasks }}</pre>-->
-        <!--<pre>{{ this.emailInputPassed }}</pre>-->
-        <!--<pre>{{ this.phoneInputPassed }}</pre>-->
-        <!--<pre>{{ allTasksData }}</pre>-->
-        <!--<pre>{{ task }}</pre>-->
-        <!--<pre>{{ newTaskName }}</pre>-->
-        <!--<pre>{{ showDetails }}</pre>-->
-        <div class="joblist" v-if="getUser === 'customer'">
-            <div class="container">
-                <div v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                    <h1>Bid Is In Progress</h1>
-                </div>
-                <div v-else-if="jobStatus === 'Waiting For Customer Approval' || jobStatus === 'The Job Has Been Accepted'">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Task Name</th>
-                            <th>Final Customer Price</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="task in allTasksData" :key="task.id">
-                            <td>
-                                {{ task.name }}
-                            </td>
-                            <td>
-                                {{ task.pivot.cust_final_price }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <button class="btn btn-sm btn-primary button"
-                                        @click="declineJob()">
-                                    Decline Job
-                                </button>
-                                <button class="btn btn-sm btn-primary button"
-                                        @click="acceptJob()">
-                                    Accept Job
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <!--<pre>{{ showDetails[0].show }}</pre>-->
+    <!--<pre>{{ showDetails[1].show }}</pre>-->
+    <!--<pre>{{ showDetails[2].show }}</pre>-->
+    <!--<pre>{{ showDetails[3].show }}</pre>-->
+    <!--<pre>{{ showDetails[4].show }}</pre>-->
+    <!--<pre>{{ taskId }}</pre>-->
+    <!--<pre>{{ allTasks }}</pre>-->
+    <!--<pre>{{ showDetails }}</pre>-->
+    <!--<pre>{{ bids }}</pre>-->
+    <!--<pre>{{ bidTasks }}</pre>-->
+    <!--<pre>{{ this.emailInputPassed }}</pre>-->
+    <!--<pre>{{ this.phoneInputPassed }}</pre>-->
+    <!--<pre>{{ allTasksData }}</pre>-->
+    <!--<pre>{{ task }}</pre>-->
+    <!--<pre>{{ newTaskName }}</pre>-->
+    <!--<pre>{{ showDetails }}</pre>-->
+    <div class="joblist" v-if="getUser === 'customer'">
+      <div class="container">
+        <div v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+          <h1>Bid Is In Progress</h1>
         </div>
-        <div class="joblist" v-if="getUser === 'contractor'">
-            <div class="container">
+        <div v-else-if="jobStatus === 'Waiting For Customer Approval' || jobStatus === 'The Job Has Been Accepted'">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Task Name</th>
+                <th>Final Customer Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="task in allTasksData" :key="task.id">
+                <td>
+                  {{ task.name }}
+                </td>
+                <td>
+                  {{ task.pivot.cust_final_price }}
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <button class="btn btn-sm btn-primary button" @click="declineJob()">
+                    Decline Job
+                  </button>
+                  <button class="btn btn-sm btn-primary button" @click="acceptJob()">
+                    Accept Job
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="joblist" v-if="getUser === 'contractor'">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
                 <table class="table">
-                    <thead>
+                  <thead>
                     <tr v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                        <th>Task Name</th>
-                        <th>Final Customer Price</th>
-                        <th>Final Sub Price</th>
-                        <th></th>
-                        <th></th>
+                      <th>Task Name</th>
+                      <th>Final Customer Price</th>
+                      <th>Final Sub Price</th>
+                      <th></th>
+                      <th></th>
                     </tr>
                     <tr v-else>
-                        <th>Task Name</th>
-                        <th>Final Customer Price</th>
-                        <th>Final Sub Price</th>
+                      <th>Task Name</th>
+                      <th>Final Customer Price</th>
+                      <th>Final Sub Price</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                  </thead>
+                  <tbody>
                     <tr v-for="task in allTasksData" :key="task.id">
-                        <!--<td>{{ jobStatus }}</td>-->
-                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                            <input type="text" :value="task.name"
-                                   @blur="updateTaskName($event.target.value, task.id)">
-                        </td>
-                        <td v-else>
-                            {{ task.name }}
-                        </td>
-                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                            <input type="text" :value="task.pivot.cust_final_price"
-                                   @blur="updateCustomerPrice($event.target.value, task.id)">
-                        </td>
-                        <td v-else>
-                            {{ task.pivot.cust_final_price }}
-                        </td>
-                        <td v-if="task.pivot.sub_final_price !== 0">{{ task.pivot.sub_final_price }}</td>
-                        <td v-else>Pending</td>
-                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                            <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
-                                Initiate Bid For Sub
-                            </button>
-                        </td>
-                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                            <button class="btn btn-sm btn-primary button"
-                                    @click="showTheDetails(task.id)">
-                                Details
-                            </button>
-                        </td>
-                        <!--<td>-->
-                        <!--<button class="btn btn-sm btn-primary button"-->
-                        <!--@click="editTask(task.id)">-->
-                        <!--Edit-->
-                        <!--</button>-->
-                        <!--</td>-->
-                        <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                            <button class="btn btn-sm btn-primary button"
-                                    @click="deleteTask(task.id)">
-                                Delete
-                            </button>
-                        </td>
+                      <!--<td>{{ jobStatus }}</td>-->
+                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                        <input type="text" :value="task.name" @blur="updateTaskName($event.target.value, task.id)">
+                      </td>
+                      <td v-else>
+                        {{ task.name }}
+                      </td>
+                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                        <input type="text" :value="task.pivot.cust_final_price" @blur="updateCustomerPrice($event.target.value, task.id)">
+                      </td>
+                      <td v-else>
+                        {{ task.pivot.cust_final_price }}
+                      </td>
+                      <td v-if="task.pivot.sub_final_price !== 0">{{ task.pivot.sub_final_price }}</td>
+                      <td v-else>Pending</td>
+                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                        <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
+                          Initiate Bid For Sub
+                        </button>
+                      </td>
+                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                        <button class="btn btn-sm btn-primary button" @click="showTheDetails(task.id)">
+                          Details
+                        </button>
+                      </td>
+                      <!--<td>-->
+                      <!--<button class="btn btn-sm btn-primary button"-->
+                      <!--@click="editTask(task.id)">-->
+                      <!--Edit-->
+                      <!--</button>-->
+                      <!--</td>-->
+                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                        <button class="btn btn-sm btn-primary button" @click="deleteTask(task.id)">
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                     <tr>
-                        <td>Totals</td>
-                        <td>{{ customerTotal }}</td>
-                        <td>{{ subTotal }}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                      <td>Totals</td>
+                      <td>{{ customerTotal }}</td>
+                      <td>{{ subTotal }}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
                     </tr>
                     <tr v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary button"
-                                    @click="showNewTask = !showNewTask">
-                                Add Task To Bid
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary button"
-                                    @click="notifyCustomerOfFinishedBid()">
-                                Notify Customer of Finished Bid
-                            </button>
-                        </td>
-                        <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        <button class="btn btn-sm btn-primary button" @click="showNewTask = !showNewTask">
+                          Add Task To Bid
+                        </button>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-primary button" @click="notifyCustomerOfFinishedBid()">
+                          Notify Customer of Finished Bid
+                        </button>
+                      </td>
+                      <td></td>
                     </tr>
                     <tr v-else-if="jobStatus === 'Bid Has Been Approved'">
 
                     </tr>
                     <tr v-show="showNewTask">
-                        <td>
-                            <div class="form-group">
-                                <label
-                                        for="taskName">Task Name</label>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="taskName"
-                                        name="taskName"
-                                        v-model="newTaskName"
-                                        v-on:keyup="getExistingTask"
-                                >
-                                <div class="panel-footer" v-if="taskResults.length">
-                                    <ul class="list-group">
-                                        <button class="list-group-item" v-for="result in taskResults"
-                                                :name="result.phone"
-                                                @click="fillTaskPrice(result)">
-                                            {{ result.name }}
-                                        </button>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <label
-                                        for="custTaskPrice">Customer Task Price</label>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="custTaskPrice"
-                                        name="taskPrice"
-                                        v-model="taskPrice">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <label
-                                        for="subTaskPrice">Sub Task Price</label>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="subTaskPrice"
-                                        name="taskPrice"
-                                        v-model="subTaskPrice">
-                            </div>
-                        </td>
-                        <td>
-                            <button
-                                    style="margin-top: 27px"
-                                    id="submitTask"
-                                    class="btn btn-default btn-primary"
-                                    v-on:click="addNewTask()">
-                                Submit
-                            </button>
-                        </td>
-                        <td></td>
-                        <td></td>
+                      <td>
+                        <div class="form-group">
+                          <label for="taskName">Task Name</label>
+                          <input type="text" class="form-control" id="taskName" name="taskName" v-model="newTaskName" v-on:keyup="getExistingTask">
+                          <div class="panel-footer" v-if="taskResults.length">
+                            <ul class="list-group">
+                              <button class="list-group-item" v-for="result in taskResults" :name="result.phone" @click="fillTaskPrice(result)">
+                                {{ result.name }}
+                              </button>
+                            </ul>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <label for="custTaskPrice">Customer Task Price</label>
+                          <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="taskPrice">
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <label for="subTaskPrice">Sub Task Price</label>
+                          <input type="text" class="form-control" id="subTaskPrice" name="taskPrice" v-model="subTaskPrice">
+                        </div>
+                      </td>
+                      <td>
+                        <button style="margin-top: 27px" id="submitTask" class="btn btn-default btn-primary" v-on:click="addNewTask()">
+                          Submit
+                        </button>
+                      </td>
+                      <td></td>
+                      <td></td>
                     </tr>
-                    </tbody>
+                  </tbody>
                 </table>
-                <div class="alert-success" v-show="showNotificationSent">A notification was succesfully sent</div>
-                <div class="alert-warning" v-show="taskAlreadyExistsWarning">
-                    Task Already exists and was not added for this contractor <span
-                        class="glyphicon glyphicon-remove-sign"
-                        @click="hideTaskWarning()"></span>
-                </div>
-                <div class="alert-warning" v-show="possibleDuplicateUserAlert">
-                    This Contractor May Already Exist in the Database. Please use the drop down to select the correct
-                    name <span
-                        class="glyphicon glyphicon-remove-sign"
-                        @click="hideDuplicateUserWarning()"></span>
-                </div>
-                <div class="wrapper">
-                    <div class="details" v-for="(task, index) in allTasksData">
-                        <div v-show="showDetails[index].show">
-                            <h3 class="text-center">Sub Details: {{ task.name }}</h3>
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Sub</th>
-                                    <th>Price</th>
-                                    <th>Accept</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr class="table" v-for="bid in bidTasks" :key="bid.id" v-if="task.id === bid.task_id">
-                                    <td>{{ bid.contractorName[0].name }}</td>
-                                    <td>{{ bid.bid_price }}</td>
-                                    <td>
-                                        <button @click="acceptBid(bid.id, task.id, bid.bid_price)"
-                                                class="button btn btn-sm btn-primary">Accept
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button @click="notify(bid.id)" class="button btn btn-sm btn-primary">Notify
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="initiateBid" v-show="initiateSubTask">
-                        <div class="addBidTask">
-                            <h3 class="text-center">Task: {{ taskName }}</h3>
-                            <div class="form-group">
-                                <label
-                                        for="contractorName">Contractor Name *</label>
-                                <span class="validationError" v-show="hasNameError">Please Enter A Name</span>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="contractorName"
-                                        name="contractorName"
-                                        :placeholder="contractorName"
-                                        v-model="query"
-                                        v-bind:class="{ 'text-danger': hasNameError }"
-                                        required
-                                        v-on:keyup="autoComplete"
-                                        @blur="mouseLeave('notNow')"
-                                >
-                                <div class="panel-footer" v-if="results.length">
-                                    <ul class="list-group">
-                                        <button class="list-group-item" v-for="result in results" :name="result.phone"
-                                                @click="fillFields(result)">
-                                            {{ result.name }}
-                                        </button>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label
-                                        for="phone">Phone *</label>
-                                <span class="validationError"
-                                      v-show="hasPhoneError">Please Enter A Valid Phone Number - xxx-xxx-xxxx</span>
-                                <input
-                                        type="tel"
-                                        class="form-control"
-                                        id="phone"
-                                        name="phone"
-                                        required
-                                        v-bind:class="{ 'text-danger': hasPhoneError }"
-                                        v-model="phone"
-                                        @blur="mouseLeave('phone')">
-                            </div>
-                            <div class="form-group">
-                                <label
-                                        for="email">Email *</label>
-                                <span class="validationError"
-                                      v-show="hasEmailError">Please Enter A Valid Email Address</span>
-                                <input
-                                        type="email"
-                                        class="form-control"
-                                        id="email"
-                                        name="email"
-                                        required
-                                        v-bind:class="{ 'text-danger': hasEmailError }"
-                                        v-model="email"
-                                        @blur="mouseLeave('email')">
-                            </div>
-                            <div class="form-group">
-                                <button @click="sendNotificationToSubForParticularTask()" class="btn btn-sm btn-primary"
-                                        type="submit">Submit
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
+        <!-- /end row -->
+
+        <div class="alert-success" v-show="showNotificationSent">A notification was succesfully sent</div>
+        <div class="alert-warning" v-show="taskAlreadyExistsWarning">
+          Task Already exists and was not added for this contractor
+          <span class="glyphicon glyphicon-remove-sign" @click="hideTaskWarning()"></span>
+        </div>
+        <div class="alert-warning" v-show="possibleDuplicateUserAlert">
+          This Contractor May Already Exist in the Database. Please use the drop down to select the correct name
+          <span class="glyphicon glyphicon-remove-sign" @click="hideDuplicateUserWarning()"></span>
+        </div>
+        <!-- /end feedback section -->
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="details" v-for="(task, index) in allTasksData">
+                  <div v-show="showDetails[index].show">
+                    <h3 class="text-center">Sub Details: {{ task.name }}</h3>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Sub</th>
+                          <th>Price</th>
+                          <th>Accept</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="table" v-for="bid in bidTasks" :key="bid.id" v-if="task.id === bid.task_id">
+                          <td>{{ bid.contractorName[0].name }}</td>
+                          <td>{{ bid.bid_price }}</td>
+                          <td>
+                            <button @click="acceptBid(bid.id, task.id, bid.bid_price)" class="button btn btn-sm btn-primary">Accept
+                            </button>
+                          </td>
+                          <td>
+                            <button @click="notify(bid.id)" class="button btn btn-sm btn-primary">Notify
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /end col-md-6 -->
+          <div class="col-md-6">
+            <div class="panel panel-default"  v-show="initiateSubTask">
+              <div class="panel-body">
+                <div class="initiateBid">
+                  <div class="addBidTask">
+                    <h3 class="text-center">Task: {{ taskName }}</h3>
+                    <div class="form-group">
+                      <label for="contractorName">Contractor Name *</label>
+                      <span class="validationError" v-show="hasNameError">Please Enter A Name</span>
+                      <input type="text" class="form-control" id="contractorName" name="contractorName" :placeholder="contractorName" v-model="query"
+                        v-bind:class="{ 'text-danger': hasNameError }" required v-on:keyup="autoComplete" @blur="mouseLeave('notNow')">
+                      <div class="panel-footer" v-if="results.length">
+                        <ul class="list-group">
+                          <button class="list-group-item" v-for="result in results" :name="result.phone" @click="fillFields(result)">
+                            {{ result.name }}
+                          </button>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="phone">Phone *</label>
+                      <span class="validationError" v-show="hasPhoneError">Please Enter A Valid Phone Number - xxx-xxx-xxxx</span>
+                      <input type="tel" class="form-control" id="phone" name="phone" required v-bind:class="{ 'text-danger': hasPhoneError }" v-model="phone"
+                        @blur="mouseLeave('phone')">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email *</label>
+                      <span class="validationError" v-show="hasEmailError">Please Enter A Valid Email Address</span>
+                      <input type="email" class="form-control" id="email" name="email" required v-bind:class="{ 'text-danger': hasEmailError }"
+                        v-model="email" @blur="mouseLeave('email')">
+                    </div>
+                    <div class="form-group">
+                      <label for="area">Locality</label>
+                      <input type="area" class="form-control" id="area" name="area" required v-model="area" >
+                    </div>
+                    <div class="form-group">
+                      <button @click="sendNotificationToSubForParticularTask()" class="btn btn-sm btn-primary" type="submit">Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /end col-md-6 -->
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -333,9 +295,10 @@
     components: {
       JemmDate
     },
-    data () {
+    data() {
       return {
         allTasksData: '',
+        area: '',
         bidTasks: '',
         contractorName: '',
         email: '',
@@ -374,11 +337,11 @@
         taskResults: []
       }
     },
-    mounted () {
+    mounted() {
       if (this.allTasksData === '') {
         this.allTasksData = this.allTasks
       }
-      this.bidTasks = JSON.parse(this.bids)
+      this.bidTasks = this.bids;
       // console.log(typeof this.bidTasks)
       this.setUpShowDetailsArray()
       console.log('all tasks data')
@@ -404,11 +367,11 @@
         type: Number
       },
       bids: {
-        type: String
+        type: Array
       }
     },
     computed: {
-      totalPrice () {
+      totalPrice() {
         let totalPrice = 0
         for (let i = 0; i < this.allTasks.length; i++) {
           totalPrice = totalPrice + this.allTasks[0].price
@@ -510,27 +473,27 @@
           jobId: this.jobid
         }).then(function (response) {
           console.log(response.data)
-//          this.updateAllTasksData(response.data.price, response.data.taskId)
+          //          this.updateAllTasksData(response.data.price, response.data.taskId)
         }.bind(this))
       },
       acceptJob () {
         axios.post('/api/task/acceptJob', {
-//          taskId: taskId,
+          //          taskId: taskId,
           contractorId: this.contractorId,
           jobId: this.jobid
         }).then(function (response) {
           console.log(response.data)
-//          this.updateAllTasksData(response.data.price, response.data.taskId)
+          //          this.updateAllTasksData(response.data.price, response.data.taskId)
         }.bind(this))
       },
       declineJob () {
         axios.post('/api/task/declineJob', {
-//          taskId: taskId,
+          //          taskId: taskId,
           contractorId: this.contractorId,
           jobId: this.jobid
         }).then(function (response) {
           console.log(response.data)
-//          this.updateAllTasksData(response.data.price, response.data.taskId)
+          //          this.updateAllTasksData(response.data.price, response.data.taskId)
         }.bind(this))
       },
       initiateSub (taskId, taskName) {
@@ -542,7 +505,10 @@
       setUpShowDetailsArray () {
         this.showDetails = []
         for (let i = 0; i < this.allTasksData.length; i++) {
-          this.showDetails.push({tableIndex: this.allTasksData[i].id, show: false});
+          this.showDetails.push({
+            tableIndex: this.allTasksData[i].id,
+            show: false
+          });
         }
       },
       hideTaskWarning () {
@@ -594,7 +560,7 @@
         }.bind(this))
       },
       showTheDetails (index) {
-//        debugger
+        //        debugger
         this.hideAllTables()
         for (let obj of this.showDetails) {
           if (obj.tableIndex === index) {
@@ -616,6 +582,7 @@
             jobId: this.jobid,
             phone: this.phone,
             email: this.email,
+            area: this.area,
             name: this.query
           }).then(function (response) {
             console.log(response.data)
@@ -630,7 +597,7 @@
               this.bidTasks = response.data
               this.display()
             }
-//          debugger
+            //          debugger
             // display flash message was sent
           }.bind(this))
         }
@@ -709,7 +676,8 @@
             this.hasPhoneError = true
           }
         } else if (inputType === 'email') {
-          let emailRegex = '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
+          let emailRegex =
+            '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
           if (this.email.match(emailRegex)) {
             this.emailInputPassed = true
             this.hasEmailError = false
@@ -720,7 +688,7 @@
         }
       },
       display () {
-//        debugger
+        //        debugger
         // hide the initiate task box
         this.initiateSubTask = false
         // show flash message for one second
@@ -833,6 +801,10 @@
         this.hasPhoneError = false
         this.emailInputPassed = true
         this.phoneInputPassed = true
+
+        // clear results after user has 
+        // picked from the dropdown list
+        this.results = '';
       },
       fillTaskPrice (result) {
         console.log(result)
@@ -863,210 +835,183 @@
 </script>
 
 <style scoped>
+  /*.addBidTask {*/
+  /*margin-top: 4rem;*/
+  /*margin-left: 1rem;*/
+  /*margin-right: 1rem;*/
+  /*}*/
+  /*.currenttasksforjob {*/
+  /*background-color: white;*/
+  /*margin-left: 27rem;*/
+  /*margin-right: 27rem;*/
+  /*border-radius: 2.5%;*/
+  /*border: solid thin black;*/
+  /*}*/
+  /*.ctfheader {*/
+  /*font-weight: 900;*/
+  /*font-size: larger;*/
+  /*margin-top: 1rem;*/
+  /*margin-left: 1rem;*/
+  /*}*/
 
-    /*.addBidTask {*/
-    /*margin-top: 4rem;*/
-    /*margin-left: 1rem;*/
-    /*margin-right: 1rem;*/
-    /*}*/
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 20px;
+    margin-bottom: 1rem;
+  }
 
-    /*.currenttasksforjob {*/
-    /*background-color: white;*/
-    /*margin-left: 27rem;*/
-    /*margin-right: 27rem;*/
-    /*border-radius: 2.5%;*/
-    /*border: solid thin black;*/
-    /*}*/
+  .details {
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
 
-    /*.ctfheader {*/
-    /*font-weight: 900;*/
-    /*font-size: larger;*/
-    /*margin-top: 1rem;*/
-    /*margin-left: 1rem;*/
-    /*}*/
+  .initiateBid {
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
 
-    .wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-column-gap: 20px;
-        margin-bottom: 1rem;
-    }
+  .text-danger {
+    background-color: rgba(255, 64, 47, 0.38);
+  }
 
-    .details {
-        grid-row-start: 1;
-        grid-row-end: 2;
-        grid-column-start: 1;
-        grid-column-end: 2;
-    }
-
-    .initiateBid {
-        grid-row-start: 1;
-        grid-row-end: 2;
-        grid-column-start: 2;
-        grid-column-end: 3;
-    }
-
-    .text-danger {
-        background-color: rgba(255, 64, 47, 0.38);
-    }
-
-    .validationError {
-        margin-left: 1rem;
-        color: red;
-    }
-
-    /*.button {*/
-    /*margin-left: 50px;*/
-    /*margin-right: 50px;*/
-    /*}*/
-
-    /*.joblist {*/
-    /*!*margin-left: 27rem;*!*/
-    /*!*margin-right: 27rem;*!*/
-    /*}*/
-
-    /*.task {*/
-    /*font-size: medium;*/
-    /*font-weight: 400;*/
-    /*margin-left: 1rem;*/
-    /*}*/
-
-    /*.subwrapper {*/
-    /*display: grid;*/
-    /*grid-template-columns: 1fr 1fr 1fr 1fr;*/
-    /*grid-row-gap: 5px;*/
-    /*grid-auto-flow: column dense;*/
-    /*}*/
-
-    /*.mainTaskWrapper {*/
-    /*display: grid;*/
-    /*grid-row-gap: 10px;*/
-    /*}*/
-
-    /*.customer {*/
-    /*grid-row-start: 1;*/
-    /*grid-row-end: 2;*/
-    /*grid-column-start: 2;*/
-    /*grid-column-end: 3;*/
-    /*}*/
-
-    /*.contractor {*/
-    /*grid-row-start: 1;*/
-    /*grid-row-end: 2;*/
-    /*grid-column-start: 3;*/
-    /*grid-column-end: 4;*/
-    /*}*/
-
-    /*.contcustpricelabel {*/
-    /*grid-row-start: 2;*/
-    /*grid-row-end: 3;*/
-    /*grid-column-start: 1;*/
-    /*grid-column-end: 2;*/
-    /*}*/
-
-    /*.contcustprice {*/
-    /*grid-row-start: 2;*/
-    /*grid-row-end: 3;*/
-    /*grid-column-start: 2;*/
-    /*grid-column-end: 3;*/
-    /*}*/
-
-    /*.contsubpricelabel {*/
-    /*grid-row-start: 2;*/
-    /*grid-row-end: 3;*/
-    /*grid-column-start: 3;*/
-    /*grid-column-end: 4;*/
-    /*}*/
-
-    /*.contsubprice {*/
-    /*grid-row-start: 2;*/
-    /*grid-row-end: 3;*/
-    /*grid-column-start: 4;*/
-    /*grid-column-end: 5;*/
-    /*}*/
-
-    /*.custpricelabel {*/
-    /*grid-row-start: 3;*/
-    /*grid-row-end: 4;*/
-    /*grid-column-start: 1;*/
-    /*grid-column-end: 2;*/
-    /*}*/
-
-    /*.custprice {*/
-    /*grid-row-start: 3;*/
-    /*grid-row-end: 4;*/
-    /*grid-column-start: 2;*/
-    /*grid-column-end: 3;*/
-    /*}*/
-
-    /*.subpricelabel {*/
-    /*grid-row-start: 3;*/
-    /*grid-row-end: 4;*/
-    /*grid-column-start: 3;*/
-    /*grid-column-end: 4;*/
-    /*}*/
-
-    /*.subprice {*/
-    /*grid-row-start: 3;*/
-    /*grid-row-end: 4;*/
-    /*grid-column-start: 4;*/
-    /*grid-column-end: 5;*/
-    /*}*/
-
-    /*.custaccepted {*/
-    /*grid-row-start: 4;*/
-    /*grid-row-end: 5;*/
-    /*grid-column-start: 1;*/
-    /*grid-column-end: 2;*/
-    /*}*/
-
-    /*.subaccepted {*/
-    /*grid-row-start: 4;*/
-    /*grid-row-end: 5;*/
-    /*grid-column-start: 2;*/
-    /*grid-column-end: 3;*/
-    /*}*/
-
-    /*.contcustaccepted {*/
-    /*grid-row-start: 4;*/
-    /*grid-row-end: 5;*/
-    /*grid-column-start: 3;*/
-    /*grid-column-end: 4;*/
-    /*}*/
-
-    /*.contsubaccepted {*/
-    /*grid-row-start: 4;*/
-    /*grid-row-end: 5;*/
-    /*grid-column-start: 4;*/
-    /*grid-column-end: 5;*/
-    /*}*/
-
-    /*.custstartdate {*/
-    /*grid-row-start: 5;*/
-    /*grid-row-end: 6;*/
-    /*grid-column-start: 1;*/
-    /*grid-column-end: 2;*/
-    /*}*/
-
-    /*.custenddate {*/
-    /*grid-row-start: 5;*/
-    /*grid-row-end: 6;*/
-    /*grid-column-start: 2;*/
-    /*grid-column-end: 3;*/
-    /*}*/
-
-    /*.substartdate {*/
-    /*grid-row-start: 5;*/
-    /*grid-row-end: 6;*/
-    /*grid-column-start: 3;*/
-    /*grid-column-end: 4;*/
-    /*}*/
-
-    /*.subenddate {*/
-    /*grid-row-start: 5;*/
-    /*grid-row-end: 6;*/
-    /*grid-column-start: 4;*/
-    /*grid-column-end: 5;*/
-    /*}*/
-
+  .validationError {
+    margin-left: 1rem;
+    color: red;
+  }
+  /*.button {*/
+  /*margin-left: 50px;*/
+  /*margin-right: 50px;*/
+  /*}*/
+  /*.joblist {*/
+  /*!*margin-left: 27rem;*!*/
+  /*!*margin-right: 27rem;*!*/
+  /*}*/
+  /*.task {*/
+  /*font-size: medium;*/
+  /*font-weight: 400;*/
+  /*margin-left: 1rem;*/
+  /*}*/
+  /*.subwrapper {*/
+  /*display: grid;*/
+  /*grid-template-columns: 1fr 1fr 1fr 1fr;*/
+  /*grid-row-gap: 5px;*/
+  /*grid-auto-flow: column dense;*/
+  /*}*/
+  /*.mainTaskWrapper {*/
+  /*display: grid;*/
+  /*grid-row-gap: 10px;*/
+  /*}*/
+  /*.customer {*/
+  /*grid-row-start: 1;*/
+  /*grid-row-end: 2;*/
+  /*grid-column-start: 2;*/
+  /*grid-column-end: 3;*/
+  /*}*/
+  /*.contractor {*/
+  /*grid-row-start: 1;*/
+  /*grid-row-end: 2;*/
+  /*grid-column-start: 3;*/
+  /*grid-column-end: 4;*/
+  /*}*/
+  /*.contcustpricelabel {*/
+  /*grid-row-start: 2;*/
+  /*grid-row-end: 3;*/
+  /*grid-column-start: 1;*/
+  /*grid-column-end: 2;*/
+  /*}*/
+  /*.contcustprice {*/
+  /*grid-row-start: 2;*/
+  /*grid-row-end: 3;*/
+  /*grid-column-start: 2;*/
+  /*grid-column-end: 3;*/
+  /*}*/
+  /*.contsubpricelabel {*/
+  /*grid-row-start: 2;*/
+  /*grid-row-end: 3;*/
+  /*grid-column-start: 3;*/
+  /*grid-column-end: 4;*/
+  /*}*/
+  /*.contsubprice {*/
+  /*grid-row-start: 2;*/
+  /*grid-row-end: 3;*/
+  /*grid-column-start: 4;*/
+  /*grid-column-end: 5;*/
+  /*}*/
+  /*.custpricelabel {*/
+  /*grid-row-start: 3;*/
+  /*grid-row-end: 4;*/
+  /*grid-column-start: 1;*/
+  /*grid-column-end: 2;*/
+  /*}*/
+  /*.custprice {*/
+  /*grid-row-start: 3;*/
+  /*grid-row-end: 4;*/
+  /*grid-column-start: 2;*/
+  /*grid-column-end: 3;*/
+  /*}*/
+  /*.subpricelabel {*/
+  /*grid-row-start: 3;*/
+  /*grid-row-end: 4;*/
+  /*grid-column-start: 3;*/
+  /*grid-column-end: 4;*/
+  /*}*/
+  /*.subprice {*/
+  /*grid-row-start: 3;*/
+  /*grid-row-end: 4;*/
+  /*grid-column-start: 4;*/
+  /*grid-column-end: 5;*/
+  /*}*/
+  /*.custaccepted {*/
+  /*grid-row-start: 4;*/
+  /*grid-row-end: 5;*/
+  /*grid-column-start: 1;*/
+  /*grid-column-end: 2;*/
+  /*}*/
+  /*.subaccepted {*/
+  /*grid-row-start: 4;*/
+  /*grid-row-end: 5;*/
+  /*grid-column-start: 2;*/
+  /*grid-column-end: 3;*/
+  /*}*/
+  /*.contcustaccepted {*/
+  /*grid-row-start: 4;*/
+  /*grid-row-end: 5;*/
+  /*grid-column-start: 3;*/
+  /*grid-column-end: 4;*/
+  /*}*/
+  /*.contsubaccepted {*/
+  /*grid-row-start: 4;*/
+  /*grid-row-end: 5;*/
+  /*grid-column-start: 4;*/
+  /*grid-column-end: 5;*/
+  /*}*/
+  /*.custstartdate {*/
+  /*grid-row-start: 5;*/
+  /*grid-row-end: 6;*/
+  /*grid-column-start: 1;*/
+  /*grid-column-end: 2;*/
+  /*}*/
+  /*.custenddate {*/
+  /*grid-row-start: 5;*/
+  /*grid-row-end: 6;*/
+  /*grid-column-start: 2;*/
+  /*grid-column-end: 3;*/
+  /*}*/
+  /*.substartdate {*/
+  /*grid-row-start: 5;*/
+  /*grid-row-end: 6;*/
+  /*grid-column-start: 3;*/
+  /*grid-column-end: 4;*/
+  /*}*/
+  /*.subenddate {*/
+  /*grid-row-start: 5;*/
+  /*grid-row-end: 6;*/
+  /*grid-column-start: 4;*/
+  /*grid-column-end: 5;*/
+  /*}*/
 </style>

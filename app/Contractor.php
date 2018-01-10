@@ -61,11 +61,11 @@ class Contractor extends Model
         return $this->hasMany(BidContractorJobTask::class, 'contractor_id')->get();
     }
 
-    public function addContractorToBidForJobTable($contractorId, $taskId, $jobId)
+    public function addContractorToBidForJobTable($contractorId, $taskId, $jobId, $area)
     {
 
         DB::table('bid_contractor_job_task')->insert(
-            ['contractor_id' => $contractorId, 'task_id' => $taskId, "job_id" => $jobId]
+            ['contractor_id' => $contractorId, 'task_id' => $taskId, "job_id" => $jobId, 'area' => $area]
         );
 
     }
