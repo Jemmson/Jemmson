@@ -33944,37 +33944,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       selectedDates: {
         startDate: '',
         endDate: ''
-      },
-      bids: {},
-      job: {},
-      contractor: {},
-      customer: {},
-      tasks: {}
+      }
     };
   },
   beforeMount: function () {
     this.loadJobStore();
-    this.bids = JSON.parse(this.pBids);
-    this.job = JSON.parse(this.pJob);
-    this.contractor = JSON.parse(this.pContractor);
-    this.customer = JSON.parse(this.pCustomer);
-    this.tasks = JSON.parse(this.pTasks);
   },
   props: {
-    pBids: {
-      type: String
+    bids: {
+      type: Array
     },
-    pJob: {
-      type: String
+    job: {
+      type: Object
     },
-    pContractor: {
-      type: String
+    contractor: {
+      type: Object
     },
-    pCustomer: {
-      type: String
+    customer: {
+      type: Object
     },
-    pTasks: {
-      type: String
+    tasks: {
+      type: Array
     },
     usertype: {
       type: String
@@ -34209,9 +34199,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }).then(response => {
         // TODO: security review
         console.log(response);
-
-        $('#price-' + id).prop('disabled', true);
-        $('#' + id).prop('disabled', true);
 
         $('#success-' + id).css('display', 'block');
         $('#success-' + id).text('Bid has been sent.');
@@ -74138,7 +74125,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "scope": "row"
       }
-    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.name))]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('input', {
+    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.task.name))]), _vm._v(" "), _c('td', [(bidTask.accepted == 0) ? _c('div', [_c('input', {
       attrs: {
         "type": "text",
         "id": 'price-' + bidTask.id
@@ -74171,7 +74158,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "id": 'success-' + bidTask.id
       }
-    })]), _vm._v(" "), _c('td', [(bidTask.bid_price == 0) ? _c('div', [_c('button', {
+    })]), _vm._v(" "), _c('td', [(bidTask.accepted == 0) ? _c('div', [_c('button', {
       staticClass: "btn btn-primary",
       attrs: {
         "id": bidTask.id

@@ -4,11 +4,11 @@
 
     <job
             usertype="{{ $userType }}"
-            p-job="{{ $job }}"
-            p-bids="{{ $bids }}"
-            p-contractor="{{ $contractor }}"
-            p-customer="{{ $customer }}"
-            p-tasks="{{ $tasks }}"
+            :job="{{ $job }}"
+            :bids="{{ $bids }}"
+            :contractor="{{ $contractor }}"
+            :customer="{{ $customer }}"
+            :tasks="{{ $tasks }}"
             >
     </job>
 

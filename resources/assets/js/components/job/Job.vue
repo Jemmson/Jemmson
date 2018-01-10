@@ -53,36 +53,26 @@
           startDate: '',
           endDate: ''
         },
-        bids: {},
-        job: {},
-        contractor: {},
-        customer: {},
-        tasks: {},
       }
     },
     beforeMount: function () {
       this.loadJobStore ()
-      this.bids = JSON.parse(this.pBids);
-      this.job = JSON.parse(this.pJob);
-      this.contractor = JSON.parse(this.pContractor);
-      this.customer = JSON.parse(this.pCustomer);
-      this.tasks = JSON.parse(this.pTasks);
     },
     props: {
-      pBids: {
-        type: String,
+      bids: {
+        type: Array,
       },
-      pJob: {
-        type: String,
+      job: {
+        type: Object,
       },
-      pContractor: {
-        type: String
+      contractor: {
+        type: Object
       },
-      pCustomer: {
-        type: String
+      customer: {
+        type: Object
       },
-      pTasks: {
-        type: String
+      tasks: {
+        type: Array
       },
       usertype: {
         type: String
