@@ -88,17 +88,17 @@ class JobController extends Controller
     {
         //dd($job);
         $bids = Task::getBidPrices($job->id);
-        $contractor = Contractor::find($job->contractor_id);
-        if (Customer::find($job->customer_id) == null) {
+        $contractor = Contractor::with('user')->find($job->contractor_id);
+        $customer = Customer::with('user')->find($job->customer_id);
+        
+        if ($customer == null) {
             $customer = "[]";
-        } else {
-            $customer = Customer::find($job->customer_id)->get()->first();
         }
-        $customerUserData = User::find(1)->where('id', '=', $job->customer_id)->get();
+        
         $tasks = $job->tasks()->get();
         $userType = Auth::user()->usertype;
         return view('jobs.edit_job',
-            compact('job', 'contractor', 'customer', 'tasks', 'userType', 'customerUserData', 'bids'));
+            compact('job', 'contractor', 'customer', 'tasks', 'userType', 'bids'));
     }
 
     public function updateJobDate(Request $request)
