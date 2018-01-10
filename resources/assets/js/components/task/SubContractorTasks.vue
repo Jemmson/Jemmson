@@ -26,9 +26,9 @@
               <tbody>
                 <tr v-for="bidTask in tasks" v-bind:value="bidTask.id">
                   <th scope="row">{{ bidTask.id }}</th>
-                  <td>{{ bidTask.name }}</td>
+                  <td>{{ bidTask.task.name }}</td>
                   <td>
-                    <div v-if="bidTask.bid_price == 0">
+                    <div v-if="bidTask.accepted == 0">
                       <input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price" />
                     </div>
                     <div v-else>
@@ -40,7 +40,7 @@
                     </span>
                   </td>
                   <td>
-                    <div v-if="bidTask.bid_price == 0">
+                    <div v-if="bidTask.accepted == 0">
                       <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id">Submit</button>
                     </div>
                     <div v-else>
@@ -78,9 +78,6 @@
         }).then((response) => {
           // TODO: security review
           console.log(response);
-
-          $('#price-' + id).prop('disabled', true);
-          $('#' + id).prop('disabled', true);
 
           $('#success-' + id).css('display', 'block');
           $('#success-' + id).text('Bid has been sent.');
