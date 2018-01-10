@@ -19,6 +19,8 @@
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Task Name</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">Area</th>
                   <th scope="col">Price</th>
                   <th scope="col"></th>
                 </tr>
@@ -26,9 +28,11 @@
               <tbody>
                 <tr v-for="bidTask in tasks" v-bind:value="bidTask.id">
                   <th scope="row">{{ bidTask.id }}</th>
-                  <td>{{ bidTask.name }}</td>
+                  <td>{{ bidTask.task.name }}</td>
+                  <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
+                  <td>{{ bidTask.job_task.area }}</td>
                   <td>
-                    <div v-if="bidTask.bid_price == 0">
+                    <div v-if="bidTask.accepted == 0">
                       <input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price" />
                     </div>
                     <div v-else>
@@ -40,7 +44,7 @@
                     </span>
                   </td>
                   <td>
-                    <div v-if="bidTask.bid_price == 0">
+                    <div v-if="bidTask.accepted == 0">
                       <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id">Submit</button>
                     </div>
                     <div v-else>
@@ -67,6 +71,13 @@
       }
     },
     methods: {
+      prettyDate: function (date) {
+        if (date == null)
+          return '';
+        // return the date and ignore the time
+        date = date.split(' ');
+        return date[0];
+      },
       update: function (e) {
         let id = e.target.id;
         let bid_price = $('#price-' + id).val();
@@ -78,9 +89,6 @@
         }).then((response) => {
           // TODO: security review
           console.log(response);
-
-          $('#price-' + id).prop('disabled', true);
-          $('#' + id).prop('disabled', true);
 
           $('#success-' + id).css('display', 'block');
           $('#success-' + id).text('Bid has been sent.');

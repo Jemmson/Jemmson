@@ -5,23 +5,35 @@
         <!--<pre>{{ getUserType }}</pre>-->
         <!--<pre> {{ getCustomer }}</pre>-->
         <div class="customerRegisteredAlert" v-show="getCustomerObject">Customer Has Not Registered Yet</div>
-        <div class="wrapper">
-            <h3 class="customerName">Customer Name: {{ getCustomerName }}</h3>
-            <info-label class="infoLabel" label="Job Name" :value="jobName()"></info-label>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="col-md-6">
+                  <h3 class="customerName"><b>Customer Name:</b> {{ customer.user.name }}</h3>
+                  </div>
+                  <div class="col-md-6">
+                  <info-label class="infoLabel" label="Job Name" :value="job.job_name"></info-label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
             <!--<jemm-date class="startDate" label="Job Start Date" serverurl="/job/update" dbcolumn="agreed_start_date"-->
             <!--&gt;</jemm-date>-->
             <!--<jemm-date class="endDate" label="Job End Date" serverurl="/job/update" dbcolumn="agreed_end_date"-->
             <!--&gt;</jemm-date>-->
         </div>
         <currentTasksForJob
-                :customerId="getCustomerId"
+                :customerId="customer.id"
                 :bids="bids"
-                :user="getUserType"
-                :jobid="getJobId"
-                :jobStatus="getJobStatus"
+                :user="contractor.user.usertype"
+                :jobid="job.id"
+                :jobStatus="job.status"
                 class="currentTasksForJob"
-                :allTasks="getTasks"
-                :contractorId="getContractorId"
+                :allTasks="tasks"
+                :contractorId="contractor.user.id"
         >
         </currentTasksForJob>
         <!--<button class="btn btn-primary btn-lg" @click="showAddTask()">Add Task</button>-->
@@ -52,7 +64,7 @@
         selectedDates: {
           startDate: '',
           endDate: ''
-        }
+        },
       }
     },
     beforeMount: function () {
@@ -60,24 +72,21 @@
     },
     props: {
       bids: {
-        type: String,
+        type: Array,
       },
       job: {
-        type: String,
+        type: Object,
       },
       contractor: {
-        type: String
+        type: Object
       },
       customer: {
-        type: String
+        type: Object
       },
       tasks: {
-        type: String
+        type: Array
       },
       usertype: {
-        type: String
-      },
-      customeruserdata: {
         type: String
       },
     },
@@ -89,63 +98,18 @@
       JemmDate
     },
     computed: {
-      getCustomerObject () {
-//        console.log(this.customer)
-        return this.customer === '[]'
-      },
       date () {
         return this.$moment (new Date (), 'MMMM YYYY')
       },
-      getJobId () {
-        let job = JSON.parse(this.job)
-        console.log(job.id)
-        return job.id
-      },
-      getJobStatus () {
-        let job = JSON.parse(this.job)
-        console.log(job.status)
-        return job.status
-      },
-      getCustomerId () {
-        // debugger;
-        let customer = JSON.parse(this.customer)
-        console.log(customer.id)
-        return customer.id
-      },
-      getContractorId () {
-        // debugger;
-        let contractor = JSON.parse(this.contractor)
-        console.log(contractor.id)
-        return contractor.id
-      },
-      getCustomer () {
-//        return JSON.parse (this.customer)
-//        return customer
-      },
-      getCustomerName () {
-        let cud = this.customeruserdata
-        let val = cud.substr(1, cud.length - 2)
-        let customerName = JSON.parse(val)
-        return customerName.name
-      },
-      getTasks () {
-        return JSON.parse (this.tasks)
-      },
-      getUserType () {
-        console.log (this.usertype)
-        console.log (typeof this.usertype)
-        return this.usertype;
+      getCustomerObject () {
+//        console.log(this.customer)
+        return this.customer === '[]'
       }
     },
     methods: {
 //      ...mapMutations([
 //          'loadJobStore'
 //      ]),
-      jobName () {
-        let job = JSON.parse (this.job)
-        console.log(job)
-        return job.job_name
-      },
       loadJobStore () {
 //        this.$store.commit ('job/loadStore', this.job)
       },
@@ -163,7 +127,7 @@
           this.$emit ('taskIsAdded')
         })
       }
-    }
+    },
   }
 </script>
 

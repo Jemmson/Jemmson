@@ -25,7 +25,7 @@ class Contractor extends Model
     //
     public function user()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class);
     }
 
     public function jobs()
@@ -58,7 +58,7 @@ class Contractor extends Model
      */
     public function bidJobTasks()
     {
-        return $this->hasMany(BidContractorJobTask::class, 'contractor_id')->get();
+        return $this->hasMany(BidContractorJobTask::class, 'contractor_id')->with(['task', 'jobTask']);
     }
 
     public function addContractorToBidForJobTable($contractorId, $taskId, $jobId)
