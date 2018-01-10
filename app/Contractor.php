@@ -58,7 +58,7 @@ class Contractor extends Model
      */
     public function bidJobTasks()
     {
-        return $this->hasMany(BidContractorJobTask::class, 'contractor_id')->get();
+        return $this->hasMany(BidContractorJobTask::class, 'contractor_id')->with('task');
     }
 
     public function addContractorToBidForJobTable($contractorId, $taskId, $jobId, $area)
