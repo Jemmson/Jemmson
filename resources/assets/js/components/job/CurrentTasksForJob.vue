@@ -135,7 +135,7 @@
                         </button>
                       </td>
                       <td>
-                        <button class="btn btn-sm btn-success button" @click="notifyCustomerOfFinishedBid()">
+                        <button class="btn btn-sm btn-warning button" @click="openModal('notifyCustomerOfFinishedBid')">
                           Notify Customer of Finished Bid
                         </button>
                       </td>
@@ -155,9 +155,12 @@
               <div class="panel-body">
                 <form>
                   <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                       <label for="taskName">Task Name</label>
                       <input type="text" class="form-control" id="taskName" name="taskName" v-model="newTaskName" v-on:keyup="getExistingTask">
+                      <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
+                            {{ addNewTaskForm.errors.get('taskName') }}
+                      </span>
                       <div class="panel-footer" v-if="taskResults.length">
                         <ul class="list-group">
                           <button class="list-group-item" v-for="result in taskResults" :name="result.phone" @click="fillTaskPrice(result)">
@@ -172,19 +175,28 @@
                       <input type="text" class="form-control" id="area" name="area" required v-model="area">
                     </div>
 
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-12" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
                       <label for="start_date">Start Date</label>
                       <input type="date" class="form-control" id="start_date" name="start_date" required v-model="start_date">
+                      <span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">
+                            {{ addNewTaskForm.errors.get('start_date') }}
+                      </span>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                       <label for="custTaskPrice">Customer Task Price</label>
                       <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="taskPrice">
+                      <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
+                            {{ addNewTaskForm.errors.get('taskPrice') }}
+                      </span>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
                       <label for="subTaskPrice">Sub Task Price</label>
-                      <input type="text" class="form-control" id="subTaskPrice" name="taskPrice" v-model="subTaskPrice">
+                      <input type="text" class="form-control" id="subTaskPrice" name="subTaskPrice" v-model="subTaskPrice">
+                      <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
+                            {{ addNewTaskForm.errors.get('subTaskPrice') }}
+                      </span>
                     </div>
                     <div class=" col-md-12">
                       <button id="submitTask" class="btn btn-default btn-success" @click.prevent="addNewTask()">
@@ -291,6 +303,8 @@
         </div>
         <!-- /end col-md-6 -->
       </div>
+      <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()">
+      </modal>
     </div>
   </div>
 </template>
@@ -346,7 +360,27 @@
         taskResults: [],
         showDetailsPanel: false,
         start_date: '',
+        modalHeader: '',
+        modalBody: '',
+        modalId: '',
+        modalCurrentlyOpenFor: '',
+        jobStatus: '',
+        detailId: '',
+        addNewTaskForm: new SparkForm({
+          taskId: '',
+          taskExists: '',
+          jobId: '',
+          subTaskPrice: '',
+          taskPrice: '',
+          taskName: '',
+          contractorId: '',
+          area: '',
+          start_date: '',
+        }),
       }
+    },
+    beforeMount () {
+      this.jobStatus = this.pJobStatus;
     },
     mounted() {
       if (this.allTasksData === '') {
@@ -368,7 +402,7 @@
       jobid: {
         type: Number
       },
-      jobStatus: {
+      pJobStatus: {
         type: String
       },
       customerId: {
@@ -429,34 +463,36 @@
         // I want the task to associated to a job, customer, and contractor
         console.log('adding a new task method is being called')
         // I want to add the existing task to the job
-        console.log(this.task)
-        console.log(this.task.id)
-        console.log(this.taskExists)
-        console.log(this.jobid)
-        console.log(this.taskPrice)
-        console.log(this.newTaskName)
-        console.log(this.contractorId)
-        console.log(this.subTaskPrice)
+        this.addNewTaskForm.taskId = this.task.id;
+        this.addNewTaskForm.taskExists = this.taskExists;
+        this.addNewTaskForm.jobId = this.jobid;
+        this.addNewTaskForm.subTaskPrice = this.subTaskPrice;
+        this.addNewTaskForm.taskPrice = this.taskPrice;
+        this.addNewTaskForm.taskName = this.newTaskName;
+        this.addNewTaskForm.contractorId = this.contractorId;
+        this.addNewTaskForm.area = this.area;
+        this.addNewTaskForm.start_date = this.start_date;
+
+        console.log(this.addNewTaskForm);
+
         // debugger
         this.checkIfTaskExists()
-        axios.post('/api/task/addTask', {
-          taskId: this.task.id,
-          taskExists: this.taskExists,
-          jobId: this.jobid,
-          subTaskPrice: this.subTaskPrice,
-          taskPrice: this.taskPrice,
-          taskName: this.newTaskName,
-          contractorId: this.contractorId,
-          area: this.area,
-          start_date: this.start_date,
-        }).then(function (response) {
+        Spark.post('/api/task/addTask', this.addNewTaskForm)
+        .then(function (response) {
           console.log(this.allTasksData)
-          console.log(response.data)
-          this.allTasksData.push(response.data)
+          console.log(response)
+          // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
+          this.allTasksData.push(response)
           this.setUpShowDetailsArray()
           this.clearTaskResults()
           console.log(this.allTasksData)
-        }.bind(this))
+        }.bind(this)).catch(error => {
+          // NOTICE: lets us do addNewTaskForm.errors.has('errorName') to check if this error exists & addNewTaskForm.errors.get('errorName') to get the error message
+          // usually we don't have to do this, but api routes messes this up
+          // we don't have to do this for web routes we can just call addNewTaskForm.errors.has('errorName')
+          // without catching the error and assigning the errors
+          this.addNewTaskForm.errors.errors = this.addNewTaskForm.errors.errors.errors;
+        });
 
       },
       clearTaskResults () {
@@ -470,12 +506,37 @@
           this.task = {} // cant pass in a task if the task does not exist and I dont want to pass a prior selected task
         }
       },
+      openModal (forBtn) {
+        // update model header and body
+        switch (forBtn) {
+          case 'notifyCustomerOfFinishedBid' : 
+            this.updateModal('Bid Finished', 'You are about to submit this job bid to the customer,' + 
+                                         'you will not be able to edit this bid after its been submitted.' +
+                                         ' Click yes to submit or no to cancel.',
+                                         'notifyCustomerOfFinishedBid');
+            this.modalCurrentlyOpenFor = 'notifyCustomerOfFinishedBid';
+            break;
+        }
+
+        // open model after contect has been udpated
+        $('#modal').modal();
+      },
+      modalYes () {
+        switch (this.modalCurrentlyOpenFor) {
+          case 'notifyCustomerOfFinishedBid' : 
+            this.notifyCustomerOfFinishedBid();
+            $('#modal').modal('hide');
+            break;
+        }
+      },
       notifyCustomerOfFinishedBid () {
+        console.log('notifyCustomerOfFinishedBid');
         axios.post('/api/task/finishedBidNotification', {
           jobId: this.jobid,
           customerId: this.customerId
         }).then(function (response) {
           console.log(response.data)
+          this.jobStatus = 'Waiting For Customer Approval'; // TODO: need to get actual confirmation
           this.updateAllTasksData(response.data.price, response.data.taskId)
         }.bind(this))
       },
@@ -581,7 +642,12 @@
         // hide add task panel TODO: should be animations for better UX
         this.showNewTask = false;
         // toggle details panel 
-        this.showDetailsPanel = true;
+        if (index === this.detailId) {
+          this.showDetailsPanel = !this.showDetailsPanel;
+        } else {
+          this.showDetailsPanel = true;
+          this.detailId = index;
+        }
         
         this.hideAllTables()
         for (let obj of this.showDetails) {
@@ -850,6 +916,11 @@
           this.initiateSubTask = true
           this.taskId = taskId
         }
+      },
+      updateModal (header, body, id) {
+        this.modalHeader = header;
+        this.modalBody = body;
+        this.modalId = id;
       }
     }
   }
