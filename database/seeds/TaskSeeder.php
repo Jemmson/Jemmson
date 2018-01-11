@@ -15,20 +15,41 @@ class TaskSeeder extends Seeder
     {
         //
         $faker = Faker\Factory::create();
-        for ($i = 1; $i < 5; $i++) {
-            for ($j = 1; $j < 10; $j++) {
-                $contractor = Contractor::find($i);
-                $data = [
-                    'name' => $faker->name,
-                    'standard_task_id' => rand(1, 1000),
-                    'contractor_id' => $contractor->id,
+        $data = [
+                    'name' => 'Fix Water Filter',
+                    'standard_task_id' => rand(1, 4),
+                    'contractor_id' => 1,
                     'proposed_cust_price' => rand(1, 1000),
                     'average_cust_price' => rand(1, 1000),
                     'proposed_sub_price' => rand(1, 1000),
                     'average_sub_price' => rand(1, 1000),
-                ];
-                Task::create($data);
-            }
-        }
+        ];
+        Task::create($data);
+
+        $data = [
+                    'name' => 'Fix Toilet',
+                    'standard_task_id' => rand(1, 4),
+                    'contractor_id' => 2,
+                    'proposed_cust_price' => rand(1, 1000),
+                    'average_cust_price' => rand(1, 1000),
+                    'proposed_sub_price' => rand(1, 1000),
+                    'average_sub_price' => rand(1, 1000),
+        ];
+        Task::create($data);
+        // for ($i = 1; $i < 5; $i++) {
+        //     for ($j = 1; $j < 10; $j++) {
+        //         $contractor = Contractor::find($i);
+        //         $data = [
+        //             'name' => $faker->name,
+        //             'standard_task_id' => rand(1, 1000),
+        //             'contractor_id' => $contractor->id,
+        //             'proposed_cust_price' => rand(1, 1000),
+        //             'average_cust_price' => rand(1, 1000),
+        //             'proposed_sub_price' => rand(1, 1000),
+        //             'average_sub_price' => rand(1, 1000),
+        //         ];
+        //         Task::create($data);
+        //     }
+        // }
     }
 }

@@ -2,6 +2,7 @@
     <div>
         <h1 class="text-center">Please Initiate a Bid With A Customer</h1>
         <label for="customerName">Customer Name *</label>
+
         <input
                 name="customerName"
                 id="customerName"

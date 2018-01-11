@@ -1,5 +1,5 @@
 <template>
-    <h3>{{ label }}:
+    <h3><b>{{ label }}:</b>
         <span>{{ value }}</span>
     </h3>
 </template>

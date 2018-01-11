@@ -64,15 +64,14 @@
                             <div class="panel-body">
                                 <div class="col-md-12 panelTop">
                                     <div class="col-md-8">
-                                        <h2>Type of Work</h2>
-                                        <p>Select me to look at the type of work
-                                            that I do and the prices that I charge</p>
+                                        <h2>Task Bids</h2>
+                                        <p>Select me to look at the task bids sent to me</p>
                                     </div>
                                 </div>
                                 <div class="col-md-12 panelBottom">
-                                    <a href="">
+                                    <a href="/bid/tasks">
                                         <button class="btn btn-default btn-primary">
-                                            Type of work
+                                            Task Bids
                                         </button>
                                     </a>
                                 </div>
@@ -229,6 +228,26 @@
                                     <a href="">
                                         <button class="btn btn-default btn-primary">
                                             Settings
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default  panel--styled">
+                            <div class="panel-body">
+                                <div class="col-md-12 panelTop">
+                                    <div class="col-md-8">
+                                        <h2>Type of Work</h2>
+                                        <p>Select me to look at the type of work
+                                            that I do and the prices that I charge</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 panelBottom">
+                                    <a href="">
+                                        <button class="btn btn-default btn-primary">
+                                            Type of work
                                         </button>
                                     </a>
                                 </div>
