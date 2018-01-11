@@ -30,7 +30,7 @@
                 :bids="bids"
                 :user="contractor.user.usertype"
                 :jobid="job.id"
-                :jobStatus="job.status"
+                :pJobStatus="job.status"
                 class="currentTasksForJob"
                 :allTasks="tasks"
                 :contractorId="contractor.user.id"

@@ -440,7 +440,13 @@ class TaskController extends Controller
 
     public function addTask(Request $request)
     {
-
+        $this->validate($request, [
+            'taskName' => 'required|string',
+            'taskPrice' => 'required|numeric',
+            'subTaskPrice' => 'required|numeric',
+            'start_date' => 'required|date'
+        ]);
+        
         $jobId = $request->jobId;
         $taskId = $request->taskId;
         $taskPrice = $request->taskPrice;

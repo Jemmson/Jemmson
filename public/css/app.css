@@ -7373,3 +7373,7 @@ body {
 [v-cloak] {
   display: none;
 }
+.modal-footer .btn {
+  padding-left: 24px;
+  padding-right: 24px;
+}
