@@ -446,7 +446,7 @@ class TaskController extends Controller
             'subTaskPrice' => 'required|numeric',
             'start_date' => 'required|date'
         ]);
-        
+     
         $jobId = $request->jobId;
         $taskId = $request->taskId;
         $taskPrice = $request->taskPrice;
@@ -455,6 +455,9 @@ class TaskController extends Controller
         $subTaskPrice = $request->subTaskPrice;
         $area = $request->area;
         $start_date = $request->start_date;
+
+        // example of standard way to return errors for apis - we should standardize our errors to this
+        //return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 422);
 
         if ($request->taskExists) {
             // 1. add the task to the job task table

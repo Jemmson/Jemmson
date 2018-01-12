@@ -155,11 +155,22 @@
               <div class="panel-body">
                 <form>
                   <div class="row">
+                    <!-- /form feedback, commented out since found good mobile first notification option -->
+                    <!-- <div class="form-group col-md-12">
+                      <transition name="slide-fade">
+                        <div class="alert alert-success" v-if="addNewTaskForm.successful">
+                          New Task Added!
+                        </div>
+                        <div class="alert alert-danger" v-if="addNewTaskForm.errors.has('error')">
+                          {{ addNewTaskForm.errors.get('error') }}
+                        </div>
+                      </transition>
+                    </div> -->
                     <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                       <label for="taskName">Task Name</label>
                       <input type="text" class="form-control" id="taskName" name="taskName" v-model="newTaskName" v-on:keyup="getExistingTask">
                       <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
-                            {{ addNewTaskForm.errors.get('taskName') }}
+                        {{ addNewTaskForm.errors.get('taskName') }}
                       </span>
                       <div class="panel-footer" v-if="taskResults.length">
                         <ul class="list-group">
@@ -179,7 +190,7 @@
                       <label for="start_date">Start Date</label>
                       <input type="date" class="form-control" id="start_date" name="start_date" required v-model="start_date">
                       <span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">
-                            {{ addNewTaskForm.errors.get('start_date') }}
+                        {{ addNewTaskForm.errors.get('start_date') }}
                       </span>
                     </div>
 
@@ -187,7 +198,7 @@
                       <label for="custTaskPrice">Customer Task Price</label>
                       <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="taskPrice">
                       <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
-                            {{ addNewTaskForm.errors.get('taskPrice') }}
+                        {{ addNewTaskForm.errors.get('taskPrice') }}
                       </span>
                     </div>
 
@@ -195,7 +206,7 @@
                       <label for="subTaskPrice">Sub Task Price</label>
                       <input type="text" class="form-control" id="subTaskPrice" name="subTaskPrice" v-model="subTaskPrice">
                       <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
-                            {{ addNewTaskForm.errors.get('subTaskPrice') }}
+                        {{ addNewTaskForm.errors.get('subTaskPrice') }}
                       </span>
                     </div>
                     <div class=" col-md-12">
@@ -486,12 +497,16 @@
           this.setUpShowDetailsArray()
           this.clearTaskResults()
           console.log(this.allTasksData)
+          // show a toast notification
+          this.$toasted.success('New Task Added!');
         }.bind(this)).catch(error => {
           // NOTICE: lets us do addNewTaskForm.errors.has('errorName') to check if this error exists & addNewTaskForm.errors.get('errorName') to get the error message
           // usually we don't have to do this, but api routes messes this up
           // we don't have to do this for web routes we can just call addNewTaskForm.errors.has('errorName')
           // without catching the error and assigning the errors
           this.addNewTaskForm.errors.errors = this.addNewTaskForm.errors.errors.errors;
+          // show a toast notification
+          this.$toasted.error('Whoops! Something went wrong! Please try again.');
         });
 
       },
@@ -499,7 +514,7 @@
         this.taskResults = ''
       },
       checkIfTaskExists () {
-        if (this.selectedTaskName === this.newTaskName) {
+        if (this.selectedTaskName === this.newTaskName && this.selectedTaskName !== '') {
           this.taskExists = true
         } else {
           this.taskExists = false
