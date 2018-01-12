@@ -6,7 +6,6 @@
         <input
                 name="customerName"
                 id="customerName"
-                :value="name"
                 :placeholder="name"
                 type="text"
                 v-model="query"
