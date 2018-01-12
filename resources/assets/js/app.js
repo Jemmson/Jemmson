@@ -45,3 +45,12 @@ var app = new Vue({
   mixins: [require('spark')],
   store
 });
+
+
+// register the plugin on vue
+import Toasted from 'vue-toasted';
+
+Vue.use(Toasted, {
+  duration: 5000,
+  theme: 'bubble',
+})
