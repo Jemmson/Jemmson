@@ -6,19 +6,22 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Auth;
 
-class NotifySubOfAcceptedBid extends Notification
+class NotifyContractorOfSubBid extends Notification
 {
     use Queueable;
-    protected $bid;
+    protected $user;
+    protected $subName;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($bid)
+    public function __construct($user, $subName)
     {
-        $this->bid = $bid;
+        $this->user = $user;
+        $this->subName = $subName;
     }
 
     /**
@@ -41,8 +44,9 @@ class NotifySubOfAcceptedBid extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Your bid for ' . $this->bid->name . ' has been accepted')
-                    ->action('View Job', url('/job/' . $this->bid->id))
+                    ->line('Hello ' . $this->user->name . ' Contractor ' . $this->subName)
+                    ->line('Has just submitted a bid for the task you sent him.')
+                    ->action('View Bid', url('/job/edit/1'))
                     ->line('Thank you for using our application!');
     }
 

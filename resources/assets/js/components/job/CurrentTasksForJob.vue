@@ -255,7 +255,7 @@
                           <td>{{ bid.contractorName[0].name }}</td>
                           <td>{{ bid.bid_price }}</td>
                           <td>
-                            <button @click="acceptBid(bid.id, task.id, bid.bid_price)" class="button btn btn-sm btn-success">Accept
+                            <button @click="acceptBid(bid.id, task.id, bid.bid_price, bid.contractor_id)" class="button btn btn-sm btn-success">Accept
                             </button>
                           </td>
                           <td>
@@ -609,14 +609,15 @@
       hideDuplicateUserWarning () {
         this.possibleDuplicateUserAlert = false
       },
-      acceptBid (bidId, taskId, price) {
+      acceptBid (bidId, taskId, price, contractorId) {
         console.log('id: ' + bidId)
         console.log('task id: ' + taskId)
         axios.post('/api/task/accept', {
           bidId: bidId,
           jobId: this.jobid,
           taskId: taskId,
-          price: price
+          price: price,
+          contractorId: contractorId,
         }).then(function (response) {
           console.log(response.data)
           this.updateAllTasksData(response.data.price, response.data.taskId)

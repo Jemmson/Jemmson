@@ -22,6 +22,7 @@
                   <th scope="col">Start Date</th>
                   <th scope="col">Area</th>
                   <th scope="col">Price</th>
+                  <th scope="col">Status</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -32,7 +33,7 @@
                   <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
                   <td>{{ bidTask.job_task.area }}</td>
                   <td>
-                    <div v-if="bidTask.accepted == 0">
+                    <div v-if="!bidTask.accepted">
                       <input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price" />
                     </div>
                     <div v-else>
@@ -44,11 +45,14 @@
                     </span>
                   </td>
                   <td>
-                    <div v-if="bidTask.accepted == 0">
+                    {{ status(bidTask) }}
+                  </td>
+                  <td>
+                    <div v-if="!bidTask.accepted">
                       <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id">Submit</button>
                     </div>
                     <div v-else>
-                      <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" disabled>Submit</button>
+                      <button class="btn btn-primary" v-bind:id="bidTask.id" disabled>Submit</button>
                     </div>
                   </td>
                 </tr>
@@ -71,6 +75,23 @@
       }
     },
     methods: {
+      status: function (bid_task) {
+        let job_task = bid_task.job_task;
+
+        // did the contractor go with someone else?
+        // TODO: is this the best place for this?
+        if (job_task.contractor_id !== bid_task.contractor_id) {
+          return 'Declined';
+        }
+
+        let lang = Language.lang()[job_task.status];
+        // if no status then waiting on bid
+        if (lang === undefined) {
+          return 'Waiting On Bid';
+        }
+        // return status for sub
+        return lang.sub;
+      },
       prettyDate: function (date) {
         if (date == null)
           return '';

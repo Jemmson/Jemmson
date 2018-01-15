@@ -41,6 +41,7 @@
                     </div>
                 </div>
             </div>
+            <!-- /end col-md-8 -->
             <transition name="slide-fade">
                 <div class="col-md-8 col-md-offset-2" v-if="!showBidList">
                     <div class="panel panel-default">
@@ -49,10 +50,6 @@
                             <form role="form">
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label for="area">City</label>
-                                        <input type="text" class="form-control" id="area" name="area" required v-model="bidForm.area">
-                                    </div>
-                                    <div class="form-group col-md-6">
                                         <label for="area">Start Date</label>
                                         <input type="text" class="form-control" id="area" name="area" required v-model="bidForm.start_date">
                                     </div>
@@ -60,12 +57,17 @@
                                         <label for="area">End Date</label>
                                         <input type="text" class="form-control" id="area" name="area" required v-model="bidForm.end_date">
                                     </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="area">City</label>
+                                        <input type="text" class="form-control" id="area" name="area" required v-model="bidForm.area">
+                                    </div>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </transition>
+            <!-- /end transition -->
         </div>
     </div>
 </template>
