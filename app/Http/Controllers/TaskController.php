@@ -7,6 +7,7 @@ use App\Notifications\NotifySubOfAcceptedBid;
 use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfAcceptedBid;
 use App\Notifications\NotifyContractorOfDeclinedBid;
+use App\Notifications\NotifyContractorOfSubBid;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
@@ -112,20 +113,36 @@ class TaskController extends Controller
      */
     public function updateBidContractorJobTask(Request $request, $id)
     {
-        $task = BidContractorJobTask::find($id);
-        if ($task == null) {
+        $bidContractorJobTask = BidContractorJobTask::find($id);
+        if ($bidContractorJobTask == null) {
             return response()->json(["message"=>"Couldn't find record.","errors"=>["error" =>["Couldn't find record."]]], 404);
         }else if($request->bid_price == 0) {
             return response()->json(["message"=>"Price needs to be greater than 0.","errors"=>["error" =>[""]]], 412);
         }
-        $task->bid_price = $request->bid_price;
+
+        $bidContractorJobTask->bid_price = $request->bid_price;
+        $jobTask = $bidContractorJobTask->jobTask()->first();
+        $jobTask->status = 'bid_task.sent';
 
         try {
-            $task->save();
+            $bidContractorJobTask->save();
         } catch (\Exception $e) {
-            Log::error('Update Task:' . $e->getMessage());
+            Log::error('Update Bid Task:' . $e->getMessage());
             return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
+
+        try {
+            \DB::table('job_task')
+            ->where([['job_id', '=', $jobTask->job_id], ['task_id', '=', $jobTask->task_id]])
+            ->update(['status' => 'bid_task.sent']);
+        } catch (\Exception $e) {
+            $bidContractorJobTask->delete();
+            Log::error('Update Job Task: ' . $e->getMessage());
+            return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
+        }
+        $gContractor = Contractor::find($bidContractorJobTask->task()->first()->contractor_id)->user()->first();
+        $gContractor->notify(new NotifyContractorOfSubBid($gContractor, Contractor::find($bidContractorJobTask->contractor_id)->user()->first()->name));
+
         return response()->json(["message"=>"Success"], 200);
     }
 
@@ -345,10 +362,9 @@ class TaskController extends Controller
 //            ->update(['status' => config('app.taskIsAccepted')]);
 
         $user_id = Contractor::where('id', $contractorId)
-            ->get()
             ->first()
             ->user_id;
-        $user = User::where('id', $user_id)->get()->first();
+        $user = User::where('id', $user_id)->first();
 
         $user->notify(new NotifyContractorOfAcceptedBid());
     }

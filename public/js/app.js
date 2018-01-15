@@ -31660,21 +31660,22 @@ return Vue$3;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_InitiateBid_vue__ = __webpack_require__(151);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_InitiateBid_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_InitiateBid_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_job_Job_vue__ = __webpack_require__(153);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_job_Job_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_job_Job_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_job_Task_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_job_Task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_job_Task_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_job_InfoLabel_vue__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_job_InfoLabel_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_job_InfoLabel_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_job_Contracts_vue__ = __webpack_require__(152);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_job_Contracts_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_job_Contracts_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_job_CurrentTasksForJob_vue__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_job_CurrentTasksForJob_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_job_CurrentTasksForJob_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__vuex_index__ = __webpack_require__(241);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_toasted__ = __webpack_require__(359);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_toasted___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_vue_toasted__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classes_Language__ = __webpack_require__(455);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_InitiateBid_vue__ = __webpack_require__(151);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_InitiateBid_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_InitiateBid_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_job_Job_vue__ = __webpack_require__(153);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_job_Job_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_job_Job_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_job_Task_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_job_Task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_job_Task_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_job_InfoLabel_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_job_InfoLabel_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_job_InfoLabel_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_job_Contracts_vue__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_job_Contracts_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_job_Contracts_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_job_CurrentTasksForJob_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_job_CurrentTasksForJob_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_job_CurrentTasksForJob_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__vuex_index__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vue_toasted__ = __webpack_require__(359);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vue_toasted___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_vue_toasted__);
 /*
  |--------------------------------------------------------------------------
  | Laravel Spark Bootstrap
@@ -31692,25 +31693,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 __webpack_require__(302);
 
+
+
+window.Language = __WEBPACK_IMPORTED_MODULE_0__classes_Language__["a" /* default */];
+
 __webpack_require__(186);
 
 
-Vue.component('initiate-bid', __WEBPACK_IMPORTED_MODULE_0__components_InitiateBid_vue___default.a);
+Vue.component('initiate-bid', __WEBPACK_IMPORTED_MODULE_1__components_InitiateBid_vue___default.a);
 
 
-Vue.component('job', __WEBPACK_IMPORTED_MODULE_1__components_job_Job_vue___default.a);
+Vue.component('job', __WEBPACK_IMPORTED_MODULE_2__components_job_Job_vue___default.a);
 
 
-Vue.component('task', __WEBPACK_IMPORTED_MODULE_2__components_job_Task_vue___default.a);
+Vue.component('task', __WEBPACK_IMPORTED_MODULE_3__components_job_Task_vue___default.a);
 
 
-Vue.component('infoLabel', __WEBPACK_IMPORTED_MODULE_3__components_job_InfoLabel_vue___default.a);
+Vue.component('infoLabel', __WEBPACK_IMPORTED_MODULE_4__components_job_InfoLabel_vue___default.a);
 
 
-Vue.component('contracts', __WEBPACK_IMPORTED_MODULE_4__components_job_Contracts_vue___default.a);
+Vue.component('contracts', __WEBPACK_IMPORTED_MODULE_5__components_job_Contracts_vue___default.a);
 
 
-Vue.component('currentTasksForJob', __WEBPACK_IMPORTED_MODULE_5__components_job_CurrentTasksForJob_vue___default.a);
+Vue.component('currentTasksForJob', __WEBPACK_IMPORTED_MODULE_6__components_job_CurrentTasksForJob_vue___default.a);
 
 
 
@@ -31720,13 +31725,13 @@ Spark.forms.register = {
 
 var app = new Vue({
   mixins: [__webpack_require__(303)],
-  store: __WEBPACK_IMPORTED_MODULE_6__vuex_index__["a" /* store */]
+  store: __WEBPACK_IMPORTED_MODULE_7__vuex_index__["a" /* store */]
 });
 
 // register the plugin on vue
 
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_7_vue_toasted___default.a, {
+Vue.use(__WEBPACK_IMPORTED_MODULE_8_vue_toasted___default.a, {
   duration: 5000,
   theme: 'bubble'
 });
@@ -33858,6 +33863,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -34464,6 +34471,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user', 'bidTasks'],
@@ -34474,6 +34485,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   methods: {
+    lang: function (id) {
+      console.log(id);
+      let txt = Language.lang()[id];
+      if (txt === undefined) {
+        return 'Waiting On Bid';
+      }
+      return txt.sub;
+    },
     prettyDate: function (date) {
       if (date == null) return '';
       // return the date and ignore the time
@@ -74601,35 +74620,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "area"
     }
-  }, [_vm._v("City")]), _vm._v(" "), _c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.bidForm.area),
-      expression: "bidForm.area"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "id": "area",
-      "name": "area",
-      "required": ""
-    },
-    domProps: {
-      "value": (_vm.bidForm.area)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.$set(_vm.bidForm, "area", $event.target.value)
-      }
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "form-group col-md-6"
-  }, [_c('label', {
-    attrs: {
-      "for": "area"
-    }
   }, [_vm._v("Start Date")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
@@ -74680,6 +74670,35 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.$set(_vm.bidForm, "end_date", $event.target.value)
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "form-group col-md-6"
+  }, [_c('label', {
+    attrs: {
+      "for": "area"
+    }
+  }, [_vm._v("City")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.bidForm.area),
+      expression: "bidForm.area"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "id": "area",
+      "name": "area",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.bidForm.area)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.$set(_vm.bidForm, "area", $event.target.value)
       }
     }
   })])])])])])]) : _vm._e()])], 1)])
@@ -74750,7 +74769,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "scope": "row"
       }
-    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.task.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bidTask.job_task.start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.job_task.area))]), _vm._v(" "), _c('td', [(bidTask.accepted == 0) ? _c('div', [_c('input', {
+    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.task.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bidTask.job_task.start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.job_task.area))]), _vm._v(" "), _c('td', [(bidTask.accepted) ? _c('div', [_c('input', {
       attrs: {
         "type": "text",
         "id": 'price-' + bidTask.id
@@ -74783,7 +74802,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "id": 'success-' + bidTask.id
       }
-    })]), _vm._v(" "), _c('td', [(bidTask.accepted == 0) ? _c('div', [_c('button', {
+    })]), _vm._v(" "), _c('td', [_vm._v("\n                  " + _vm._s(_vm.lang(bidTask.job_task.status)) + "\n                ")]), _vm._v(" "), _c('td', [(bidTask.accepted) ? _c('div', [_c('button', {
       staticClass: "btn btn-primary",
       attrs: {
         "id": bidTask.id
@@ -74799,12 +74818,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "id": bidTask.id,
         "disabled": ""
-      },
-      on: {
-        "click": function($event) {
-          $event.preventDefault();
-          _vm.update($event)
-        }
       }
     }, [_vm._v("Submit")])])])])
   }))])])])])])])
@@ -74830,6 +74843,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "scope": "col"
     }
   }, [_vm._v("Price")]), _vm._v(" "), _c('th', {
+    attrs: {
+      "scope": "col"
+    }
+  }, [_vm._v("Status")]), _vm._v(" "), _c('th', {
     attrs: {
       "scope": "col"
     }
@@ -75877,6 +75894,123 @@ module.exports = function listToStyles (parentId, list) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(155);
+
+
+/***/ }),
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Language {
+    constructor() {}
+
+    static lang() {
+        return {
+            'bid_task.sent': {
+                sub: 'Waiting On Contractor Approval',
+                general: 'Waiting On Customer Approval'
+            },
+            'bid_task.approved': {
+                sub: 'Waiting On Customer Approval',
+                general: 'Job Approved'
+            }
+        };
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Language;
 
 
 /***/ })

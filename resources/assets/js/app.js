@@ -15,6 +15,10 @@
 
 require('spark-bootstrap');
 
+import Language from './classes/Language';
+
+window.Language = Language;
+
 require('./components/bootstrap');
 
 import InitiateBid from './components/InitiateBid.vue';

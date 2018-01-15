@@ -22,6 +22,17 @@ return [
     'taskIsInitiated' => 'initiated',
     'taskIsAccepted' => 'accepted',
 
+    'bid_task' => [
+        'sent'       =>  [
+            'sub'       => "Waiting On Contractor Approval",
+            'general'   => "Waiting On Customer Approval"
+        ],
+        'approved'   =>  [
+            'sub'      => "Waiting On Customer Approval",
+            'general'  => "Approved"
+        ]
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
