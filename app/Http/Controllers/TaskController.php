@@ -122,7 +122,8 @@ class TaskController extends Controller
 
         $bidContractorJobTask->bid_price = $request->bid_price;
         $jobTask = $bidContractorJobTask->jobTask()->first();
-        $jobTask->status = 'bid_task.sent';
+        // doesn't work since no default 'id' found
+        // $jobTask->status = 'bid_task.sent';
 
         try {
             $bidContractorJobTask->save();
@@ -136,7 +137,6 @@ class TaskController extends Controller
             ->where([['job_id', '=', $jobTask->job_id], ['task_id', '=', $jobTask->task_id]])
             ->update(['status' => 'bid_task.sent']);
         } catch (\Exception $e) {
-            $bidContractorJobTask->delete();
             Log::error('Update Job Task: ' . $e->getMessage());
             return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
@@ -328,23 +328,32 @@ class TaskController extends Controller
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $price = $request->price;
-        DB::table('bid_contractor_job_task')
-            ->where('job_id', $jobId)
-            ->where('task_id', $taskId)
-            ->update(['accepted' => 0]);
-        DB::table('bid_contractor_job_task')
-            ->where('id', $bidId)
-            ->update(['accepted' => 1]);
+        $contractor_id = $request->contractorId;
+        
+        // accept bid task
+        $bidContractorJobTask = $this->acceptBidContractorJobTask($bidId);
 
+        if ($bidContractorJobTask === false) {
+            return response()->json(["message"=>"Couldn't accept bid.","errors"=>["error" =>["Couldn't accept bid."]]], 404);
+        }
 
         // set the sub price in the job task table
         $job = Job::find($jobId);
         $task = $job->tasks()->get()->where('id', '=', $taskId)->first();
         $task->pivot->sub_final_price = $price;
+        // need to update the job task with the contractor who was chosen to do
+        // that job task
+        $task->pivot->contractor_id = $contractor_id;
+        $task->pivot->status = 'bid_task.approved';
         $task->pivot->save();
 
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
+
+        // notify sub contractor that his bid was approved
+        $user = $bidContractorJobTask->contractor()->first()->user()->first();
+        $user->notify(new NotifySubOfAcceptedBid($bidContractorJobTask->task));
+
         return $data;
     }
 
@@ -540,5 +549,21 @@ class TaskController extends Controller
         $jt->pivot->area = $area;
         $jt->pivot->start_date = $start_date;
         $jt->pivot->save();
+    }
+
+    protected function acceptBidContractorJobTask($id)
+    {
+        // get model
+        $bidContractorJobTask = BidContractorJobTask::find($id);
+
+        $bidContractorJobTask->accepted = true;
+
+        try {
+            $bidContractorJobTask->save();
+        } catch (\Excpetion $e) {
+            Log::error('Accept Bid: ' . $e->getMessage());
+            return false;
+        }
+        return $bidContractorJobTask;
     }
 }
