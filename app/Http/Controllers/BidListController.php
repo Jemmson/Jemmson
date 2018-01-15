@@ -11,6 +11,6 @@ class BidListController extends Controller
 {
   public function index()
   {
-      return view('/bid-list')->with(['jobs' => Auth::user()->jobs()]);
+      return view('/bid-list')->with(['jobs' => Auth::user()->jobs()->get()]);
   }
 }
