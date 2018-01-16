@@ -11,6 +11,8 @@ class BidListController extends Controller
 {
   public function index()
   {
-      return view('/bid-list')->with(['jobs' => Auth::user()->jobs()->get()]);
+      // load jobs and all their tasks along with those tasks relationships 
+      $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks')->get();
+      return view('/bid-list')->with(['jobs' => $jobs]);
   }
 }

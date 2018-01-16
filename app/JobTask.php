@@ -18,4 +18,8 @@ class JobTask extends Model
         return $this->belongsTo(Task::class);
     }
 
+    public function contractor()
+    {
+        return $this->belongsTo(Contractor::class);
+    }
 }

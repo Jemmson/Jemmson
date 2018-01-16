@@ -50,6 +50,21 @@ class Job extends Model
         return $this->belongsTo(Contractor::class, 'id');
     }
 
+    /**
+     * All subs who have a job task on this job
+     *
+     * @return void
+     */
+    public function subs()
+    {
+        $tasks = $this->tasks()->get();
+        $subs = [];
+        foreach ($tasks as $task) {
+            $subs[] = $task->jobTask()->first()->contractor()->first();
+        }
+        return $subs;
+    }
+
     public function tasks()
     {
         return $this->belongsToMany('App\Task')
