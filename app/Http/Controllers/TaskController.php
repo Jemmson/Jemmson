@@ -39,7 +39,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->bidJobTasks()->get();
+        $bidTasks = Auth::user()->contractor()->bidContractorJobTasks()->with(['task', 'jobTask'])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -272,6 +272,7 @@ class TaskController extends Controller
 
         // does the subcontractor exist?
         // if not then create a new one
+        // TODO: not working?
         $userData = $this->checkIfSubContractorExits($email, $phone);
 
 
