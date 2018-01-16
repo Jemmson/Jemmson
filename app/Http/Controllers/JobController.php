@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Validator;
 
+use App\Notifications\NotifyJobHasBeenApproved;
+
 class JobController extends Controller
 {
     /**
@@ -136,6 +138,48 @@ class JobController extends Controller
         $job->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Approve job
+     *
+     * @param Request $request
+     * @param Job $job
+     * @return void
+     */
+    public function approveJob(Request $request, Job $job)
+    {
+        $this->validate($request, [
+            'agreed_start_date' => 'required|date',
+            'city' => 'string'
+        ]);
+        // TODO what date needs to be updated here?
+        $job->agreed_start_date = $request->agreed_start_date;
+        $job->status = config('job.approved');
+
+        try {
+            $job->save();
+        } catch (\Exception $e) {
+            Log::error('Approve Job: ' . $e->getMessage());
+            return response()->json(["message"=>"Couldn't approve job.","errors"=>["error" =>[$e->getMessage()]]], 400);
+        }
+
+        $this->notifyAll(new NotifyJobHasBeenApproved($job), $job);
+
+        return response()->json($job, 200);
+    }
+
+    protected function notifyAll($notification, $job)
+    {
+        $generalContractor = $job->contractor()->first()->user()->first();
+        $subContractors = $job->subs();
+        
+        // notify general
+        $generalContractor->notify($notification);
+        $notification->setSub(true);
+        foreach ($subContractors as $sub) {
+            $sub->user()->first()->notify($notification);
+        }
     }
 
     public function action(Request $request)

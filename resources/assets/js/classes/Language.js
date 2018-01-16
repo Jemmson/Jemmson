@@ -12,6 +12,11 @@ export default class Language {
                 sub: 'Waiting On Customer Approval',
                 general: 'Job Approved'
             },
+            'job.approved': {
+                sub: 'Start Job',
+                general: 'Start Job',
+                customer: 'Approved',
+            }
         };
     }
 }

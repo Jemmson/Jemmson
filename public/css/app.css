@@ -7391,3 +7391,6 @@ body {
           transform: translateX(10px);
   opacity: 0;
 }
+.btn-close {
+  padding: 10px 16px 10px 16px;
+}
