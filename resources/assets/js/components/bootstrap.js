@@ -22,6 +22,7 @@ require('./job/CurrentTasksForJob.vue');
 
 Vue.component('subcontractor-tasks', require('./task/SubContractorTasks.vue'));
 Vue.component('customer-bidlist', require('./job/CustomerBidList.vue'));
+Vue.component('customer-bid', require('./job/CustomerBid.vue'));
 Vue.component('modal', require('./shared/Modal.vue'));
 
 // require('./Autocomplete.vue');

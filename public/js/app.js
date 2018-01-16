@@ -33322,6 +33322,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    status: function (status) {
+      return Language.lang()[status];
+    },
     addNewTask() {
       // I want the status to go from initiated to in progress when the first new task is added
       // I want each task to be added to the the tasks table
@@ -33470,6 +33473,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }).then(function (response) {
         console.log(response.data);
         this.updateAllTasksData(response.data.price, response.data.taskId);
+        this.$toasted.success('Accepted Bid!');
       }.bind(this));
 
       // return true
@@ -33881,6 +33885,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -33891,11 +33899,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             showBidList: true,
             showBid: false,
+            bidApproved: false,
+            bid: {},
             bidForm: new SparkForm({
                 id: 0,
                 agreed_start_date: '',
                 end_date: '',
-                area: ''
+                area: '',
+                status: ''
             })
         };
     },
@@ -33911,6 +33922,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.$toasted.error('Whoops! Something went wrong! Please try again.');
             });
         },
+        status: function (status) {
+            return Language.lang()[status].customer;
+        },
         prettyDate: function (date) {
             if (date == null) return '';
             // return the date and ignore the time
@@ -33918,10 +33932,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return date[0];
         },
         openBid: function (bid) {
+            console.log('openBid');
+
+            let status = this.status(bid.status);
+
+            // clone bid
+            this.bid = JSON.parse(JSON.stringify(bid));
+            this.bid.status = status;
+
+            this.bidApproved = status === 'Approved' || status === 'Waiting on Contractor to Submit Final Bid';
+
+            // set up form inputs
             this.bidForm.id = bid.id;
+            this.bidForm.status = status;
+            // hide show components
             this.showBidList = false;
             this.showBid = true;
-            console.log(bid);
         },
         closeBid: function () {
             console.log('closeBid');
@@ -34596,6 +34622,16 @@ class Language {
                 sub: 'Waiting On Customer Approval',
                 general: 'Job Approved'
             },
+            'bid.sent': {
+                sub: 'Waiting on Customer Approval',
+                general: 'Waiting on Customer Approval',
+                customer: 'Waiting on Approval'
+            },
+            'bid.in_progress': {
+                sub: 'Waiting on General Contractor to Submit Final Bid',
+                general: 'Bid In Progress',
+                customer: 'Waiting on Contractor to Submit Final Bid'
+            },
             'job.approved': {
                 sub: 'Start Job',
                 general: 'Start Job',
@@ -34635,6 +34671,7 @@ __webpack_require__(14);
 
 Vue.component('subcontractor-tasks', __webpack_require__(342));
 Vue.component('customer-bidlist', __webpack_require__(340));
+Vue.component('customer-bid', __webpack_require__(457));
 Vue.component('modal', __webpack_require__(341));
 
 // require('./Autocomplete.vue');
@@ -42359,7 +42396,7 @@ exports.push([module.i, "\n.wrapper[data-v-2a33f6c8] {\n\n    display: -ms-grid;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n  display: -ms-grid;\n  display: grid;\n  -ms-grid-columns: 1fr 1fr;\n      grid-template-columns: 1fr 1fr;\n  grid-column-gap: 20px;\n  margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n  -ms-grid-row: 1;\n      grid-row-start: 1;\n  grid-row-end: 2;\n  -ms-grid-column: 1;\n      grid-column-start: 1;\n  grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n  -ms-grid-row: 1;\n      grid-row-start: 1;\n  grid-row-end: 2;\n  -ms-grid-column: 2;\n      grid-column-start: 2;\n  grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n  background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n  margin-left: 1rem;\n  color: red;\n}\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.addBidTask {*/\n/*margin-top: 4rem;*/\n/*margin-left: 1rem;*/\n/*margin-right: 1rem;*/\n/*}*/\n/*.currenttasksforjob {*/\n/*background-color: white;*/\n/*margin-left: 27rem;*/\n/*margin-right: 27rem;*/\n/*border-radius: 2.5%;*/\n/*border: solid thin black;*/\n/*}*/\n/*.ctfheader {*/\n/*font-weight: 900;*/\n/*font-size: larger;*/\n/*margin-top: 1rem;*/\n/*margin-left: 1rem;*/\n/*}*/\n.wrapper[data-v-4c93029a] {\n  display: -ms-grid;\n  display: grid;\n  -ms-grid-columns: 1fr 1fr;\n      grid-template-columns: 1fr 1fr;\n  grid-column-gap: 20px;\n  margin-bottom: 1rem;\n}\n.details[data-v-4c93029a] {\n  -ms-grid-row: 1;\n      grid-row-start: 1;\n  grid-row-end: 2;\n  -ms-grid-column: 1;\n      grid-column-start: 1;\n  grid-column-end: 2;\n}\n.initiateBid[data-v-4c93029a] {\n  -ms-grid-row: 1;\n      grid-row-start: 1;\n  grid-row-end: 2;\n  -ms-grid-column: 2;\n      grid-column-start: 2;\n  grid-column-end: 3;\n}\n.text-danger[data-v-4c93029a] {\n  background-color: rgba(255, 64, 47, 0.38);\n}\n.validationError[data-v-4c93029a] {\n  margin-left: 1rem;\n  color: red;\n}\n/*.button {*/\n/*margin-left: 50px;*/\n/*margin-right: 50px;*/\n/*}*/\n/*.joblist {*/\n/*!*margin-left: 27rem;*!*/\n/*!*margin-right: 27rem;*!*/\n/*}*/\n/*.task {*/\n/*font-size: medium;*/\n/*font-weight: 400;*/\n/*margin-left: 1rem;*/\n/*}*/\n/*.subwrapper {*/\n/*display: grid;*/\n/*grid-template-columns: 1fr 1fr 1fr 1fr;*/\n/*grid-row-gap: 5px;*/\n/*grid-auto-flow: column dense;*/\n/*}*/\n/*.mainTaskWrapper {*/\n/*display: grid;*/\n/*grid-row-gap: 10px;*/\n/*}*/\n/*.customer {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contractor {*/\n/*grid-row-start: 1;*/\n/*grid-row-end: 2;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contcustpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.contcustprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contsubpricelabel {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contsubprice {*/\n/*grid-row-start: 2;*/\n/*grid-row-end: 3;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.custprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.subpricelabel {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.subprice {*/\n/*grid-row-start: 3;*/\n/*grid-row-end: 4;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.subaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.contcustaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.contsubaccepted {*/\n/*grid-row-start: 4;*/\n/*grid-row-end: 5;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n/*.custstartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 1;*/\n/*grid-column-end: 2;*/\n/*}*/\n/*.custenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 2;*/\n/*grid-column-end: 3;*/\n/*}*/\n/*.substartdate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 3;*/\n/*grid-column-end: 4;*/\n/*}*/\n/*.subenddate {*/\n/*grid-row-start: 5;*/\n/*grid-row-end: 6;*/\n/*grid-column-start: 4;*/\n/*grid-column-end: 5;*/\n/*}*/\n", ""]);
 
 /***/ }),
 /* 321 */
@@ -74698,7 +74735,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "scope": "row"
       }
-    }, [_vm._v(_vm._s(bid.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.job_name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bid.agreed_start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.status))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
+    }, [_vm._v(_vm._s(bid.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.job_name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bid.agreed_start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.status(bid.status)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
       staticClass: "btn btn-primary",
       on: {
         "click": function($event) {
@@ -74741,13 +74778,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })])])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group col-md-12"
-  }, [_c('label', {
+  })])])]), _vm._v(" "), _c('customer-bid', {
     attrs: {
-      "for": "review"
+      "bid": _vm.bid
     }
-  }, [_vm._v("This is where all the bids task would be, just need to actually show them")])]), _vm._v(" "), _c('div', {
+  }), _vm._v(" "), (!_vm.bidApproved) ? _c('div', [_c('div', {
     staticClass: "form-group col-md-6"
   }, [_c('label', {
     attrs: {
@@ -74812,7 +74847,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "bidForm.errors.has('agreed_start_date')"
     }],
     staticClass: "help-block"
-  }, [_vm._v("\n                                        " + _vm._s(_vm.bidForm.errors.get('agreed_start_date')) + "\n                                    ")])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                                            " + _vm._s(_vm.bidForm.errors.get('agreed_start_date')) + "\n                                        ")])]), _vm._v(" "), _c('div', {
     staticClass: "form-group col-md-12"
   }, [_c('button', {
     staticClass: "btn btn-success",
@@ -74822,7 +74857,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.approve($event)
       }
     }
-  }, [_vm._v("Approve")])])])])])])]) : _vm._e()])], 1)])
+  }, [_vm._v("Approve")])])]) : _vm._e()], 1)])])])]) : _vm._e()])], 1)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -74966,7 +75001,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "joblist"
   }, [_c('div', {
     staticClass: "container"
-  }, [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('div', [_c('h1', [_vm._v("Bid Is In Progress")])]) : (_vm.jobStatus === 'Waiting For Customer Approval' || _vm.jobStatus === 'The Job Has Been Accepted') ? _c('div', [_c('table', {
+  }, [(_vm.status(_vm.jobStatus).customer === 'Bid In Progress') ? _c('div', [_c('h1', [_vm._v("Bid Is In Progress")])]) : (_vm.status(_vm.jobStatus).customer === 'Waiting on Customer Approval') ? _c('div', [_c('table', {
     staticClass: "table"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
     return _c('tr', {
@@ -75000,10 +75035,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "panel-body"
   }, [_c('table', {
     staticClass: "table"
-  }, [_c('thead', [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")]), _vm._v(" "), _c('th'), _vm._v(" "), _c('th')]) : _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")])])]), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
+  }, [_c('thead', [(_vm.status(_vm.jobStatus).general === 'Bid In Progress') ? _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")]), _vm._v(" "), _c('th'), _vm._v(" "), _c('th')]) : _c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Final Customer Price")]), _vm._v(" "), _c('th', [_vm._v("Final Sub Price")])])]), _vm._v(" "), _c('tbody', [_vm._l((_vm.allTasksData), function(task) {
     return _c('tr', {
       key: task.id
-    }, [(_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
+    }, [(_vm.status(_vm.jobStatus).general === 'Bid In Progress') ? _c('td', [_c('input', {
       attrs: {
         "type": "text"
       },
@@ -75015,7 +75050,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.updateTaskName($event.target.value, task.id)
         }
       }
-    })]) : _c('td', [_vm._v("\n                      " + _vm._s(task.name) + "\n                    ")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('input', {
+    })]) : _c('td', [_vm._v("\n                      " + _vm._s(task.name) + "\n                    ")]), _vm._v(" "), (_vm.status(_vm.jobStatus).general === 'Bid In Progress') ? _c('td', [_c('input', {
       attrs: {
         "type": "text"
       },
@@ -75027,21 +75062,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.updateCustomerPrice($event.target.value, task.id)
         }
       }
-    })]) : _c('td', [_vm._v("\n                      " + _vm._s(task.pivot.cust_final_price) + "\n                    ")]), _vm._v(" "), (task.pivot.sub_final_price !== 0) ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+    })]) : _c('td', [_vm._v("\n                      " + _vm._s(task.pivot.cust_final_price) + "\n                    ")]), _vm._v(" "), (task.pivot.sub_final_price !== 0) ? _c('td', [_vm._v(_vm._s(task.pivot.sub_final_price))]) : _c('td', [_vm._v("Pending")]), _vm._v(" "), (_vm.status(_vm.jobStatus).general === 'Bid In Progress') ? _c('td', [_c('button', {
       staticClass: "button btn btn-sm btn-primary",
       on: {
         "click": function($event) {
           _vm.initiateSub(task.id, task.name)
         }
       }
-    }, [_vm._v("\n                        Initiate Bid For Sub\n                      ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+    }, [_vm._v("\n                        Initiate Bid For Sub\n                      ")])]) : _vm._e(), _vm._v(" "), (_vm.status(_vm.jobStatus).general === 'Bid In Progress') ? _c('td', [_c('button', {
       staticClass: "btn btn-sm btn-primary button",
       on: {
         "click": function($event) {
           _vm.showTheDetails(task.id)
         }
       }
-    }, [_vm._v("\n                        Details\n                      ")])]) : _vm._e(), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('td', [_c('button', {
+    }, [_vm._v("\n                        Details\n                      ")])]) : _vm._e(), _vm._v(" "), (_vm.status(_vm.jobStatus).general === 'Bid In Progress') ? _c('td', [_c('button', {
       staticClass: "btn btn-sm btn-danger button",
       on: {
         "click": function($event) {
@@ -75049,7 +75084,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("\n                        Delete\n                      ")])]) : _vm._e()])
-  }), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Totals")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.customerTotal))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.subTotal))]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')]), _vm._v(" "), (_vm.jobStatus === 'Bid In Progress' || _vm.jobStatus === 'initiated') ? _c('tr', [_c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [_c('button', {
+  }), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Totals")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.customerTotal))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.subTotal))]), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td')]), _vm._v(" "), (_vm.status(_vm.jobStatus).general === 'Bid In Progress') ? _c('tr', [_c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td'), _vm._v(" "), _c('td', [_c('button', {
     staticClass: "btn btn-sm btn-primary button",
     on: {
       "click": function($event) {
@@ -75063,7 +75098,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.openModal('notifyCustomerOfFinishedBid')
       }
     }
-  }, [_vm._v("\n                        Notify Customer of Finished Bid\n                      ")])]), _vm._v(" "), _c('td')]) : (_vm.jobStatus === 'Bid Has Been Approved') ? _c('tr') : _vm._e()], 2)])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                        Notify Customer of Finished Bid\n                      ")])]), _vm._v(" "), _c('td')]) : (_vm.status(_vm.jobStatus).general === 'Start Job') ? _c('tr') : _vm._e()], 2)])])])]), _vm._v(" "), _c('div', {
     staticClass: "col-md-12"
   }, [_c('div', {
     directives: [{
@@ -75990,6 +76025,239 @@ module.exports = function listToStyles (parentId, list) {
 
 module.exports = __webpack_require__(155);
 
+
+/***/ }),
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        bid: Object
+    },
+    data() {
+        return {};
+    },
+    methods: {},
+    created: function () {
+        console.log('created');
+    }
+});
+
+/***/ }),
+/* 457 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(2)(
+  /* script */
+  __webpack_require__(456),
+  /* template */
+  __webpack_require__(458),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/mnt/c/Users/daven/Documents/GitHub/Jemmson/resources/assets/js/components/job/CustomerBid.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] CustomerBid.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7cae9dc4", Component.options)
+  } else {
+    hotAPI.reload("data-v-7cae9dc4", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 458 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-12"
+  }, [_c('div', {
+    staticClass: "col-md-6"
+  }, [_c('label', [_vm._v("Job Name: ")]), _vm._v(" "), _c('label', {
+    staticClass: "label label-primary"
+  }, [_vm._v("\n                " + _vm._s(_vm.bid.job_name) + "\n            ")])]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-6"
+  }, [_c('label', [_vm._v("Status: ")]), _vm._v(" "), _c('label', {
+    staticClass: "label label-success"
+  }, [_vm._v("\n                " + _vm._s(_vm.bid.status) + "\n            ")])]), _vm._v(" "), _c('div', {
+    staticStyle: {
+      "padding-top": "40px"
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "col-md-6"
+  }, [_vm._m(0), _vm._v(" "), _c('p', [_vm._v("\n                " + _vm._s(_vm.bid.address_line_1) + "\n            ")]), _vm._v(" "), _c('p', [_vm._v("\n                " + _vm._s(_vm.bid.city) + ", " + _vm._s(_vm.bid.state) + " " + _vm._s(_vm.bid.zip) + "\n            ")])]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-6"
+  }, [_vm._m(1), _vm._v(" "), _c('p', [_vm._v("\n                Total Job Price: "), _c('label', {
+    staticClass: "label label-info"
+  }, [_vm._v("$" + _vm._s(_vm.bid.bid_price))])])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('p', [_c('label', [_vm._v("\n                    Location:\n                ")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('p', [_c('label', {
+    attrs: {
+      "for": "price"
+    }
+  }, [_vm._v("Prices:")])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-7cae9dc4", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

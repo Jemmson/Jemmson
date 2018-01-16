@@ -457,7 +457,7 @@ class TaskController extends Controller
         $user = User::where('id', $user_id)->get()->first();
 
         $job = Job::find($jobId);
-        $this->switchJobStatusToInProgress($job, config('app.bidIsFinished'));
+        $this->switchJobStatusToInProgress($job, __('bid.sent'));
 
 //        return $user;
 
@@ -495,7 +495,7 @@ class TaskController extends Controller
 
             $this->updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId, $area, $start_date);
 
-            $this->switchJobStatusToInProgress($job, config('app.bidIsInProgress'));
+            $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
             return $job->tasks()->where('id', '=', $taskId)->get()[0];
         } else {
@@ -516,7 +516,7 @@ class TaskController extends Controller
 
             $this->updateJobTaskTable($job, $task->id, $jobId, $taskPrice, $contractorId, $area, $start_date);
 
-            $this->switchJobStatusToInProgress($job, config('app.bidIsInProgress'));
+            $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
             return $job->tasks()->where('id', '=', $task->id)->get()[0];
         }
