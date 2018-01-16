@@ -21,10 +21,10 @@
     <!--<pre>{{ showDetails }}</pre>-->
     <div class="joblist" v-if="getUser === 'customer'">
       <div class="container">
-        <div v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+        <div v-if="status(jobStatus).customer === 'Bid In Progress'">
           <h1>Bid Is In Progress</h1>
         </div>
-        <div v-else-if="jobStatus === 'Waiting For Customer Approval' || jobStatus === 'The Job Has Been Accepted'">
+        <div v-else-if="status(jobStatus).customer === 'Waiting on Customer Approval'">
           <table class="table">
             <thead>
               <tr>
@@ -65,7 +65,7 @@
               <div class="panel-body">
                 <table class="table">
                   <thead>
-                    <tr v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                    <tr v-if="status(jobStatus).general === 'Bid In Progress'">
                       <th>Task Name</th>
                       <th>Final Customer Price</th>
                       <th>Final Sub Price</th>
@@ -81,13 +81,13 @@
                   <tbody>
                     <tr v-for="task in allTasksData" :key="task.id">
                       <!--<td>{{ jobStatus }}</td>-->
-                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                      <td v-if="status(jobStatus).general === 'Bid In Progress'">
                         <input type="text" :value="task.name" @blur="updateTaskName($event.target.value, task.id)">
                       </td>
                       <td v-else>
                         {{ task.name }}
                       </td>
-                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                      <td v-if="status(jobStatus).general === 'Bid In Progress'">
                         <input type="text" :value="task.pivot.cust_final_price" @blur="updateCustomerPrice($event.target.value, task.id)">
                       </td>
                       <td v-else>
@@ -95,12 +95,12 @@
                       </td>
                       <td v-if="task.pivot.sub_final_price !== 0">{{ task.pivot.sub_final_price }}</td>
                       <td v-else>Pending</td>
-                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                      <td v-if="status(jobStatus).general === 'Bid In Progress'">
                         <button @click="initiateSub(task.id, task.name)" class="button btn btn-sm btn-primary">
                           Initiate Bid For Sub
                         </button>
                       </td>
-                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                      <td v-if="status(jobStatus).general === 'Bid In Progress'">
                         <button class="btn btn-sm btn-primary button" @click="showTheDetails(task.id)">
                           Details
                         </button>
@@ -111,7 +111,7 @@
                       <!--Edit-->
                       <!--</button>-->
                       <!--</td>-->
-                      <td v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                      <td v-if="status(jobStatus).general === 'Bid In Progress'">
                         <button class="btn btn-sm btn-danger button" @click="deleteTask(task.id)">
                           Delete
                         </button>
@@ -125,7 +125,7 @@
                       <td></td>
                       <td></td>
                     </tr>
-                    <tr v-if="jobStatus === 'Bid In Progress' || jobStatus === 'initiated'">
+                    <tr v-if="status(jobStatus).general === 'Bid In Progress'">
                       <td></td>
                       <td></td>
                       <td></td>
@@ -141,7 +141,7 @@
                       </td>
                       <td></td>
                     </tr>
-                    <tr v-else-if="jobStatus === 'Bid Has Been Approved'">
+                    <tr v-else-if="status(jobStatus).general === 'Start Job'">
 
                     </tr>
                   </tbody>
@@ -468,6 +468,9 @@
       }
     },
     methods: {
+      status: function (status) {
+              return Language.lang()[status];
+      },
       addNewTask () {
         // I want the status to go from initiated to in progress when the first new task is added
         // I want each task to be added to the the tasks table
@@ -621,6 +624,7 @@
         }).then(function (response) {
           console.log(response.data)
           this.updateAllTasksData(response.data.price, response.data.taskId)
+          this.$toasted.success('Accepted Bid!');
         }.bind(this))
 
         // return true

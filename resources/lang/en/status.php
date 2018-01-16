@@ -13,5 +13,10 @@ return [
     'job' => [
         'approved' => 'job.approved'
     ],
+    'bid' => [
+        'in_progress' => [
+            'bid.in_progress',
+        ]
+    ]
 
 ];

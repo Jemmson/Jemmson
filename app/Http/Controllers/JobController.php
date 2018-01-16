@@ -152,8 +152,8 @@ class JobController extends Controller
         $this->validate($request, [
             'agreed_start_date' => 'required|date',
             'city' => 'string',
-            // if job has been approved do not approve again, js handles this already by not showing the approve button
-            'status' => 'required|regex:/^(?!Approved$).*/' 
+            // bid needs to be in the 'Waiting on Approval' in order to approve jbo
+            'status' => 'required|regex:/\bWaiting on Approval\b/',
         ]);
         // TODO what date needs to be updated here?
         $job->agreed_start_date = $request->agreed_start_date;
