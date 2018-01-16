@@ -31,7 +31,7 @@
                                         <th scope="row">{{ bid.id }}</th>
                                         <td>{{ bid.job_name }}</td>
                                         <td>{{ prettyDate(bid.agreed_start_date) }}</td>
-                                        <td>{{ bid.status }}</td>
+                                        <td>{{ status(bid.status) }}</td>
                                         <td>{{ bid.bid_price }}</td>
                                         <td>
                                             <button class="btn btn-primary" @click="openBid(bid)">Review</button>
@@ -62,19 +62,21 @@
                                     <div class="form-group col-md-12">
                                         <label for="review">This is where all the bids task would be, just need to actually show them</label>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="area">City</label>
-                                        <input type="text" class="form-control" id="area" v-model="bidForm.area">
-                                    </div>
-                                    <div class="form-group col-md-6" :class="{'has-error': bidForm.errors.has('agreed_start_date')}">
-                                        <label for="start_date">Start Date</label>
-                                        <input type="date" class="form-control" id="start_date" v-model="bidForm.agreed_start_date">
-                                        <span class="help-block" v-show="bidForm.errors.has('agreed_start_date')">
-                                            {{ bidForm.errors.get('agreed_start_date') }}
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <button class="btn btn-success" @click.prevent="approve">Approve</button>
+                                    <div v-if="!bidApproved">
+                                        <div class="form-group col-md-6">
+                                            <label for="area">City</label>
+                                            <input type="text" class="form-control" id="area" v-model="bidForm.area">
+                                        </div>
+                                        <div class="form-group col-md-6" :class="{'has-error': bidForm.errors.has('agreed_start_date')}">
+                                            <label for="start_date">Start Date</label>
+                                            <input type="date" class="form-control" id="start_date" v-model="bidForm.agreed_start_date">
+                                            <span class="help-block" v-show="bidForm.errors.has('agreed_start_date')">
+                                                {{ bidForm.errors.get('agreed_start_date') }}
+                                            </span>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <button class="btn btn-success" @click.prevent="approve">Approve</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -97,11 +99,13 @@
           return {
               showBidList: true,
               showBid: false,
+              bidApproved: false,
               bidForm: new SparkForm({
                   id: 0,
                   agreed_start_date: '',
                   end_date: '',
-                  area: ''
+                  area: '',
+                  status: '',
               }),
           }
       },
@@ -118,6 +122,10 @@
                     this.$toasted.error('Whoops! Something went wrong! Please try again.');
                 });
           },
+          status: function (status) {
+              console.log(status);
+              return Language.lang()[status].customer;
+          },
           prettyDate: function (date) {
               if (date == null)
                   return '';
@@ -126,7 +134,9 @@
               return date[0];
           },
           openBid: function (bid) {
+              this.bidApproved = this.status(bid.status) === 'Approved';
               this.bidForm.id = bid.id;
+              this.bidForm.status = this.status(bid.status);
               this.showBidList = false;
               this.showBid = true;
               console.log(bid);

@@ -15,7 +15,7 @@ export default class Language {
             'job.approved': {
                 sub: 'Start Job',
                 general: 'Start Job',
-                customer: 'Approved',
+                customer: 'Approved'
             }
         };
     }

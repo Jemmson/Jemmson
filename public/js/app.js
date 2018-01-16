@@ -33881,6 +33881,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -33891,11 +33893,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             showBidList: true,
             showBid: false,
+            bidApproved: false,
             bidForm: new SparkForm({
                 id: 0,
                 agreed_start_date: '',
                 end_date: '',
-                area: ''
+                area: '',
+                status: ''
             })
         };
     },
@@ -33911,6 +33915,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.$toasted.error('Whoops! Something went wrong! Please try again.');
             });
         },
+        status: function (status) {
+            console.log(status);
+            return Language.lang()[status].customer;
+        },
         prettyDate: function (date) {
             if (date == null) return '';
             // return the date and ignore the time
@@ -33918,7 +33926,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return date[0];
         },
         openBid: function (bid) {
+            this.bidApproved = this.status(bid.status) === 'Approved';
             this.bidForm.id = bid.id;
+            this.bidForm.status = this.status(bid.status);
             this.showBidList = false;
             this.showBid = true;
             console.log(bid);
@@ -74698,7 +74708,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "scope": "row"
       }
-    }, [_vm._v(_vm._s(bid.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.job_name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bid.agreed_start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.status))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
+    }, [_vm._v(_vm._s(bid.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.job_name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bid.agreed_start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.status(bid.status)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bid.bid_price))]), _vm._v(" "), _c('td', [_c('button', {
       staticClass: "btn btn-primary",
       on: {
         "click": function($event) {
@@ -74747,7 +74757,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "review"
     }
-  }, [_vm._v("This is where all the bids task would be, just need to actually show them")])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("This is where all the bids task would be, just need to actually show them")])]), _vm._v(" "), (!_vm.bidApproved) ? _c('div', [_c('div', {
     staticClass: "form-group col-md-6"
   }, [_c('label', {
     attrs: {
@@ -74812,7 +74822,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "bidForm.errors.has('agreed_start_date')"
     }],
     staticClass: "help-block"
-  }, [_vm._v("\n                                        " + _vm._s(_vm.bidForm.errors.get('agreed_start_date')) + "\n                                    ")])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                                            " + _vm._s(_vm.bidForm.errors.get('agreed_start_date')) + "\n                                        ")])]), _vm._v(" "), _c('div', {
     staticClass: "form-group col-md-12"
   }, [_c('button', {
     staticClass: "btn btn-success",
@@ -74822,7 +74832,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.approve($event)
       }
     }
-  }, [_vm._v("Approve")])])])])])])]) : _vm._e()])], 1)])
+  }, [_vm._v("Approve")])])]) : _vm._e()])])])])]) : _vm._e()])], 1)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

@@ -151,11 +151,13 @@ class JobController extends Controller
     {
         $this->validate($request, [
             'agreed_start_date' => 'required|date',
-            'city' => 'string'
+            'city' => 'string',
+            // if job has been approved do not approve again, js handles this already by not showing the approve button
+            'status' => 'required|regex:/^(?!Approved$).*/' 
         ]);
         // TODO what date needs to be updated here?
         $job->agreed_start_date = $request->agreed_start_date;
-        $job->status = config('job.approved');
+        $job->status = __('job.approved');
 
         try {
             $job->save();
@@ -169,6 +171,14 @@ class JobController extends Controller
         return response()->json($job, 200);
     }
 
+    /**
+     * Notify all contractors and sub connected to the job
+     * that have approved bids 
+     *
+     * @param NotifyJobHasBeenApproved $notification
+     * @param Job                      $job
+     * @return void
+     */
     protected function notifyAll($notification, $job)
     {
         $generalContractor = $job->contractor()->first()->user()->first();
