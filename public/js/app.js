@@ -33916,7 +33916,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         status: function (status) {
-            console.log(status);
             return Language.lang()[status].customer;
         },
         prettyDate: function (date) {
@@ -33926,12 +33925,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return date[0];
         },
         openBid: function (bid) {
+            console.log('openBid');
             this.bidApproved = this.status(bid.status) === 'Approved';
             this.bidForm.id = bid.id;
             this.bidForm.status = this.status(bid.status);
             this.showBidList = false;
             this.showBid = true;
-            console.log(bid);
         },
         closeBid: function () {
             console.log('closeBid');
