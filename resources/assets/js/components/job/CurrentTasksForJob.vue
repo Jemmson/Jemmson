@@ -311,8 +311,9 @@
               </div>
             </div>
           </div>
+          <!-- /end col-md-6 -->
         </div>
-        <!-- /end col-md-6 -->
+        <!-- /end row -->
       </div>
       <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()">
       </modal>
@@ -538,6 +539,11 @@
 
         // open model after contect has been udpated
         $('#modal').modal();
+      },
+      updateModal (header, body, id) {
+        this.modalHeader = header;
+        this.modalBody = body;
+        this.modalId = id;
       },
       modalYes () {
         switch (this.modalCurrentlyOpenFor) {
@@ -937,11 +943,6 @@
           this.taskId = taskId
         }
       },
-      updateModal (header, body, id) {
-        this.modalHeader = header;
-        this.modalBody = body;
-        this.modalId = id;
-      }
     }
   }
 </script>
