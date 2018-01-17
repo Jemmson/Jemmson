@@ -22,9 +22,8 @@
         @endif
         @include('contractors.bidList')
     @elseif(Auth::user()->usertype == 'customer')
-        <customer-bidlist :user="{{ Auth::user() }}" :bids="{{ $jobs }}">
-
-        </customer-bidlist>
+        <bidlist :user="user" :bids="{{ $jobs }}">
+        </bidlist>
     @endif
 
 @endsection

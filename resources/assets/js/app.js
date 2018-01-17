@@ -16,8 +16,14 @@
 require('spark-bootstrap');
 
 import Language from './classes/Language';
+import GeneralContractor from './classes/GeneralContractor';
+import SubContractor from './classes/SubContractor';
+import Customer from './classes/Customer';
 
 window.Language = Language;
+window.GeneralContractor = GeneralContractor;
+window.SubContractor = SubContractor;
+window.Customer = Customer;
 
 require('./components/bootstrap');
 
