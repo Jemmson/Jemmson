@@ -20,12 +20,12 @@
                           @if ($jobs)
                             @foreach ($jobs as $key => $job)
                               <tr>
-                                <td>{{ $job['job_name'] }}</td>
-                                <td>${{ $job['bid_price']}} </td>
-                                <td>{{ $job['completed_bid_date']}}</td>
-                                <td><label class="label label-{{ $styles->getBidStatusLabelColor($job['status']) }}">{{ $job['status']}}</label></td>
-                                <td>{{ $job['tasksCompleted'] }}/{{ $job['totalTasks'] }}</td>
-                                <td><a href="/job/{{ $job['id'] }}/edit" class="btn btn-primary">Edit</a></td>
+                                <td>{{ $job->job_name }}</td>
+                                <td>${{ $job->bid_price}} </td>
+                                <td>{{ $job->completed_bid_date}}</td>
+                                <td><label class="label label-{{ $styles->getBidStatusLabelColor($job->status) }}">{{ $job->status}}</label></td>
+                                  <!--<td> $job->tasksCompleted / $job->totalTasks </td>-->
+                                <td><a href="/job/{{ $job->id }}/edit" class="btn btn-primary">Edit</a></td>
                               </tr>
                             @endforeach
                           @endif

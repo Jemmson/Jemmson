@@ -15,10 +15,7 @@
                     </div>
                     <div class="col-md-4"></div>
                 </div>
-
             </div>
-
-
         @endif
         @include('contractors.bidList')
     @elseif(Auth::user()->usertype == 'customer')
