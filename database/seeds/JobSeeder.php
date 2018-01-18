@@ -20,8 +20,8 @@ class JobSeeder extends Seeder
         $k = 0;
         $faker = Faker\Factory::create();
         $data = [
-                    'status' => "initiated",
-                    'customer_id' => 1,
+                    'status' => "bid.in_progress",
+                    'customer_id' => 3,
                     'contractor_id' => 1,
                     'address_line_1' => $faker->streetAddress,
                     'address_line_2' => $faker->word,
@@ -39,8 +39,8 @@ class JobSeeder extends Seeder
 
 
         $data = [
-                    'status' => "initiated",
-                    'customer_id' => 2,
+                    'status' => "bid.in_progress",
+                    'customer_id' => 4,
                     'contractor_id' => 2,
                     'address_line_1' => $faker->streetAddress,
                     'address_line_2' => $faker->word,
