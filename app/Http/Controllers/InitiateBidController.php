@@ -225,11 +225,16 @@ class InitiateBidController extends Controller
         // TODO: find a better way but this works for now
         $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
 
+
 //        dd($jobId[0]->id);
 //        dd($jobId);
 
         $job = new Job;
-        $job->id = $jobId[0]->id + 1;
+        if ($jobId == []) {
+            $job->id = 1;
+        } else {
+            $job->id = $jobId[0]->id + 1;
+        }
         $job->contractor_id = Auth::user()->id;
         $job->customer_id = $customer_id;
         $job->job_name = $job_name;
