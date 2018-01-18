@@ -4,6 +4,10 @@ export default class Language {
 
     static lang () {
         return {
+            'bid_task.initiated': {
+                sub: 'Please Bid On This Task',
+                general: 'Waiting on Bid' 
+            },
             'bid_task.sent': {
                 sub: 'Waiting On Contractor Approval',
                 general: 'Waiting On Customer Approval' 
