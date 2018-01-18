@@ -35120,6 +35120,9 @@ class Customer {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Language__ = __webpack_require__(193);
+
+
 class GeneralContractor {
 
     constructor() {
@@ -35178,6 +35181,7 @@ class GeneralContractor {
         // I want the task to associated to a job, customer, and contractor
         // I want to add the existing task to the job
 
+        // TODO: handle tasks existing
         form.taskId = 1;
         form.taskExists = false;
 
@@ -35187,12 +35191,12 @@ class GeneralContractor {
 
         form.contractorId = Spark.state.user.id;
 
-        Spark.post('/api/task/addTask', form).then(function (response) {
+        Spark.post('/api/task/addTask', form).then(response => {
             console.log(response);
             // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
             // show a toast notification
             Vue.toasted.success('New Task Added!');
-        }.bind(this)).catch(error => {
+        }).catch(error => {
             console.error(error);
             // NOTICE: lets us do addNewTaskForm.errors.has('errorName') to check if this error exists & addNewTaskForm.errors.get('errorName') to get the error message
             // usually we don't have to do this, but api routes messes this up
@@ -35201,6 +35205,19 @@ class GeneralContractor {
             form.errors.errors = error.errors;
             // show a toast notification
             Vue.toasted.error('Whoops! Something went wrong! Please try again.');
+        });
+    }
+
+    static approveTaskHasBeenFinished(task) {
+        console.log('approveTaskHasBeenFinished', task);
+        axios.post('/api/task/approve', task).then(response => {
+            console.log(response);
+            // show a toast notification
+            Vue.toasted.success(__WEBPACK_IMPORTED_MODULE_0__Language__["a" /* default */].lang().submit.approve_task.success);
+        }).catch(error => {
+            console.error(error);
+            // show a toast notification
+            Vue.toasted.error('Error: ' + error.message);
         });
     }
 
@@ -35218,17 +35235,21 @@ class Language {
 
     static lang() {
         return {
+            // statuses 
             'bid_task.initiated': {
                 sub: 'Please Bid On This Task',
-                general: 'Waiting on Bid'
+                general: 'Waiting on Bid',
+                customer: 'Initiated'
             },
             'bid_task.sent': {
                 sub: 'Waiting On Contractor Approval',
-                general: 'Waiting On Customer Approval'
+                general: 'Waiting On Customer Approval',
+                customer: 'Initiated'
             },
             'bid_task.approved': {
-                sub: 'Waiting On Customer Approval',
-                general: 'Job Approved'
+                sub: 'Waiting On Contractor Approval',
+                general: 'Waiting On Customer Approval',
+                customer: 'Task Finished Waiting On Approval'
             },
             'bid.sent': {
                 sub: 'Waiting on Customer Approval',
@@ -35244,6 +35265,18 @@ class Language {
                 sub: 'Start Job',
                 general: 'Start Job',
                 customer: 'Approved'
+            },
+            // feedback messages for toasts
+            'submit': {
+                'job_finished': {
+                    'success': {
+                        sub: 'Job Finished! The contractor has been notified.',
+                        general: 'Job Finished! The customer has been notified.'
+                    }
+                },
+                'approve_task': {
+                    success: 'The task has been approved! Sub and Customer have been notified.'
+                }
             }
         };
     }
@@ -35256,10 +35289,33 @@ class Language {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Language__ = __webpack_require__(193);
+
+
 class SubContractor {
 
     constructor() {
         this.user = Spark.state.user;
+    }
+
+    static finishedTask(task) {
+        console.log('finishedTask', task);
+        let id = Spark.state.user.id;
+        task.current_user_id = id;
+
+        let general = false;
+        // did the general contractor finish this task?
+        if (id === task.job_task.contractor_id && id === task.contractor_id) general = true;
+
+        axios.post('/api/task/finished', task).then(response => {
+            console.log(response);
+            // show a toast notification
+            Vue.toasted.success(general ? __WEBPACK_IMPORTED_MODULE_0__Language__["a" /* default */].lang().submit.job_finished.success.general : __WEBPACK_IMPORTED_MODULE_0__Language__["a" /* default */].lang().submit.job_finished.success.sub);
+        }).catch(error => {
+            console.error(error);
+            // show a toast notification
+            Vue.toasted.error('Error: ' + error.message);
+        });
     }
 
 }
@@ -77546,6 +77602,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -77557,16 +77616,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     computed: {
+        // was the one who created the bid the one logged in?
+        // if so this is a general contractor and should be shown 
+        // everything
         isGeneral() {
             return this.bid.contractor_id === this.user.id;
+        },
+        isContractor() {
+            return this.user.usertype === 'contractor';
         }
     },
     methods: {
+        // is the task assigned to the currently logged in user
+        isAssignedToMe(task) {
+            return this.user.id === task.job_task.contractor_id;
+        },
         openTask(task) {
             this.$emit('openTaskPanel', task);
         },
         finishedTask(task) {
-            console.log('finishedTask', task);
+            SubContractor.finishedTask(task);
+        },
+        approveTaskHasBeenFinished(task) {
+            GeneralContractor.approveTaskHasBeenFinished(task);
+        },
+        status(status) {
+            if (this.isContractor) {
+                if (this.isGeneral) return Language.lang()[status].general;
+
+                return Language.lang()[status].sub;
+            }
+
+            return Language.lang()[status].customer;
         }
     },
     mounted: function () {
@@ -77618,7 +77699,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('table', {
     staticClass: "table"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.bid.tasks), function(task) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(task.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(task.proposed_cust_price))]), _vm._v(" "), _c('td', [_c('button', {
+    return _c('tr', [_c('td', [_vm._v(_vm._s(task.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(task.proposed_cust_price))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.status(task.job_task.status)))]), _vm._v(" "), _c('td', [_c('button', {
       staticClass: "btn btn-primary",
       on: {
         "click": function($event) {
@@ -77626,17 +77707,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.openTask(task)
         }
       }
-    }, [_vm._v("Details")]), _vm._v(" "), (_vm.isGeneral) ? _c('button', {
+    }, [_vm._v("Details")]), _vm._v(" "), (_vm.isContractor && _vm.isAssignedToMe(task)) ? _c('button', {
       staticClass: "btn btn-success",
       on: {
         "click": function($event) {
           _vm.finishedTask(task)
         }
       }
-    }, [_vm._v("Finished")]) : _vm._e()])])
+    }, [_vm._v("Finished")]) : _vm._e(), _vm._v(" "), (_vm.isGeneral && !_vm.isAssignedToMe(task)) ? _c('button', {
+      staticClass: "btn btn-success",
+      on: {
+        "click": function($event) {
+          _vm.approveTaskHasBeenFinished(task)
+        }
+      }
+    }, [_vm._v("Approve")]) : _vm._e()])])
   }))])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Task Price")]), _vm._v(" "), _c('th')])])
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Task Name")]), _vm._v(" "), _c('th', [_vm._v("Task Price")]), _vm._v(" "), _c('th', [_vm._v("Task Status")]), _vm._v(" "), _c('th')])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
