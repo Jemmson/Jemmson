@@ -6,6 +6,7 @@
                     <tr>
                         <th>Task Name</th>
                         <th>Task Price</th>
+                        <th>Task Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -13,9 +14,11 @@
                     <tr v-for="task in bid.tasks">
                         <td>{{ task.name }}</td>
                         <td>{{ task.proposed_cust_price }}</td>
+                        <td>{{ status(task.job_task.status) }}</td>
                         <td>
                             <button class="btn btn-primary" @click.prevent="openTask(task)">Details</button>
-                            <button class="btn btn-success" v-if="isGeneral" @click="finishedTask(task)">Finished</button>
+                            <button class="btn btn-success" v-if="isContractor && isAssignedToMe(task)" @click="finishedTask(task)">Finished</button>
+                            <button class="btn btn-success" v-if="isGeneral && !isAssignedToMe(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
                         </td>
                     </tr>
 
@@ -35,16 +38,39 @@
           }
       },
       computed: {
+          // was the one who created the bid the one logged in?
+          // if so this is a general contractor and should be shown 
+          // everything
           isGeneral() {
               return this.bid.contractor_id === this.user.id;
+          },
+          isContractor() {
+              return this.user.usertype === 'contractor';
           }
       },
       methods: {
+          // is the task assigned to the currently logged in user
+          isAssignedToMe(task) {
+              return this.user.id === task.job_task.contractor_id;
+          },
           openTask(task) {
               this.$emit('openTaskPanel', task);
           },
           finishedTask(task) {
-              console.log('finishedTask', task);
+              SubContractor.finishedTask(task);
+          },
+          approveTaskHasBeenFinished(task) {
+              GeneralContractor.approveTaskHasBeenFinished(task);
+          },
+          status(status){
+              if (this.isContractor) {
+                  if (this.isGeneral)
+                    return Language.lang()[status].general;
+
+                return Language.lang()[status].sub;
+              }
+              
+              return Language.lang()[status].customer;
           }
       },
       mounted: function () {

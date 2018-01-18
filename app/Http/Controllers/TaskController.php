@@ -8,6 +8,7 @@ use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfAcceptedBid;
 use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\NotifyContractorOfSubBid;
+use App\Notifications\TaskFinished;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
@@ -375,6 +376,42 @@ class TaskController extends Controller
         $user = User::where('id', $user_id)->first();
 
         $user->notify(new NotifyContractorOfAcceptedBid());
+    }
+
+    /**
+     * General Contractor
+     * Approve task assigned to sub contractor
+     * has been finished and notify relevant users
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function approveTaskHasBeenFinished(Request $request) 
+    {
+        return response()->json(["message"=>"Success"], 200);
+    }
+    
+    /**
+     * General or Sub Contractor
+     * Put task as finished and notify relevant users
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function taskHasBeenFinished(Request $request) 
+    {
+        $task = Task::find($request->id);
+        $customer = User::find(Job::find($request->job_task['job_id'])->customer_id);
+        $generalContractor = User::find($request->contractor_id);
+
+        if ($request->current_user_id === $request->job_task['contractor_id'] && $request->current_user_id === $request->contractor_id) {
+            // is general contractor
+            $customer->notify(new TaskFinished($task, true));
+        } else {
+            $generalContractor->notify(new TaskFinished($task, false));
+        }
+
+        return response()->json(["message"=>"Success"], 200);
     }
 
     public function acceptJob(Request $request)

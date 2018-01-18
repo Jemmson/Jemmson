@@ -1,3 +1,5 @@
+import Language from "./Language";
+
 export default class GeneralContractor {
 
     constructor() {
@@ -57,6 +59,7 @@ export default class GeneralContractor {
         // I want the task to associated to a job, customer, and contractor
         // I want to add the existing task to the job
         
+        // TODO: handle tasks existing
         form.taskId = 1;
         form.taskExists = false;
         
@@ -67,12 +70,12 @@ export default class GeneralContractor {
         form.contractorId = Spark.state.user.id;
         
         Spark.post('/api/task/addTask', form)
-            .then(function (response) {
+            .then((response) => {
                 console.log(response)
                 // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
                 // show a toast notification
                 Vue.toasted.success('New Task Added!');
-            }.bind(this)).catch(error => {
+            }).catch(error => {
                 console.error(error);
                 // NOTICE: lets us do addNewTaskForm.errors.has('errorName') to check if this error exists & addNewTaskForm.errors.get('errorName') to get the error message
                 // usually we don't have to do this, but api routes messes this up
@@ -82,7 +85,20 @@ export default class GeneralContractor {
                 // show a toast notification
                 Vue.toasted.error('Whoops! Something went wrong! Please try again.');
             });
+    }
 
+    static approveTaskHasBeenFinished(task) {
+        console.log('approveTaskHasBeenFinished', task);
+        axios.post('/api/task/approve', task)
+            .then((response) => {
+                console.log(response);
+                // show a toast notification
+                Vue.toasted.success(Language.lang().submit.approve_task.success);
+            }).catch(error => {
+                console.error(error);
+                // show a toast notification
+                Vue.toasted.error('Error: ' + error.message);
+            });
     }
 
 }
