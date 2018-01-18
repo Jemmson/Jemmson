@@ -32,7 +32,7 @@
                                         <th scope="row">{{ bid.id }}</th>
                                         <td>{{ bid.job_name }}</td>
                                         <td>{{ prettyDate(bid.agreed_start_date) }}</td>
-                                        <td>{{ status(bid.status) }}</td>
+                                        <td>{{ status(bid) }}</td>
                                         <td>{{ bid.bid_price }}</td>
                                         <td>
                                             <button class="btn btn-primary" @click="openBid(bid)">Review</button>
@@ -68,8 +68,18 @@
           }
       },
       methods: {
-          status: function (status) {
-              return Language.lang()[status].customer;
+          status: function (bid) {
+              switch (this.user.usertype) {
+                  case 'contractor':
+                    if (bid.contractor_id === this.user.id)
+                        return Language.lang()[bid.status].general;
+                    else
+                        return Language.lang()[bid.status].sub;
+                    break;
+                  case 'customer':
+                    return Language.lang()[bid.status].customer;
+                    break;
+              }
           },
           prettyDate: function (date) {
               if (date == null)
@@ -83,7 +93,7 @@
 
               // clone bid
               this.bid = JSON.parse(JSON.stringify(bid));
-              this.bid.status = this.status(bid.status);
+              this.bid.status = this.status(bid);
               
               // hide show components
               this.showBidList = false;

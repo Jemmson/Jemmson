@@ -249,25 +249,23 @@ class TaskController extends Controller
 
     public function notify(Request $request)
     {
+
+        $this->validate($request, [
+            'phone' => 'required|string',
+            'email' => 'required|email',
+            'taskId' => 'required',
+        ]);
+
         $phone = $request->phone;
         $email = $request->email;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $name = $request->name;
 
-
-//        return gettype($jobId);
-
-        // check the validation
-        $validation = $this->validateRequest($email, $phone);
-        if ($validation !== 'validationPassed') {
-            return $validation;
-        };
-
         if ($this
             ->checkIfNameIsDifferentButPhoneAndEmailExistInTheDatabase($name,
                 $phone, $email)) {
-            return "user may already exist in database";
+            return response()->json(["message"=>"Contractor Exists Select Them From the Dropdown List.","errors"=>["error" => "error"]], 422);
         }
 
         // does the subcontractor exist?
@@ -279,13 +277,13 @@ class TaskController extends Controller
         $user = $userData[0];
         $userExists = $userData[1];
 
-        $contractor = $user->contractor();
+        $contractor = $user->contractor()->first();
 
 //        return $this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId);
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
         if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
-            return "task already exists";
+            return response()->json(["message"=>"Task Already Exists.","errors"=>["error" => "Task Already Exists."]], 422);
         }
 
 
@@ -543,7 +541,7 @@ class TaskController extends Controller
     public function updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId, $area, $start_date)
     {
         $jt = $job->tasks()->where("task_id", "=", $taskId)->where("job_id", "=", $jobId)->get()[0];
-        $jt->pivot->status = config('app.taskIsInitiated');
+        $jt->pivot->status = __('bid_task.initiated');
         $jt->pivot->cust_final_price = $taskPrice;
         $jt->pivot->sub_final_price = 0;
         $jt->pivot->contractor_id = $contractorId;
