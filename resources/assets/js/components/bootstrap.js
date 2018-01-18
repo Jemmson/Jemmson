@@ -21,8 +21,15 @@ require('./job/Contracts.vue');
 require('./job/CurrentTasksForJob.vue');
 
 Vue.component('subcontractor-tasks', require('./task/SubContractorTasks.vue'));
-Vue.component('customer-bidlist', require('./job/CustomerBidList.vue'));
-Vue.component('customer-bid', require('./job/CustomerBid.vue'));
+
+// /bid components
+Vue.component('bidlist', require('./job/BidList.vue'));
+Vue.component('bid', require('./job/Bid.vue'));
+Vue.component('bid-details', require('./job/BidDetails.vue'));
+Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
+Vue.component('bid-task', require('./job/BidTask.vue'));
+Vue.component('bid-add-task', require('./job/BidAddTask.vue'));
+
 Vue.component('modal', require('./shared/Modal.vue'));
 
 // require('./Autocomplete.vue');
