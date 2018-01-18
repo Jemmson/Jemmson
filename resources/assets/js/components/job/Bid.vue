@@ -13,10 +13,15 @@
                     </div>
 
                     <!-- /show all bid information -->
-                    <bid-details :bid="bid" @openTaskPanel="openTaskPanel">
+                    <bid-details :bid="bid">
                     </bid-details>
 
-                    <form role="form" v-if="userType === 'customer' && !bidApproved">
+                    <!-- /show all tasks associated to this bid -->
+                    <bid-tasks :bid="bid" @openTaskPanel="openTaskPanel">
+                    </bid-tasks>
+
+                    <!-- /customer approve bid form -->
+                    <form role="form" v-if="isCustomer && !bidApproved">
                         <div class="form-group col-md-6">
                             <label for="area">City</label>
                             <input type="text" class="form-control" id="area" v-model="bidForm.area">
@@ -32,8 +37,9 @@
                             <button class="btn btn-success" @click.prevent="approve">Approve</button>
                         </div>
                     </form>
+
                     <!-- /buttons  -->
-                    <general-contractor-bid-actions :show="showGeneralContractorBidActionsPanel" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
+                    <general-contractor-bid-actions :show="isGeneralContractor" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
                         @openAddTask="openAddTask">
                     </general-contractor-bid-actions>
                 </div>
@@ -45,9 +51,10 @@
             <bid-task :show="showTaskPanel" :task="task">
             </bid-task>
         </transition>
+
         <!-- /add task to bid -->
         <transition name="slide-fade">
-            <bid-add-task :show="showAddTaskPanel" @addTaskToBid="addTaskToBid">
+            <bid-add-task :show="showAddTaskPanel" :bid="bid">
             </bid-add-task>
         </transition>
     </div>
@@ -69,21 +76,22 @@
                     area: '',
                     status: '',
                 }),
-                userType: '',
+                user: '',
                 bidApproved: false,
                 showTaskPanel: false,
                 showAddTaskPanel: false,
             }
         },
         computed: {
-            showGeneralContractorBidActionsPanel() {
-                return true;
+            isCustomer() {
+                return this.user.usertype === 'customer';
+            },
+            isGeneralContractor() {
+                // General contractor is the one who created the bid
+                return this.bid.contractor_id === this.user.id;
             },
         },
         methods: {
-            addTaskToBid(taskForm) {
-                GeneralContractor.addTaskToBid(taskForm);
-            },
             notifyCustomerOfFinishedBid() {
                 GeneralContractor.notifyCustomerOfFinishedBid(this.bid);
             },
@@ -108,7 +116,7 @@
             this.bidForm.status = this.bid.status;
             this.bidApproved = (this.bid.status === 'Approved' || this.bid.status ===
                 'Waiting on Contractor to Submit Final Bid');
-            this.userType = Spark.state.user.usertype;
+            this.user = Spark.state.user;
         }
     }
 </script>

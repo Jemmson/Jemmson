@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Laravel\Spark\Spark;
 use Laravel\Spark\Providers\AppServiceProvider as ServiceProvider;
+use Auth;
 
 class SparkServiceProvider extends ServiceProvider
 {
@@ -82,5 +83,23 @@ class SparkServiceProvider extends ServiceProvider
             ->features([
                 'First', 'Second', 'Third'
             ]);
+    }
+
+    /**
+     * Load init user and their relationships
+     *
+     * @return void
+     */
+    public function register()
+    {
+        Spark::swap('UserRepository@current', 
+            function () {
+                // Return the current user...
+                if (Auth::user() != null) 
+                    return Auth::user()->load('subscriptions', 'contractor', 'customer');
+                else
+                    return null;
+            }
+        );
     }
 }

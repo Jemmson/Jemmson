@@ -27,6 +27,7 @@ Vue.component('bidlist', require('./job/BidList.vue'));
 Vue.component('bid', require('./job/Bid.vue'));
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
+Vue.component('bid-tasks', require('./job/BidTasks.vue'));
 Vue.component('bid-task', require('./job/BidTask.vue'));
 Vue.component('bid-add-task', require('./job/BidAddTask.vue'));
 

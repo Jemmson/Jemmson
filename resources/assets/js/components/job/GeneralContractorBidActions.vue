@@ -1,6 +1,6 @@
 <template>
     <!-- /contractor bid actions -->
-    <div class="col-md-12">
+    <div class="col-md-12" v-if="show">
                 <button class="btn btn-sm btn-primary button" @click="openAddTask">
                     Add Task To Bid
                 </button>

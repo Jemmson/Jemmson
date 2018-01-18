@@ -8,6 +8,7 @@ use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfAcceptedBid;
 use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\NotifyContractorOfSubBid;
+use App\Notifications\TaskFinished;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
@@ -249,25 +250,23 @@ class TaskController extends Controller
 
     public function notify(Request $request)
     {
+
+        $this->validate($request, [
+            'phone' => 'required|string',
+            'email' => 'required|email',
+            'taskId' => 'required',
+        ]);
+
         $phone = $request->phone;
         $email = $request->email;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $name = $request->name;
 
-
-//        return gettype($jobId);
-
-        // check the validation
-        $validation = $this->validateRequest($email, $phone);
-        if ($validation !== 'validationPassed') {
-            return $validation;
-        };
-
         if ($this
             ->checkIfNameIsDifferentButPhoneAndEmailExistInTheDatabase($name,
                 $phone, $email)) {
-            return "user may already exist in database";
+            return response()->json(["message"=>"Contractor Exists Select Them From the Dropdown List.","errors"=>["error" => "error"]], 422);
         }
 
         // does the subcontractor exist?
@@ -279,13 +278,13 @@ class TaskController extends Controller
         $user = $userData[0];
         $userExists = $userData[1];
 
-        $contractor = $user->contractor();
+        $contractor = $user->contractor()->first();
 
 //        return $this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId);
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
         if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
-            return "task already exists";
+            return response()->json(["message"=>"Task Already Exists.","errors"=>["error" => "Task Already Exists."]], 422);
         }
 
 
@@ -377,6 +376,42 @@ class TaskController extends Controller
         $user = User::where('id', $user_id)->first();
 
         $user->notify(new NotifyContractorOfAcceptedBid());
+    }
+
+    /**
+     * General Contractor
+     * Approve task assigned to sub contractor
+     * has been finished and notify relevant users
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function approveTaskHasBeenFinished(Request $request) 
+    {
+        return response()->json(["message"=>"Success"], 200);
+    }
+    
+    /**
+     * General or Sub Contractor
+     * Put task as finished and notify relevant users
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function taskHasBeenFinished(Request $request) 
+    {
+        $task = Task::find($request->id);
+        $customer = User::find(Job::find($request->job_task['job_id'])->customer_id);
+        $generalContractor = User::find($request->contractor_id);
+
+        if ($request->current_user_id === $request->job_task['contractor_id'] && $request->current_user_id === $request->contractor_id) {
+            // is general contractor
+            $customer->notify(new TaskFinished($task, true));
+        } else {
+            $generalContractor->notify(new TaskFinished($task, false));
+        }
+
+        return response()->json(["message"=>"Success"], 200);
     }
 
     public function acceptJob(Request $request)
@@ -543,7 +578,7 @@ class TaskController extends Controller
     public function updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId, $area, $start_date)
     {
         $jt = $job->tasks()->where("task_id", "=", $taskId)->where("job_id", "=", $jobId)->get()[0];
-        $jt->pivot->status = config('app.taskIsInitiated');
+        $jt->pivot->status = __('bid_task.initiated');
         $jt->pivot->cust_final_price = $taskPrice;
         $jt->pivot->sub_final_price = 0;
         $jt->pivot->contractor_id = $contractorId;

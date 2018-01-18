@@ -74,6 +74,7 @@ class UsersTableSeeder extends Seeder
                 'email' => $faker->unique()->safeEmail,
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
+                'phone' => $faker->phoneNumber,
                 'usertype' => 'contractor'
             ];
             $user = User::create($data);
@@ -100,6 +101,7 @@ class UsersTableSeeder extends Seeder
                 'email' => $faker->unique()->safeEmail,
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
+                'phone' => $faker->phoneNumber,
                 'usertype' => 'contractor'
             ];
             $user = User::create($data);
@@ -126,6 +128,7 @@ class UsersTableSeeder extends Seeder
                 'email' => $faker->unique()->safeEmail,
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
+                'phone' => $faker->phoneNumber,
                 'usertype' => 'customer'
             ];
             $user = User::create($data);
@@ -151,6 +154,7 @@ class UsersTableSeeder extends Seeder
                 'email' => $faker->unique()->safeEmail,
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
+                'phone' => $faker->phoneNumber,
                 'usertype' => 'customer'
             ];
             $user = User::create($data);

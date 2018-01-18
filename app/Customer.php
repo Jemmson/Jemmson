@@ -28,12 +28,12 @@ class Customer extends Model
 
     public function jobs()
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(Job::class, 'customer_id', 'user_id');
     }
     
     public function contractors()
     {
-        return $this->belongsToMany(contractor::class);
+        return $this->belongsToMany(Contractor::class);
     }
 
     // TODO: understand where an intermidate table relates to two other tables

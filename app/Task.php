@@ -46,10 +46,11 @@ class Task extends Model
 
     public function Contractors()
     {
-        return $this->belongsToMany('App\Contractor')
+        return $this->belongsToMany(User::class)
             ->withPivot(
                 'base_price'
             )
+            ->with('contractor')
             ->withTimestamps();
     }
 

@@ -20,6 +20,6 @@ class JobTask extends Model
 
     public function contractor()
     {
-        return $this->belongsTo(Contractor::class);
+        return $this->belongsTo(User::class)->with('contractor');
     }
 }

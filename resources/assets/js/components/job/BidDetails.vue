@@ -37,28 +37,6 @@
                     <label class="label label-info">${{ bid.bid_price }}</label>
                 </p>
             </div>
-            <div class="col-md-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Task Name</th>
-                            <th>Task Price</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="task in bid.tasks">
-                            <td>{{ task.name }}</td>
-                            <td>{{ task.proposed_cust_price }}</td>
-                            <td>
-                                <button class="btn btn-primary" @click.prevent="openTask(task)">Details</button>
-                                <button class="btn btn-success" v-if="userType === 'contractor'" @click="finishedTask(task)">Finished</button>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-            </div>
         </div>
 </template>
 
@@ -69,19 +47,11 @@
       },
       data() {
           return {
-              userType: '',
           }
       },
       methods: {
-          openTask(task) {
-              this.$emit('openTaskPanel', task);
-          },
-          finishedTask(task) {
-              console.log('finishedTask', task);
-          }
       },
       mounted: function () {
-          this.userType = Spark.state.user.usertype;
       }
   }
 </script>

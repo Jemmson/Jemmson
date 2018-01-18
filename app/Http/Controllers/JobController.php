@@ -90,8 +90,8 @@ class JobController extends Controller
     {
         //dd($job);
         $bids = Task::getBidPrices($job->id);
-        $contractor = Contractor::with('user')->find($job->contractor_id);
-        $customer = Customer::with('user')->find($job->customer_id);
+        $contractor = User::with('contractor')->find($job->contractor_id);
+        $customer = User::with('customer')->find($job->customer_id);
         
         if ($customer == null) {
             $customer = "[]";

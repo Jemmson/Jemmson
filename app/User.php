@@ -56,12 +56,12 @@ class User extends SparkUser
 
     public function customer()
     {
-        return $this->hasOne(Customer::class, 'user_id', 'id')->first();
+        return $this->hasOne(Customer::class);
     }
 
     public function contractor()
     {
-        return $this->hasOne(Contractor::class, 'user_id', 'id')->first();
+        return $this->hasOne(Contractor::class);
     }
 
     public function feedback()
@@ -82,9 +82,9 @@ class User extends SparkUser
     public function jobs()
     {
         if ($this->usertype === 'contractor') {
-            return $this->contractor()->jobs();
+            return $this->contractor()->first()->jobs();
         } else {
-            return $this->customer()->jobs();
+            return $this->customer()->first()->jobs();
         }
     }
 

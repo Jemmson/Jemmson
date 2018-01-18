@@ -26,7 +26,7 @@ class ContractorJobTask extends Seeder
 //                    DB::table("INSERT INTO contractor_job_task SET (contractor_id, job_id, task_id) VALUES ($contractor->id,$job->id,$task->id)");
                     DB::table('contractor_job_task')->insert(
                         [
-                            'contractor_id' => $contractor->id,
+                            'contractor_id' => $contractor->user_id,
                             'job_id' => $job->id,
                             'task_id' => $task->id,
 //                            TODO: add the NOW() function to this or the timestamps

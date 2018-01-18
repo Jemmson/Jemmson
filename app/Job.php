@@ -42,12 +42,12 @@ class Job extends Model
 
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'id');
+        return $this->belongsTo(User::class)->with('customer');
     }
 
     public function contractor()
     {
-        return $this->belongsTo(Contractor::class, 'id');
+        return $this->belongsTo(User::class)->with('contractor');
     }
 
     /**
