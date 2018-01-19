@@ -2,6 +2,15 @@
 
 @section('content')
 
+    <h1>Edit Job</h1>
+
+    {{ $userType }} <br>
+    {{ $job }} <br>
+    {{ $bids }} <br>
+    {{ $contractor }} <br>
+    {{ $customer }}<br>
+    {{ $tasks }} <br>
+
     <job
             usertype="{{ $userType }}"
             :job="{{ $job }}"
