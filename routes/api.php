@@ -84,3 +84,6 @@ Route::post('/task/acceptJob', 'TaskController@acceptJob');
 Route::post('/task/declineJob', 'TaskController@declineJob');
 Route::post('/task/addTask', 'TaskController@addTask');
 Route::post('/task/delete', 'TaskController@destroy');
+Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
+Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
+

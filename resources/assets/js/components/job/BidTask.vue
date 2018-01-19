@@ -2,16 +2,24 @@
     <div class="panel panel-default" v-if="show">
         <!-- <div class="panel-heading">Dashboard</div> -->
         <div class="panel-body">
+            <!-- /customer and contractor section -->
             <div class="row">
+                <pre>
+                    {{ JSON.stringify(task) }}
+                </pre>
+            </div>
+
+            <!-- / general contractor only section -->
+            <div class="row" v-if="isGeneralContractor">
                 <div class="col-md-6">
                     <div class="initiateBid">
                         <div class="addBidTask">
-                            <h3 class="text-center">Task: {{ task.name }}</h3>
+                            <h3 class="text-center">Send Bid To Sub</h3>
                             <div class="form-group">
                                 <label for="contractorName">Contractor Name *</label>
-                                <span class="validationError" v-show="hasNameError">Please Enter A Name</span>
-                                <input type="text" class="form-control" id="contractorName" name="contractorName" :placeholder="contractorName" v-model="query"
-                                    v-bind:class="{ 'text-danger': hasNameError }" required v-on:keyup="autoComplete" @blur="mouseLeave('notNow')">
+                                <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')">Please Enter A Name</span>
+                                <input type="text" class="form-control" id="contractorName" name="contractorName" :placeholder="contractorName" v-model="initiateBidForSubForm.name"
+                                    v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" required v-on:keyup="autoComplete" @blur="mouseLeave('notNow')">
                                 <div class="panel-footer" v-if="results.length">
                                     <ul class="list-group">
                                         <button class="list-group-item" v-for="result in results" :name="result.phone" @click="fillFields(result)">
@@ -20,20 +28,23 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
                                 <label for="phone">Phone *</label>
-                                <span class="validationError" v-show="hasPhoneError">Please Enter A Valid Phone Number - xxx-xxx-xxxx</span>
-                                <input type="tel" class="form-control" id="phone" name="phone" required v-bind:class="{ 'text-danger': hasPhoneError }" v-model="phone"
-                                    @blur="mouseLeave('phone')">
+                                <input type="tel" class="form-control" id="phone" name="phone" required v-model="initiateBidForSubForm.phone" @blur="mouseLeave('phone')">
+                                <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
+                                    {{ initiateBidForSubForm.errors.get('phone') }}
+                                </span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
                                 <label for="email">Email *</label>
                                 <span class="validationError" v-show="hasEmailError">Please Enter A Valid Email Address</span>
-                                <input type="email" class="form-control" id="email" name="email" required v-bind:class="{ 'text-danger': hasEmailError }"
-                                    v-model="email" @blur="mouseLeave('email')">
+                                <input type="email" class="form-control" id="email" name="email" required v-model="initiateBidForSubForm.email" @blur="mouseLeave('email')">
+                                <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
+                                    {{ initiateBidForSubForm.errors.get('email') }}
+                                </span>
                             </div>
                             <div class="form-group">
-                                <button @click="sendNotificationToSubForParticularTask()" class="btn btn-sm btn-success" type="submit">Submit
+                                <button @click="sendSubInviteToBidOnTask" class="btn btn-sm btn-success" type="submit">Submit
                                 </button>
                             </div>
                         </div>
@@ -42,7 +53,7 @@
                 <!-- /end col-md-6 -->
 
                 <div class="col-md-6">
-                    <h3 class="text-center">Sub Details: {{ task.name }}</h3>
+                    <h3 class="text-center">Accept Sub Bid</h3>
                     <table class="table">
                         <thead>
                             <tr>
@@ -57,7 +68,7 @@
                                 <td>{{ bid.contractor_id }}</td>
                                 <td>{{ bid.bid_price }}</td>
                                 <td>
-                                    <button @click="acceptSub(bid.id, task.id, bid.bid_price, bid.contractor_id)" class="button btn btn-sm btn-success">Accept
+                                    <button @click="acceptSubBidForTask(bid)" class="button btn btn-sm btn-success">Accept
                                     </button>
                                 </td>
                                 <td>
@@ -90,18 +101,15 @@
                     status: '',
                 }),
                 initiateBidForSubForm: new SparkForm({
-                    id: 0,
-                    agreed_start_date: '',
-                    end_date: '',
-                    area: '',
-                    status: '',
+                    task_id: 0,
+                    email: '',
+                    phone: '',
                 }),
-                userType: '',
+                user: '',
 
                 hasNameError: false,
                 hasEmailError: false,
                 hasPhoneError: false,
-                query: null,
                 phone: '',
                 email: '',
                 contractorName: '',
@@ -110,27 +118,47 @@
             }
         },
         methods: {
-            acceptSub() {
-                this.$emit('acceptSub');
+            acceptSubBidForTask(bid) {
+                GeneralContractor.acceptSubBidForTask(this.task, bid);
+            },
+            sendSubInviteToBidOnTask() {
+                GeneralContractor.sendSubInviteToBidOnTask(this.task, this.initiateBidForSubForm);
             },
             notify() {
 
             },
-            fillFields() {
-
-            },
-            sendNotificationToSubForParticularTask() {
-
+            fillFields(result) {
+                this.initiateBidForSubForm.email = result.email;
+                this.initiateBidForSubForm.phone = result.phone;
+                this.initiateBidForSubForm.name = result.name;
+                this.results = '';
             },
             mouseLeave() {
 
             },
             autoComplete() {
-
+                this.results = [];
+                let query = this.initiateBidForSubForm.name;
+                if (query.length > 2) {
+                    axios.get('/api/search', {
+                        params: {
+                            query: query
+                        }
+                    }).then(function (response) {
+                        console.log(response.data)
+                        this.results = response.data
+                    }.bind(this))
+                }
+            }
+        },
+        computed: {
+            isGeneralContractor() {
+                // General contractor is the one who created the bid
+                return this.task.contractor_id === this.user.id;
             }
         },
         mounted: function () {
-            this.userType = Spark.state.user.usertype;
+            this.user = Spark.state.user;
         }
     }
 </script>

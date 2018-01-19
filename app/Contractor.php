@@ -30,12 +30,12 @@ class Contractor extends Model
 
     public function jobs()
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(Job::class, 'contractor_id', 'user_id');
     }
 
     public function time()
     {
-        return $this->hasMany(Time::class);
+        return $this->hasMany(Time::class, 'contractor_id', 'user_id');
     }
 
 
@@ -46,7 +46,7 @@ class Contractor extends Model
 
     public function tasks()
     {
-        return $this->belongsToMany(Task::class)->withPivot('base_price')
+        return $this->belongsToMany(Task::class, 'contractor_id', 'user_id')->withPivot('base_price')
             ->withTimestamps();
     }
 
@@ -58,7 +58,7 @@ class Contractor extends Model
      */
     public function bidContractorJobTasks()
     {
-        return $this->hasMany(BidContractorJobTask::class, 'contractor_id');
+        return $this->hasMany(BidContractorJobTask::class, 'contractor_id', 'user_id');
     }
 
     public function addContractorToBidForJobTable($contractorId, $taskId, $jobId)

@@ -18,7 +18,7 @@ class JobTaskSeeder extends Seeder
         $faker = Faker\Factory::create();
 
         $job = Job::find(1);
-        $job->status = config('app.bidIsInProgress');
+        $job->status = __('bid.in_progress');
         $job->save();
         $task = Task::find(1);
         $job->tasks()->attach($task);
@@ -26,11 +26,11 @@ class JobTaskSeeder extends Seeder
         $task->pivot->contractor_id = 2;
         $task->pivot->cust_final_price = rand(1, 1000);
         $task->pivot->sub_final_price = rand(1, 1000);
-        $task->pivot->status = config('app.taskIsInitiated');
+        $task->pivot->status = __('app.taskIsInitiated');
         $task->pivot->save();
 
         $job = Job::find(2);
-        $job->status = config('app.bidIsInProgress');
+        $job->status = __('bid.in_progress');
         $job->save();
         $task = Task::find(2);
         $job->tasks()->attach($task);

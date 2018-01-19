@@ -23,14 +23,9 @@ return [
     'taskIsAccepted' => 'accepted',
 
     'bid_task' => [
-        'sent'       =>  [
-            'sub'       => "Waiting On Contractor Approval",
-            'general'   => "Waiting On Customer Approval"
-        ],
-        'approved'   =>  [
-            'sub'      => "Waiting On Customer Approval",
-            'general'  => "Approved"
-        ]
+        'initiated' => 'bid_task.initiated',
+        'sent'       =>  'bid_task.sent',
+        'approved'   =>  'bid_task.approved',
     ],
 
     'job' => [
