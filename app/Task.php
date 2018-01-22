@@ -14,7 +14,8 @@ class Task extends Model
         'proposed_cust_price',
         'average_cust_price',
         'proposed_sub_price',
-        'average_sub_price'
+        'average_sub_price',
+        'job_id'
     ];
     //
 //    public function time()

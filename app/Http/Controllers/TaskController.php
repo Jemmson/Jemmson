@@ -16,6 +16,7 @@ use App\Contractor;
 use App\Customer;
 use App\User;
 use App\BidContractorJobTask;
+use App\JobTask;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +41,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->bidContractorJobTasks()->with(['task', 'jobTask'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task', 'jobTask'])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -141,8 +142,8 @@ class TaskController extends Controller
             Log::error('Update Job Task: ' . $e->getMessage());
             return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
-        $gContractor = Contractor::find($bidContractorJobTask->task()->first()->contractor_id)->user()->first();
-        $gContractor->notify(new NotifyContractorOfSubBid($gContractor, Contractor::find($bidContractorJobTask->contractor_id)->user()->first()->name));
+        $gContractor = User::find($bidContractorJobTask->task()->first()->contractor_id);
+        $gContractor->notify(new NotifyContractorOfSubBid($gContractor, User::find($bidContractorJobTask->contractor_id)->name));
 
         return response()->json(["message"=>"Success"], 200);
     }
@@ -215,8 +216,8 @@ class TaskController extends Controller
 
     public function addBidEntryForTheSubContractor($contractor, $taskId, $jobId)
     {
-        if ($contractor->checkIfContractorSetBidForATask($contractor->id, $taskId, $jobId)) {
-            $contractor->addContractorToBidForJobTable($contractor->id, $taskId, $jobId);
+        if ($contractor->checkIfContractorSetBidForATask($contractor->user_id, $taskId, $jobId)) {
+            $contractor->addContractorToBidForJobTable($contractor->user_id, $taskId, $jobId);
             return true;
         } else {
             return false;
@@ -279,8 +280,6 @@ class TaskController extends Controller
         $userExists = $userData[1];
 
         $contractor = $user->contractor()->first();
-
-//        return $this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId);
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
         if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
@@ -364,16 +363,11 @@ class TaskController extends Controller
         $contractorId = $request->contractorId;
 
         // TODO: Determine if I want to accept each individual task and not just the job as a whole
-//        DB::table('job_task')
-//            ->where('job_id', $jobId)
-//            ->where('task_id', $taskId)
-//            ->where('contractor_id', $contractorId)
-//            ->update(['status' => config('app.taskIsAccepted')]);
 
         $user_id = Contractor::where('id', $contractorId)
             ->first()
             ->user_id;
-        $user = User::where('id', $user_id)->first();
+        $user = User::find($contractorId)->first();
 
         $user->notify(new NotifyContractorOfAcceptedBid());
     }
@@ -401,8 +395,18 @@ class TaskController extends Controller
     public function taskHasBeenFinished(Request $request) 
     {
         $task = Task::find($request->id);
+        $task_job_task = $task->jobTask()->first();
+        $task_job_task->status = __("bid_task.finished");
+
         $customer = User::find(Job::find($request->job_task['job_id'])->customer_id);
         $generalContractor = User::find($request->contractor_id);
+
+        try {
+            $task_job_task->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Task Status: ' . $e->getMessage());
+            return response()->json(["message"=>"Couldn't update status task bid.","errors"=>["error" =>[$e->getMessage()]]], 404);
+        }
 
         if ($request->current_user_id === $request->job_task['contractor_id'] && $request->current_user_id === $request->contractor_id) {
             // is general contractor
@@ -420,14 +424,10 @@ class TaskController extends Controller
         $contractorId = $request->contractorId;
 
         $job = Job::find($jobId);
-        $job->status = config('app.jobIsAccepted');
+        $job->status = __('job.accepted');
         $job->save();
 
-        $user_id = Contractor::where('id', $contractorId)
-            ->get()
-            ->first()
-            ->user_id;
-        $user = User::where('id', $user_id)->get()->first();
+        $user = User::find($contractorId);
 
         $user->notify(new NotifyContractorOfAcceptedBid());
     }
@@ -486,76 +486,49 @@ class TaskController extends Controller
         $jobId = $request->jobId;
         $customerId = $request->customerId;
 
-//        return $customerId;
 
-        $user_id = Customer::where('id', $customerId)->get()->first()->user_id;
-        $user = User::where('id', $user_id)->get()->first();
-
+        $user = User::find($customerId);
         $job = Job::find($jobId);
-        $this->switchJobStatusToInProgress($job, __('bid.sent'));
 
-//        return $user;
+        $this->switchJobStatusToInProgress($job, __('bid.sent'));
 
         $user->notify(new NotifyCustomerThatBidIsFinished());
     }
 
     public function addTask(Request $request)
     {
+        
         $this->validate($request, [
             'taskName' => 'required|string',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_date' => 'required|date'
         ]);
-     
-        $jobId = $request->jobId;
-        $taskId = $request->taskId;
-        $taskPrice = $request->taskPrice;
-        $contractorId = $request->contractorId;
-        $taskName = $request->taskName;
-        $subTaskPrice = $request->subTaskPrice;
-        $area = $request->area;
-        $start_date = $request->start_date;
 
-        // example of standard way to return errors for apis - we should standardize our errors to this
-        //return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 422);
+        $job_id = $request->jobId;
+        $name = strtolower($request->taskName);
 
-        if ($request->taskExists) {
-            // 1. add the task to the job task table
-            $job = Job::find($jobId);
-            $task = Task::find($taskId);
-            $job->tasks()->attach($task);
+        $job = Job::find($job_id);
+            
+        // find or create a task
+        $task = Task::firstOrCreate(['name' => $name, 'job_id' => $job_id, 'contractor_id' => $request->contractorId]);
+        $task->proposed_cust_price = $request->taskPrice;
+        $task->proposed_sub_price = $request->subTaskPrice;
 
-            $task = $this->updateTaskWithNewValuesIfValuesAreDifferent($task, $subTaskPrice, $taskPrice);
-
-            $this->updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId, $area, $start_date);
-
-            $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
-
-            return $job->tasks()->where('id', '=', $taskId)->get()[0];
-        } else {
-
-            $task = Task::create(
-                [
-                    'name' => $taskName,
-                    'standard_task_id' => null,
-                    'contractor_id' => $contractorId,
-                    'proposed_cust_price' => $taskPrice,
-                    'proposed_sub_price' => $subTaskPrice
-                ]
-            );
-
-            // Add the task to the task table for the given contractor
-            $job = Job::find($jobId);
-            $job->tasks()->attach($task);
-
-            $this->updateJobTaskTable($job, $task->id, $jobId, $taskPrice, $contractorId, $area, $start_date);
-
-            $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
-
-            return $job->tasks()->where('id', '=', $task->id)->get()[0];
+        try {
+            $task->save();
+        } catch (\Exception $e) {
+            Log::error('Add/Update Task: ' . $e->getMessage());
+            return response()->json(["message"=>"Couldn't add/update task.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
+        
+        // update or create job task for task
+        $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
+        $this->updateJobTask($request, $task->id, $jobTask);
+        
+        $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
+        return response()->json($job->tasks()->get(), 200);
         // change the status of the job to pending
     }
 
@@ -575,16 +548,17 @@ class TaskController extends Controller
         $job->save();
     }
 
-    public function updateJobTaskTable($job, $taskId, $jobId, $taskPrice, $contractorId, $area, $start_date)
+    public function updateJobTask($request, $task_id, $jobTask)
     {
-        $jt = $job->tasks()->where("task_id", "=", $taskId)->where("job_id", "=", $jobId)->get()[0];
-        $jt->pivot->status = __('bid_task.initiated');
-        $jt->pivot->cust_final_price = $taskPrice;
-        $jt->pivot->sub_final_price = 0;
-        $jt->pivot->contractor_id = $contractorId;
-        $jt->pivot->area = $area;
-        $jt->pivot->start_date = $start_date;
-        $jt->pivot->save();
+        $jobTask->job_id = $request->jobId;
+        $jobTask->task_id = $task_id;
+        $jobTask->status = __('bid_task.initiated');
+        $jobTask->cust_final_price = $request->taskPrice;
+        $jobTask->sub_final_price = 0;
+        $jobTask->contractor_id = $request->contractorId;
+        $jobTask->area = $request->area;
+        $jobTask->start_date = $request->start_date;
+        $jobTask->save();
     }
 
     protected function acceptBidContractorJobTask($id)

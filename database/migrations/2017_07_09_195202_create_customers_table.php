@@ -26,7 +26,6 @@ class CreateCustomersTable extends Migration
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->text('notes')->nullable();
-            $table->text('phone_number')->nullable();
             $table->timestamps();
         });
     }

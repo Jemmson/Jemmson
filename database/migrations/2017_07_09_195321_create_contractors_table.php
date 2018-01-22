@@ -26,7 +26,6 @@ class CreateContractorsTable extends Migration
             $table->string('company_logo_name')->nullable();
             $table->string('sms_method_of_contact')->nullable();
             $table->string('phone_method_of_contact')->nullable();
-            $table->string('phone_number')->nullable();
             $table->string('company_name')->nullable();
             $table->timestamps();
         });

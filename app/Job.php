@@ -60,7 +60,7 @@ class Job extends Model
         $tasks = $this->tasks()->get();
         $subs = [];
         foreach ($tasks as $task) {
-            $subs[] = $task->jobTask()->first()->contractor()->first();
+            $subs[] = $task->jobTask()->first()->contractor();
         }
         return $subs;
     }

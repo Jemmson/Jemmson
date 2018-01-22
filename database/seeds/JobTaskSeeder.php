@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Job;
 use App\Task;
+use App\JobTask;
 use App\Contractor;
 
 class JobTaskSeeder extends Seeder
@@ -20,26 +21,29 @@ class JobTaskSeeder extends Seeder
         $job = Job::find(1);
         $job->status = __('bid.in_progress');
         $job->save();
-        $task = Task::find(1);
-        $job->tasks()->attach($task);
-        $task = $job->tasks()->find($task->id);
-        $task->pivot->contractor_id = 2;
-        $task->pivot->cust_final_price = rand(1, 1000);
-        $task->pivot->sub_final_price = rand(1, 1000);
-        $task->pivot->status = __('app.taskIsInitiated');
-        $task->pivot->save();
+
+        $task = new JobTask();
+        $task->task_id = 1;
+        $task->job_id = 1;
+        $task->contractor_id = 2;
+        $task->cust_final_price = rand(1, 1000);
+        $task->sub_final_price = rand(1, 1000);
+        $task->status = __('bid_task.initiated');
+        $task->save();
 
         $job = Job::find(2);
         $job->status = __('bid.in_progress');
         $job->save();
-        $task = Task::find(2);
-        $job->tasks()->attach($task);
-        $task = $job->tasks()->find($task->id);
-        $task->pivot->contractor_id = 1;
-        $task->pivot->cust_final_price = rand(1, 1000);
-        $task->pivot->sub_final_price = rand(1, 1000);
-        $task->pivot->status = config('app.taskIsInitiated');
-        $task->pivot->save();
+
+        $task = new JobTask();
+        $task->task_id = 2;
+        $task->job_id = 2;
+        $task->contractor_id = 1;
+        $task->cust_final_price = rand(1, 1000);
+        $task->sub_final_price = rand(1, 1000);
+        $task->status = __('bid_task.initiated');
+        $task->save();
+
 
 
         // for ($j = 1; $j < 5; $j++) {
