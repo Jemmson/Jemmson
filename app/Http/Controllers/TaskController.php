@@ -216,8 +216,8 @@ class TaskController extends Controller
 
     public function addBidEntryForTheSubContractor($contractor, $taskId, $jobId)
     {
-        if ($contractor->checkIfContractorSetBidForATask($contractor->id, $taskId, $jobId)) {
-            $contractor->addContractorToBidForJobTable($contractor->id, $taskId, $jobId);
+        if ($contractor->checkIfContractorSetBidForATask($contractor->user_id, $taskId, $jobId)) {
+            $contractor->addContractorToBidForJobTable($contractor->user_id, $taskId, $jobId);
             return true;
         } else {
             return false;
@@ -280,8 +280,6 @@ class TaskController extends Controller
         $userExists = $userData[1];
 
         $contractor = $user->contractor()->first();
-
-//        return $this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId);
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
         if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
