@@ -154,27 +154,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="panel panel-default  panel--styled">
-                            <div class="panel-body">
-                                <div class="col-md-12 panelTop">
-                                    <div class="col-md-8">
-                                        <h2>Settings</h2>
-                                        <p>Select me to to look at your settings</p>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12 panelBottom">
-                                    <a href="">
-                                        <button class="btn btn-default btn-primary">
-                                            Settings
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="panel panel-default  panel--styled">
                             <div class="panel-body">
                                 <div class="col-md-12 panelTop">
