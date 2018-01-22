@@ -513,7 +513,7 @@ class TaskController extends Controller
         $job = Job::find($job_id);
             
         // find or create a task
-        $task = Task::firstOrCreate(['name' => $name, 'job_id' => $job_id]);
+        $task = Task::firstOrCreate(['name' => $name, 'job_id' => $job_id, 'contractor_id' => $request->contractorId]);
         $task->proposed_cust_price = $request->taskPrice;
         $task->proposed_sub_price = $request->subTaskPrice;
 
