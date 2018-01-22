@@ -181,14 +181,14 @@ class JobController extends Controller
      */
     protected function notifyAll($notification, $job)
     {
-        $generalContractor = $job->contractor()->first()->user()->first();
+        $generalContractor = $job->contractor()->first();
         $subContractors = $job->subs();
         
         // notify general
         $generalContractor->notify($notification);
         $notification->setSub(true);
         foreach ($subContractors as $sub) {
-            $sub->user()->first()->notify($notification);
+            $sub->first()->notify($notification);
         }
     }
 

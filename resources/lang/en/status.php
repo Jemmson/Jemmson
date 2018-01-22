@@ -11,7 +11,8 @@ return [
     */
 
     'job' => [
-        'approved' => 'job.approved'
+        'approved' => 'job.approved',
+        'accepted' => 'job.accepted'
     ],
     'bid' => [
         'in_progress' => [

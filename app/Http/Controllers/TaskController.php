@@ -40,7 +40,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->bidContractorJobTasks()->with(['task', 'jobTask'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task', 'jobTask'])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -141,8 +141,8 @@ class TaskController extends Controller
             Log::error('Update Job Task: ' . $e->getMessage());
             return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
-        $gContractor = Contractor::find($bidContractorJobTask->task()->first()->contractor_id)->user()->first();
-        $gContractor->notify(new NotifyContractorOfSubBid($gContractor, Contractor::find($bidContractorJobTask->contractor_id)->user()->first()->name));
+        $gContractor = User::find($bidContractorJobTask->task()->first()->contractor_id);
+        $gContractor->notify(new NotifyContractorOfSubBid($gContractor, User::find($bidContractorJobTask->contractor_id)->name));
 
         return response()->json(["message"=>"Success"], 200);
     }
@@ -364,16 +364,11 @@ class TaskController extends Controller
         $contractorId = $request->contractorId;
 
         // TODO: Determine if I want to accept each individual task and not just the job as a whole
-//        DB::table('job_task')
-//            ->where('job_id', $jobId)
-//            ->where('task_id', $taskId)
-//            ->where('contractor_id', $contractorId)
-//            ->update(['status' => config('app.taskIsAccepted')]);
 
         $user_id = Contractor::where('id', $contractorId)
             ->first()
             ->user_id;
-        $user = User::where('id', $user_id)->first();
+        $user = User::find($contractorId)->first();
 
         $user->notify(new NotifyContractorOfAcceptedBid());
     }
@@ -420,14 +415,10 @@ class TaskController extends Controller
         $contractorId = $request->contractorId;
 
         $job = Job::find($jobId);
-        $job->status = config('app.jobIsAccepted');
+        $job->status = __('job.accepted');
         $job->save();
 
-        $user_id = Contractor::where('id', $contractorId)
-            ->get()
-            ->first()
-            ->user_id;
-        $user = User::where('id', $user_id)->get()->first();
+        $user = User::find($contractorId);
 
         $user->notify(new NotifyContractorOfAcceptedBid());
     }
@@ -486,15 +477,11 @@ class TaskController extends Controller
         $jobId = $request->jobId;
         $customerId = $request->customerId;
 
-//        return $customerId;
 
-        $user_id = Customer::where('id', $customerId)->get()->first()->user_id;
-        $user = User::where('id', $user_id)->get()->first();
-
+        $user = User::find($customerId);
         $job = Job::find($jobId);
-        $this->switchJobStatusToInProgress($job, __('bid.sent'));
 
-//        return $user;
+        $this->switchJobStatusToInProgress($job, __('bid.sent'));
 
         $user->notify(new NotifyCustomerThatBidIsFinished());
     }
