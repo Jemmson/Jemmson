@@ -5901,12 +5901,7 @@ class Language {
             // statuses 
             'bid_task.initiated': {
                 sub: 'Please Bid On This Task',
-                general: 'Waiting on Bid',
-                customer: 'Initiated'
-            },
-            'bid_task.sent': {
-                sub: 'Waiting On Contractor Approval',
-                general: 'Waiting On Customer Approval',
+                general: 'Initiated',
                 customer: 'Initiated'
             },
             'bid_task.approved': {
@@ -5914,10 +5909,20 @@ class Language {
                 general: 'Waiting On Customer Approval',
                 customer: 'Task Finished Waiting On Approval'
             },
+            'bid_task.finished': {
+                sub: 'Waiting on Contractor Approval',
+                general: 'Waiting on Customer Approval',
+                customer: 'Waiting on Approval'
+            },
             'bid.sent': {
                 sub: 'Waiting on Customer Approval',
                 general: 'Waiting on Customer Approval',
                 customer: 'Waiting on Approval'
+            },
+            'bid.initiated': {
+                sub: 'Waiting on General Contractor to finish job bid',
+                general: 'Bid Initiated',
+                customer: 'Bid Initiated'
             },
             'bid.in_progress': {
                 sub: 'Waiting on General Contractor to Submit Final Bid',
@@ -31723,21 +31728,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__classes_GeneralContractor__ = __webpack_require__(194);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__classes_SubContractor__ = __webpack_require__(195);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__classes_Customer__ = __webpack_require__(193);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_InitiateBid_vue__ = __webpack_require__(152);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_InitiateBid_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_InitiateBid_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_job_Job_vue__ = __webpack_require__(154);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_job_Job_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_job_Job_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_job_Task_vue__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_job_Task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_job_Task_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_job_InfoLabel_vue__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_job_InfoLabel_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_job_InfoLabel_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_job_Contracts_vue__ = __webpack_require__(153);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_job_Contracts_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_job_Contracts_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_job_CurrentTasksForJob_vue__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_job_CurrentTasksForJob_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__components_job_CurrentTasksForJob_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__vuex_index__ = __webpack_require__(251);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_vue_toasted__ = __webpack_require__(381);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_vue_toasted___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_vue_toasted__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__classes_User__ = __webpack_require__(477);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_InitiateBid_vue__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_InitiateBid_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_InitiateBid_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_job_Job_vue__ = __webpack_require__(154);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_job_Job_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_job_Job_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_job_Task_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_job_Task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_job_Task_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_job_InfoLabel_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_job_InfoLabel_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_job_InfoLabel_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_job_Contracts_vue__ = __webpack_require__(153);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_job_Contracts_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__components_job_Contracts_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_job_CurrentTasksForJob_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_job_CurrentTasksForJob_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__components_job_CurrentTasksForJob_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__vuex_index__ = __webpack_require__(251);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_vue_toasted__ = __webpack_require__(381);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_vue_toasted___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12_vue_toasted__);
 /*
  |--------------------------------------------------------------------------
  | Laravel Spark Bootstrap
@@ -31760,30 +31766,32 @@ __webpack_require__(312);
 
 
 
+
 window.Language = __WEBPACK_IMPORTED_MODULE_0__classes_Language__["a" /* default */];
 window.GeneralContractor = __WEBPACK_IMPORTED_MODULE_1__classes_GeneralContractor__["a" /* default */];
 window.SubContractor = __WEBPACK_IMPORTED_MODULE_2__classes_SubContractor__["a" /* default */];
 window.Customer = __WEBPACK_IMPORTED_MODULE_3__classes_Customer__["a" /* default */];
+window.User = new __WEBPACK_IMPORTED_MODULE_4__classes_User__["a" /* default */](Spark.state.user);
 
 __webpack_require__(196);
 
 
-Vue.component('initiate-bid', __WEBPACK_IMPORTED_MODULE_4__components_InitiateBid_vue___default.a);
+Vue.component('initiate-bid', __WEBPACK_IMPORTED_MODULE_5__components_InitiateBid_vue___default.a);
 
 
-Vue.component('job', __WEBPACK_IMPORTED_MODULE_5__components_job_Job_vue___default.a);
+Vue.component('job', __WEBPACK_IMPORTED_MODULE_6__components_job_Job_vue___default.a);
 
 
-Vue.component('task', __WEBPACK_IMPORTED_MODULE_6__components_job_Task_vue___default.a);
+Vue.component('task', __WEBPACK_IMPORTED_MODULE_7__components_job_Task_vue___default.a);
 
 
-Vue.component('infoLabel', __WEBPACK_IMPORTED_MODULE_7__components_job_InfoLabel_vue___default.a);
+Vue.component('infoLabel', __WEBPACK_IMPORTED_MODULE_8__components_job_InfoLabel_vue___default.a);
 
 
-Vue.component('contracts', __WEBPACK_IMPORTED_MODULE_8__components_job_Contracts_vue___default.a);
+Vue.component('contracts', __WEBPACK_IMPORTED_MODULE_9__components_job_Contracts_vue___default.a);
 
 
-Vue.component('currentTasksForJob', __WEBPACK_IMPORTED_MODULE_9__components_job_CurrentTasksForJob_vue___default.a);
+Vue.component('currentTasksForJob', __WEBPACK_IMPORTED_MODULE_10__components_job_CurrentTasksForJob_vue___default.a);
 
 
 
@@ -31793,13 +31801,13 @@ Spark.forms.register = {
 
 var app = new Vue({
   mixins: [__webpack_require__(313)],
-  store: __WEBPACK_IMPORTED_MODULE_10__vuex_index__["a" /* store */]
+  store: __WEBPACK_IMPORTED_MODULE_11__vuex_index__["a" /* store */]
 });
 
 // register the plugin on vue
 
 
-Vue.use(__WEBPACK_IMPORTED_MODULE_11_vue_toasted___default.a, {
+Vue.use(__WEBPACK_IMPORTED_MODULE_12_vue_toasted___default.a, {
   duration: 5000,
   theme: 'bubble'
 });
@@ -33168,14 +33176,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         status: function (bid) {
-            switch (this.user.usertype) {
-                case 'contractor':
-                    if (bid.contractor_id === this.user.id) return Language.lang()[bid.status].general;else return Language.lang()[bid.status].sub;
-                    break;
-                case 'customer':
-                    return Language.lang()[bid.status].customer;
-                    break;
-            }
+            return User.status(bid.status, bid);
         },
         prettyDate: function (date) {
             if (date == null) return '';
@@ -33421,10 +33422,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // if so this is a general contractor and should be shown 
         // everything
         isGeneral() {
-            return this.bid.contractor_id === this.user.id;
+            return User.isGeneral(this.bid);
         },
         isContractor() {
-            return this.user.usertype === 'contractor';
+            return User.isContractor();
         }
     },
     methods: {
@@ -33442,13 +33443,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             GeneralContractor.approveTaskHasBeenFinished(task);
         },
         status(status) {
-            if (this.isContractor) {
-                if (this.isGeneral) return Language.lang()[status].general;
-
-                return Language.lang()[status].sub;
-            }
-
-            return Language.lang()[status].customer;
+            return User.status(status, this.bid);
         }
     },
     mounted: function () {
@@ -77639,6 +77634,134 @@ module.exports = function listToStyles (parentId, list) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(156);
+
+
+/***/ }),
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */,
+/* 460 */,
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */,
+/* 477 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class User {
+    constructor(user) {
+        this.user = user;
+    }
+
+    status(status, bid) {
+        status = Language.lang()[status];
+        if (status === undefined) {
+            return '';
+        }
+        if (this.isContractor) {
+            if (bid !== null && this.isGeneral(bid)) return status.general;
+
+            return status.sub;
+        }
+
+        return status.customer;
+    }
+
+    isContractor() {
+        return this.user.usertype === 'contractor';
+    }
+
+    isGeneral(bid) {
+        if (bid !== null) return bid.contractor_id === this.user.id;
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = User;
 
 
 /***/ })

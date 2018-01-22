@@ -238,7 +238,7 @@ class InitiateBidController extends Controller
         $job->contractor_id = Auth::user()->id; // actually the user id and not the contractor Id
         $job->customer_id = $customer_id;       // also the user Id and not the customer Id
         $job->job_name = $job_name;
-        $job->status = "initiated";
+        $job->status = __("status.bid.initiated");
 
 
         try {

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class JobTask extends Model
 {
     protected $table = "job_task";
-    protected $fillable = ['*'];
+    protected $fillable = ['job_id', 'task_id'];
 
     /**
      * Get the task this bid belongs to

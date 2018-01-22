@@ -19,11 +19,13 @@ import Language from './classes/Language';
 import GeneralContractor from './classes/GeneralContractor';
 import SubContractor from './classes/SubContractor';
 import Customer from './classes/Customer';
+import User from './classes/User';
 
 window.Language = Language;
 window.GeneralContractor = GeneralContractor;
 window.SubContractor = SubContractor;
 window.Customer = Customer;
+window.User = new User(Spark.state.user);
 
 require('./components/bootstrap');
 
