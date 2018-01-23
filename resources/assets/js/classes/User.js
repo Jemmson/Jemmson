@@ -8,7 +8,7 @@ export default class User {
         if (status === undefined) {
             return '';
         }
-        if (this.isContractor) {
+        if (this.isContractor()) {
             if (bid !== null && this.isGeneral(bid))
                 return status.general;
 

@@ -21,7 +21,7 @@
                     </bid-tasks>
 
                     <!-- /customer approve bid form -->
-                    <form role="form" v-if="isCustomer && !bidApproved">
+                    <form role="form" v-if="isCustomer && needsApproval">
                         <div class="form-group col-md-6">
                             <label for="area">City</label>
                             <input type="text" class="form-control" id="area" v-model="bidForm.area">
@@ -83,6 +83,10 @@
             }
         },
         computed: {
+            needsApproval() {
+                // TODO: use regular status values to check these
+                return this.bid.status === "Waiting on Approval";
+            },
             isCustomer() {
                 return this.user.usertype === 'customer';
             },

@@ -31,7 +31,7 @@ class TaskController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
+     * NOTICE: 
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -137,7 +137,7 @@ class TaskController extends Controller
         try {
             \DB::table('job_task')
             ->where([['job_id', '=', $jobTask->job_id], ['task_id', '=', $jobTask->task_id]])
-            ->update(['status' => 'bid_task.sent']);
+            ->update(['status' => __('bid_task.bid_sent')]);
         } catch (\Exception $e) {
             Log::error('Update Job Task: ' . $e->getMessage());
             return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
@@ -249,6 +249,12 @@ class TaskController extends Controller
         }
     }
 
+    /**
+     * Send an invite to a sub to bid for a task
+     *
+     * @param Request $request
+     * @return void
+     */
     public function notify(Request $request)
     {
 
@@ -321,16 +327,22 @@ class TaskController extends Controller
         $user->notify(new NotifySubOfAcceptedBid());
     }
 
+    /**
+     * Accept bid for job task from sub contractor
+     *
+     * @param Request $request
+     * @return void
+     */
     public function accept(Request $request)
     {
         $bidId = $request->bidId;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $price = $request->price;
-        $contractor_id = $request->contractorId;
+        $contractorId = $request->contractorId;
         
         // accept bid task
-        $bidContractorJobTask = $this->acceptBidContractorJobTask($bidId);
+        $bidContractorJobTask = BidContractorJobTask::find($bidId);
 
         if ($bidContractorJobTask === false) {
             return response()->json(["message"=>"Couldn't accept bid.","errors"=>["error" =>["Couldn't accept bid."]]], 404);
@@ -339,23 +351,33 @@ class TaskController extends Controller
         // set the sub price in the job task table
         $job = Job::find($jobId);
         $task = $job->tasks()->get()->where('id', '=', $taskId)->first();
-        $task->pivot->sub_final_price = $price;
-        // need to update the job task with the contractor who was chosen to do
-        // that job task
-        $task->pivot->contractor_id = $contractor_id;
-        $task->pivot->status = 'bid_task.approved';
-        $task->pivot->save();
+        $jobTask = $task->jobTask()->first();
 
-        $data = ["price" => $price, "taskId" => $taskId];
-        $data = json_encode($data);
+        $jobTask->sub_final_price = $price;
+        $jobTask->contractor_id = $contractorId;
+        $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
+        $jobTask->status = __('bid_task.accepted');
 
+        try {
+            $jobTask->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Job Task: ' . $e->getMessage());
+            return response()->json(["message"=>"Couldn't accept Job Task bid.","errors"=>["error" =>["Couldn't accept bid."]]], 404);
+        }
+        
         // notify sub contractor that his bid was approved
-        $user = $bidContractorJobTask->contractor()->first()->user()->first();
+        $user = User::find($contractorId);
         $user->notify(new NotifySubOfAcceptedBid($bidContractorJobTask->task));
 
-        return $data;
+        return response()->json(["message"=>"Success"], 200);
     }
 
+    /**
+     * Notify General Contractor of accepted job bid
+     *
+     * @param Request $request
+     * @return void
+     */
     public function acceptTask(Request $request)
     {
         $taskId = $request->taskId;
@@ -382,6 +404,23 @@ class TaskController extends Controller
      */
     public function approveTaskHasBeenFinished(Request $request) 
     {
+        $task = Task::find($request->id);
+        $jobTask = $task->jobTask()->first();
+        $jobTask->status = __("bid_task.approved_by_general");
+
+        $customer = User::find(Job::find($jobTask->job_id)->customer_id);
+        $subContractor = User::find($jobTask->contractor_id);
+
+        try {
+            $jobTask->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Task Status: ' . $e->getMessage());
+            return response()->json(["message"=>"Couldn't update status task.","errors"=>["error" =>[$e->getMessage()]]], 404);
+        }
+
+        $customer->notify(new TaskFinished($task, true));
+        $subContractor->notify(new TaskFinished($task, false));
+
         return response()->json(["message"=>"Success"], 200);
     }
     
@@ -395,20 +434,21 @@ class TaskController extends Controller
     public function taskHasBeenFinished(Request $request) 
     {
         $task = Task::find($request->id);
-        $task_job_task = $task->jobTask()->first();
-        $task_job_task->status = __("bid_task.finished");
+        $jobTask = $task->jobTask()->first();
+        // TODO: check if sub or general finished this job
+        $jobTask->status = __("bid_task.finished_by_sub");
 
-        $customer = User::find(Job::find($request->job_task['job_id'])->customer_id);
+        $customer = User::find(Job::find($jobTask->job_id)->customer_id);
         $generalContractor = User::find($request->contractor_id);
 
         try {
-            $task_job_task->save();
+            $jobTask->save();
         } catch (\Exception $e) {
             Log::error('Updating Task Status: ' . $e->getMessage());
             return response()->json(["message"=>"Couldn't update status task bid.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
 
-        if ($request->current_user_id === $request->job_task['contractor_id'] && $request->current_user_id === $request->contractor_id) {
+        if ($request->current_user_id === $jobTask->contractor_id && $request->current_user_id === $request->contractor_id) {
             // is general contractor
             $customer->notify(new TaskFinished($task, true));
         } else {
@@ -559,21 +599,5 @@ class TaskController extends Controller
         $jobTask->area = $request->area;
         $jobTask->start_date = $request->start_date;
         $jobTask->save();
-    }
-
-    protected function acceptBidContractorJobTask($id)
-    {
-        // get model
-        $bidContractorJobTask = BidContractorJobTask::find($id);
-
-        $bidContractorJobTask->accepted = true;
-
-        try {
-            $bidContractorJobTask->save();
-        } catch (\Excpetion $e) {
-            Log::error('Accept Bid: ' . $e->getMessage());
-            return false;
-        }
-        return $bidContractorJobTask;
     }
 }

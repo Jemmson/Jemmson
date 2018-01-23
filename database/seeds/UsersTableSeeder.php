@@ -71,7 +71,7 @@ class UsersTableSeeder extends Seeder
 
             $data = [
                 'name' => 'Shawn Pike',
-                'email' => $faker->unique()->safeEmail,
+                'email' => "shawn@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
@@ -90,7 +90,6 @@ class UsersTableSeeder extends Seeder
                 'company_logo_name' => $faker->word,
                 'sms_method_of_contact' => 'on',
                 'phone_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
                 'company_name' => $faker->word,
             ];
 
@@ -98,7 +97,7 @@ class UsersTableSeeder extends Seeder
 
             $data = [
                 'name' => 'Daven Escobar',
-                'email' => $faker->unique()->safeEmail,
+                'email' => "daven@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
@@ -117,15 +116,14 @@ class UsersTableSeeder extends Seeder
                 'company_logo_name' => $faker->word,
                 'sms_method_of_contact' => 'on',
                 'phone_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
                 'company_name' => $faker->word,
             ];
 
             Contractor::create($contractorData);
 
             $data = [
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
+                'name' => "John Doe",
+                'email' => "john@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
@@ -144,14 +142,13 @@ class UsersTableSeeder extends Seeder
                 'notes' => $faker->paragraph,
                 'phone_method_of_contact' => 'on',
                 'sms_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
             ];
 
             Customer::create($customerData);
 
             $data = [
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
+                'name' => "Jane Doe",
+                'email' => "jane@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
@@ -170,7 +167,6 @@ class UsersTableSeeder extends Seeder
                 'notes' => $faker->paragraph,
                 'phone_method_of_contact' => 'on',
                 'sms_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
             ];
 
             Customer::create($customerData);

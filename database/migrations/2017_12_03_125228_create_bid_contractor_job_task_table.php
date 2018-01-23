@@ -15,12 +15,10 @@ class CreateBidContractorJobTaskTable extends Migration
     {
         Schema::create('bid_contractor_job_task', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('contractor_id');
-            $table->integer('job_id');
-            $table->integer('task_id');
+            $table->integer('contractor_id')->unsigned();
+            $table->integer('job_id')->unsigned();
+            $table->integer('task_id')->unsigned();
             $table->float('bid_price')->nullable()->default(0.00);
-            $table->boolean('accepted')->nullable()->default(0);
-//            $table->primary(['contractor_id', 'job_id', 'task_id']);
             $table->timestamps();
         });
     }
