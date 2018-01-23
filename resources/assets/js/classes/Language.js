@@ -10,10 +10,15 @@ export default class Language {
                 general: 'Initiated',
                 customer: 'Initiated' 
             },
-            'bid_task.approved': {
-                sub: 'Waiting On Contractor Approval',
-                general: 'Waiting On Customer Approval',
-                customer: 'Task Finished Waiting On Approval'
+            'bid_task.accepted': {
+                sub: 'Bid Accepted, Waiting On Customer Approval',
+                general: 'Approved, Waiting On Customer Approval',
+                customer: 'Task Finished Waiting On Approval & Pay'
+            },
+            'bid_task.approved_by_general': {
+                sub: 'Waiting On Customer Approval & Payment',
+                general: 'Approved, Waiting On Customer Approval',
+                customer: 'Needs Approval & Pay'
             },
             'bid_task.finished': {
                 sub: 'Waiting on Contractor Approval',

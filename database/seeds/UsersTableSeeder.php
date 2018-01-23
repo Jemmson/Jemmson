@@ -90,7 +90,6 @@ class UsersTableSeeder extends Seeder
                 'company_logo_name' => $faker->word,
                 'sms_method_of_contact' => 'on',
                 'phone_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
                 'company_name' => $faker->word,
             ];
 
@@ -117,7 +116,6 @@ class UsersTableSeeder extends Seeder
                 'company_logo_name' => $faker->word,
                 'sms_method_of_contact' => 'on',
                 'phone_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
                 'company_name' => $faker->word,
             ];
 
@@ -144,7 +142,6 @@ class UsersTableSeeder extends Seeder
                 'notes' => $faker->paragraph,
                 'phone_method_of_contact' => 'on',
                 'sms_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
             ];
 
             Customer::create($customerData);
@@ -170,7 +167,6 @@ class UsersTableSeeder extends Seeder
                 'notes' => $faker->paragraph,
                 'phone_method_of_contact' => 'on',
                 'sms_method_of_contact' => 'on',
-                'phone_number' => $faker->phoneNumber,
             ];
 
             Customer::create($customerData);

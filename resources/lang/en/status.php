@@ -16,7 +16,8 @@ return [
     ],
     'bid_task' => [
         'initiated' => 'bid_task.initiated',
-        'approved' => 'bid_task.approved',    
+        'accepted' => 'bid_task.accepted',
+        'approved_by_general' => 'bid_task.approved_by_general',    
         'finished' => 'bid_task.finished',
     ],
     'bid' => [
