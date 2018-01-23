@@ -21,6 +21,7 @@ class CreateJobTaskTable extends Migration
             $table->increments('id');
             $table->integer('job_id')->unsigned();
             $table->integer('task_id')->unsigned();
+            $table->integer('bid_id')->unsigned()->nullable();
             $table->integer('contractor_id')->nullable();
             $table->string('status')->nullable();
             $table->float('cust_final_price')->nullable();
@@ -31,6 +32,7 @@ class CreateJobTaskTable extends Migration
             
             $table->foreign('job_id')->references('id')->on('jobs');
             $table->foreign('task_id')->references('id')->on('tasks');
+            
         });
     }
 

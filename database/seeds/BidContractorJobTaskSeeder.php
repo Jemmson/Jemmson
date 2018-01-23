@@ -5,7 +5,7 @@ use App\Contractor;
 use App\Job;
 use App\Task;
 
-class BidContractorJobTask extends Seeder
+class BidContractorJobTaskSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -23,7 +23,6 @@ class BidContractorJobTask extends Seeder
                             'job_id' => 1,
                             'task_id' => 1,
                             'bid_price' => rand(1, 1000),
-                            'accepted' => 0
                         ]
                     );
 
@@ -33,7 +32,6 @@ class BidContractorJobTask extends Seeder
                             'job_id' => 2,
                             'task_id' => 2,
                             'bid_price' => rand(1, 1000),
-                            'accepted' => 0
                         ]
                     );
 

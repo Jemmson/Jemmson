@@ -71,7 +71,7 @@ class UsersTableSeeder extends Seeder
 
             $data = [
                 'name' => 'Shawn Pike',
-                'email' => $faker->unique()->safeEmail,
+                'email' => "shawn@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
@@ -97,7 +97,7 @@ class UsersTableSeeder extends Seeder
 
             $data = [
                 'name' => 'Daven Escobar',
-                'email' => $faker->unique()->safeEmail,
+                'email' => "daven@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
@@ -122,8 +122,8 @@ class UsersTableSeeder extends Seeder
             Contractor::create($contractorData);
 
             $data = [
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
+                'name' => "John Doe",
+                'email' => "john@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
@@ -147,8 +147,8 @@ class UsersTableSeeder extends Seeder
             Customer::create($customerData);
 
             $data = [
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
+                'name' => "Jane Doe",
+                'email' => "jane@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
                 'phone' => $faker->phoneNumber,
