@@ -5898,30 +5898,50 @@ class Language {
 
     static lang() {
         return {
-            // statuses 
+            // initiated
             'bid_task.initiated': {
                 sub: 'Please Bid On This Task',
                 general: 'Initiated',
                 customer: 'Initiated'
             },
+            // sub sent a bid to the general contractor
+            'bid_task.bid_sent': {
+                sub: 'Waiting on Contractor To Accept Bid',
+                general: 'Waiting On Bid Approval',
+                customer: 'Pending'
+            },
+            // general contractor accepted the subs bid
             'bid_task.accepted': {
                 sub: 'Bid Accepted, Waiting On Customer Approval',
-                general: 'Approved, Waiting On Customer Approval',
-                customer: 'Task Finished Waiting On Approval & Pay'
+                general: 'Bid Accepted',
+                customer: 'Pending'
             },
+            // sub saying this task is finished
+            'bid_task.finished_by_sub': {
+                sub: 'Waiting on Contractor Approval',
+                general: 'Waiting On Approval',
+                customer: 'Pending'
+            },
+            // approving a job finished by a sub is finished
             'bid_task.approved_by_general': {
                 sub: 'Waiting On Customer Approval & Payment',
                 general: 'Approved, Waiting On Customer Approval',
                 customer: 'Needs Approval & Pay'
             },
-            'bid_task.finished': {
-                sub: 'Waiting on Contractor Approval',
-                general: 'Waiting on Customer Approval',
-                customer: 'Waiting on Approval'
+            // general saying this task is finished
+            'bid_task.finished_by_general': {
+                sub: '',
+                general: 'Waiting On Customer Approval & Payment',
+                customer: 'Needs Approval & Pay'
+            },
+            'bid_task.approved_by_customer': {
+                sub: 'Start Job',
+                general: 'Start Job',
+                customer: 'Approved Task'
             },
             'bid.sent': {
-                sub: 'Waiting on Customer Approval',
-                general: 'Waiting on Customer Approval',
+                sub: 'Waiting on Customer Approval - sub',
+                general: 'Waiting on Customer Approval - general',
                 customer: 'Waiting on Approval'
             },
             'bid.initiated': {
@@ -32901,6 +32921,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     computed: {
+        needsApproval() {
+            // TODO: use regular status values to check these
+            return this.bid.status === "Waiting on Approval";
+        },
         isCustomer() {
             return this.user.usertype === 'customer';
         },
@@ -35165,38 +35189,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user', 'bidTasks'],
   data() {
     return {
-      tasks: this.bidTasks,
+      bids: this.bidTasks,
       price: ''
     };
   },
   methods: {
+    shouldStartJob(bid) {
+      return bid.job_task.status === 'bid_task.approved_by_customer';
+    },
+    isBidOpen(bid) {
+      let acceptedBid = bid.job_task.bid_id;
+
+      // the contractor has not chosen a bid for the
+      // task yet
+      if (acceptedBid === null) {
+        return true;
+      }
+
+      return false;
+    },
     status: function (bid_task) {
-      let job_task = bid_task.job_task;
-
-      // did the contractor go with someone else?
-      // TODO: is this the best place for this?
-      if (job_task.contractor_id !== bid_task.contractor_id) {
-        return 'Declined';
-      }
-
-      let lang = Language.lang()[job_task.status];
-      // if no status then waiting on bid
-      if (lang === undefined) {
-        return 'Waiting On Bid';
-      }
-      // return status for sub
-      return lang.sub;
+      return User.status(bid_task.job_task.status, bid_task.task);
     },
     prettyDate: function (date) {
       if (date == null) return '';
       // return the date and ignore the time
       date = date.split(' ');
       return date[0];
+    },
+    finished(bid) {
+      console.log(bid);
     },
     update: function (e) {
       let id = e.target.id;
@@ -35422,7 +35455,7 @@ class User {
         if (status === undefined) {
             return '';
         }
-        if (this.isContractor) {
+        if (this.isContractor()) {
             if (bid !== null && this.isGeneral(bid)) return status.general;
 
             return status.sub;
@@ -76029,7 +76062,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "openTaskPanel": _vm.openTaskPanel
     }
-  }), _vm._v(" "), (_vm.isCustomer && !_vm.bidApproved) ? _c('form', {
+  }), _vm._v(" "), (_vm.isCustomer && _vm.needsApproval) ? _c('form', {
     attrs: {
       "role": "form"
     }
@@ -76155,20 +76188,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "row"
   }, [_c('div', {
-    staticClass: "col-md-8 col-md-offset-2"
+    staticClass: "col-md-12"
   }, [_c('div', {
     staticClass: "panel"
   }, [_c('div', {
     staticClass: "panel-body"
   }, [_vm._v("\n          Hello, " + _vm._s(_vm.user.name) + "\n          "), _c('br'), _vm._v(" These are your bid tasks\n        ")])])]), _vm._v(" "), _c('div', {
-    staticClass: "col-md-8 col-md-offset-2"
+    staticClass: "col-md-12"
   }, [_c('div', {
     staticClass: "panel"
   }, [_c('div', {
     staticClass: "panel-body"
   }, [_c('table', {
     staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.tasks), function(bidTask) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.bids), function(bidTask) {
     return _c('tr', {
       attrs: {
         "value": bidTask.id
@@ -76177,7 +76210,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "scope": "row"
       }
-    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.task.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bidTask.job_task.start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.job_task.area))]), _vm._v(" "), _c('td', [(!bidTask.accepted) ? _c('div', [_c('input', {
+    }, [_vm._v(_vm._s(bidTask.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.task.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.prettyDate(bidTask.job_task.start_date)))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(bidTask.job_task.area))]), _vm._v(" "), _c('td', [(_vm.isBidOpen(bidTask)) ? _c('div', [_c('input', {
       attrs: {
         "type": "text",
         "id": 'price-' + bidTask.id
@@ -76210,7 +76243,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "id": 'success-' + bidTask.id
       }
-    })]), _vm._v(" "), _c('td', [_vm._v("\n                  " + _vm._s(_vm.status(bidTask)) + "\n                ")]), _vm._v(" "), _c('td', [(!bidTask.accepted) ? _c('div', [_c('button', {
+    })]), _vm._v(" "), _c('td', [_vm._v("\n                  " + _vm._s(_vm.status(bidTask)) + "\n                ")]), _vm._v(" "), _c('td', [(_vm.isBidOpen(bidTask)) ? _c('div', [_c('button', {
       staticClass: "btn btn-primary",
       attrs: {
         "id": bidTask.id
@@ -76227,7 +76260,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "id": bidTask.id,
         "disabled": ""
       }
-    }, [_vm._v("Submit")])])])])
+    }, [_vm._v("Submit")])])]), _vm._v(" "), _c('td', [(_vm.shouldStartJob(bidTask)) ? _c('div', [_c('button', {
+      staticClass: "btn btn-success",
+      on: {
+        "click": function($event) {
+          _vm.finished(bidTask)
+        }
+      }
+    }, [_vm._v("Finished")])]) : _vm._e()])])
   }))])])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', {
@@ -76255,6 +76295,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "scope": "col"
     }
   }, [_vm._v("Status")]), _vm._v(" "), _c('th', {
+    attrs: {
+      "scope": "col"
+    }
+  }), _vm._v(" "), _c('th', {
     attrs: {
       "scope": "col"
     }
