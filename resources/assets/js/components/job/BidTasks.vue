@@ -50,7 +50,7 @@
       },
       methods: {
           showFinishedBtn(task) {
-              if (this.isContractor && this.isAssignedToMe(task) && (task.job_task.status === 'bid_task.approved_by_customer' || this.bid.status === 'job.approved')) {
+              if (this.isContractor && this.isAssignedToMe(task) && task.job_task.status === 'bid_task.approved_by_customer') {
                   return true;
               }
               return false;

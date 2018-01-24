@@ -455,7 +455,7 @@ class TaskController extends Controller
         }
 
         $customer = User::find(Job::find($jobTask->job_id)->customer_id);
-        $generalContractor = User::find($request->contractor_id);
+        $generalContractor = User::find($task->contractor_id);
 
         try {
             $jobTask->save();
