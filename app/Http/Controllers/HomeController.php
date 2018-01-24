@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contractor;
 use App\Customer;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -91,9 +92,14 @@ class HomeController extends Controller
                 'company_logo_name' => request('file_name'), //
                 'sms_method_of_contact' => request('sms_text'), //
                 'phone_method_of_contact' => request('phone_contact'), //
-                'phone_number' => request('phone_number'), //
                 'company_name' => request('company_name'), //
             ]);
+            $user = User::find($request->user_id);
+//            dd($user."<br>".$request->phone_number);
+
+            $user->phone = $request->phone_number;
+            $user->save();
+//                'phone_number' => request('phone_number'), //
 
         } else if (Auth::user()->usertype == 'customer') {
 
