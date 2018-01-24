@@ -4,7 +4,7 @@ export default class Customer {
         this.user = Spark.state.user;
     }
 
-    static approveBid(bidForm) {
+    approveBid(bidForm) {
         console.log('approve');
         Spark.post('/api/job/approve/' + bidForm.id, bidForm)
             .then((response) => {

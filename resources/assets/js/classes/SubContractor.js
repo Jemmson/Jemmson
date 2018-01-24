@@ -6,7 +6,7 @@ export default class SubContractor {
         this.user = Spark.state.user;
     }
 
-    static finishedTask(task) {
+    finishedTask(task) {
         console.log('finishedTask', task);
         let id = Spark.state.user.id;
         task.current_user_id = id;
