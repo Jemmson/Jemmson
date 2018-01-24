@@ -21,7 +21,14 @@ class BidListController extends Controller
           ->with(
             [
               'tasks' => function ($query) {
-                $query->with('jobTask', 'bidContractorJobTasks');
+                $query->select('tasks.id', 'tasks.name', 'tasks.contractor_id', 'tasks.job_id');
+                $query->with(
+                [
+                  'jobTask' => function ($q) {
+                    // TODO: need to only return need to know columns, returns all data right now
+                    //$q->select('job_task.id', 'job_task.contractor_id', 'job_task.status', 'job_task.cust_final_price', 'job_task.start_date');
+                  }
+                ]);
               }
             ])->get();
           $jobsWithoutTasks = Auth::user()->jobs()
