@@ -82,8 +82,7 @@
               console.log('openBid');
 
               // clone bid
-              this.bid = JSON.parse(JSON.stringify(bid));
-              this.bid.status = this.status(bid);
+              this.bid = bid;
               
               // hide show components
               this.showBidList = false;

@@ -85,14 +85,14 @@
         computed: {
             needsApproval() {
                 // TODO: use regular status values to check these
-                return this.bid.status === "Waiting on Approval";
+                return this.bid.status === "bid.sent";
             },
             isCustomer() {
-                return this.user.usertype === 'customer';
+                return User.isCustomer();
             },
             isGeneralContractor() {
                 // General contractor is the one who created the bid
-                return this.bid.contractor_id === this.user.id;
+                return User.isGeneral(this.bid);
             },
         },
         methods: {
@@ -118,8 +118,6 @@
             // set up init data
             this.bidForm.id = this.bid.id;
             this.bidForm.status = this.bid.status;
-            this.bidApproved = (this.bid.status === 'Approved' || this.bid.status ===
-                'Waiting on Contractor to Submit Final Bid');
             this.user = Spark.state.user;
         }
     }

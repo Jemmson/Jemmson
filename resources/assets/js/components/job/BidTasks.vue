@@ -17,8 +17,8 @@
                         <td>{{ status(task.job_task.status) }}</td>
                         <td>
                             <button class="btn btn-primary" @click.prevent="openTask(task)">Details</button>
-                            <button class="btn btn-success" v-if="isContractor && isAssignedToMe(task)" @click="finishedTask(task)">Finished</button>
-                            <button class="btn btn-success" v-if="isGeneral && !isAssignedToMe(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
+                            <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)">Finished</button>
+                            <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
                         </td>
                     </tr>
 
@@ -49,6 +49,18 @@
           }
       },
       methods: {
+          showFinishedBtn(task) {
+              if (this.isContractor && this.isAssignedToMe(task) && (task.job_task.status === 'bid_task.approved_by_customer' || this.bid.status === 'job.approved')) {
+                  return true;
+              }
+              return false;
+          },
+          showApproveBtn(task) {
+              if (this.isGeneral && !this.isAssignedToMe(task) && (task.job_task.status === 'bid_task.finished_by_sub' || task.job_task.status === 'bid_task.initiated')) {
+                  return true;
+              }
+              return false;
+          },
           // is the task assigned to the currently logged in user
           isAssignedToMe(task) {
               return this.user.id === task.job_task.contractor_id;
