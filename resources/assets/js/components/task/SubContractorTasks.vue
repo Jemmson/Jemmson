@@ -106,7 +106,7 @@
         return date[0];
       },
       finished(bid) {
-        console.log(bid);
+        SubContractor.finishedTask(bid);
       },
       update: function (e) {
         let id = e.target.id;
