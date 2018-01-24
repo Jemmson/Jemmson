@@ -42,10 +42,10 @@
           // if so this is a general contractor and should be shown 
           // everything
           isGeneral() {
-              return this.bid.contractor_id === this.user.id;
+              return User.isGeneral(this.bid);
           },
           isContractor() {
-              return this.user.usertype === 'contractor';
+              return User.isContractor();
           }
       },
       methods: {
@@ -63,14 +63,7 @@
               GeneralContractor.approveTaskHasBeenFinished(task);
           },
           status(status){
-              if (this.isContractor) {
-                  if (this.isGeneral)
-                    return Language.lang()[status].general;
-
-                return Language.lang()[status].sub;
-              }
-              
-              return Language.lang()[status].customer;
+              return User.status(status, this.bid);
           }
       },
       mounted: function () {

@@ -4,26 +4,56 @@ export default class Language {
 
     static lang () {
         return {
-            // statuses 
+            // initiated
             'bid_task.initiated': {
                 sub: 'Please Bid On This Task',
-                general: 'Waiting on Bid',
+                general: 'Initiated',
                 customer: 'Initiated' 
             },
-            'bid_task.sent': {
-                sub: 'Waiting On Contractor Approval',
-                general: 'Waiting On Customer Approval',
-                customer: 'Initiated'  
+            // sub sent a bid to the general contractor
+            'bid_task.bid_sent': {
+                sub: 'Waiting on Contractor To Accept Bid',
+                general: 'Waiting On Bid Approval',
+                customer: 'Pending'
             },
-            'bid_task.approved': {
-                sub: 'Waiting On Contractor Approval',
-                general: 'Waiting On Customer Approval',
-                customer: 'Task Finished Waiting On Approval'
+            // general contractor accepted the subs bid
+            'bid_task.accepted': {
+                sub: 'Bid Accepted, Waiting On Customer Approval',
+                general: 'Bid Accepted',
+                customer: 'Pending'
+            },
+            // sub saying this task is finished
+            'bid_task.finished_by_sub': {
+                sub: 'Waiting on Contractor Approval',
+                general: 'Waiting On Approval',
+                customer: 'Pending'
+            },
+            // approving a job finished by a sub is finished
+            'bid_task.approved_by_general': {
+                sub: 'Waiting On Customer Approval & Payment',
+                general: 'Approved, Waiting On Customer Approval',
+                customer: 'Needs Approval & Pay'
+            },
+            // general saying this task is finished
+            'bid_task.finished_by_general': {
+                sub: '',
+                general: 'Waiting On Customer Approval & Payment',
+                customer: 'Needs Approval & Pay'
+            },
+            'bid_task.approved_by_customer': {
+                sub: 'Start Job',
+                general: 'Start Job',
+                customer: 'Approved Task'
             },
             'bid.sent': {
-                sub: 'Waiting on Customer Approval',
-                general: 'Waiting on Customer Approval',
+                sub: 'Waiting on Customer Approval - sub',
+                general: 'Waiting on Customer Approval - general',
                 customer: 'Waiting on Approval'
+            },
+            'bid.initiated': {
+                sub: 'Waiting on General Contractor to finish job bid',
+                general: 'Bid Initiated',
+                customer: 'Bid Initiated'
             },
             'bid.in_progress': {
                 sub: 'Waiting on General Contractor to Submit Final Bid',

@@ -18,17 +18,21 @@ class CreateJobTaskTable extends Migration
         // particular job. the contractor id is the id of the contractor that will be performing the
         // particular job.
         Schema::create('job_task', function (Blueprint $table) {
-//            $table->increments('id');
-            $table->integer('job_id');
-            $table->integer('task_id');
+            $table->increments('id');
+            $table->integer('job_id')->unsigned();
+            $table->integer('task_id')->unsigned();
+            $table->integer('bid_id')->unsigned()->nullable();
             $table->integer('contractor_id')->nullable();
             $table->string('status')->nullable();
             $table->float('cust_final_price')->nullable();
             $table->float('sub_final_price')->nullable();
             $table->string('area')->nullable();
             $table->timestamp('start_date')->nullable();
-            $table->primary(['job_id', 'task_id']);
             $table->timestamps();
+            
+            $table->foreign('job_id')->references('id')->on('jobs');
+            $table->foreign('task_id')->references('id')->on('tasks');
+            
         });
     }
 

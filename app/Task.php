@@ -14,7 +14,8 @@ class Task extends Model
         'proposed_cust_price',
         'average_cust_price',
         'proposed_sub_price',
-        'average_sub_price'
+        'average_sub_price',
+        'job_id'
     ];
     //
 //    public function time()
@@ -71,7 +72,6 @@ class Task extends Model
                         bid_contractor_job_task.contractor_id, 
                         bid_contractor_job_task.task_id, 
                         bid_contractor_job_task.bid_price,
-                        bid_contractor_job_task.accepted
                       from 
                         contractors 
                       inner join 

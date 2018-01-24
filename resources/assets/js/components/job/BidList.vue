@@ -69,17 +69,7 @@
       },
       methods: {
           status: function (bid) {
-              switch (this.user.usertype) {
-                  case 'contractor':
-                    if (bid.contractor_id === this.user.id)
-                        return Language.lang()[bid.status].general;
-                    else
-                        return Language.lang()[bid.status].sub;
-                    break;
-                  case 'customer':
-                    return Language.lang()[bid.status].customer;
-                    break;
-              }
+              return User.status(bid.status, bid);
           },
           prettyDate: function (date) {
               if (date == null)
