@@ -10,7 +10,7 @@
             <div class="col-md-6">
                 <label>Status: </label>
                 <label class="label label-warning">
-                    {{ bid.status }}
+                    {{ status }}
                 </label>
             </div>
             <!-- /end detail header -->
@@ -48,6 +48,11 @@
       data() {
           return {
           }
+      },
+      computed: {
+        status () {
+            return User.status(this.bid.status, this.bid);
+        }
       },
       methods: {
       },

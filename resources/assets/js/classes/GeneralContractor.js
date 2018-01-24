@@ -6,7 +6,7 @@ export default class GeneralContractor {
         this.user = Spark.state.user;
     }
 
-    static notifyCustomerOfFinishedBid(bid) {
+    notifyCustomerOfFinishedBid(bid) {
         console.log('notifyCustomerOfFinishedBid', bid);
         axios.post('/api/task/finishedBidNotification', {
             jobId: bid.id,
@@ -20,7 +20,7 @@ export default class GeneralContractor {
         });
     }
 
-    static acceptSubBidForTask(task, bid) {
+    acceptSubBidForTask(task, bid) {
         console.log('acceptSubBidForTask', task);
         axios.post('/api/task/accept', {
             jobId: task.job_task.job_id,
@@ -37,7 +37,7 @@ export default class GeneralContractor {
         });
     }
 
-    static sendSubInviteToBidOnTask(task, form) {
+    sendSubInviteToBidOnTask(task, form) {
         console.log('sendSubInviteToBidOnTask', task, form);
         form.taskId = task.id;
         form.jobId = task.job_task.job_id;
@@ -52,7 +52,7 @@ export default class GeneralContractor {
             });
     }
 
-    static addNewTaskToBid(bid, form) {
+    addNewTaskToBid(bid, form) {
         console.log('sendSubInviteToBidOnTask', bid, form);
         // I want the status to go from initiated to in progress when the first new task is added
         // I want each task to be added to the the tasks table
@@ -74,6 +74,7 @@ export default class GeneralContractor {
                 console.log(response)
                 // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
                 // show a toast notification
+                Bus.$emit('taskAdded', true);
                 Vue.toasted.success('New Task Added!');
             }).catch(error => {
                 console.error(error);
@@ -87,7 +88,7 @@ export default class GeneralContractor {
             });
     }
 
-    static approveTaskHasBeenFinished(task) {
+    approveTaskHasBeenFinished(task) {
         console.log('approveTaskHasBeenFinished', task);
         axios.post('/api/task/approve', task)
             .then((response) => {

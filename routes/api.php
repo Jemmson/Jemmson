@@ -87,3 +87,7 @@ Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 
+// Payment apis
+Route::post('/pay/task', 'PayController@payForTask');
+
+

@@ -10,10 +10,42 @@ use Illuminate\Support\Facades\DB;
 
 class BidListController extends Controller
 {
-  public function index()
-  {
-      // load jobs and all their tasks along with those tasks relationships 
-      $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks')->get();
-      return view('/bid-list', compact('jobs'));
-  }
+    public function index()
+    {
+        // load jobs and all their tasks along with those tasks relationships
+        if ($this->isCustomer()) {
+          // only load tasks on jobs that are approved or need approval
+          $jobsWithTasks = Auth::user()->jobs()
+          ->where('status', __('bid.sent'))
+          ->orWhere('status', __('job.approved'))
+          ->with(
+            [
+              'tasks' => function ($query) {
+                $query->select('tasks.id', 'tasks.name', 'tasks.contractor_id', 'tasks.job_id');
+                $query->with(
+                [
+                  'jobTask' => function ($q) {
+                    // TODO: need to only return need to know columns, returns all data right now
+                    //$q->select('job_task.id', 'job_task.contractor_id', 'job_task.status', 'job_task.cust_final_price', 'job_task.start_date');
+                  }
+                ]);
+              }
+            ])->get();
+          $jobsWithoutTasks = Auth::user()->jobs()
+          ->where('status', '!=', __('bid.sent'))
+          ->where('status', '!=', __('job.approved'))
+          ->get();
+          $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
+        } else {
+          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks')->get();
+        }
+        
+        return view('/bid-list', compact('jobs'));
+    }
+    
+    private function isCustomer()
+    {
+        return Auth::user()->usertype === 'customer';
+    }
+
 }

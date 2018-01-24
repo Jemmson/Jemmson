@@ -17,7 +17,7 @@
                     </bid-details>
 
                     <!-- /show all tasks associated to this bid -->
-                    <bid-tasks :bid="bid" @openTaskPanel="openTaskPanel">
+                    <bid-tasks v-if="bid.tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
                     </bid-tasks>
 
                     <!-- /customer approve bid form -->
@@ -85,14 +85,14 @@
         computed: {
             needsApproval() {
                 // TODO: use regular status values to check these
-                return this.bid.status === "Waiting on Approval";
+                return this.bid.status === "bid.sent";
             },
             isCustomer() {
-                return this.user.usertype === 'customer';
+                return User.isCustomer();
             },
             isGeneralContractor() {
                 // General contractor is the one who created the bid
-                return this.bid.contractor_id === this.user.id;
+                return User.isGeneral(this.bid);
             },
         },
         methods: {
@@ -104,9 +104,11 @@
             },
             openTaskPanel(e) {
                 this.task = e;
+                this.showAddTaskPanel = false;
                 this.showTaskPanel = this.showTaskPanel ? false : true;
             },
             openAddTask() {
+                this.showTaskPanel = false;
                 this.showAddTaskPanel = this.showAddTaskPanel ? false : true;
             },
             closeBid: function () {
@@ -118,9 +120,12 @@
             // set up init data
             this.bidForm.id = this.bid.id;
             this.bidForm.status = this.bid.status;
-            this.bidApproved = (this.bid.status === 'Approved' || this.bid.status ===
-                'Waiting on Contractor to Submit Final Bid');
             this.user = Spark.state.user;
+        },
+        created: function () {
+            Bus.$on('taskAdded', () => {
+                this.showAddTaskPanel = false;
+            });
         }
     }
 </script>

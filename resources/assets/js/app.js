@@ -22,9 +22,9 @@ import Customer from './classes/Customer';
 import User from './classes/User';
 
 window.Language = Language;
-window.GeneralContractor = GeneralContractor;
-window.SubContractor = SubContractor;
-window.Customer = Customer;
+window.GeneralContractor = new GeneralContractor(Spark.state.user);
+window.SubContractor = new SubContractor(Spark.state.user);
+window.Customer = new Customer(Spark.state.user);
 window.User = new User(Spark.state.user);
 
 require('./components/bootstrap');

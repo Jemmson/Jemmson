@@ -41,7 +41,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task', 'jobTask'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task.jobs', 'jobTask'])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -428,18 +428,34 @@ class TaskController extends Controller
      * General or Sub Contractor
      * Put task as finished and notify relevant users
      *
-     * @param Request $request
+     * @param Request $request task or bidcontractorjobtask object
      * @return void
      */
     public function taskHasBeenFinished(Request $request) 
     {
-        $task = Task::find($request->id);
+        $id = 0;
+        $finishedByGeneral = false;
+
+        if ($request->task !== null) {
+            // request comes from the bid task page
+            // main object is not the task itself 
+            $id = $request->task_id;
+        } else {
+            $id = $request->id;
+        }
+
+        $task = Task::find($id);
         $jobTask = $task->jobTask()->first();
-        // TODO: check if sub or general finished this job
-        $jobTask->status = __("bid_task.finished_by_sub");
+
+        if ($request->current_user_id === $jobTask->contractor_id && $request->current_user_id === $task->contractor_id) {
+            $finishedByGeneral = true;
+            $jobTask->status = __("bid_task.finished_by_general");
+        } else {
+            $jobTask->status = __("bid_task.finished_by_sub");
+        }
 
         $customer = User::find(Job::find($jobTask->job_id)->customer_id);
-        $generalContractor = User::find($request->contractor_id);
+        $generalContractor = User::find($task->contractor_id);
 
         try {
             $jobTask->save();
@@ -448,7 +464,7 @@ class TaskController extends Controller
             return response()->json(["message"=>"Couldn't update status task bid.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
 
-        if ($request->current_user_id === $jobTask->contractor_id && $request->current_user_id === $request->contractor_id) {
+        if ($finishedByGeneral) {
             // is general contractor
             $customer->notify(new TaskFinished($task, true));
         } else {

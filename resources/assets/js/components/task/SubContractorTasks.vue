@@ -57,7 +57,7 @@
                     </div>
                   </td>
                   <td>
-                    <div v-if="shouldStartJob(bidTask)">
+                    <div v-if="showFinishedBtn(bidTask)">
                       <button class="btn btn-success" @click="finished(bidTask)">Finished</button>
                     </div>
                   </td>
@@ -81,7 +81,7 @@
       }
     },
     methods: {
-      shouldStartJob(bid) {
+      showFinishedBtn(bid) {
         return bid.job_task.status === 'bid_task.approved_by_customer';
       },
       isBidOpen(bid) {
@@ -106,7 +106,7 @@
         return date[0];
       },
       finished(bid) {
-        console.log(bid);
+        SubContractor.finishedTask(bid);
       },
       update: function (e) {
         let id = e.target.id;

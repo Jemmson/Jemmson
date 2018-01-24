@@ -45,10 +45,10 @@ export default class Language {
                 general: 'Start Job',
                 customer: 'Approved Task'
             },
-            'bid.sent': {
-                sub: 'Waiting on Customer Approval - sub',
-                general: 'Waiting on Customer Approval - general',
-                customer: 'Waiting on Approval'
+            'bid_task.customer_sent_payment': {
+                sub: 'Customer Has Sent A Payment',
+                general: 'Customer Has Sent A Payment',
+                customer: 'Sent Payment'
             },
             'bid.initiated': {
                 sub: 'Waiting on General Contractor to finish job bid',
@@ -59,6 +59,13 @@ export default class Language {
                 sub: 'Waiting on General Contractor to Submit Final Bid',
                 general: 'Bid In Progress',
                 customer: 'Waiting on Contractor to Submit Final Bid'
+            },
+            // general is finished with their bids and has sent 
+            // the bid to the customer for approval
+            'bid.sent': {
+                sub: 'Waiting on Customer Approval - sub',
+                general: 'Waiting on Customer Approval - general',
+                customer: 'Waiting on Approval'
             },
             'job.approved': {
                 sub: 'Start Job',

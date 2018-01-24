@@ -68,12 +68,6 @@ class Job extends Model
     public function tasks()
     {
         return $this->belongsToMany('App\Task')
-            ->withPivot(
-                'contractor_id',
-                'cust_final_price',
-                'sub_final_price',
-                'status'
-            )
             ->withTimestamps();
     }
     
