@@ -7,6 +7,7 @@ use App\User;
 use App\Task;
 use App\Customer;
 use App\Contractor;
+use App\JobTask;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -155,9 +156,14 @@ class JobController extends Controller
             // bid needs to be in the 'Waiting on Approval' in order to approve jbo
             'status' => 'required|regex:/\bbid.sent\b/',
         ]);
-        // TODO what date needs to be updated here?
+        // TODO: what date needs to be updated here?
         $job->agreed_start_date = $request->agreed_start_date;
         $job->status = __('job.approved');
+        
+        // approve all tasks associated with this job, any exceptions?
+        JobTask::where('job_id', $job->id)
+                //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+                ->update(['status' => __('bid_task.approved_by_customer')]);
 
         try {
             $job->save();

@@ -21,6 +21,7 @@ return [
         'approved_by_general' => 'bid_task.approved_by_general',    
         'finished_by_sub' => 'bid_task.finished_by_sub',
         'finished_by_general' => 'bid_task.finished_by_general',
+        'approved_by_customer' => 'bid_task.approved_by_customer',
         
     ],
     'bid' => [
