@@ -153,7 +153,7 @@ class JobController extends Controller
             'agreed_start_date' => 'required|date',
             'city' => 'string',
             // bid needs to be in the 'Waiting on Approval' in order to approve jbo
-            'status' => 'required|regex:/\bWaiting on Approval\b/',
+            'status' => 'required|regex:/\bbid.sent\b/',
         ]);
         // TODO what date needs to be updated here?
         $job->agreed_start_date = $request->agreed_start_date;
