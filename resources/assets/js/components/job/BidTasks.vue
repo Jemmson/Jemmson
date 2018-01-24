@@ -17,6 +17,7 @@
                         <td>{{ status(task.job_task.status) }}</td>
                         <td>
                             <button class="btn btn-primary" @click.prevent="openTask(task)">Details</button>
+                            <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)">Pay</button>
                             <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)">Finished</button>
                             <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
                         </td>
@@ -49,6 +50,11 @@
           }
       },
       methods: {
+          showPayForTaskBtn(task) {
+              console.log(task);
+              
+              return task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general';
+          },
           showFinishedBtn(task) {
               if (this.isContractor && this.isAssignedToMe(task) && task.job_task.status === 'bid_task.approved_by_customer') {
                   return true;
@@ -60,6 +66,9 @@
                   return true;
               }
               return false;
+          },
+          payForTask(task) {
+              Customer.payForTask(task);
           },
           // is the task assigned to the currently logged in user
           isAssignedToMe(task) {
