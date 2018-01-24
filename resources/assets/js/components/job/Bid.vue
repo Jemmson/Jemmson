@@ -17,7 +17,7 @@
                     </bid-details>
 
                     <!-- /show all tasks associated to this bid -->
-                    <bid-tasks :bid="bid" @openTaskPanel="openTaskPanel">
+                    <bid-tasks v-if="bid.tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
                     </bid-tasks>
 
                     <!-- /customer approve bid form -->

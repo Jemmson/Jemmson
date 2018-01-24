@@ -18,6 +18,10 @@ export default class User {
         return status.customer;
     }
 
+    isCustomer() {
+        return this.user.usertype === 'customer';
+    }
+
     isContractor() {
         return this.user.usertype === 'contractor';
     }

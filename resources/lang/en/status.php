@@ -25,7 +25,11 @@ return [
     ],
     'bid' => [
         'initiated' => 'bid.initiated',
-        'in_progress' => 'bid.in_progress'
+        'in_progress' => 'bid.in_progress',
+        'sent' => 'bid.sent'
+    ],
+    'job' => [
+        'approved' => 'job.approved'
     ]
 
 ];
