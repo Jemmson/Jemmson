@@ -130,7 +130,7 @@ class HomeController extends Controller
             ]);
         }
 
-        $this->updateUsersPhoneNumber($request->phone_number, $request->$user_id);
+        $this->updateUsersPhoneNumber($request->phone_number, $request->user_id);
         
         $this->redirectToJob();
 
@@ -139,7 +139,7 @@ class HomeController extends Controller
 
     public function updateUsersPhoneNumber($phoneNumber, $userId)
     {
-        $user = User::find($request->user_id);
+        $user = User::find($userId);
         $user->phone = $phoneNumber;
         $user->save();
     }
