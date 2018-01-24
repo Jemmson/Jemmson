@@ -119,6 +119,11 @@
             this.bidForm.id = this.bid.id;
             this.bidForm.status = this.bid.status;
             this.user = Spark.state.user;
+        },
+        created: function () {
+            Bus.$on('taskAdded', () => {
+                this.showAddTaskPanel = false;
+            });
         }
     }
 </script>

@@ -74,6 +74,7 @@ export default class GeneralContractor {
                 console.log(response)
                 // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
                 // show a toast notification
+                Bus.$emit('taskAdded', true);
                 Vue.toasted.success('New Task Added!');
             }).catch(error => {
                 console.error(error);
