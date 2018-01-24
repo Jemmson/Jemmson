@@ -56,7 +56,7 @@
               return false;
           },
           showApproveBtn(task) {
-              if (this.isGeneral && !this.isAssignedToMe(task) && (task.job_task.status === 'bid_task.finished_by_sub' || task.job_task.status === 'bid_task.initiated')) {
+              if (this.isGeneral && !this.isAssignedToMe(task) && task.job_task.status === 'bid_task.finished_by_sub') {
                   return true;
               }
               return false;
