@@ -82,7 +82,7 @@
     },
     methods: {
       shouldStartJob(bid) {
-        return bid.job_task.status === 'bid_task.approved_by_customer';
+        return bid.job_task.status === 'bid_task.approved_by_customer' || bid.task.jobs[0].status === 'job.approved';
       },
       isBidOpen(bid) {
         let acceptedBid = bid.job_task.bid_id;

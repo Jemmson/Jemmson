@@ -41,7 +41,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task', 'jobTask'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task.jobs', 'jobTask'])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
