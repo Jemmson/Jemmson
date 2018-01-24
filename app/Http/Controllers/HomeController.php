@@ -94,12 +94,7 @@ class HomeController extends Controller
                 'phone_method_of_contact' => request('phone_contact'), //
                 'company_name' => request('company_name'), //
             ]);
-            $user = User::find($request->user_id);
-//            dd($user."<br>".$request->phone_number);
-
-            $user->phone = $request->phone_number;
-            $user->save();
-//                'phone_number' => request('phone_number'), //
+            $this->updateUsersPhoneNumber($request->phone_number, $request->$user_id);
 
         } else if (Auth::user()->usertype == 'customer') {
 
@@ -131,14 +126,22 @@ class HomeController extends Controller
                 'zip' => request('zip'),
                 'notes' => request('notes'),
                 'sms_method_of_contact' => request('sms_method_of_contact'),
-                'phone_method_of_contact' => request('phone_method_of_contact'),
-                'phone_number' => request('phone_number'),
+                'phone_method_of_contact' => request('phone_method_of_contact')
             ]);
         }
+
+        $this->updateUsersPhoneNumber($request->phone_number, $request->$user_id);
         
         $this->redirectToJob();
 
         return redirect()->to('/home');
+    }
+
+    public function updateUsersPhoneNumber($phoneNumber, $userId)
+    {
+        $user = User::find($request->user_id);
+        $user->phone = $phoneNumber;
+        $user->save();
     }
 
     /**
@@ -147,7 +150,7 @@ class HomeController extends Controller
      *
      * @return void
      */
-    function redirectToJob()
+    public function redirectToJob()
     {
         $job_id = session('job_id'); 
         //dd($job_id);
