@@ -104,9 +104,11 @@
             },
             openTaskPanel(e) {
                 this.task = e;
+                this.showAddTaskPanel = false;
                 this.showTaskPanel = this.showTaskPanel ? false : true;
             },
             openAddTask() {
+                this.showTaskPanel = false;
                 this.showAddTaskPanel = this.showAddTaskPanel ? false : true;
             },
             closeBid: function () {
