@@ -35,7 +35,7 @@
                                         <td>{{ status(bid) }}</td>
                                         <td>{{ bid.bid_price }}</td>
                                         <td>
-                                            <button class="btn btn-primary" @click="openBid(bid)">Review</button>
+                                            <button class="btn btn-primary" name="review" @click="openBid(bid)">Review</button>
                                         </td>
                                     </tr>
                                 </tbody>

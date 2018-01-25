@@ -14,6 +14,7 @@
                         </div>
                       </transition>
                     </div> -->
+                    <pre>{{ addNewTaskForm.start_date }}</pre>
                     <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                         <label for="taskName">Task Name</label>
                         <input type="text" class="form-control" id="taskName" name="taskName" v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
@@ -58,8 +59,12 @@
                         </span>
                     </div>
                     <div class=" col-md-12">
-                        <button id="submitTask" class="btn btn-default btn-success" @click.prevent="addNewTaskToBid()">
-                            Submit
+                        <button
+                                id="addTaskToInvoice"
+                                name="addTaskToInvoice"
+                                class="btn btn-default btn-success"
+                                @click.prevent="addNewTaskToBid()">
+                            Add Task
                         </button>
                     </div>
                 </div>

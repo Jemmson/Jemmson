@@ -130,7 +130,11 @@
                       <td></td>
                       <td></td>
                       <td>
-                        <button class="btn btn-sm btn-primary button" @click="showNewTask = !showNewTask">
+                        <button
+                                class="btn btn-sm btn-primary button"
+                                name="addTaskToBid"
+                                id="addTaskToBid"
+                                @click="showNewTask = !showNewTask">
                           Add Task To Bid
                         </button>
                       </td>

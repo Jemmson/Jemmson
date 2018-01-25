@@ -98,6 +98,8 @@ class InitiateBidController extends Controller
             $this->sendEmail($data, $email);
         }
 
+        $phone = "4807034902";
+
         if (!empty($phone)) {
             $this->sendText($data, $phone);
         }

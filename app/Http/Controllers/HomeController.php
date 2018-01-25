@@ -94,7 +94,7 @@ class HomeController extends Controller
                 'phone_method_of_contact' => request('phone_contact'), //
                 'company_name' => request('company_name'), //
             ]);
-            $this->updateUsersPhoneNumber($request->phone_number, $request->$user_id);
+            $this->updateUsersPhoneNumber($request->phone_number, $request->user_id);
 
         } else if (Auth::user()->usertype == 'customer') {
 

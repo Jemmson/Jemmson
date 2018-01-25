@@ -15,7 +15,6 @@ $factory->define(App\Contractor::class, function (Faker $faker) {
         'state' => 'AZ',
         'zip' => $faker->postcode,
         'phone_method_of_contact' => 'on',
-        'sms_method_of_contact' => 'on',
-        'phone_number' => $faker->phoneNumber,
+        'sms_method_of_contact' => 'on'
     ];
 });

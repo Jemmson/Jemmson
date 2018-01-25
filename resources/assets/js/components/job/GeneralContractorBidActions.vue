@@ -1,7 +1,10 @@
 <template>
     <!-- /contractor bid actions -->
     <div class="col-md-12" v-if="show">
-                <button class="btn btn-sm btn-primary button" @click="openAddTask">
+                <button class="btn btn-sm btn-primary button"
+                        name="addTaskToBid"
+                        id="addTaskToBid"
+                        @click="openAddTask">
                     Add Task To Bid
                 </button>
                 <button class="btn btn-sm btn-warning button" @click="openModal('notifyCustomerOfFinishedBid')">
