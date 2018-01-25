@@ -36,6 +36,9 @@ export default class User {
             case 'bidUpdated' : 
                 Bus.$emit('bidUpdated');
                 break;
+            case 'taskUpdated':
+                Bus.$emit('taskUpdated');
+                break;
         }
     }
 }

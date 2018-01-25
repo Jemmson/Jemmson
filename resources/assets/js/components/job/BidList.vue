@@ -96,7 +96,7 @@
           },
           getBids() {
               console.log('getBids');
-              axios.get('/jobs').then((response) => {
+              axios.post('/jobs').then((response) => {
                   this.bids = response.data;
               });
           }

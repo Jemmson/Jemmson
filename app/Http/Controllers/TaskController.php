@@ -46,6 +46,17 @@ class TaskController extends Controller
     }
 
     /**
+     * Get all bid tasks from the currently logged in contractor
+     *
+     * @return void
+     */
+    public function bidTasks()
+    {
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task.jobs', 'jobTask'])->get();
+        return response()->json($bidTasks, 200); 
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
