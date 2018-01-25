@@ -28,7 +28,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="bidTask in bids" v-bind:value="bidTask.id">
+                <tr v-for="bidTask in tasks" v-bind:value="bidTask.id">
                   <th scope="row">{{ bidTask.id }}</th>
                   <td>{{ bidTask.task.name }}</td>
                   <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
@@ -76,7 +76,7 @@
     props: ['user', 'bidTasks'],
     data() {
       return {
-        bids: this.bidTasks,
+        tasks: this.bidTasks,
         price: ''
       }
     },
