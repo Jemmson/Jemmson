@@ -67,40 +67,40 @@ class Task extends Model
 
     public static function getBidPrices($jobId)
     {
-        $bidPrices = DB::select("select 
-                        bid_contractor_job_task.id,
-                        bid_contractor_job_task.contractor_id, 
-                        bid_contractor_job_task.task_id, 
-                        bid_contractor_job_task.bid_price,
-                      from 
-                        contractors 
-                      inner join 
-                        bid_contractor_job_task 
-                      on 
-                        bid_contractor_job_task.contractor_id=contractors.id 
-                      where 
-                        bid_contractor_job_task.job_id=$jobId");
+//         $bidPrices = DB::select("select 
+//                         bid_contractor_job_task.id,
+//                         bid_contractor_job_task.contractor_id, 
+//                         bid_contractor_job_task.task_id, 
+//                         bid_contractor_job_task.bid_price,
+//                       from 
+//                         contractors 
+//                       inner join 
+//                         bid_contractor_job_task 
+//                       on 
+//                         bid_contractor_job_task.contractor_id=contractors.id 
+//                       where 
+//                         bid_contractor_job_task.job_id=$jobId");
 
-        $contractorNames = [];
-//
-        foreach ($bidPrices as $bidPrice) {
-            $contractorName = DB::select("select
-                        users.name
-                        from users
-                        inner join contractors
-                        on users.id = contractors.user_id
-                        where contractors.id = $bidPrice->contractor_id");
-            array_push($contractorNames, $contractorName);
-        }
+//         $contractorNames = [];
+// //
+//         foreach ($bidPrices as $bidPrice) {
+//             $contractorName = DB::select("select
+//                         users.name
+//                         from users
+//                         inner join contractors
+//                         on users.id = contractors.user_id
+//                         where contractors.id = $bidPrice->contractor_id");
+//             array_push($contractorNames, $contractorName);
+//         }
 
-        $bidPriceLength = sizeof($bidPrices);
-        for ($i = 0; $i < $bidPriceLength; $i++) {
-            $bidPrices[$i]->contractorName = $contractorNames[$i];
-        }
+//         $bidPriceLength = sizeof($bidPrices);
+//         for ($i = 0; $i < $bidPriceLength; $i++) {
+//             $bidPrices[$i]->contractorName = $contractorNames[$i];
+//         }
 
-        $bidPrices = json_encode($bidPrices);
+//         $bidPrices = json_encode($bidPrices);
 
-        return $bidPrices;
+//        return $bidPrices;
 
     }
 }

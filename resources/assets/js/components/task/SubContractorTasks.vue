@@ -28,7 +28,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="bidTask in bids" v-bind:value="bidTask.id">
+                <tr v-for="bidTask in tasks" v-bind:value="bidTask.id">
                   <th scope="row">{{ bidTask.id }}</th>
                   <td>{{ bidTask.task.name }}</td>
                   <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
@@ -76,7 +76,7 @@
     props: ['user', 'bidTasks'],
     data() {
       return {
-        bids: this.bidTasks,
+        tasks: this.bidTasks,
         price: ''
       }
     },
@@ -95,10 +95,10 @@
 
         return false;
       },
-      status: function (bid_task) {
+      status(bid_task) {
           return User.status(bid_task.job_task.status, bid_task.task);
       },
-      prettyDate: function (date) {
+      prettyDate(date) {
         if (date == null)
           return '';
         // return the date and ignore the time
@@ -108,7 +108,7 @@
       finished(bid) {
         SubContractor.finishedTask(bid);
       },
-      update: function (e) {
+      update(e) {
         let id = e.target.id;
         let bid_price = $('#price-' + id).val();
 
@@ -137,11 +137,18 @@
           }, 10000);
 
         });
-
-      }
+      },
+      getTasks() {
+              console.log('getTasks');
+              axios.post('/bid/tasks').then((response) => {
+                  this.tasks = response.data;
+              });
+          }
     },
     created: function () {
-      console.log('created');
+      Bus.$on('bidUpdated', (payload) => {
+        this.getTasks();
+      });
     }
   }
 </script>

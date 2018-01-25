@@ -51,9 +51,7 @@
       },
       methods: {
           showPayForTaskBtn(task) {
-              console.log(task);
-              
-              return task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general';
+              return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer();
           },
           showFinishedBtn(task) {
               if (this.isContractor && this.isAssignedToMe(task) && task.job_task.status === 'bid_task.approved_by_customer') {

@@ -8,11 +8,12 @@ use App\Task;
 use App\Customer;
 use App\Contractor;
 use App\JobTask;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+
 use Validator;
+use Auth;
 
 use App\Notifications\NotifyJobHasBeenApproved;
 
@@ -223,5 +224,43 @@ class JobController extends Controller
         }
 
         return response()->json($job->jobActions(), 200);        
+    }
+
+    /**
+     * Get all jobs associated with user
+     *
+     * @return void
+     */
+    public function jobs(Request $request)
+    {
+        // load jobs and all their tasks along with those tasks relationships
+        if (Auth::user()->isCustomer()) {
+          // only load tasks on jobs that are approved or need approval
+          $jobsWithTasks = Auth::user()->jobs()
+          ->where('status', __('bid.sent'))
+          ->orWhere('status', __('job.approved'))
+          ->with(
+            [
+              'tasks' => function ($query) {
+                $query->select('tasks.id', 'tasks.name', 'tasks.contractor_id', 'tasks.job_id');
+                $query->with(
+                [
+                  'jobTask' => function ($q) {
+                    // TODO: need to only return need to know columns, returns all data right now
+                    //$q->select('job_task.id', 'job_task.contractor_id', 'job_task.status', 'job_task.cust_final_price', 'job_task.start_date');
+                  }
+                ]);
+              }
+            ])->get();
+          $jobsWithoutTasks = Auth::user()->jobs()
+          ->where('status', '!=', __('bid.sent'))
+          ->where('status', '!=', __('job.approved'))
+          ->get();
+          $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
+        } else {
+          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks')->get();
+        }
+
+        return response()->json($jobs, 200); 
     }
 }
