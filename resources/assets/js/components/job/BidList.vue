@@ -28,14 +28,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="bid in bids" v-bind:value="bid.id">
+                                    <tr v-for="(bid, index) in bids" v-bind:value="bid.id">
                                         <th scope="row">{{ bid.id }}</th>
                                         <td>{{ bid.job_name }}</td>
                                         <td>{{ prettyDate(bid.agreed_start_date) }}</td>
                                         <td>{{ status(bid) }}</td>
                                         <td>{{ bid.bid_price }}</td>
                                         <td>
-                                            <button class="btn btn-primary" name="review" @click="openBid(bid)">Review</button>
+                                            <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -46,7 +46,7 @@
             </transition>
             <!-- /end col-md-8 -->
             <transition name="slide-fade">
-                <bid v-if="showBid" v-on:closeBid="closeBid" :bid="bid">
+                <bid v-if="showBid" v-on:closeBid="closeBid" :bid="bids[bidIndex]">
                 </bid>
             </transition>
             <!-- /end transition -->
@@ -58,44 +58,56 @@
   export default {
       props: {
           user: Object,
-          bids: Array
+          pbids: Array
       },
       data() {
           return {
+              bids: [],
               showBidList: true,
               showBid: false,
-              bid: {},
+              bidIndex: 0
           }
       },
       methods: {
-          status: function (bid) {
+          status(bid) {
               return User.status(bid.status, bid);
           },
-          prettyDate: function (date) {
+          prettyDate(date) {
               if (date == null)
                   return '';
               // return the date and ignore the time
               date = date.split(' ');
               return date[0];
           },
-          openBid: function (bid) {
+          openBid(index) {
               console.log('openBid');
 
               // clone bid
-              this.bid = bid;
+              this.bidIndex = index;
               
               // hide show components
               this.showBidList = false;
               this.showBid = true;
           },
-          closeBid: function () {
+          closeBid() {
               console.log('closeBid');
               this.showBidList = true;
               this.showBid = false;
+          },
+          getBids() {
+              console.log('getBids');
+              axios.get('/jobs').then((response) => {
+                  this.bids = response.data;
+              });
           }
       },
-      created: function () {
-          console.log('created');
+      created() {
+          Bus.$on('bidUpdated', (payload) => {
+              this.getBids();
+          });
+      },
+      mounted() {
+          this.bids = this.pbids;
       }
   }
 </script>

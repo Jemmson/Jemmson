@@ -20,6 +20,7 @@ export default class SubContractor {
             .then((response) => {
                 console.log(response)
                 // show a toast notification
+                User.emitChange('bidUpdated');
                 Vue.toasted.success(general ? Language.lang().submit.job_finished.success.general : Language.lang().submit.job_finished.success.sub);
             }).catch((error) => {
                 console.error(error);

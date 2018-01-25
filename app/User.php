@@ -125,4 +125,9 @@ class User extends SparkUser
             Log::error('Model User: ' . $e->getMessage());
         }
     }
+
+    public function isCustomer()
+    {
+        return $this->usertype === 'customer';
+    }
 }

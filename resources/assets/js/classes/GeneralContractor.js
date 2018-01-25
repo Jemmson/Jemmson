@@ -13,6 +13,7 @@ export default class GeneralContractor {
             customerId: bid.customer_id
         }).then((response) => {
             console.log(response);
+            User.emitChange('bidUpdated');
             Vue.toasted.success('Bid has been submitted and notification sent!');
         }).catch((error) => {
             console.error(error);
@@ -30,6 +31,7 @@ export default class GeneralContractor {
             price: bid.bid_price,
         }).then((response) => {
             console.log(response.data)
+            User.emitChange('bidUpdated');
             Vue.toasted.success('Accepted Bid!');
         }).catch((error) => {
             console.error(error);
@@ -44,6 +46,7 @@ export default class GeneralContractor {
         Spark.post('/api/task/notify', form)
             .then((response) => {
                 console.log(response);
+                User.emitChange('bidUpdated');
                 Vue.toasted.success('Invite Sent!');
             }).catch((error) => {
                 console.error(error);
@@ -75,6 +78,7 @@ export default class GeneralContractor {
                 // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
                 // show a toast notification
                 Bus.$emit('taskAdded', true);
+                User.emitChange('bidUpdated');
                 Vue.toasted.success('New Task Added!');
             }).catch(error => {
                 console.error(error);
@@ -94,6 +98,7 @@ export default class GeneralContractor {
             .then((response) => {
                 console.log(response);
                 // show a toast notification
+                User.emitChange('bidUpdated');
                 Vue.toasted.success(Language.lang().submit.approve_task.success);
             }).catch(error => {
                 console.error(error);
@@ -101,5 +106,4 @@ export default class GeneralContractor {
                 Vue.toasted.error('Error: ' + error.message);
             });
     }
-
 }

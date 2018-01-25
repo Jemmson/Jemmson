@@ -3,7 +3,7 @@
 
 @section('content')
 
-        <bidlist :user="user" :bids="{{ $jobs }}">
+        <bidlist :user="user" :pbids="{{ $jobs }}">
         </bidlist>
 
 @endsection

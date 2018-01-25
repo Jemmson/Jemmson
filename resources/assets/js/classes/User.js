@@ -30,4 +30,12 @@ export default class User {
         if (bid !== null)
             return bid.contractor_id === this.user.id;
     }
+
+    emitChange(emit) {
+        switch(emit) {
+            case 'bidUpdated' : 
+                Bus.$emit('bidUpdated');
+                break;
+        }
+    }
 }
