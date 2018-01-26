@@ -82,9 +82,9 @@ class User extends SparkUser
     public function jobs()
     {
         if ($this->usertype === 'contractor') {
-            return $this->contractor()->first()->jobs();
+            return $this->hasMany(Job::class, 'contractor_id');
         } else {
-            return $this->customer()->first()->jobs();
+            return $this->hasMany(Job::class, 'customer_id');
         }
     }
 

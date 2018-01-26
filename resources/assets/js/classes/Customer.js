@@ -14,6 +14,7 @@ export default class Customer {
         Spark.post('/api/job/approve/' + bidForm.id, bidForm)
             .then((response) => {
                 console.log(response);
+                User.emitChange('bidUpdated');
                 Vue.toasted.success('Job Approved');
             }).catch((error) => {
                 console.log(error);
@@ -41,6 +42,7 @@ export default class Customer {
         axios.post('/api/pay/task/', task)
             .then((response) => {
                 console.log(response);
+                User.emitChange('bidUpdated');
                 Vue.toasted.success('Paid For Task');
             }).catch((error) => {
                 console.log(error);

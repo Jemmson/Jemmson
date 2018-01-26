@@ -7,21 +7,23 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NotifySubOfAcceptedBid extends Notification
+use App\User;
+
+class BidInitiated extends Notification
 {
     use Queueable;
-    protected $bid;
+
     protected $user;
+    protected $job;
 
     /**
-     * Construct
+     * Create a new notification instance.
      *
-     * @param Task $bid
-     * @param User $user
+     * @return void
      */
-    public function __construct($bid, $user)
+    public function __construct($job, $user)
     {
-        $this->bid = $bid;
+        $this->job = $job;
         $this->user = $user;
     }
 
@@ -44,10 +46,12 @@ class NotifySubOfAcceptedBid extends Notification
      */
     public function toMail($notifiable)
     {
-
+        $contractor = User::find($this->job->contractor_id);
+        $cName = $contractor->name;
+        $jobName = $this->job->name;
         return (new MailMessage)
-                    ->line('Your bid for ' . $this->bid->name . ' has been accepted')
-                    ->action('View Job', url('/login/sub/task/'. $this->bid->id . '/' . $this->user->generateToken(true)->token))
+                    ->line('A bid has been initiated by contractor: ' . $cName)
+                    ->action('Login', url('/login/customer/' . $this->job->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 

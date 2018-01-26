@@ -13,8 +13,6 @@ class NotifySubOfTaskToBid extends Notification
 
     protected $taskId;
     protected $user;
-    protected $token;
-    protected $userExists;
 
     use Queueable;
 
@@ -23,22 +21,11 @@ class NotifySubOfTaskToBid extends Notification
      *
      * @return void
      */
-    public function __construct($taskId, $user, $token, $userExists)
+    public function __construct($taskId, $user)
     {
-
         $this->taskId = $taskId;
         $this->user = $user;
-        $this->token = $token;
-        $this->userExists = $userExists;
     }
-
-//    public function __construct()
-//    {
-
-//        $this->task = $task;
-//        $this->user = $user;
-//        $this->token = $token;
-//    }
 
     /**
      * Get the notification's delivery channels.
@@ -59,17 +46,18 @@ class NotifySubOfTaskToBid extends Notification
      */
     public function toMail($notifiable)
     {
-        if ($this->userExists) {
+        $task = Task::find($this->taskId);
+        if (true) {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' back to Jemmson.')
                 ->line('Please Sign In and go bid on your task')
-                ->action('Notification Action', url('/' . $this->taskId))
+                ->action('Login', url('/login/sub/task/'. $task->id . '/' . $this->user->generateToken(true)->token))
                 ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' to Jemmson.')
                 ->line('Please follow these steps to sign up for the site. and review your task.')
-                ->action('Notification Action', url('/'))
+                ->action('Login', url('/login/sub/task/'. $task->id . '/' . $this->user->generateToken(true)->token))
                 ->line('Thank you for using our application!');
         }
 

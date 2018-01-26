@@ -12,6 +12,7 @@ use App\Job;
 use App\Mail\PasswordlessBidPageLogin;
 use Illuminate\Support\Facades\DB;
 use App\Services\RandomPasswordService;
+use App\Notifications\BidInitiated;
 
 class InitiateBidController extends Controller
 {
@@ -67,12 +68,12 @@ class InitiateBidController extends Controller
         }
 
         // create a bid
-        $job_id = $this->createBid($user->id, $jobName);
+        $job = $this->createBid($user->id, $jobName);
+        $job_id = $job->id;
+        
 
         // generate token and save it
         $token = $user->generateToken(true);
-
-//        dd("jobId: $job_id token: $token");
 
         // if we fail to create a job or token redirect back 
         // with error
@@ -95,10 +96,10 @@ class InitiateBidController extends Controller
 
 
         if (!empty($email)) {
-            $this->sendEmail($data, $email);
+            $user->notify(new BidInitiated($job, $user));
         }
 
-        $phone = "4807034902";
+        //$phone = "4807034902";
 
         if (!empty($phone)) {
             $this->sendText($data, $phone);
@@ -227,10 +228,6 @@ class InitiateBidController extends Controller
         // TODO: find a better way but this works for now
         $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
 
-
-//        dd($jobId[0]->id);
-//        dd($jobId);
-
         $job = new Job;
         if ($jobId == []) {
             $job->id = 1;
@@ -245,12 +242,10 @@ class InitiateBidController extends Controller
 
         try {
             $job->save();
-//            dd($job);
-            return $job->id;
         } catch (\Exception $e) {
-//            dd('Failed to create a bid: ' . $e);
-            Log::critical('Failed to create a bid: ' . $e);
+            Log::critical('Failed to create a bid: ' . $e->getMessage());
             return null;
         }
+        return $job;
     }
 }
