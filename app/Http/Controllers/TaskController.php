@@ -303,14 +303,9 @@ class TaskController extends Controller
             return response()->json(["message"=>"Task Already Exists.","errors"=>["error" => "Task Already Exists."]], 422);
         }
 
-
-        //   send a code in the notification to use when they sign up
-        // generate token and save it
-        $token = $user->generateToken(true);
-
         //   this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
-        $user->notify(new NotifySubOfTaskToBid($taskId, $user, $token, $userExists));
+        $user->notify(new NotifySubOfTaskToBid($taskId, $user));
 
 
         $bidPrices = Task::getBidPrices($jobId);
@@ -378,7 +373,7 @@ class TaskController extends Controller
         
         // notify sub contractor that his bid was approved
         $user = User::find($contractorId);
-        $user->notify(new NotifySubOfAcceptedBid($bidContractorJobTask->task));
+        $user->notify(new NotifySubOfAcceptedBid($bidContractorJobTask->task, $user));
 
         return response()->json(["message"=>"Success"], 200);
     }

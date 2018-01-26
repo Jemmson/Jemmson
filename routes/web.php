@@ -89,5 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 // passwordless login
 Route::get('/login/{type}/{job_id}/{token}', 'PasswordlessController@JobBid');
+// passwordless login
+Route::get('/login/{type}/task/{task_id}/{token}', 'PasswordlessController@taskBid');
 
 
