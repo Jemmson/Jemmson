@@ -10,15 +10,17 @@ use Illuminate\Notifications\Messages\MailMessage;
 class NotifyContractorOfAcceptedBid extends Notification
 {
     use Queueable;
-
+    protected $user, $bid;
     /**
-     * Create a new notification instance.
+     * Construct
      *
-     * @return void
+     * @param Job $bid
+     * @param User $user
      */
-    public function __construct()
+    public function __construct($bid, $user)
     {
-        //
+        $this->bid = $bid;
+        $this->user = $user;
     }
 
     /**
@@ -41,8 +43,9 @@ class NotifyContractorOfAcceptedBid extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->line('Your bid for job: ' . $bid->name)
+                    ->lin('has been accepted')
+                    ->action('View Job', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 

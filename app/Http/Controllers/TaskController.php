@@ -391,13 +391,9 @@ class TaskController extends Controller
         $contractorId = $request->contractorId;
 
         // TODO: Determine if I want to accept each individual task and not just the job as a whole
-
-        $user_id = Contractor::where('id', $contractorId)
-            ->first()
-            ->user_id;
         $user = User::find($contractorId)->first();
 
-        $user->notify(new NotifyContractorOfAcceptedBid());
+        $user->notify(new NotifyContractorOfAcceptedBid(User::find($jobId), $user));
     }
 
     /**
