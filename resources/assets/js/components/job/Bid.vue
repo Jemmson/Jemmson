@@ -48,7 +48,7 @@
 
         <!-- /task details and actions -->
         <transition name="slide-fade">
-            <bid-task :show="showTaskPanel" :task="task">
+            <bid-task :show="showTaskPanel" :task="bid.tasks[taskIndex]">
             </bid-task>
         </transition>
 
@@ -68,7 +68,7 @@
         },
         data() {
             return {
-                task: {},
+                taskIndex: 0,
                 bidForm: new SparkForm({
                     id: 0,
                     agreed_start_date: '',
@@ -102,8 +102,8 @@
             approve() {
                 Customer.approveBid(this.bidForm);
             },
-            openTaskPanel(e) {
-                this.task = e;
+            openTaskPanel(index) {
+                this.taskIndex = index;
                 this.showAddTaskPanel = false;
                 this.showTaskPanel = this.showTaskPanel ? false : true;
             },
