@@ -48,7 +48,7 @@
 
         <!-- /task details and actions -->
         <transition name="slide-fade">
-            <bid-task :show="showTaskPanel" :task="bid.tasks[taskIndex]">
+            <bid-task :show="showTaskPanel" :task="task">
             </bid-task>
         </transition>
 
@@ -83,6 +83,13 @@
             }
         },
         computed: {
+            task() {
+                if (this.bid.tasks !== undefined) {
+                    return this.bid.tasks[this.taskIndex];
+                } else {
+                    return this.bid;
+                }
+            },
             needsApproval() {
                 // TODO: use regular status values to check these
                 return this.bid.status === "bid.sent";

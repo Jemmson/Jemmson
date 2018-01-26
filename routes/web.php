@@ -83,43 +83,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/bid/tasks', 'TaskController@bidTasks');
     Route::resource('/job', 'JobController');
     Route::post('/jobs', 'JobController@jobs');
-
-    // contractor routes
-//    Route::get('/contractor/', 'ContractorController@index');
-//    Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
-//    Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
-//    Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
-
-
-    // customer routes
-//    Route::get('/customer/bid-list', 'BidListController@customerIndex');
-//    Route::get('/customer/check', 'CustomerController@checkCustomerData');
-//    Route::resource('/customer', 'CustomerController');
 }
 );
 
 
 // passwordless login
-Route::get('/login/{token}/{job_id}', function ($token, $job_id) {
-    // find token in the db
-    $token = App\PasswordlessToken::where('token', $token)->first();
-    // invalid token
-    if (!$token) {
-        return redirect('login')->withErrors(__('passwordless.invalid_token'));
-    }
-
-    // find user connected to token
-    $user = App\User::find($token->user_id);
-    // user not found or login user if they where found
-    if (!$user) {
-        return redirect('login')->withErrors(__('passwordless.no_user'));
-    } else {
-        if ($user->isValidToken($token->token)) {
-            Auth::login($user);
-            session(['job_id' => $job_id]);
-            return redirect('/job/' . $job_id . '/edit');
-        }
-    }
-});
+Route::get('/login/{type}/{job_id}/{token}', 'PasswordlessController@JobBid');
 
 
