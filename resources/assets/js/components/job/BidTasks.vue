@@ -11,12 +11,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="task in bid.tasks">
+                    <tr v-for="(task, index) in bid.tasks">
                         <td>{{ task.name }}</td>
                         <td>{{ task.proposed_cust_price }}</td>
                         <td>{{ status(task.job_task.status) }}</td>
                         <td>
-                            <button class="btn btn-primary" @click.prevent="openTask(task)">Details</button>
+                            <button class="btn btn-primary" @click.prevent="openTask(index)">Details</button>
                             <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)">Pay</button>
                             <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)">Finished</button>
                             <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
@@ -72,8 +72,8 @@
           isAssignedToMe(task) {
               return this.user.id === task.job_task.contractor_id;
           },
-          openTask(task) {
-              this.$emit('openTaskPanel', task);
+          openTask(index) {
+              this.$emit('openTaskPanel', index);
           },
           finishedTask(task) {
               SubContractor.finishedTask(task);
