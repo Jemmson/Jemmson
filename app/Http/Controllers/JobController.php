@@ -173,7 +173,7 @@ class JobController extends Controller
             return response()->json(["message"=>"Couldn't approve job.","errors"=>["error" =>[$e->getMessage()]]], 400);
         }
 
-        $this->notifyAll(new NotifyJobHasBeenApproved($job), $job);
+        $this->notifyAll($job);
 
         return response()->json($job, 200);
     }
@@ -182,19 +182,19 @@ class JobController extends Controller
      * Notify all contractors and sub connected to the job
      * that have approved bids 
      *
-     * @param NotifyJobHasBeenApproved $notification
      * @param Job                      $job
      * @return void
      */
-    protected function notifyAll($notification, $job)
+    protected function notifyAll($job)
     {
         $generalContractor = $job->contractor()->first();
         $subContractors = $job->subs();
         
         // notify general
-        $generalContractor->notify($notification);
-        $notification->setSub(true);
+        $generalContractor->notify(new NotifyJobHasBeenApproved($job, $generalContractor));
         foreach ($subContractors as $sub) {
+            $notification = new NotifyJobHasBeenApproved($job, $sub->first());
+            $notification->setSub(true);
             $sub->first()->notify($notification);
         }
     }

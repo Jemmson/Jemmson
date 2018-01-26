@@ -10,16 +10,17 @@ use Illuminate\Notifications\Messages\MailMessage;
 class NotifyJobHasBeenApproved extends Notification
 {
     use Queueable;
-    protected $job;
+    protected $job, $user;
     protected $sub = false;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($job)
+    public function __construct($job, $user)
     {
         $this->job = $job;
+        $this->user = $user;
     }
 
     /**
@@ -54,13 +55,13 @@ class NotifyJobHasBeenApproved extends Notification
         if ($this->sub) {
             return (new MailMessage)
                     ->line('Job has been approved. Sub Contractor.')
-                    ->action('View Job', url('/'))
+                    ->action('View Job', url('/login/sub/task/' . $this->job->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
         }
 
         return (new MailMessage)
                     ->line('Job has been approved. General Contractor.')
-                    ->action('View Job', url('/'))
+                    ->action('View Job', url('/login/contractor/' . $this->job->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 
