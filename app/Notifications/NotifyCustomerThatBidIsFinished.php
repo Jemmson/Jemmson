@@ -12,13 +12,15 @@ class NotifyCustomerThatBidIsFinished extends Notification
     use Queueable;
 
     /**
-     * Create a new notification instance.
+     * Construct
      *
-     * @return void
+     * @param Job $bid
+     * @param User $user
      */
-    public function __construct()
+    public function __construct($bid, $user)
     {
-        //
+        $this->bid = $bid;
+        $this->user = $user;
     }
 
     /**
@@ -42,7 +44,7 @@ class NotifyCustomerThatBidIsFinished extends Notification
     {
         return (new MailMessage)
                     ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->action('Notification Action', url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 

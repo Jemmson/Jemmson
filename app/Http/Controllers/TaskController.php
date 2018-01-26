@@ -539,6 +539,14 @@ class TaskController extends Controller
 //        return $data;
     }
 
+    /**
+     * TODO: move to job controller
+     * Notify customer that a contractor has finished
+     * his bid for the specific job
+     *
+     * @param Request $request
+     * @return void
+     */
     public function finishedBidNotification(Request $request)
     {
         $jobId = $request->jobId;
@@ -550,7 +558,7 @@ class TaskController extends Controller
 
         $this->switchJobStatusToInProgress($job, __('bid.sent'));
 
-        $user->notify(new NotifyCustomerThatBidIsFinished());
+        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user));
     }
 
     public function addTask(Request $request)
