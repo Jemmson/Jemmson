@@ -38,22 +38,14 @@ class InitiateBidController extends Controller
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
+        $this->validate($request, [
+            'email' => 'required|email',
+            'phone' => 'min:7|max:10',
+        ]);
 
         $email = $request->email;
         $phone = $request->phone;
         $jobName = $request->jobName;
-
-        if (empty($email) && empty($phone)) {
-            return redirect('initiate-bid');
-        }
-
-        if (!empty($email)) {
-            $this->validate(request(), ['email' => 'email']);
-        }
-
-        if (!empty($phone)) {
-            $this->validate(request(), ['phone' => 'min:7|max:10']);
-        }
 
         // find user
         $user = $this->customerExistsInTheDatabase($email, $phone);
@@ -100,8 +92,9 @@ class InitiateBidController extends Controller
         }
 
         //$phone = "4807034902";
-
-        if (!empty($phone)) {
+        // TODO: delete phone != '' in prod 
+        // phone should be required
+        if (!empty($phone) && $phone != '') {
             $this->sendText($data, $phone);
         }
 
@@ -175,7 +168,7 @@ class InitiateBidController extends Controller
             $email = null;
         }
 
-        if (empty($phone)) {
+        if (empty($phone) || $phone === '') {
             $phone = null;
         }
 
@@ -204,7 +197,14 @@ class InitiateBidController extends Controller
      */
     public function customerExistsInTheDatabase($email, $phone)
     {
-        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        if ($phone !== '' && $email !== '') {
+            $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        } else if ($phone !== '') {
+            $user = User::Where('phone', $phone)->first();
+        } else if ($email !== '') {
+            $user = User::where('email', $email)->first();
+        }
+
         $result = count($user);
 
         if ($result === 1) {

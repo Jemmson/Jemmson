@@ -41,4 +41,10 @@ export default class User {
                 break;
         }
     }
+
+    findTaskBid(id, bids) {
+        return bids.filter(function(bid) {
+            return id === bid.id;
+        });
+    }
 }
