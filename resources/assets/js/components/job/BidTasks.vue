@@ -13,7 +13,7 @@
                 <tbody>
                     <tr v-for="(task, index) in bid.tasks">
                         <td>{{ task.name }}</td>
-                        <td>{{ task.proposed_cust_price }}</td>
+                        <td>{{ taskPrice(task) }}</td>
                         <td>{{ status(task.job_task.status) }}</td>
                         <td>
                             <button class="btn btn-primary" @click.prevent="openTask(index)">Details</button>
@@ -64,6 +64,16 @@
                   return true;
               }
               return false;
+          },
+          /**@augments
+           * customer task price
+           */
+          taskPrice(task) {
+              if (task.job_task.bid_id === null ) {
+                  return 0;
+              } else {
+                return User.findTaskBid(task.job_task.bid_id, task.bid_contractor_job_tasks);
+              }
           },
           payForTask(task) {
               Customer.payForTask(task);
