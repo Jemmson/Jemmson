@@ -6,6 +6,7 @@
                     <tr>
                         <th>Task Name</th>
                         <th>Task Price</th>
+                        <th>Task Sub Price</th>
                         <th>Task Status</th>
                         <th></th>
                     </tr>
@@ -13,7 +14,8 @@
                 <tbody>
                     <tr v-for="(task, index) in bid.tasks">
                         <td>{{ task.name }}</td>
-                        <td>{{ taskPrice(task) }}</td>
+                        <td>${{ task.proposed_cust_price }}</td>
+                        <td>${{ subTaskPrice(task) }}</td>
                         <td>{{ status(task.job_task.status) }}</td>
                         <td>
                             <button class="btn btn-primary" @click.prevent="openTask(index)">Details</button>
@@ -22,7 +24,14 @@
                             <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
                         </td>
                     </tr>
-
+                    <tr v-if="isContractor">
+                        <td></td>
+                        <td>Total: ${{ generalTotalTaskPrice }}</td>
+                        <td>Total: ${{ subTotalTaskPrices }}</td>
+                        <td></td>
+                        <td>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -47,6 +56,20 @@
           },
           isContractor() {
               return User.isContractor();
+          },
+          generalTotalTaskPrice() {
+              let total = 0;
+              for (const task of this.bid.tasks) {
+                  total += task.proposed_cust_price;
+              }
+              return total;
+          },
+          subTotalTaskPrices() {
+              let total = 0;
+              for (const task of this.bid.tasks) {
+                  total += this.subTaskPrice(task);
+              }
+              return total;
           }
       },
       methods: {
@@ -68,11 +91,11 @@
           /**@augments
            * customer task price
            */
-          taskPrice(task) {
+          subTaskPrice(task) {
               if (task.job_task.bid_id === null ) {
                   return 0;
               } else {
-                return User.findTaskBid(task.job_task.bid_id, task.bid_contractor_job_tasks);
+                return User.findTaskBid(task.job_task.bid_id, task.bid_contractor_job_tasks)[0].bid_price;
               }
           },
           payForTask(task) {
