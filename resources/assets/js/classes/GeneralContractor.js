@@ -67,9 +67,6 @@ export default class GeneralContractor {
         form.taskExists = false;
         
         form.jobId = bid.id;
-        
-        form.subTaskPrice = 0; // TODO: is this needed?
-        
         form.contractorId = Spark.state.user.id;
         
         Spark.post('/api/task/addTask', form)

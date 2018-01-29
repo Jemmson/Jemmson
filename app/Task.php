@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+use Log;
+
 class Task extends Model
 {
     protected $fillable = [
@@ -65,6 +67,17 @@ class Task extends Model
         return $this->hasOne(JobTask::class);
     }
 
+    public function updateStatus($status)
+    {
+        $jobTask = $this->jobTask()->first();
+        $jobTask->status = $status;
+
+        try {
+            $jobTask->save();
+        } catch (\Excpetion $e) {
+            Log::error('Update Job Task: ' . $e->getMessage());
+        }
+    }
     public static function getBidPrices($jobId)
     {
 //         $bidPrices = DB::select("select 
