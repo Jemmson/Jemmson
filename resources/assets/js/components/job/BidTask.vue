@@ -18,11 +18,11 @@
                             <div class="form-group">
                                 <label for="contractorName">Contractor Name *</label>
                                 <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')">Please Enter A Name</span>
-                                <input type="text" class="form-control" id="contractorName" name="contractorName" :placeholder="contractorName" v-model="initiateBidForSubForm.name"
+                                <input type="text" class="form-control" id="contractorName" name="contractorName" placeholder="Name" v-model="initiateBidForSubForm.name"
                                     v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" required v-on:keyup="autoComplete" @blur="mouseLeave('notNow')">
-                                <div class="panel-footer" v-if="results.length">
+                                <div class="panel-footer" v-if="aResults.length">
                                     <ul class="list-group">
-                                        <button class="list-group-item" v-for="result in results" :name="result.phone" @click="fillFields(result)">
+                                        <button class="list-group-item" v-for="result in aResults" :name="result.phone" @click="fillFields(result)">
                                             {{ result.name }}
                                         </button>
                                     </ul>
@@ -37,7 +37,6 @@
                             </div>
                             <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
                                 <label for="email">Email *</label>
-                                <span class="validationError" v-show="hasEmailError">Please Enter A Valid Email Address</span>
                                 <input type="email" class="form-control" id="email" name="email" required v-model="initiateBidForSubForm.email" @blur="mouseLeave('email')">
                                 <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
                                     {{ initiateBidForSubForm.errors.get('email') }}
@@ -106,15 +105,7 @@
                     phone: '',
                 }),
                 user: '',
-
-                hasNameError: false,
-                hasEmailError: false,
-                hasPhoneError: false,
-                phone: '',
-                email: '',
-                contractorName: '',
                 results: [],
-
             }
         },
         methods: {
@@ -145,13 +136,28 @@
                             query: query
                         }
                     }).then(function (response) {
-                        console.log(response.data)
+                        console.log('autocomplete', response.data)
                         this.results = response.data
                     }.bind(this))
                 }
             }
         },
         computed: {
+            aResults() {
+                if (this.results.length > 0) {
+                    return this.results.filter((sub) => {
+                        for (let bid of this.task.bid_contractor_job_tasks) {
+                            // if invited to bid do not show in dropdown list
+                            if (bid.contractor_id === sub.id) {
+                                return false;                                
+                            }
+                        } 
+                        // do not show self in dropdown list
+                        return sub.id !== this.user.id;
+                    });
+                }
+                return [];
+            },
             isGeneralContractor() {
                 // General contractor is the one who created the bid
                 return this.task.contractor_id === this.user.id;
