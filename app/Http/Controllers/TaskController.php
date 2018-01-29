@@ -568,7 +568,7 @@ class TaskController extends Controller
             'taskName' => 'required|string',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
-            'start_date' => 'required|date'
+            'start_date' => 'required|date|after:today'
         ]);
 
         $job_id = $request->jobId;
