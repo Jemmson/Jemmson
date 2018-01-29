@@ -476,6 +476,27 @@ class TaskController extends Controller
         return response()->json(["message"=>"Success"], 200);
     }
 
+    /**
+     * changes the status of a task to reopened
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function reopenTask(Request $request)
+    {
+        
+        $this->validate($request, [
+            'id' => 'required',
+        ]);
+
+        $task = Task::find($request->id);
+        $task->updateStatus(__('bid_task.reopened'));
+
+        return response()->json(['message' => 'task reopened'], 200);
+        // change the status of the job to pending
+    }
+
+
     public function acceptJob(Request $request)
     {
         $jobId = $request->jobId;

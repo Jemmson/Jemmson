@@ -15,13 +15,14 @@
                     <tr v-for="(task, index) in bid.tasks">
                         <td>{{ task.name }}</td>
                         <td>${{ task.proposed_cust_price }}</td>
-                        <td>${{ subTaskPrice(task) }}</td>
+                        <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
                         <td>{{ status(task.job_task.status) }}</td>
                         <td>
                             <button class="btn btn-primary" @click.prevent="openTask(index)">Details</button>
                             <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)">Pay</button>
                             <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)">Finished</button>
                             <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
+                            <button class="btn btn-warning" v-if="showReopenBtn(task)" @click="reopenTask(task)">Reopen</button>
                         </td>
                     </tr>
                     <tr v-if="isContractor">
@@ -73,26 +74,35 @@
           }
       },
       methods: {
+          showReopenBtn(task) {
+              if (this.isContractor && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general')) {
+                  return true;
+              }
+              return false;
+          },
           showPayForTaskBtn(task) {
               return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer();
           },
           showFinishedBtn(task) {
-              if (this.isContractor && this.isAssignedToMe(task) && task.job_task.status === 'bid_task.approved_by_customer') {
+              if (this.isContractor && this.isAssignedToMe(task) && (task.job_task.status === 'bid_task.approved_by_customer' || task.job_task.status === 'bid_task.reopened')) {
                   return true;
               }
               return false;
           },
           showApproveBtn(task) {
-              if (this.isGeneral && !this.isAssignedToMe(task) && task.job_task.status === 'bid_task.finished_by_sub') {
+              if (this.isGeneral && !this.isAssignedToMe(task) && (task.job_task.status === 'bid_task.finished_by_sub' || task.job_task.status === 'bid_task.reopened')) {
                   return true;
               }
               return false;
           },
-          /**@augments
+          reopenTask(task) {
+              SubContractor.reopenTask(task);
+          },
+          /**
            * customer task price
            */
           subTaskPrice(task) {
-              if (task.job_task.bid_id === null ) {
+              if (task.job_task.bid_id === null) {
                   return 0;
               } else {
                 return User.findTaskBid(task.job_task.bid_id, task.bid_contractor_job_tasks)[0].bid_price;

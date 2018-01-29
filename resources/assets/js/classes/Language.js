@@ -50,6 +50,11 @@ export default class Language {
                 general: 'Customer Has Sent A Payment',
                 customer: 'Sent Payment'
             },
+            'bid_task.reopened': {
+                sub: 'Waiting on Contractor Approval',
+                general: 'Reopened',
+                customer: 'Reopened'
+            },
             'bid.initiated': {
                 sub: 'Waiting on General Contractor to finish job bid',
                 general: 'Bid Initiated',

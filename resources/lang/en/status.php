@@ -23,6 +23,8 @@ return [
         'finished_by_general' => 'bid_task.finished_by_general',
         'approved_by_customer' => 'bid_task.approved_by_customer',
         'customer_sent_payment' => 'bid_task.customer_sent_payment',
+        'reopened' => 'bid_task.reopened',
+        
     ],
     'bid' => [
         'initiated' => 'bid.initiated',
