@@ -63,9 +63,10 @@ class Contractor extends Model
 
     public function addContractorToBidForJobTable($contractorId, $taskId, $jobId)
     {
-
+        $proposedBidPrice = Task::find($taskId)->proposed_sub_price;
+        // TODO: update this
         DB::table('bid_contractor_job_task')->insert(
-            ['contractor_id' => $contractorId, 'task_id' => $taskId, "job_id" => $jobId]
+            ['contractor_id' => $contractorId, 'task_id' => $taskId, "job_id" => $jobId, "bid_price" => $proposedBidPrice]
         );
 
     }
