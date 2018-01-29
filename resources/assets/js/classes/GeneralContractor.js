@@ -77,6 +77,9 @@ export default class GeneralContractor {
                 console.log(response)
                 // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
                 // show a toast notification
+                form.taskName = '';
+                form.taskPrice = '';
+                form.subTaskPrice = '';
                 Bus.$emit('taskAdded', true);
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('New Task Added!');
