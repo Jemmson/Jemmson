@@ -47,12 +47,6 @@ class InitiateBidController extends Controller
         $phone = $request->phone;
         $jobName = $request->jobName;
 
-        // TODO:  for testing only
-        // phone should be required in validation
-        if ($phone === '') {
-            $phone = '-1';
-        }
-
         // find user
         $user = $this->customerExistsInTheDatabase($email, $phone);
 
@@ -98,9 +92,9 @@ class InitiateBidController extends Controller
         }
 
         //$phone = "4807034902";
-        // TODO: delete phone != '-1' in prod 
+        // TODO: delete phone != '' in prod 
         // phone should be required
-        if (!empty($phone) && $phone != '-1') {
+        if (!empty($phone) && $phone != '') {
             $this->sendText($data, $phone);
         }
 
@@ -174,8 +168,7 @@ class InitiateBidController extends Controller
             $email = null;
         }
 
-        // TODO: delete $phone === '-1' in prod
-        if (empty($phone) || $phone === '-1') {
+        if (empty($phone) || $phone === '') {
             $phone = null;
         }
 
@@ -204,7 +197,14 @@ class InitiateBidController extends Controller
      */
     public function customerExistsInTheDatabase($email, $phone)
     {
-        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        if ($phone !== '' && $email !== '') {
+            $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        } else if ($phone !== '') {
+            $user = User::Where('phone', $phone)->first();
+        } else if ($email !== '') {
+            $user = User::where('email', $email)->first();
+        }
+
         $result = count($user);
 
         if ($result === 1) {
