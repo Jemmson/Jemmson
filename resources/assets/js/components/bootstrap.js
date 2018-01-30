@@ -34,3 +34,7 @@ Vue.component('bid-add-task', require('./job/BidAddTask.vue'));
 Vue.component('modal', require('./shared/Modal.vue'));
 
 // require('./Autocomplete.vue');
+
+Vue.component('connect-with-stripe', require('./stripe/ConnectWithStripe'));
+Vue.component('pay-with-stripe', require('./stripe/PayWithStripe'));
+Vue.component('subscripe-stripe', require('./stripe/Subscripe'));
