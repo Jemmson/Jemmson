@@ -84,6 +84,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
     Route::resource('/job', 'JobController');
     Route::post('/jobs', 'JobController@jobs');
+
+    // Stripe routes
+    Route::get('/stripe/express/auth', 'StripeController@expressAuth');
+    Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');    
+        
 }
 );
 

@@ -50,6 +50,10 @@
                 </bid>
             </transition>
             <!-- /end transition -->
+            
+            <!-- / stripe testing delete after -->
+            <stripe>
+            </stripe>
         </div>
     </div>
 </template>

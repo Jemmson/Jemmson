@@ -44,6 +44,11 @@ class Contractor extends Model
         return $this->belongsToMany(Customer::class);
     }
 
+    public function stripeExpress()
+    {
+        return $this->hasOne(StripeExpress::class, 'contractor_id', 'user_id');
+    }
+
     public function tasks()
     {
         return $this->belongsToMany(Task::class, 'contractor_id', 'user_id')->withPivot('base_price')

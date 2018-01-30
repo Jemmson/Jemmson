@@ -15,11 +15,20 @@
 
 require('spark-bootstrap');
 
+// register the plugin on vue
+import Toasted from 'vue-toasted';
+
+Vue.use(Toasted, {
+  duration: 5000,
+  theme: 'bubble',
+})
+
 import Language from './classes/Language';
 import GeneralContractor from './classes/GeneralContractor';
 import SubContractor from './classes/SubContractor';
 import Customer from './classes/Customer';
 import User from './classes/User';
+
 
 window.Language = Language;
 window.User = new User(Spark.state.user);
@@ -57,12 +66,3 @@ var app = new Vue({
   mixins: [require('spark')],
   store
 });
-
-
-// register the plugin on vue
-import Toasted from 'vue-toasted';
-
-Vue.use(Toasted, {
-  duration: 5000,
-  theme: 'bubble',
-})

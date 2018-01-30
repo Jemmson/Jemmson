@@ -34,3 +34,10 @@ Vue.component('bid-add-task', require('./job/BidAddTask.vue'));
 Vue.component('modal', require('./shared/Modal.vue'));
 
 // require('./Autocomplete.vue');
+
+// stripe
+Vue.component('stripe', require('./stripe/Stripe'));
+Vue.component('connect-with-stripe', require('./stripe/ConnectWithStripe'));
+Vue.component('express-dashboard-stripe', require('./stripe/StripeExpressDashboard'));
+Vue.component('pay-with-stripe', require('./stripe/PayWithStripe'));
+Vue.component('subscripe-stripe', require('./stripe/Subscripe'));
