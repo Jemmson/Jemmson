@@ -86,7 +86,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/jobs', 'JobController@jobs');
 
     // Stripe routes
-    Route::get('/stripe/express/auth', 'StripeController@expressAuth');    
+    Route::get('/stripe/express/auth', 'StripeController@expressAuth');
+    Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');    
+        
 }
 );
 

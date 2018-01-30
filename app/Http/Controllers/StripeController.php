@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Stripe\Account;
 
 use Auth;
 use Redirect;
@@ -43,7 +44,7 @@ class StripeController extends Controller
     {
         // TODO: do we want to update the existing express model if
         // they for some reason connect again?
-        
+
         $url = "https://connect.stripe.com/oauth/token";
         $data = [
             'client_secret' => config('services.stripe.secret'),
@@ -89,5 +90,26 @@ class StripeController extends Controller
         }
 
         return redirect('bid-list');
+    }
+
+    /**
+     * Create one time link the user can use to 
+     * access their express dashboard
+     *
+     * @return void
+     */
+    public function createExpressDashboardLink()
+    {
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+            $account = Account::retrieve(Auth::user()->contractor()->first()->stripeExpress()->first()->stripe_user_id);
+            $link = $account->login_links->create();
+        } catch (\Exception $e) {
+            Log::error('Creating Stripe Express Link: ' . $e->getMessage());
+            return response()->json(['message' => "could't create link", 'errors' => ['error' => $e->getMessage()]]);
+        }
+        
+        return response()->json($link, 200);
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b056972da0b42aa0a3f54c6eb75d994",
+    "content-hash": "9269afddf6245f40f9a4178b88541c75",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -2478,16 +2478,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v5.7.0",
+            "version": "v5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "82228e4c9cc682219a234fa35cffa509793ecf9f"
+                "reference": "d1978a7f20cdbd05c5c462ffa6728f279f03e0c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/82228e4c9cc682219a234fa35cffa509793ecf9f",
-                "reference": "82228e4c9cc682219a234fa35cffa509793ecf9f",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/d1978a7f20cdbd05c5c462ffa6728f279f03e0c9",
+                "reference": "d1978a7f20cdbd05c5c462ffa6728f279f03e0c9",
                 "shasum": ""
             },
             "require": {
@@ -2529,7 +2529,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2017-11-28T17:22:06+00:00"
+            "time": "2018-01-17T20:53:33+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
