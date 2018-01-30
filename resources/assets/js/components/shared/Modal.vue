@@ -13,8 +13,11 @@
                     <span style="font-weight: 800;">{{ body }}</span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-success btn-model-yes" @click="$emit('modal', modalId)">Yes</button>
+                    <span>
+                        <slot name="button"></slot>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-success btn-model-yes" @click="$emit('modal', modalId)">Yes</button>
+                    </span>
                 </div>
             </div>
         </div>

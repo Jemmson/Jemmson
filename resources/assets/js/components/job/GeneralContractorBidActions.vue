@@ -11,6 +11,8 @@
                     Notify Customer of Finished Bid
                 </button>
         <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()">
+            <connect-with-stripe slot="button">
+            </connect-with-stripe>
         </modal>
     </div>
 </template>
