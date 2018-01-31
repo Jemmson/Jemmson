@@ -75,6 +75,56 @@ class User extends SparkUser
     }
 
     /**
+     * Save customer Stripe id
+     *
+     * @param String $id
+     * @return Boolean
+     */
+    public function saveStripeId($id)
+    {
+        if ($id === null) {
+            return false;
+        }
+
+        $this->stripe_id = $id;
+
+        try {
+            $this->save();
+        } catch (\Excpetion $e) {
+            Log::error('Saving Stripe Id: ' . $e-getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Save card infromation from stripe
+     *
+     * @param [type] $card
+     * @return Boolean
+     */
+    public function saveCardInformation($card)
+    {
+        if ($card === null) {
+            return false;
+        }
+
+        $this->card_brand = $card['brand'];
+        $this->card_last_four = $card['last4'];
+        $this->card_country = $card['country'];
+
+        try {
+            $this->save();
+        } catch (\Excpetion $e) {
+            Log::error('Saving Stripe Id: ' . $e-getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get all jobs this user is associated with
      *
      * @return void
