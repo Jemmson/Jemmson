@@ -100,8 +100,6 @@ class StripeController extends Controller
      */
     public function createExpressDashboardLink()
     {
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-
         try {
             $account = Account::retrieve(Auth::user()->contractor()->first()->stripeExpress()->first()->stripe_user_id);
             $link = $account->login_links->create();
@@ -111,5 +109,86 @@ class StripeController extends Controller
         }
         
         return response()->json($link, 200);
+    }
+
+    /**
+     * Handles charging a customer on behalf of a contractor
+     * with the the express stripe integration 
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function chargeCustomerExpress(Request $request)
+    {
+
+    }
+
+    /**
+     * Charge a customer with their customer id
+     * on the platform account, not express accounts
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function chargeCustomer(Request $request)
+    {
+        $this->validate($request, [
+            'amount' => 'required'
+        ]);
+        
+        $amount = $request->amount;
+        $id = Auth::user()->stripe_id;
+
+        if ($id === null) {
+            return response()->json(['message' => 'Customer not in stripe yet'], 422);
+        }
+
+        try {
+            // Charge the Customer
+            $charge = \Stripe\Charge::create(array(
+                "amount" => $amount,
+                "currency" => "usd",
+                "customer" => $id
+            ));
+        } catch (\Excpetion $e) {
+            Log::error('Charging Customer: ' . $e->getMessage());
+            return response()->json(['message' => "Couln't charge card", 'errors' => ['error' => $e->getMessage()]], 400);
+        }
+        return response()->json($charge, 200);
+    }
+
+    /**
+     * Save a stripe customer so we can charge them later
+     * without asking for cc again
+     *
+     * @param Request $request
+     * @return Boolean
+     */
+    public function saveCustomer(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        if (Auth::user()->stripe_id !== null) {
+            return response()->json(['id' => Auth::user()->stripe_id], 200);
+        }
+
+        try {
+            // Create a Customer:
+            $customer = \Stripe\Customer::create(array(
+                "email" => Auth::user()->email,
+                "source" => $request->id,
+            ));
+        } catch (\Excpetion $e) {
+            Log::error('Creating Stripe Customer: ' . $e->getMessage());
+            return response()->json(['message' => "Couldn't create customer"], 200);
+        }
+
+        if (Auth::user()->saveStripeId($customer->id) && Auth::user()->saveCardInformation($request->card)) {
+            return response()->json(['id' => $customer->id], 200);
+        } 
+        
+        return response()->json(['message' => "Coulnd't save customer"], 400);
     }
 }

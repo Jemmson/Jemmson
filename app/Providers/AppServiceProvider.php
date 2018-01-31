@@ -31,5 +31,8 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
         }
+        
+        // set up stripe env variables 
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
     }
 }

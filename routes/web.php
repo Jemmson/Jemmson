@@ -87,7 +87,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Stripe routes
     Route::get('/stripe/express/auth', 'StripeController@expressAuth');
-    Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');    
+    Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');
+    Route::post('/stripe/customer', 'StripeController@saveCustomer');
+    Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer');    
+        
+        
         
 }
 );

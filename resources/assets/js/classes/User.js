@@ -47,4 +47,59 @@ export default class User {
             return id === bid.id;
         });
     }
+    
+    // /stripe functions 
+    // /NOTICE: not used just incase we need them later as functions
+    async createToken() {
+        // create stripe token
+        const {
+        token,
+            error
+      } = await this.stripe.createToken(this.card);
+
+        if (error) {
+            // Inform the customer that there was an error
+            const errorElement = document.getElementById('card-errors');
+            errorElement.textContent = error.message;
+            return false;
+        } else {
+            return token;
+        }
+    }
+
+    async saveCustomer(token) {
+        if (!token) {
+            return false;
+        }
+        // create stripe customer with token
+        const {
+        customer,
+            error
+      } = await axios.post('/stripe/customer', token);
+
+        if (error) {
+            Vue.toasted.error(error.message);
+            return false;
+        } else {
+            this.stripe_id = customer.id;
+            return true;
+        }
+    }
+
+    async chargeCustomer() {
+        // charge customer
+        const {
+        charge,
+            error
+      } = await axios.post('/stripe/customer/charge', {
+                amount: 1
+            });
+
+        if (error) {
+            Vue.toasted.error(error.message);
+        } else {
+            console.log(charge);
+            Vue.toasted.success('Payment Sent!');
+        }
+    }
 }
