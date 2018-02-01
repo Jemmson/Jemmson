@@ -47,6 +47,10 @@ export default class User {
             return id === bid.id;
         });
     }
+
+    hasStripeId() {
+        return this.user.stripe_id !== null && this.user.stripe_id !== undefined;
+    }
     
     // /stripe functions 
     // /NOTICE: not used just incase we need them later as functions need to fix the error

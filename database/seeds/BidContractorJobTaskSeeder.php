@@ -22,7 +22,7 @@ class BidContractorJobTaskSeeder extends Seeder
                             'contractor_id' => 2,
                             'job_id' => 1,
                             'task_id' => 1,
-                            'bid_price' => rand(1, 1000),
+                            'bid_price' => rand(1, 100),
                         ]
                     );
 
@@ -31,7 +31,7 @@ class BidContractorJobTaskSeeder extends Seeder
                             'contractor_id' => 1,
                             'job_id' => 2,
                             'task_id' => 2,
-                            'bid_price' => rand(1, 1000),
+                            'bid_price' => rand(1, 100),
                         ]
                     );
 

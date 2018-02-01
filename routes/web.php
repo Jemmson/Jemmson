@@ -89,7 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/stripe/express/connect', 'StripeController@connectExpress');
     Route::get('/stripe/express/auth', 'StripeController@expressAuth');
     Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');
-    Route::post('/stripe/express/task/payment', 'StripeController@sendTaskPayment');    
+    Route::post('/stripe/express/task/payment', 'StripeController@sendExpressTaskPayment');    
     
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 

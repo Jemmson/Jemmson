@@ -6,22 +6,24 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+
 use App\Task;
+use App\User;
 
 class TaskFinished extends Notification
 {
     use Queueable;
-    protected $task;
-    protected $customer;
+    protected $task, $customer, $user;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Task $task, Bool $customer)
+    public function __construct(Task $task, Bool $customer, User $user)
     {
         $this->task = $task;
         $this->customer = $customer;
+        $this->user = $user;
     }
 
     /**
@@ -52,7 +54,7 @@ class TaskFinished extends Notification
         return (new MailMessage)
                     ->line("The task: " . $this->task->name . " has been finished.")
                     ->line($custom)
-                    ->action('View Task', url('/task/' . $this->task->id))
+                    ->action('View Task', url('/login/mix/' . $this->task->jobTask()->first()->job_id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 

@@ -13,10 +13,10 @@
             </express-dashboard-stripe>
         </div>
     </div>
-    <div class="panel panel-default" v-if="isCustomer">
-        <div class="col-md-8">
-            <pay-with-stripe>
-            </pay-with-stripe>
+    <div class="panel panel-default" v-if="isCustomer && notSignedUp">
+        <div class="panel-body">
+            <signup-with-stripe>
+            </signup-with-stripe>
         </div>
     </div>
 </div>
@@ -25,6 +25,9 @@
 <script>
 export default {
   computed: {
+      notSignedUp() {
+          return !User.hasStripeId();
+      },
       isContractor() {
           return User.isContractor();
       },

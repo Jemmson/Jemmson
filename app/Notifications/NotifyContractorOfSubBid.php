@@ -8,20 +8,26 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Auth;
 
+use App\User;
+use App\Job;
+
 class NotifyContractorOfSubBid extends Notification
 {
     use Queueable;
-    protected $user;
-    protected $subName;
+    protected $user, $subName, $bid;
+
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param Job $bid
+     * @param string $subName
+     * @param User $user
      */
-    public function __construct($user, $subName)
+    public function __construct(Job $bid, $subName, User $user)
     {
         $this->user = $user;
         $this->subName = $subName;
+        $this->bid = $bid;
     }
 
     /**
@@ -46,7 +52,7 @@ class NotifyContractorOfSubBid extends Notification
         return (new MailMessage)
                     ->line('Hello ' . $this->user->name . ' Contractor ' . $this->subName)
                     ->line('Has just submitted a bid for the task you sent him.')
-                    ->action('View Bid', url('/job/edit/1'))
+                    ->action('View Bid', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 
