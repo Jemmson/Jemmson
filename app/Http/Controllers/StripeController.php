@@ -15,6 +15,8 @@ use App\Task;
 use App\User;
 
 use App\Notifications\CustomerUnableToSendPaymentWithStripe;
+use App\Notifications\CustomerSentStripePayment;
+
 
 class StripeController extends Controller
 {
@@ -117,12 +119,13 @@ class StripeController extends Controller
 
     /**
      * Handles sending a payment for a task 
-     * to the contractor connected to that task
+     * to the contractor connected to that task along with 
+     * the general contractors cut
      *
      * @param Request $request
-     * @return void
+     * @return Response
      */
-    public function sendTaskPayment(Request $request)
+    public function sendExpressTaskPayment(Request $request)
     {
         $this->validate($request, [
             'id' => 'required'
@@ -134,9 +137,14 @@ class StripeController extends Controller
         $sub_contractor_id = $jobTask->contractor_id;
         $general_contractor_id = $task->contractor_id;
 
+        // if paid already howd you get here?
+        if ($jobTask->status === __('bid_task.customer_sent_payment')) {
+            return response()->json(['message' => 'Payment Sent Already'], 422);
+        }
+
         // amounts
-        $subAmount = $jobTask->sub_final_price;
-        $generalAmount = $jobTask->cust_final_price - $subAmount;
+        $subAmount = (int) $jobTask->sub_final_price;
+        $generalAmount = (int) $jobTask->cust_final_price - $subAmount;
 
         // get stripe express modals
         $sub_contractor = User::find($sub_contractor_id);
@@ -145,7 +153,7 @@ class StripeController extends Controller
         $general_stripeExpress = $general_contractor->contractor()->first()->stripeExpress()->first();
 
         // do contractors have an express account with us?
-        if ($sub_stripeExpress === null) {
+        if ($sub_stripeExpress === null && $sub_stripeExpress !== $general_stripeExpress) {
             $sub_contractor->notify(new CustomerUnableToSendPaymentWithStripe());
         }
         
@@ -175,24 +183,26 @@ class StripeController extends Controller
                 "account" => $sub_stripeUserId,
                 ),
             ));
+            //notify
+            $sub_contractor->notify(new CustomerSentStripePayment(Auth::user(), $sub_contractor));
         }
-
+        
         // pay the general the customer price - sub price 
         if ($generalAmount !== 0) {
             $g_charge = \Stripe\Charge::create(array(
-                "amount" => $generalAmount * 100,
+                "amount" => (int) $generalAmount * 100,
                 "currency" => "usd",
                 "customer" => Auth::user()->stripe_id,
                 "destination" => array(
-                "account" => $general_stripeUserId,
+                    "account" => $general_stripeUserId,
                 ),
             ));
+            // notify
+            $general_contractor->notify(new CustomerSentStripePayment(Auth::user(), $general_contractor));
         }
         
         // update task status
         $jobTask->updateStatus(__('bid_task.customer_sent_payment'));
-
-        // TODO: send payment notifications
 
         return response()->json([$s_charge, $g_charge], 200);
     }
