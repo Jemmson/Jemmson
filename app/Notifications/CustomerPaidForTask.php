@@ -7,18 +7,24 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
+use App\Task;
+use App\User;
+
 class CustomerPaidForTask extends Notification
 {
     use Queueable;
-    protected $task;
+    protected $task, $user;
+
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param Task $task
+     * @param User $user
      */
-    public function __construct($task)
+    public function __construct(Task $task, User $user)
     {
         $this->task = $task;
+        $this->user = $user;
     }
 
     /**
@@ -40,10 +46,20 @@ class CustomerPaidForTask extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('Customer has sent you a payment for :'.$this->task->name.'.')
-                    ->action('View Task', url('/task/' . $this->task->id))
+        $isGeneral = $this->task->contractor_id === $this->user->id;
+
+        if ($isGeneral) {
+            return (new MailMessage)
+                    ->line('Customer has sent you a payment for : '. $this->task->name . '.')
+                    ->action('View Task', url('/login/general/' . $this->task->jobTask()->first()->job_id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
+        } else {
+            return (new MailMessage)
+                    ->line('Customer has sent you a payment for : ' .$this->task->name . '.')
+                    ->action('View Task', url('/login/sub/task/' . $this->task->id . '/' . $this->user->generateToken(true)->token))
+                    ->line('Thank you for using our application!');
+        }
+
     }
 
     /**

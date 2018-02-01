@@ -15,7 +15,7 @@ use App\Task;
 use App\User;
 
 use App\Notifications\CustomerUnableToSendPaymentWithStripe;
-use App\Notifications\CustomerSentStripePayment;
+use App\Notifications\CustomerPaidForTask;
 
 
 class StripeController extends Controller
@@ -184,7 +184,7 @@ class StripeController extends Controller
                 ),
             ));
             //notify
-            $sub_contractor->notify(new CustomerSentStripePayment(Auth::user(), $sub_contractor));
+            $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
         }
         
         // pay the general the customer price - sub price 
@@ -198,7 +198,7 @@ class StripeController extends Controller
                 ),
             ));
             // notify
-            $general_contractor->notify(new CustomerSentStripePayment(Auth::user(), $general_contractor));
+            $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
         }
         
         // update task status
