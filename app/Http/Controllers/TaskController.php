@@ -154,7 +154,7 @@ class TaskController extends Controller
             return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
         $gContractor = User::find($bidContractorJobTask->task()->first()->contractor_id);
-        $gContractor->notify(new NotifyContractorOfSubBid($gContractor, User::find($bidContractorJobTask->contractor_id)->name));
+        $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
 
         return response()->json(["message"=>"Success"], 200);
     }
