@@ -82,41 +82,37 @@ export default {
                     const errorElement = document.getElementById('card-errors');
                     errorElement.textContent = error.message;
                 } else {
-                    // create stripe customer with token
-                    let {data, error} = await axios.post('/stripe/customer', token);
-
-                    if (error) {
-                        Vue.toasted.error(error.message);
-                    } else {
-                        console.log('customer', data);
+                    try {
+                        // create stripe customer with token
+                        let response = await axios.post('/stripe/customer', token);
+                        console.log('customer', response);
+                        let data = response.data;
                         this.stripe_id = data.id;
-                        // charge customer
-                        ({data, error} = await axios.post('/stripe/customer/charge', {
-                            amount: amount
-                        }));
-
-                        if (error) {
-                            Vue.toasted.error(error.message);
-                        } else {
-                            console.log('customer.charge', data);
+                        
+                        try {
+                            // charge customer
+                            response = await axios.post('/stripe/customer/charge', {amount: amount});
+                            console.log('customer.charge', response);
                             Vue.toasted.success('Payment Sent!');
+                        } catch (error) {
+                            error = error.response.data;
+                            Vue.toasted.error(error.message);
                         }
+                    } catch (error) {
+                        error = error.response.data;
+                        Vue.toasted.error(error.message);
                     }
                 }
             } else {
                 // we have a stripe id for this customer we can charge them with it
-                const {
-                    data,
-                    error
-                } = await axios.post('/stripe/customer/charge', {
-                    amount: amount
-                });
-
-                if (error) {
-                    Vue.toasted.error(error.message);
-                } else {
-                    console.log('charge only', data);
+                try {
+                    // charge customer
+                    let data = await axios.post('/stripe/customer/charge', {amount: amount});
+                    console.log('customer.charge', data);
                     Vue.toasted.success('Payment Sent!');
+                } catch (error) {
+                    error = error.response.data;
+                    Vue.toasted.error(error.message);
                 }
             }
         },
