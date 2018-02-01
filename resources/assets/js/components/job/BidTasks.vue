@@ -1,5 +1,5 @@
 <template>
-    <!-- /all details of a bid -->
+    <!-- /all tasks of a bid -->
         <div class="col-md-12">
             <table class="table">
                 <thead>

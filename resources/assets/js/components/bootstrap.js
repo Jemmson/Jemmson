@@ -41,3 +41,5 @@ Vue.component('connect-with-stripe', require('./stripe/ConnectWithStripe'));
 Vue.component('express-dashboard-stripe', require('./stripe/StripeExpressDashboard'));
 Vue.component('pay-with-stripe', require('./stripe/PayWithStripe'));
 Vue.component('subscripe-stripe', require('./stripe/Subscripe'));
+Vue.component('signup-with-stripe', require('./stripe/SignupWithStripe'));
+
