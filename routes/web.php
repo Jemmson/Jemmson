@@ -86,13 +86,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/jobs', 'JobController@jobs');
 
     // Stripe routes
+    Route::get('/stripe/express/connect', 'StripeController@connectExpress');
     Route::get('/stripe/express/auth', 'StripeController@expressAuth');
     Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');
+    Route::post('/stripe/express/task/payment', 'StripeController@sendTaskPayment');    
+    
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
-    Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer');    
-        
-        
-        
+    Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
 }
 );
 
