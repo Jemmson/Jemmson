@@ -30,7 +30,8 @@ class BidListController extends Controller
                   }
                 ]);
               }
-            ])->get();
+              // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
+            ])->where('customer_id', Auth::user()->id)->get();
           $jobsWithoutTasks = Auth::user()->jobs()
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
