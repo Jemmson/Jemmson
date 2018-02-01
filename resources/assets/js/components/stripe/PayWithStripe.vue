@@ -85,14 +85,14 @@ export default {
                     try {
                         // create stripe customer with token
                         let response = await axios.post('/stripe/customer', token);
-                        console.log('customer', response);
+                        console.log('customer');
                         let data = response.data;
                         this.stripe_id = data.id;
                         
                         try {
                             // charge customer
                             response = await axios.post('/stripe/customer/charge', {amount: amount});
-                            console.log('customer.charge', response);
+                            console.log('customer.charge');
                             Vue.toasted.success('Payment Sent!');
                         } catch (error) {
                             error = error.response.data;
@@ -107,8 +107,8 @@ export default {
                 // we have a stripe id for this customer we can charge them with it
                 try {
                     // charge customer
-                    let data = await axios.post('/stripe/customer/charge', {amount: amount});
-                    console.log('customer.charge', data);
+                    let response = await axios.post('/stripe/customer/charge', {amount: amount});
+                    console.log('customer charge stripe id exists');
                     Vue.toasted.success('Payment Sent!');
                 } catch (error) {
                     error = error.response.data;
