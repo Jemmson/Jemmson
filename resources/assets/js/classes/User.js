@@ -49,7 +49,8 @@ export default class User {
     }
     
     // /stripe functions 
-    // /NOTICE: not used just incase we need them later as functions
+    // /NOTICE: not used just incase we need them later as functions need to fix the error
+    // /NOTICE: need to fix the error handling since it doesn't work
     async createToken() {
         // create stripe token
         const {

@@ -11,6 +11,10 @@ use Redirect;
 use Log;
 
 use App\StripeExpress;
+use App\Task;
+use App\User;
+
+use App\Notifications\CustomerUnableToSendPaymentWithStripe;
 
 class StripeController extends Controller
 {
@@ -112,15 +116,85 @@ class StripeController extends Controller
     }
 
     /**
-     * Handles charging a customer on behalf of a contractor
-     * with the the express stripe integration 
+     * Handles sending a payment for a task 
+     * to the contractor connected to that task
      *
      * @param Request $request
      * @return void
      */
-    public function chargeCustomerExpress(Request $request)
+    public function sendTaskPayment(Request $request)
     {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+        
+        // get modals and relevant variables 
+        $task = Task::find($request->id);
+        $jobTask = $task->jobTask()->first();
+        $sub_contractor_id = $jobTask->contractor_id;
+        $general_contractor_id = $task->contractor_id;
 
+        // amounts
+        $subAmount = $jobTask->sub_final_price;
+        $generalAmount = $jobTask->cust_final_price - $subAmount;
+
+        // get stripe express modals
+        $sub_contractor = User::find($sub_contractor_id);
+        $general_contractor = User::find($general_contractor_id);
+        $sub_stripeExpress = $sub_contractor->contractor()->first()->stripeExpress()->first();
+        $general_stripeExpress = $general_contractor->contractor()->first()->stripeExpress()->first();
+
+        // do contractors have an express account with us?
+        if ($sub_stripeExpress === null) {
+            $sub_contractor->notify(new CustomerUnableToSendPaymentWithStripe());
+        }
+        
+        if ($general_stripeExpress === null) {
+            $general_contractor->notify(new CustomerUnableToSendPaymentWithStripe());
+        }
+
+        if ($sub_stripeExpress === null || $general_stripeExpress === null) {
+            return response()->json(['message' => 'Not all contractors have Stripe'], 422);
+        }
+
+        // get stripe user ids
+        $sub_stripeUserId = $sub_stripeExpress->stripe_user_id;
+        $general_stripeUserId = $general_stripeExpress->stripe_user_id;
+
+        // charge results
+        $s_charge = [];
+        $g_charge = [];
+
+        // pay sub the sub amount on the job task
+        if ($subAmount !== 0) {
+            $s_charge = \Stripe\Charge::create(array(
+                "amount" => $subAmount * 100,
+                "currency" => "usd",
+                "customer" => Auth::user()->stripe_id,
+                "destination" => array(
+                "account" => $sub_stripeUserId,
+                ),
+            ));
+        }
+
+        // pay the general the customer price - sub price 
+        if ($generalAmount !== 0) {
+            $g_charge = \Stripe\Charge::create(array(
+                "amount" => $generalAmount * 100,
+                "currency" => "usd",
+                "customer" => Auth::user()->stripe_id,
+                "destination" => array(
+                "account" => $general_stripeUserId,
+                ),
+            ));
+        }
+        
+        // update task status
+        $jobTask->updateStatus(__('bid_task.customer_sent_payment'));
+
+        // TODO: send payment notifications
+
+        return response()->json([$s_charge, $g_charge], 200);
     }
 
     /**
@@ -170,6 +244,7 @@ class StripeController extends Controller
             'id' => 'required'
         ]);
 
+        // customer exists already returns its id
         if (Auth::user()->stripe_id !== null) {
             return response()->json(['id' => Auth::user()->stripe_id], 200);
         }
@@ -182,13 +257,11 @@ class StripeController extends Controller
             ));
         } catch (\Excpetion $e) {
             Log::error('Creating Stripe Customer: ' . $e->getMessage());
-            return response()->json(['message' => "Couldn't create customer"], 200);
+            return response()->json(['message' => "Couldn't create customer"], 400);
         }
 
         if (Auth::user()->saveStripeId($customer->id) && Auth::user()->saveCardInformation($request->card)) {
             return response()->json(['id' => $customer->id], 200);
         } 
-        
-        return response()->json(['message' => "Coulnd't save customer"], 400);
     }
 }

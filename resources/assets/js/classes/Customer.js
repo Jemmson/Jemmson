@@ -37,17 +37,17 @@ export default class Customer {
      * 
      * @param {Object} task 
      */
-    payForTask(task) {
+    async payForTask(task) {
         console.log('payForTask', task);
-        axios.post('/api/pay/task/', task)
-            .then((response) => {
-                console.log(response);
-                User.emitChange('bidUpdated');
-                Vue.toasted.success('Paid For Task');
-            }).catch((error) => {
-                console.log(error);
-                Vue.toasted.error('Whoops! Something went wrong! Please try again.');
-            });
+
+        try {
+            const data = await axios.post('/stripe/express/task/payment', task);
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Paid For Task');
+        } catch (error) {
+            error = error.response.data;
+            Vue.toasted.error(error.message);
+        }
         
     }
 
