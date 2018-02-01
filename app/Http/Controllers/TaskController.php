@@ -420,8 +420,9 @@ class TaskController extends Controller
             return response()->json(["message"=>"Couldn't update status task.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
 
-        $customer->notify(new TaskFinished($task, true));
-        $subContractor->notify(new TaskFinished($task, false));
+        $customer->notify(new TaskFinished($task, true, $customer));
+        // TODO: send approve notification not task finished
+        //$subContractor->notify(new TaskFinished($task, false, $subContractor));
 
         return response()->json(["message"=>"Success"], 200);
     }
@@ -468,9 +469,9 @@ class TaskController extends Controller
 
         if ($finishedByGeneral) {
             // is general contractor
-            $customer->notify(new TaskFinished($task, true));
+            $customer->notify(new TaskFinished($task, true, $customer));
         } else {
-            $generalContractor->notify(new TaskFinished($task, false));
+            $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
         }
 
         return response()->json(["message"=>"Success"], 200);
