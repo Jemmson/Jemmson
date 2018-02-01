@@ -174,7 +174,7 @@ class StripeController extends Controller
         $g_charge = [];
 
         // pay sub the sub amount on the job task
-        if ($subAmount !== 0) {
+        if ($subAmount > 0) {
             $s_charge = \Stripe\Charge::create(array(
                 "amount" => $subAmount * 100,
                 "currency" => "usd",
@@ -188,7 +188,7 @@ class StripeController extends Controller
         }
         
         // pay the general the customer price - sub price 
-        if ($generalAmount !== 0) {
+        if ($generalAmount > 0) {
             $g_charge = \Stripe\Charge::create(array(
                 "amount" => (int) $generalAmount * 100,
                 "currency" => "usd",
