@@ -19,10 +19,10 @@ class TaskSeeder extends Seeder
                     'name' => 'Fix Water Filter',
                     'standard_task_id' => rand(1, 4),
                     'contractor_id' => 1,
-                    'proposed_cust_price' => rand(1, 1000),
-                    'average_cust_price' => rand(1, 1000),
-                    'proposed_sub_price' => rand(1, 1000),
-                    'average_sub_price' => rand(1, 1000),
+                    'proposed_cust_price' => rand(1, 100),
+                    'average_cust_price' => rand(1, 100),
+                    'proposed_sub_price' => rand(1, 100),
+                    'average_sub_price' => rand(1, 100),
                     'job_id' => 1
         ];
         Task::create($data);
@@ -31,10 +31,10 @@ class TaskSeeder extends Seeder
                     'name' => 'Fix Toilet',
                     'standard_task_id' => rand(1, 4),
                     'contractor_id' => 2,
-                    'proposed_cust_price' => rand(1, 1000),
-                    'average_cust_price' => rand(1, 1000),
-                    'proposed_sub_price' => rand(1, 1000),
-                    'average_sub_price' => rand(1, 1000),
+                    'proposed_cust_price' => rand(1, 100),
+                    'average_cust_price' => rand(1, 100),
+                    'proposed_sub_price' => rand(1, 100),
+                    'average_sub_price' => rand(1, 100),
                     'job_id' => 2
         ];
         Task::create($data);
