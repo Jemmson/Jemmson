@@ -22,4 +22,17 @@ class JobTask extends Model
     {
         return $this->belongsTo(User::class)->with('contractor');
     }
+
+    public function updateStatus($status)
+    {
+        
+        $this->status = $status;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('JobTask Updaing Status: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

@@ -188,6 +188,11 @@ class StripeController extends Controller
                 ),
             ));
         }
+        
+        // update task status
+        $jobTask->updateStatus(__('bid_task.customer_sent_payment'));
+
+        // TODO: send payment notifications
 
         return response()->json([$s_charge, $g_charge], 200);
     }
