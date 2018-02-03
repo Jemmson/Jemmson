@@ -4,4 +4,4 @@ Welcome To Jemmson
 
 Job Name: {{ $job_name }}
 
-Login Link: {{ url('/login/' . $link . '/' . $job_id) }}
+Login Link: {{ url('/login/customer/'. $job_id. '/' . $link) }}
