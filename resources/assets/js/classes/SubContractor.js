@@ -11,28 +11,31 @@ export default class SubContractor {
      * 
      * @param {Object} task 
      */
-    reopenTask(task) {
+    reopenTask(task, disabled) {
         console.log('reopenTask', task);
-
+        disabled.reopen = true;
         axios.post('/bid/tasks/reopen', task)
             .then((response) => {
                 console.log(response)
                 // show a toast notification
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('Reopened Task');
+                disabled.reopen = false;
             }).catch((error) => {
                 console.error(error);
                 // show a toast notification
                 Vue.toasted.error('Error: ' + error.message);
+                disabled.reopen = false;
             });
     }
 
-    finishedTask(task) {
+    finishedTask(task, disabled) {
         console.log('finishedTask', task);
         let id = this.user.id;
         task.current_user_id = id;
 
         let general = false;
+        disabled.finished = true;
         // did the general contractor finish this task?
         if (id === task.job_task.contractor_id && id === task.contractor_id)
             general = true;
@@ -43,10 +46,12 @@ export default class SubContractor {
                 // show a toast notification
                 User.emitChange('bidUpdated');
                 Vue.toasted.success(general ? Language.lang().submit.job_finished.success.general : Language.lang().submit.job_finished.success.sub);
+                disabled.finished = false;
             }).catch((error) => {
                 console.error(error);
                 // show a toast notification
                 Vue.toasted.error('Error: ' + error.message);
+                disabled.finished = false;
             });
     }
 

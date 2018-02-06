@@ -34,7 +34,12 @@
                             </span>
                         </div>
                         <div class="form-group col-md-12">
-                            <button class="btn btn-success" @click.prevent="approve">Approve</button>
+                            <button class="btn btn-success" @click.prevent="approve" :disabled="disabled.approve">
+                                <span v-if="disabled.approve">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Approve
+                            </button>
                         </div>
                     </form>
 
@@ -80,6 +85,9 @@
                 bidApproved: false,
                 showTaskPanel: false,
                 showAddTaskPanel: false,
+                disabled: {
+                    approve: false
+                }
             }
         },
         computed: {
@@ -107,7 +115,7 @@
                 GeneralContractor.notifyCustomerOfFinishedBid(this.bid);
             },
             approve() {
-                Customer.approveBid(this.bidForm);
+                Customer.approveBid(this.bidForm, this.disabled);
             },
             openTaskPanel(index) {
                 this.taskIndex = index;
