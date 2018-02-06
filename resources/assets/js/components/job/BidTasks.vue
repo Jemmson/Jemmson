@@ -37,6 +37,12 @@
                                 </span>
                                 Approve
                             </button>
+                            <button class="btn btn-danger" v-if="showDenyBtn(task)" @click="denyTask(task)" :disabled="disabled.deny">
+                                <span v-if="disabled.deny">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Deny
+                            </button>
                             <button class="btn btn-warning" v-if="showReopenBtn(task)" @click="reopenTask(task)" :disabled="disabled.reopen">
                                 <span v-if="disabled.reopen">
                                     <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -70,7 +76,8 @@
                   pay: false,
                   finished: false,
                   approve: false,
-                  reopen: false
+                  reopen: false,
+                  deny: false
               }
           }
       },
@@ -78,6 +85,9 @@
           // was the one who created the bid the one logged in?
           // if so this is a general contractor and should be shown 
           // everything
+          isCustomer() {
+              return User.isCustomer();
+          },
           isGeneral() {
               return User.isGeneral(this.bid);
           },
@@ -100,6 +110,9 @@
           }
       },
       methods: {
+          showDenyBtn(task) {
+              return this.isCustomer && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general');
+          },
           showReopenBtn(task) {
               if (this.isContractor && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general')) {
                   return true;
@@ -149,6 +162,9 @@
           },
           approveTaskHasBeenFinished(task) {
               GeneralContractor.approveTaskHasBeenFinished(task, this.disabled);
+          },
+          denyTask(task) {
+              Customer.denyTask(task, this.disabled);
           },
           status(status){
               return User.status(status, this.bid);

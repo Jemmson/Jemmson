@@ -22,11 +22,7 @@
 
                     <!-- /customer approve bid form -->
                     <form role="form" v-if="isCustomer && needsApproval">
-                        <div class="form-group col-md-6">
-                            <label for="area">City</label>
-                            <input type="text" class="form-control" id="area" v-model="bidForm.area">
-                        </div>
-                        <div class="form-group col-md-6" :class="{'has-error': bidForm.errors.has('agreed_start_date')}">
+                        <div class="form-group col-sm-12 col-md-6" :class="{'has-error': bidForm.errors.has('agreed_start_date')}">
                             <label for="start_date">Start Date</label>
                             <input type="date" class="form-control" id="start_date" v-model="bidForm.agreed_start_date">
                             <span class="help-block" v-show="bidForm.errors.has('agreed_start_date')">

@@ -9,6 +9,7 @@ use App\Notifications\NotifyContractorOfAcceptedBid;
 use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\TaskFinished;
+use App\Notifications\TaskWasNotApproved;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
@@ -618,6 +619,36 @@ class TaskController extends Controller
 
         return response()->json($job->tasks()->get(), 200);
         // change the status of the job to pending
+    }
+
+    /**
+     * Deny the task has been properly finished
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function denyTask(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
+        ]);
+
+
+        $task = Task::find($request->id);
+        $jobTask = $task->jobTask()->first();
+
+        $jobTask->updateStatus(__('bid_task.reopened'));
+
+        // notify
+        $contractor = User::find($task->contractor_id);
+        $contractor->notify(new TaskWasNotApproved($task, $contractor));
+
+        if ($jobTask->contractor_id !== $task->contractor_id) {
+            $subContractor = User::find($jobTask->contractor_id);
+            $subContractor->notify(new TaskWasNotApproved($task, $subContractor));
+        }
+
+        return response()->json($task, 200);
     }
 
     public function updateTaskWithNewValuesIfValuesAreDifferent ($task, $subTaskPrice, $taskPrice)

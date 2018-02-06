@@ -36,6 +36,25 @@ export default class Customer {
     }
 
     /**
+     * Deny a task that has been finished
+     * 
+     * @param {Ojbect} task 
+     */
+    async denyTask(task, disabled) {
+        disabled.deny = true;
+        try {
+            const data = await axios.post('/task/deny', task);
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Task Denied & Notification Sent');
+            disabled.deny = false;
+        } catch (error) {
+            error = error.response.data;
+            Vue.toasted.error(error.message);
+            disabled.deny = false;
+        }
+    }
+
+    /**
      * Pay for a task
      * 
      * @param {Object} task 
