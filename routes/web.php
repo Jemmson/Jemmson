@@ -82,6 +82,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/bid/tasks', 'TaskController@bidContractorJobTasks');
     Route::post('/bid/tasks', 'TaskController@bidTasks');
     Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
+    Route::post('/task/deny', 'TaskController@denyTask');
     Route::resource('/job', 'JobController');
     Route::post('/jobs', 'JobController@jobs');
 

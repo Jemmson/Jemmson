@@ -50,7 +50,12 @@
                   </td>
                   <td>
                     <div v-if="isBidOpen(bidTask)">
-                      <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id">Submit</button>
+                      <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
+                        <span v-if="disabled.submit">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Submit
+                      </button>
                     </div>
                     <div v-else>
                       <button class="btn btn-primary" v-bind:id="bidTask.id" disabled>Submit</button>
@@ -58,7 +63,12 @@
                   </td>
                   <td>
                     <div v-if="showFinishedBtn(bidTask)">
-                      <button class="btn btn-success" @click="finished(bidTask)">Finished</button>
+                      <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
+                        <span v-if="disabled.finished">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Finished
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -77,7 +87,11 @@
     data() {
       return {
         tasks: this.bidTasks,
-        price: ''
+        price: '',
+        disabled: {
+          submit: false,
+          finished: false
+        }
       }
     },
     methods: {
@@ -106,12 +120,12 @@
         return date[0];
       },
       finished(bid) {
-        SubContractor.finishedTask(bid);
+        SubContractor.finishedTask(bid, this.disabled);
       },
       update(e) {
         let id = e.target.id;
         let bid_price = $('#price-' + id).val();
-
+        this.disabled.submit = true;
         console.log(id, bid_price);
         axios.put('/api/bid/task/' + id, {
           id: id,
@@ -125,7 +139,7 @@
           setTimeout(() => {
             $('#success-' + id).css('display', 'none');
           }, 10000);
-
+          this.disabled.submit = false;
         }).catch((error) => {
 
           console.log(error.response, '#error-' + id);
@@ -135,7 +149,7 @@
           setTimeout(() => {
             $('#error-' + id).css('display', 'none');
           }, 10000);
-
+          this.disabled.submit = false;
         });
       },
       getTasks() {

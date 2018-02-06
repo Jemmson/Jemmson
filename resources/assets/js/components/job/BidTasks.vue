@@ -19,10 +19,36 @@
                         <td>{{ status(task.job_task.status) }}</td>
                         <td>
                             <button class="btn btn-primary" @click.prevent="openTask(index)">Details</button>
-                            <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)">Pay</button>
-                            <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)">Finished</button>
-                            <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)">Approve</button>
-                            <button class="btn btn-warning" v-if="showReopenBtn(task)" @click="reopenTask(task)">Reopen</button>
+                            <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)" :disabled="disabled.pay">
+                                <span v-if="disabled.pay">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Pay
+                            </button>
+                            <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)" :disabled="disabled.finished">
+                                <span v-if="disabled.finished">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Finished
+                            </button>
+                            <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)" :disabled="disabled.approve">
+                                <span v-if="disabled.approve">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Approve
+                            </button>
+                            <button class="btn btn-danger" v-if="showDenyBtn(task)" @click="denyTask(task)" :disabled="disabled.deny">
+                                <span v-if="disabled.deny">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Deny
+                            </button>
+                            <button class="btn btn-warning" v-if="showReopenBtn(task)" @click="reopenTask(task)" :disabled="disabled.reopen">
+                                <span v-if="disabled.reopen">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Reopen
+                            </button>
                         </td>
                     </tr>
                     <tr v-if="isContractor">
@@ -46,12 +72,22 @@
       data() {
           return {
               user: '',
+              disabled: {
+                  pay: false,
+                  finished: false,
+                  approve: false,
+                  reopen: false,
+                  deny: false
+              }
           }
       },
       computed: {
           // was the one who created the bid the one logged in?
           // if so this is a general contractor and should be shown 
           // everything
+          isCustomer() {
+              return User.isCustomer();
+          },
           isGeneral() {
               return User.isGeneral(this.bid);
           },
@@ -74,6 +110,9 @@
           }
       },
       methods: {
+          showDenyBtn(task) {
+              return this.isCustomer && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general');
+          },
           showReopenBtn(task) {
               if (this.isContractor && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general')) {
                   return true;
@@ -96,7 +135,7 @@
               return false;
           },
           reopenTask(task) {
-              SubContractor.reopenTask(task);
+              SubContractor.reopenTask(task, this.disabled);
           },
           /**
            * customer task price
@@ -109,7 +148,7 @@
               }
           },
           payForTask(task) {
-              Customer.payForTask(task);
+              Customer.payForTask(task, this.disabled);
           },
           // is the task assigned to the currently logged in user
           isAssignedToMe(task) {
@@ -119,10 +158,13 @@
               this.$emit('openTaskPanel', index);
           },
           finishedTask(task) {
-              SubContractor.finishedTask(task);
+              SubContractor.finishedTask(task, this.disabled);
           },
           approveTaskHasBeenFinished(task) {
-              GeneralContractor.approveTaskHasBeenFinished(task);
+              GeneralContractor.approveTaskHasBeenFinished(task, this.disabled);
+          },
+          denyTask(task) {
+              Customer.denyTask(task, this.disabled);
           },
           status(status){
               return User.status(status, this.bid);

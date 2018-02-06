@@ -22,11 +22,7 @@
 
                     <!-- /customer approve bid form -->
                     <form role="form" v-if="isCustomer && needsApproval">
-                        <div class="form-group col-md-6">
-                            <label for="area">City</label>
-                            <input type="text" class="form-control" id="area" v-model="bidForm.area">
-                        </div>
-                        <div class="form-group col-md-6" :class="{'has-error': bidForm.errors.has('agreed_start_date')}">
+                        <div class="form-group col-sm-12 col-md-6" :class="{'has-error': bidForm.errors.has('agreed_start_date')}">
                             <label for="start_date">Start Date</label>
                             <input type="date" class="form-control" id="start_date" v-model="bidForm.agreed_start_date">
                             <span class="help-block" v-show="bidForm.errors.has('agreed_start_date')">
@@ -34,12 +30,17 @@
                             </span>
                         </div>
                         <div class="form-group col-md-12">
-                            <button class="btn btn-success" @click.prevent="approve">Approve</button>
+                            <button class="btn btn-success" @click.prevent="approve" :disabled="disabled.approve">
+                                <span v-if="disabled.approve">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Approve
+                            </button>
                         </div>
                     </form>
 
                     <!-- /buttons  -->
-                    <general-contractor-bid-actions :show="isGeneralContractor" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
+                    <general-contractor-bid-actions :show="isGeneralContractor && !jobApproved" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
                         @openAddTask="openAddTask">
                     </general-contractor-bid-actions>
                 </div>
@@ -54,7 +55,7 @@
 
         <!-- /add task to bid -->
         <transition name="slide-fade">
-            <bid-add-task :show="showAddTaskPanel" :bid="bid">
+            <bid-add-task :show="showAddTaskPanel" :bid="bid" v-if="!jobApproved">
             </bid-add-task>
         </transition>
     </div>
@@ -80,6 +81,9 @@
                 bidApproved: false,
                 showTaskPanel: false,
                 showAddTaskPanel: false,
+                disabled: {
+                    approve: false
+                }
             }
         },
         computed: {
@@ -89,6 +93,9 @@
                 } else {
                     return this.bid;
                 }
+            },
+            jobApproved() {
+                return this.bid.status === 'job.approved';
             },
             needsApproval() {
                 // TODO: use regular status values to check these
@@ -107,7 +114,7 @@
                 GeneralContractor.notifyCustomerOfFinishedBid(this.bid);
             },
             approve() {
-                Customer.approveBid(this.bidForm);
+                Customer.approveBid(this.bidForm, this.disabled);
             },
             openTaskPanel(index) {
                 this.taskIndex = index;

@@ -21,8 +21,9 @@ export default class GeneralContractor {
         });
     }
 
-    acceptSubBidForTask(task, bid) {
+    acceptSubBidForTask(task, bid, disabled) {
         console.log('acceptSubBidForTask', task);
+        disabled.accept = true;
         axios.post('/api/task/accept', {
             jobId: task.job_task.job_id,
             taskId: task.id,
@@ -33,14 +34,17 @@ export default class GeneralContractor {
             console.log(response.data)
             User.emitChange('bidUpdated');
             Vue.toasted.success('Accepted Bid!');
+            disabled.accept = false;
         }).catch((error) => {
             console.error(error);
             Vue.toasted.error('Error Trying to Accept Bid!');
+            disabled.accept = false;
         });
     }
 
-    sendSubInviteToBidOnTask(task, form) {
+    sendSubInviteToBidOnTask(task, form, disabled) {
         console.log('sendSubInviteToBidOnTask', task, form);
+        disabled.invite = true;
         form.taskId = task.id;
         form.jobId = task.job_task.job_id;
         Spark.post('/api/task/notify', form)
@@ -48,10 +52,12 @@ export default class GeneralContractor {
                 console.log(response);
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('Invite Sent!');
+                disabled.invite = false;
             }).catch((error) => {
                 console.error(error);
                 form.errors.errors = error.errors;
                 Vue.toasted.error('Error: ' + error.message);
+                disabled.invite = false;
             });
     }
 
@@ -92,18 +98,21 @@ export default class GeneralContractor {
             });
     }
 
-    approveTaskHasBeenFinished(task) {
+    approveTaskHasBeenFinished(task, disabled) {
         console.log('approveTaskHasBeenFinished', task);
+        disabled.approve = true;
         axios.post('/api/task/approve', task)
             .then((response) => {
                 console.log(response);
                 // show a toast notification
                 User.emitChange('bidUpdated');
                 Vue.toasted.success(Language.lang().submit.approve_task.success);
+                disabled.approve = false;
             }).catch(error => {
                 console.error(error);
                 // show a toast notification
                 Vue.toasted.error('Error: ' + error.message);
+                disabled.approve = false;
             });
     }
 }

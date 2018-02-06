@@ -10,7 +10,7 @@
             </div>
 
             <!-- / general contractor only section -->
-            <div class="row" v-if="isGeneralContractor">
+            <div class="row" v-if="isGeneralContractor && !taskApproved">
                 <div class="col-md-6">
                     <div class="initiateBid">
                         <div class="addBidTask">
@@ -43,7 +43,11 @@
                                 </span>
                             </div>
                             <div class="form-group">
-                                <button @click="sendSubInviteToBidOnTask" class="btn btn-sm btn-success" type="submit">Submit
+                                <button @click="sendSubInviteToBidOnTask" class="btn btn-sm btn-success" type="submit" :disabled="disabled.invite">
+                                    <span v-if="disabled.invite">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                    </span>
+                                    Submit
                                 </button>
                             </div>
                         </div>
@@ -58,7 +62,7 @@
                             <tr>
                                 <th>Sub</th>
                                 <th>Price</th>
-                                <th>Accept</th>
+                                <th>Privew Price</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -67,11 +71,15 @@
                                 <td>{{ bid.contractor_id }}</td>
                                 <td>{{ bid.bid_price }}</td>
                                 <td>
-                                    <button @click="acceptSubBidForTask(bid)" class="button btn btn-sm btn-success">Accept
+                                    <button @click="preview(bid.id)" class="button btn btn-sm btn-info">Preview
                                     </button>
                                 </td>
                                 <td>
-                                    <button @click="notify(bid.id)" class="button btn btn-sm btn-warning">Notify
+                                    <button @click="acceptSubBidForTask(bid)" class="button btn btn-sm btn-success" :disabled="disabled.accept">
+                                        <span v-if="disabled.accept">
+                                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                        </span>
+                                        Accept
                                     </button>
                                 </td>
                             </tr>
@@ -106,14 +114,21 @@
                 }),
                 user: '',
                 results: [],
+                disabled: {
+                    accept: false,
+                    invite: false
+                }
             }
         },
         methods: {
+            taskApproved() {
+                return this.task.job_task.status === 'bid_task.approved_by_customer';
+            },
             acceptSubBidForTask(bid) {
-                GeneralContractor.acceptSubBidForTask(this.task, bid);
+                GeneralContractor.acceptSubBidForTask(this.task, bid, this.disabled);
             },
             sendSubInviteToBidOnTask() {
-                GeneralContractor.sendSubInviteToBidOnTask(this.task, this.initiateBidForSubForm);
+                GeneralContractor.sendSubInviteToBidOnTask(this.task, this.initiateBidForSubForm, this.disabled);
             },
             notify() {
 
