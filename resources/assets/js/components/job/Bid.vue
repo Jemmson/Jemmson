@@ -44,7 +44,7 @@
                     </form>
 
                     <!-- /buttons  -->
-                    <general-contractor-bid-actions :show="isGeneralContractor" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
+                    <general-contractor-bid-actions :show="isGeneralContractor && !jobApproved" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
                         @openAddTask="openAddTask">
                     </general-contractor-bid-actions>
                 </div>
@@ -59,7 +59,7 @@
 
         <!-- /add task to bid -->
         <transition name="slide-fade">
-            <bid-add-task :show="showAddTaskPanel" :bid="bid">
+            <bid-add-task :show="showAddTaskPanel" :bid="bid" v-if="!jobApproved">
             </bid-add-task>
         </transition>
     </div>
@@ -97,6 +97,9 @@
                 } else {
                     return this.bid;
                 }
+            },
+            jobApproved() {
+                return this.bid.status === 'job.approved';
             },
             needsApproval() {
                 // TODO: use regular status values to check these

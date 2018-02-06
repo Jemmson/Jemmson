@@ -10,7 +10,7 @@
             </div>
 
             <!-- / general contractor only section -->
-            <div class="row" v-if="isGeneralContractor">
+            <div class="row" v-if="isGeneralContractor && !taskApproved">
                 <div class="col-md-6">
                     <div class="initiateBid">
                         <div class="addBidTask">
@@ -121,6 +121,9 @@
             }
         },
         methods: {
+            taskApproved() {
+                return this.task.job_task.status === 'bid_task.approved_by_customer';
+            },
             acceptSubBidForTask(bid) {
                 GeneralContractor.acceptSubBidForTask(this.task, bid, this.disabled);
             },
