@@ -46,17 +46,16 @@ class HomeController extends Controller
     public function create(Request $request)
     {
         // TODO: Need to make the user_id unique and update if the user is already in the table
-        if (request('password') !== null) {
-            $this->validate(
-                $request,
-                [
-                    'password' => 'required|min:6|confirmed',
-                    'password_confirmation' => 'required|min:6'
-                ]
-            );
+        $this->validate(
+        $request,
+            [
+                'password' => 'required|min:6|confirmed',
+                'password_confirmation' => 'required|min:6'
+            ]
+        );
 
-            Auth::user()->updatePassword(request('password'));
-        }
+        Auth::user()->updatePassword(request('password'));
+        $user_id = Auth::user()->id;
 
         if (Auth::user()->usertype == 'contractor') {
 
@@ -65,7 +64,6 @@ class HomeController extends Controller
             // TODO: if sms or phone is selected then a phone number must be present
 
             $this->validate(request(), [
-                'user_id' => 'required',
 //            'email_method_of_contact' => 'required|min:2',
 //            'address_line_1' => 'required|min:2',
 //            'address_line_2' => 'required|min:2',
@@ -81,8 +79,11 @@ class HomeController extends Controller
 
 //            TODO: need to add functionality for handling images for company logos if a contractor wants to add it
 
-            Contractor::create([
-                'user_id' => request('user_id'),
+            $contractor = Contractor::firstOrCreate([
+                'user_id' => $user_id,
+            ]);
+
+            $contractor->update([
                 'email_method_of_contact' => request('email_contact'), //
                 'address_line_1' => request('address_line_1'), //
                 'address_line_2' => request('address_line_2'),
@@ -102,7 +103,6 @@ class HomeController extends Controller
             // TODO: if sms or phone is selected then a phone number must be present
             Log::info('creating customer');
             $this->validate(request(), [
-                'user_id' => 'required',
 //            'email_method_of_contact' => 'required|min:2',
 //            'address_line_1' => 'required|min:2',
 //            'address_line_2' => 'required|min:2',
@@ -116,8 +116,11 @@ class HomeController extends Controller
             ]);
 
 
-            Customer::create([
-                'user_id' => request('user_id'),
+            $customer = Customer::firstOrCreate([
+                'user_id' => $user_id,
+            ]);
+
+            $customer->update([
                 'email_method_of_contact' => request('email_method_of_contact'),
                 'address_line_1' => request('address_line_1'),
                 'address_line_2' => request('address_line_2'),
@@ -130,7 +133,7 @@ class HomeController extends Controller
             ]);
         }
 
-        $this->updateUsersPhoneNumber($request->phone_number, $request->user_id);
+        $this->updateUsersPhoneNumber($request->phone_number, $user_id);
         
         $this->redirectToJob();
 
