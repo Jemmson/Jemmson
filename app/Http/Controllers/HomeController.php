@@ -95,7 +95,6 @@ class HomeController extends Controller
                 'phone_method_of_contact' => request('phone_contact'), //
                 'company_name' => request('company_name'), //
             ]);
-            $this->updateUsersPhoneNumber($request->phone_number, $request->user_id);
 
         } else if (Auth::user()->usertype == 'customer') {
 
@@ -129,21 +128,5 @@ class HomeController extends Controller
         $user = User::find($userId);
         $user->phone = $phoneNumber;
         $user->save();
-    }
-
-    /**
-     * Redirect to job page if we have the id in a session
-     * this means they clicked a passwordless link
-     *
-     * @return void
-     */
-    public function redirectToJob()
-    {
-        $job_id = session('job_id'); 
-        //dd($job_id);
-        if ($job_id !== null) {
-            session(['job_id' => null]);
-            return redirect('/job/' . $job_id . '/edit');
-        }
     }
 }
