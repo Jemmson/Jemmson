@@ -49,6 +49,16 @@ class HomeController extends Controller
         $this->validate(
         $request,
             [
+                'email_method_of_contact' => 'required|min:2',
+                'address_line_1' => 'required|min:2',
+                'address_line_2' => 'required|min:2',
+                'city' => 'required|min:2',
+                'state' => 'required|min:2',
+                'zip' => 'required|min:2',
+                'company_logo_name' => 'required|min:2',
+                'sms_method_of_contact' => 'required|min:2',
+                'phone_method_of_contact' => 'required|min:2',
+                'phone_number' => 'required|min:2',
                 'password' => 'required|min:6|confirmed',
                 'password_confirmation' => 'required|min:6'
             ]
@@ -64,16 +74,6 @@ class HomeController extends Controller
             // TODO: if sms or phone is selected then a phone number must be present
 
             $this->validate(request(), [
-//            'email_method_of_contact' => 'required|min:2',
-//            'address_line_1' => 'required|min:2',
-//            'address_line_2' => 'required|min:2',
-//            'city' => 'required|min:2',
-//            'state' => 'required|min:2',
-//            'zip' => 'required|min:2',
-//            'company_logo_name' => 'required|min:2',
-//            'sms_method_of_contact' => 'required|min:2',
-//            'phone_method_of_contact' => 'required|min:2',
-//            'phone_number' => 'required|min:2',
                 'company_name' => 'required',
             ]);
 
@@ -101,20 +101,6 @@ class HomeController extends Controller
 
             // TODO: if email method of contact is selected then there must be an email address
             // TODO: if sms or phone is selected then a phone number must be present
-            Log::info('creating customer');
-            $this->validate(request(), [
-//            'email_method_of_contact' => 'required|min:2',
-//            'address_line_1' => 'required|min:2',
-//            'address_line_2' => 'required|min:2',
-//            'city' => 'required|min:2',
-//            'state' => 'required|min:2',
-//            'zip' => 'required|min:2',
-//            'sms_method_of_contact' => 'required|min:2',
-//            'phone_method_of_contact' => 'required|min:2',
-//            'phone_number' => 'required|min:2',
-//                'email_method_of_contact' => 'required'
-            ]);
-
 
             $customer = Customer::firstOrCreate([
                 'user_id' => $user_id,
