@@ -40,7 +40,7 @@ class InitiateBidController extends Controller
 
         $this->validate($request, [
             'email' => 'required|email',
-            'phone' => 'min:7|max:10|unique:users',
+            'phone' => 'min:7|max:10',
         ]);
 
         $email = $request->email;
