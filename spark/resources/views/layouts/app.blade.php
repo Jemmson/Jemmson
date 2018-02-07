@@ -25,7 +25,6 @@
             Spark::scriptVariables(), []
         )); ?>;
     </script>
-
 </head>
 <body class="with-navbar">
     <div id="spark-app" v-cloak>
@@ -50,6 +49,5 @@
     <!-- JavaScript -->
     <script src="{{ mix('js/app.js') }}"></script>
     <script src="/js/sweetalert.min.js"></script>
-
 </body>
 </html>

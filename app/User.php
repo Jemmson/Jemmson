@@ -142,15 +142,18 @@ class User extends SparkUser
      * Get more details about this user
      * whether they are a contractor or customer
      *
+     * Notice: We are assuming the correct details for this user
+     * is the first record found TODO: is there a better a way to do this?
+     *
      * @return [obj]
      */
     public function getDetails()
     {
         if ($this->usertype === 'contractor') {
-            return $this->contractor()->first();
+            return $this->contractor()->first() != null ? $this->contractor()->first() : null;
         } else {
             //dd($this->customers()->first());
-            return $this->customer()->first();
+            return $this->customer()->first() != null ? $this->customer()->first() : null;
         }
 
     }

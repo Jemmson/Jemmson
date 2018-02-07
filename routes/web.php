@@ -59,9 +59,18 @@ Route::get('/public/contractorCommunication', function(){
     return view('/public.contractorCommunication');
 });
 
-Route::group(['middleware' => ['auth', 'further.info']], function () {
+Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/home', 'HomeController@show');
+    //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
+    Route::get(
+        '/furtherInfo', function () {
+            return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
+        }
+    );
+
+    Route::get('/home', 'HomeController@show')->middleware('further.info');
+    Route::post('/home', 'HomeController@create');
+
     // common routes
     Route::get('/initiate-bid', 'InitiateBidController@index');
     Route::post('/initiate-bid', 'InitiateBidController@send');
@@ -76,7 +85,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/task/deny', 'TaskController@denyTask');
     Route::resource('/job', 'JobController');
     Route::post('/jobs', 'JobController@jobs');
-    
+
     // Stripe routes
     Route::get('/stripe/express/connect', 'StripeController@connectExpress');
     Route::get('/stripe/express/auth', 'StripeController@expressAuth');
@@ -87,16 +96,6 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
 }
 );
-Route::group(['middleware' => ['auth']], function () {
-    Route::post('/home', 'HomeController@create');
-    Route::get(
-        '/furtherInfo', function () {
-            return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
-        }
-    );
-}
-);
-
 
 
 // passwordless login
