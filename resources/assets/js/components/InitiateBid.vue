@@ -14,7 +14,7 @@
         <div class="panel-footer" v-if="results.length">
             <ul class="list-group">
                 <button class="list-group-item" v-for="result in results" :name="result.phone"
-                        @click="fillFields(result)">
+                        @click.prevent="fillFields(result)">
                     {{ result.name }}
                 </button>
             </ul>
