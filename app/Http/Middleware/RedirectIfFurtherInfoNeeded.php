@@ -17,7 +17,7 @@ class RedirectIfFurtherInfoNeeded
      */
     public function handle($request, Closure $next, $guard = null)
     {
-
+        session(['prevDestination' => $request->getRequestUri()]);
         $details = Auth::user()->getDetails();
         if (Auth::guard($guard)->check() && ($details === null || $details->address_line_1 === null)) {
             // TODO: if they are coming from a passwordless link and further info was
