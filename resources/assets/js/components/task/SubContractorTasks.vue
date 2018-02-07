@@ -28,7 +28,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="bidTask in tasks" v-bind:value="bidTask.id">
+                <tr v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
                   <th scope="row">{{ bidTask.id }}</th>
                   <td>{{ bidTask.task.name }}</td>
                   <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
@@ -110,7 +110,7 @@
         return false;
       },
       status(bid_task) {
-          return User.status(bid_task.job_task.status, bid_task.task);
+        return User.status(bid_task.job_task.status, bid_task.task);
       },
       prettyDate(date) {
         if (date == null)
@@ -133,36 +133,31 @@
         }).then((response) => {
           // TODO: security review
           console.log(response);
-
-          $('#success-' + id).css('display', 'block');
-          $('#success-' + id).text('Bid has been sent.');
-          setTimeout(() => {
-            $('#success-' + id).css('display', 'none');
-          }, 10000);
+          Vue.toasted.success('Bid Sent.');
           this.disabled.submit = false;
         }).catch((error) => {
-
           console.log(error.response, '#error-' + id);
-
-          $('#error-' + id).css('display', 'block');
-          $('#error-' + id).text(error.response.data.message);
-          setTimeout(() => {
-            $('#error-' + id).css('display', 'none');
-          }, 10000);
+          Vue.toasted.error(error.response.data.message);
           this.disabled.submit = false;
         });
       },
       getTasks() {
-              console.log('getTasks');
-              axios.post('/bid/tasks').then((response) => {
-                  this.tasks = response.data;
-              });
-          }
+        console.log('getTasks');
+        axios.post('/bid/tasks').then((response) => {
+          this.tasks = response.data;
+        });
+      }
     },
     created: function () {
       Bus.$on('bidUpdated', (payload) => {
         this.getTasks();
       });
+    },
+    mounted() {
+      const taskId = User.getParameterByName('taskId');
+      if (taskId !== null && taskId !== '') {
+        $('#task_' + taskId).addClass('info');
+      }
     }
   }
 </script>

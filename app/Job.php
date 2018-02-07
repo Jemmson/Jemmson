@@ -184,5 +184,24 @@ class Job extends Model
             Log::error('JobActions: creating new JobActions - ' . $e->getMessage());
         }
     }
+
+    /**
+     * Update Job status
+     *
+     * @param string $status
+     * @return bool
+     */
+    public function updateStatus($status)
+    {
+        $this->status = $status;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Job Status: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
     
 }

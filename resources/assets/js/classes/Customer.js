@@ -55,6 +55,26 @@ export default class Customer {
     }
 
     /**
+     * Decline a job bid a contractor has submitted
+     * 
+     * @param {Object} bid 
+     * @param {Object} disabled 
+     */
+    async declineBid(bid, disabled) {
+        disabled.declineBid = true;
+        try {
+            const data = await axios.post('/bid/job/decline', bid);
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Bid Declined & Notification Sent');
+            disabled.declineBid = false;
+        } catch (error) {
+            error = error.response.data;
+            Vue.toasted.error(error.message);
+            disabled.declineBid = false;
+        }
+    }
+
+    /**
      * Pay for a task
      * 
      * @param {Object} task 

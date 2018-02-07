@@ -30,7 +30,8 @@ return [
     'bid' => [
         'initiated' => 'bid.initiated',
         'in_progress' => 'bid.in_progress',
-        'sent' => 'bid.sent'
+        'sent' => 'bid.sent',
+        'declined' => 'bid.declined'
     ],
     'job' => [
         'approved' => 'job.approved'
