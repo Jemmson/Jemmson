@@ -1,102 +1,20 @@
-@extends('spark::layouts.app')
+@extends('layouts.master')
 
 @section('content')
 
     @if(isset($user))
-       
+
         @if($user->usertype == 'contractor')
 
             <div class="container" style="margin-top: 2rem">
                 <div class="row" style="margin-top: 2rem">
-                    <div class="col-md-4">
-                        <img src="{{ asset('/img/color-logo.png', false) }}"
-                             class="img-rounded" alt="spark" width="" height="">
-                    </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-6">
-                        <h1>{{ $user->getDetails()->company_name }}</h1>
-                    </div>
+                    <h1 class="text-center">{{ $user->getDetails()->company_name }}</h1>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="panel panel-default  panel--styled">
-                            <div class="panel-body">
-                                <div class="col-md-12 panelTop">
-                                    <div class="col-md-8">
-                                        <h2>Initiate Bid</h2>
-                                        <p>Select me to intiate a bid with a customer</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 panelBottom">
-                                    <a href="/initiate-bid">
-                                        <button class="btn btn-default btn-primary">
-                                            Initiate Bid
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="panel panel-default  panel--styled">
-                            <div class="panel-body">
-                                <div class="col-md-12 panelTop">
-                                    <div class="col-md-8">
-                                        <h2>Bid List</h2>
-                                        <p>Select me to look at all of your bids</p>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12 panelBottom">
-                                    <a href="/bid-list">
-                                        <button class="btn btn-default btn-primary">
-                                            Bid List
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="panel panel-default  panel--styled">
-                            <div class="panel-body">
-                                <div class="col-md-12 panelTop">
-                                    <div class="col-md-8">
-                                        <h2>Task Bids</h2>
-                                        <p>Select me to look at the task bids sent to me</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 panelBottom">
-                                    <a href="/bid/tasks">
-                                        <button class="btn btn-default btn-primary">
-                                            Task Bids
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="panel panel-default  panel--styled">
-                            <div class="panel-body">
-                                <div class="col-md-12 panelTop">
-                                    <div class="col-md-8">
-                                        <h2>Previous Bids</h2>
-                                        <p>Select me to look at your previous bids</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 panelBottom">
-                                    <a href="/previousbids">
-                                        <button class="btn btn-default btn-primary">
-                                            Previous Bids
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="btn-group home-nav">
+                    <button class="btn btn-primary btn-large">Initiate Bid</button>
+                    <button class="btn btn-primary btn-large">Bid Tasks</button>
+                    <button class="btn btn-primary btn-large">Bid Lists</button>
+                    <button class="btn btn-primary btn-large">Settings</button>
                 </div>
             </div>
 
