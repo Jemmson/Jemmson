@@ -32,8 +32,8 @@ export default class User {
     }
 
     emitChange(emit) {
-        switch(emit) {
-            case 'bidUpdated' : 
+        switch (emit) {
+            case 'bidUpdated':
                 Bus.$emit('bidUpdated');
                 break;
             case 'taskUpdated':
@@ -43,7 +43,7 @@ export default class User {
     }
 
     findTaskBid(id, bids) {
-        return bids.filter(function(bid) {
+        return bids.filter(function (bid) {
             return id === bid.id;
         });
     }
@@ -51,16 +51,16 @@ export default class User {
     hasStripeId() {
         return this.user.stripe_id !== null && this.user.stripe_id !== undefined;
     }
-    
+
     // /stripe functions 
     // /NOTICE: not used just incase we need them later as functions need to fix the error
     // /NOTICE: need to fix the error handling since it doesn't work
     async createToken() {
         // create stripe token
         const {
-        token,
+            token,
             error
-      } = await this.stripe.createToken(this.card);
+        } = await this.stripe.createToken(this.card);
 
         if (error) {
             // Inform the customer that there was an error
@@ -78,9 +78,9 @@ export default class User {
         }
         // create stripe customer with token
         const {
-        customer,
+            customer,
             error
-      } = await axios.post('/stripe/customer', token);
+        } = await axios.post('/stripe/customer', token);
 
         if (error) {
             Vue.toasted.error(error.message);
@@ -94,11 +94,11 @@ export default class User {
     async chargeCustomer() {
         // charge customer
         const {
-        charge,
+            charge,
             error
-      } = await axios.post('/stripe/customer/charge', {
-                amount: 1
-            });
+        } = await axios.post('/stripe/customer/charge', {
+            amount: 1
+        });
 
         if (error) {
             Vue.toasted.error(error.message);
@@ -106,5 +106,22 @@ export default class User {
             console.log(charge);
             Vue.toasted.success('Payment Sent!');
         }
+    }
+    getBidIndex(id, bid) {
+        for (let index = 0; index < bid.length; index++) {
+            if (bid[index].id == id) {
+                return index;
+            }
+        }
+        return null;
+    }
+    getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 }

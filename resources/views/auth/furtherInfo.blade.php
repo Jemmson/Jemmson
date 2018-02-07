@@ -34,7 +34,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Phone Number</label>
                                 <div class="col-md-8">
-                                    <input type="tel" class="form-control" name="phone_number" autofocus>
+                                    <input type="tel" class="form-control" name="phone_number" value="{{ Auth::user()->phone }}" autofocus>
                                 </div>
                             </div>
 
@@ -168,7 +168,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Phone Number</label>
                                 <div class="col-md-8">
-                                    <input type="tel" class="form-control" name="phone_number" autofocus>
+                                    <input type="tel" class="form-control" name="phone_number" value="{{ Auth::user()->phone }}" autofocus>
                                 </div>
                             </div>
 

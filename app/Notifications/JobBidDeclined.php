@@ -7,18 +7,20 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NotifyContractorOfDeclinedBid extends Notification
+class JobBidDeclined extends Notification
 {
     use Queueable;
 
+    protected $bid, $user;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Job $bid, User $user)
     {
-        //
+        $this->bid = $bid;
+        $this->user = $user;
     }
 
     /**
@@ -41,8 +43,8 @@ class NotifyContractorOfDeclinedBid extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->line('Job was declined.')
+                    ->action('View Job', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 

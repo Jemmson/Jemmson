@@ -112,6 +112,11 @@
       },
       mounted() {
           this.bids = this.pbids;
+          const bidId = User.getParameterByName('jobId');
+          if (bidId !== null && bidId !== '') {
+              this.openBid(User.getBidIndex(bidId, this.bids));
+          }
+          
       }
   }
 </script>
