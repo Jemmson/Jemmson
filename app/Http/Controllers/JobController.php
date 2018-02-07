@@ -16,6 +16,8 @@ use Validator;
 use Auth;
 
 use App\Notifications\NotifyJobHasBeenApproved;
+use App\Notifications\JobBidDeclined;
+
 
 class JobController extends Controller
 {

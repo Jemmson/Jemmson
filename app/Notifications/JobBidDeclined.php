@@ -7,6 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
+use App\Job;
+use App\User;
+
 class JobBidDeclined extends Notification
 {
     use Queueable;
