@@ -49,31 +49,31 @@ class InitiateBidController extends Controller
         $phone = $request->phone;
         $jobName = $request->jobName;
 
-        // find user
-        $userExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
+        // find customer
+        $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
 
-        if ($userExists['error']) {
-            if ($userExists['errorText'] == 'Create a new user') {
-                $user = $this->createNewUser($email, $phone, $customerName);
+        if ($customerExists['error']) {
+            if ($customerExists['errorText'] == 'Create a new customer') {
+                $customer = $this->createNewcustomer($email, $phone, $customerName);
             } else {
-                // TODO: redirect back to page with the error text and the user name to be corrected
+                // TODO: redirect back to page with the error text and the customer name to be corrected
             }
         } else {
-            $user = $userExists['user'];
+            $customer = $customerExists['customer'];
         }
 
         // create a job name if one does not exist
         if (empty($jobName)) {
-            $jobName = $this->jobName($user);
+            $jobName = $this->jobName($customer);
         }
 
         // create a bid
-        $job = $this->createBid($user->id, $jobName);
+        $job = $this->createBid($customer->id, $jobName);
         $job_id = $job->id;
 
 
         // generate token and save it
-        $token = $user->generateToken(true);
+        $token = $customer->generateToken(true);
 
         // if we fail to create a job or token redirect back 
         // with error
@@ -96,7 +96,7 @@ class InitiateBidController extends Controller
 
 
         if (!empty($email)) {
-            $user->notify(new BidInitiated($job, $user));
+            $customer->notify(new BidInitiated($job, $customer));
         }
 
         //$phone = "4807034902";
@@ -118,9 +118,9 @@ class InitiateBidController extends Controller
      *
      * @return string
      */
-    public function jobName($user)
+    public function jobName($customer)
     {
-        return $user->name . uniqid();
+        return $customer->name . uniqid();
     }
 
     /**
@@ -205,26 +205,26 @@ class InitiateBidController extends Controller
      */
     public function customerExistsInTheDatabase($email, $phone, $customerName)
     {
-        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        $customer = User::where('email', $email)->orWhere('phone', $phone)->first();
 
-        if ($user != null) {
-            if ($user->name != $customerName) {
+        if ($customer != null) {
+            if ($customer->name != $customerName) {
                 return [
                     "error" => true,
-                    "name" => $user->name,
+                    "name" => $customer->name,
                     "errorText" => "Error: Customer already exists please correct the name"
                 ];
             } else {
                 return [
                     "error" => false,
-                    "user" => $user
+                    "customer" => $customer
                 ];
             }
         } else {
             return [
                 "error" => true,
-                "user" => $user,
-                "errorText" => "Create a new user"
+                "customer" => $customer,
+                "errorText" => "Create a new customer"
             ];
         }
 
