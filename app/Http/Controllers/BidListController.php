@@ -18,6 +18,7 @@ class BidListController extends Controller
           $jobsWithTasks = Auth::user()->jobs()
           ->where('status', __('bid.sent'))
           ->orWhere('status', __('job.approved'))
+          ->orWhere('status', __('bid.declined'))
           ->with(
             [
               'tasks' => function ($query) {
@@ -35,6 +36,7 @@ class BidListController extends Controller
           $jobsWithoutTasks = Auth::user()->jobs()
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
+          ->Where('status', '!=',__('bid.declined'))
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {

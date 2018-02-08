@@ -240,12 +240,12 @@ class JobController extends Controller
     public function jobs(Request $request)
     {
         // load jobs and all their tasks along with those tasks relationships
-        if (Auth::user()->isCustomer()) {
+        if ($this->isCustomer()) {
           // only load tasks on jobs that are approved or need approval
           $jobsWithTasks = Auth::user()->jobs()
           ->where('status', __('bid.sent'))
-          ->Where('status', __('job.approved'))
-          ->Where('status', __('job.declined'))
+          ->orWhere('status', __('job.approved'))
+          ->orWhere('status', __('bid.declined'))
           ->with(
             [
               'tasks' => function ($query) {
@@ -258,12 +258,12 @@ class JobController extends Controller
                   }
                 ]);
               }
-            ])->get();
+              // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
+            ])->where('customer_id', Auth::user()->id)->get();
           $jobsWithoutTasks = Auth::user()->jobs()
-          ->where('customer_id', Auth::user()->id)
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
-          ->Where('status', '!=', __('job.declined'))
+          ->Where('status', '!=',__('bid.declined'))
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
@@ -292,5 +292,10 @@ class JobController extends Controller
             return response()->json(['message' => 'Success'], 200);
         } 
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
+    }
+
+    private function isCustomer()
+    {
+        return Auth::user()->usertype === 'customer';
     }
 }
