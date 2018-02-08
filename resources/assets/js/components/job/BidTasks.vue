@@ -12,7 +12,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(task, index) in bid.tasks">
+                    <tr v-for="(task, index) in bid.tasks" v-bind:key="index">
                         <td>{{ task.name }}</td>
                         <td>${{ task.proposed_cust_price }}</td>
                         <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
@@ -49,6 +49,12 @@
                                 </span>
                                 Reopen
                             </button>
+                            <button class="btn btn-danger" v-if="showDeleteBtn(task)" @click="deleteTask(task)" :disabled="disabled.deleteTask">
+                                <span v-if="disabled.deleteTask">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Delete
+                            </button>
                         </td>
                     </tr>
                     <tr v-if="isContractor">
@@ -77,7 +83,8 @@
                   finished: false,
                   approve: false,
                   reopen: false,
-                  deny: false
+                  deny: false,
+                  deleteTask: false
               }
           }
       },
@@ -134,8 +141,17 @@
               }
               return false;
           },
+          showDeleteBtn(task) {
+              if (this.isGeneral && (task.job_task.status !== 'bid_task.approved_by_customer' && task.job_task.status !== 'bid_task.reopened')) {
+                  return true;
+              }
+              return false;
+          },
           reopenTask(task) {
               SubContractor.reopenTask(task, this.disabled);
+          },
+          deleteTask(task) {
+              GeneralContractor.deleteTask(task, this.disabled);
           },
           /**
            * customer task price
