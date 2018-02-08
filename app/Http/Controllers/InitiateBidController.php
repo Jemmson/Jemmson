@@ -50,10 +50,16 @@ class InitiateBidController extends Controller
         $jobName = $request->jobName;
 
         // find user
-        $user = $this->customerExistsInTheDatabase($email, $phone, $customerName);
+        $userExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
 
-        if ($user == false) {
-            $user = $this->createNewUser($email, $phone);
+        if ($userExists['error']) {
+            if ($userExists['errorText'] == 'Create a new user') {
+                $user = $this->createNewUser($email, $phone, $customerName);
+            } else {
+                // TODO: redirect back to page with the error text and the user name to be corrected
+            }
+        } else {
+            $user = $userExists['user'];
         }
 
         // create a job name if one does not exist
@@ -164,7 +170,7 @@ class InitiateBidController extends Controller
      *
      * @return $this|\Illuminate\Database\Eloquent\Model
      */
-    public function createNewUser($email, $phone)
+    public function createNewUser($email, $phone, $customerName)
     {
         if (empty($email)) {
             $email = null;
@@ -178,7 +184,7 @@ class InitiateBidController extends Controller
 
         return User::create(
             [
-                'name' => explode('@', $email)[0],
+                'name' => $customerName,
                 'email' => $email,
                 'phone' => $phone,
                 'usertype' => 'customer',
@@ -199,13 +205,14 @@ class InitiateBidController extends Controller
      */
     public function customerExistsInTheDatabase($email, $phone, $customerName)
     {
-        if ($phone !== '' || $email !== '') {
-            $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
+
+        if ($user != null) {
             if ($user->name != $customerName) {
                 return [
                     "error" => true,
                     "name" => $user->name,
-                    "errorText" => "Error: Customer already exists correct the name"
+                    "errorText" => "Error: Customer already exists please correct the name"
                 ];
             } else {
                 return [
@@ -213,7 +220,14 @@ class InitiateBidController extends Controller
                     "user" => $user
                 ];
             }
+        } else {
+            return [
+                "error" => true,
+                "user" => $user,
+                "errorText" => "Create a new user"
+            ];
         }
+
     }
 
     /**
