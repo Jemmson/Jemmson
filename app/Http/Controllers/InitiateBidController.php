@@ -56,7 +56,10 @@ class InitiateBidController extends Controller
             if ($customerExists['errorText'] == 'Create a new customer') {
                 $customer = $this->createNewcustomer($email, $phone, $customerName);
             } else {
-                // TODO: redirect back to page with the error text and the customer name to be corrected
+                return redirect()->back()->with(
+                    'error',
+                    $customerExists['errorText'] . $customerExists['name']
+                );
             }
         } else {
             $customer = $customerExists['customer'];
@@ -94,17 +97,7 @@ class InitiateBidController extends Controller
             'contractor' => Auth::user()->name
         ];
 
-
-        if (!empty($email)) {
-            $customer->notify(new BidInitiated($job, $customer));
-        }
-
-        //$phone = "4807034902";
-        // TODO: delete phone != '' in prod 
-        // phone should be required
-        if (!empty($phone) && $phone != '') {
-            $this->sendText($data, $phone);
-        }
+        $this->notifyCustomer($email, $phone, $data, $customer, $job);
 
         $request->session()->flash('status', 'Your bid was created');
 
@@ -193,6 +186,21 @@ class InitiateBidController extends Controller
             ]
         );
 
+    }
+
+    public function notifyCustomer($email, $phone, $data, $customer, $job)
+    {
+
+        if (!empty($email)) {
+            $customer->notify(new BidInitiated($job, $customer));
+        }
+
+        //$phone = "4807034902";
+        // TODO: delete phone != '' in prod
+        // phone should not be required just phone or email
+        if (!empty($phone) && $phone != '') {
+            $this->sendText($data, $phone);
+        }
     }
 
     /**
