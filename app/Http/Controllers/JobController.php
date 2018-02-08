@@ -191,13 +191,18 @@ class JobController extends Controller
     {
         $generalContractor = $job->contractor()->first();
         $subContractors = $job->subs();
-        
+        $notified = [];
         // notify general
         $generalContractor->notify(new NotifyJobHasBeenApproved($job, $generalContractor));
+        $notified[$generalContractor->id] = true;
         foreach ($subContractors as $sub) {
-            $notification = new NotifyJobHasBeenApproved($job, $sub->first());
-            $notification->setSub(true);
-            $sub->first()->notify($notification);
+            $sub = $sub->first();
+            if (!isset($notified[$sub->id])) {
+                $notified[$sub->id] = true;
+                $notification = new NotifyJobHasBeenApproved($job, $sub);
+                $notification->setSub(true);
+                $sub->notify($notification);
+            }
         }
     }
 
