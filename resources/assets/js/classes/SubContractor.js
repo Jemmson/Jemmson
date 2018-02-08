@@ -36,6 +36,15 @@ export default class SubContractor {
 
         let general = false;
         disabled.finished = true;
+
+        if (User.payWithStripe()) {
+            if (!User.isSignedUpWithStripe()) {
+                console.log('No Stripe Account');
+                Bus.$emit('needsStripe');
+                disabled.finished = false;
+                return false;
+            }
+        }
         // did the general contractor finish this task?
         if (id === task.job_task.contractor_id && id === task.contractor_id)
             general = true;
