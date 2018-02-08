@@ -55,6 +55,12 @@ class InitiateBidController extends Controller
         if ($customerExists['error']) {
             if ($customerExists['errorText'] == 'Create a new customer') {
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
+                if ($customer == null) {
+                    return redirect()->back()->with(
+                        'error',
+                        'Customer could not be created. Please try initiating the bid again'
+                    );
+                }
             } else {
                 return redirect()->back()->with(
                     'error',
@@ -175,16 +181,23 @@ class InitiateBidController extends Controller
 
         $pass = RandomPasswordService::randomPassword();
 
-        return User::create(
-            [
-                'name' => $customerName,
-                'email' => $email,
-                'phone' => $phone,
-                'usertype' => 'customer',
-                'password_updated' => false,
-                'password' => bcrypt($pass),
-            ]
-        );
+        $customer = null;
+
+        DB::transaction(function () {
+            $customer = User::create(
+                [
+                    'name' => $customerName,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'usertype' => 'customer',
+                    'password_updated' => false,
+                    'password' => bcrypt($pass),
+                ]
+            );
+        });
+
+
+        return $customer;
 
     }
 
@@ -265,10 +278,16 @@ class InitiateBidController extends Controller
 
 
         try {
-            $job->save();
+            DB::transaction(function () {
+                $job->save();
+            });
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e->getMessage());
-            return null;
+            return redirect()->back()->with(
+                'error',
+                'Job could not be created. Please try initiating the bid again'
+            );
+//            return null;
         }
         return $job;
     }
