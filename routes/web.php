@@ -59,18 +59,9 @@ Route::get('/public/contractorCommunication', function(){
     return view('/public.contractorCommunication');
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth', 'further.info']], function () {
 
-    //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
-    Route::get(
-        '/furtherInfo', function () {
-            return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
-        }
-    );
-
-    Route::get('/home', 'HomeController@show')->middleware('further.info');
-    Route::post('/home', 'HomeController@create');
-
+    Route::get('/home', 'HomeController@show');
     // common routes
     Route::get('/initiate-bid', 'InitiateBidController@index');
     Route::post('/initiate-bid', 'InitiateBidController@send');
@@ -79,13 +70,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/current-job', 'Controller@create');
     Route::get('/payments-and-review', 'Controller@create');
     Route::get('/my-contractors', 'Controller@create');
+
+    // TaskController
     Route::get('/bid/tasks', 'TaskController@bidContractorJobTasks');
     Route::post('/bid/tasks', 'TaskController@bidTasks');
     Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
     Route::post('/task/deny', 'TaskController@denyTask');
+
+    // JobController
     Route::resource('/job', 'JobController');
     Route::post('/jobs', 'JobController@jobs');
-
+    Route::post('/bid/job/decline', 'JobController@declineJobBid');
+    
     // Stripe routes
     Route::get('/stripe/express/connect', 'StripeController@connectExpress');
     Route::get('/stripe/express/auth', 'StripeController@expressAuth');
@@ -96,6 +92,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
 }
 );
+Route::group(['middleware' => ['auth']], function () {
+    Route::post('/home', 'HomeController@create');
+    Route::get(
+        '/furtherInfo', function () {
+            return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
+        }
+    );
+}
+);
+
 
 
 // passwordless login

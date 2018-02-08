@@ -72,6 +72,11 @@ export default class Language {
                 general: 'Waiting on Customer Approval - general',
                 customer: 'Waiting on Approval'
             },
+            'bid.declined': {
+                sub: 'Waiting on Customer Approval - sub',
+                general: 'Job Declined Please Review',
+                customer: 'Declined Waiting On Contractor To Resubmit'
+            },
             'job.approved': {
                 sub: 'Start Job',
                 general: 'Start Job',

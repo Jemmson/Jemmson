@@ -36,6 +36,12 @@
                                 </span>
                                 Approve
                             </button>
+                            <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid">
+                                <span v-if="disabled.declineBid">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Decline
+                            </button>
                         </div>
                     </form>
 
@@ -110,6 +116,9 @@
             },
         },
         methods: {
+            declineBid() {
+                Customer.declineBid(this.bid, this.disabled);
+            },
             notifyCustomerOfFinishedBid() {
                 GeneralContractor.notifyCustomerOfFinishedBid(this.bid);
             },

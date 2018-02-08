@@ -16,6 +16,8 @@ use Validator;
 use Auth;
 
 use App\Notifications\NotifyJobHasBeenApproved;
+use App\Notifications\JobBidDeclined;
+
 
 class JobController extends Controller
 {
@@ -238,7 +240,8 @@ class JobController extends Controller
           // only load tasks on jobs that are approved or need approval
           $jobsWithTasks = Auth::user()->jobs()
           ->where('status', __('bid.sent'))
-          ->orWhere('status', __('job.approved'))
+          ->Where('status', __('job.approved'))
+          ->Where('status', __('job.declined'))
           ->with(
             [
               'tasks' => function ($query) {
@@ -253,8 +256,10 @@ class JobController extends Controller
               }
             ])->get();
           $jobsWithoutTasks = Auth::user()->jobs()
+          ->where('customer_id', Auth::user()->id)
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
+          ->Where('status', '!=', __('job.declined'))
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
@@ -262,5 +267,28 @@ class JobController extends Controller
         }
 
         return response()->json($jobs, 200); 
+    }
+
+    /**
+     * Customer does not approve of the job bid
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function declineJobBid(Request $request) {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $job = Job::find($request->id);
+        $contractor = User::find($job->contractor_id);
+
+        if ($job->updateStatus(__('bid.declined'))) {
+            return response()->json(['message' => 'Success'], 200);
+        } 
+        
+        $contractor->notify(new JobBidDeclined($job, $contractor));
+
+        return response()->json(['message' => "Couldn't decline job, please try again."], 400);
     }
 }

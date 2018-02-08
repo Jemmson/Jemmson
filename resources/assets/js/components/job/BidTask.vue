@@ -121,9 +121,6 @@
             }
         },
         methods: {
-            taskApproved() {
-                return this.task.job_task.status === 'bid_task.approved_by_customer';
-            },
             acceptSubBidForTask(bid) {
                 GeneralContractor.acceptSubBidForTask(this.task, bid, this.disabled);
             },
@@ -158,6 +155,9 @@
             }
         },
         computed: {
+            taskApproved() {
+                return this.task.job_task.status === 'bid_task.approved_by_customer';
+            },
             aResults() {
                 if (this.results.length > 0) {
                     return this.results.filter((sub) => {
