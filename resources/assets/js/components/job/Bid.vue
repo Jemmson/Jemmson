@@ -64,6 +64,10 @@
             <bid-add-task :show="showAddTaskPanel" :bid="bid" v-if="!jobApproved">
             </bid-add-task>
         </transition>
+
+        <!-- / stripe testing delete after -->
+        <stripe v-if="showStripe">
+        </stripe>
     </div>
 </template>
 
@@ -90,7 +94,8 @@
                 disabled: {
                     approve: false,
                     declineBid: false
-                }
+                },
+                showStripe: false
             }
         },
         computed: {
@@ -149,6 +154,9 @@
         created: function () {
             Bus.$on('taskAdded', () => {
                 this.showAddTaskPanel = false;
+            });
+            Bus.$on('needsStripe', () => {
+                this.showStripe = true;                
             });
         }
     }
