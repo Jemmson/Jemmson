@@ -20,9 +20,11 @@
                                 <button name="submit" class="btn btn-default btn-primary">Submit</button>
                             </form>
                         </div>
+                        @include('misc.errors')
                     </div>
                 </div>
             </div>
+            <hr>
         </div>
     @elseif(Auth::user()->usertype == 'customer')
 

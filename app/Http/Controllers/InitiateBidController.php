@@ -39,16 +39,18 @@ class InitiateBidController extends Controller
         // this link will then redirect them to the bid page
 
         $this->validate($request, [
-            'email' => 'required|email',
-            'phone' => 'min:7|max:10',
+            'email' => 'required_without:phone',
+            'phone' => 'required_without:email|min:7|max:10',
+            'customerName' => 'required'
         ]);
 
+        $customerName = $request->customerName;
         $email = $request->email;
         $phone = $request->phone;
         $jobName = $request->jobName;
 
         // find user
-        $user = $this->customerExistsInTheDatabase($email, $phone);
+        $user = $this->customerExistsInTheDatabase($email, $phone, $customerName);
 
         if ($user == false) {
             $user = $this->createNewUser($email, $phone);
@@ -195,8 +197,13 @@ class InitiateBidController extends Controller
      *
      * @return bool|\Illuminate\Database\Eloquent\Model|null|static
      */
-    public function customerExistsInTheDatabase($email, $phone)
+    public function customerExistsInTheDatabase($email, $phone, $customerName)
     {
+
+//        if () {
+//
+//        }
+
         if ($phone !== '' && $email !== '') {
             $user = User::where('email', $email)->orWhere('phone', $phone)->first();
         } else if ($phone !== '') {
