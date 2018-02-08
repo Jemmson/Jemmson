@@ -284,11 +284,9 @@ class JobController extends Controller
         $contractor = User::find($job->contractor_id);
 
         if ($job->updateStatus(__('bid.declined'))) {
+            $contractor->notify(new JobBidDeclined($job, $contractor));
             return response()->json(['message' => 'Success'], 200);
         } 
-        
-        $contractor->notify(new JobBidDeclined($job, $contractor));
-
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
     }
 }
