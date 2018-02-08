@@ -88,7 +88,8 @@
                 showTaskPanel: false,
                 showAddTaskPanel: false,
                 disabled: {
-                    approve: false
+                    approve: false,
+                    declineBid: false
                 }
             }
         },
