@@ -14,7 +14,6 @@
 
                         <div class="panel-body">
                             <form action="/initiate-bid/" method="post">
-
                                 {{ csrf_field() }}
                                 <initiate-bid></initiate-bid>
                                 <button name="submit" class="btn btn-default btn-primary">Submit</button>

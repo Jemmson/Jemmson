@@ -64,7 +64,7 @@ class InitiateBidController extends Controller
         // create a bid
         $job = $this->createBid($user->id, $jobName);
         $job_id = $job->id;
-        
+
 
         // generate token and save it
         $token = $user->generateToken(true);
@@ -114,7 +114,7 @@ class InitiateBidController extends Controller
      */
     public function jobName($user)
     {
-        return $user->name.uniqid();
+        return $user->name . uniqid();
     }
 
     /**
@@ -146,11 +146,11 @@ class InitiateBidController extends Controller
         $nexmo = app('Nexmo\Client');
 
         $nexmo->message()->send([
-            'to'   => '1' . $phone,
+            'to' => '1' . $phone,
             'from' => env('NEXMO_FROM_NUMBER'),
-            'text' => 'Welcome To Jemmson'. '
-                       '.$data['contractor'] . ' has initated a bid.
-                      Job Name: ' . $data['job_name'] . ' Login Link: '. url('/login/' . $data['link'] . '/' . $data['job_id'])
+            'text' => 'Welcome To Jemmson' . '
+                       ' . $data['contractor'] . ' has initated a bid.
+                      Job Name: ' . $data['job_name'] . ' Login Link: ' . url('/login/' . $data['link'] . '/' . $data['job_id'])
         ]);
 
         session()->forget('phone');
@@ -199,25 +199,20 @@ class InitiateBidController extends Controller
      */
     public function customerExistsInTheDatabase($email, $phone, $customerName)
     {
-
-//        if () {
-//
-//        }
-
-        if ($phone !== '' && $email !== '') {
+        if ($phone !== '' || $email !== '') {
             $user = User::where('email', $email)->orWhere('phone', $phone)->first();
-        } else if ($phone !== '') {
-            $user = User::Where('phone', $phone)->first();
-        } else if ($email !== '') {
-            $user = User::where('email', $email)->first();
-        }
-
-        $result = count($user);
-
-        if ($result === 1) {
-            return $user;
-        } else {
-            return false;
+            if ($user->name != $customerName) {
+                return [
+                    "error" => true,
+                    "name" => $user->name,
+                    "errorText" => "Error: Customer already exists correct the name"
+                ];
+            } else {
+                return [
+                    "error" => false,
+                    "user" => $user
+                ];
+            }
         }
     }
 
