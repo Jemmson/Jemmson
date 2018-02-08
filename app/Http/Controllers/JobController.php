@@ -170,7 +170,7 @@ class JobController extends Controller
             JobTask::where('job_id', $job->id)
                     //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
                     ->update(['status' => __('bid_task.approved_by_customer')]);
-            Task::where('job_id', $job->id)
+            JobTask::where('job_id', $job->id)
                     ->where('start_when_accepted', true)
                     ->update(['start_date' => Carbon::now()]);
         });
