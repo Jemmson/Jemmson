@@ -131,7 +131,7 @@
                 console.log(result)
                 this.taskExists = true
                 // input fields
-                this.addNewTaskForm.TaskName = result.name
+                this.addNewTaskForm.taskName = result.name
                 this.addNewTaskForm.taskPrice = result.proposed_cust_price
                 this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
                 // comparison values
