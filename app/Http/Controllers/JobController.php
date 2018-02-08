@@ -243,9 +243,11 @@ class JobController extends Controller
         if ($this->isCustomer()) {
           // only load tasks on jobs that are approved or need approval
           $jobsWithTasks = Auth::user()->jobs()
-          ->where('status', __('bid.sent'))
-          ->orWhere('status', __('job.approved'))
-          ->orWhere('status', __('bid.declined'))
+          ->where(function ($query) {
+            $query->where('status', __('bid.sent'))
+              ->orwhere('status', __('job.approved'))
+              ->orwhere('status', __('bid.declined'));
+          })
           ->with(
             [
               'tasks' => function ($query) {
@@ -259,7 +261,7 @@ class JobController extends Controller
                 ]);
               }
               // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
-            ])->where('customer_id', Auth::user()->id)->get();
+            ])->get();
           $jobsWithoutTasks = Auth::user()->jobs()
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
