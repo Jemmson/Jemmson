@@ -54,11 +54,11 @@ class InitiateBidController extends Controller
 
         if ($customerExists['error']) {
             if ($customerExists['errorText'] == 'Create a new customer') {
-                $customer = $this->createNewcustomer($email, $phone, $customerName);
+                $customer = $this->createNewCustomer($email, $phone, $customerName);
             } else {
                 return redirect()->back()->with(
                     'error',
-                    $customerExists['errorText'] . $customerExists['name']
+                    $customerExists['errorText'] . " The customer name should be " . $customerExists['name']
                 );
             }
         } else {
@@ -163,7 +163,7 @@ class InitiateBidController extends Controller
      *
      * @return $this|\Illuminate\Database\Eloquent\Model
      */
-    public function createNewUser($email, $phone, $customerName)
+    public function createNewCustomer($email, $phone, $customerName)
     {
         if (empty($email)) {
             $email = null;
@@ -220,7 +220,7 @@ class InitiateBidController extends Controller
                 return [
                     "error" => true,
                     "name" => $customer->name,
-                    "errorText" => "Error: Customer already exists please correct the name"
+                    "errorText" => "Error: Customer already exists please correct the name."
                 ];
             } else {
                 return [

@@ -9,7 +9,6 @@
                 <div class="col-md-8 col-md-offset-2">
                     <div class="panel panel-default">
                         {{-- / --}}
-                        <span>{{ session('error') }}</span>
                         <div class="panel-heading">Initiate Bid</div>
 
                         <div class="panel-body">
