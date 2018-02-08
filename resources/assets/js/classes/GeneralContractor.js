@@ -7,6 +7,13 @@ export default class GeneralContractor {
     }
 
     notifyCustomerOfFinishedBid(bid) {
+        if (User.recievePaymentsWithStripe()) {
+            if (!User.stripeExpressConnected()) {
+                console.log('No Stripe Express');
+                Bus.$emit('needsStripe');
+                return false;
+            }
+        }
         console.log('notifyCustomerOfFinishedBid', bid);
         axios.post('/api/task/finishedBidNotification', {
             jobId: bid.id,
@@ -114,5 +121,25 @@ export default class GeneralContractor {
                 Vue.toasted.error('Error: ' + error.message);
                 disabled.approve = false;
             });
+    }
+
+    async deleteTask(task, disabled) {
+        disabled.deleteTask = true;
+        try {
+            const data = await axios.post('/api/task/delete', {
+                taskId: task.id,
+                jobId: task.job_id
+            });
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Task Denied & Notification Sent');
+            disabled.deleteTask = false;
+        } catch (error) {
+            error = error.response.data;
+            Vue.toasted.error(error.message);
+            disabled.deleteTask = false;
+        }
+
+        console.log(result);
+        
     }
 }

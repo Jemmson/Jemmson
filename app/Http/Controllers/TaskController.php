@@ -591,7 +591,9 @@ class TaskController extends Controller
             'taskName' => 'required|string',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
-            'start_date' => 'required|date|after:today'
+            'start_when_accepted' => 'required',
+            'start_date' => 'required_if:start_when_accepted,false|date|after:today'
+            
         ]);
 
         $job_id = $request->jobId;
@@ -601,6 +603,7 @@ class TaskController extends Controller
             
         // find or create a task
         $task = Task::firstOrCreate(['name' => $name, 'job_id' => $job_id, 'contractor_id' => $request->contractorId]);
+        
         $task->proposed_cust_price = $request->taskPrice;
         $task->proposed_sub_price = $request->subTaskPrice;
 
@@ -676,7 +679,12 @@ class TaskController extends Controller
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
         $jobTask->area = $request->area;
-        $jobTask->start_date = $request->start_date;
+        if ($request->start_when_accepted) {
+            $jobTask->start_when_accepted = true;
+            $jobTask->start_date = \Carbon\Carbon::now();
+        } else {
+            $jobTask->start_date = $request->start_date;
+        }
         $jobTask->save();
     }
 }

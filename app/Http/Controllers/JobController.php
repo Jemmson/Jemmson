@@ -10,6 +10,7 @@ use App\Contractor;
 use App\JobTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 use Validator;
@@ -163,18 +164,16 @@ class JobController extends Controller
         $job->agreed_start_date = $request->agreed_start_date;
         $job->status = __('job.approved');
         
-        // approve all tasks associated with this job, any exceptions?
-        JobTask::where('job_id', $job->id)
-                //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
-                ->update(['status' => __('bid_task.approved_by_customer')]);
-
-        try {
+        $result = DB::transaction(function () use ($job) {
             $job->save();
-        } catch (\Exception $e) {
-            Log::error('Approve Job: ' . $e->getMessage());
-            return response()->json(["message"=>"Couldn't approve job.","errors"=>["error" =>[$e->getMessage()]]], 400);
-        }
-
+            // approve all tasks associated with this job, any exceptions?
+            JobTask::where('job_id', $job->id)
+                    //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+                    ->update(['status' => __('bid_task.approved_by_customer')]);
+            JobTask::where('job_id', $job->id)
+                    ->where('start_when_accepted', true)
+                    ->update(['start_date' => Carbon::now()]);
+        });
         $this->notifyAll($job);
 
         return response()->json($job, 200);
@@ -191,13 +190,18 @@ class JobController extends Controller
     {
         $generalContractor = $job->contractor()->first();
         $subContractors = $job->subs();
-        
+        $notified = [];
         // notify general
         $generalContractor->notify(new NotifyJobHasBeenApproved($job, $generalContractor));
+        $notified[$generalContractor->id] = true;
         foreach ($subContractors as $sub) {
-            $notification = new NotifyJobHasBeenApproved($job, $sub->first());
-            $notification->setSub(true);
-            $sub->first()->notify($notification);
+            $sub = $sub->first();
+            if (!isset($notified[$sub->id])) {
+                $notified[$sub->id] = true;
+                $notification = new NotifyJobHasBeenApproved($job, $sub);
+                $notification->setSub(true);
+                $sub->notify($notification);
+            }
         }
     }
 
@@ -236,12 +240,14 @@ class JobController extends Controller
     public function jobs(Request $request)
     {
         // load jobs and all their tasks along with those tasks relationships
-        if (Auth::user()->isCustomer()) {
+        if ($this->isCustomer()) {
           // only load tasks on jobs that are approved or need approval
           $jobsWithTasks = Auth::user()->jobs()
-          ->where('status', __('bid.sent'))
-          ->Where('status', __('job.approved'))
-          ->Where('status', __('job.declined'))
+          ->where(function ($query) {
+            $query->where('status', __('bid.sent'))
+              ->orwhere('status', __('job.approved'))
+              ->orwhere('status', __('bid.declined'));
+          })
           ->with(
             [
               'tasks' => function ($query) {
@@ -254,12 +260,12 @@ class JobController extends Controller
                   }
                 ]);
               }
+              // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
             ])->get();
           $jobsWithoutTasks = Auth::user()->jobs()
-          ->where('customer_id', Auth::user()->id)
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
-          ->Where('status', '!=', __('job.declined'))
+          ->Where('status', '!=',__('bid.declined'))
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
@@ -284,11 +290,14 @@ class JobController extends Controller
         $contractor = User::find($job->contractor_id);
 
         if ($job->updateStatus(__('bid.declined'))) {
+            $contractor->notify(new JobBidDeclined($job, $contractor));
             return response()->json(['message' => 'Success'], 200);
         } 
-        
-        $contractor->notify(new JobBidDeclined($job, $contractor));
-
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
+    }
+
+    private function isCustomer()
+    {
+        return Auth::user()->usertype === 'customer';
     }
 }

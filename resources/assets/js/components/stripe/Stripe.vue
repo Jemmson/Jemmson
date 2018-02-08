@@ -1,5 +1,5 @@
 <template>
-<div class="col-md-12">
+<div>
     <div class="panel panel-default" v-if="isContractor">
         <!-- <div class="panel-heading">Dashboard</div> -->
         <div class="panel-body">
