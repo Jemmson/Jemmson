@@ -10,6 +10,7 @@ use App\Contractor;
 use App\JobTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 use Validator;
@@ -163,18 +164,16 @@ class JobController extends Controller
         $job->agreed_start_date = $request->agreed_start_date;
         $job->status = __('job.approved');
         
-        // approve all tasks associated with this job, any exceptions?
-        JobTask::where('job_id', $job->id)
-                //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
-                ->update(['status' => __('bid_task.approved_by_customer')]);
-
-        try {
+        $result = DB::transaction(function () use ($job) {
             $job->save();
-        } catch (\Exception $e) {
-            Log::error('Approve Job: ' . $e->getMessage());
-            return response()->json(["message"=>"Couldn't approve job.","errors"=>["error" =>[$e->getMessage()]]], 400);
-        }
-
+            // approve all tasks associated with this job, any exceptions?
+            JobTask::where('job_id', $job->id)
+                    //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+                    ->update(['status' => __('bid_task.approved_by_customer')]);
+            Task::where('job_id', $job->id)
+                    ->where('start_when_accepted', true)
+                    ->update(['start_date' => Carbon::now()]);
+        });
         $this->notifyAll($job);
 
         return response()->json($job, 200);

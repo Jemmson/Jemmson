@@ -35,7 +35,15 @@
                         <input type="text" class="form-control" id="area" name="area" required v-model="addNewTaskForm.area">
                     </div>
 
-                    <div class="form-group col-md-12" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
+                    <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('start_when_accepted')}">
+                        <label for="start_when_accepted">Start When Job Is Accepted</label>
+                        <input type="checkbox" class="form-control" id="start_when_accepted" name="start_when_accepted" required v-model="addNewTaskForm.start_when_accepted">
+                        <span class="help-block" v-show="addNewTaskForm.errors.has('start_when_accepted')">
+                            {{ addNewTaskForm.errors.get('start_when_accepted') }}
+                        </span>
+                    </div>
+
+                    <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('start_date')}" v-if="!addNewTaskForm.start_when_accepted">
                         <label for="start_date">Start Date</label>
                         <input type="date" class="form-control" id="start_date" name="start_date" required v-model="addNewTaskForm.start_date">
                         <span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">
@@ -91,6 +99,7 @@
                     contractorId: '',
                     area: '',
                     start_date: '',
+                    start_when_accepted: false
                 }),
                 taskResults: [],
             }
