@@ -23,7 +23,7 @@
                         </span>
                         <div class="panel-footer" v-if="taskResults.length">
                             <ul class="list-group">
-                                <button class="list-group-item" v-for="result in taskResults" :name="result.phone" @click="fillTaskPrice(result)">
+                                <button class="list-group-item" v-for="result in taskResults" v-bind:key="result.id" @click="fillTaskValues(result)">
                                     {{ result.name }}
                                 </button>
                             </ul>
@@ -84,7 +84,7 @@
                 addNewTaskForm: new SparkForm({
                     taskId: '',
                     taskExists: '',
-                    jobId: '',
+                    jobId: this.bid.id,
                     subTaskPrice: '',
                     taskPrice: '',
                     taskName: '',
@@ -97,13 +97,56 @@
         },
         methods: {
             getExistingTask() {
+                this.taskResults = [];
+                if (this.addNewTaskForm.taskName.length > 2) {
+                    axios.post('/api/search/task', {
+                        taskname: this.addNewTaskForm.taskName,
+                        jobId: this.addNewTaskForm.jobId
+                    }).then(response => {
+                        console.log(response.data)
+                        this.taskResults = response.data
+                    })
+                }
+            },
+            filterReturnedTasks(responseData, allTasks) {
+                let responseDataLength = responseData.length
+                let allTasksDataLength = allTasks.length
+                let newTasks = []
 
+                for (let i = 0; i < responseDataLength; i++) {
+                    let flag = false
+                    for (let j = 0; j < allTasksDataLength; j++) {
+                        if (responseData[i].id === allTasks[j].id) {
+                            flag = true
+                        }
+                    }
+                    // debugger
+                    if (flag === false) {
+                        newTasks.push(responseData[i])
+                    }
+                }
+                return newTasks
+            },
+            fillTaskValues(result) {
+                console.log(result)
+                this.taskExists = true
+                // input fields
+                this.addNewTaskForm.TaskName = result.name
+                this.addNewTaskForm.taskPrice = result.proposed_cust_price
+                this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
+                // comparison values
+                // this.selectedTaskName = result.name
+                // this.selectedTaskPrice = result.proposed_cust_price
+                // this.selectedSubTaskPrice = result.proposed_sub_price
+                this.clearTaskResults()
+            },
+            clearTaskResults() {
+                this.taskResults = [];
             },
             addNewTaskToBid() {
                 GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
             }
         },
-        mounted: function () {
-        }
+        mounted: function () {}
     }
 </script>
