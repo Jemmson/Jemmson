@@ -31,6 +31,28 @@ export default class User {
             return bid.contractor_id === this.user.id;
     }
 
+    isSignedUpWithStripe() {
+        this.user.stripe_id === undefined && this.user.stripe_id === null;
+    }
+
+    payWithStripe() {
+        return true;
+    }
+
+    /**
+     * User has a stripe express account connected
+     */
+    stripeExpressConnected() {
+        if (!this.isContractor) {
+            return false; 
+        }
+        return this.user.contractor.stripe_express !== undefined && this.user.contractor.stripe_express !== null;
+    }
+
+    recievePaymentsWithStripe() {
+        return false;
+    }
+
     emitChange(emit) {
         switch (emit) {
             case 'bidUpdated':

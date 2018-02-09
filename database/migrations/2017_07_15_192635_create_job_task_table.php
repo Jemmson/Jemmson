@@ -27,6 +27,7 @@ class CreateJobTaskTable extends Migration
             $table->float('cust_final_price')->nullable();
             $table->float('sub_final_price')->nullable();
             $table->string('area')->nullable();
+             $table->boolean('start_when_accepted')->default(false);
             $table->timestamp('start_date')->nullable();
             $table->timestamps();
             

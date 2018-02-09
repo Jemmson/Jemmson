@@ -23,7 +23,7 @@
                         </span>
                         <div class="panel-footer" v-if="taskResults.length">
                             <ul class="list-group">
-                                <button class="list-group-item" v-for="result in taskResults" :name="result.phone" @click="fillTaskPrice(result)">
+                                <button class="list-group-item" v-for="result in taskResults" v-bind:key="result.id" @click="fillTaskValues(result)">
                                     {{ result.name }}
                                 </button>
                             </ul>
@@ -35,7 +35,15 @@
                         <input type="text" class="form-control" id="area" name="area" required v-model="addNewTaskForm.area">
                     </div>
 
-                    <div class="form-group col-md-12" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
+                    <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('start_when_accepted')}">
+                        <label for="start_when_accepted">Start When Job Is Accepted</label>
+                        <input type="checkbox" class="form-control" id="start_when_accepted" name="start_when_accepted" required v-model="addNewTaskForm.start_when_accepted">
+                        <span class="help-block" v-show="addNewTaskForm.errors.has('start_when_accepted')">
+                            {{ addNewTaskForm.errors.get('start_when_accepted') }}
+                        </span>
+                    </div>
+
+                    <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('start_date')}" v-if="!addNewTaskForm.start_when_accepted">
                         <label for="start_date">Start Date</label>
                         <input type="date" class="form-control" id="start_date" name="start_date" required v-model="addNewTaskForm.start_date">
                         <span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">
@@ -84,26 +92,70 @@
                 addNewTaskForm: new SparkForm({
                     taskId: '',
                     taskExists: '',
-                    jobId: '',
+                    jobId: this.bid.id,
                     subTaskPrice: '',
                     taskPrice: '',
                     taskName: '',
                     contractorId: '',
                     area: '',
                     start_date: '',
+                    start_when_accepted: false
                 }),
                 taskResults: [],
             }
         },
         methods: {
             getExistingTask() {
+                this.taskResults = [];
+                if (this.addNewTaskForm.taskName.length > 2) {
+                    axios.post('/api/search/task', {
+                        taskname: this.addNewTaskForm.taskName,
+                        jobId: this.addNewTaskForm.jobId
+                    }).then(response => {
+                        console.log(response.data)
+                        this.taskResults = response.data
+                    })
+                }
+            },
+            filterReturnedTasks(responseData, allTasks) {
+                let responseDataLength = responseData.length
+                let allTasksDataLength = allTasks.length
+                let newTasks = []
 
+                for (let i = 0; i < responseDataLength; i++) {
+                    let flag = false
+                    for (let j = 0; j < allTasksDataLength; j++) {
+                        if (responseData[i].id === allTasks[j].id) {
+                            flag = true
+                        }
+                    }
+                    // debugger
+                    if (flag === false) {
+                        newTasks.push(responseData[i])
+                    }
+                }
+                return newTasks
+            },
+            fillTaskValues(result) {
+                console.log(result)
+                this.taskExists = true
+                // input fields
+                this.addNewTaskForm.taskName = result.name
+                this.addNewTaskForm.taskPrice = result.proposed_cust_price
+                this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
+                // comparison values
+                // this.selectedTaskName = result.name
+                // this.selectedTaskPrice = result.proposed_cust_price
+                // this.selectedSubTaskPrice = result.proposed_sub_price
+                this.clearTaskResults()
+            },
+            clearTaskResults() {
+                this.taskResults = [];
             },
             addNewTaskToBid() {
                 GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
             }
         },
-        mounted: function () {
-        }
+        mounted: function () {}
     }
 </script>

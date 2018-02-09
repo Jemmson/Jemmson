@@ -44,17 +44,12 @@ Route::get('/search', function (Request $request) {
 
 Route::post('/search/task', function (Request $request) {
     $taskName = $request->taskname;
-//    $contId = $request->contractorId;
     $jobId = $request->jobId;
-
-    // TODO: change this select statement so that I only pull tasks associated to the contractor but are not already associated to the job possibly use the validate function
-    $cont = DB::select("select contractor_id 
-                           from jobs 
-                           where id = ?", [$jobId]);
-    $contId = $cont[0]->contractor_id;
-
+    $job = \App\Job::find($jobId);
+    // get tasks not associated with the job already but are associated to the contractor
     $tasks = \App\Task::where('name', 'like', '%' . $taskName . '%')
-        ->where('contractor_id', '=', $contId)
+        ->where('contractor_id', '=', $job->contractor_id)
+        ->where('job_id', '!=', $jobId)
         ->get();
     return $tasks;
 });
