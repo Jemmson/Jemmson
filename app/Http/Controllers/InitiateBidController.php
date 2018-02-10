@@ -44,13 +44,16 @@ class InitiateBidController extends Controller
             'customerName' => 'required'
         ]);
 
+
         $customerName = $request->customerName;
         $email = $request->email;
         $phone = $request->phone;
         $jobName = $request->jobName;
 
+
         // find customer
         $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
+
 
         if ($customerExists['error']) {
             if ($customerExists['errorText'] == 'Create a new customer') {
@@ -78,6 +81,9 @@ class InitiateBidController extends Controller
 
         // create a bid
         $job = $this->createBid($customer->id, $jobName);
+
+//        dd($job);
+
         $job_id = $job->id;
 
 
@@ -183,18 +189,20 @@ class InitiateBidController extends Controller
 
         $customer = null;
 
-        DB::transaction(function () {
-            $customer = User::create(
-                [
-                    'name' => $customerName,
-                    'email' => $email,
-                    'phone' => $phone,
-                    'usertype' => 'customer',
-                    'password_updated' => false,
-                    'password' => bcrypt($pass),
-                ]
-            );
-        });
+//        dd($customerName);
+
+//        DB::transaction(function () {
+        $customer = User::create(
+            [
+                'name' => $customerName,
+                'email' => $email,
+                'phone' => $phone,
+                'usertype' => 'customer',
+                'password_updated' => false,
+                'password' => bcrypt($pass),
+            ]
+        );
+//        });
 
 
         return $customer;
@@ -278,9 +286,7 @@ class InitiateBidController extends Controller
 
 
         try {
-            DB::transaction(function () {
-                $job->save();
-            });
+            $job->save();
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e->getMessage());
             return redirect()->back()->with(
