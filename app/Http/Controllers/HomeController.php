@@ -63,8 +63,8 @@ class HomeController extends Controller
                 // 'password_confirmation' => 'required|min:6'
             ]
         );
-
-        Auth::user()->updatePassword(request('password'));
+        
+        //Auth::user()->updatePassword(request('password'));
         $user_id = Auth::user()->id;
 
         if (Auth::user()->usertype == 'contractor') {
