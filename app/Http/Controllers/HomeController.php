@@ -120,7 +120,11 @@ class HomeController extends Controller
 
         $this->updateUsersPhoneNumber($request->phone_number, $user_id);
 
-        return redirect(session('prevDestination'));
+        if (empty(session('prevDestination'))) {
+            return redirect('home');
+        } else {
+            return redirect(session('prevDestination'));
+        }
     }
 
     public function updateUsersPhoneNumber($phoneNumber, $userId)
