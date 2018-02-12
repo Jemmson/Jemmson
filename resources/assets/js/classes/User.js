@@ -74,6 +74,21 @@ export default class User {
         return this.user.stripe_id !== null && this.user.stripe_id !== undefined;
     }
 
+    async submitFurtherInfo(form, disabled) {
+        disabled.submit = true;
+        try {
+            const data = await Spark.post('/home', form);
+            Vue.toasted.success('info updated');
+            disabled.submit = false;
+            location.href = data;
+        } catch (error) {
+            console.log(error);
+            form.errors.errors = error.errors;
+            Vue.toasted.error(error.message);
+            disabled.submit = false;
+        }
+    }
+
     // /stripe functions 
     // /NOTICE: not used just incase we need them later as functions need to fix the error
     // /NOTICE: need to fix the error handling since it doesn't work
