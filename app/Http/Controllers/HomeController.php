@@ -57,7 +57,6 @@ class HomeController extends Controller
                 // 'email_method_of_contact' => 'required|min:2',
                 // 'sms_method_of_contact' => 'required|min:2',
                 // 'phone_method_of_contact' => 'required|min:2',
-                // 'password' => 'required|min:6|confirmed',
             ]
         );
 
