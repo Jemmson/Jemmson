@@ -37,8 +37,8 @@ export default class SubContractor {
         let general = false;
         disabled.finished = true;
 
-        if (User.payWithStripe()) {
-            if (!User.isSignedUpWithStripe()) {
+        if (User.recievePaymentsWithStripe()) {
+            if (!User.stripeExpressConnected()) {
                 console.log('No Stripe Account');
                 Bus.$emit('needsStripe');
                 disabled.finished = false;
