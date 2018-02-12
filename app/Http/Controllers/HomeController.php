@@ -83,13 +83,13 @@ class HomeController extends Controller
             ]);
 
             $contractor->update([
-                'email_method_of_contact' => request('email_contact'), //
                 'address_line_1' => request('address_line_1'), //
                 'address_line_2' => request('address_line_2'),
                 'city' => request('city'), //
                 'state' => request('state'), //
                 'zip' => request('zip'), //
                 'company_logo_name' => request('file_name'), //
+                'email_method_of_contact' => request('email_contact'), //
                 'sms_method_of_contact' => request('sms_text'), //
                 'phone_method_of_contact' => request('phone_contact'), //
                 'company_name' => request('company_name'), //
@@ -105,15 +105,15 @@ class HomeController extends Controller
             ]);
 
             $customer->update([
-                'email_method_of_contact' => request('email_method_of_contact'),
                 'address_line_1' => request('address_line_1'),
                 'address_line_2' => request('address_line_2'),
                 'city' => request('city'),
                 'state' => request('state'),
                 'zip' => request('zip'),
                 'notes' => request('notes'),
-                'sms_method_of_contact' => request('sms_method_of_contact'),
-                'phone_method_of_contact' => request('phone_method_of_contact')
+                'email_method_of_contact' => request('email_contact'),
+                'sms_method_of_contact' => request('sms_text'),
+                'phone_method_of_contact' => request('phone_contact')
             ]);
         }
 
