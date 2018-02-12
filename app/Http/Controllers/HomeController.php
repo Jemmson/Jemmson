@@ -49,14 +49,11 @@ class HomeController extends Controller
         $this->validate(
         $request,
             [
-                'phone_number' => 'required|min:2',
+                'phone_number' => 'required|min:2|unique:users,phone',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',
                 'zip' => 'required|min:2',
-                // 'email_method_of_contact' => 'required|min:2',
-                // 'sms_method_of_contact' => 'required|min:2',
-                // 'phone_method_of_contact' => 'required|min:2',
             ]
         );
 

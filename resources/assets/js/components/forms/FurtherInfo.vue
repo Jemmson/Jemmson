@@ -133,27 +133,36 @@
                             <div class="preferred_contact" style="border: solid thin black">
                                 <div class="preferred_contact_input" style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
                                     <!-- preferred method of contact -->
-                                    <div class="form-group">
+                                    <div class="form-group" :class="{'has-error': form.errors.has('email_contact')}">
                                         <label class="col-md-3 control-label">Email</label>
 
                                         <div class="col-md-8">
                                             <input type="checkbox" name="email_contact" v-model="form.email_contact">
+                                            <span class="help-block" v-show="form.errors.has('email_contact')">
+                                                {{ form.errors.get('email_contact') }}
+                                            </span>
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group" :class="{'has-error': form.errors.has('phone_contact')}">
                                         <label class="col-md-3 control-label">Phone Call</label>
 
                                         <div class="col-md-8">
                                             <input type="checkbox" name="phone_contact" v-model="form.phone_contact">
+                                            <span class="help-block" v-show="form.errors.has('phone_contact')">
+                                                {{ form.errors.get('phone_contact') }}
+                                            </span>
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group" :class="{'has-error': form.errors.has('sms_text')}">
                                         <label class="col-md-3 control-label">SMS Text</label>
 
                                         <div class="col-md-8">
                                             <input type="checkbox" name="sms_text" v-model="form.sms_text">
+                                            <span class="help-block" v-show="form.errors.has('sms_text')">
+                                                {{ form.errors.get('sms_text') }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
