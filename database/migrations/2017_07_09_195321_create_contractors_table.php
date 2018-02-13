@@ -16,17 +16,15 @@ class CreateContractorsTable extends Migration
         // this table keeps track of all of the users that are contractors
         Schema::create('contractors', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unique(); 
-            $table->string('address_line_1')->nullable();
-            $table->string('address_line_2')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('zip')->nullable();
+            $table->integer('user_id')->unique();
+            $table->integer('location_id')->unique(); 
+            
+            $table->string('company_name')->nullable();
             $table->string('company_logo_name')->nullable();
+
             $table->boolean('email_method_of_contact')->nullable();
             $table->boolean('sms_method_of_contact')->nullable();
             $table->boolean('phone_method_of_contact')->nullable();
-            $table->string('company_name')->nullable();
             $table->timestamps();
         });
     }
