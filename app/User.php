@@ -149,10 +149,40 @@ class User extends SparkUser
         if ($this->usertype === 'contractor') {
             return $this->contractor()->first();
         } else {
-            //dd($this->customers()->first());
             return $this->customer()->first();
         }
 
+    }
+
+    /**
+     * Are sms notifications on for this user
+     *
+     * @return bool
+     */
+    public function smsOn()
+    {
+        if ($this->usertype === 'contractor') {
+            $on = $this->contractor()->first()->sms_method_of_contact;
+        } else {
+            $on = $this->customer()->first()->sms_method_of_contact;
+        }
+
+        return $on;
+    }
+
+    /**
+     * Are email notifications on for this user
+     *
+     * @return bool
+     */
+    public function emailOn()
+    {
+        if ($this->usertype === 'contractor') {
+            $on = $this->contractor()->first()->email_method_of_contact;
+        } else {
+            $on = $this->customer()->first()->email_method_of_contact;
+        }
+        return $on;
     }
 
     /**
@@ -177,4 +207,15 @@ class User extends SparkUser
     {
         return $this->usertype === 'customer';
     }
+
+    /**
+     * Route notifications for the Nexmo channel.
+     *
+     * @return string
+     */
+    public function routeNotificationForNexmo()
+    {
+        return $this->phone;
+    }
+
 }

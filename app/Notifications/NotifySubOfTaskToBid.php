@@ -7,6 +7,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\NexmoMessage;
+use Laravel\Spark\Notifications\SparkChannel;
+use Laravel\Spark\Notifications\SparkNotification;
+
+
 
 class NotifySubOfTaskToBid extends Notification
 {
@@ -35,7 +40,15 @@ class NotifySubOfTaskToBid extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        $notifyThrough = [SparkChannel::class];
+        if ($notifiable->smsOn()) {
+            $notifyThrough[] = 'nexmo';
+        }
+        if ($notifiable->emailOn()) {
+            $notifyThrough[] = 'mail';
+        }
+
+        return $notifyThrough;
     }
 
     /**
@@ -64,15 +77,22 @@ class NotifySubOfTaskToBid extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the Nexmo / SMS representation of the notification.
      *
-     * @param  mixed $notifiable
-     * @return array
+     * @param  mixed  $notifiable
+     * @return NexmoMessage
      */
-    public function toArray($notifiable)
+    public function toNexmo($notifiable)
     {
-        return [
-            //
-        ];
+        return (new NexmoMessage)
+                    ->content('Please Sign In and go bid on your task ' . url('/login/sub/task/'. $this->taskId . '/' . $this->user->generateToken(true)->token) . ' ');
+    }
+
+    public function toSpark($notifiable)
+    {
+        return (new SparkNotification)
+                      ->action('View Task', '/bid/tasks?taskId=' . $this->taskId)
+                      ->icon('fa-users')
+                      ->body('A contractor sent you a task!');
     }
 }
