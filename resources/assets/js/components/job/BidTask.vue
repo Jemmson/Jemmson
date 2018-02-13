@@ -68,7 +68,7 @@
                         </thead>
                         <tbody>
                             <tr class="table" v-for="bid in task.bid_contractor_job_tasks" :key="bid.id">
-                                <td>{{ bid.contractor_id }}</td>
+                                <td>{{ bid.contractor.name }}</td>
                                 <td>{{ bid.bid_price }}</td>
                                 <td>
                                     <button @click="preview(bid.id)" class="button btn btn-sm btn-info">Preview
