@@ -43,3 +43,7 @@ Vue.component('pay-with-stripe', require('./stripe/PayWithStripe'));
 Vue.component('subscripe-stripe', require('./stripe/Subscripe'));
 Vue.component('signup-with-stripe', require('./stripe/SignupWithStripe'));
 
+
+// forms
+Vue.component('further-info', require('./forms/FurtherInfo'));
+

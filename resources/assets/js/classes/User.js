@@ -32,7 +32,7 @@ export default class User {
     }
 
     isSignedUpWithStripe() {
-        this.user.stripe_id === undefined && this.user.stripe_id === null;
+        this.user.stripe_id !== undefined && this.user.stripe_id !== null;
     }
 
     payWithStripe() {
@@ -50,7 +50,7 @@ export default class User {
     }
 
     recievePaymentsWithStripe() {
-        return false;
+        return true;
     }
 
     emitChange(emit) {
@@ -72,6 +72,21 @@ export default class User {
 
     hasStripeId() {
         return this.user.stripe_id !== null && this.user.stripe_id !== undefined;
+    }
+
+    async submitFurtherInfo(form, disabled) {
+        disabled.submit = true;
+        try {
+            const data = await Spark.post('/home', form);
+            Vue.toasted.success('info updated');
+            disabled.submit = false;
+            location.href = data;
+        } catch (error) {
+            console.log(error);
+            form.errors.errors = error.errors;
+            Vue.toasted.error(error.message);
+            disabled.submit = false;
+        }
     }
 
     // /stripe functions 
