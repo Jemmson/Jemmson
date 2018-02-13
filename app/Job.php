@@ -119,24 +119,15 @@ class Job extends Model
         }
     }
 
-    public function updateLocation($request)
+    public function newLocation($request)
     {
-        if ($this->location_id === null) {
-            $location = new Location();
-            $location->job_id = $this->id;
-            $location->address_line_1 = $request->address_line_1;
-            $location->address_line_2 = $request->address_line_2;
-            $location->city = $request->city;
-            $location->state = $request->state;
-            $location->zip = $request->zip;
-        } else {
-            $location = $this->location()->first();
-            $location->address_line_1 = $request->address_line_1;
-            $location->address_line_2 = $request->address_line_2;
-            $location->city = $request->city;
-            $location->state = $request->state;
-            $location->zip = $request->zip;
-        }
+        $location = new Location();
+        $location->job_id = $this->id;
+        $location->address_line_1 = $request->address_line_1;
+        $location->address_line_2 = $request->address_line_2;
+        $location->city = $request->city;
+        $location->state = $request->state;
+        $location->zip = $request->zip;
 
         try {
             $location->save();
