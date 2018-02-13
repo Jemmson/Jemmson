@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use App\User;
+use App\Location;
+
 use App\Services\UpdateRecordsService;
 
 use Illuminate\Http\Request;
@@ -81,32 +83,27 @@ class CustomerController extends Controller
         return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Password field is required']);
       }
 
-      $customer->address_line_1 = $request->address_line_1;
-      $customer->address_line_2 = $request->address_line_2;
-      $customer->city = $request->city;
-      $customer->state = $request->state;
-      $customer->zip = $request->zip;
+      
       $customer->preferred_method_of_contact = $request->preferred_method_of_contact;
       $customer->sms_text = $request->sms_text == "on" ? 1 : 0;
-
+      
       $user = User::find($customer->user_id);
       $user->name = UpdateRecordsService::shouldUpdate($request->name) ? $request->name : $user->name;
       $user->password = $password_updated == null ? bcrypt($request->password) : $user->password;
       $user->password_updated = 1;
+      
+      $result = DB::transaction(function () use ($location, $user, $customer) {
+          $customer->updateLocation($request);
+          $user->save();
+          $customer->save();
+      });
 
-      try {
-        $user->save();
-      } catch (\Exception $e) {
-        Log::error('Error Saving User: ' . $e->getMessage());
-      }
+      // try {
+      // } catch (\Exception $e) {
+      //   Log::error('Error Saving Customer: ' . $e->getMessage());
+      //   return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors([__('error.data.updated')]);
+      // }
 
-
-      try {
-        $customer->save();
-      } catch (\Exception $e) {
-        Log::error('Error Saving Customer: ' . $e->getMessage());
-        return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors([__('error.data.updated')]);
-      }
       // if theres a job id show that job
       if($request->job_id != null){
         return redirect('/job/'.$request->job_id.'/edit')->with('success', __('success.data.updated'));

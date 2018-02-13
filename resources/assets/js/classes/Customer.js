@@ -12,7 +12,7 @@ export default class Customer {
     approveBid(bidForm, disabled) {
         console.log('approve');
         disabled.approve = true;
-        Spark.post('/api/job/approve/' + bidForm.id, bidForm)
+        Spark.post('/job/approve/' + bidForm.id, bidForm)
             .then((response) => {
                 console.log(response);
                 User.emitChange('bidUpdated');

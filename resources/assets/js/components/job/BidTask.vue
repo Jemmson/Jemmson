@@ -22,7 +22,7 @@
                                     v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" required v-on:keyup="autoComplete" @blur="mouseLeave('notNow')">
                                 <div class="panel-footer" v-if="aResults.length">
                                     <ul class="list-group">
-                                        <button class="list-group-item" v-for="result in aResults" :name="result.phone" @click="fillFields(result)">
+                                        <button class="list-group-item" v-for="result in aResults" v-bind:key="result.id" :name="result.phone" @click="fillFields(result)">
                                             {{ result.name }}
                                         </button>
                                     </ul>
@@ -68,14 +68,14 @@
                         </thead>
                         <tbody>
                             <tr class="table" v-for="bid in task.bid_contractor_job_tasks" :key="bid.id">
-                                <td>{{ bid.contractor_id }}</td>
+                                <td>{{ bid.contractor.name }}</td>
                                 <td>{{ bid.bid_price }}</td>
                                 <td>
                                     <button @click="preview(bid.id)" class="button btn btn-sm btn-info">Preview
                                     </button>
                                 </td>
                                 <td>
-                                    <button @click="acceptSubBidForTask(bid)" class="button btn btn-sm btn-success" :disabled="disabled.accept">
+                                    <button v-if="showAcceptBtn" @click="acceptSubBidForTask(bid)" class="button btn btn-sm btn-success" :disabled="disabled.accept">
                                         <span v-if="disabled.accept">
                                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
@@ -155,6 +155,9 @@
             }
         },
         computed: {
+            showAcceptBtn() {
+                return this.task.job_task.status === 'bid_task.bid_sent';
+            },
             taskApproved() {
                 return this.task.job_task.status === 'bid_task.approved_by_customer';
             },

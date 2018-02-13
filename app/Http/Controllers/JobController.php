@@ -156,15 +156,30 @@ class JobController extends Controller
     {
         $this->validate($request, [
             'agreed_start_date' => 'required|date',
-            'city' => 'string',
-            // bid needs to be in the 'Waiting on Approval' in order to approve jbo
             'status' => 'required|regex:/\bbid.sent\b/',
         ]);
+
+        if (!$request->job_location_same_as_home) {
+            $this->validate($request, [
+                'address_line_1' => 'required|min:2',
+                'city' => 'required|min:2',
+                'state' => 'required|min:2',
+                'zip' => 'required|min:2',
+            ]);
+        }
+
         // TODO: what date needs to be updated here?
         $job->agreed_start_date = $request->agreed_start_date;
         $job->status = __('job.approved');
         
-        $result = DB::transaction(function () use ($job) {
+        $location_id = Auth::user()->customer()->first()->location_id;
+        
+        $result = DB::transaction(function () use ($job, $request, $location_id) {
+            if ($request->job_location_same_as_home) {
+                $job->location_id = $location_id;
+            } else {
+                $job->newLocation($request);
+            }
             $job->save();
             // approve all tasks associated with this job, any exceptions?
             JobTask::where('job_id', $job->id)
@@ -174,6 +189,7 @@ class JobController extends Controller
                     ->where('start_when_accepted', true)
                     ->update(['start_date' => Carbon::now()]);
         });
+
         $this->notifyAll($job);
 
         return response()->json($job, 200);
@@ -269,7 +285,7 @@ class JobController extends Controller
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks')->get();
+          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks.contractor')->get();
         }
 
         return response()->json($jobs, 200); 

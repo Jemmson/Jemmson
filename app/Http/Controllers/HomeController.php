@@ -49,7 +49,7 @@ class HomeController extends Controller
         $this->validate(
         $request,
             [
-                'phone_number' => 'required|min:2|unique:users,phone',
+                'phone_number' => 'required|min:2',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',
@@ -82,12 +82,8 @@ class HomeController extends Controller
                 'user_id' => $user_id,
             ]);
 
+            $contractor->updateLocation($request);
             $contractor->update([
-                'address_line_1' => request('address_line_1'), //
-                'address_line_2' => request('address_line_2'),
-                'city' => request('city'), //
-                'state' => request('state'), //
-                'zip' => request('zip'), //
                 'company_logo_name' => request('file_name'), //
                 'email_method_of_contact' => request('email_contact'), //
                 'sms_method_of_contact' => request('sms_text'), //
@@ -104,12 +100,8 @@ class HomeController extends Controller
                 'user_id' => $user_id,
             ]);
 
+            $customer->updateLocation($request);
             $customer->update([
-                'address_line_1' => request('address_line_1'),
-                'address_line_2' => request('address_line_2'),
-                'city' => request('city'),
-                'state' => request('state'),
-                'zip' => request('zip'),
                 'notes' => request('notes'),
                 'email_method_of_contact' => request('email_contact'),
                 'sms_method_of_contact' => request('sms_text'),

@@ -22,6 +22,8 @@ class CreateJobTaskTable extends Migration
             $table->integer('job_id')->unsigned();
             $table->integer('task_id')->unsigned();
             $table->integer('bid_id')->unsigned()->nullable();
+            $table->integer('location_id')->unsigned()->nullable();
+            
             $table->integer('contractor_id')->nullable();
             $table->string('status')->nullable();
             $table->float('cust_final_price')->nullable();

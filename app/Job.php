@@ -90,6 +90,11 @@ class Job extends Model
         return $jobActions;
     }
 
+    public function location()
+    {
+        return $this->hasOne(Location::class);
+    }
+
     /**
      * Accept the job
      *
@@ -111,6 +116,25 @@ class Job extends Model
         } catch (\Exception $e) {
             Log::error('JobActions: accept job - ' . $e->getMessage());
             return false;
+        }
+    }
+
+    public function newLocation($request)
+    {
+        $location = new Location();
+        $location->job_id = $this->id;
+        $location->address_line_1 = $request->address_line_1;
+        $location->address_line_2 = $request->address_line_2;
+        $location->city = $request->city;
+        $location->state = $request->state;
+        $location->zip = $request->zip;
+
+        try {
+            $location->save();
+            $this->location_id = $location->id;
+            $this->save();
+        } catch(\Exception $e) {
+            Log::error('Saving Location: ' . $e->getMessage());
         }
     }
 

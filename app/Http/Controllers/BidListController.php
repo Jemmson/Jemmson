@@ -42,7 +42,7 @@ class BidListController extends Controller
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks')->get();
+          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks.contractor')->get();
         }
         
         return view('/bid-list', compact('jobs'));

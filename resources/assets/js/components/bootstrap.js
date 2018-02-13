@@ -46,4 +46,5 @@ Vue.component('signup-with-stripe', require('./stripe/SignupWithStripe'));
 
 // forms
 Vue.component('further-info', require('./forms/FurtherInfo'));
+Vue.component('approve-bid', require('./job/ApproveBid'));
 

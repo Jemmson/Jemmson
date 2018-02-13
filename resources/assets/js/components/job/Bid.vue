@@ -21,29 +21,8 @@
                     </bid-tasks>
 
                     <!-- /customer approve bid form -->
-                    <form role="form" v-if="isCustomer && needsApproval">
-                        <div class="form-group col-sm-12 col-md-6" :class="{'has-error': bidForm.errors.has('agreed_start_date')}">
-                            <label for="start_date">Start Date</label>
-                            <input type="date" class="form-control" id="start_date" v-model="bidForm.agreed_start_date">
-                            <span class="help-block" v-show="bidForm.errors.has('agreed_start_date')">
-                                {{ bidForm.errors.get('agreed_start_date') }}
-                            </span>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <button class="btn btn-success" @click.prevent="approve" :disabled="disabled.approve">
-                                <span v-if="disabled.approve">
-                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                </span>
-                                Approve
-                            </button>
-                            <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid">
-                                <span v-if="disabled.declineBid">
-                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                </span>
-                                Decline
-                            </button>
-                        </div>
-                    </form>
+                    <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
+                    </approve-bid>
 
                     <!-- /buttons  -->
                     <general-contractor-bid-actions :show="isGeneralContractor && !jobApproved" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"

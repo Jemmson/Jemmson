@@ -139,6 +139,7 @@ export default {
                 // TODO: security review
                 console.log(response);
                 Vue.toasted.success('Bid Sent.');
+                User.emitChange('bidUpdated');
                 this.disabled.submit = false;
             }).catch((error) => {
                 console.log(error.response, '#error-' + id);

@@ -28,15 +28,15 @@ class UsersTableSeeder extends Seeder
 
         //     $contractorData = [
         //         'user_id' => $user->id,
-        //         'email_method_of_contact' => 'on',
+        //         'email_method_of_contact' => '1',
         //         'address_line_1' => $faker->streetAddress,
         //         'address_line_2' => $faker->word,
         //         'city' => $faker->city,
         //         'state' => 'AZ',
         //         'zip' => $faker->postcode,
         //         'company_logo_name' => $faker->word,
-        //         'sms_method_of_contact' => 'on',
-        //         'phone_method_of_contact' => 'on',
+        //         'sms_method_of_contact' => '1',
+        //         'phone_method_of_contact' => '1',
         //         'phone_number' => $faker->phoneNumber,
         //         'company_name' => $faker->word,
         //     ];
@@ -54,15 +54,15 @@ class UsersTableSeeder extends Seeder
 
         //     $customerData = [
         //         'user_id' => $user->id,
-        //         'email_method_of_contact' => 'on',
+        //         'email_method_of_contact' => '1',
         //         'address_line_1' => $faker->streetAddress,
         //         'address_line_2' => $faker->word,
         //         'city' => $faker->city,
         //         'state' => 'AZ',
         //         'zip' => $faker->postcode,
         //         'notes' => $faker->paragraph,
-        //         'phone_method_of_contact' => 'on',
-        //         'sms_method_of_contact' => 'on',
+        //         'phone_method_of_contact' => '1',
+        //         'sms_method_of_contact' => '1',
         //         'phone_number' => $faker->phoneNumber,
         //     ];
 
@@ -81,15 +81,10 @@ class UsersTableSeeder extends Seeder
 
             $contractorData = [
                 'user_id' => $user->id,
-                'email_method_of_contact' => 'on',
-                'address_line_1' => $faker->streetAddress,
-                'address_line_2' => $faker->word,
-                'city' => $faker->city,
-                'state' => 'AZ',
-                'zip' => $faker->postcode,
+                'email_method_of_contact' => '1',
                 'company_logo_name' => $faker->word,
-                'sms_method_of_contact' => 'on',
-                'phone_method_of_contact' => 'on',
+                'sms_method_of_contact' => '1',
+                'phone_method_of_contact' => '1',
                 'company_name' => $faker->word,
             ];
 
@@ -107,15 +102,10 @@ class UsersTableSeeder extends Seeder
 
             $contractorData = [
                 'user_id' => $user->id,
-                'email_method_of_contact' => 'on',
-                'address_line_1' => $faker->streetAddress,
-                'address_line_2' => $faker->word,
-                'city' => $faker->city,
-                'state' => 'AZ',
-                'zip' => $faker->postcode,
+                'email_method_of_contact' => '1',
                 'company_logo_name' => $faker->word,
-                'sms_method_of_contact' => 'on',
-                'phone_method_of_contact' => 'on',
+                'sms_method_of_contact' => '1',
+                'phone_method_of_contact' => '1',
                 'company_name' => $faker->word,
             ];
 
@@ -133,15 +123,10 @@ class UsersTableSeeder extends Seeder
 
             $customerData = [
                 'user_id' => $user->id,
-                'email_method_of_contact' => 'on',
-                'address_line_1' => $faker->streetAddress,
-                'address_line_2' => $faker->word,
-                'city' => $faker->city,
-                'state' => 'AZ',
-                'zip' => $faker->postcode,
+                'email_method_of_contact' => '1',
                 'notes' => $faker->paragraph,
-                'phone_method_of_contact' => 'on',
-                'sms_method_of_contact' => 'on',
+                'phone_method_of_contact' => '1',
+                'sms_method_of_contact' => '1',
             ];
 
             Customer::create($customerData);
@@ -158,15 +143,10 @@ class UsersTableSeeder extends Seeder
 
             $customerData = [
                 'user_id' => $user->id,
-                'email_method_of_contact' => 'on',
-                'address_line_1' => $faker->streetAddress,
-                'address_line_2' => $faker->word,
-                'city' => $faker->city,
-                'state' => 'AZ',
-                'zip' => $faker->postcode,
+                'email_method_of_contact' => '1',
                 'notes' => $faker->paragraph,
-                'phone_method_of_contact' => 'on',
-                'sms_method_of_contact' => 'on',
+                'phone_method_of_contact' => '1',
+                'sms_method_of_contact' => '1',
             ];
 
             Customer::create($customerData);
