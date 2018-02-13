@@ -2,8 +2,8 @@
     <!-- /customer approve bid form -->
     <form role="form">
         <div class="form-group col-sm-12 col-md-6">
-            <label for="job_same_as_home_location">Job Location Same as Home Location</label>
-            <input type="checkbox" class="form-control" id="job_same_as_home_location" v-model="form.job_same_as_home_location">
+            <label for="job_location_same_as_home">Job Location Same as Home Location</label>
+            <input type="checkbox" class="form-control" id="job_location_same_as_home" v-model="form.job_location_same_as_home">
         </div>
 
         <div class="form-group col-sm-12 col-md-6" :class="{'has-error': form.errors.has('agreed_start_date')}">
@@ -15,7 +15,7 @@
         </div>
 
         <!-- /job location -->
-        <div v-if="!form.job_same_as_home_location">
+        <div v-if="!form.job_location_same_as_home">
             <!-- Address Line 1 -->
             <div class="form-group col-sm-12" :class="{'has-error': form.errors.has('address_line_1')}">
                 <label for="">Address Line 1</label>
@@ -90,7 +90,7 @@
                     end_date: '',
                     area: '',
                     status: '',
-                    job_same_as_home_location: true,
+                    job_location_same_as_home: true,
                     address_line_1: '',
                     address_line_2: '',
                     city: '',

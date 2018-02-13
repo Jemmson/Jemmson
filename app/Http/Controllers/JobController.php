@@ -172,8 +172,14 @@ class JobController extends Controller
         $job->agreed_start_date = $request->agreed_start_date;
         $job->status = __('job.approved');
         
-        $result = DB::transaction(function () use ($job) {
-            $job->updateLocation($request);
+        $location_id = Auth::user()->customer()->first()->location_id;
+        
+        $result = DB::transaction(function () use ($job, $request, $location_id) {
+            if ($request->job_location_same_as_home) {
+                $job->location_id = $location_id;
+            } else {
+                $job->newLocation($request);
+            }
             $job->save();
             // approve all tasks associated with this job, any exceptions?
             JobTask::where('job_id', $job->id)
