@@ -17,7 +17,7 @@ class CreateContractorsTable extends Migration
         Schema::create('contractors', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unique();
-            $table->integer('location_id')->unique(); 
+            $table->integer('location_id')->unique()->nullable(); 
             
             $table->string('company_name')->nullable();
             $table->string('company_logo_name')->nullable();
