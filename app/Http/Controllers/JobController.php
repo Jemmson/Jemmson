@@ -173,6 +173,7 @@ class JobController extends Controller
         $job->status = __('job.approved');
         
         $result = DB::transaction(function () use ($job) {
+            $job->updateLocation($request);
             $job->save();
             // approve all tasks associated with this job, any exceptions?
             JobTask::where('job_id', $job->id)
@@ -278,7 +279,7 @@ class JobController extends Controller
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks')->get();
+          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks.contractor')->get();
         }
 
         return response()->json($jobs, 200); 
