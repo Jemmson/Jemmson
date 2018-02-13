@@ -22,7 +22,7 @@
                                     v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" required v-on:keyup="autoComplete" @blur="mouseLeave('notNow')">
                                 <div class="panel-footer" v-if="aResults.length">
                                     <ul class="list-group">
-                                        <button class="list-group-item" v-for="result in aResults" :name="result.phone" @click="fillFields(result)">
+                                        <button class="list-group-item" v-for="result in aResults" v-bind:key="result.id" :name="result.phone" @click="fillFields(result)">
                                             {{ result.name }}
                                         </button>
                                     </ul>
