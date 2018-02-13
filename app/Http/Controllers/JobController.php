@@ -156,10 +156,18 @@ class JobController extends Controller
     {
         $this->validate($request, [
             'agreed_start_date' => 'required|date',
-            'city' => 'string',
-            // bid needs to be in the 'Waiting on Approval' in order to approve jbo
             'status' => 'required|regex:/\bbid.sent\b/',
         ]);
+
+        if (!$request->job_location_same_as_home) {
+            $this->validate($request, [
+                'address_line_1' => 'required|min:2',
+                'city' => 'required|min:2',
+                'state' => 'required|min:2',
+                'zip' => 'required|min:2',
+            ]);
+        }
+
         // TODO: what date needs to be updated here?
         $job->agreed_start_date = $request->agreed_start_date;
         $job->status = __('job.approved');
@@ -174,6 +182,7 @@ class JobController extends Controller
                     ->where('start_when_accepted', true)
                     ->update(['start_date' => Carbon::now()]);
         });
+
         $this->notifyAll($job);
 
         return response()->json($job, 200);
