@@ -49,7 +49,7 @@ class HomeController extends Controller
         $this->validate(
         $request,
             [
-                'phone_number' => 'required|min:2|unique:users,phone',
+                'phone_number' => 'required|min:2',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',

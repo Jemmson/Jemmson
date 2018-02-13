@@ -75,7 +75,7 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <button @click="acceptSubBidForTask(bid)" class="button btn btn-sm btn-success" :disabled="disabled.accept">
+                                    <button v-if="showAcceptBtn" @click="acceptSubBidForTask(bid)" class="button btn btn-sm btn-success" :disabled="disabled.accept">
                                         <span v-if="disabled.accept">
                                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
@@ -155,6 +155,9 @@
             }
         },
         computed: {
+            showAcceptBtn() {
+                return this.task.job_task.status === 'bid_task.bid_sent';
+            },
             taskApproved() {
                 return this.task.job_task.status === 'bid_task.approved_by_customer';
             },
