@@ -10,6 +10,7 @@ use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\TaskFinished;
 use App\Notifications\TaskWasNotApproved;
+use App\Notifications\TaskApproved;
 //use Illuminate\Notifications\Notifiable;
 use App\Task;
 use App\Job;
@@ -290,7 +291,6 @@ class TaskController extends Controller
 
         // does the subcontractor exist?
         // if not then create a new one
-        // TODO: not working?
         $userData = $this->checkIfSubContractorExits($email, $phone);
 
 
@@ -422,8 +422,7 @@ class TaskController extends Controller
         }
 
         $customer->notify(new TaskFinished($task, true, $customer));
-        // TODO: send approve notification not task finished
-        //$subContractor->notify(new TaskFinished($task, false, $subContractor));
+        $subContractor->notify(new TaskApproved($task, $subContractor));
 
         return response()->json(["message"=>"Success"], 200);
     }
