@@ -28,7 +28,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(bid, index) in bids" v-bind:value="bid.id">
+                                    <tr v-for="(bid, index) in bids" v-bind:key="bid.id">
                                         <th scope="row">{{ bid.id }}</th>
                                         <td>{{ bid.job_name }}</td>
                                         <td>{{ prettyDate(bid.agreed_start_date) }}</td>
@@ -99,11 +99,17 @@
               axios.post('/jobs').then((response) => {
                   this.bids = response.data;
               });
+          },
+          previewSubForTask(bidId, taskId, subBidId) {
+                console.log(TaskUtil.previewSubForTask(this.bids, bidId, taskId, subBidId));
           }
       },
       created() {
           Bus.$on('bidUpdated', (payload) => {
               this.getBids();
+          });
+          Bus.$on('previewSubForTask', (payload) => {
+              this.previewSubForTask(payload[0], payload[1], payload[2]);
           });
       },
       mounted() {
