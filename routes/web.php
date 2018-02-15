@@ -91,6 +91,9 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
+
+    // home controller
+    Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
 }
 );
 Route::group(['middleware' => ['auth']], function () {
