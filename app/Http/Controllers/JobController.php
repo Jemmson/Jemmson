@@ -298,17 +298,45 @@ class JobController extends Controller
      */
     public function declineJobBid(Request $request) {
         $this->validate($request, [
-            'id' => 'required'
+            'id' => 'required',
+            'message' => 'string'
         ]);
+
+        if ($request->message != '') {
+            $message = $request->message;
+        }
 
         $job = Job::find($request->id);
         $contractor = User::find($job->contractor_id);
 
         if ($job->updateStatus(__('bid.declined'))) {
-            $contractor->notify(new JobBidDeclined($job, $contractor));
+            $contractor->notify(new JobBidDeclined($job, $contractor, $message));
             return response()->json(['message' => 'Success'], 200);
         } 
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
+    }
+
+    /**
+     * Soft Deletes a job while its still in a bidding state
+     *
+     * @param Request $request
+     * @return boolean
+     */
+    public function cancelJobBid(Request $request) {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $job = Job::find($request->id);
+        
+        if ($job->updatable(__('bid.canceled'))) {
+            $job->updateStatus(__('bid.canceled'));
+            $job->delete();
+        } else {
+            return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
+        }
+
+        return response()->json(['message' => 'Success'], 200);
     }
 
     private function isCustomer()

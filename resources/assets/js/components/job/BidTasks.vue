@@ -25,6 +25,12 @@
                                 </span>
                                 Pay
                             </button>
+                            <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="paidWithCashTask(task)" :disabled="disabled.payCash">
+                                <span v-if="disabled.payCash">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                </span>
+                                Paid With Cash
+                            </button>
                             <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)" :disabled="disabled.finished">
                                 <span v-if="disabled.finished">
                                     <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -84,7 +90,8 @@
                   approve: false,
                   reopen: false,
                   deny: false,
-                  deleteTask: false
+                  deleteTask: false,
+                  payCash: false,
               }
           }
       },
@@ -165,6 +172,9 @@
           },
           payForTask(task) {
               Customer.payForTask(task, this.disabled);
+          },
+          paidWithCashTask(task) {
+              Customer.paidWithCashTask(task, this.disabled);
           },
           // is the task assigned to the currently logged in user
           isAssignedToMe(task) {

@@ -66,13 +66,37 @@
                 </span>
                 Approve
             </button>
-            <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid">
-                <span v-if="disabled.declineBid">
+            <button class="btn btn-primary" @click.prevent="openDeclineForm">
+                Open Decline Form
+            </button>
+            <button class="btn btn-danger" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
+                <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
-                Decline
+                Cancel Job
             </button>
         </div>
+        <!-- / decline bid section -->
+        <transition name="slide-fade">
+            <div v-if="showDeclineForm">
+                <!-- deny message -->
+                <div class="form-group col-md-12" :class="{'has-error': form.errors.has('message')}">
+                    <label for="">Message</label>
+                    <input type="text" class="form-control" name="message" v-model="form.message" placeholder="Optional Message">
+                    <span class="help-block" v-show="form.errors.has('message')">
+                        {{ form.errors.get('message') }}
+                    </span>
+                </div>
+                <div class="form-group col-md-12">
+                    <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid">
+                        <span v-if="disabled.declineBid">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Decline Bid
+                    </button>
+                </div>
+            </div>
+        </transition>
     </form>
 </template>
 
@@ -85,35 +109,41 @@
             return {
                 taskIndex: 0,
                 form: new SparkForm({
-                    id: 0,
+                    id: this.bid.id,
                     agreed_start_date: '',
                     end_date: '',
                     area: '',
-                    status: '',
+                    status: this.bid.status,
                     job_location_same_as_home: true,
                     address_line_1: '',
                     address_line_2: '',
                     city: '',
                     state: '',
                     zip: '',
+                    message: '',
                 }),
-                user: '',
+                user: Spark.state.user,
                 disabled: {
                     approve: false,
-                    declineBid: false
+                    declineBid: false,
+                    cancelBid: false
                 },
+                showDeclineForm: false,
             }
         },
         methods: {
+            openDeclineForm() {
+                this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
+            },
             approve() {
                 Customer.approveBid(this.form, this.disabled);
             },
-        },
-        mounted: function () {
-            // set up init data
-            this.form.id = this.bid.id;
-            this.form.status = this.bid.status;
-            this.user = Spark.state.user;
+            declineBid() {
+                Customer.declineBid(this.form, this.disabled);
+            },
+            cancelBid() {
+                Customer.cancelBid(this.form, this.disabled);
+            }
         }
     }
 </script>

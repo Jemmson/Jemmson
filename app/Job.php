@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Carbon\Carbon;
 use Log;
@@ -11,6 +12,7 @@ use App\JobActions;
 
 class Job extends Model
 {   
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -217,6 +219,10 @@ class Job extends Model
      */
     public function updateStatus($status)
     {
+        if (!$this->updatable($status)) {
+            return false;
+        }
+
         $this->status = $status;
 
         try {
@@ -226,6 +232,30 @@ class Job extends Model
             return false;
         }
         return true;
+    }
+
+    /**
+     * Can the status be changed to what its
+     * trying to be changed to
+     *
+     * @param string $status
+     * @return bool
+     */
+    public function updatable(string $status) 
+    {
+        switch ($status) {
+            case 'bid.cancel':
+                return $this->isCancellable();
+                break;
+            default:
+                return true; // TODO: testing, should be false
+                break;
+        }
+    }
+
+    private function isCancellable()
+    {
+        return $this->status === 'bid.sent';
     }
     
 }
