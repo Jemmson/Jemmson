@@ -69,6 +69,12 @@
             <button class="btn btn-primary" @click.prevent="openDeclineForm">
                 Open Decline Form
             </button>
+            <button class="btn btn-danger" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
+                <span v-if="disabled.cancelBid">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                </span>
+                Cancel Job
+            </button>
         </div>
         <!-- / decline bid section -->
         <transition name="slide-fade">
@@ -103,11 +109,11 @@
             return {
                 taskIndex: 0,
                 form: new SparkForm({
-                    id: 0,
+                    id: this.bid.id,
                     agreed_start_date: '',
                     end_date: '',
                     area: '',
-                    status: '',
+                    status: this.bid.status,
                     job_location_same_as_home: true,
                     address_line_1: '',
                     address_line_2: '',
@@ -116,10 +122,11 @@
                     zip: '',
                     message: '',
                 }),
-                user: '',
+                user: Spark.state.user,
                 disabled: {
                     approve: false,
-                    declineBid: false
+                    declineBid: false,
+                    cancelBid: false
                 },
                 showDeclineForm: false,
             }
@@ -133,13 +140,10 @@
             },
             declineBid() {
                 Customer.declineBid(this.form, this.disabled);
+            },
+            cancelBid() {
+                Customer.cancelBid(this.form, this.disabled);
             }
-        },
-        mounted: function () {
-            // set up init data
-            this.form.id = this.bid.id;
-            this.form.status = this.bid.status;
-            this.user = Spark.state.user;
         }
     }
 </script>

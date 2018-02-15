@@ -316,6 +316,28 @@ class JobController extends Controller
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
     }
 
+    /**
+     * Soft Deletes a job while its still in a bidding state
+     *
+     * @param Request $request
+     * @return boolean
+     */
+    public function cancelJobBid(Request $request) {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $job = Job::find($request->id);
+
+        $result = DB::transaction(function () use ($job) {
+            if ($job->updateStatus(__('bid.canceled'))) {
+                $job->delete();
+            } 
+        });
+
+        return response()->json(['message' => 'Success'], 200);
+    }
+
     private function isCustomer()
     {
         return Auth::user()->usertype === 'customer';

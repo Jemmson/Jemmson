@@ -46,7 +46,7 @@
             </transition>
             <!-- /end col-md-8 -->
             <transition name="slide-fade">
-                <bid v-if="showBid" v-on:closeBid="closeBid" :bid="bids[bidIndex]">
+                <bid v-if="showBid && bids[bidIndex] !== undefined" v-on:closeBid="closeBid" :bid="bids[bidIndex]">
                 </bid>
             </transition>
             <!-- /end transition -->

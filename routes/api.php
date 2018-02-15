@@ -63,6 +63,7 @@ Route::post('job', 'JobController@store');
 Route::put('job/{job}', 'JobController@update');
 Route::delete('job/{job}', 'JobController@delete');
 Route::post('job/update', 'JobController@updateJobDate');
+Route::post('job/cancel', 'JobController@cancelJobBid');
 
 // Tasks
 Route::resource('task', 'TaskController');

@@ -75,6 +75,26 @@ export default class Customer {
     }
 
     /**
+     * Canel a job bid a contractor has submitted
+     * 
+     * @param {Object} bid 
+     * @param {Object} disabled 
+     */
+    async cancelBid(bid, disabled) {
+        disabled.cancelBid = true;
+        try {
+            const data = await axios.post('/api/job/cancel', bid);
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Bid Canceled');
+            disabled.cancelBid = false;
+        } catch (error) {
+            error = error.response.data;
+            Vue.toasted.error(error.message);
+            disabled.cancelBid = false;
+        }
+    }
+
+    /**
      * Pay for a task
      * 
      * @param {Object} task 
