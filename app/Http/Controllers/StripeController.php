@@ -137,9 +137,9 @@ class StripeController extends Controller
         $sub_contractor_id = $jobTask->contractor_id;
         $general_contractor_id = $task->contractor_id;
 
-        // if paid already howd you get here?
-        if ($jobTask->status === __('bid_task.customer_sent_payment')) {
-            return response()->json(['message' => 'Payment Sent Already'], 422);
+        // if not payable howd you get here?
+        if ($jobTask->updateable(__('bid_task.customer_sent_payment'))) {
+            return response()->json(['message' => "Can't pay for this task yet."], 422);
         }
 
         // amounts
@@ -205,6 +205,17 @@ class StripeController extends Controller
         $jobTask->updateStatus(__('bid_task.customer_sent_payment'));
 
         return response()->json([$s_charge, $g_charge], 200);
+    }
+
+    /**
+     * Pay all tasks selected
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function sendMultipleExpressTaskPayments(Request $request)
+    {
+
     }
 
     /**

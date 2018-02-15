@@ -25,14 +25,42 @@ class JobTask extends Model
 
     public function updateStatus($status)
     {
-        
+        if (!$this->updateable($status)) {
+            return false;
+        }
+
         $this->status = $status;
 
         try {
             $this->save();
         } catch (\Exception $e) {
-            Log::error('JobTask Updaing Status: ' . $e->getMessage());
+            Log::error('Updating JobStatus Status: ' . $e->getMessage());
             return false;
         }
+        return true;
+    }
+
+    /**
+     * Can the status be changed to what its
+     * trying to be changed to
+     *
+     * @param string $status
+     * @return bool
+     */
+    public function updateable(string $status) 
+    {
+        switch ($status) {
+            case 'bid_task.customer_sent_payment':
+                return $this->isPayable();
+                break;
+            default:
+                return true; // TODO: testing, should be false
+                break;
+        }
+    }
+
+    private function isPayable()
+    {
+        return $this->status === 'bid_task.finished_by_general' || $this->status === 'bid_task.finished_by_sub';
     }
 }
