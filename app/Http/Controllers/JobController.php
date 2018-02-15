@@ -328,12 +328,13 @@ class JobController extends Controller
         ]);
 
         $job = Job::find($request->id);
-
-        $result = DB::transaction(function () use ($job) {
-            if ($job->updateStatus(__('bid.canceled'))) {
-                $job->delete();
-            } 
-        });
+        
+        if ($job->updatable(__('bid.canceled'))) {
+            $job->updateStatus(__('bid.canceled'));
+            $job->delete();
+        } else {
+            return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
+        }
 
         return response()->json(['message' => 'Success'], 200);
     }
