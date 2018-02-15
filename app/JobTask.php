@@ -61,6 +61,6 @@ class JobTask extends Model
 
     private function isPayable()
     {
-        return $this->status === 'bid_task.finished_by_general' || $this->status === 'bid_task.finished_by_sub';
+        return $this->status === 'bid_task.finished_by_general' || $this->status === 'bid_task.approved_by_general';
     }
 }

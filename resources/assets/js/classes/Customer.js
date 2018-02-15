@@ -125,4 +125,26 @@ export default class Customer {
         
     }
 
+        /**
+         * Pay for a task
+         * 
+         * @param {Object} task 
+         */
+        async paidWithCashTask(task, disabled) {
+            console.log('paidWithCashTask', task);
+            disabled.payCash = true;
+
+            try {
+                const data = await axios.post('/api/stripe/task/cash', task);
+                User.emitChange('bidUpdated');
+                Vue.toasted.success('Paid For Task');
+                disabled.payCash = false;
+            } catch (error) {
+                error = error.response.data;
+                Vue.toasted.error(error.message);
+                disabled.payCash = false;
+            }
+
+        }
+
 }

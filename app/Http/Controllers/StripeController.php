@@ -138,7 +138,7 @@ class StripeController extends Controller
         $general_contractor_id = $task->contractor_id;
 
         // if not payable howd you get here?
-        if ($jobTask->updateable(__('bid_task.customer_sent_payment'))) {
+        if (!$jobTask->updatable(__('bid_task.customer_sent_payment'))) {
             return response()->json(['message' => "Can't pay for this task yet."], 422);
         }
 
@@ -284,5 +284,40 @@ class StripeController extends Controller
         if (Auth::user()->saveStripeId($customer->id) && Auth::user()->saveCardInformation($request->card)) {
             return response()->json(['id' => $customer->id], 200);
         } 
+    }
+
+    /**
+     *Customer Paid with cash
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function taskPaidWithCash(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+        
+        // get modals and relevant variables 
+        $task = Task::find($request->id);
+        $jobTask = $task->jobTask()->first();
+        $sub_contractor_id = $jobTask->contractor_id;
+        $general_contractor_id = $task->contractor_id;
+
+        // if not payable howd you get here?
+        if (!$jobTask->updatable(__('bid_task.customer_sent_payment'))) {
+            return response()->json(['message' => "Can't pay for this task yet."], 422);
+        }
+
+        // get contractors
+        $sub_contractor = User::find($sub_contractor_id);
+        $general_contractor = User::find($general_contractor_id);
+
+        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
+        
+        // update task status
+        $jobTask->updateStatus(__('bid_task.customer_sent_payment'));
+
+        return response()->json(['message' => 'success'], 200);
     }
 }
