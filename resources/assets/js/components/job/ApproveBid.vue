@@ -66,13 +66,31 @@
                 </span>
                 Approve
             </button>
-            <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid">
-                <span v-if="disabled.declineBid">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                Decline
+            <button class="btn btn-primary" @click.prevent="openDeclineForm">
+                Open Decline Form
             </button>
         </div>
+        <!-- / decline bid section -->
+        <transition name="slide-fade">
+            <div v-if="showDeclineForm">
+                <!-- deny message -->
+                <div class="form-group col-md-12" :class="{'has-error': form.errors.has('message')}">
+                    <label for="">Message</label>
+                    <input type="text" class="form-control" name="message" v-model="form.message" placeholder="Optional Message">
+                    <span class="help-block" v-show="form.errors.has('message')">
+                        {{ form.errors.get('message') }}
+                    </span>
+                </div>
+                <div class="form-group col-md-12">
+                    <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid">
+                        <span v-if="disabled.declineBid">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Decline Bid
+                    </button>
+                </div>
+            </div>
+        </transition>
     </form>
 </template>
 
@@ -96,18 +114,26 @@
                     city: '',
                     state: '',
                     zip: '',
+                    message: '',
                 }),
                 user: '',
                 disabled: {
                     approve: false,
                     declineBid: false
                 },
+                showDeclineForm: false,
             }
         },
         methods: {
+            openDeclineForm() {
+                this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
+            },
             approve() {
                 Customer.approveBid(this.form, this.disabled);
             },
+            declineBid() {
+                Customer.declineBid(this.form, this.disabled);
+            }
         },
         mounted: function () {
             // set up init data

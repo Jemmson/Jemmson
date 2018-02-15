@@ -15,15 +15,19 @@ class JobBidDeclined extends Notification
     use Queueable;
 
     protected $bid, $user;
+
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param Job $bid
+     * @param User $user
+     * @param string $message
      */
-    public function __construct(Job $bid, User $user)
+    public function __construct(Job $bid, User $user, string $message = '')
     {
         $this->bid = $bid;
         $this->user = $user;
+        $this->message = $message;
     }
 
     /**
@@ -47,6 +51,7 @@ class JobBidDeclined extends Notification
     {
         return (new MailMessage)
                     ->line('Job was declined.')
+                    ->line($this->message)
                     ->action('View Job', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
