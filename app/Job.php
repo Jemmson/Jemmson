@@ -219,7 +219,7 @@ class Job extends Model
      */
     public function updateStatus($status)
     {
-        if (!$this->updateable($status)) {
+        if (!$this->updatable($status)) {
             return false;
         }
 
@@ -241,7 +241,7 @@ class Job extends Model
      * @param string $status
      * @return bool
      */
-    protected function updateable(string $status) 
+    public function updatable(string $status) 
     {
         switch ($status) {
             case 'bid.cancel':

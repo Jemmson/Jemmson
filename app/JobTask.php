@@ -25,7 +25,7 @@ class JobTask extends Model
 
     public function updateStatus($status)
     {
-        if (!$this->updateable($status)) {
+        if (!$this->updatable($status)) {
             return false;
         }
 
@@ -47,7 +47,7 @@ class JobTask extends Model
      * @param string $status
      * @return bool
      */
-    public function updateable(string $status) 
+    public function updatable(string $status) 
     {
         switch ($status) {
             case 'bid_task.customer_sent_payment':
