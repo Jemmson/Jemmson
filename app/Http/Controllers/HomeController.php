@@ -100,7 +100,7 @@ class HomeController extends Controller
                 'user_id' => $user_id,
             ]);
 
-            $customer->updateLocation($request);
+//            $customer->updateLocation($request);
             $customer->update([
                 'notes' => request('notes'),
                 'email_method_of_contact' => request('email_contact'),
