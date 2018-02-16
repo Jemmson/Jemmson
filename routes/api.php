@@ -63,6 +63,7 @@ Route::post('job', 'JobController@store');
 Route::put('job/{job}', 'JobController@update');
 Route::delete('job/{job}', 'JobController@delete');
 Route::post('job/update', 'JobController@updateJobDate');
+Route::post('job/cancel', 'JobController@cancelJobBid');
 
 // Tasks
 Route::resource('task', 'TaskController');
@@ -81,7 +82,8 @@ Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 
-// Payment apis
-Route::post('/pay/task', 'PayController@payForTask');
+
+// stripe controller 
+Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');
 
 

@@ -71,7 +71,7 @@
                                 <td>{{ bid.contractor.name }}</td>
                                 <td>{{ bid.bid_price }}</td>
                                 <td>
-                                    <button @click="preview(bid.id)" class="button btn btn-sm btn-info">Preview
+                                    <button @click="preview(task, bid.id)" class="button btn btn-sm btn-info">Preview
                                     </button>
                                 </td>
                                 <td>
@@ -152,6 +152,13 @@
                         this.results = response.data
                     }.bind(this))
                 }
+            },
+            preview(task, subId) {
+                Bus.$emit('previewSubForTask', [
+                    task.job_task.job_id,
+                    task.id,
+                    subId
+                ]);
             }
         },
         computed: {

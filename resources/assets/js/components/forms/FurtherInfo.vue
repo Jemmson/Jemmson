@@ -4,7 +4,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading" v-if="isContractor">Register Your Company</div>
                 <div class="panel-heading" v-if="!isContractor">Please Add Additional Information</div>
-                
+
                 <div class="panel-body">
                     <form class="form-horizontal" method="post" role="form">
 
@@ -81,13 +81,12 @@
                                 </span>
                             </div>
                         </div>
-                            
+
                         <!-- Notes -->
                         <div class="form-group" v-if="!isContractor">
                             <label class="col-md-3 control-label">Any Special Notes</label>
                             <div class="col-md-8">
-                                <textarea name="notes" id="notes" cols="30" rows="10" class="form-control"
-                                          autofocus></textarea>
+                                <textarea name="notes" id="notes" cols="30" rows="10" class="form-control" autofocus></textarea>
                             </div>
                         </div>
 
@@ -124,10 +123,26 @@
                         <div class="col-md-2"></div>
                         <div class="col-md-8">
                             <!-- upload company logo -->
-                            <div class="form-group" style="margin-left: auto; margin-right: auto" v-if="isContractor">
-                                <label class="control-label">Please upload a company logo</label>
-                                <br>
-                                <input id="input-1" name="file_name" type="file" class="file btn btn-primary">
+                            <!-- Photo Preview-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">&nbsp;</label>
+
+                                <div class="col-md-6">
+                                    <img :src="logoUrl" >
+                                </div>
+                            </div>
+
+                            <!-- Update Button -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">&nbsp;</label>
+
+                                <div class="col-md-6">
+                                    <label type="button" class="btn btn-primary btn-upload" :disabled="form.busy">
+                                        <span>Select New Logo</span>
+
+                                        <input ref="photo" type="file" class="form-control" name="photo" @change="update">
+                                    </label>
+                                </div>
                             </div>
                             <h3>Preferred Method of Contact</h3>
                             <div class="preferred_contact" style="border: solid thin black">
@@ -167,7 +182,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" name="submit" class="btn btn-default btn-primary" style="margin-top: 1rem" @click.prevent="submitFurtherInfo" :disabled="disabled.submit">
+                            <button type="submit" name="submit" class="btn btn-default btn-primary" style="margin-top: 1rem" @click.prevent="submitFurtherInfo"
+                                :disabled="disabled.submit">
                                 <span v-if="disabled.submit">
                                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                                 </span>
@@ -211,11 +227,51 @@ export default {
         },
         isContractor() {
             return User.isContractor();
+        },
+        logoUrl() {
+            return Spark.state.user.logo;
         }
   },
   methods: {
         submitFurtherInfo() {
             User.submitFurtherInfo(this.form, this.disabled);
+        },
+        /**
+         * Update the user's profile photo.
+         */
+        update(e) {
+            e.preventDefault();
+
+            var self = this;
+
+            this.form.startProcessing();
+
+            // We need to gather a fresh FormData instance with the profile photo appended to
+            // the data so we can POST it up to the server. This will allow us to do async
+            // uploads of the profile photos. We will update the user after this action.
+            axios.post('/settings/logo', this.gatherFormData())
+                .then(
+                    () => {
+                        Bus.$emit('updateUser');
+
+                        self.form.finishProcessing();
+                    },
+                    (error) => {
+                        self.form.setErrors(error.response.data);
+                    }
+                );
+        },
+
+
+        /**
+         * Gather the form data for the photo upload.
+         */
+        gatherFormData() {
+            const data = new FormData();
+
+            data.append('photo', this.$refs.photo.files[0]);
+
+            return data;
         }
   }
 }

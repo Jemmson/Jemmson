@@ -20,15 +20,17 @@ class CreateJobsTable extends Migration
             $table->bigInteger('customer_id');
             $table->bigInteger('contractor_id');
             $table->integer('location_id')->usigned()->nullable();
+            
+            $table->string('job_name');
             $table->string('status')->nullable();
-            $table->dateTime('completed_bid_date')->nullable();
             $table->float('bid_price')->nullable();
+            
+            $table->dateTime('completed_bid_date')->nullable();
             $table->dateTime('agreed_start_date')->nullable();
             $table->dateTime('agreed_end_date')->nullable();
             $table->dateTime('actual_end_date')->nullable();
-            $table->string('job_name');
-            // FYI id will always be unique, I'm not sure what this accomplishes?
-//            $table->unique(['id', 'customer_id', 'contractor_id']);
+            
+            $table->softDeletes();
             $table->timestamps();
         });
     }

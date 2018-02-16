@@ -28,6 +28,7 @@ import GeneralContractor from './classes/GeneralContractor';
 import SubContractor from './classes/SubContractor';
 import Customer from './classes/Customer';
 import User from './classes/User';
+import TaskUtil from './classes/TaskUtil';
 
 
 window.Language = Language;
@@ -35,6 +36,7 @@ window.User = new User(Spark.state.user);
 window.GeneralContractor = new GeneralContractor(Spark.state.user);
 window.SubContractor = new SubContractor(Spark.state.user);
 window.Customer = new Customer(Spark.state.user);
+window.TaskUtil = new TaskUtil();
 
 require('./components/bootstrap');
 

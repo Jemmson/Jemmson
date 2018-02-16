@@ -1,15 +1,18 @@
 <template>
     <!-- /contractor bid actions -->
     <div class="col-md-12" v-if="show">
-                <button class="btn btn-sm btn-primary button"
-                        name="addTaskToBid"
-                        id="addTaskToBid"
-                        @click="openAddTask">
-                    Add Task To Bid
-                </button>
-                <button class="btn btn-sm btn-warning button" @click="openModal('notifyCustomerOfFinishedBid')">
-                    Notify Customer of Finished Bid
-                </button>
+        <button class="btn btn-sm btn-primary button" name="addTaskToBid" id="addTaskToBid" @click="openAddTask">
+            Add Task To Bid
+        </button>
+        <button class="btn btn-sm btn-warning button" @click="openModal('notifyCustomerOfFinishedBid')">
+            Notify Customer of Finished Bid
+        </button>
+        <button class="btn btn-danger" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
+            <span v-if="disabled.cancelBid">
+                <i class="fa fa-btn fa-spinner fa-spin"></i>
+            </span>
+            Cancel Job
+        </button>
         <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()">
         </modal>
     </div>
@@ -28,6 +31,9 @@
               modalHeader: '',
               modalBody: '',
               modalId: '',
+              disabled: {
+                  cancelBid: false
+              }
           }
       },
       methods: {
@@ -61,7 +67,10 @@
           },
           openAddTask() {
               this.$emit('openAddTask');
-          }
+          },
+            cancelBid() {
+                Customer.cancelBid(this.bid, this.disabled);
+            }
       },
       mounted: function () {
           this.userType = Spark.state.user.usertype;

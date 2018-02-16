@@ -7,27 +7,22 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-use App\Job;
+use App\Task;
 use App\User;
 
-class JobBidDeclined extends Notification
+class TaskApproved extends Notification
 {
     use Queueable;
-
-    protected $bid, $user;
-
+    protected $task, $customer, $user;
     /**
      * Create a new notification instance.
      *
-     * @param Job $bid
-     * @param User $user
-     * @param string $message
+     * @return void
      */
-    public function __construct(Job $bid, User $user, string $message = '')
+    public function __construct(Task $task, User $user)
     {
-        $this->bid = $bid;
+        $this->task = $task;
         $this->user = $user;
-        $this->message = $message;
     }
 
     /**
@@ -50,9 +45,9 @@ class JobBidDeclined extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Job was declined.')
-                    ->line($this->message)
-                    ->action('View Job', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
+                    ->line("The task: " . $this->task->name . " has been Approved.")
+                    ->line('Now waiting on customer to approve the task & send payment.')
+                    ->action('View Task', url('/login/sub/task/' . $this->task->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
 

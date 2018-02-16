@@ -8,6 +8,8 @@ use App\Customer;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -116,6 +118,38 @@ class HomeController extends Controller
         } else {
             return response()->json(session('prevDestination'), 200);
         }
+    }
+
+    public function uploadCompanyLogo(Request $request)
+    {
+        
+        $file = $request->photo;
+        $user = $request->user();
+
+        $path = $file->hashName('logos');
+
+        $disk = Storage::disk('public');
+
+        $disk->put(
+            $path, $this->formatImage($file)
+        );
+
+        $oldPhotoUrl = $user->logo_url;
+        
+        $user->forceFill([
+            'logo_url' => $disk->url($path),
+        ])->save();
+
+        if (preg_match('/logos\/(.*)$/', $oldPhotoUrl, $matches)) {
+            $disk->delete('logos/'.$matches[1]);
+        }
+    }
+
+    protected function formatImage($file)
+    {
+        $images = new ImageManager;
+        return (string) $images->make($file->path())
+                            ->fit(300)->encode();
     }
 
     public function updateUsersPhoneNumber($phoneNumber, $userId)
