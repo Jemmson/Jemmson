@@ -109,6 +109,8 @@ class InitiateBidController extends Controller
             'contractor' => Auth::user()->name
         ];
 
+//        dd($data);
+
         $this->notifyCustomer($email, $phone, $data, $customer, $job);
 
         $request->session()->flash('status', 'Your bid was created');
@@ -156,12 +158,28 @@ class InitiateBidController extends Controller
 
         $nexmo = app('Nexmo\Client');
 
+//        dd($data);
+
+        $text = 'Welcome To Jemmson ' .
+            $data['contractor'] .
+            ' has initated a bid ' .
+            ' Job Name: ' .
+            $data['job_name'] .
+            ' The link below will expire in one hour.' .
+            ' Login Link: ' .
+            url('/login/' .
+                'customer/' .
+                $data['job_id'] .
+                '/' .
+                $data['link']);
+
+//        dd($phone);
+//        dd($text);
+
         $nexmo->message()->send([
             'to' => '1' . $phone,
             'from' => env('NEXMO_FROM_NUMBER'),
-            'text' => 'Welcome To Jemmson' . '
-                       ' . $data['contractor'] . ' has initated a bid.
-                      Job Name: ' . $data['job_name'] . ' Login Link: ' . url('/login/' . $data['link'] . '/' . $data['job_id'])
+            'text' => $text
         ]);
 
         session()->forget('phone');
@@ -220,6 +238,7 @@ class InitiateBidController extends Controller
         // TODO: delete phone != '' in prod
         // phone should not be required just phone or email
         if (!empty($phone) && $phone != '') {
+//            dd($data);
             $this->sendText($data, $phone);
         }
     }
