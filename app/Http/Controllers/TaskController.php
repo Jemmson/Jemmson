@@ -594,8 +594,6 @@ class TaskController extends Controller
             'start_date' => 'required_if:start_when_accepted,false|date|after:today'
         ]);
 
-        return $request;
-
         $job_id = $request->jobId;
         $name = strtolower($request->taskName);
 

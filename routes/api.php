@@ -12,6 +12,7 @@
 */
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 Route::group([
     'middleware' => 'auth:api'
@@ -47,10 +48,11 @@ Route::post('/search/task', function (Request $request) {
     $jobId = $request->jobId;
     $job = \App\Job::find($jobId);
     // get tasks not associated with the job already but are associated to the contractor
-    $tasks = \App\Task::where('name', 'like', '%' . $taskName . '%')
-        ->where('contractor_id', '=', $job->contractor_id)
-        ->where('job_id', '!=', $jobId)
-        ->get();
+    $tasks = DB::select('select * from tasks where id not in (SELECT jt.task_id from tasks t join job_task jt on jt.task_id = t.id and t.job_id='.$jobId.') and contractor_id = '.$job->contractor_id);
+//    $tasks = \App\Task::where('name', 'like', '%' . $taskName . '%')
+//        ->where('contractor_id', '=', $job->contractor_id)
+//        ->where('job_id', '!=', $jobId)
+//        ->get();
     return $tasks;
 });
 
