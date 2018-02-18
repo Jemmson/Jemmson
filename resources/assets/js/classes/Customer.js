@@ -74,7 +74,7 @@ export default class Customer {
   /**
    * Deny a task that has been finished
    *
-   * @param {Ojbect} task
+   * @param {Object} task
    */
   async denyTask (task, disabled) {
     disabled.deny = true;

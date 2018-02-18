@@ -105,6 +105,28 @@ export default class GeneralContractor {
             });
     }
 
+    updateCustomerPrice (price, taskId, jobId) {
+      console.log(price)
+      if (price === '') {
+        price = 0
+      }
+      console.log(price)
+      axios.post('/api/task/updateCustomerPrice', {
+        jobId: jobId,
+        taskId: taskId,
+        price: price
+      }).then((response) => {
+        User.emitChange('bidUpdated');
+        Vue.toasted.success(Language.lang().bid_task.price_updated.general);
+        // console.log(response.data)
+        // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
+      }).catch(error => {
+        console.error(error);
+        // show a toast notification
+        Vue.toasted.error('Error: ' + error.message);
+      });
+    }
+
     approveTaskHasBeenFinished(task, disabled) {
         console.log('approveTaskHasBeenFinished', task);
         disabled.approve = true;
