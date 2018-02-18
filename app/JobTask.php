@@ -23,6 +23,39 @@ class JobTask extends Model
         return $this->belongsTo(User::class)->with('contractor');
     }
 
+    public function location()
+    {
+        return $this->hasOne(Location::class, 'id', 'location_id');
+    }
+
+    public function updateLocation($request)
+    {
+        if ($this->location_id === null) {
+            $location = new Location();
+            $location->address_line_1 = $request->address_line_1;
+            $location->address_line_2 = $request->address_line_2;
+            $location->city = $request->city;
+            $location->state = $request->state;
+            $location->zip = $request->zip;
+        } else {
+            $location = $this->location()->first();
+            $location->address_line_1 = $request->address_line_1;
+            $location->address_line_2 = $request->address_line_2;
+            $location->city = $request->city;
+            $location->state = $request->state;
+            $location->zip = $request->zip;
+        }
+        
+        try {
+            $location->save();
+            $this->location_id = $location->id;
+            $this->save();
+        } catch(\Exception $e) {
+            Log::error('Saving Location: ' . $e->getMessage());
+        }
+    }
+
+
     public function updateStatus($status)
     {
         if (!$this->updatable($status)) {
