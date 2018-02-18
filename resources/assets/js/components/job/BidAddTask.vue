@@ -14,7 +14,7 @@
                         </div>
                       </transition>
                     </div> -->
-                    <pre>{{ addNewTaskForm.start_date }}</pre>
+                    <!--<pre>{{ addNewTaskForm.start_date }}</pre>-->
                     <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                         <label for="taskName">Task Name</label>
                         <input type="text" class="form-control" id="taskName" name="taskName" v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
@@ -28,11 +28,6 @@
                                 </button>
                             </ul>
                         </div>
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label for="area">Locality</label>
-                        <input type="text" class="form-control" id="area" name="area" required v-model="addNewTaskForm.area">
                     </div>
 
                     <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('start_when_accepted')}">

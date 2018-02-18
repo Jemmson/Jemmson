@@ -8,6 +8,7 @@ use App\Location;
 
 use App\Services\UpdateRecordsService;
 
+use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -36,7 +37,7 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -47,7 +48,7 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function show(Customer $customer)
@@ -58,67 +59,112 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function edit(Customer $customer)
     {
-      return view('customers.edit')->with('data', ['customer' => $customer, 'job_id' => session('job_id')]);
+        return view('customers.edit')->with('data', ['customer' => $customer, 'job_id' => session('job_id')]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Customer  $customer
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Customer $customer)
     {
-      $password_updated = $request->password_updated;
-      if($request->password != $request->confirm_password && $password_updated == null){
-        return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Passwords need to match']);
-      }
-      if($request->password == '' || $request->confirm_password == '' && $password_updated == null){
-        return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Password field is required']);
-      }
+        $password_updated = $request->password_updated;
+        if ($request->password != $request->confirm_password && $password_updated == null) {
+            return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Passwords need to match']);
+        }
+        if ($request->password == '' || $request->confirm_password == '' && $password_updated == null) {
+            return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors(['Password field is required']);
+        }
 
-      
-      $customer->preferred_method_of_contact = $request->preferred_method_of_contact;
-      $customer->sms_text = $request->sms_text == "on" ? 1 : 0;
-      
-      $user = User::find($customer->user_id);
-      $user->name = UpdateRecordsService::shouldUpdate($request->name) ? $request->name : $user->name;
-      $user->password = $password_updated == null ? bcrypt($request->password) : $user->password;
-      $user->password_updated = 1;
-      
-      $result = DB::transaction(function () use ($location, $user, $customer) {
-          $customer->updateLocation($request);
-          $user->save();
-          $customer->save();
-      });
 
-      // try {
-      // } catch (\Exception $e) {
-      //   Log::error('Error Saving Customer: ' . $e->getMessage());
-      //   return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors([__('error.data.updated')]);
-      // }
+        $customer->preferred_method_of_contact = $request->preferred_method_of_contact;
+        $customer->sms_text = $request->sms_text == "on" ? 1 : 0;
 
-      // if theres a job id show that job
-      if($request->job_id != null){
-        return redirect('/job/'.$request->job_id.'/edit')->with('success', __('success.data.updated'));
-      }
-      return view('home')->with('success', __('success.data.updated'));
+        $user = User::find($customer->user_id);
+        $user->name = UpdateRecordsService::shouldUpdate($request->name) ? $request->name : $user->name;
+        $user->password = $password_updated == null ? bcrypt($request->password) : $user->password;
+        $user->password_updated = 1;
+
+        $result = DB::transaction(function () use ($location, $user, $customer) {
+            $customer->updateLocation($request);
+            $user->save();
+            $customer->save();
+        });
+
+        // try {
+        // } catch (\Exception $e) {
+        //   Log::error('Error Saving Customer: ' . $e->getMessage());
+        //   return redirect()->back()->with('data', ['user_id' => $customer->user_id, 'job_id' => $request->job_id])->withErrors([__('error.data.updated')]);
+        // }
+
+        // if theres a job id show that job
+        if ($request->job_id != null) {
+            return redirect('/job/' . $request->job_id . '/edit')->with('success', __('success.data.updated'));
+        }
+        return view('home')->with('success', __('success.data.updated'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Customer  $customer
+     * @param  \App\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function updateLocality(Request $request)
+    {
+        $customer = User::find($request->customer_id);
+        $location = Location::find($customer->location_id);
+        $location->area = $request->area;
+//        $obj = [
+//            "customer_id" => $request->customer_id,
+//            "area" => $request->area,
+//        ];
+//        return json_encode($obj);
+//        return $location;
+        if (empty($location)) {
+            return $location;
+        } else {
+            try {
+                $location->save;
+                $response = [
+                    "error" => false,
+                    "message" => "",
+                    "location" => $location
+                ];
+                return json_encode($response);
+            } catch (\Exception $e) {
+                $response = [
+                    "error" => true,
+                    "message" => $e->getMessage(),
+                    "location" => $location
+                ];
+                return json_encode($response);
+            }
+        }
+    }
+
+    public function getAddress(Request $request)
+    {
+//        return $request->customer_id;
+        $customer = User::find($request->customer_id);
+        $location = Location::find($customer->location_id);
+        if (empty($location)) {
+            return "location not set";
+        } else {
+            return $location->area;
+        }
     }
 }

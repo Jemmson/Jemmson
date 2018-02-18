@@ -82,6 +82,9 @@ Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 
+Route::post('/customer/updateLocality', 'CustomerController@updateLocality');
+Route::post('/customer/getAddress', 'CustomerController@getAddress');
+
 
 // stripe controller 
 Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');

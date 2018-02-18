@@ -592,8 +592,9 @@ class TaskController extends Controller
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
             'start_date' => 'required_if:start_when_accepted,false|date|after:today'
-            
         ]);
+
+        return $request;
 
         $job_id = $request->jobId;
         $name = strtolower($request->taskName);
@@ -677,7 +678,7 @@ class TaskController extends Controller
         $jobTask->cust_final_price = $request->taskPrice;
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
-        $jobTask->area = $request->area;
+//        $jobTask->area = $request->area;
         if ($request->start_when_accepted) {
             $jobTask->start_when_accepted = true;
             $jobTask->start_date = \Carbon\Carbon::now();

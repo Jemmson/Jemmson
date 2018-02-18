@@ -30,7 +30,7 @@ class HomeController extends Controller
      */
     public function show()
     {
-        $user = Auth::user();  
+        $user = Auth::user();
               
         // this is the home page
         return view('home', compact('user'));
