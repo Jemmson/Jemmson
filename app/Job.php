@@ -142,7 +142,11 @@ class Job extends Model
     public function getArea()
     {
 //        dd($this->location);
-        return $this->location()->first()->area;
+        $location = $this->location()->first();
+        if (!empty($location)){
+            return $location->area;
+        }
+        return response()->json(["message" => "Could Not Save Get the Area"], 404);
     }
 
 

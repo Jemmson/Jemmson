@@ -62,12 +62,12 @@
     },
     computed: {
       status () {
-        return User.status (this.bid.status, this.bid);
+        return User.status(this.bid.status, this.bid);
       }
     },
     methods: {
       updateArea() {
-        Customer.updateArea (this.reactiveData.area, this.bid.id);
+        Customer.updateArea(this.reactiveData.area, this.bid.id);
       },
       showArea() {
         console.log('user type: ' + User.isContractor())
@@ -75,7 +75,7 @@
       }
     },
     mounted: function () {
-      Customer.getArea (this.bid.id, this.reactiveData)
+      Customer.getArea(this.bid.id, this.reactiveData)
     }
   }
 </script>
