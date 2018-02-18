@@ -4,10 +4,10 @@
 
         <!--<pre>{{ bid }}</pre>-->
 
-        <div v-if="locationExists" class="form-group col-md-6">
+        <div v-if="showArea()" class="form-group col-md-6">
             <label for="area">Locality</label>
-            <input type="text" class="form-control" id="area" name="area" v-model="area"
-                   v-on:mouseleave="updateLocality">
+            <input type="text" class="form-control" id="area" name="area" v-model="reactiveData.area"
+                   v-on:mouseleave="updateArea">
         </div>
         <div class="col-md-6">
             <label>Job Name: </label>
@@ -55,7 +55,8 @@
     },
     data () {
       return {
-        area: '',
+        reactiveData: {area: ''},
+        areaError: '',
         locationExists: false
       }
     },
@@ -65,31 +66,16 @@
       }
     },
     methods: {
-      updateLocality () {
-        console.log ('customer_id: ' + this.bid.customer_id)
-        console.log ('area: ' + this.area)
-        axios.post ('/api/customer/updateLocality', {
-          customer_id: this.bid.customer_id,
-          area: this.area
-        }).then (function (response) {
-          console.log (response.data)
-          if (!response.data.error) {
-          } else {
-          }
-        }.bind (this))
+      updateArea() {
+        Customer.updateArea (this.reactiveData.area, this.bid.id);
+      },
+      showArea() {
+        console.log('user type: ' + User.isContractor())
+        return this.reactiveData.area !== '' && User.isContractor();
       }
     },
     mounted: function () {
-      console.log (this.bid.customer_id)
-      axios.post ('/api/customer/getAddress', {
-        customer_id: this.bid.customer_id,
-      }).then (function (response) {
-        console.log (response.data)
-        if (response.data !== 'location not set') {
-          this.area = response.data
-          this.locationExists = true
-        }
-      }.bind (this))
+      Customer.getArea (this.bid.id, this.reactiveData)
     }
   }
 </script>

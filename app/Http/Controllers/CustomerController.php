@@ -122,49 +122,4 @@ class CustomerController extends Controller
     {
         //
     }
-
-    public function updateLocality(Request $request)
-    {
-        $customer = User::find($request->customer_id);
-        $location = Location::find($customer->location_id);
-        $location->area = $request->area;
-//        $obj = [
-//            "customer_id" => $request->customer_id,
-//            "area" => $request->area,
-//        ];
-//        return json_encode($obj);
-//        return $location;
-        if (empty($location)) {
-            return $location;
-        } else {
-            try {
-                $location->save;
-                $response = [
-                    "error" => false,
-                    "message" => "",
-                    "location" => $location
-                ];
-                return json_encode($response);
-            } catch (\Exception $e) {
-                $response = [
-                    "error" => true,
-                    "message" => $e->getMessage(),
-                    "location" => $location
-                ];
-                return json_encode($response);
-            }
-        }
-    }
-
-    public function getAddress(Request $request)
-    {
-//        return $request->customer_id;
-        $customer = User::find($request->customer_id);
-        $location = Location::find($customer->location_id);
-        if (empty($location)) {
-            return "location not set";
-        } else {
-            return $location->area;
-        }
-    }
 }

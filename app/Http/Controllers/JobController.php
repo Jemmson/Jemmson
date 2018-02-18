@@ -316,6 +316,20 @@ class JobController extends Controller
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
     }
 
+
+    public function updateArea(Request $request)
+    {
+        $job = Job::find($request->job_id);
+        $job->updateArea($request->area);
+
+    }
+
+    public function getArea(Request $request)
+    {
+        $job = Job::find($request->job_id);
+        return $job->getArea();
+    }
+
     /**
      * Soft Deletes a job while its still in a bidding state
      *
@@ -343,4 +357,5 @@ class JobController extends Controller
     {
         return Auth::user()->usertype === 'customer';
     }
+
 }

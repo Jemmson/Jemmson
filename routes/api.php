@@ -82,8 +82,8 @@ Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 
-Route::post('/customer/updateLocality', 'CustomerController@updateLocality');
-Route::post('/customer/getAddress', 'CustomerController@getAddress');
+Route::post('/job/updateArea', 'JobController@updateArea');
+Route::post('/job/getArea', 'JobController@getArea');
 
 
 // stripe controller 

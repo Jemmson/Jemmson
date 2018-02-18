@@ -11,7 +11,7 @@ use Log;
 use App\JobActions;
 
 class Job extends Model
-{   
+{
     use SoftDeletes;
     /**
      * The attributes that are mass assignable.
@@ -72,9 +72,9 @@ class Job extends Model
         return $this->belongsToMany('App\Task')
             ->withTimestamps();
     }
-    
+
     /**
-     * Return related JobActions Model - create it 
+     * Return related JobActions Model - create it
      * if it doesn't exist
      *
      * @return JobActions model
@@ -82,7 +82,7 @@ class Job extends Model
     public function jobActions()
     {
         $jobActions = $this->hasOne(JobActions::class);
-        
+
         if ($jobActions->exists()) {
             $jobActions = $jobActions->first();
         } else {
@@ -103,7 +103,7 @@ class Job extends Model
      * @return bool did this action succeed
      */
     public function acceptJob()
-    {   
+    {
         if ($this->id == null) {
             return false;
         }
@@ -134,8 +134,31 @@ class Job extends Model
             $location->save();
             $this->location_id = $location->id;
             $this->save();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
+        }
+    }
+
+    public function getArea()
+    {
+//        dd($this->location);
+        return $this->location()->first()->area;
+    }
+
+
+
+    // TODO: Refactor for best practice
+    public function updateArea($area)
+    {
+        $location = $this->location()->first();
+
+        $location->area = $area;
+
+        try {
+            $location->save();
+            return response()->json($location, 200);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "Could Not Save Area"], 404);
         }
     }
 
@@ -162,7 +185,7 @@ class Job extends Model
             return false;
         }
     }
-    
+
     /**
      * Approve the job
      *
@@ -193,7 +216,8 @@ class Job extends Model
      *
      * @return void
      */
-    public function createJobActions() {
+    public function createJobActions()
+    {
 
         if ($this->id == null) {
             return false;
@@ -240,7 +264,7 @@ class Job extends Model
      * @param string $status
      * @return bool
      */
-    public function updatable(string $status) 
+    public function updatable(string $status)
     {
         switch ($status) {
             case 'bid.cancel':
@@ -256,5 +280,5 @@ class Job extends Model
     {
         return $this->status === 'bid.sent';
     }
-    
+
 }

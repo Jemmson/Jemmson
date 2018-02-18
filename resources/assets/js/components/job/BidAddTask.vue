@@ -94,7 +94,7 @@
                     contractorId: '',
                     area: this.bid.city,
                     start_date: '',
-                    start_when_accepted: false
+                    start_when_accepted: true
                 }),
                 taskResults: [],
             }
