@@ -38,7 +38,7 @@ class Customer extends Model
     
     public function location()
     {
-        return $this->hasOne(Location::class);
+        return $this->hasOne(Location::class, 'user_id', 'user_id');
     }
 
     public function updateLocation($request)

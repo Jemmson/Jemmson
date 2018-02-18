@@ -94,7 +94,7 @@ class Job extends Model
 
     public function location()
     {
-        return $this->hasOne(Location::class);
+        return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
     /**
@@ -124,7 +124,6 @@ class Job extends Model
     public function newLocation($request)
     {
         $location = new Location();
-        $location->job_id = $this->id;
         $location->address_line_1 = $request->address_line_1;
         $location->address_line_2 = $request->address_line_2;
         $location->city = $request->city;
