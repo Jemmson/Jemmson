@@ -24,6 +24,7 @@
                                 <th scope="col">Area</th>
                                 <th scope="col">Price</th>
                                 <th scope="col">Status</th>
+                                <th scope="col">Address</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                             </tr>
@@ -52,6 +53,9 @@
                                 </td>
                                 <td>
                                     {{ status(bidTask) }}
+                                </td>
+                                <td>
+                                    {{ getAddress(bidTask) }}
                                 </td>
                                 <td>
                                     <div v-if="isBidOpen(bidTask)">
@@ -97,6 +101,10 @@
     props: ['user', 'bidTasks'],
     data () {
       return {
+        address: '',
+        location: {
+          location: []
+        },
         localArea: '',
         area: {
           area: ''
@@ -108,16 +116,26 @@
           submit: false,
           finished: false
         },
-        showStripe: false,
+        showStripe: false
       }
     },
     methods: {
-      getArea(bidTask) {
+      getArea (bidTask) {
         // console.log(bidTask)
         // debugger
         Customer.getArea(bidTask.job_id, this.area)
         this.localArea = this.area
+
         return this.localArea.area
+      },
+      getAddress (bidTask) {
+        //TODO: only show Address when customer has approved the job
+        Customer.getAddress(bidTask.task.jobs[0].location_id, this.location)
+        if(bidTask.job_task.status === 'bid_task.accepted') {
+            return this.location.location
+        } else {
+          return 'Pending'
+        }
       },
       showFinishedBtn (bid) {
         return bid.job_task.status === 'bid_task.approved_by_customer';

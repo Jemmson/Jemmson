@@ -105,6 +105,21 @@ export default class Customer {
     })
   }
 
+  getAddress (locationId, ajax_response) {
+    console.log("locationId: "+ locationId)
+    console.log("ajax_response: "+ ajax_response)
+    // debugger
+    axios.post ('/api/customer/getAddress', {
+      locationId: locationId
+    }).then ((response) => {
+      console.log (response)
+      console.log (response.data)
+      ajax_response.location = response.data
+    }).catch ((error) => {
+      console.log (error);
+    })
+  }
+
   /**
    * Pay for a task
    *

@@ -11,6 +11,7 @@ use App\Services\UpdateRecordsService;
 use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -110,6 +111,20 @@ class CustomerController extends Controller
             return redirect('/job/' . $request->job_id . '/edit')->with('success', __('success.data.updated'));
         }
         return view('home')->with('success', __('success.data.updated'));
+    }
+
+    public function getAddress(Request $request)
+    {
+        $location = DB::select("select address_line_1, address_line_2, city, state, zip from locations where id = $request->locationId");
+
+        $address = $location[0]->address_line_1 . " " .
+            $location[0]->address_line_2 . " " .
+            $location[0]->city . " " .
+            $location[0]->state . " " .
+            $location[0]->zip;
+//            dd($address);
+//        dd($location[0]);
+        return $address;
     }
 
     /**
