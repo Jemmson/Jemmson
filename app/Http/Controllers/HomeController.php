@@ -77,7 +77,7 @@ class HomeController extends Controller
             // TODO: need to add functionality for handling images for company logos if a contractor wants to add it
 
             $this->validate($request, [
-                'company_name' => 'required|min:2'
+                'company_name' => 'required|min2'
             ]);
 
             $contractor = Contractor::firstOrCreate([

@@ -6,8 +6,8 @@
 
         <div v-if="showArea()" class="form-group col-md-6">
             <label for="area">Locality</label>
-            <input type="text" class="form-control" id="area" name="area" v-model="reactiveData.area"
-                   v-on:mouseleave="updateArea">
+            <input type="text" class="form-control" id="area" name="area" v-model="area.area"
+                   v-on:blur="updateArea">
         </div>
         <div class="col-md-6">
             <label>Job Name: </label>
@@ -55,7 +55,7 @@
     },
     data () {
       return {
-        reactiveData: {area: ''},
+        area: {area: ''},
         areaError: '',
         locationExists: false
       }
@@ -67,15 +67,15 @@
     },
     methods: {
       updateArea() {
-        Customer.updateArea(this.reactiveData.area, this.bid.id);
+        Customer.updateArea(this.area.area, this.bid.id);
       },
       showArea() {
         console.log('user type: ' + User.isContractor())
-        return this.reactiveData.area !== '' && User.isContractor();
+        return this.area.area !== '' && User.isContractor();
       }
     },
     mounted: function () {
-      Customer.getArea(this.bid.id, this.reactiveData)
+      Customer.getArea(this.bid.id, this.area)
     }
   }
 </script>

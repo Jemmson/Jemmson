@@ -326,6 +326,7 @@ class JobController extends Controller
 
     public function getArea(Request $request)
     {
+//        dd($request->job_id);
         $job = Job::find($request->job_id);
         return $job->getArea();
     }

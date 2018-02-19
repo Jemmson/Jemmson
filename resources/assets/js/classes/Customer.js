@@ -91,10 +91,14 @@ export default class Customer {
   }
 
   getArea (jobId, ajax_response) {
+    console.log("jobId: "+ jobId)
+    console.log("ajax_response: "+ ajax_response)
+    // debugger
     axios.post ('/api/job/getArea', {
       job_id: jobId
     }).then ((response) => {
       console.log (response)
+      console.log (response.data)
       ajax_response.area = response.data
     }).catch ((error) => {
       console.log (error);

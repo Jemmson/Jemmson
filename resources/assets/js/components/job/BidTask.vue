@@ -3,11 +3,11 @@
         <!-- <div class="panel-heading">Dashboard</div> -->
         <div class="panel-body">
             <!-- /customer and contractor section -->
-            <div class="row">
-                <pre>
-                    {{ JSON.stringify(task) }}
-                </pre>
-            </div>
+            <!--<div class="row">-->
+                <!--<pre>-->
+                    <!--{{ JSON.stringify(task) }}-->
+                <!--</pre>-->
+            <!--</div>-->
 
             <!-- / general contractor only section -->
             <div class="row" v-if="isGeneralContractor && !taskApproved">

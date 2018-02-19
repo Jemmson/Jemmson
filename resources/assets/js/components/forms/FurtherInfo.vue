@@ -9,10 +9,12 @@
                     <form class="form-horizontal" method="post" role="form">
 
                         <!-- Company Name -->
-                        <div class="form-group" :class="{'has-error': form.errors.has('company_name')}" v-if="isContractor">
+                        <div class="form-group" :class="{'has-error': form.errors.has('company_name')}"
+                             v-if="isContractor">
                             <label class="col-md-3 control-label">Company Name</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="company_name" v-model="form.company_name" autofocus>
+                                <input type="text" class="form-control" name="company_name" v-model="form.company_name"
+                                       autofocus>
                                 <span class="help-block" v-show="form.errors.has('company_name')">
                                     {{ form.errors.get('company_name') }}
                                 </span>
@@ -23,7 +25,8 @@
                         <div class="form-group" :class="{'has-error': form.errors.has('phone_number')}">
                             <label class="col-md-3 control-label">Phone Number</label>
                             <div class="col-md-8">
-                                <input type="tel" class="form-control" name="phone_number" v-model="form.phone_number" autofocus>
+                                <input type="tel" class="form-control" name="phone_number" v-model="form.phone_number"
+                                       autofocus>
                                 <span class="help-block" v-show="form.errors.has('phone_number')">
                                     {{ form.errors.get('phone_number') }}
                                 </span>
@@ -34,7 +37,8 @@
                         <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                             <label class="col-md-3 control-label">Address Line 1</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="address_line_1" v-model="form.address_line_1" autofocus>
+                                <input type="text" class="form-control" name="address_line_1"
+                                       v-model="form.address_line_1" autofocus>
                                 <span class="help-block" v-show="form.errors.has('address_line_1')">
                                     {{ form.errors.get('address_line_1') }}
                                 </span>
@@ -45,7 +49,8 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">Address Line 2</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="address_line_2" v-model="form.address_line_2" autofocus>
+                                <input type="text" class="form-control" name="address_line_2"
+                                       v-model="form.address_line_2" autofocus>
                             </div>
                         </div>
 
@@ -86,14 +91,16 @@
                         <div class="form-group" v-if="!isContractor">
                             <label class="col-md-3 control-label">Any Special Notes</label>
                             <div class="col-md-8">
-                                <textarea name="notes" id="notes" cols="30" rows="10" class="form-control" autofocus></textarea>
+                                <textarea name="notes" id="notes" cols="30" rows="10" class="form-control"
+                                          autofocus></textarea>
                             </div>
                         </div>
 
                         <div v-if="!passwordUpdated">
                             <h3>Update Password</h3>
                             <div class="update_password" style="border: solid thin black">
-                                <div class="update_password_inputs" style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
+                                <div class="update_password_inputs"
+                                     style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
                                     <!-- Update password -->
                                     <div class="form-group" :class="{'has-error': form.errors.has('password')}">
                                         <label class="col-md-3 control-label">Password</label>
@@ -106,11 +113,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" :class="{'has-error': form.errors.has('password_confirmation')}">
+                                    <div class="form-group"
+                                         :class="{'has-error': form.errors.has('password_confirmation')}">
                                         <label class="col-md-3 control-label">Confirm Password</label>
 
                                         <div class="col-md-8">
-                                            <input type="password" name="password_confirmation" v-model="form.password_confirmation">
+                                            <input type="password" name="password_confirmation"
+                                                   v-model="form.password_confirmation">
                                             <span class="help-block" v-show="form.errors.has('password_confirmation')">
                                                 {{ form.errors.get('password_confirmation') }}
                                             </span>
@@ -128,7 +137,7 @@
                                 <label class="col-md-4 control-label">&nbsp;</label>
 
                                 <div class="col-md-6">
-                                    <img :src="logoUrl" >
+                                    <img :src="logoUrl">
                                 </div>
                             </div>
 
@@ -140,13 +149,15 @@
                                     <label type="button" class="btn btn-primary btn-upload" :disabled="form.busy">
                                         <span>Select New Logo</span>
 
-                                        <input ref="photo" type="file" class="form-control" name="photo" @change="update">
+                                        <input ref="photo" type="file" class="form-control" name="photo"
+                                               @change="update">
                                     </label>
                                 </div>
                             </div>
                             <h3>Preferred Method of Contact</h3>
                             <div class="preferred_contact" style="border: solid thin black">
-                                <div class="preferred_contact_input" style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
+                                <div class="preferred_contact_input"
+                                     style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
                                     <!-- preferred method of contact -->
                                     <div class="form-group" :class="{'has-error': form.errors.has('email_contact')}">
                                         <label class="col-md-3 control-label">Email</label>
@@ -182,8 +193,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" name="submit" class="btn btn-default btn-primary" style="margin-top: 1rem" @click.prevent="submitFurtherInfo"
-                                :disabled="disabled.submit">
+                            <button type="submit" name="submit" class="btn btn-default btn-primary"
+                                    style="margin-top: 1rem" @click.prevent="submitFurtherInfo()"
+                                    :disabled="disabled.submit">
                                 <span v-if="disabled.submit">
                                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                                 </span>
@@ -198,81 +210,82 @@
 </template>
 
 <script>
-export default {
-  data() {
+  export default {
+    data () {
       return {
-          user: Spark.state.user,
-          disabled: {
-                submit: false
-          },
-          form: new SparkForm({
-                company_name: Spark.state.user.company_name,
-                phone_number: Spark.state.user.phone,
-                address_line_1: Spark.state.user.address_line_1,
-                address_line_2: Spark.state.user.address_line_2,
-                city: Spark.state.user.city,
-                state: Spark.state.user.state,
-                zip: Spark.state.user.zip,
-                password: '',
-                password_confirmation: '',
-                email_contact: false,
-                phone_contact: false,
-                sms_text: false,
-          }),
+        user: Spark.state.user,
+        disabled: {
+          submit: false
+        },
+        form: new SparkForm ({
+          company_name: Spark.state.user.company_name,
+          phone_number: Spark.state.user.phone,
+          address_line_1: Spark.state.user.address_line_1,
+          address_line_2: Spark.state.user.address_line_2,
+          city: Spark.state.user.city,
+          state: Spark.state.user.state,
+          zip: Spark.state.user.zip,
+          password: '',
+          password_confirmation: '',
+          email_contact: false,
+          phone_contact: false,
+          sms_text: false,
+        }),
       }
-  },
-  computed: {
-        passwordUpdated() {
-            return this.user.password_updated;
-        },
-        isContractor() {
-            return User.isContractor();
-        },
-        logoUrl() {
-            return Spark.state.user.logo;
-        }
-  },
-  methods: {
-        submitFurtherInfo() {
-            User.submitFurtherInfo(this.form, this.disabled);
-        },
-        /**
-         * Update the user's profile photo.
-         */
-        update(e) {
-            e.preventDefault();
+    },
+    computed: {
+      passwordUpdated () {
+        return this.user.password_updated;
+      },
+      isContractor () {
+        return User.isContractor ();
+      },
+      logoUrl () {
+        return Spark.state.user.logo;
+      }
+    },
+    methods: {
+      submitFurtherInfo () {
+        // debugger
+        User.submitFurtherInfo (this.form, this.disabled);
+      },
+      /**
+       * Update the user's profile photo.
+       */
+      update (e) {
+        e.preventDefault ();
 
-            var self = this;
+        var self = this;
 
-            this.form.startProcessing();
+        this.form.startProcessing ();
 
-            // We need to gather a fresh FormData instance with the profile photo appended to
-            // the data so we can POST it up to the server. This will allow us to do async
-            // uploads of the profile photos. We will update the user after this action.
-            axios.post('/settings/logo', this.gatherFormData())
-                .then(
-                    () => {
-                        Bus.$emit('updateUser');
+        // We need to gather a fresh FormData instance with the profile photo appended to
+        // the data so we can POST it up to the server. This will allow us to do async
+        // uploads of the profile photos. We will update the user after this action.
+        axios.post ('/settings/logo', this.gatherFormData ())
+          .then (
+            () => {
+              Bus.$emit ('updateUser');
 
-                        self.form.finishProcessing();
-                    },
-                    (error) => {
-                        self.form.setErrors(error.response.data);
-                    }
-                );
-        },
+              self.form.finishProcessing ();
+            },
+            (error) => {
+              self.form.setErrors (error.response.data);
+            }
+          );
+      },
 
 
-        /**
-         * Gather the form data for the photo upload.
-         */
-        gatherFormData() {
-            const data = new FormData();
+      /**
+       * Gather the form data for the photo upload.
+       */
+      gatherFormData () {
+        const data = new FormData ();
 
-            data.append('photo', this.$refs.photo.files[0]);
+        data.append ('photo', this.$refs.photo.files[0]);
 
-            return data;
-        }
+        return data;
+      }
+    }
   }
-}
 </script>

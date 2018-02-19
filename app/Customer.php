@@ -49,6 +49,7 @@ class Customer extends Model
             $location->address_line_1 = $request->address_line_1;
             $location->address_line_2 = $request->address_line_2;
             $location->city = $request->city;
+            $location->area = $request->city;
             $location->state = $request->state;
             $location->zip = $request->zip;
         } else {
@@ -56,6 +57,7 @@ class Customer extends Model
             $location->address_line_1 = $request->address_line_1;
             $location->address_line_2 = $request->address_line_2;
             $location->city = $request->city;
+            $location->area = $request->city;
             $location->state = $request->state;
             $location->zip = $request->zip;
         }
