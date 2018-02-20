@@ -136,11 +136,9 @@
     },
     methods: {
       updateCustomerTaskPrice (price, taskId, bidId, task) {
-        price = price.substring (1)
-        console.log (price)
-        console.log (task.job_task.cust_final_price)
-        let taskPrice = task.job_task.cust_final_price
-        taskPrice = taskPrice.toString ()
+        price = price.replace(/[^0-9.]/g, "");
+        let taskPrice = task.job_task.cust_final_price;
+        taskPrice = taskPrice.toString();
         // debugger
         if ((taskPrice !== price)) {
           GeneralContractor.updateCustomerPrice (price, taskId, bidId)
