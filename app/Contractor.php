@@ -92,7 +92,7 @@ class Contractor extends Model
 
     public function location()
     {
-        return $this->hasOne(Location::class, 'user_id', 'user_id');
+        return $this->hasOne(Location::class, 'user_id', 'user_id')->where('default', '=', 1);
     }
 
     public function updateLocation($request)
@@ -101,6 +101,7 @@ class Contractor extends Model
         if ($this->location_id === null) {
             $location = new Location();
             $location->user_id = $this->id;
+            $location->default = true;
             $location->address_line_1 = $request->address_line_1;
             $location->address_line_2 = $request->address_line_2;
             $location->city = $request->city;
