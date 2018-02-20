@@ -119,7 +119,7 @@
 
                                         <div class="col-md-8">
                                             <input type="password" name="password_confirmation"
-                                                   v-model="form.password_confirmation">
+                                                   v-model="form.password_confirmation" @blur="confirmPassword">
                                             <span class="help-block" v-show="form.errors.has('password_confirmation')">
                                                 {{ form.errors.get('password_confirmation') }}
                                             </span>
@@ -231,6 +231,7 @@
           phone_contact: false,
           sms_text: false,
         }),
+        passwordsMatch: false,
       }
     },
     computed: {
@@ -245,6 +246,16 @@
       }
     },
     methods: {
+        confirmPassword() {
+            if (this.form.password !== this.form.password_confirmation) {
+                this.form.errors.errors = {
+                    password: ['Passwords need to match.'],
+                    password_confirmation: ['Passwords need to match.']
+                };
+                this.passwordsMatch = false;
+            }
+            this.passwordsMatch = true;
+        },
       submitFurtherInfo () {
         // debugger
         User.submitFurtherInfo (this.form, this.disabled);
@@ -254,6 +265,10 @@
        */
       update (e) {
         e.preventDefault ();
+
+        if (!this.passwordsMatch) {
+            return;
+        }
 
         var self = this;
 
