@@ -40,7 +40,7 @@ class InitiateBidController extends Controller
 
         $this->validate($request, [
             'email' => 'required_without:phone',
-            'phone' => 'required_without:email|min:7|max:10',
+            'phone' => 'required_without:email|min:7|max:11',
             'customerName' => 'required'
         ]);
 
@@ -81,18 +81,11 @@ class InitiateBidController extends Controller
 
         // create a bid
         $job = $this->createBid($customer->id, $jobName);
-
-//        dd($job);
-
         $job_id = $job->id;
-
-
-        // generate token and save it
-        $token = $customer->generateToken(true);
 
         // if we fail to create a job or token redirect back 
         // with error
-        if ($job_id == null || $token == null) {
+        if ($job_id == null) {
             // TODO: delete job/token if only one was created
             return redirect()->back()->with(
                 'error',
@@ -100,18 +93,7 @@ class InitiateBidController extends Controller
             );
         }
 
-        // generate data for views
-        $data = [
-            'email' => $email,
-            'link' => $token->token,
-            'job_name' => $jobName,
-            'job_id' => $job_id,
-            'contractor' => Auth::user()->name
-        ];
-
-//        dd($data);
-
-        $this->notifyCustomer($email, $phone, $data, $customer, $job);
+        $customer->notify(new BidInitiated($job, $customer));
 
         $request->session()->flash('status', 'Your bid was created');
 
@@ -130,60 +112,6 @@ class InitiateBidController extends Controller
         return $customer->name . uniqid();
     }
 
-    /**
-     * Sending an Email to the customer or the contractor
-     *
-     * @param array $data the data associated with the job
-     * @param string $email the email address to send the mail to
-     */
-    public function sendEmail($data, $email)
-    {
-        // send passwordless email
-        $resp = Mail::to($email)
-            ->queue(
-                new PasswordlessBidPageLogin($data)
-            ); // no response from queue or send
-    }
-
-    /**
-     * Sending a text to the customer or the contractor
-     *
-     * @param array $data the data associated with the job
-     * @param string $phone the phone number of the customer
-     */
-    public function sendText($data, $phone)
-    {
-        // send sms passwordless link
-        session()->put('phone', $phone);
-
-        $nexmo = app('Nexmo\Client');
-
-//        dd($data);
-
-        $text = 'Welcome To Jemmson ' .
-            $data['contractor'] .
-            ' has initated a bid ' .
-            ' Job Name: ' .
-            $data['job_name'] .
-            ' The link below will expire in one hour.' .
-            ' Login Link: ' .
-            url('/login/' .
-                'customer/' .
-                $data['job_id'] .
-                '/' .
-                $data['link']);
-
-//        dd($phone);
-//        dd($text);
-
-        $nexmo->message()->send([
-            'to' => '1' . $phone,
-            'from' => env('NEXMO_FROM_NUMBER'),
-            'text' => $text
-        ]);
-
-        session()->forget('phone');
-    }
 
     /**
      * This function creates a new user
@@ -207,9 +135,6 @@ class InitiateBidController extends Controller
 
         $customer = null;
 
-//        dd($customerName);
-
-//        DB::transaction(function () {
         $customer = User::create(
             [
                 'name' => $customerName,
@@ -220,27 +145,9 @@ class InitiateBidController extends Controller
                 'password' => bcrypt($pass),
             ]
         );
-//        });
-
 
         return $customer;
 
-    }
-
-    public function notifyCustomer($email, $phone, $data, $customer, $job)
-    {
-
-        if (!empty($email)) {
-            $customer->notify(new BidInitiated($job, $customer));
-        }
-
-        //$phone = "4807034902";
-        // TODO: delete phone != '' in prod
-        // phone should not be required just phone or email
-        if (!empty($phone) && $phone != '') {
-//            dd($data);
-            $this->sendText($data, $phone);
-        }
     }
 
     /**
