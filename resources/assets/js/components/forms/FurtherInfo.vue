@@ -241,7 +241,7 @@
         return User.isContractor ();
       },
       logoUrl () {
-        return Spark.state.user.logo;
+        return Spark.state.user.logo_url;
       }
     },
     methods: {
@@ -282,7 +282,7 @@
       gatherFormData () {
         const data = new FormData ();
 
-        data.append ('photo', this.$refs.photo.files[0]);
+        data.append('photo', this.$refs.photo.files[0]);
 
         return data;
       }
