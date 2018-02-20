@@ -22,7 +22,8 @@
                 <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
                 <td>{{ status(task.job_task.status) }}</td>
                 <td>
-                    <button class="btn btn-primary" @click.prevent="openTask(index)">Details</button>
+                    <button class="btn btn-primary" @click.prevent="openTaskPanel(index)">Details</button>
+
                     <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)"
                             :disabled="disabled.pay">
                                 <span v-if="disabled.pay">
@@ -203,7 +204,7 @@
       isAssignedToMe (task) {
         return this.user.id === task.job_task.contractor_id;
       },
-      openTask (index) {
+      openTaskPanel (index) {
         this.$emit ('openTaskPanel', index);
       },
       finishedTask (task) {
