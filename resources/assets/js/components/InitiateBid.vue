@@ -66,7 +66,7 @@
         console.log (result.name);
         this.email = result.email;
         this.phone = result.phone;
-        this.name = result.name;
+        this.query = result.name;
       }
     }
   }

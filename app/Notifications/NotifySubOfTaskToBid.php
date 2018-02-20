@@ -41,7 +41,7 @@ class NotifySubOfTaskToBid extends Notification
     public function via($notifiable)
     {
         $notifyThrough = [SparkChannel::class, 'mail'];
-        if ($notifiable->smsOn()) {
+        if ($notifiable->smsOn() || !$notifiable->password_updated) {
             $notifyThrough[] = 'nexmo';
         }
         return $notifyThrough;

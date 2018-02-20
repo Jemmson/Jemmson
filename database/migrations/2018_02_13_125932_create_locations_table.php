@@ -16,9 +16,7 @@ class CreateLocationsTable extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-//            $table->integer('job_id')->unsigned()->nullable()->comment = "column should not be on this table";
-//            $table->integer('task_id')->unsigned()->nullable()->comment = "column should not be on this table";
-
+            $table->boolean('default')->default(false);
             $table->string('address_line_1')->nullable();
             $table->string('address_line_2')->nullable();
             $table->string('city')->nullable();

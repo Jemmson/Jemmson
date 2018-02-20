@@ -22,7 +22,8 @@
                 <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
                 <td>{{ status(task.job_task.status) }}</td>
                 <td>
-                    <button class="btn btn-primary" @click.prevent="openTask(index)">Details</button>
+                    <button class="btn btn-primary" @click.prevent="openTaskPanel(index)">Details</button>
+
                     <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)"
                             :disabled="disabled.pay">
                                 <span v-if="disabled.pay">
@@ -136,11 +137,9 @@
     },
     methods: {
       updateCustomerTaskPrice (price, taskId, bidId, task) {
-        price = price.substring (1)
-        console.log (price)
-        console.log (task.job_task.cust_final_price)
-        let taskPrice = task.job_task.cust_final_price
-        taskPrice = taskPrice.toString ()
+        price = price.replace(/[^0-9.]/g, "");
+        let taskPrice = task.job_task.cust_final_price;
+        taskPrice = taskPrice.toString();
         // debugger
         if ((taskPrice !== price)) {
           GeneralContractor.updateCustomerPrice (price, taskId, bidId)
@@ -205,7 +204,7 @@
       isAssignedToMe (task) {
         return this.user.id === task.job_task.contractor_id;
       },
-      openTask (index) {
+      openTaskPanel (index) {
         this.$emit ('openTaskPanel', index);
       },
       finishedTask (task) {

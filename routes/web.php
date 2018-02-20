@@ -91,9 +91,6 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
-
-    // home controller
-    Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
 }
 );
 Route::group(['middleware' => ['auth']], function () {
@@ -103,6 +100,9 @@ Route::group(['middleware' => ['auth']], function () {
             return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
         }
     );
+
+    // home controller
+    Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
 }
 );
 

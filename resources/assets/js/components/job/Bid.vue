@@ -111,9 +111,13 @@
                 Customer.approveBid(this.bidForm, this.disabled);
             },
             openTaskPanel(index) {
-                this.taskIndex = index;
-                this.showAddTaskPanel = false;
-                this.showTaskPanel = this.showTaskPanel ? false : true;
+                if (this.taskIndex === index && this.showTaskPanel) {
+                    this.showTaskPanel = false;
+                } else {
+                    this.showTaskPanel = true;
+                    this.taskIndex = index;
+                    this.showAddTaskPanel = false;
+                }
             },
             openAddTask() {
                 this.showTaskPanel = false;
