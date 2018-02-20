@@ -129,7 +129,6 @@
         return this.localArea.area
       },
       getAddress (bidTask) {
-        //TODO: only show Address when customer has approved the job
         Customer.getAddress(bidTask.task.jobs[0].location_id, this.location)
         if(bidTask.job_task.status === 'bid_task.accepted') {
             return this.location.location
@@ -155,6 +154,7 @@
         return User.status (bid_task.job_task.status, bid_task.task);
       },
       prettyDate (date) {
+
         if (date == null)
           return '';
         // return the date and ignore the time

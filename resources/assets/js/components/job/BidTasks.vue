@@ -15,7 +15,8 @@
             <tr v-for="(task, index) in bid.tasks" v-bind:key="index">
                 <td>{{ task.name }}</td>
                 <td>
-                    <input type="text" :value="taskCustFinalPrice(task.job_task.cust_final_price)" @blur="updateCustomerTaskPrice($event.target.value, task.id, bid.id)">
+                    <input type="text" :value="taskCustFinalPrice(task.job_task.cust_final_price)"
+                           @blur="updateCustomerTaskPrice($event.target.value, task.id, bid.id, task)">
                     <!--<input type="text" :value="taskProposedPrice(task)">-->
                 </td>
                 <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
@@ -134,15 +135,22 @@
       }
     },
     methods: {
-      updateCustomerTaskPrice (price, taskId, bidId) {
-        price = price.substring(1)
-        GeneralContractor.updateCustomerPrice(price, taskId, bidId)
+      updateCustomerTaskPrice (price, taskId, bidId, task) {
+        price = price.substring (1)
+        console.log (price)
+        console.log (task.job_task.cust_final_price)
+        let taskPrice = task.job_task.cust_final_price
+        taskPrice = taskPrice.toString ()
+        // debugger
+        if ((taskPrice !== price)) {
+          GeneralContractor.updateCustomerPrice (price, taskId, bidId)
+        }
       },
       showDenyBtn (task) {
         return this.isCustomer && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general');
       },
       taskCustFinalPrice (price) {
-        return "$"+ price;
+        return '$' + price;
       },
       showReopenBtn (task) {
         if (this.isContractor && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general')) {
