@@ -15,9 +15,9 @@
             <tr v-for="(task, index) in bid.tasks" v-bind:key="index">
                 <td>{{ task.name }}</td>
                 <td>
-                    <input type="text" :value="taskCustFinalPrice(task.job_task.cust_final_price)"
+                    <input v-if="showTaskPriceInput()" type="text" :value="taskCustFinalPrice(task.job_task.cust_final_price)"
                            @blur="updateCustomerTaskPrice($event.target.value, task.id, bid.id, task)">
-                    <!--<input type="text" :value="taskProposedPrice(task)">-->
+                    <label v-if="isCustomer || !showTaskPriceInput()"> {{taskCustFinalPrice(task.job_task.cust_final_price)}} </label>
                 </td>
                 <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
                 <td>{{ status(task.job_task.status) }}</td>
@@ -136,6 +136,9 @@
       }
     },
     methods: {
+      showTaskPriceInput() {
+        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
+      },
       updateCustomerTaskPrice (price, taskId, bidId, task) {
         price = price.replace(/[^0-9.]/g, "");
         let taskPrice = task.job_task.cust_final_price;
