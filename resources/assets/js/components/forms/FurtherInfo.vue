@@ -133,27 +133,30 @@
                         <div class="col-md-8">
                             <!-- upload company logo -->
                             <!-- Photo Preview-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">&nbsp;</label>
-
-                                <div class="col-md-6">
-                                    <img :src="logoUrl">
+                            <div v-if="isContractor">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">&nbsp;</label>
+    
+                                    <div class="col-md-6">
+                                        <img :src="logoUrl">
+                                    </div>
+                                </div>
+    
+                                <!-- Update Button -->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">&nbsp;</label>
+    
+                                    <div class="col-md-6">
+                                        <label type="button" class="btn btn-primary btn-upload" :disabled="form.busy">
+                                            <span>Select New Logo</span>
+    
+                                            <input ref="photo" type="file" class="form-control" name="photo"
+                                                   @change="update">
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Update Button -->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">&nbsp;</label>
-
-                                <div class="col-md-6">
-                                    <label type="button" class="btn btn-primary btn-upload" :disabled="form.busy">
-                                        <span>Select New Logo</span>
-
-                                        <input ref="photo" type="file" class="form-control" name="photo"
-                                               @change="update">
-                                    </label>
-                                </div>
-                            </div>
                             <h3>Preferred Method of Contact</h3>
                             <div class="preferred_contact" style="border: solid thin black">
                                 <div class="preferred_contact_input"
@@ -231,7 +234,7 @@
           phone_contact: false,
           sms_text: false,
         }),
-        passwordsMatch: false,
+        passwordsMatch: true,
       }
     },
     computed: {
@@ -258,6 +261,9 @@
         },
       submitFurtherInfo () {
         // debugger
+        if (!this.passwordsMatch) {
+            return;
+        }
         User.submitFurtherInfo (this.form, this.disabled);
       },
       /**
@@ -265,10 +271,6 @@
        */
       update (e) {
         e.preventDefault ();
-
-        if (!this.passwordsMatch) {
-            return;
-        }
 
         var self = this;
 
