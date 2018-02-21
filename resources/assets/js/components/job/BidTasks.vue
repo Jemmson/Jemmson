@@ -123,7 +123,7 @@
       generalTotalTaskPrice () {
         let total = 0;
         for (const task of this.bid.tasks) {
-          total += task.proposed_cust_price;
+          total += task.job_task.cust_final_price;
         }
         return total;
       },
