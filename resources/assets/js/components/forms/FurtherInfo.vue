@@ -214,20 +214,22 @@
 
 <script>
   export default {
+    props: {
+        user: Object,
+    },
     data () {
       return {
-        user: Spark.state.user,
         disabled: {
           submit: false
         },
         form: new SparkForm ({
-          company_name: Spark.state.user.company_name,
-          phone_number: Spark.state.user.phone,
-          address_line_1: Spark.state.user.address_line_1,
-          address_line_2: Spark.state.user.address_line_2,
-          city: Spark.state.user.city,
-          state: Spark.state.user.state,
-          zip: Spark.state.user.zip,
+          company_name: this.user.company_name,
+          phone_number: this.user.phone,
+          address_line_1: this.user.address_line_1,
+          address_line_2: this.user.address_line_2,
+          city: this.user.city,
+          state: this.user.state,
+          zip: this.user.zip,
           password: '',
           password_confirmation: '',
           email_contact: false,
@@ -245,7 +247,7 @@
         return User.isContractor ();
       },
       logoUrl () {
-        return Spark.state.user.logo_url;
+        return this.user.logo_url;
       }
     },
     methods: {
