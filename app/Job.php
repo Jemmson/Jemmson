@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 use Log;
@@ -71,6 +72,11 @@ class Job extends Model
     {
         return $this->belongsToMany('App\Task')
             ->withTimestamps();
+    }
+
+    public function jobTasks()
+    {
+        return $this->hasMany(JobTask::class, 'job_id', 'id');
     }
 
     /**
@@ -274,6 +280,9 @@ class Job extends Model
             case 'bid.cancel':
                 return $this->isCancellable();
                 break;
+            case 'job.completed':
+                return $this->isCompletable();
+                break;
             default:
                 return true; // TODO: testing, should be false
                 break;
@@ -283,6 +292,18 @@ class Job extends Model
     private function isCancellable()
     {
         return $this->status === 'bid.sent';
+    }
+
+    private function isCompletable()
+    {
+        return $this->status === 'job.approved' && $this->allJobTasksResolved();
+    }
+
+    private function allJobTasksResolved()
+    {
+        $totalTasks = count(DB::table('job_task')->where('job_id', $this->id)->get());
+        $totalTasksResolved = count(DB::table('job_task')->where('job_id', $this->id)->where('status','bid_task.customer_sent_payment')->get());
+        return $totalTasks === $totalTasksResolved;
     }
 
 }

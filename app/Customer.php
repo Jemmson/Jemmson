@@ -9,16 +9,10 @@ class Customer extends Model
     //
     protected $fillable = [
         'user_id',
-        'email_method_of_contact',
-        'address_line_1',
-        'address_line_2',
-        'city',
-        'state',
-        'zip',
         'notes',
+        'email_method_of_contact',
         'phone_method_of_contact',
         'sms_method_of_contact',
-        'phone_number'
     ];
 
     public function user()

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-            <further-info>
+            <further-info :user="user">
             </further-info>
     </div>
 @endsection

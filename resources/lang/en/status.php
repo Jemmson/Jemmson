@@ -33,7 +33,8 @@ return [
         'declined' => 'bid.declined'
     ],
     'job' => [
-        'approved' => 'job.approved'
+        'approved' => 'job.approved',
+        'completed' => 'job.completed'
     ]
 
 ];

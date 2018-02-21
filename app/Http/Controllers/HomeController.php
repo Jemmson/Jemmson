@@ -51,7 +51,7 @@ class HomeController extends Controller
         $this->validate(
         $request,
             [
-                'phone_number' => 'required|min:2',
+                'phone_number' => 'required|min:7|max:10',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',
@@ -149,7 +149,7 @@ class HomeController extends Controller
     {
         $images = new ImageManager;
         return (string) $images->make($file->path())
-                            ->fit(300)->encode();
+                            ->fit(150)->encode();
     }
 
     public function updateUsersPhoneNumber($phoneNumber, $userId)

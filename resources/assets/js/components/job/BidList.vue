@@ -107,6 +107,9 @@
       },
       created() {
           Bus.$on('bidUpdated', (payload) => {
+              if (payload !== undefined && payload[0] === 'closeBid') {
+                  this.closeBid();
+              }
               this.getBids();
           });
           Bus.$on('previewSubForTask', (payload) => {

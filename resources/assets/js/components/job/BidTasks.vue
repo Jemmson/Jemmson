@@ -123,7 +123,7 @@
       generalTotalTaskPrice () {
         let total = 0;
         for (const task of this.bid.tasks) {
-          total += task.proposed_cust_price;
+          total += task.job_task.cust_final_price;
         }
         return total;
       },
@@ -176,7 +176,8 @@
         return false;
       },
       showDeleteBtn (task) {
-        if (this.isGeneral && (task.job_task.status !== 'bid_task.approved_by_customer' && task.job_task.status !== 'bid_task.reopened')) {
+        const status = task.job_task.status;
+        if (this.isGeneral && (status !== 'bid_task.approved_by_customer' && status !== 'bid_task.reopened' && status !== 'bid_task.customer_sent_payment')) {
           return true;
         }
         return false;
