@@ -354,6 +354,28 @@ class JobController extends Controller
         return response()->json(['message' => 'Success'], 200);
     }
 
+    /**
+     * Put the job as completed
+     *
+     * @param Request $request
+     * @return boolean
+     */
+    public function jobCompleted(Request $request) {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $job = Job::find($request->id);
+        
+        if ($job->updatable(__('job.completed'))) {
+            $job->updateStatus(__('job.completed'));
+        } else {
+            return response()->json(['message' => "Couldn't set the job as completed, All Tasks need to be resolved."], 400);
+        }
+
+        return response()->json(['message' => 'Success'], 200);
+    }
+
     private function isCustomer()
     {
         return Auth::user()->usertype === 'customer';
