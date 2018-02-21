@@ -79,6 +79,11 @@ export default class Language {
         general: 'Start Job',
         customer: 'Approved'
       },
+      'job.completed': {
+        sub: 'Job Completed',
+        general: 'Job Completed',
+        customer: 'Job Completed'
+      },
       // feedback messages for toasts
       'submit': {
         'job_finished': {

@@ -160,8 +160,20 @@ export default class GeneralContractor {
             Vue.toasted.error(error.message);
             disabled.deleteTask = false;
         }
+    }
 
-        console.log(result);
-        
+    async jobCompleted(job, disabled) {
+        disabled.jobCompleted = true;
+        try {
+            const data = await axios.post('/api/job/completed', {id: job.id});
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Job Completed');
+            disabled.jobCompleted = false;
+        } catch (error) {
+            error = error.response.data;
+            Vue.toasted.error(error.message);
+            disabled.jobCompleted = false;
+        }
+
     }
 }

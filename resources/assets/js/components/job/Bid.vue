@@ -25,7 +25,7 @@
                     </approve-bid>
 
                     <!-- /buttons  -->
-                    <general-contractor-bid-actions :show="isGeneralContractor && !jobApproved" :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
+                    <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
                         @openAddTask="openAddTask">
                     </general-contractor-bid-actions>
                 </div>
