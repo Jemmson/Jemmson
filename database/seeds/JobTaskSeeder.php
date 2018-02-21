@@ -25,7 +25,7 @@ class JobTaskSeeder extends Seeder
         $task = new JobTask();
         $task->task_id = 1;
         $task->job_id = 1;
-        $task->contractor_id = 2;
+        $task->contractor_id = 1;
         $task->cust_final_price = rand(1, 100);
         $task->sub_final_price = rand(1, 100);
         $task->status = __('bid_task.initiated');
@@ -38,7 +38,7 @@ class JobTaskSeeder extends Seeder
         $task = new JobTask();
         $task->task_id = 2;
         $task->job_id = 2;
-        $task->contractor_id = 1;
+        $task->contractor_id = 2;
         $task->cust_final_price = rand(1, 100);
         $task->sub_final_price = rand(1, 100);
         $task->status = __('bid_task.initiated');
