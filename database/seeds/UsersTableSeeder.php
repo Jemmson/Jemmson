@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\User;
 use App\Contractor;
 use App\Customer;
+use App\StripeExpress;
 
 class UsersTableSeeder extends Seeder
 {
@@ -90,6 +91,15 @@ class UsersTableSeeder extends Seeder
 
             Contractor::create($contractorData);
 
+            $stripe = [
+                'contractor_id' => 1,
+                'access_token' => 'sk_test_vewQOBeHnMCFtgEjOLQmXrdD',
+                'refresh_token' => 'rt_CMkeB75bV4BbR9v06ioFogUHLzoUSUkAhTyqwqV76CPlz0gi',
+                'stripe_user_id' => 'acct_1By18sB4l1AzsWS0',
+            ];
+
+            StripeExpress::create($stripe);
+
             $data = [
                 'name' => 'Daven Escobar',
                 'email' => "daven@example.com",
@@ -110,6 +120,15 @@ class UsersTableSeeder extends Seeder
             ];
 
             Contractor::create($contractorData);
+
+            $stripe = [
+                'contractor_id' => 2,
+                'access_token' => 'sk_test_2DL5LXhimtvvVfbhZNOaEYOG',
+                'refresh_token' => 'rt_CMkY01KB2aW0XM0Q2XCKw8fNbH8kI3y1EnqfJ2mQ8LzfbbgC',
+                'stripe_user_id' => 'acct_1By13dFOSJzZ3wkC',
+            ];
+
+            StripeExpress::create($stripe);
 
             $data = [
                 'name' => "John Doe",
