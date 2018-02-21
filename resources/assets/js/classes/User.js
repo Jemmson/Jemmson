@@ -32,7 +32,7 @@ export default class User {
     }
 
     isSignedUpWithStripe() {
-        this.user.stripe_id !== undefined && this.user.stripe_id !== null;
+        return this.user.stripe_id !== undefined && this.user.stripe_id !== null;
     }
 
     payWithStripe() {
