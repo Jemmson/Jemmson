@@ -232,7 +232,7 @@
           zip: this.user.zip,
           password: '',
           password_confirmation: '',
-          email_contact: false,
+          email_contact: true,
           phone_contact: false,
           sms_text: false,
         }),
