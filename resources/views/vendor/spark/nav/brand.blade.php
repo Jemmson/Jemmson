@@ -3,7 +3,6 @@
 </a>
 <script>
     let img = document.getElementById('user_logo');
-    console.log(img);
     if (Spark.state.user !== undefined && Spark.state.user !== null) {
         if (Spark.state.user.logo_url !== null) {
             img.src = Spark.state.user.logo_url;

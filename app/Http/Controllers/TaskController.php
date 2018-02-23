@@ -169,11 +169,14 @@ class TaskController extends Controller
      */
     public function destroy(Request $request)
     {
-        // TODO: fix this query so it uses eloqouent so that it does not face sql injection attacks
         // remove the task from the job
-        $statement = "Delete from job_task where job_id = ".$request->jobId." AND task_id = ".$request->taskId;
-        $totalDrugs = DB::delete($statement);
-//        \App\Task::destroy($request->taskId);
+        $jobTask = JobTask::where('job_id', $request->jobId)->where('task_id', $request->taskId)->firstOrFail();
+        
+        try {
+            $jobTask->delete();
+        } catch (\Excpetion $e) {
+            Log::error('Deleteing JobTask: ' . $e->getMessage());
+        }
     }
 
     public function checkIfSubContractorExits($email, $phone)

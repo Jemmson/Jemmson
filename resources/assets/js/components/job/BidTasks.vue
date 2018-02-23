@@ -12,7 +12,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(task, index) in bid.tasks" v-bind:key="index">
+            <tr v-for="(task, index) in bid.tasks" v-if="task.job_task !== null" v-bind:key="index">
                 <td>{{ task.name }}</td>
                 <td>
                     <input v-if="showTaskPriceInput()" type="text" :value="taskCustFinalPrice(task.job_task.cust_final_price)"
@@ -123,7 +123,9 @@
       generalTotalTaskPrice () {
         let total = 0;
         for (const task of this.bid.tasks) {
-          total += task.job_task.cust_final_price;
+          if (task.job_task !== null) {
+            total += task.job_task.cust_final_price;
+          }
         }
         return total;
       },
@@ -192,6 +194,9 @@
        * customer task price
        */
       subTaskPrice (task) {
+        if (task.job_task === null) {
+          return 0;
+        }
         if (task.job_task.bid_id === null) {
           return 0;
         } else {

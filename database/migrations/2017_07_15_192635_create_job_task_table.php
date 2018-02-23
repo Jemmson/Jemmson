@@ -30,11 +30,12 @@ class CreateJobTaskTable extends Migration
             $table->float('sub_final_price')->nullable();
             $table->boolean('start_when_accepted')->default(false);
             $table->timestamp('start_date')->nullable();
-            $table->timestamps();
             
             $table->foreign('job_id')->references('id')->on('jobs');
             $table->foreign('task_id')->references('id')->on('tasks');
             
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 

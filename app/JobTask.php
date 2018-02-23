@@ -2,9 +2,14 @@
 namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\BidContractorJobTask;
+
 
 class JobTask extends Model
 {
+    use SoftDeletes;
     protected $table = "job_task";
     protected $fillable = ['job_id', 'task_id'];
 
@@ -26,6 +31,11 @@ class JobTask extends Model
     public function location()
     {
         return $this->hasOne(Location::class, 'id', 'location_id');
+    }
+
+    public function bidContractorJobTasks()
+    {
+        return $this->hasMany(BidContractorJobTask::class, 'job_id', 'job_id')->where('job_id', $this->job_id)->where('task_id', $this->task_id);
     }
 
     public function updateLocation($request)
