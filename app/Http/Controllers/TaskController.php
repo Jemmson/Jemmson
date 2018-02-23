@@ -659,11 +659,11 @@ class TaskController extends Controller
 
         // notify
         $contractor = User::find($task->contractor_id);
-        $contractor->notify(new TaskWasNotApproved($task, $contractor));
+        $contractor->notify(new TaskWasNotApproved($task, $contractor, $request->message));
 
         if ($jobTask->contractor_id !== $task->contractor_id) {
             $subContractor = User::find($jobTask->contractor_id);
-            $subContractor->notify(new TaskWasNotApproved($task, $subContractor));
+            $subContractor->notify(new TaskWasNotApproved($task, $subContractor, $request->message));
         }
 
         return response()->json($task, 200);
