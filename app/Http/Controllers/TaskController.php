@@ -602,7 +602,7 @@ class TaskController extends Controller
     {
         
         $this->validate($request, [
-            'taskName' => 'required|string',
+            'taskName' => 'required|alpha_num',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
