@@ -23,7 +23,7 @@
                         </span>
                         <div class="panel-footer" v-if="taskResults.length">
                             <ul class="list-group">
-                                <button class="list-group-item" v-for="result in taskResults" v-bind:key="result.id" @click="fillTaskValues(result)">
+                                <button class="list-group-item" v-for="result in taskResults" v-bind:key="result.id" @click.prevent="fillTaskValues(result)">
                                     {{ result.name }}
                                 </button>
                             </ul>
@@ -48,7 +48,7 @@
 
                     <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                         <label for="custTaskPrice">Customer Task Price</label>
-                        <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="addNewTaskForm.taskPrice">
+                        <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
                         <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
                             {{ addNewTaskForm.errors.get('taskPrice') }}
                         </span>
@@ -56,7 +56,7 @@
 
                     <div class="form-group col-md-6" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
                         <label for="subTaskPrice">Sub Task Price</label>
-                        <input type="text" class="form-control" id="subTaskPrice" name="subTaskPrice" v-model="addNewTaskForm.subTaskPrice">
+                        <input type="text" class="form-control" id="subTaskPrice" name="subTaskPrice" v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
                         <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
                             {{ addNewTaskForm.errors.get('subTaskPrice') }}
                         </span>
@@ -100,6 +100,9 @@
             }
         },
         methods: {
+            formatPrice(price) {
+                Format.addDollarSign(this.addNewTaskForm, price);
+            },
             getExistingTask() {
                 this.taskResults = [];
                 if (this.addNewTaskForm.taskName.length > 2) {
@@ -134,14 +137,11 @@
             fillTaskValues(result) {
                 console.log(result)
                 this.taskExists = true
-                // input fields
-                this.addNewTaskForm.taskName = result.name
-                this.addNewTaskForm.taskPrice = result.proposed_cust_price
-                this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
-                // comparison values
-                // this.selectedTaskName = result.name
-                // this.selectedTaskPrice = result.proposed_cust_price
-                // this.selectedSubTaskPrice = result.proposed_sub_price
+                this.addNewTaskForm.taskName = result.name;
+                this.addNewTaskForm.taskPrice = result.proposed_cust_price;
+                this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
+                this.formatPrice('taskPrice');
+                this.formatPrice('subTaskPrice');
                 this.clearTaskResults()
             },
             clearTaskResults() {
