@@ -31,7 +31,10 @@ Vue.component('bid-tasks', require('./job/BidTasks.vue'));
 Vue.component('bid-task', require('./job/BidTask.vue'));
 Vue.component('bid-add-task', require('./job/BidAddTask.vue'));
 
+// Shared Components
 Vue.component('modal', require('./shared/Modal.vue'));
+Vue.component('brand', require('./shared/Brand.vue'));
+
 
 // require('./Autocomplete.vue');
 
