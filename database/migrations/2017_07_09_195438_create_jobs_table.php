@@ -23,7 +23,7 @@ class CreateJobsTable extends Migration
 
             $table->string('job_name');
             $table->string('status')->nullable();
-            $table->float('bid_price')->nullable();
+            $table->float('bid_price')->default(0.00);
 
             $table->dateTime('completed_bid_date')->nullable();
             $table->dateTime('agreed_start_date')->nullable();
