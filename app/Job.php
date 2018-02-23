@@ -220,6 +220,32 @@ class Job extends Model
         }
     }
 
+    public function addPrice($amount)
+    {
+        $this->bid_price += $amount;
+
+        try {
+            $this->save();
+        } catch(\Exception $e) {
+            Log::error('Adding Price To Job: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public function subtractPrice($amount)
+    {
+        $this->bid_price -= $amount;
+
+        try {
+            $this->save();
+        } catch(\Exception $e) {
+            Log::error('Adding Price To Job: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Helper function to create a JobActions
      * related to this Job model

@@ -170,6 +170,7 @@ class TaskController extends Controller
     public function destroy(Request $request)
     {
         // remove the task from the job
+        $job = Job::find($request->jobId);
         $jobTask = JobTask::where('job_id', $request->jobId)->where('task_id', $request->taskId)->firstOrFail();
         
         try {
@@ -177,6 +178,8 @@ class TaskController extends Controller
         } catch (\Excpetion $e) {
             Log::error('Deleteing JobTask: ' . $e->getMessage());
         }
+
+        $job->subtractPrice($jobTask->cust_final_price);
     }
 
     public function checkIfSubContractorExits($email, $phone)
@@ -538,11 +541,20 @@ class TaskController extends Controller
         $price = $request->price;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
+        $job = Job::find($jobId);
+        $jobTask = JobTask::where('job_id', $jobId)
+                            ->where('task_id', $taskId)
+                            ->firstOrFail();
+        $oldPrice = $jobTask->cust_final_price;
 
-        DB::table('job_task')
-            ->where('job_id', $jobId)
-            ->where('task_id', $taskId)
-            ->update(['cust_final_price' => $price]);
+        try {
+            $jobTask->cust_final_price = $price;
+            $jobTask->save();
+         } catch (\Excpetion $e) {
+             Log::error('Updating JobTask: ' . $e->getMessage);
+         }
+
+        $job->addPrice($price - $oldPrice);
 
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
@@ -607,7 +619,7 @@ class TaskController extends Controller
         
         $task->proposed_cust_price = $request->taskPrice;
         $task->proposed_sub_price = $request->subTaskPrice;
-
+        
         try {
             $task->save();
         } catch (\Exception $e) {
@@ -618,6 +630,8 @@ class TaskController extends Controller
         // update or create job task for task
         $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
         $this->updateJobTask($request, $task->id, $jobTask);
+        // add to total job price
+        $job->addPrice($request->taskPrice);
         
         $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
