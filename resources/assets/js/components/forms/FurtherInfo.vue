@@ -97,7 +97,7 @@
                         </div>
 
                         <div v-if="!passwordUpdated">
-                            <h3>Update Password</h3>
+                            <h3>Create Password</h3>
                             <div class="update_password" style="border: solid thin black">
                                 <div class="update_password_inputs"
                                      style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
