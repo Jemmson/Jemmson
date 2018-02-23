@@ -34,7 +34,7 @@
                                         <td>{{ bid.job_name }}</td>
                                         <td>{{ prettyDate(bid.agreed_start_date) }}</td>
                                         <td>{{ status(bid) }}</td>
-                                        <td>{{ bid.bid_price }}</td>
+                                        <td>${{ bid.bid_price }}</td>
                                         <td>
                                             <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button>
                                         </td>

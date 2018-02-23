@@ -169,11 +169,17 @@ class TaskController extends Controller
      */
     public function destroy(Request $request)
     {
-        // TODO: fix this query so it uses eloqouent so that it does not face sql injection attacks
         // remove the task from the job
-        $statement = "Delete from job_task where job_id = ".$request->jobId." AND task_id = ".$request->taskId;
-        $totalDrugs = DB::delete($statement);
-//        \App\Task::destroy($request->taskId);
+        $job = Job::find($request->jobId);
+        $jobTask = JobTask::where('job_id', $request->jobId)->where('task_id', $request->taskId)->firstOrFail();
+        
+        try {
+            $jobTask->delete();
+        } catch (\Excpetion $e) {
+            Log::error('Deleteing JobTask: ' . $e->getMessage());
+        }
+
+        $job->subtractPrice($jobTask->cust_final_price);
     }
 
     public function checkIfSubContractorExits($email, $phone)
@@ -535,11 +541,20 @@ class TaskController extends Controller
         $price = $request->price;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
+        $job = Job::find($jobId);
+        $jobTask = JobTask::where('job_id', $jobId)
+                            ->where('task_id', $taskId)
+                            ->firstOrFail();
+        $oldPrice = $jobTask->cust_final_price;
 
-        DB::table('job_task')
-            ->where('job_id', $jobId)
-            ->where('task_id', $taskId)
-            ->update(['cust_final_price' => $price]);
+        try {
+            $jobTask->cust_final_price = $price;
+            $jobTask->save();
+         } catch (\Excpetion $e) {
+             Log::error('Updating JobTask: ' . $e->getMessage);
+         }
+
+        $job->addPrice($price - $oldPrice);
 
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
@@ -587,7 +602,7 @@ class TaskController extends Controller
     {
         
         $this->validate($request, [
-            'taskName' => 'required|string',
+            'taskName' => 'required|alpha_num',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
@@ -604,7 +619,7 @@ class TaskController extends Controller
         
         $task->proposed_cust_price = $request->taskPrice;
         $task->proposed_sub_price = $request->subTaskPrice;
-
+        
         try {
             $task->save();
         } catch (\Exception $e) {
@@ -615,6 +630,8 @@ class TaskController extends Controller
         // update or create job task for task
         $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
         $this->updateJobTask($request, $task->id, $jobTask);
+        // add to total job price
+        $job->addPrice($request->taskPrice);
         
         $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
@@ -642,11 +659,11 @@ class TaskController extends Controller
 
         // notify
         $contractor = User::find($task->contractor_id);
-        $contractor->notify(new TaskWasNotApproved($task, $contractor));
+        $contractor->notify(new TaskWasNotApproved($task, $contractor, $request->message));
 
         if ($jobTask->contractor_id !== $task->contractor_id) {
             $subContractor = User::find($jobTask->contractor_id);
-            $subContractor->notify(new TaskWasNotApproved($task, $subContractor));
+            $subContractor->notify(new TaskWasNotApproved($task, $subContractor, $request->message));
         }
 
         return response()->json($task, 200);

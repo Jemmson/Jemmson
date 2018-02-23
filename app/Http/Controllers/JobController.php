@@ -61,7 +61,7 @@ class JobController extends Controller
         $validator = Validator::make($request->all(), [
             'agreed_start_date' => 'required',
             'agreed_end_date' => 'required',
-            'bid_price' => 'required'
+            'bid_price' => 'required|numeric'
         ]);
         Log::info($request->all());
         if ($validator->fails()) {

@@ -81,6 +81,9 @@ export default class GeneralContractor {
         
         form.jobId = bid.id;
         form.contractorId = Spark.state.user.id;
+
+        Format.numbers(form, 'taskPrice');
+        Format.numbers(form, 'subTaskPrice');
         
         Spark.post('/api/task/addTask', form)
             .then((response) => {

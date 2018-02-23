@@ -83,6 +83,7 @@ export default class Customer {
       User.emitChange('bidUpdated');
       Vue.toasted.success('Task Denied & Notification Sent');
       disabled.deny = false;
+      disabled.showDenyForm = false;
     } catch (error) {
       error = error.response.data;
       Vue.toasted.error(error.message);

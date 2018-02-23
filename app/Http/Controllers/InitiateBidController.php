@@ -41,7 +41,8 @@ class InitiateBidController extends Controller
         $this->validate($request, [
             'email' => 'required_without:phone|email',
             'phone' => 'required_without:email|min:7|max:10',
-            'customerName' => 'required'
+            'customerName' => 'required',
+            'jobName' => 'alpha_num|nullable'
         ]);
 
 

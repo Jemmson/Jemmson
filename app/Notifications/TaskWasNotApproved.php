@@ -13,16 +13,17 @@ use App\User;
 class TaskWasNotApproved extends Notification
 {
     use Queueable;
-    protected $task, $user;
+    protected $task, $user, $message;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Task $task, User $user)
+    public function __construct(Task $task, User $user, string $message = '')
     {
         $this->task = $task;
         $this->user = $user;
+        $this->message = $message;
     }
 
     /**
@@ -47,12 +48,14 @@ class TaskWasNotApproved extends Notification
         if ($this->task->contractor_id !== $this->user->id) {
             return (new MailMessage)
                     ->line('Task was not approved. Sub Contractor.')
+                    ->line($this->message)
                     ->action('View Job', url('/login/sub/task/' . $this->task->id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
         }
 
         return (new MailMessage)
                     ->line('Task was not approved. General Contractor.')
+                    ->line($this->message)
                     ->action('View Job', url('/login/contractor/' . $this->task->job_id . '/' . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
     }
