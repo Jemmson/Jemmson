@@ -302,8 +302,16 @@ class TaskController extends Controller
 
         $user = $userData[0];
         $userExists = $userData[1];
-
-        $contractor = $user->contractor()->first();
+        // TODO: customer cant be their own subcontractor on own job
+        if ($user->contractor()->first() !== null) {
+            $contractor = $user->contractor()->first();
+        } else {
+            $contractor = Contractor::create(
+                [
+                    'user_id' => $user->id
+                ]
+            );
+        }
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
         if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
