@@ -61,6 +61,15 @@
                             {{ addNewTaskForm.errors.get('subTaskPrice') }}
                         </span>
                     </div>
+
+                    <div class="form-group col-md-12" :class="{'has-error': addNewTaskForm.errors.has('details')}">
+                        <label for="details">Details</label>
+                        <input type="text" class="form-control" id="details" name="details" v-model="addNewTaskForm.details">
+                        <span class="help-block" v-show="addNewTaskForm.errors.has('details')">
+                            {{ addNewTaskForm.errors.get('details') }}
+                        </span>
+                    </div>
+
                     <div class=" col-md-12">
                         <button
                                 id="addTaskToInvoice"
@@ -94,7 +103,8 @@
                     contractorId: '',
                     area: this.bid.city,
                     start_date: '',
-                    start_when_accepted: true
+                    start_when_accepted: true,
+                    details: '',
                 }),
                 taskResults: [],
             }

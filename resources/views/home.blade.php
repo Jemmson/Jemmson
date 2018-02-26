@@ -15,6 +15,8 @@
                     <button class="btn btn-primary btn-large">Bid Tasks</button>
                     <button class="btn btn-primary btn-large">Bid Lists</button>
                     <button class="btn btn-primary btn-large">Settings</button>
+                    <express-dashboard-stripe>
+                    </express-dashboard-stripe>
                 </div>
             </div>
 

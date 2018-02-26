@@ -28,7 +28,7 @@
             <input name="email" type="email" id="email" v-model="email" class="form-control">
         </label>
         <label for="phone">Phone
-            <input name="phone" type="text" id="phone" v-model="phone" class="form-control">
+            <input name="phone" type="text" id="phone" class="form-control" maxlength="10" v-model="phone" @keyup="filterPhone">
         </label>
         <br>
         <br>
@@ -46,6 +46,9 @@
       }
     },
     methods: {
+      filterPhone () {
+        this.phone = Format.phone(this.phone);
+      },
       autoComplete () {
         this.results = [];
         if (this.query.length > 2) {

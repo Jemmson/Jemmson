@@ -21,6 +21,7 @@ use App\BidContractorJobTask;
 use App\JobTask;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
+use App\Services\SanatizeService;
 use Illuminate\Support\Facades\DB;
 
 use Auth;
@@ -278,12 +279,12 @@ class TaskController extends Controller
     {
 
         $this->validate($request, [
-            'phone' => 'required|string',
+            'phone' => 'required|string|min:10|max:14',
             'email' => 'required|email',
             'taskId' => 'required',
         ]);
 
-        $phone = $request->phone;
+        $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
@@ -302,16 +303,8 @@ class TaskController extends Controller
 
         $user = $userData[0];
         $userExists = $userData[1];
-        // TODO: customer cant be their own subcontractor on own job
-        if ($user->contractor()->first() !== null) {
-            $contractor = $user->contractor()->first();
-        } else {
-            $contractor = Contractor::create(
-                [
-                    'user_id' => $user->id
-                ]
-            );
-        }
+
+        $contractor = $user->contractor()->first();
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
         if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
@@ -610,7 +603,7 @@ class TaskController extends Controller
     {
         
         $this->validate($request, [
-            'taskName' => 'required|alpha_num',
+            'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
@@ -701,6 +694,7 @@ class TaskController extends Controller
         $jobTask->cust_final_price = $request->taskPrice;
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
+        $jobTask->details = $request->details;
 //        $jobTask->area = $request->area;
         if ($request->start_when_accepted) {
             $jobTask->start_when_accepted = true;

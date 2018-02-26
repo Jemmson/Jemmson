@@ -39,7 +39,7 @@ Route::group([
 
 Route::get('/search', function (Request $request) {
     $query = $request->query('query');
-    $users = \App\User::where('name', 'like', '%' . $query . '%')->get();
+    $users = \App\User::where('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'customer')->get();
     return $users;
 });
 

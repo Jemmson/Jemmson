@@ -30,7 +30,7 @@
                             </div>
                             <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
                                 <label for="phone">Phone *</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" required v-model="initiateBidForSubForm.phone" @blur="mouseLeave('phone')">
+                                <input type="tel" class="form-control" id="phone" name="phone" maxlength="10" required v-model="initiateBidForSubForm.phone" @keyup="filterPhone">
                                 <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
                                     {{ initiateBidForSubForm.errors.get('phone') }}
                                 </span>
@@ -69,7 +69,7 @@
                         <tbody>
                             <tr class="table" v-for="bid in task.bid_contractor_job_tasks" :key="bid.id">
                                 <td>{{ bid.contractor.name }}</td>
-                                <td>{{ bid.bid_price }}</td>
+                                <td>${{ bid.bid_price }}</td>
                                 <td>
                                     <button @click="preview(task, bid.id)" class="button btn btn-sm btn-info">Preview
                                     </button>
@@ -121,6 +121,9 @@
             }
         },
         methods: {
+            filterPhone(){
+                this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone);
+            },
             acceptSubBidForTask(bid) {
                 GeneralContractor.acceptSubBidForTask(this.task, bid, this.disabled);
             },

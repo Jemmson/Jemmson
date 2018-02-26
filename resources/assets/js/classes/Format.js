@@ -10,4 +10,9 @@ export default class Format {
     static numbersOnly(num) {
         return num.toString().replace(/[^0-9.]/g, "");
     }
+
+    static phone(phone) {
+        return phone.replace(/[^0-9]/g, '')
+            .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+    }
 }
