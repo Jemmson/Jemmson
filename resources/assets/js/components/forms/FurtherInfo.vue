@@ -25,8 +25,7 @@
                         <div class="form-group" :class="{'has-error': form.errors.has('phone_number')}">
                             <label class="col-md-3 control-label">Phone Number</label>
                             <div class="col-md-8">
-                                <input type="tel" class="form-control" name="phone_number" v-model="form.phone_number"
-                                       autofocus>
+                                <input type="tel" class="form-control" name="phone_number" maxlength="10" v-model="form.phone_number" @keyup="filterPhone">
                                 <span class="help-block" v-show="form.errors.has('phone_number')">
                                     {{ form.errors.get('phone_number') }}
                                 </span>
@@ -251,6 +250,9 @@
       }
     },
     methods: {
+        filterPhone(){
+            this.form.phone_number = Format.phone(this.form.phone_number);
+        },
         confirmPassword() {
             if (this.form.password !== this.form.password_confirmation) {
                 this.form.errors.errors = {
