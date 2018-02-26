@@ -21,6 +21,7 @@ use App\BidContractorJobTask;
 use App\JobTask;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
+use App\Services\SanatizeService;
 use Illuminate\Support\Facades\DB;
 
 use Auth;
@@ -278,12 +279,12 @@ class TaskController extends Controller
     {
 
         $this->validate($request, [
-            'phone' => 'required|string',
+            'phone' => 'required|string|min:10|max:14',
             'email' => 'required|email',
             'taskId' => 'required',
         ]);
 
-        $phone = $request->phone;
+        $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
         $taskId = $request->taskId;
         $jobId = $request->jobId;

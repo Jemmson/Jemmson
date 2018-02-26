@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
+use App\Services\SanatizeService;
+
 
 class HomeController extends Controller
 {
@@ -47,17 +49,18 @@ class HomeController extends Controller
 
     public function create(Request $request)
     {
-        // TODO: Need to make the user_id unique and update if the user is already in the table
         $this->validate(
-        $request,
+            $request,
             [
-                'phone_number' => 'required|min:7|max:10',
+                'phone_number' => 'required|min:10|max:14',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',
                 'zip' => 'required|min:2',
-            ]
-        );
+                ]
+            );
+
+        $phone = SanatizeService::phone($request->phone_number);
 
         if (!Auth::user()->password_updated) {
             $this->validate($request, [
@@ -111,7 +114,7 @@ class HomeController extends Controller
             ]);
         }
 
-        $this->updateUsersPhoneNumber($request->phone_number, $user_id);
+        $this->updateUsersPhoneNumber($phone, $user_id);
 
         if (empty(session('prevDestination'))) {
             return response()->json('home', 200);

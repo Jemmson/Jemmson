@@ -13,6 +13,7 @@ use App\Mail\PasswordlessBidPageLogin;
 use Illuminate\Support\Facades\DB;
 use App\Services\RandomPasswordService;
 use App\Notifications\BidInitiated;
+use App\Services\SanatizeService;
 
 class InitiateBidController extends Controller
 {
@@ -40,15 +41,14 @@ class InitiateBidController extends Controller
 
         $this->validate($request, [
             'email' => 'required_without:phone|email',
-            'phone' => 'required_without:email|min:7|max:10',
+            'phone' => 'required_without:email|min:10|max:14',
             'customerName' => 'required',
-            'jobName' => 'alpha_num|nullable'
+            'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
 
-
         $customerName = $request->customerName;
+        $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
-        $phone = $request->phone;
         $jobName = $request->jobName;
 
 
