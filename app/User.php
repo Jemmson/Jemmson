@@ -215,7 +215,9 @@ class User extends SparkUser
      */
     public function routeNotificationForNexmo()
     {
-        return $this->phone;
+        // NOTICE: only handling US phone numbers
+        // this along with phone validation will need to be updated to handle other country phone numbers
+        return '1' . $this->phone;
     }
 
 }
