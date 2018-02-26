@@ -603,7 +603,7 @@ class TaskController extends Controller
     {
         
         $this->validate($request, [
-            'taskName' => 'required|alpha_num',
+            'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
@@ -694,6 +694,7 @@ class TaskController extends Controller
         $jobTask->cust_final_price = $request->taskPrice;
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
+        $jobTask->details = $request->details;
 //        $jobTask->area = $request->area;
         if ($request->start_when_accepted) {
             $jobTask->start_when_accepted = true;
