@@ -130,6 +130,7 @@ class TaskController extends Controller
     public function updateBidContractorJobTask(Request $request, $id)
     {
         $bidContractorJobTask = BidContractorJobTask::find($id);
+
         if ($bidContractorJobTask == null) {
             return response()->json(["message"=>"Couldn't find record.","errors"=>["error" =>["Couldn't find record."]]], 404);
         }else if($request->bid_price == 0) {
@@ -137,7 +138,7 @@ class TaskController extends Controller
         }
 
         $bidContractorJobTask->bid_price = $request->bid_price;
-        $jobTask = $bidContractorJobTask->jobTask()->first();
+        $jobTask = JobTask::where('job_id', $bidContractorJobTask->job_id)->where('task_id', $bidContractorJobTask->task_id)->first();
         // doesn't work since no default 'id' found
         // $jobTask->status = 'bid_task.sent';
 
@@ -148,14 +149,8 @@ class TaskController extends Controller
             return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
         }
 
-        try {
-            \DB::table('job_task')
-            ->where([['job_id', '=', $jobTask->job_id], ['task_id', '=', $jobTask->task_id]])
-            ->update(['status' => __('bid_task.bid_sent')]);
-        } catch (\Exception $e) {
-            Log::error('Update Job Task: ' . $e->getMessage());
-            return response()->json(["message"=>"Couldn't save record.","errors"=>["error" =>[$e->getMessage()]]], 404);
-        }
+        $jobTask->updateStatus(__('bid_task.bid_sent'));
+
         $gContractor = User::find($bidContractorJobTask->task()->first()->contractor_id);
         $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
 
@@ -290,19 +285,15 @@ class TaskController extends Controller
         $jobId = $request->jobId;
         $name = $request->name;
 
-        if ($this
-            ->checkIfNameIsDifferentButPhoneAndEmailExistInTheDatabase($name,
-                $phone, $email)) {
-            return response()->json(["message"=>"Contractor Exists Select Them From the Dropdown List.","errors"=>["error" => "error"]], 422);
+        $user = User::where('phone', $phone)->orWhere('email', $email)->first();
+
+        if ($user === null) {
+            // if no user found create one
+            $user = $this->createNewUser($email, $phone);
+        } else if ($user->usertype === 'customer') {
+            // return if the user is a customer
+            return response()->json(["message"=>"Not a valid user.","errors"=>["error" => "No valid user."]], 422);
         }
-
-        // does the subcontractor exist?
-        // if not then create a new one
-        $userData = $this->checkIfSubContractorExits($email, $phone);
-
-
-        $user = $userData[0];
-        $userExists = $userData[1];
 
         $contractor = $user->contractor()->first();
 
@@ -656,7 +647,7 @@ class TaskController extends Controller
         $task = Task::find($request->id);
         $jobTask = $task->jobTask()->first();
 
-        $jobTask->updateStatus(__('bid_task.reopened'));
+        $jobTask->updateStatus(__('bid_task.denied'));
 
         // notify
         $contractor = User::find($task->contractor_id);

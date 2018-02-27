@@ -185,7 +185,7 @@
         return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer ();
       },
       showFinishedBtn (task) {
-        if (this.isContractor && this.isAssignedToMe (task) && (task.job_task.status === 'bid_task.approved_by_customer' || task.job_task.status === 'bid_task.reopened')) {
+        if (this.isContractor && this.isAssignedToMe (task) && (task.job_task.status === 'bid_task.approved_by_customer' || task.job_task.status === 'bid_task.reopened' || task.job_task.status === 'bid_task.denied')) {
           return true;
         }
         return false;
@@ -198,7 +198,7 @@
       },
       showDeleteBtn (task) {
         const status = task.job_task.status;
-        if (this.isGeneral && (status !== 'bid_task.approved_by_customer' && status !== 'bid_task.reopened' && status !== 'bid_task.customer_sent_payment')) {
+        if (this.isGeneral && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent')) {
           return true;
         }
         return false;

@@ -3,7 +3,7 @@ export default class Language {
     return {
       // initiated
       'bid_task.initiated': {
-        sub: 'Please Bid On This Task',
+        sub: '',
         general: 'Initiated',
         customer: 'Initiated'
       },
@@ -51,6 +51,11 @@ export default class Language {
         sub: 'Waiting on Contractor Approval',
         general: 'Reopened',
         customer: 'Reopened'
+      },
+      'bid_task.denied': {
+        sub: 'Work not approved',
+        general: 'Work not approved',
+        customer: 'Not Approved, Waiting for Resubmit'
       },
       'bid.initiated': {
         sub: 'Waiting on General Contractor to finish job bid',

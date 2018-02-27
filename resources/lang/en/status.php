@@ -24,7 +24,7 @@ return [
         'approved_by_customer' => 'bid_task.approved_by_customer',
         'customer_sent_payment' => 'bid_task.customer_sent_payment',
         'reopened' => 'bid_task.reopened',
-        
+        'denied' => 'bid_task.denied',
     ],
     'bid' => [
         'initiated' => 'bid.initiated',

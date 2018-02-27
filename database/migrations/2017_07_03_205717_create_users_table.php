@@ -17,8 +17,12 @@ class CreateUsersTable extends Migration
             $table->integer('location_id')->unique()->nullable(); 
             $table->string('name');
             $table->string('email')->unique()->nullable();
+            $table->string('usertype')->default('customer');
+
             $table->string('password', 60);
+            $table->boolean('password_updated')->default(1);
             $table->rememberToken();
+            
             $table->text('photo_url')->nullable();
             $table->text('logo_url')->nullable();
             
@@ -42,8 +46,6 @@ class CreateUsersTable extends Migration
             $table->text('extra_billing_information')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('last_read_announcements_at')->nullable();
-            $table->boolean('password_updated')->default(1);
-            $table->string('usertype')->default('customer');
             $table->timestamps();
         });
     }
