@@ -117,21 +117,21 @@
       getArea (bidTask) {
         // console.log(bidTask)
         // debugger
-        Customer.getArea(bidTask.job_id, this.area)
-        this.localArea = this.area
+        // Customer.getArea(bidTask.job_id, this.area)
+        // this.localArea = this.area
 
-        return this.localArea.area
+        // return this.localArea.area
       },
       getAddress (bidTask) {
-        Customer.getAddress(bidTask.task.jobs[0].location_id, this.location)
-        if(bidTask.job_task.status === 'bid_task.accepted') {
-            return this.location.location
-        } else {
-          return 'Pending'
-        }
+        // Customer.getAddress(bidTask.task.jobs[0].location_id, this.location)
+        // if(bidTask.job_task.status === 'bid_task.accepted') {
+        //     return this.location.location
+        // } else {
+        //   return 'Pending'
+        // }
       },
       showFinishedBtn (bid) {
-        return bid.job_task.status === 'bid_task.approved_by_customer';
+        return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied';
       },
       isBidOpen (bid) {
         let acceptedBid = bid.job_task.bid_id;
@@ -162,7 +162,7 @@
         let id = e.target.id;
         let bid_price = $ ('#price-' + id).val ();
         this.disabled.submit = true;
-        console.log (id, bid_price);
+        console.log(id, bid_price);
         axios.put ('/api/bid/task/' + id, {
           id: id,
           bid_price: bid_price
