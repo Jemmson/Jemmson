@@ -103,13 +103,10 @@
         }
       },
       fillFields (result) {
-        console.log (result);
-        console.log (result.email);
-        console.log (result.phone);
-        console.log (result.name);
         this.form.email = result.email;
         this.form.phone = result.phone;
         this.form.customerName = result.name;
+        this.results = [];
       }
     }
   }
