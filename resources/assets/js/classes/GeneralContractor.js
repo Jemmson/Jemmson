@@ -6,6 +6,21 @@ export default class GeneralContractor {
         this.user = Spark.state.user;
     }
 
+    async initiateBid(form, disabled) {
+        disabled.submit = true;
+        try {
+            const data = await axios.post('/initiate-bid', form);
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Bid Initiated');
+            disabled.submit = false;
+            window.location = '/bid-list';
+        } catch (error) {
+            error = error.response.data;
+            Vue.toasted.error(error.message);
+            disabled.submit = false;
+        }
+    }
+
     notifyCustomerOfFinishedBid(bid) {
         if (User.recievePaymentsWithStripe()) {
             if (!User.stripeExpressConnected()) {
@@ -74,17 +89,17 @@ export default class GeneralContractor {
         // I want each task to be added to the the tasks table
         // I want the task to associated to a job, customer, and contractor
         // I want to add the existing task to the job
-        
+
         // TODO: handle tasks existing
         form.taskId = 1;
         form.taskExists = false;
-        
+
         form.jobId = bid.id;
         form.contractorId = Spark.state.user.id;
 
         Format.numbers(form, 'taskPrice');
         Format.numbers(form, 'subTaskPrice');
-        
+
         Spark.post('/api/task/addTask', form)
             .then((response) => {
                 console.log(response)
@@ -108,26 +123,26 @@ export default class GeneralContractor {
             });
     }
 
-    updateCustomerPrice (price, taskId, jobId) {
-      console.log(price)
-      if (price === '') {
-        price = 0
-      }
-      console.log(price)
-      axios.post('/api/task/updateCustomerPrice', {
-        jobId: jobId,
-        taskId: taskId,
-        price: price
-      }).then((response) => {
-        User.emitChange('bidUpdated');
-        Vue.toasted.success(Language.lang().bid_task.price_updated.general);
-        // console.log(response.data)
-        // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
-      }).catch(error => {
-        console.error(error);
-        // show a toast notification
-        Vue.toasted.error('Error: ' + error.message);
-      });
+    updateCustomerPrice(price, taskId, jobId) {
+        console.log(price)
+        if (price === '') {
+            price = 0
+        }
+        console.log(price)
+        axios.post('/api/task/updateCustomerPrice', {
+            jobId: jobId,
+            taskId: taskId,
+            price: price
+        }).then((response) => {
+            User.emitChange('bidUpdated');
+            Vue.toasted.success(Language.lang().bid_task.price_updated.general);
+            // console.log(response.data)
+            // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
+        }).catch(error => {
+            console.error(error);
+            // show a toast notification
+            Vue.toasted.error('Error: ' + error.message);
+        });
     }
 
     approveTaskHasBeenFinished(task, disabled) {
@@ -168,7 +183,9 @@ export default class GeneralContractor {
     async jobCompleted(job, disabled) {
         disabled.jobCompleted = true;
         try {
-            const data = await axios.post('/api/job/completed', {id: job.id});
+            const data = await axios.post('/api/job/completed', {
+                id: job.id
+            });
             User.emitChange('bidUpdated');
             Vue.toasted.success('Job Completed');
             disabled.jobCompleted = false;
