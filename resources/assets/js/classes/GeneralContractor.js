@@ -16,6 +16,7 @@ export default class GeneralContractor {
             window.location = '/bid-list';
         } catch (error) {
             error = error.response.data;
+            form.errors.errors = error.errors;
             Vue.toasted.error(error.message);
             disabled.submit = false;
         }
