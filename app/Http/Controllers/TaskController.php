@@ -641,15 +641,16 @@ class TaskController extends Controller
             'id' => 'required',
         ]);
 
-
         $task = Task::find($request->id);
         $jobTask = $task->jobTask()->first();
 
         $jobTask->updateStatus(__('bid_task.denied'));
 
         // notify
-        $contractor = User::find($task->contractor_id);
-        $contractor->notify(new TaskWasNotApproved($task, $contractor, $request->message));
+        if ($request->user_id !== $task->contractor_id) {
+            $contractor = User::find($task->contractor_id);
+            $contractor->notify(new TaskWasNotApproved($task, $contractor, $request->message));
+        }
 
         if ($jobTask->contractor_id !== $task->contractor_id) {
             $subContractor = User::find($jobTask->contractor_id);
