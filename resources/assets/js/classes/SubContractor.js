@@ -5,6 +5,18 @@ export default class SubContractor {
     constructor() {
         this.user = Spark.state.user;
     }
+
+    async toggleStripePaymentOption(task) {
+        try {
+            const data = await axios.post('/api/task/togglestripe', task);
+            User.emitChange('bidUpdated');
+            Vue.toasted.success('Stripe Payment');
+        } catch (error) {
+            error = error.response.data;
+            form.errors.errors = error.errors;
+            Vue.toasted.error(error.message);
+        }
+    }
     
     /**
      * reopen a task that has been approved or finished

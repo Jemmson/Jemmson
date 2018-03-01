@@ -121,6 +121,24 @@ class TaskController extends Controller
     }
 
     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Task $task
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleStripe(Request $request)
+    {
+        // remove the task from the job
+        $jobTask = Task::find($request->id)->jobTask()->first();
+        
+        if ($jobTask->toggleStripe()) {
+            return response()->json(["message"=>"Success"], 200);
+        } 
+
+        return response()->json(["message"=>"Price needs to be greater than 0.","errors"=>["error" =>[""]]], 412);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -138,7 +156,7 @@ class TaskController extends Controller
         }
 
         $bidContractorJobTask->bid_price = $request->bid_price;
-        $jobTask = JobTask::where('job_id', $bidContractorJobTask->job_id)->where('task_id', $bidContractorJobTask->task_id)->first();
+        $jobTask = Task::find($bidContractorJobTask->task_id)->jobTask()->first();
         // doesn't work since no default 'id' found
         // $jobTask->status = 'bid_task.sent';
 
@@ -167,7 +185,7 @@ class TaskController extends Controller
     {
         // remove the task from the job
         $job = Job::find($request->jobId);
-        $jobTask = JobTask::where('job_id', $request->jobId)->where('task_id', $request->taskId)->firstOrFail();
+        $jobTask = Task::find($taskId)->jobTask()->first();
         
         try {
             $jobTask->delete();
@@ -406,7 +424,7 @@ class TaskController extends Controller
     public function approveTaskHasBeenFinished(Request $request) 
     {
         $task = Task::find($request->id);
-        $jobTask = $task->jobTask()->first();
+        $jobTask =  $task->jobTask()->first();
         $jobTask->status = __("bid_task.approved_by_general");
 
         $customer = User::find(Job::find($jobTask->job_id)->customer_id);
@@ -450,19 +468,16 @@ class TaskController extends Controller
 
         if ($request->current_user_id === $jobTask->contractor_id && $request->current_user_id === $task->contractor_id) {
             $finishedByGeneral = true;
-            $jobTask->status = __("bid_task.finished_by_general");
+            $status = __("bid_task.finished_by_general");
         } else {
-            $jobTask->status = __("bid_task.finished_by_sub");
+            $status = __("bid_task.finished_by_sub");
         }
 
         $customer = User::find(Job::find($jobTask->job_id)->customer_id);
         $generalContractor = User::find($task->contractor_id);
 
-        try {
-            $jobTask->save();
-        } catch (\Exception $e) {
-            Log::error('Updating Task Status: ' . $e->getMessage());
-            return response()->json(["message"=>"Couldn't update status task bid.","errors"=>["error" =>[$e->getMessage()]]], 404);
+        if (!$jobTask->updateStatus($status)) {
+            return response()->json(["message"=>"Couldn't update job task.","errors"=>["error" =>['']]], 422);
         }
 
         if ($finishedByGeneral) {
@@ -530,13 +545,17 @@ class TaskController extends Controller
 
     public function updateCustomerPrice(Request $request)
     {
+        $this->validate($request, [
+            'price' => 'required|numeric',
+            'taskId' => 'required|numeric',
+            'jobId' => 'required|numeric'
+        ]);
+
         $price = $request->price;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $job = Job::find($jobId);
-        $jobTask = JobTask::where('job_id', $jobId)
-                            ->where('task_id', $taskId)
-                            ->firstOrFail();
+        $jobTask = Task::find($taskId)->jobTask()->first();
         $oldPrice = $jobTask->cust_final_price;
 
         try {
@@ -563,9 +582,6 @@ class TaskController extends Controller
             ->where('id', $taskId)
             ->update(['name' => $taskName]);
 
-//        $data = ["price" => $price, "taskId" => $taskId];
-//        $data = json_encode($data);
-//        return $data;
     }
 
     /**
@@ -606,7 +622,7 @@ class TaskController extends Controller
 
         $job = Job::find($job_id);
             
-        // find or create a task
+        // find or create a task TODO: review
         $task = Task::firstOrCreate(['name' => $name, 'job_id' => $job_id, 'contractor_id' => $request->contractorId]);
         
         $task->proposed_cust_price = $request->taskPrice;
@@ -643,15 +659,16 @@ class TaskController extends Controller
             'id' => 'required',
         ]);
 
-
         $task = Task::find($request->id);
         $jobTask = $task->jobTask()->first();
 
         $jobTask->updateStatus(__('bid_task.denied'));
 
         // notify
-        $contractor = User::find($task->contractor_id);
-        $contractor->notify(new TaskWasNotApproved($task, $contractor, $request->message));
+        if ($request->user_id !== $task->contractor_id) {
+            $contractor = User::find($task->contractor_id);
+            $contractor->notify(new TaskWasNotApproved($task, $contractor, $request->message));
+        }
 
         if ($jobTask->contractor_id !== $task->contractor_id) {
             $subContractor = User::find($jobTask->contractor_id);

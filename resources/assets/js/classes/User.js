@@ -3,6 +3,10 @@ export default class User {
         this.user = user;
     }
 
+    getId() {
+        return this.user.id;
+    }
+
     status(status, bid) {
         status = Language.lang()[status];
         if (status === undefined) {
@@ -62,6 +66,11 @@ export default class User {
                 Bus.$emit('taskUpdated');
                 break;
         }
+    }
+
+    // is the task assigned to the currently logged in user
+    isAssignedToMe(task) {
+        return this.user.id === task.job_task.contractor_id;
     }
 
     findTaskBid(id, bids) {
