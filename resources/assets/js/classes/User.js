@@ -2,7 +2,7 @@ export default class User {
     constructor(user) {
         this.user = user;
     }
-    
+
     getId() {
         return this.user.id;
     }
@@ -66,6 +66,11 @@ export default class User {
                 Bus.$emit('taskUpdated');
                 break;
         }
+    }
+
+    // is the task assigned to the currently logged in user
+    isAssignedToMe(task) {
+        return this.user.id === task.job_task.contractor_id;
     }
 
     findTaskBid(id, bids) {

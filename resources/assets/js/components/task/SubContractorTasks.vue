@@ -19,6 +19,7 @@
               <thead>
                 <tr>
                   <th scope="col">#</th>
+                  <th scope="col">Stripe Payment</th>
                   <th scope="col">Task Name</th>
                   <th scope="col">Start Date</th>
                   <th scope="col">Area</th>
@@ -32,6 +33,13 @@
               <tbody>
                 <tr v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
                   <th scope="row">{{ bidTask.id }}</th>
+                  <td>
+                    <!-- Rounded switch -->
+                    <label v-if="showStripeToggle(bidTask.job_task)" class="switch">
+                      <input :id="'toggle-stripe-' + bidTask.task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.task)">
+                      <span class="slider round"></span>
+                    </label>
+                  </td>
                   <td>{{ bidTask.task.name }}</td>
                   <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
                   <td>{{ getArea(bidTask) }}</td>
@@ -158,6 +166,12 @@
         // return the date and ignore the time
         date = date.split (' ');
         return date[0];
+      },
+      showStripeToggle(jobTask) {
+        return jobTask.contractor_id === User.getId();
+      },
+      toggleStripePaymentOption(task) {
+        SubContractor.toggleStripePaymentOption(task);
       },
       finished (bid) {
         SubContractor.finishedTask (bid, this.disabled);

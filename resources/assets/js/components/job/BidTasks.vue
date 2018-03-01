@@ -8,6 +8,7 @@
           <th>Task Price</th>
           <th>Task Sub Price</th>
           <th>Task Status</th>
+          <th>Stripe Payment</th>
           <th></th>
         </tr>
       </thead>
@@ -20,6 +21,14 @@
           </td>
           <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
           <td>{{ status(task.job_task.status) }}</td>
+          <td>
+            <!-- Rounded switch -->
+            <label v-if="showStripeToggle(task)" class="switch">
+              <input :id="'toggle-stripe-' + task.id" type="checkbox" v-model="task.job_task.stripe" @click="toggleStripePaymentOption(task)">
+              <span class="slider round"></span>
+            </label>
+          </td>
+          
           <td>
             <button class="btn btn-primary" @click.prevent="openTaskPanel(index)">Details</button>
 
@@ -148,6 +157,9 @@
       }
     },
     methods: {
+      showStripeToggle(task) {
+        return User.isAssignedToMe(task);
+      },
       openDenyTaskForm(task) {
         if (task.id === this.task.id) {
             this.disabled.showDenyForm = this.disabled.showDenyForm ? false : true;
@@ -189,13 +201,13 @@
         return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer ();
       },
       showFinishedBtn (task) {
-        if (this.isContractor && this.isAssignedToMe (task) && (task.job_task.status === 'bid_task.approved_by_customer' || task.job_task.status === 'bid_task.reopened' || task.job_task.status === 'bid_task.denied')) {
+        if (this.isContractor && User.isAssignedToMe(task) && (task.job_task.status === 'bid_task.approved_by_customer' || task.job_task.status === 'bid_task.reopened' || task.job_task.status === 'bid_task.denied')) {
           return true;
         }
         return false;
       },
       showApproveBtn (task) {
-        if (this.isGeneral && !this.isAssignedToMe (task) && (task.job_task.status === 'bid_task.finished_by_sub' || task.job_task.status === 'bid_task.reopened')) {
+        if (this.isGeneral && !User.isAssignedToMe(task) && (task.job_task.status === 'bid_task.finished_by_sub' || task.job_task.status === 'bid_task.reopened')) {
           return true;
         }
         return false;
@@ -226,15 +238,15 @@
           return User.findTaskBid (task.job_task.bid_id, task.bid_contractor_job_tasks)[0].bid_price;
         }
       },
+      toggleStripePaymentOption(task) {
+        task.checked = $('#toggle-stripe-'+task.id).is(':checked');
+        SubContractor.toggleStripePaymentOption(task);
+      },
       payForTask (task) {
         Customer.payForTask (task, this.disabled);
       },
       paidWithCashTask (task) {
         Customer.paidWithCashTask (task, this.disabled);
-      },
-      // is the task assigned to the currently logged in user
-      isAssignedToMe (task) {
-        return this.user.id === task.job_task.contractor_id;
       },
       openTaskPanel (index) {
         this.$emit ('openTaskPanel', index);

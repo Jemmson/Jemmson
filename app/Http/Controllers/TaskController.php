@@ -121,6 +121,24 @@ class TaskController extends Controller
     }
 
     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Task $task
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleStripe(Request $request)
+    {
+        // remove the task from the job
+        $jobTask = Task::find($request->id)->jobTask()->first();
+        
+        if ($jobTask->toggleStripe()) {
+            return response()->json(["message"=>"Success"], 200);
+        } 
+
+        return response()->json(["message"=>"Price needs to be greater than 0.","errors"=>["error" =>[""]]], 412);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request

@@ -65,6 +65,18 @@ class JobTask extends Model
         }
     }
 
+    public function toggleStripe() {
+        $this->stripe = $this->stripe ? false : true;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Toggle Stripe: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
 
     public function updateStatus($status)
     {
