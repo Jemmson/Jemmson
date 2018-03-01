@@ -170,7 +170,11 @@
         }
       },
       showDenyBtn (task) {
-        return this.isCustomer && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general');
+        const status = task.job_task.status;
+        if (this.isCustomer) {
+            return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general');
+        }
+        return status === 'bid_task.finished_by_sub';
       },
       taskCustFinalPrice (price) {
         return '$' + price;
@@ -243,6 +247,7 @@
       },
       denyTask() {
         this.task.message = this.message;
+        this.task.user_id = User.getId();
         Customer.denyTask(this.task, this.disabled);
       },
       status (status) {

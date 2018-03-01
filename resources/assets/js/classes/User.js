@@ -2,6 +2,10 @@ export default class User {
     constructor(user) {
         this.user = user;
     }
+    
+    getId() {
+        return this.user.id;
+    }
 
     status(status, bid) {
         status = Language.lang()[status];
