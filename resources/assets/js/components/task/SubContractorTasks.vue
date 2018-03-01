@@ -37,10 +37,10 @@
                   <td>{{ getArea(bidTask) }}</td>
                   <td>
                     <div v-if="isBidOpen(bidTask)">
-                      <input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price" />
+                      $<input type="text" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
                     </div>
                     <div v-else>
-                      <input type="text" v-bind:id="'price-' + bidTask.id" v-bind:value="bidTask.bid_price" disabled/>
+                      $<input type="text" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" disabled/>
                     </div>
                     <span class="help-block label label-danger" v-bind:id="'error-' + bidTask.id" style="display: none;">
                     </span>
@@ -114,6 +114,10 @@
       }
     },
     methods: {
+      bidPrice(target) {
+        let price = $('#' + target).val().replace(/[^0-9.]/g, "");
+        $('#' + target).val(price); 
+      },
       getArea (bidTask) {
         // console.log(bidTask)
         // debugger

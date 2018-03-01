@@ -530,6 +530,12 @@ class TaskController extends Controller
 
     public function updateCustomerPrice(Request $request)
     {
+        $this->validate($request, [
+            'price' => 'required|numeric',
+            'taskId' => 'required|numeric',
+            'jobId' => 'required|numeric'
+        ]);
+
         $price = $request->price;
         $taskId = $request->taskId;
         $jobId = $request->jobId;
