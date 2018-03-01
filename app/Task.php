@@ -64,7 +64,7 @@ class Task extends Model
 
     public function jobTask()
     {
-        return $this->hasOne(JobTask::class);
+        return $this->hasOne(JobTask::class, 'task_id', 'id');
     }
 
     public function updateStatus($status)
