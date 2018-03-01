@@ -38,7 +38,7 @@
               </span>
               Pay
             </button>
-            <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="paidWithCashTask(task)" :disabled="disabled.payCash">
+            <button class="btn btn-success" v-if="showPayCashForTaskBtn(task)" @click.prevent="paidWithCashTask(task)" :disabled="disabled.payCash">
               <span v-if="disabled.payCash">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
@@ -197,8 +197,11 @@
         }
         return false;
       },
+      showPayCashForTaskBtn(task) {
+        return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer();
+      },
       showPayForTaskBtn (task) {
-        return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer ();
+        return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer() && task.job_task.stripe;
       },
       showFinishedBtn (task) {
         if (this.isContractor && User.isAssignedToMe(task) && (task.job_task.status === 'bid_task.approved_by_customer' || task.job_task.status === 'bid_task.reopened' || task.job_task.status === 'bid_task.denied')) {
