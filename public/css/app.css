@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -7526,6 +7527,7 @@ input:checked + .slider:before {
 }
 body {
   background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
+  font-family: 'Roboto', sans-serif;
 }
 .page-title {
   font-weight: 800;
@@ -7533,6 +7535,7 @@ body {
 .job-name {
   font-weight: 900;
   font-size: 1.8rem;
+  font-style: italic;
 }
 .job-status {
   float: right;

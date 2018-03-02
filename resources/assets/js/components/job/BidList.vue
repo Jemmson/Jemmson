@@ -1,7 +1,6 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
     <div class="container">
-        <!--<pre>{{ user }}</pre>-->
         <div class="row">
             <div class="col-md-12">
                 <div class="panel">
