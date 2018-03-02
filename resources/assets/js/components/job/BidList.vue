@@ -67,10 +67,7 @@
       },
       methods: {
           jobName(name) {
-              if (name.length > 15) {
-                  return name.substring(0, 13) + '...';
-              }
-              return name;
+              return Format.jobName(name);
           },
           status(bid) {
               return User.status(bid.status, bid);

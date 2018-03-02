@@ -1,92 +1,69 @@
 <template>
   <div class="container">
-    <!-- <pre>{{ tasks }}</pre> -->
     <div class="row">
       <div class="col-md-12">
         <div class="panel">
           <!-- <div class="panel-heading">Dashboard</div> -->
           <div class="panel-body">
-            Hello, {{ user.name }}
-            <br> These are your bid tasks
+            <center>
+              <h2 class="page-title">Open Tasks</h2>
+            </center>
           </div>
         </div>
       </div>
-      <!-- / League Actions -->
-      <div class="col-md-12">
+      <div class="col-sm-12 col-md-6" v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
         <div class="panel">
           <div class="panel-body">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Stripe Payment</th>
-                  <th scope="col">Task Name</th>
-                  <th scope="col">Start Date</th>
-                  <th scope="col">Area</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Address</th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
-                  <th scope="row">{{ bidTask.id }}</th>
-                  <td>
-                    <!-- Rounded switch -->
-                    <label v-if="showStripeToggle(bidTask.job_task)" class="switch">
-                      <input :id="'toggle-stripe-' + bidTask.task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.task)">
-                      <span class="slider round"></span>
-                    </label>
-                  </td>
-                  <td>{{ bidTask.task.name }}</td>
-                  <td>{{ prettyDate(bidTask.job_task.start_date) }}</td>
-                  <td>{{ getArea(bidTask) }}</td>
-                  <td>
-                    <div v-if="isBidOpen(bidTask)">
-                      $<input type="text" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
-                    </div>
-                    <div v-else>
-                      $<input type="text" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" disabled/>
-                    </div>
-                    <span class="help-block label label-danger" v-bind:id="'error-' + bidTask.id" style="display: none;">
+            <div class="col-xs-12">
+              <label for="job-name" class="job-name">{{ jobName(bidTask.task.name) }}</label>
+              <label for="job-stats" class="label label-info label-small job-status">{{ status(bidTask) }}</label>
+            </div>
+            <div class="col-xs-6">
+              <p>
+              Start On:
+              <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
+              </p>
+              <div v-if="showStripeToggle(bidTask.job_task)">
+                              <p>
+              Stripe Payment:
+              </P>
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input :id="'toggle-stripe-' + bidTask.task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.task)">
+                <span class="slider round"></span>
+              </label>
+              </div>
+            </div>
+            <div v-if="isBidOpen(bidTask)" class="form-group col-md-6">
+              <label for="details">Task Price</label>
+              <input type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
+              />
+            </div>
+            <div class="col-xs-6" v-else>
+              <span class="right-label">
+                Accepted Bid Price: <label>${{ bidTask.bid_price }}</label>
+              </span> 
+            </div>
+            <div class="col-xs-12">
+              <span class="primary-action-btn">
+                <div v-if="isBidOpen(bidTask)">
+                  <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
+                    <span v-if="disabled.submit">
+                      <i class="fa fa-btn fa-spinner fa-spin"></i>
                     </span>
-                    <span class="help-block label label-success" v-bind:id="'success-' + bidTask.id" style="display: none;">
+                    Submit
+                  </button>
+                </div>
+                <div v-if="showFinishedBtn(bidTask)">
+                  <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
+                    <span v-if="disabled.finished">
+                      <i class="fa fa-btn fa-spinner fa-spin"></i>
                     </span>
-                  </td>
-                  <td>
-                    {{ status(bidTask) }}
-                  </td>
-                  <td>
-                    {{ getAddress(bidTask) }}
-                  </td>
-                  <td>
-                    <div v-if="isBidOpen(bidTask)">
-                      <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
-                        <span v-if="disabled.submit">
-                          <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                        Submit
-                      </button>
-                    </div>
-                    <div v-else>
-                      <button class="btn btn-primary" v-bind:id="bidTask.id" disabled>Submit</button>
-                    </div>
-                  </td>
-                  <td>
-                    <div v-if="showFinishedBtn(bidTask)">
-                      <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
-                        <span v-if="disabled.finished">
-                          <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                        Finished
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    Finished
+                  </button>
+                </div>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -122,6 +99,9 @@
       }
     },
     methods: {
+      jobName(name) {
+        return Format.jobName(name);
+      },
       bidPrice(target) {
         let price = $('#' + target).val().replace(/[^0-9.]/g, "");
         $('#' + target).val(price); 

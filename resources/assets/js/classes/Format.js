@@ -15,4 +15,11 @@ export default class Format {
         return phone.replace(/[^0-9]/g, '')
             .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
     }
+    
+    static jobName(name) {
+        if (name.length > 15) {
+            return name.substring(0, 13) + '...';
+        }
+        return name;
+    }
 }

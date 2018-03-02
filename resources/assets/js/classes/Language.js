@@ -3,7 +3,7 @@ export default class Language {
     return {
       // initiated
       'bid_task.initiated': {
-        sub: '',
+        sub: 'Please Bid',
         general: 'Initiated',
         customer: 'Initiated'
       },
