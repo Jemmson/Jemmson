@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6" v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
-        <div class="panel">
+        <div class="panel" v-if="showBid(bidTask)">
           <div class="panel-body">
             <div class="col-xs-12">
               <label for="job-name" class="job-name">{{ jobName(bidTask.task.name) }}</label>
@@ -99,6 +99,10 @@
       }
     },
     methods: {
+      showBid(bid) {
+        // TODO: backend what should happen to the bids that wheren't accepted
+        return (bid.id === bid.job_task.bid_id && bid.task.jobs[0].status === 'job.approved') || (bid.task.jobs[0].status !== 'job.approved');
+      },
       jobName(name) {
         return Format.jobName(name);
       },
