@@ -75,7 +75,7 @@ class UsersTableSeeder extends Seeder
                 'email' => "shawn@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
-                'phone' => $faker->phoneNumber,
+                'phone' => '4901112222',
                 'usertype' => 'contractor'
             ];
             $user = User::create($data);
@@ -105,7 +105,7 @@ class UsersTableSeeder extends Seeder
                 'email' => "daven@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
-                'phone' => $faker->phoneNumber,
+                'phone' => '4901113333',
                 'usertype' => 'contractor'
             ];
             $user = User::create($data);
@@ -135,7 +135,7 @@ class UsersTableSeeder extends Seeder
                 'email' => "john@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
-                'phone' => $faker->phoneNumber,
+                'phone' => '4901114444',
                 'usertype' => 'customer'
             ];
             $user = User::create($data);
@@ -155,7 +155,7 @@ class UsersTableSeeder extends Seeder
                 'email' => "jane@example.com",
                 'password' => bcrypt('secret'),
                 'remember_token' => str_random(10),
-                'phone' => $faker->phoneNumber,
+                'phone' => '4901115555',
                 'usertype' => 'customer'
             ];
             $user = User::create($data);
