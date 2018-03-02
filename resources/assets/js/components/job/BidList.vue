@@ -7,40 +7,37 @@
                 <div class="panel">
                     <!-- <div class="panel-heading">Dashboard</div> -->
                     <div class="panel-body">
-                        Hello, {{ user.name }}
-                        <br> These are your bids
+                        <center>
+                            <h2 class="page-title">Open Bids</h2>
+                        </center>
                     </div>
                 </div>
             </div>
             <transition name="">
-                <div class="col-md-12" v-show="showBidList">
-                    <div class="panel panel-default">
-                        <!-- <div class="panel-heading">Dashboard</div> -->
-                        <div class="panel-body">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Task Name</th>
-                                        <th scope="col">Start Date</th>
-                                        <th scope="col">status</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(bid, index) in bids" v-bind:key="bid.id">
-                                        <th scope="row">{{ bid.id }}</th>
-                                        <td>{{ bid.job_name }}</td>
-                                        <td>{{ prettyDate(bid.agreed_start_date) }}</td>
-                                        <td>{{ status(bid) }}</td>
-                                        <td>${{ bid.bid_price }}</td>
-                                        <td>
-                                            <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <div v-show="showBidList">
+                    <div class="col-sm-12 col-md-4" v-for="(bid, index) in bids" v-bind:key="bid.id">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="col-xs-12">
+                                    <span>
+                                        <label for="job-name" class="job-name">{{ jobName(bid.job_name) }}</label>
+                                        <label for="job-stats" class="label label-info label-small job-status">{{ status(bid) }}</label>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12">
+                                        <p>
+                                            Start On: <label for="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
+                                            <span class="right-label">
+                                                Price: <label for="job-price">${{ bid.bid_price }}</label>
+                                            </span> 
+                                        </p>
+                                </div>
+                                <div class="col-xs-12">
+                                    <span class="primary-action-btn">
+                                        <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,6 +67,12 @@
           }
       },
       methods: {
+          jobName(name) {
+              if (name.length > 15) {
+                  return name.substring(0, 13) + '...';
+              }
+              return name;
+          },
           status(bid) {
               return User.status(bid.status, bid);
           },
