@@ -5,6 +5,7 @@ use App\Job;
 use App\Task;
 use App\JobTask;
 use App\Contractor;
+use Carbon\Carbon;
 
 class JobTaskSeeder extends Seeder
 {
@@ -28,7 +29,8 @@ class JobTaskSeeder extends Seeder
         $task->contractor_id = 1;
         $task->cust_final_price = 100;
         $task->sub_final_price = rand(10, 50);
-        $task->status = __('bid_task.initiated');
+        $task->start_date = Carbon::now();
+        $task->status = __('bid_task.bid_sent');
         $task->save();
 
         $job = Job::find(2);
@@ -41,7 +43,8 @@ class JobTaskSeeder extends Seeder
         $task->contractor_id = 2;
         $task->cust_final_price = 100;
         $task->sub_final_price = rand(20, 50);
-        $task->status = __('bid_task.initiated');
+        $task->start_date = Carbon::now();
+        $task->status = __('bid_task.bid_sent');
         $task->save();
 
 
