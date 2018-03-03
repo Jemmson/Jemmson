@@ -17,7 +17,7 @@
                     </bid-details>
 
                     <!-- /show all tasks associated to this bid -->
-                    <bid-tasks v-if="bid.tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
+                    <bid-tasks v-if="bid.job_tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
                     </bid-tasks>
 
                     <!-- /customer approve bid form -->
@@ -34,7 +34,7 @@
 
         <!-- /task details and actions -->
         <transition name="slide-fade">
-            <bid-task :show="showTaskPanel" :task="task">
+            <bid-task :show="showTaskPanel" :jobTask="task">
             </bid-task>
         </transition>
 
@@ -79,8 +79,8 @@
         },
         computed: {
             task() {
-                if (this.bid.tasks !== undefined) {
-                    return this.bid.tasks[this.taskIndex];
+                if (this.bid.job_tasks !== undefined) {
+                    return this.bid.job_tasks[this.taskIndex];
                 } else {
                     return this.bid;
                 }
@@ -111,6 +111,8 @@
                 Customer.approveBid(this.bidForm, this.disabled);
             },
             openTaskPanel(index) {
+                console.log(index);
+                
                 if (this.taskIndex === index && this.showTaskPanel) {
                     this.showTaskPanel = false;
                 } else {

@@ -44,12 +44,12 @@ export default class GeneralContractor {
         });
     }
 
-    acceptSubBidForTask(task, bid, disabled) {
-        console.log('acceptSubBidForTask', task);
+    acceptSubBidForTask(jobTask, bid, disabled) {
+        console.log('acceptSubBidForTask', jobTask);
         disabled.accept = true;
         axios.post('/api/task/accept', {
-            jobId: task.job_task.job_id,
-            taskId: task.id,
+            jobId: jobTask.job_id,
+            taskId: jobTask.task_id,
             contractorId: bid.contractor_id,
             bidId: bid.id,
             price: bid.bid_price,
@@ -65,11 +65,10 @@ export default class GeneralContractor {
         });
     }
 
-    sendSubInviteToBidOnTask(task, form, disabled) {
-        console.log('sendSubInviteToBidOnTask', task, form);
+    sendSubInviteToBidOnTask(jobTask, form, disabled) {
+        console.log('sendSubInviteToBidOnTask', jobTask, form);
         disabled.invite = true;
-        form.taskId = task.id;
-        form.jobId = task.job_task.job_id;
+        form.jobTaskId = jobTask.id;
         Spark.post('/api/task/notify', form)
             .then((response) => {
                 console.log(response);

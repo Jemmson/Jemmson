@@ -266,17 +266,18 @@ class JobController extends Controller
           })
           ->with(
             [
-              'tasks' => function ($query) {
-                $query->select('tasks.id', 'tasks.name', 'tasks.contractor_id', 'tasks.job_id');
+              'jobTasks' => function ($query) {
+                $query->select('job_task.task_id', 'job_task.stripe', 'job_task.id', 'job_task.contractor_id', 'job_task.status', 'job_task.cust_final_price', 'job_task.start_date');
                 $query->with(
                 [
-                  'jobTask' => function ($q) {
-                        $q->select('job_task.task_id', 'job_task.task_id', 'job_task.id', 'job_task.contractor_id', 'job_task.status', 'job_task.cust_final_price', 'job_task.start_date');
+                  'task' => function ($q) {
+                      $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
                   }
                 ]);
               }
               // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
             ])->get();
+
           $jobsWithoutTasks = Auth::user()->jobs()
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
@@ -284,7 +285,7 @@ class JobController extends Controller
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('tasks.jobTask', 'tasks.bidContractorJobTasks.contractor')->get();
+          $jobs = Auth::user()->jobs()->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
         }
 
         return response()->json($jobs, 200); 

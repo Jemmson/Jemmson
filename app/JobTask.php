@@ -23,6 +23,11 @@ class JobTask extends Model
         return $this->belongsTo(Task::class);
     }
 
+    public function job()
+    {
+        return $this->belongsTo(Job::class);
+    }
+
     public function contractor()
     {
         return $this->belongsTo(User::class)->with('contractor');
@@ -35,7 +40,7 @@ class JobTask extends Model
 
     public function bidContractorJobTasks()
     {
-        return $this->hasMany(BidContractorJobTask::class, 'job_id', 'job_id')->where('job_id', $this->job_id)->where('task_id', $this->task_id);
+        return $this->hasMany(BidContractorJobTask::class, 'job_task_id');
     }
 
     public function updateLocation($request)

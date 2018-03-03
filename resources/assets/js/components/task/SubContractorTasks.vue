@@ -15,7 +15,7 @@
         <div class="panel" v-if="showBid(bidTask)">
           <div class="panel-body">
             <div class="col-xs-12">
-              <label for="job-name" class="job-name">{{ jobName(bidTask.task.name) }}</label>
+              <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
               <label for="job-stats" class="label label-info label-small job-status">{{ status(bidTask) }}</label>
             </div>
             <div class="col-xs-6">
@@ -101,7 +101,7 @@
     methods: {
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
-        return (bid.id === bid.job_task.bid_id && bid.task.jobs[0].status === 'job.approved') || (bid.task.jobs[0].status !== 'job.approved');
+        return (bid.id === bid.job_task.bid_id && bid.job_task.job.status === 'job.approved') || (bid.job_task.job.status !== 'job.approved');
       },
       jobName(name) {
         return Format.jobName(name);

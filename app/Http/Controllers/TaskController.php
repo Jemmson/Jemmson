@@ -44,7 +44,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task.jobs', 'jobTask'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['jobTask.job', 'jobTask.task'])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -156,7 +156,8 @@ class TaskController extends Controller
         }
 
         $bidContractorJobTask->bid_price = $request->bid_price;
-        $jobTask = Task::find($bidContractorJobTask->task_id)->jobTask()->first();
+        $jobTask = $bidContractorJobTask->jobTask()->first();
+        
         // doesn't work since no default 'id' found
         // $jobTask->status = 'bid_task.sent';
 
@@ -247,10 +248,10 @@ class TaskController extends Controller
 
     }
 
-    public function addBidEntryForTheSubContractor($contractor, $taskId, $jobId)
+    public function addBidEntryForTheSubContractor($contractor, $jobTaskId, $taskId)
     {
-        if ($contractor->checkIfContractorSetBidForATask($contractor->user_id, $taskId, $jobId)) {
-            $contractor->addContractorToBidForJobTable($contractor->user_id, $taskId, $jobId);
+        if ($contractor->checkIfContractorSetBidForATask($contractor->user_id, $jobTaskId)) {
+            $contractor->addContractorToBidForJobTable($contractor->user_id, $jobTaskId, $taskId);
             return true;
         } else {
             return false;
@@ -294,13 +295,11 @@ class TaskController extends Controller
         $this->validate($request, [
             'phone' => 'required|string|min:10|max:14',
             'email' => 'required|email',
-            'taskId' => 'required',
         ]);
 
         $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
-        $taskId = $request->taskId;
-        $jobId = $request->jobId;
+        $jobTaskId = $request->jobTaskId;
         $name = $request->name;
 
         $user = User::where('phone', $phone)->orWhere('email', $email)->first();
@@ -314,19 +313,19 @@ class TaskController extends Controller
         }
 
         $contractor = $user->contractor()->first();
+        $jobTask = JobTask::find($jobTaskId);
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
-        if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
+        if ($this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id) === false) {
             return response()->json(["message"=>"Task Already Exists.","errors"=>["error" => "Task Already Exists."]], 422);
         }
 
         //   this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
-        $user->notify(new NotifySubOfTaskToBid($taskId, $user));
+        $user->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user));
 
 
-        $bidPrices = Task::getBidPrices($jobId);
-
+        $bidPrices = Task::getBidPrices($jobTask->job_id);
 
         return $bidPrices;
     }
@@ -345,7 +344,7 @@ class TaskController extends Controller
             ->user_id;
         $user = User::where('id', $user_id)->get()->first();
 
-//        return $user;
+        //        return $user;
 
         $user->notify(new NotifySubOfAcceptedBid());
     }

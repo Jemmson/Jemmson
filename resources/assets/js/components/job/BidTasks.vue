@@ -14,18 +14,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(task, index) in bid.tasks" v-if="task.job_task !== null" v-bind:key="task.id" :id="'task-' + task.id">
-          <td>{{ task.name }}</td>
+        <tr v-for="(jobTask, index) in bid.job_tasks" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
+          <td>{{ jobTask.task.name }}</td>
           <td>
-            <input v-if="showTaskPriceInput()" type="text" :value="taskCustFinalPrice(task.job_task.cust_final_price)" @blur="updateCustomerTaskPrice($event.target.value, task.id, bid.id, task)">
-            <label v-if="isCustomer || !showTaskPriceInput()"> {{taskCustFinalPrice(task.job_task.cust_final_price)}} </label>
+            <input v-if="showTaskPriceInput()" type="text" :value="taskCustFinalPrice(jobTask.cust_final_price)" @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
+            <label v-if="isCustomer || !showTaskPriceInput()"> {{taskCustFinalPrice(jobTask.cust_final_price)}} </label>
           </td>
-          <td v-if="isContractor">${{ subTaskPrice(task) }}</td>
-          <td>{{ status(task.job_task.status) }}</td>
+          <td v-if="isContractor">${{ subTaskPrice(jobTask) }}</td>
+          <td>{{ status(jobTask.status) }}</td>
           <td>
             <!-- Rounded switch -->
-            <label v-if="showStripeToggle(task)" class="switch">
-              <input :id="'toggle-stripe-' + task.id" type="checkbox" v-model="task.job_task.stripe" @click="toggleStripePaymentOption(task)">
+            <label v-if="showStripeToggle(jobTask)" class="switch">
+              <input :id="'toggle-stripe-' + jobTask.id" type="checkbox" v-model="jobTask.stripe" @click="toggleStripePaymentOption(jobTask)">
               <span class="slider round"></span>
             </label>
           </td>
@@ -33,40 +33,40 @@
           <td>
             <button class="btn btn-primary" @click.prevent="openTaskPanel(index)">Details</button>
 
-            <button class="btn btn-success" v-if="showPayForTaskBtn(task)" @click.prevent="payForTask(task)" :disabled="disabled.pay">
+            <button class="btn btn-success" v-if="showPayForTaskBtn(jobTask)" @click.prevent="payForTask(jobTask)" :disabled="disabled.pay">
               <span v-if="disabled.pay">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
               Pay
             </button>
-            <button class="btn btn-success" v-if="showPayCashForTaskBtn(task)" @click.prevent="paidWithCashTask(task)" :disabled="disabled.payCash">
+            <button class="btn btn-success" v-if="showPayCashForTaskBtn(jobTask)" @click.prevent="paidWithCashTask(jobTask)" :disabled="disabled.payCash">
               <span v-if="disabled.payCash">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
               Paid With Cash
             </button>
-            <button class="btn btn-success" v-if="showFinishedBtn(task)" @click="finishedTask(task)" :disabled="disabled.finished">
+            <button class="btn btn-success" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)" :disabled="disabled.finished">
               <span v-if="disabled.finished">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
               Finished
             </button>
-            <button class="btn btn-success" v-if="showApproveBtn(task)" @click="approveTaskHasBeenFinished(task)" :disabled="disabled.approve">
+            <button class="btn btn-success" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
               <span v-if="disabled.approve">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
               Approve
             </button>
-            <button class="btn btn-primary" v-if="showDenyBtn(task)" @click="openDenyTaskForm(task)">
+            <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
               Deny
             </button>
-            <button class="btn btn-warning" v-if="showReopenBtn(task)" @click="reopenTask(task)" :disabled="disabled.reopen">
+            <button class="btn btn-warning" v-if="showReopenBtn(jobTask)" @click="reopenTask(jobTask)" :disabled="disabled.reopen">
               <span v-if="disabled.reopen">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
               Reopen
             </button>
-            <button class="btn btn-danger" v-if="showDeleteBtn(task)" @click="deleteTask(task)" :disabled="disabled.deleteTask">
+            <button class="btn btn-danger" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
               <span v-if="disabled.deleteTask">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
@@ -85,7 +85,7 @@
         <transition name="slide-fade">
           <tr v-show="disabled.showDenyForm" id="deny-form">
             <td>
-              Deny Approval For: {{task.name}}
+              <!-- Deny Approval For: {{jobTask.task.name}} -->
             </td>
             <td>
               <input type="text" class="form-control" v-model="message">
@@ -114,7 +114,7 @@
     data () {
       return {
         user: '',
-        task: {},
+        jobTask: {},
         message: '',
         disabled: {
           showDenyForm: false,
@@ -143,48 +143,48 @@
       },
       generalTotalTaskPrice () {
         let total = 0;
-        for (const task of this.bid.tasks) {
-          if (task.job_task !== null) {
-            total += task.job_task.cust_final_price;
+        for (const jobTask of this.bid.job_tasks) {
+          if (jobTask !== null) {
+            total += jobTask.cust_final_price;
           }
         }
         return total;
       },
       subTotalTaskPrices () {
         let total = 0;
-        for (const task of this.bid.tasks) {
-          total += this.subTaskPrice (task);
+        for (const jobTask of this.bid.job_tasks) {
+          total += this.subTaskPrice(jobTask);
         }
         return total;
       }
     },
     methods: {
-      showStripeToggle(task) {
-        return User.isAssignedToMe(task);
+      showStripeToggle(jobTask) {
+        return User.isAssignedToMe(jobTask);
       },
-      openDenyTaskForm(task) {
-        if (task.id === this.task.id) {
+      openDenyTaskForm(jobTask) {
+        if (jobTask.id === this.jobTask.id) {
             this.disabled.showDenyForm = this.disabled.showDenyForm ? false : true;
         } else {
             this.disabled.showDenyForm = true;
         }
-        this.task = task;
-        $("#deny-form").insertAfter('#task-' + task.id);
+        this.jobTask = jobTask;
+        $("#deny-form").insertAfter('#task-' + jobTask.id);
       },
       showTaskPriceInput() {
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
       },
-      updateCustomerTaskPrice (price, taskId, bidId, task) {
+      updateCustomerTaskPrice (price, taskId, bidId, jobTask) {
         price = price.replace(/[^0-9.]/g, "");
-        let taskPrice = task.job_task.cust_final_price;
+        let taskPrice = jobTask.cust_final_price;
         taskPrice = taskPrice.toString();
         // debugger
         if ((taskPrice !== price)) {
           GeneralContractor.updateCustomerPrice (price, taskId, bidId)
         }
       },
-      showDenyBtn (task) {
-        const status = task.job_task.status;
+      showDenyBtn (jobTask) {
+        const status = jobTask.status;
         if (this.isCustomer) {
             return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general');
         }
@@ -193,79 +193,79 @@
       taskCustFinalPrice (price) {
         return '$' + price;
       },
-      showReopenBtn (task) {
-        if (this.isContractor && (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general')) {
+      showReopenBtn (jobTask) {
+        if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general')) {
           return true;
         }
         return false;
       },
-      showPayCashForTaskBtn(task) {
-        return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer();
+      showPayCashForTaskBtn(jobTask) {
+        return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') && User.isCustomer();
       },
-      showPayForTaskBtn (task) {
-        return (task.job_task.status === 'bid_task.finished_by_general' || task.job_task.status === 'bid_task.approved_by_general') && User.isCustomer() && task.job_task.stripe;
+      showPayForTaskBtn (jobTask) {
+        return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') && User.isCustomer() && jobTask.stripe;
       },
-      showFinishedBtn (task) {
-        if (this.isContractor && User.isAssignedToMe(task) && (task.job_task.status === 'bid_task.approved_by_customer' || task.job_task.status === 'bid_task.reopened' || task.job_task.status === 'bid_task.denied')) {
+      showFinishedBtn (jobTask) {
+        if (this.isContractor && User.isAssignedToMe(jobTask) && (jobTask.status === 'bid_task.approved_by_customer' || jobTask.status === 'bid_task.reopened' || jobTask.status === 'bid_task.denied')) {
           return true;
         }
         return false;
       },
-      showApproveBtn (task) {
-        if (this.isGeneral && !User.isAssignedToMe(task) && (task.job_task.status === 'bid_task.finished_by_sub' || task.job_task.status === 'bid_task.reopened')) {
+      showApproveBtn (jobTask) {
+        if (this.isGeneral && !User.isAssignedToMe(jobTask) && (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')) {
           return true;
         }
         return false;
       },
-      showDeleteBtn (task) {
-        const status = task.job_task.status;
+      showDeleteBtn (jobTask) {
+        const status = jobTask.status;
         if (this.isGeneral && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent')) {
           return true;
         }
         return false;
       },
-      reopenTask (task) {
-        SubContractor.reopenTask (task, this.disabled);
+      reopenTask (jobTask) {
+        SubContractor.reopenTask (jobTask, this.disabled);
       },
-      deleteTask (task) {
-        GeneralContractor.deleteTask (task, this.disabled);
+      deleteTask (jobTask) {
+        GeneralContractor.deleteTask (jobTask, this.disabled);
       },
       /**
        * customer task price
        */
-      subTaskPrice (task) {
-        if (task.job_task === null) {
+      subTaskPrice (jobTask) {
+        if (jobTask === null) {
           return 0;
         }
-        if (task.job_task.bid_id === null) {
+        if (jobTask.bid_id === null) {
           return 0;
         } else {
-          return User.findTaskBid (task.job_task.bid_id, task.bid_contractor_job_tasks)[0].bid_price;
+          return User.findTaskBid (jobTask.bid_id, jobTask.bid_contractor_job_tasks)[0].bid_price;
         }
       },
-      toggleStripePaymentOption(task) {
-        task.checked = $('#toggle-stripe-'+task.id).is(':checked');
-        SubContractor.toggleStripePaymentOption(task);
+      toggleStripePaymentOption(jobTask) {
+        jobTask.checked = $('#toggle-stripe-'+jobTask.id).is(':checked');
+        SubContractor.toggleStripePaymentOption(jobTask);
       },
-      payForTask (task) {
-        Customer.payForTask (task, this.disabled);
+      payForTask (jobTask) {
+        Customer.payForTask (jobTask, this.disabled);
       },
-      paidWithCashTask (task) {
-        Customer.paidWithCashTask (task, this.disabled);
+      paidWithCashTask (jobTask) {
+        Customer.paidWithCashTask (jobTask, this.disabled);
       },
       openTaskPanel (index) {
         this.$emit ('openTaskPanel', index);
       },
-      finishedTask (task) {
-        SubContractor.finishedTask (task, this.disabled);
+      finishedTask (jobTask) {
+        SubContractor.finishedTask (jobTask, this.disabled);
       },
-      approveTaskHasBeenFinished (task) {
-        GeneralContractor.approveTaskHasBeenFinished (task, this.disabled);
+      approveTaskHasBeenFinished (jobTask) {
+        GeneralContractor.approveTaskHasBeenFinished (jobTask, this.disabled);
       },
       denyTask() {
-        this.task.message = this.message;
-        this.task.user_id = User.getId();
-        Customer.denyTask(this.task, this.disabled);
+        this.jobTask.message = this.message;
+        this.jobTask.user_id = User.getId();
+        Customer.denyTask(this.jobTask, this.disabled);
       },
       status (status) {
         return User.status (status, this.bid);
