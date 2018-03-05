@@ -29,7 +29,7 @@
               </P>
               <!-- Rounded switch -->
               <label class="switch">
-                <input :id="'toggle-stripe-' + bidTask.task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.task)">
+                <input :id="'toggle-stripe-' + bidTask.job_task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.job_task)">
                 <span class="slider round"></span>
               </label>
               </div>
@@ -152,8 +152,8 @@
       showStripeToggle(jobTask) {
         return jobTask.contractor_id === User.getId();
       },
-      toggleStripePaymentOption(task) {
-        SubContractor.toggleStripePaymentOption(task);
+      toggleStripePaymentOption(jobTask) {
+        SubContractor.toggleStripePaymentOption(jobTask);
       },
       finished (bid) {
         SubContractor.finishedTask (bid, this.disabled);
@@ -170,7 +170,7 @@
           // TODO: security review
           console.log (response);
           Vue.toasted.success ('Bid Sent.');
-          User.emitChange ('bidUpdated');
+          User.emitChange('bidUpdated');
           this.disabled.submit = false;
         }).catch ((error) => {
           console.log (error.response, '#error-' + id);
@@ -187,7 +187,7 @@
     },
     created: function () {
       Bus.$on ('bidUpdated', (payload) => {
-        this.getTasks ();
+        this.getTasks();
       });
       Bus.$on ('needsStripe', () => {
           $('#stripe-modal').modal();   

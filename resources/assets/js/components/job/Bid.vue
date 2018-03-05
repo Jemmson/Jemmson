@@ -30,12 +30,12 @@
 
         
         <!-- /show all tasks associated to this bid -->
-        <bid-tasks v-if="bid.tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
+        <bid-tasks v-if="bid.job_tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
         </bid-tasks>
 
         <!-- /task details and actions -->
         <transition name="slide-fade">
-            <bid-task :show="showTaskPanel" :jobTask="task">
+            <bid-task :show="showTaskPanel" :jobTask="jobTask">
             </bid-task>
         </transition>
 
@@ -59,7 +59,7 @@
         },
         data() {
             return {
-                taskIndex: 0,
+                jobTaskIndex: 0,
                 bidForm: new SparkForm({
                     id: 0,
                     agreed_start_date: '',
@@ -79,9 +79,9 @@
             }
         },
         computed: {
-            task() {
+            jobTask() {
                 if (this.bid.job_tasks !== undefined) {
-                    return this.bid.job_tasks[this.taskIndex];
+                    return this.bid.job_tasks[this.jobTaskIndex];
                 } else {
                     return this.bid;
                 }
@@ -114,11 +114,11 @@
             openTaskPanel(index) {
                 console.log(index);
                 
-                if (this.taskIndex === index && this.showTaskPanel) {
+                if (this.jobTaskIndex === index && this.showTaskPanel) {
                     this.showTaskPanel = false;
                 } else {
                     this.showTaskPanel = true;
-                    this.taskIndex = index;
+                    this.jobTaskIndex = index;
                     this.showAddTaskPanel = false;
                     this.$nextTick(() => {
                         document.getElementById('task-details').scrollIntoView();

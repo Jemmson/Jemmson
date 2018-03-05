@@ -177,13 +177,13 @@
       showTaskPriceInput() {
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
       },
-      updateCustomerTaskPrice (price, taskId, bidId, jobTask) {
+      updateCustomerTaskPrice (price, jobTaskId, bidId, jobTask) {
         price = price.replace(/[^0-9.]/g, "");
         let taskPrice = jobTask.cust_final_price;
         taskPrice = taskPrice.toString();
         // debugger
         if ((taskPrice !== price)) {
-          GeneralContractor.updateCustomerPrice (price, taskId, bidId)
+          GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
         }
       },
       showDenyBtn (jobTask) {

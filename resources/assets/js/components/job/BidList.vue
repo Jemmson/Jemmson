@@ -100,8 +100,8 @@
                   this.bids = response.data;
               });
           },
-          previewSubForTask(bidId, taskId, subBidId) {
-                console.log(TaskUtil.previewSubForTask(this.bids, bidId, taskId, subBidId));
+          previewSubForTask(bidId, jobTaskId, subBidId) {
+                console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId));
           }
       },
       created() {

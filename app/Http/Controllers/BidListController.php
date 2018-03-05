@@ -24,7 +24,7 @@ class BidListController extends Controller
           ->with(
             [
               'jobTasks' => function ($query) {
-                $query->select('job_task.task_id', 'job_task.stripe', 'job_task.id', 'job_task.contractor_id', 'job_task.status', 'job_task.cust_final_price', 'job_task.start_date');
+                //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
                 $query->with(
                 [
                   'task' => function ($q) {

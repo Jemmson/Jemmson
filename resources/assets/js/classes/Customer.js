@@ -74,12 +74,12 @@ export default class Customer {
   /**
    * Deny a task that has been finished
    *
-   * @param {Object} task
+   * @param {Object} jobTask
    */
-  async denyTask(task, disabled) {
+  async denyTask(jobTask, disabled) {
     disabled.deny = true;
     try {
-      const data = await axios.post('/task/deny', task);
+      const data = await axios.post('/task/deny', jobTask);
       User.emitChange('bidUpdated');
       Vue.toasted.success('Task Denied & Notification Sent');
       disabled.deny = false;
@@ -124,14 +124,14 @@ export default class Customer {
   /**
    * Pay for a task
    *
-   * @param {Object} task
+   * @param {Object} jobTask
    */
-  async paidWithCashTask(task, disabled) {
-    console.log('paidWithCashTask', task);
+  async paidWithCashTask(jobTask, disabled) {
+    console.log('paidWithCashTask', jobTask);
     disabled.payCash = true;
 
     try {
-      const data = await axios.post('/api/stripe/task/cash', task);
+      const data = await axios.post('/api/stripe/task/cash', jobTask);
       User.emitChange('bidUpdated');
       Vue.toasted.success('Paid For Task');
       disabled.payCash = false;
@@ -148,8 +148,8 @@ export default class Customer {
    *
    * @param {Object} task
    */
-  async payForTask(task, disabled) {
-    console.log('payForTask', task);
+  async payForTask(jobTask, disabled) {
+    console.log('payForTask', jobTask);
     disabled.pay = true;
 
     if (User.payWithStripe()) {
@@ -162,7 +162,7 @@ export default class Customer {
     }
 
     try {
-      const data = await axios.post('/stripe/express/task/payment', task);
+      const data = await axios.post('/stripe/express/task/payment', jobTask);
       User.emitChange('bidUpdated');
       Vue.toasted.success('Paid For Task');
       disabled.pay = false;

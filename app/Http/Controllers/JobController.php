@@ -255,7 +255,7 @@ class JobController extends Controller
      */
     public function jobs(Request $request)
     {
-        // load jobs and all their tasks along with those tasks relationships
+         // load jobs and all their tasks along with those tasks relationships
         if ($this->isCustomer()) {
           // only load tasks on jobs that are approved or need approval
           $jobsWithTasks = Auth::user()->jobs()
@@ -267,7 +267,7 @@ class JobController extends Controller
           ->with(
             [
               'jobTasks' => function ($query) {
-                $query->select('job_task.task_id', 'job_task.stripe', 'job_task.id', 'job_task.contractor_id', 'job_task.status', 'job_task.cust_final_price', 'job_task.start_date');
+                //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
                 $query->with(
                 [
                   'task' => function ($q) {

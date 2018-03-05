@@ -156,7 +156,7 @@
                     }.bind(this))
                 }
             },
-            preview(task, subId) {
+            preview(jobTask, subId) {
                 Bus.$emit('previewSubForTask', [
                     jobTask.job_id,
                     jobTask.id,
