@@ -6,16 +6,16 @@ export default class TaskUtil {
         this.user = Spark.state.user;
     }
 
-    previewSubForTask(bids, bidId, taskId, subId) {
+    previewSubForTask(bids, bidId, jobTaskId, subId) {
         const bid = this.getBid(bidId, bids)[0];
-        if (bid === undefined || bid.tasks === undefined) {
+        if (bid === undefined || bid.job_tasks === undefined) {
             return false;
         }
-        let task = this.getTask(taskId, bid.tasks)[0];
-        if (task === undefined) {
+        let jobTask = this.getTask(jobTaskId, bid.job_tasks)[0];
+        if (jobTask === undefined) {
             return false;
         }
-        task.job_task.bid_id = subId;
+        jobTask.bid_id = subId;
         return bids;
     }
 
@@ -25,9 +25,9 @@ export default class TaskUtil {
         });
     }
 
-    getTask(id, tasks) {
-        return tasks.filter((task) => {
-            return task.id === id;
+    getTask(id, jobTasks) {
+        return jobTasks.filter((jobTask) => {
+            return jobTask.id === id;
         });
     }
 }

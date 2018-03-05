@@ -81,8 +81,8 @@ export default class User {
     }
 
     // is the task assigned to the currently logged in user
-    isAssignedToMe(task) {
-        return this.user.id === task.job_task.contractor_id;
+    isAssignedToMe(jobTask) {
+        return this.user.id === jobTask.contractor_id;
     }
 
     findTaskBid(id, bids) {

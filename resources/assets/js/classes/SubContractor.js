@@ -6,13 +6,13 @@ export default class SubContractor {
         this.user = Spark.state.user;
     }
 
-    async toggleStripePaymentOption(task) {
+    async toggleStripePaymentOption(jobTask) {
         if (User.needsStripe()) {
             User.emitChange('bidUpdated');
             return false;
         }
         try {
-            const data = await axios.post('/api/task/togglestripe', task);
+            const data = await axios.post('/api/task/togglestripe', jobTask);
             User.emitChange('bidUpdated');
             Vue.toasted.success('Stripe Payment');
         } catch (error) {
@@ -25,12 +25,12 @@ export default class SubContractor {
     /**
      * reopen a task that has been approved or finished
      * 
-     * @param {Object} task 
+     * @param {Object} jobTask 
      */
-    reopenTask(task, disabled) {
-        console.log('reopenTask', task);
+    reopenTask(jobTask, disabled) {
+        console.log('reopenTask', jobTask);
         disabled.reopen = true;
-        axios.post('/bid/tasks/reopen', task)
+        axios.post('/bid/tasks/reopen', jobTask)
             .then((response) => {
                 console.log(response)
                 // show a toast notification
@@ -45,10 +45,10 @@ export default class SubContractor {
             });
     }
 
-    finishedTask(task, disabled) {
-        console.log('finishedTask', task);
+    finishedTask(bid, disabled) {
+        console.log('finishedTask', bid);
         let id = this.user.id;
-        task.current_user_id = id;
+        bid.current_user_id = id;
 
         let general = false;
         disabled.finished = true;
@@ -61,11 +61,17 @@ export default class SubContractor {
                 return false;
             }
         }
+        let contractor_id = 0;
+        if (bid.job_task !== undefined) {
+            contractor_id = bid.job_task.task.contractor_id;
+        } else {
+            contractor_id = bid.task.contractor_id;
+        }
         // did the general contractor finish this task?
-        if (id === task.job_task.contractor_id && id === task.contractor_id)
+        if (id === bid.contractor_id && id === contractor_id)
             general = true;
 
-        axios.post('/api/task/finished', task)
+        axios.post('/api/task/finished', bid)
             .then((response) => {
                 console.log(response)
                 // show a toast notification

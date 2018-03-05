@@ -40,12 +40,12 @@ export default class GeneralContractor {
         });
     }
 
-    acceptSubBidForTask(task, bid, disabled) {
-        console.log('acceptSubBidForTask', task);
+    acceptSubBidForTask(jobTask, bid, disabled) {
+        console.log('acceptSubBidForTask', jobTask);
         disabled.accept = true;
         axios.post('/api/task/accept', {
-            jobId: task.job_task.job_id,
-            taskId: task.id,
+            jobId: jobTask.job_id,
+            jobTaskId: jobTask.id,
             contractorId: bid.contractor_id,
             bidId: bid.id,
             price: bid.bid_price,
@@ -61,11 +61,10 @@ export default class GeneralContractor {
         });
     }
 
-    sendSubInviteToBidOnTask(task, form, disabled) {
-        console.log('sendSubInviteToBidOnTask', task, form);
+    sendSubInviteToBidOnTask(jobTask, form, disabled) {
+        console.log('sendSubInviteToBidOnTask', jobTask, form);
         disabled.invite = true;
-        form.taskId = task.id;
-        form.jobId = task.job_task.job_id;
+        form.jobTaskId = jobTask.id;
         Spark.post('/api/task/notify', form)
             .then((response) => {
                 console.log(response);
@@ -120,7 +119,7 @@ export default class GeneralContractor {
             });
     }
 
-    updateCustomerPrice(price, taskId, jobId) {
+    updateCustomerPrice(price, jobTaskId, jobId) {
         console.log(price)
         if (price === '') {
             price = 0
@@ -128,7 +127,7 @@ export default class GeneralContractor {
         console.log(price)
         axios.post('/api/task/updateCustomerPrice', {
             jobId: jobId,
-            taskId: taskId,
+            jobTaskId: jobTaskId,
             price: price
         }).then((response) => {
             User.emitChange('bidUpdated');
@@ -142,10 +141,10 @@ export default class GeneralContractor {
         });
     }
 
-    approveTaskHasBeenFinished(task, disabled) {
-        console.log('approveTaskHasBeenFinished', task);
+    approveTaskHasBeenFinished(jobTask, disabled) {
+        console.log('approveTaskHasBeenFinished', jobTask);
         disabled.approve = true;
-        axios.post('/api/task/approve', task)
+        axios.post('/api/task/approve', jobTask)
             .then((response) => {
                 console.log(response);
                 // show a toast notification
@@ -160,12 +159,12 @@ export default class GeneralContractor {
             });
     }
 
-    async deleteTask(task, disabled) {
+    async deleteTask(jobTask, disabled) {
         disabled.deleteTask = true;
         try {
             const data = await axios.post('/api/task/delete', {
-                taskId: task.id,
-                jobId: task.job_id
+                jobTaskId: jobTask.id,
+                jobId: jobTask.job_id
             });
             User.emitChange('bidUpdated');
             Vue.toasted.success('Task Denied & Notification Sent');

@@ -15,7 +15,7 @@
         <div class="panel" v-if="showBid(bidTask)">
           <div class="panel-body">
             <div class="col-xs-12">
-              <label for="job-name" class="job-name">{{ jobName(bidTask.task.name) }}</label>
+              <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
               <label for="job-stats" class="label label-info label-small job-status">{{ status(bidTask) }}</label>
             </div>
             <div class="col-xs-6">
@@ -29,7 +29,7 @@
               </P>
               <!-- Rounded switch -->
               <label class="switch">
-                <input :id="'toggle-stripe-' + bidTask.task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.task)">
+                <input :id="'toggle-stripe-' + bidTask.job_task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.job_task)">
                 <span class="slider round"></span>
               </label>
               </div>
@@ -99,7 +99,7 @@
     methods: {
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
-        return (bid.id === bid.job_task.bid_id && bid.task.jobs[0].status === 'job.approved') || (bid.task.jobs[0].status !== 'job.approved');
+        return (bid.id === bid.job_task.bid_id && bid.job_task.job.status === 'job.approved') || (bid.job_task.job.status !== 'job.approved');
       },
       jobName(name) {
         return Format.jobName(name);
@@ -152,8 +152,8 @@
       showStripeToggle(jobTask) {
         return jobTask.contractor_id === User.getId();
       },
-      toggleStripePaymentOption(task) {
-        SubContractor.toggleStripePaymentOption(task);
+      toggleStripePaymentOption(jobTask) {
+        SubContractor.toggleStripePaymentOption(jobTask);
       },
       finished (bid) {
         SubContractor.finishedTask (bid, this.disabled);
@@ -170,7 +170,7 @@
           // TODO: security review
           console.log (response);
           Vue.toasted.success ('Bid Sent.');
-          User.emitChange ('bidUpdated');
+          User.emitChange('bidUpdated');
           this.disabled.submit = false;
         }).catch ((error) => {
           console.log (error.response, '#error-' + id);
@@ -187,7 +187,7 @@
     },
     created: function () {
       Bus.$on ('bidUpdated', (payload) => {
-        this.getTasks ();
+        this.getTasks();
       });
       Bus.$on ('needsStripe', () => {
           $('#stripe-modal').modal();   
