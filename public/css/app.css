@@ -7378,6 +7378,9 @@ body {
   padding-left: 24px;
   padding-right: 24px;
 }
+.modal-title {
+  font-weight: 800;
+}
 /* The switch - the box around the slider */
 .switch {
   position: relative;

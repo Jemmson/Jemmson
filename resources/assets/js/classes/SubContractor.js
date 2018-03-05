@@ -7,6 +7,10 @@ export default class SubContractor {
     }
 
     async toggleStripePaymentOption(task) {
+        if (User.needsStripe()) {
+            User.emitChange('bidUpdated');
+            return false;
+        }
         try {
             const data = await axios.post('/api/task/togglestripe', task);
             User.emitChange('bidUpdated');

@@ -13,7 +13,13 @@
       <div id="card-errors" role="alert"></div>
     </div>
     <br>
-    <button class="btn btn-success">Sign Up</button>
+    <button class="btn btn-success" style="float: right;" :disabled="signup">
+        <span v-if="signup">
+            <i class="fa fa-btn fa-spinner fa-spin"></i>
+        </span>
+        Sign Up
+    </button>
+    <div style="clear:both;"></div>
   </form>
 </template>
 
@@ -23,6 +29,7 @@ export default {
         return {
             stripe: {},
             card: {},
+            signup: false,
             style: {
                 base: {
                     color: '#32325d',
@@ -48,6 +55,7 @@ export default {
     methods: {
         async submit(event) {
             event.preventDefault();
+            this.signup = true;
             const {
                 token,
                 error
@@ -57,9 +65,12 @@ export default {
                 // Inform the customer that there was an error
                 const errorElement = document.getElementById('card-errors');
                 errorElement.textContent = error.message;
+                this.signup = false;
             } else {
                 try {
                     // create stripe customer with token
+                    this.signup = false;
+                    $('#stripe-modal').modal('hide');  
                     let response = await axios.post('/stripe/customer', token);
                     console.log('customer');
                     let data = response.data;
@@ -67,6 +78,7 @@ export default {
                     Spark.state.user.stripe_id = data.id;
                     Vue.toasted.success('You may now pay with stripe');
                 } catch (error) {
+                    this.signup = false;
                     error = error.response.data;
                     Vue.toasted.error(error.message);
                 }

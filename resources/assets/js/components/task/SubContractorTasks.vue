@@ -67,10 +67,9 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12">
-        <stripe v-if="showStripe">
+      
+        <stripe>
         </stripe>
-      </div>
     </div>
   </div>
 </template>
@@ -95,7 +94,6 @@
           submit: false,
           finished: false
         },
-        showStripe: false
       }
     },
     methods: {
@@ -192,7 +190,7 @@
         this.getTasks ();
       });
       Bus.$on ('needsStripe', () => {
-        this.showStripe = true;
+          $('#stripe-modal').modal();   
       });
     },
     mounted () {

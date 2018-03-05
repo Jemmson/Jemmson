@@ -244,8 +244,8 @@
         }
       },
       toggleStripePaymentOption(task) {
-        task.checked = $('#toggle-stripe-'+task.id).is(':checked');
-        SubContractor.toggleStripePaymentOption(task);
+          task.checked = $('#toggle-stripe-'+task.id).is(':checked');
+          SubContractor.toggleStripePaymentOption(task)
       },
       payForTask (task) {
         Customer.payForTask (task, this.disabled);
