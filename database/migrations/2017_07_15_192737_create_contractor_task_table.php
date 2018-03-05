@@ -18,10 +18,10 @@ class CreateContractorTaskTable extends Migration
         // will change to actual price based upon the negotiation the
         // contractor has with the customer
         Schema::create('contractor_task', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('task_id');
-            $table->integer('proposed_price');
+            $table->integer('base_price')->default(0);
+            $table->primary(['contractor_id', 'task_id']);
             $table->timestamps();
         });
     }

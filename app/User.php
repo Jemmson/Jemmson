@@ -3,10 +3,12 @@
 namespace App;
 
 use Laravel\Spark\User as SparkUser;
+use Illuminate\Notifications\Notifiable;
 
 class User extends SparkUser
 {
     use Traits\Passwordless;
+    use Notifiable;
     /**
      * The attributes that are mass assignable.
      *
@@ -17,6 +19,7 @@ class User extends SparkUser
         'email',
         'phone',
         'password_updated',
+        'usertype',
         'password'
     ];
 
@@ -38,8 +41,7 @@ class User extends SparkUser
         'billing_city',
         'billing_zip',
         'billing_country',
-        'extra_billing_information',
-        'usertype',
+        'extra_billing_information'
     ];
 
     /**
@@ -52,14 +54,14 @@ class User extends SparkUser
         'uses_two_factor_auth' => 'boolean',
     ];
 
-    public function customers()
+    public function customer()
     {
-        return $this->hasMany(Customer::class, 'user_id', 'id');
+        return $this->hasOne(Customer::class);
     }
 
-    public function contractors()
+    public function contractor()
     {
-        return $this->hasMany(Contractor::class, 'user_id', 'id');
+        return $this->hasOne(Contractor::class);
     }
 
     public function feedback()
@@ -73,6 +75,56 @@ class User extends SparkUser
     }
 
     /**
+     * Save customer Stripe id
+     *
+     * @param String $id
+     * @return Boolean
+     */
+    public function saveStripeId($id)
+    {
+        if ($id === null) {
+            return false;
+        }
+
+        $this->stripe_id = $id;
+
+        try {
+            $this->save();
+        } catch (\Excpetion $e) {
+            Log::error('Saving Stripe Id: ' . $e-getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Save card infromation from stripe
+     *
+     * @param [type] $card
+     * @return Boolean
+     */
+    public function saveCardInformation($card)
+    {
+        if ($card === null) {
+            return false;
+        }
+
+        $this->card_brand = $card['brand'];
+        $this->card_last_four = $card['last4'];
+        $this->card_country = $card['country'];
+
+        try {
+            $this->save();
+        } catch (\Excpetion $e) {
+            Log::error('Saving Stripe Id: ' . $e-getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get all jobs this user is associated with
      *
      * @return void
@@ -80,38 +132,64 @@ class User extends SparkUser
     public function jobs()
     {
         if ($this->usertype === 'contractor') {
-            return $this->hasMany(Job::class, 'contractor_id', 'id')->get();
+            return $this->hasMany(Job::class, 'contractor_id');
         } else {
-            return $this->hasMany(Job::class, 'customer_id', 'id')->get();
+            return $this->hasMany(Job::class, 'customer_id');
         }
     }
 
     /**
      * Get more details about this user
      * whether they are a contractor or customer
-     * 
-     * Notice: We are assuming the correct details for this user 
-     * is the first record found TODO: is there a better
-     * way to do this?
      *
-     * @return [obj] 
+     * @return [obj]
      */
-    public function getDetails() 
+    public function getDetails()
     {
         if ($this->usertype === 'contractor') {
-            return $this->contractors()->first() != null ? $this->contractors()->first() : null;
+            return $this->contractor()->first();
         } else {
-            //dd($this->customers()->first());
-            return $this->customers()->first() != null ? $this->customers()->first() : null;
+            return $this->customer()->first();
         }
 
+    }
+
+    /**
+     * Are sms notifications on for this user
+     *
+     * @return bool
+     */
+    public function smsOn()
+    {
+        if ($this->usertype === 'contractor') {
+            $on = $this->contractor()->first()->sms_method_of_contact;
+        } else {
+            $on = $this->customer()->first()->sms_method_of_contact;
+        }
+
+        return $on;
+    }
+
+    /**
+     * Are email notifications on for this user
+     *
+     * @return bool
+     */
+    public function emailOn()
+    {
+        if ($this->usertype === 'contractor') {
+            $on = $this->contractor()->first()->email_method_of_contact;
+        } else {
+            $on = $this->customer()->first()->email_method_of_contact;
+        }
+        return $on;
     }
 
     /**
      * Update user password
      *
      * @param [string] $password a password
-     * 
+     *
      * @return void
      */
     public function updatePassword($password)
@@ -124,4 +202,22 @@ class User extends SparkUser
             Log::error('Model User: ' . $e->getMessage());
         }
     }
+
+    public function isCustomer()
+    {
+        return $this->usertype === 'customer';
+    }
+
+    /**
+     * Route notifications for the Nexmo channel.
+     *
+     * @return string
+     */
+    public function routeNotificationForNexmo()
+    {
+        // NOTICE: only handling US phone numbers
+        // this along with phone validation will need to be updated to handle other country phone numbers
+        return '1' . $this->phone;
+    }
+
 }

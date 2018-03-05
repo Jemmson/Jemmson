@@ -19,17 +19,18 @@ class CreateJobsTable extends Migration
             $table->increments('id');
             $table->bigInteger('customer_id');
             $table->bigInteger('contractor_id');
-            $table->string('address_line_1')->nullable();
-            $table->string('address_line_2')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('zip')->nullable();
+            $table->integer('location_id')->usigned()->nullable();
+
+            $table->string('job_name');
+            $table->string('status')->nullable();
+            $table->float('bid_price')->default(0.00);
+
             $table->dateTime('completed_bid_date')->nullable();
-            $table->float('bid_price')->nullable();
             $table->dateTime('agreed_start_date')->nullable();
             $table->dateTime('agreed_end_date')->nullable();
             $table->dateTime('actual_end_date')->nullable();
-            $table->string('job_name');
+            
+            $table->softDeletes();
             $table->timestamps();
         });
     }

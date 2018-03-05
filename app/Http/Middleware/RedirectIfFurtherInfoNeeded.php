@@ -17,10 +17,9 @@ class RedirectIfFurtherInfoNeeded
      */
     public function handle($request, Closure $next, $guard = null)
     {
-
-        if (Auth::guard($guard)->check() && Auth::user()->getDetails() === null) {
-            // TODO: if they are coming from a passwordless link and further info was
-            //       needed redirect them to the bid afterwords not just home, better way to do/not do this?
+        session(['prevDestination' => $request->getRequestUri()]);
+        $details = Auth::user()->getDetails();
+        if (Auth::guard($guard)->check() && ($details === null || $details->location_id === null)) {
             return redirect('furtherInfo');
         }
 

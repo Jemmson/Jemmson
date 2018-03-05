@@ -1,30 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
+    <!-- Meta Information -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Document</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>@yield('title', config('app.name'))</title>
+
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'
+          type='text/css'>
+
+    <!-- CSS -->
+    <link href="/css/sweetalert.css" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
+    <!-- Scripts -->
+@yield('scripts', '')
+
+<!-- Global Spark Object -->
+    <script>
+      window.Spark = <?php echo json_encode(array_merge(
+          Spark::scriptVariables(), []
+      )); ?>;
+    </script>
+
 </head>
 <body>
-<div class="container" style="margin: 2em">
-    @yield('content')
+
+
+<div id="spark-app" v-cloak>
+@if (Auth::check())
+    @if(Auth::user()->usertype=='contractor')
+        @include('nav.contractor')
+    @else
+        @include('nav.customer')
+    @endif
+@else
+    @include('nav.guest')
+@endif
+
+<!-- Main Content -->
+@yield('content')
+
+<!-- Application Level Modals -->
+    @if (Auth::check())
+        @include('spark::modals.notifications')
+        @include('spark::modals.support')
+        @include('spark::modals.session-expired')
+    @endif
 </div>
 
-<!-- jQuery first, then Tether, then Bootstrap JS. -->
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
-        crossorigin="anonymous"></script>
-<script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
-<script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+<!-- JavaScript -->
+<script src="{{ mix('js/app.js') }}"></script>
+<script src="/js/sweetalert.min.js"></script>
+
 </body>
 </html>

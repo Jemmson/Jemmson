@@ -1,4 +1,135 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "./../../../node_modules/bootstrap/less/bootstrap";
 
 // @import "./spark/spark";
 @import "./../../../vendor/laravel/spark/resources/assets/less/spark";
+
+@import "./model.less";
+@import "./toggle.less";
+@import "./stripe/buttons.less";
+
+body {
+  background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
+  font-family: 'Roboto', sans-serif;
+}
+
+.page-title {
+  font-weight: 800;
+}
+
+.job-name {
+  font-weight: 900;
+  font-size: 1.8rem;
+  font-style: italic;
+}
+
+.bid-task-price {
+  // width: 50%;
+  // float: right;
+}
+
+.job-status {
+  float: right;
+}
+
+.right-label {
+  float: right;
+}
+
+.primary-action-btn {
+  float: right;
+}
+
+.label-xsmall {
+  vertical-align: super;
+  font-size: x-small;
+}
+
+.label-small {
+  vertical-align: super;
+  font-size: small;
+}
+
+.label-medium {
+  vertical-align: super;
+  font-size: medium;
+}
+
+.label-large {
+  vertical-align: super;
+  font-size: large;
+}
+
+.label-bs {
+  vertical-align: super;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.btn-close {
+  padding: 10px 16px 10px 16px;
+}
+
+/**
+ * The CSS shown here will not be introduced in the Quickstart guide, but shows
+ * how you can use CSS to style your Element's container.
+ */
+.StripeElement {
+  background-color: white;
+  height: 40px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+
+.nav-headband {
+  height: 4px;
+  background-color: #4F85CE;
+}
+
+.nav-wrapper {
+  display: grid;
+  grid-template-columns: 8rem repeat(6, 1fr) 1rem;
+  height: 5rem;
+  background-color: white;
+  border-bottom: solid thin black;
+}
+
+.nav-padding {
+
+}
+
+.nav-link-section {
+  margin: auto;
+}
+
+.home-nav {
+  margin-left: auto;
+  margin-right: auto;
+}

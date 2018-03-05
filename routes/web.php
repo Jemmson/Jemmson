@@ -59,65 +59,58 @@ Route::get('/public/contractorCommunication', function(){
     return view('/public.contractorCommunication');
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth', 'further.info']], function () {
 
-    //  Route::get('/furtherInfo', 'Auth\RegisterController@furtherInfo');
+    Route::get('/home', 'HomeController@show');
+    // common routes
+    Route::get('/initiate-bid', 'InitiateBidController@index');
+    Route::post('/initiate-bid', 'InitiateBidController@send');
+    Route::get('/bid-list', 'BidListController@index');
+    Route::get('/invoices', 'Controller@create');
+    Route::get('/current-job', 'Controller@create');
+    Route::get('/payments-and-review', 'Controller@create');
+    Route::get('/my-contractors', 'Controller@create');
+
+    // TaskController
+    Route::get('/bid/tasks', 'TaskController@bidContractorJobTasks');
+    Route::post('/bid/tasks', 'TaskController@bidTasks');
+    Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
+    Route::post('/task/deny', 'TaskController@denyTask');
+
+    // JobController
+    Route::resource('/job', 'JobController');
+    Route::post('/jobs', 'JobController@jobs');
+    Route::post('/bid/job/decline', 'JobController@declineJobBid');
+    Route::post('job/approve/{job}', 'JobController@approveJob');
+    
+    // Stripe routes
+    Route::get('/stripe/express/connect', 'StripeController@connectExpress');
+    Route::get('/stripe/express/auth', 'StripeController@expressAuth');
+    Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');
+    Route::post('/stripe/express/task/payment', 'StripeController@sendExpressTaskPayment');    
+    
+    Route::post('/stripe/customer', 'StripeController@saveCustomer');
+    Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
+}
+);
+Route::group(['middleware' => ['auth']], function () {
+    Route::post('/home', 'HomeController@create');
     Route::get(
         '/furtherInfo', function () {
             return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
         }
     );
 
-    Route::get('/home', 'HomeController@show')->middleware('further.info');
-    Route::post('/home', 'HomeController@create');
-
-    // common routes
-    Route::get('/initiate-bid', 'InitiateBidController@index');
-    Route::post('/initiate-bid', 'InitiateBidController@send');
-    Route::get('/bid-list', 'BidListController@index');
-    Route::get('/settings', 'Controller@create');
-    Route::get('/invoices', 'Controller@create');
-    Route::get('/current-job', 'Controller@create');
-    Route::get('/payments-and-review', 'Controller@create');
-    Route::get('/my-contractors', 'Controller@create');
-    Route::resource('/job', 'JobController');
-
-    // contractor routes
-//    Route::get('/contractor/', 'ContractorController@index');
-//    Route::get('/contractor/initiate-bid', 'InitiateBidController@index');
-//    Route::post('/contractor/initiate-bid', 'InitiateBidController@send');
-//    Route::get('/contractor/bid-list', 'BidListController@contractorIndex');
-
-
-    // customer routes
-//    Route::get('/customer/bid-list', 'BidListController@customerIndex');
-//    Route::get('/customer/check', 'CustomerController@checkCustomerData');
-//    Route::resource('/customer', 'CustomerController');
+    // home controller
+    Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
 }
 );
 
 
-// passwordless login
-Route::get('/login/{token}/{job_id}', function ($token, $job_id) {
-    // find token in the db
-    $token = App\PasswordlessToken::where('token', $token)->first();
-    // invalid token
-    if (!$token) {
-        return redirect('login')->withErrors(__('passwordless.invalid_token'));
-    }
 
-    // find user connected to token
-    $user = App\User::find($token->user_id);
-    // user not found or login user if they where found
-    if (!$user) {
-        return redirect('login')->withErrors(__('passwordless.no_user'));
-    } else {
-        if ($user->isValidToken($token->token)) {
-            Auth::login($user);
-            session(['job_id' => $job_id]);
-            return redirect('/job/' . $job_id . '/edit');
-        }
-    }
-});
+// passwordless login
+Route::get('/login/{type}/{job_id}/{token}', 'PasswordlessController@JobBid');
+// passwordless login
+Route::get('/login/{type}/task/{task_id}/{token}', 'PasswordlessController@taskBid');
 
 

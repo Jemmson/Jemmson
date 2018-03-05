@@ -3,6 +3,8 @@ namespace App\Traits;
 use App\Exceptions\InvalidTokenException;
 use App\PasswordlessToken;
 use Illuminate\Support\Facades\App;
+use Carbon\Carbon;
+
 trait Passwordless
 {
     /**
@@ -43,11 +45,13 @@ trait Passwordless
      */
     public function generateToken($save = false)
     {
+        $now = Carbon::now('America/Phoenix');
         $attributes = [
             'token'      => str_random(16),
             'is_used'    => false,
             'user_id'    => $this->id,
-            'created_at' => time()
+            'created_at' => time(),
+            'expires_at' => $now->addHour()
         ];
         $token = App::make(PasswordlessToken::class);
         $token->fill($attributes);
@@ -56,6 +60,7 @@ trait Passwordless
               $token->save();
             } catch (\Exception $e) {
               Log::error('Error Saving User Token: '. $e->getMessage());
+              return null;
             }
         }
         return $token;

@@ -21,7 +21,7 @@
                 </div>
 
                 <!-- Branding Image -->
-                @include('spark::nav.brand')
+                <brand></brand>
             </div>
 
             <div class="collapse navbar-collapse" id="spark-navbar-collapse">

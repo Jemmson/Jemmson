@@ -18,13 +18,13 @@ class HomePageCustomerTest extends DuskTestCase
     public function testExample()
     {
         $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(61))->visit('/home')
-                ->assertSee('Initiate Bid')
+            $browser->loginAs(User::find(2))->visit('/home')
+//                ->assertSee('Initiate Bid')
                 ->assertSee('Bid List')
                 ->assertSee('Previous Bids')
                 ->assertSee('Settings')
                 ->assertDontSee('I am a contractor')
-                ->pause(0);
+                ->pause(10000);
         });
     }
 }

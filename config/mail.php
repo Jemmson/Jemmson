@@ -16,7 +16,8 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'mailgun'),
+//    'driver' => env('MAIL_DRIVER', 'mailgun'),
+    'driver' => env('MAIL_DRIVER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +30,8 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+//    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'smtp.mailtrap.io'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +44,8 @@ return [
     |
     */
 
-    'port' => env('MAIL_PORT', 587),
+//    'port' => env('MAIL_PORT', 587),
+    'port' => env('MAIL_PORT', 2525),
 
     /*
     |--------------------------------------------------------------------------
@@ -71,7 +74,8 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+//    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    'encryption' => env('MAIL_ENCRYPTION', ''),
 
     /*
     |--------------------------------------------------------------------------

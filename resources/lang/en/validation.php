@@ -96,8 +96,11 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'jobName' => [
+            'regex' => 'The job name field may only contain the special characters . # , - ',
+        ],
+        'taskName' => [
+            'regex' => 'The task name field may only contain the special characters . # , - ',
         ],
     ],
 

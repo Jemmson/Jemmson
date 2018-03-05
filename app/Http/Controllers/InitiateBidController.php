@@ -10,8 +10,10 @@ use SimpleSoftwareIO\SMS\Facades\SMS;
 use App\User;
 use App\Job;
 use App\Mail\PasswordlessBidPageLogin;
-
+use Illuminate\Support\Facades\DB;
 use App\Services\RandomPasswordService;
+use App\Notifications\BidInitiated;
+use App\Services\SanatizeService;
 
 class InitiateBidController extends Controller
 {
@@ -37,59 +39,62 @@ class InitiateBidController extends Controller
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
+        $this->validate($request, [
+            'email' => 'required_without:phone|email',
+            'phone' => 'required_without:email|min:10|max:14',
+            'customerName' => 'required',
+            'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
+        ]);
 
+        $customerName = $request->customerName;
+        $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
-        $phone = $request->phone;
         $jobName = $request->jobName;
 
-        if (empty($email) && empty($phone)) {
-            return redirect('initiate-bid');
-        }
 
-        if (!empty($email)) {
-            $this->validate(request(), ['email' => 'email']);
-        }
+        // find customer
+        $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
 
-        if (!empty($phone)) {
-            $this->validate(request(), ['phone' => 'min:7|max:10']);
-        }
 
-        // find user
-        $user = $this->customerExistsInTheDatabase($email, $phone);
-
-        if ($user == false) {
-            $user = $this->createNewUser($email, $phone);
+        if ($customerExists['error']) {
+            if ($customerExists['errorText'] == 'Create a new customer') {
+                $customer = $this->createNewCustomer($email, $phone, $customerName);
+                if ($customer == null) {
+                    return redirect()->back()->with(
+                        'error',
+                        'Customer could not be created. Please try initiating the bid again'
+                    );
+                }
+            } else {
+                return redirect()->back()->with(
+                    'error',
+                    $customerExists['errorText'] . " The customer name should be " . $customerExists['name']
+                );
+            }
+        } else {
+            $customer = $customerExists['customer'];
         }
 
         // create a job name if one does not exist
         if (empty($jobName)) {
-            $jobName = $this->jobName($user);
+            $jobName = $this->jobName($customer);
         }
 
         // create a bid
-        $job_id = $this->createBid($user->id, $jobName);
+        $job = $this->createBid($customer->id, $jobName);
+        $job_id = $job->id;
 
-        // generate token and save it
-        $token = $user->generateToken(true);
-
-
-        // generate data for views
-        $data = [
-            'email' => $email,
-            'link' => $token->token,
-            'job_name' => $jobName,
-            'job_id' => $job_id,
-            'contractor' => Auth::user()->name
-        ];
-
-
-        if (!empty($email)) {
-            $this->sendEmail($data, $email);
+        // if we fail to create a job or token redirect back 
+        // with error
+        if ($job_id == null) {
+            // TODO: delete job/token if only one was created
+            return redirect()->back()->with(
+                'error',
+                'Sorry couldn\'t create the bid, please try again.'
+            );
         }
 
-        if (!empty($phone)) {
-            $this->sendText($data, $phone);
-        }
+        $customer->notify(new BidInitiated($job, $customer));
 
         $request->session()->flash('status', 'Your bid was created');
 
@@ -103,43 +108,11 @@ class InitiateBidController extends Controller
      *
      * @return string
      */
-    public function jobName($user)
+    public function jobName($customer)
     {
-        return $user->name.uniqid();
+        return $customer->name . uniqid();
     }
 
-    /**
-     * Sending an Email to the customer or the contractor
-     *
-     * @param array  $data  the data associated with the job
-     * @param string $email the email address to send the mail to
-     */
-    public function sendEmail($data, $email)
-    {
-        // send passwordless email
-        $resp = Mail::to($email)
-            ->queue(
-                new PasswordlessBidPageLogin($data)
-            ); // no response from queue or send
-    }
-
-    /**
-     * Sending a text to the customer or the contractor
-     *
-     * @param array  $data  the data associated with the job
-     * @param string $phone the phone number of the customer
-     */
-    public function sendText($data, $phone)
-    {
-        // send sms passwordless link
-        session()->put('phone', $phone);
-        SMS::send(
-            'sms.passwordlessbidpagelogin', $data, function ($sms) {
-                $sms->to(session('phone'));
-            }
-        );
-        session()->forget('phone');
-    }
 
     /**
      * This function creates a new user
@@ -149,27 +122,32 @@ class InitiateBidController extends Controller
      *
      * @return $this|\Illuminate\Database\Eloquent\Model
      */
-    public function createNewUser($email, $phone)
+    public function createNewCustomer($email, $phone, $customerName)
     {
         if (empty($email)) {
             $email = null;
         }
 
-        if (empty($phone)) {
+        if (empty($phone) || $phone === '') {
             $phone = null;
         }
 
         $pass = RandomPasswordService::randomPassword();
 
-        return User::create(
+        $customer = null;
+
+        $customer = User::create(
             [
-                'name' => explode('@', $email)[0],
+                'name' => $customerName,
                 'email' => $email,
                 'phone' => $phone,
+                'usertype' => 'customer',
                 'password_updated' => false,
                 'password' => bcrypt($pass),
             ]
         );
+
+        return $customer;
 
     }
 
@@ -181,42 +159,69 @@ class InitiateBidController extends Controller
      *
      * @return bool|\Illuminate\Database\Eloquent\Model|null|static
      */
-    public function customerExistsInTheDatabase($email, $phone)
+    public function customerExistsInTheDatabase($email, $phone, $customerName)
     {
-        $user = User::where('email', $email)->orWhere('phone', $phone)->first();
-        $result = count($user);
+        $customer = User::where('email', $email)->orWhere('phone', $phone)->first();
 
-        if ($result === 1) {
-            return $user;
+        if ($customer != null) {
+            if ($customer->name != $customerName) {
+                return [
+                    "error" => true,
+                    "name" => $customer->name,
+                    "errorText" => "Error: Customer already exists please correct the name."
+                ];
+            } else {
+                return [
+                    "error" => false,
+                    "customer" => $customer
+                ];
+            }
         } else {
-            return false;
+            return [
+                "error" => true,
+                "customer" => $customer,
+                "errorText" => "Create a new customer"
+            ];
         }
+
     }
 
     /**
      * Creating the bid
      *
      * @param string $customer_id the customers id
-     * @param string $job_name    the jobs name
+     * @param string $job_name the jobs name
      *
      * @return \Illuminate\Http\RedirectResponse|mixed
      */
     public function createBid($customer_id, $job_name)
     {
+        // not the best way but autoincrementing the id number
+        // TODO: find a better way but this works for now
+        $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
+
         $job = new Job;
-        $job->contractor_id = Auth::user()->id;
-        $job->customer_id = $customer_id;
+        if ($jobId == []) {
+            $job->id = 1;
+        } else {
+            $job->id = $jobId[0]->id + 1;
+        }
+        $job->contractor_id = Auth::user()->id; // actually the user id and not the contractor Id
+        $job->customer_id = $customer_id;       // also the user Id and not the customer Id
         $job->job_name = $job_name;
+        $job->status = __("status.bid.initiated");
+
 
         try {
             $job->save();
-            return $job->id;
         } catch (\Exception $e) {
-            Log::critical('Failed to create a bid: ' . $e);
+            Log::critical('Failed to create a bid: ' . $e->getMessage());
             return redirect()->back()->with(
                 'error',
-                'Sorry couldn\'t create the bid, please try again.'
+                'Job could not be created. Please try initiating the bid again'
             );
+//            return null;
         }
+        return $job;
     }
 }

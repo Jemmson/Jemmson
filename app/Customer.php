@@ -9,26 +9,61 @@ class Customer extends Model
     //
     protected $fillable = [
         'user_id',
-        'email_method_of_contact',
-        'address_line_1',
-        'address_line_2',
-        'city',
-        'state',
-        'zip',
         'notes',
+        'email_method_of_contact',
         'phone_method_of_contact',
         'sms_method_of_contact',
-        'phone_number'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class, 'customer_id', 'user_id');
     }
     
     public function contractors()
     {
-        return $this->belongsToMany(contractor::class);
+        return $this->belongsToMany(Contractor::class);
+    }
+    
+    public function location()
+    {
+        return $this->hasOne(Location::class, 'user_id', 'user_id')->where('default', '=', 1);
+    }
+
+    public function updateLocation($request)
+    {
+        if ($this->location_id === null) {
+            $location = new Location();
+            $location->user_id = $this->user()->first()->id;
+            $location->default = true;
+            $location->address_line_1 = $request->address_line_1;
+            $location->address_line_2 = $request->address_line_2;
+            $location->city = $request->city;
+            $location->area = $request->city;
+            $location->state = $request->state;
+            $location->zip = $request->zip;
+        } else {
+            $location = $this->location()->first();
+            $location->address_line_1 = $request->address_line_1;
+            $location->address_line_2 = $request->address_line_2;
+            $location->city = $request->city;
+            $location->area = $request->city;
+            $location->state = $request->state;
+            $location->zip = $request->zip;
+        }
+
+        try {
+            $location->save();
+            $this->location_id = $location->id;
+            $this->save();
+        } catch(\Exception $e) {
+            Log::error('Saving Location: ' . $e->getMessage());
+        }
     }
 
     // TODO: understand where an intermidate table relates to two other tables

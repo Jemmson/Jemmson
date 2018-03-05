@@ -199,11 +199,14 @@ module.exports = {
         /*
          * After obtaining the Stripe token, send the registration to Spark.
          */
-        sendRegistration() {
+        sendRegistration() {            
             Spark.post('/register', this.registerForm)
                 .then(response => {
                     window.location = response.redirect;
-                });
+                }).catch((error) => {
+                    this.registerForm.errors.errors = error.errors;
+                    Vue.toasted.error(error.message);
+                });;
         }
     },
 

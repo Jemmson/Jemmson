@@ -4,6 +4,36 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application String Values
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    */
+
+    'bidIsApproved' => 'Bid Has Been Approved',
+    'bidIsCanceled' => 'Bid Has Been Canceled',
+    'bidIsInProgress' => 'Bid In Progress',
+    'bidIsFinished' => 'Waiting For Customer Approval',
+    'bidIsRejected' => 'Bid Has Been Rejected',
+    'jobIsAccepted' => 'The Job Has Been Accepted',
+    'jobIsDeclined' => 'The Job Has Been Declined',
+    'taskIsInitiated' => 'initiated',
+    'taskIsAccepted' => 'accepted',
+
+    'bid_task' => [
+        'initiated' => 'bid_task.initiated',
+        'sent'       =>  'bid_task.sent',
+        'approved'   =>  'bid_task.approved',
+    ],
+
+    'job' => [
+        'approved' => 'job.approved',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Name
     |--------------------------------------------------------------------------
     |
@@ -12,7 +42,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Jemmson'),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +81,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost:9500'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +94,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'America/Phoenix',
 
     /*
     |--------------------------------------------------------------------------
@@ -120,7 +150,7 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG', 'daily'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
@@ -163,6 +193,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+
         /*
          * Package Service Providers...
          */
@@ -176,6 +207,7 @@ return [
         Laravel\Cashier\CashierServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+//        Laravel\Dusk\DuskServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,

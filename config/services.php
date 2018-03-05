@@ -37,5 +37,12 @@ return [
         'model'  => App\User::class,
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
+        'client_id' => env('STRIPE_CLIENT_ID')
+    ],
+    
+    'nexmo' => [
+        'key' => env('NEXMO_KEY'),
+        'secret' => env('NEXMO_SECRET'),
+        'sms_from' => env('NEXMO_FROM_NUMBER'),
     ],
 ];

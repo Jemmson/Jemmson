@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class LoginTest extends DuskTestCase
 {
 
-    use RefreshDatabase;
+//    use RefreshDatabase;
 
     /**
      * A Dusk test example.
@@ -31,11 +31,10 @@ class LoginTest extends DuskTestCase
             $browser->visit('/login')
                 ->type('username', $user->email)
                 ->type('password', 'secret')
-//                ->pause(5000)
+                ->pause(3000)
                 ->press('login')
                 ->pause(0)
-                ->pause(0)
-                ->assertPathIs('/home');
+                ->assertPathIs('/furtherInfo');
         });
     }
 }
