@@ -12,7 +12,7 @@
                     </div>
                 </div>
             </div>
-            <transition name="">
+            <transition name="slide-fade">
                 <div v-show="showBidList">
                     <div class="col-sm-12 col-md-4" v-for="(bid, index) in bids" v-bind:key="bid.id">
                         <div class="panel">

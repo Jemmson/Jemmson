@@ -23,12 +23,8 @@ export default class GeneralContractor {
     }
 
     notifyCustomerOfFinishedBid(bid) {
-        if (User.recievePaymentsWithStripe()) {
-            if (!User.stripeExpressConnected()) {
-                console.log('No Stripe Express');
-                Bus.$emit('needsStripe');
-                return false;
-            }
+        if (User.needsStripe()) {
+            return false;
         }
         console.log('notifyCustomerOfFinishedBid', bid);
         axios.post('/api/task/finishedBidNotification', {

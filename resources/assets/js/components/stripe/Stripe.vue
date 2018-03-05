@@ -1,30 +1,41 @@
 <template>
-<div>
-    <div class="panel panel-default" v-if="isContractor">
-        <!-- <div class="panel-heading">Dashboard</div> -->
-        <div class="panel-body">
-            <span>stripe stuff test</span>
-            <br>
-
-            <connect-with-stripe v-if="showConnectBtn">
-            </connect-with-stripe>
-
-            <express-dashboard-stripe v-if="showDashboardLoginBtn">
-            </express-dashboard-stripe>
+    <!-- Modal -->
+    <div class="modal fade" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal" aria-hidden="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ header }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div v-if="showStripeExpress">
+                        Before you can continue you will need to connect with Stripe Express. 
+                    </div>
+                    <div v-if="isCustomer && notSignedUp">
+                        Before You can pay with stripe you will need to complete the form below.
+                        <signup-with-stripe>
+                        </signup-with-stripe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span>
+                        <div v-if="isContractor">
+                            <connect-with-stripe v-if="showStripeExpress">
+                            </connect-with-stripe>
+                        </div>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="panel panel-default" v-if="isCustomer && notSignedUp">
-        <div class="panel-body">
-            <signup-with-stripe>
-            </signup-with-stripe>
-        </div>
-    </div>
-</div>
 </template>
 
 <script>
 export default {
   computed: {
+      header() {
+          return 'Stripe';
+      },
       notSignedUp() {
           return !User.hasStripeId();
       },
@@ -34,7 +45,7 @@ export default {
       isCustomer() {
           return User.isCustomer();
       },
-      showConnectBtn() {
+      showStripeExpress() {
           if (Spark.state.user.contractor === null)
             return false;
 

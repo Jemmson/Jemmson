@@ -1,5 +1,5 @@
 <template>
-    <div class="panel panel-default" v-if="show">
+    <div id="task-details" class="panel panel-default" v-if="show">
         <!-- <div class="panel-heading">Dashboard</div> -->
         <div class="panel-body">
             <!-- /customer and contractor section -->
