@@ -43,6 +43,18 @@ export default class User {
         return true;
     }
 
+    needsStripe() {
+        if (this.recievePaymentsWithStripe()) {
+            if (!this.stripeExpressConnected()) {
+                console.log('No Stripe Express');
+                Bus.$emit('needsStripe');
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
     /**
      * User has a stripe express account connected
      */

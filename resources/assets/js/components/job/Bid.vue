@@ -45,7 +45,7 @@
         </transition>
 
         <!-- / stripe testing delete after -->
-        <stripe v-if="showStripe">
+        <stripe>
         </stripe>
     </div>
 </template>
@@ -139,7 +139,7 @@
                 this.showAddTaskPanel = false;
             });
             Bus.$on('needsStripe', () => {
-                this.showStripe = true;                
+                $('#stripe-modal').modal();             
             });
         }
     }
