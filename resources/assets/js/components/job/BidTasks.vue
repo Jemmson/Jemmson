@@ -1,7 +1,8 @@
 <template>
   <!-- /all tasks of a bid -->
-  <div class="col-md-12">
-    <div class="table-responsive">
+  <div class="panel">
+    <div class="panel-body">
+      <div class="table-responsive">
     <table class="table">
       <thead>
         <tr>
@@ -103,6 +104,8 @@
       </tbody>
     </table>
     </div>
+      </div>
+    
   </div>
 </template>
 

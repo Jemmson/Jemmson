@@ -1,5 +1,5 @@
 <template>
-    <div class="panel panel-default" v-if="show">
+    <div id="add-task" class="panel panel-default" v-if="show">
         <div class="panel-body">
             <form>
                 <div class="row">
