@@ -4,11 +4,11 @@
 
         <!--<pre>{{ bid }}</pre>-->
 
-        <div v-if="showArea()" class="form-group col-md-6">
+        <!-- <div v-if="showArea()" class="form-group col-md-12">
             <label for="area">Locality</label>
             <input type="text" class="form-control" id="area" name="area" v-model="area.area"
                    v-on:blur="updateArea">
-        </div>
+        </div> -->
         <div class="col-md-6">
             <label>Job Name: </label>
             <label class="label label-primary">
@@ -38,10 +38,7 @@
         </div>
         <div class="col-md-6">
             <p>
-                <label for="price">Prices:</label>
-            </p>
-            <p>
-                Total Job Price:
+                <label for="price">Total Job Price:</label>
                 <label class="label label-info">${{ bid.bid_price }}</label>
             </p>
         </div>
