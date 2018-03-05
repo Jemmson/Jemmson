@@ -118,6 +118,9 @@
                     this.showTaskPanel = true;
                     this.taskIndex = index;
                     this.showAddTaskPanel = false;
+                    this.$nextTick(() => {
+                        document.getElementById('task-details').scrollIntoView();
+                    });
                 }
             },
             openAddTask() {
