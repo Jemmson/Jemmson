@@ -67,11 +67,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="table" v-for="bid in task.bid_contractor_job_tasks" :key="bid.id">
+                            <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
                                 <td>{{ bid.contractor.name }}</td>
                                 <td>${{ bid.bid_price }}</td>
                                 <td>
-                                    <button @click="preview(task, bid.id)" class="button btn btn-sm btn-info">Preview
+                                    <button @click="preview(jobTask, bid.id)" class="button btn btn-sm btn-info">Preview
                                     </button>
                                 </td>
                                 <td>
@@ -95,7 +95,7 @@
 <script>
     export default {
         props: {
-            task: Object,
+            jobTask: Object,
             show: Boolean,
         },
         data() {
@@ -125,10 +125,10 @@
                 this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone);
             },
             acceptSubBidForTask(bid) {
-                GeneralContractor.acceptSubBidForTask(this.task, bid, this.disabled);
+                GeneralContractor.acceptSubBidForTask(this.jobTask, bid, this.disabled);
             },
             sendSubInviteToBidOnTask() {
-                GeneralContractor.sendSubInviteToBidOnTask(this.task, this.initiateBidForSubForm, this.disabled);
+                GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled);
             },
             notify() {
 
@@ -156,25 +156,25 @@
                     }.bind(this))
                 }
             },
-            preview(task, subId) {
+            preview(jobTask, subId) {
                 Bus.$emit('previewSubForTask', [
-                    task.job_task.job_id,
-                    task.id,
+                    jobTask.job_id,
+                    jobTask.id,
                     subId
                 ]);
             }
         },
         computed: {
             showAcceptBtn() {
-                return this.task.job_task.status === 'bid_task.bid_sent';
+                return this.jobTask.status === 'bid_task.bid_sent';
             },
             taskApproved() {
-                return this.task.job_task.status === 'bid_task.approved_by_customer';
+                return this.jobTask.status === 'bid_task.approved_by_customer';
             },
             aResults() {
                 if (this.results.length > 0) {
                     return this.results.filter((sub) => {
-                        for (let bid of this.task.bid_contractor_job_tasks) {
+                        for (let bid of this.jobTask.bid_contractor_job_tasks) {
                             // if invited to bid do not show in dropdown list
                             if (bid.contractor_id === sub.id) {
                                 return false;                                
@@ -188,7 +188,7 @@
             },
             isGeneralContractor() {
                 // General contractor is the one who created the bid
-                return this.task.contractor_id === this.user.id;
+                return this.jobTask.task.contractor_id === this.user.id;
             }
         },
         mounted: function () {

@@ -60,10 +60,10 @@ class Job extends Model
      */
     public function subs()
     {
-        $tasks = $this->tasks()->get();
+        $jobTasks = $this->jobTasks()->get();
         $subs = [];
-        foreach ($tasks as $task) {
-            $subs[] = $task->jobTask()->first()->contractor();
+        foreach ($jobTasks as $jobTask) {
+            $subs[] = $jobTask->contractor();
         }
         return $subs;
     }
@@ -327,7 +327,7 @@ class Job extends Model
 
     private function allJobTasksResolved()
     {
-        $totalTasks = count(DB::table('job_task')->where('job_id', $this->id)->get());
+        $totalTasks = count(DB::table('job_task')->where('job_id', $this->id)->where('deleted_at', null)->get());
         $totalTasksResolved = count(DB::table('job_task')->where('job_id', $this->id)->where('status','bid_task.customer_sent_payment')->get());
         return $totalTasks === $totalTasksResolved;
     }

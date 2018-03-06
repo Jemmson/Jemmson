@@ -44,7 +44,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task.jobs', 'jobTask'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['jobTask.job', 'jobTask.task'])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -55,7 +55,7 @@ class TaskController extends Controller
      */
     public function bidTasks()
     {
-        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['task.jobs', 'jobTask'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['jobTask.job', 'jobTask.task'])->get();
         return response()->json($bidTasks, 200); 
     }
 
@@ -129,7 +129,7 @@ class TaskController extends Controller
     public function toggleStripe(Request $request)
     {
         // remove the task from the job
-        $jobTask = Task::find($request->id)->jobTask()->first();
+        $jobTask = JobTask::find($request->id);
         
         if ($jobTask->toggleStripe()) {
             return response()->json(["message"=>"Success"], 200);
@@ -156,7 +156,8 @@ class TaskController extends Controller
         }
 
         $bidContractorJobTask->bid_price = $request->bid_price;
-        $jobTask = Task::find($bidContractorJobTask->task_id)->jobTask()->first();
+        $jobTask = $bidContractorJobTask->jobTask()->first();
+        
         // doesn't work since no default 'id' found
         // $jobTask->status = 'bid_task.sent';
 
@@ -169,7 +170,7 @@ class TaskController extends Controller
 
         $jobTask->updateStatus(__('bid_task.bid_sent'));
 
-        $gContractor = User::find($bidContractorJobTask->task()->first()->contractor_id);
+        $gContractor = User::find($jobTask->task()->first()->contractor_id);
         $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
 
         return response()->json(["message"=>"Success"], 200);
@@ -185,15 +186,18 @@ class TaskController extends Controller
     {
         // remove the task from the job
         $job = Job::find($request->jobId);
-        $jobTask = Task::find($taskId)->jobTask()->first();
+        $jobTask = JobTask::find($request->jobTaskId);
         
         try {
             $jobTask->delete();
         } catch (\Excpetion $e) {
             Log::error('Deleteing JobTask: ' . $e->getMessage());
+            return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
         }
 
         $job->subtractPrice($jobTask->cust_final_price);
+        return response()->json(["message"=>"Success"], 200);
+        
     }
 
     public function checkIfSubContractorExits($email, $phone)
@@ -247,10 +251,10 @@ class TaskController extends Controller
 
     }
 
-    public function addBidEntryForTheSubContractor($contractor, $taskId, $jobId)
+    public function addBidEntryForTheSubContractor($contractor, $jobTaskId, $taskId)
     {
-        if ($contractor->checkIfContractorSetBidForATask($contractor->user_id, $taskId, $jobId)) {
-            $contractor->addContractorToBidForJobTable($contractor->user_id, $taskId, $jobId);
+        if ($contractor->checkIfContractorSetBidForATask($contractor->user_id, $jobTaskId)) {
+            $contractor->addContractorToBidForJobTable($contractor->user_id, $jobTaskId, $taskId);
             return true;
         } else {
             return false;
@@ -294,13 +298,11 @@ class TaskController extends Controller
         $this->validate($request, [
             'phone' => 'required|string|min:10|max:14',
             'email' => 'required|email',
-            'taskId' => 'required',
         ]);
 
         $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
-        $taskId = $request->taskId;
-        $jobId = $request->jobId;
+        $jobTaskId = $request->jobTaskId;
         $name = $request->name;
 
         $user = User::where('phone', $phone)->orWhere('email', $email)->first();
@@ -314,19 +316,19 @@ class TaskController extends Controller
         }
 
         $contractor = $user->contractor()->first();
+        $jobTask = JobTask::find($jobTaskId);
 
         // add an entry in to the contractor bid table so that the sub can bid on the task
-        if ($this->addBidEntryForTheSubContractor($contractor, $taskId, $jobId) === false) {
+        if ($this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id) === false) {
             return response()->json(["message"=>"Task Already Exists.","errors"=>["error" => "Task Already Exists."]], 422);
         }
 
         //   this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
-        $user->notify(new NotifySubOfTaskToBid($taskId, $user));
+        $user->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user));
 
 
-        $bidPrices = Task::getBidPrices($jobId);
-
+        $bidPrices = Task::getBidPrices($jobTask->job_id);
 
         return $bidPrices;
     }
@@ -345,7 +347,7 @@ class TaskController extends Controller
             ->user_id;
         $user = User::where('id', $user_id)->get()->first();
 
-//        return $user;
+        //        return $user;
 
         $user->notify(new NotifySubOfAcceptedBid());
     }
@@ -359,7 +361,7 @@ class TaskController extends Controller
     public function accept(Request $request)
     {
         $bidId = $request->bidId;
-        $taskId = $request->taskId;
+        $jobTaskId = $request->jobTaskId;
         $jobId = $request->jobId;
         $price = $request->price;
         $contractorId = $request->contractorId;
@@ -373,8 +375,8 @@ class TaskController extends Controller
 
         // set the sub price in the job task table
         $job = Job::find($jobId);
-        $task = $job->tasks()->get()->where('id', '=', $taskId)->first();
-        $jobTask = $task->jobTask()->first();
+        $jobTask = JobTask::find($jobTaskId);
+        $task = $jobTask->task()->first();
 
         $jobTask->sub_final_price = $price;
         $jobTask->contractor_id = $contractorId;
@@ -390,7 +392,7 @@ class TaskController extends Controller
         
         // notify sub contractor that his bid was approved
         $user = User::find($contractorId);
-        $user->notify(new NotifySubOfAcceptedBid($bidContractorJobTask->task, $user));
+        $user->notify(new NotifySubOfAcceptedBid($task, $user));
 
         return response()->json(["message"=>"Success"], 200);
     }
@@ -403,7 +405,6 @@ class TaskController extends Controller
      */
     public function acceptTask(Request $request)
     {
-        $taskId = $request->taskId;
         $jobId = $request->jobId;
         $contractorId = $request->contractorId;
 
@@ -423,8 +424,8 @@ class TaskController extends Controller
      */
     public function approveTaskHasBeenFinished(Request $request) 
     {
-        $task = Task::find($request->id);
-        $jobTask =  $task->jobTask()->first();
+        $jobTask = JobTask::find($request->id);
+        $task = $jobTask->task()->first();
         $jobTask->status = __("bid_task.approved_by_general");
 
         $customer = User::find(Job::find($jobTask->job_id)->customer_id);
@@ -455,16 +456,16 @@ class TaskController extends Controller
         $id = 0;
         $finishedByGeneral = false;
 
-        if ($request->task !== null) {
+        if ($request->jobTask !== null) {
             // request comes from the bid task page
             // main object is not the task itself 
-            $id = $request->task_id;
+            $id = $request->jobTaskId;
         } else {
             $id = $request->id;
         }
 
-        $task = Task::find($id);
-        $jobTask = $task->jobTask()->first();
+        $jobTask = JobTask::find($id);
+        $task = $jobTask->task()->first();
 
         if ($request->current_user_id === $jobTask->contractor_id && $request->current_user_id === $task->contractor_id) {
             $finishedByGeneral = true;
@@ -503,8 +504,8 @@ class TaskController extends Controller
             'id' => 'required',
         ]);
 
-        $task = Task::find($request->id);
-        $task->updateStatus(__('bid_task.reopened'));
+        $jobTask = JobTask::find($request->id);
+        $jobTask->updateStatus(__('bid_task.reopened'));
 
         return response()->json(['message' => 'task reopened'], 200);
         // change the status of the job to pending
@@ -547,7 +548,7 @@ class TaskController extends Controller
     {
         $this->validate($request, [
             'price' => 'required|numeric',
-            'taskId' => 'required|numeric',
+            'jobTaskId' => 'required|numeric',
             'jobId' => 'required|numeric'
         ]);
 
@@ -555,7 +556,7 @@ class TaskController extends Controller
         $taskId = $request->taskId;
         $jobId = $request->jobId;
         $job = Job::find($jobId);
-        $jobTask = Task::find($taskId)->jobTask()->first();
+        $jobTask = JobTask::find($request->jobTaskId);
         $oldPrice = $jobTask->cust_final_price;
 
         try {
@@ -576,7 +577,6 @@ class TaskController extends Controller
     {
         $taskName = $request->taskName;
         $taskId = $request->taskId;
-        $jobId = $request->jobId;
 
         DB::table('tasks')
             ->where('id', $taskId)
@@ -659,8 +659,8 @@ class TaskController extends Controller
             'id' => 'required',
         ]);
 
-        $task = Task::find($request->id);
-        $jobTask = $task->jobTask()->first();
+        $jobTask = JobTask::find($request->id);
+        $task = $jobTask->task()->first();
 
         $jobTask->updateStatus(__('bid_task.denied'));
 
