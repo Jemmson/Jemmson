@@ -456,10 +456,10 @@ class TaskController extends Controller
         $id = 0;
         $finishedByGeneral = false;
 
-        if ($request->jobTask !== null) {
+        if ($request->job_task_id !== null) {
             // request comes from the bid task page
             // main object is not the task itself 
-            $id = $request->jobTaskId;
+            $id = $request->job_task_id;
         } else {
             $id = $request->id;
         }
