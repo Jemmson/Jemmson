@@ -1,5 +1,6 @@
 <template>
-    <div class="col-md-12">
+    <div>
+        <div class="col-md-12">
         <div class="panel panel-default">
             <!-- <div class="panel-heading">Dashboard</div> -->
             <div class="panel-body">
@@ -27,17 +28,12 @@
                 </div>
             </div>
         </div>
+        </div>
 
         
         <!-- /show all tasks associated to this bid -->
         <bid-tasks v-if="bid.job_tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
         </bid-tasks>
-
-        <!-- /task details and actions -->
-        <transition name="slide-fade">
-            <bid-task :show="showTaskPanel" :jobTask="jobTask">
-            </bid-task>
-        </transition>
 
         <!-- /add task to bid -->
         <transition name="slide-fade">

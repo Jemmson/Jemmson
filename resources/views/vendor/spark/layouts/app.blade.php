@@ -10,8 +10,8 @@
 
     <!-- Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'
-          type='text/css'>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
 
     <!-- CSS -->
     <link href="/css/sweetalert.css" rel="stylesheet">
