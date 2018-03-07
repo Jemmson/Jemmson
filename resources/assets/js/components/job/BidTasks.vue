@@ -45,16 +45,16 @@
           </div>
 
         </div>
-        <div class="panel-footer" v-if="isGeneral">
+        <div class="panel-footer">
           <div class="row">
             <center>
               <div class="col-xs-4">
-                <button class="btn btn-secondary" @click.prevent="openTaskBids(jobTask.id)">
+                <button class="btn btn-secondary" @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
                   <i class="fas fa-users fa-2x"></i>
                 </button>
               </div>
               <div class="col-xs-4">
-                <button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)">
+                <button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral">
                   <i class="fas fa-user-plus fa-2x"></i>
                 </button>
               </div>
@@ -65,20 +65,20 @@
               </div>
 
               <transition-group name="slide-fade">
-                <div class="col-xs-12" :id="'task-divider-' + jobTask.id" :key="1">
+                <div class="col-xs-12 hidden" :id="'task-divider-' + jobTask.id" :key="1">
                   <div class="divider"></div>
                 </div>
 
                 <!-- / task options -->
                 <div class="col-xs-12 hidden" :id="'task-options-' + jobTask.id" :key="2">
-                  <div class="col-xs-3">
+                  <div class="col-xs-4">
                     <!-- Rounded switch -->
                     <label v-if="showStripeToggle(jobTask)" class="switch">
                       <input :id="'toggle-stripe-' + jobTask.id" type="checkbox" v-model="jobTask.stripe" @click="toggleStripePaymentOption(jobTask)">
                       <span class="slider round"></span>
                     </label>
                   </div>
-                  <div class="col-xs-3">
+                  <div class="col-xs-4">
                     <!-- <button class="btn btn-primary" @click.prevent="openTaskPanel(index)">Details</button> -->
                     <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                       Deny
@@ -96,9 +96,7 @@
                       Delete
                     </button>
                   </div>
-                  <div class="col-xs-3">
-                  </div>
-                  <div class="col-xs-3">
+                  <div class="col-xs-4">
                     <button class="btn btn-success" v-if="showPayForTaskBtn(jobTask)" @click.prevent="payForTask(jobTask)" :disabled="disabled.pay">
                       <span v-if="disabled.pay">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -109,7 +107,7 @@
                       <span v-if="disabled.payCash">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>
                       </span>
-                      Paid With Cash
+                      Cash
                     </button>
                     <button class="btn btn-success" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)" :disabled="disabled.finished">
                       <span v-if="disabled.finished">
@@ -225,9 +223,9 @@
           return status === 'bid_task.bid_sent';
       },
       openTaskBids(id) {
-        // if ($('#task-options-' + id).hasClass('hidden')) {
-        //     $('#task-divider-' + id).toggleClass('hidden');
-        // }
+        if ($('#task-options-' + id).hasClass('hidden') || this.isCustomer) {
+            $('#task-divider-' + id).toggleClass('hidden');
+        }
         $('#task-subs-' + id).toggleClass('hidden');
       },
       openSubInvite(jobTask) {
@@ -235,9 +233,9 @@
         $('#sub-invite-modal').modal();
       },
       openTaskActions(id) {
-        // if ($('#task-subs-' + id).hasClass('hidden')) {
-        //     $('#task-divider-' + id).toggleClass('hidden');
-        // }
+        if ($('#task-subs-' + id).hasClass('hidden') || this.isCustomer) {
+            $('#task-divider-' + id).toggleClass('hidden');
+        }
         $('#task-options-' + id).toggleClass('hidden');
       },
       preview(jobTask, subId) {
