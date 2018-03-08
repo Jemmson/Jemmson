@@ -23,6 +23,7 @@
                 <i class="fas fa-clock"></i>
                 <input type="date" class="form-control form-control-date" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                   @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
+                  <label v-if="isCustomer || !showTaskStartDate()"> {{prettyDate(jobTask.start_date)}} </label>
               </span>
             </div>
             <div class="col-xs-6">
@@ -162,6 +163,8 @@
     </div>
     <sub-invite-modal :jobTask="jTask">
     </sub-invite-modal>
+    <deny-task-modal :jobTask="jTask">
+    </deny-task-modal>
   </div>
 </template>
 
@@ -270,13 +273,8 @@
         return User.isAssignedToMe(jobTask);
       },
       openDenyTaskForm(jobTask) {
-        if (jobTask.id === this.jTask.id) {
-          this.disabled.showDenyForm = this.disabled.showDenyForm ? false : true;
-        } else {
-          this.disabled.showDenyForm = true;
-        }
-        this.jobTask = jobTask;
-        $("#deny-form").insertAfter('#task-' + jobTask.id);
+        this.jTask = jobTask;
+        $('#deny-task-modal').modal();
       },
       showTaskStartDate() {
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
@@ -380,11 +378,6 @@
       },
       approveTaskHasBeenFinished(jobTask) {
         GeneralContractor.approveTaskHasBeenFinished(jobTask, this.disabled);
-      },
-      denyTask() {
-        this.jTask.message = this.message;
-        this.jTask.user_id = User.getId();
-        Customer.denyTask(this.jTask, this.disabled);
       },
       status(status) {
         return User.status(status, this.bid);
