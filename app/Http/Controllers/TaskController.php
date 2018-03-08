@@ -656,10 +656,10 @@ class TaskController extends Controller
     public function denyTask(Request $request)
     {
         $this->validate($request, [
-            'id' => 'required',
+            'job_task_id' => 'required',
         ]);
 
-        $jobTask = JobTask::find($request->id);
+        $jobTask = JobTask::find($request->job_task_id);
         $task = $jobTask->task()->first();
 
         $jobTask->updateStatus(__('bid_task.denied'));
