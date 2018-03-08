@@ -456,10 +456,10 @@ class TaskController extends Controller
         $id = 0;
         $finishedByGeneral = false;
 
-        if ($request->jobTask !== null) {
+        if ($request->job_task_id !== null) {
             // request comes from the bid task page
             // main object is not the task itself 
-            $id = $request->jobTaskId;
+            $id = $request->job_task_id;
         } else {
             $id = $request->id;
         }
@@ -656,10 +656,10 @@ class TaskController extends Controller
     public function denyTask(Request $request)
     {
         $this->validate($request, [
-            'id' => 'required',
+            'job_task_id' => 'required',
         ]);
 
-        $jobTask = JobTask::find($request->id);
+        $jobTask = JobTask::find($request->job_task_id);
         $task = $jobTask->task()->first();
 
         $jobTask->updateStatus(__('bid_task.denied'));

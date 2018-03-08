@@ -7430,6 +7430,9 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+.hidden {
+  display: none;
+}
 .stripe-connect {
   display: inline-block;
   margin-bottom: 1px;
@@ -7630,4 +7633,32 @@ body {
 .home-nav {
   margin-left: auto;
   margin-right: auto;
+}
+.icon-color {
+  color: #4a5158;
+}
+.float-right {
+  float: right;
+}
+.form-control-date {
+  display: inline-block;
+  width: 87%;
+  padding-left: 6px;
+  padding-right: 0px;
+}
+.form-control-text {
+  display: inline-block;
+  width: 75%;
+  padding-left: 6px;
+  padding-right: 0px;
+}
+.divider {
+  margin-top: 16px;
+  border-top-color: #eee;
+  border-top-width: 2px;
+  border-top-style: solid;
+  min-height: 12px;
+}
+.action-icon {
+  color: #0099CC;
 }

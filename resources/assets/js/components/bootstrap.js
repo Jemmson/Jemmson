@@ -28,7 +28,6 @@ Vue.component('bid', require('./job/Bid.vue'));
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
 Vue.component('bid-tasks', require('./job/BidTasks.vue'));
-Vue.component('bid-task', require('./job/BidTask.vue'));
 Vue.component('bid-add-task', require('./job/BidAddTask.vue'));
 
 // Shared Components
@@ -50,4 +49,8 @@ Vue.component('signup-with-stripe', require('./stripe/SignupWithStripe'));
 // forms
 Vue.component('further-info', require('./forms/FurtherInfo'));
 Vue.component('approve-bid', require('./job/ApproveBid'));
+Vue.component('sub-invite-modal', require('./task/SubInviteModal'));
+Vue.component('deny-task-modal', require('./task/DenyTaskModal'));
+
+
 
