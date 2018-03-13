@@ -36,7 +36,7 @@
             </div>
 
             <div class="col-xs-12">
-              <div class="divider"></div>
+              <div class="divider2"></div>
             </div>
 
             <div class="col-xs-12">
@@ -67,7 +67,7 @@
 
               <transition-group name="slide-fade">
                 <div class="col-xs-12 hidden" :id="'task-divider-' + jobTask.id" :key="1">
-                  <div class="divider"></div>
+                  <div class="divider2"></div>
                 </div>
 
                 <!-- / task options -->

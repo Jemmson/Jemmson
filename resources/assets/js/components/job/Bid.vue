@@ -7,8 +7,8 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <span style="float: right;">
-                            <button class="btn btn-danger btn-close" @click="closeBid">
-                                <i class="fa fa-times" aria-hidden="true"></i>
+                            <button class="btn btn-danger" @click.prevent="closeBid">
+                                <i class="fa fa-times"></i>
                             </button>
                         </span>
                     </div>
@@ -122,15 +122,7 @@
                 }
             },
             openAddTask() {
-                this.showTaskPanel = false;
-                if (this.showAddTaskPanel) {
-                    this.showAddTaskPanel = false;
-                } else {
-                    this.showAddTaskPanel = true;
-                    this.$nextTick(() => {
-                        document.getElementById('add-task').scrollIntoView();
-                    });
-                }
+                $('#add-task-modal').modal();
             },
             closeBid: function () {
                 console.log('closeBid');

@@ -44,6 +44,8 @@
         @include('spark::modals.notifications')
         @include('spark::modals.support')
         @include('spark::modals.session-expired')
+        <feedback>
+        </feedback>
     @endif
 </div>
 

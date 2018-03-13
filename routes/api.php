@@ -96,4 +96,6 @@ Route::post('/customer/getAddress', 'CustomerController@getAddress');
 // stripe controller 
 Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');
 
+Route::post('feedback', 'HomeController@feedback');
+
 

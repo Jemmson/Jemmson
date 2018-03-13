@@ -39,7 +39,7 @@
                         <a @click="showNotifications" class="has-activity-indicator">
                             <div class="navbar-icon">
                                 <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i>
-                                <i class="icon fa fa-bell"></i>
+                                <i class="icon fas fa-bell"></i>
                             </div>
                         </a>
                     </li>
@@ -59,7 +59,7 @@
                                 <!-- Stop Impersonating -->
                                 <li>
                                     <a href="/spark/kiosk/users/stop-impersonating">
-                                        <i class="fa fa-fw fa-btn fa-user-secret"></i>Back To My Account
+                                        <i class="fas fa-fw fa-btn fa-user-secret"></i>Back To My Account
                                     </a>
                                 </li>
 
@@ -80,7 +80,7 @@
                             <!-- Your Settings -->
                             <li>
                                 <a href="/settings">
-                                    <i class="fa fa-fw fa-btn fa-cog"></i>Your Settings
+                                    <i class="fas fa-fw fa-btn fa-cog"></i>Your Settings
                                 </a>
                             </li>
 
@@ -99,7 +99,7 @@
                             <!-- Logout -->
                             <li>
                                 <a href="/logout">
-                                    <i class="fa fa-fw fa-btn fa-sign-out"></i>Logout
+                                    <i class="fas fa-fw fa-btn fa-sign-out-alt"></i>Logout
                                 </a>
                             </li>
                         </ul>
