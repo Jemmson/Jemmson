@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('spark::layouts.app')
 
 @section('content')
 
@@ -11,10 +11,10 @@
                     <h1 class="text-center">{{ $user->getDetails()->company_name }}</h1>
                 </div>
                 <div class="btn-group home-nav">
-                    <button class="btn btn-primary btn-large">Initiate Bid</button>
-                    <button class="btn btn-primary btn-large">Bid Tasks</button>
-                    <button class="btn btn-primary btn-large">Bid Lists</button>
-                    <button class="btn btn-primary btn-large">Settings</button>
+                    <a class="btn btn-primary btn-large" href="/initiate-bid">Initiate Bid</a>
+                    <a class="btn btn-primary btn-large" href="/bid/tasks">Bid Tasks</a>
+                    <a class="btn btn-primary btn-large" href="/bid-list">Bid Lists</a>
+                    <a class="btn btn-primary btn-large" href="/settings">Settings</a>
                     <express-dashboard-stripe>
                     </express-dashboard-stripe>
                 </div>

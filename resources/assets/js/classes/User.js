@@ -95,6 +95,26 @@ export default class User {
         return this.user.stripe_id !== null && this.user.stripe_id !== undefined;
     }
 
+    async submitFeedback(comment, disabled) {
+        disabled.submit = true;
+        let page_url = window.location.href;
+        let user_id = this.user.id;
+        try {
+            const data = await axios.post('/api/feedback', {
+                user_id: user_id,
+                page_url: page_url,
+                comment: comment,
+            });
+            Vue.toasted.success('Feedback Submitted, Thank You!');
+            disabled.submit = false;
+            $('#feedback-modal').modal('hide');
+        } catch (error) {
+            console.log(error);
+            Vue.toasted.error(error.message);
+            disabled.submit = false;
+        }
+    }
+
     async submitFurtherInfo(form, disabled) {
         disabled.submit = true;
         try {

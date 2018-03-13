@@ -10,7 +10,7 @@
                     <h4 class="modal-title">Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}</h4>
                 </div>
                 <div class="modal-body">
-                        <form>
+                        <form role="form">
                                 <div class="form-group">
                                     <label for="contractorName">Contractor Name *</label>
                                     <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')">Please Enter A Name</span>
@@ -40,7 +40,7 @@
                                     </span>
                                 </div>
                         </form>
-                    <!-- /end col-md-6 -->
+                    <!-- /end col-md6ss -->
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
