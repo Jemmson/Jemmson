@@ -63,7 +63,7 @@
         <label class="col-md-4 control-label">Contractor</label>
 
         <div class="col-md-6">
-            <input type="radio" name="usertype" value="contractor" v-model="registerForm.usertype">
+            <input type="radio" id="usertypeContractor" name="usertypeContractor" value="contractor" v-model="registerForm.usertype">
             <span class="help-block" v-show="registerForm.errors.has('usertype')">
                 @{{ registerForm.errors.get('usertype') }}
             </span>

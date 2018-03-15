@@ -1,7 +1,7 @@
 <template>
   <!-- /all tasks of a bid -->
   <div>
-    <div class="col-md-4" v-for="(jobTask) in bid.job_tasks" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
+    <div class="col-md-4" v-for="jobTask in bid.job_tasks" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
       <div class="panel">
         <div class="panel-body">
           <div class="row">
