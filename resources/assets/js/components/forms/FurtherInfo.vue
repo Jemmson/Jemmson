@@ -118,7 +118,7 @@
 
                                         <div class="col-md-8">
                                             <input type="password" name="password_confirmation"
-                                                   v-model="form.password_confirmation" @blur="confirmPassword">
+                                                   v-model="form.password_confirmation" @keyup="confirmPassword">
                                             <span class="help-block" v-show="form.errors.has('password_confirmation')">
                                                 {{ form.errors.get('password_confirmation') }}
                                             </span>
@@ -256,10 +256,11 @@
         confirmPassword() {
             if (this.form.password !== this.form.password_confirmation) {
                 this.form.errors.errors = {
-                    password: ['Passwords need to match.'],
                     password_confirmation: ['Passwords need to match.']
                 };
                 this.passwordsMatch = false;
+            } else {
+                this.form.errors.errors = {};
             }
             this.passwordsMatch = true;
         },
