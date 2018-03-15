@@ -13,7 +13,7 @@
                     <form role="form">
                         <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                             <label for="taskName">Task Name</label>
-                            <input type="text" class="form-control" id="taskName" name="taskName" v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
+                            <input type="text" class="form-control" id="taskName" name="taskName" autofocus v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                 {{ addNewTaskForm.errors.get('taskName') }}
                             </span>

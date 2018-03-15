@@ -1,36 +1,33 @@
 <template>
     <div>
         <div class="col-md-12">
-        <div class="panel panel-default">
-            <!-- <div class="panel-heading">Dashboard</div> -->
-            <div class="panel-body">
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <span style="float: right;">
-                            <button class="btn btn-danger" @click.prevent="closeBid">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </span>
+            <div class="panel panel-default">
+                <!-- <div class="panel-heading">Dashboard</div> -->
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                                <button class="btn btn-danger" @click.prevent="closeBid">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                        </div>
+
+                        <!-- /show all bid information -->
+                        <bid-details :bid="bid">
+                        </bid-details>
+
+                        <!-- /customer approve bid form -->
+                        <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
+                        </approve-bid>
+
+                        <!-- /buttons  -->
+                        <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid" @openAddTask="openAddTask">
+                        </general-contractor-bid-actions>
                     </div>
-
-                    <!-- /show all bid information -->
-                    <bid-details :bid="bid">
-                    </bid-details>
-
-                    <!-- /customer approve bid form -->
-                    <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-                    </approve-bid>
-
-                    <!-- /buttons  -->
-                    <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
-                        @openAddTask="openAddTask">
-                    </general-contractor-bid-actions>
                 </div>
             </div>
         </div>
-        </div>
 
-        
+
         <!-- /show all tasks associated to this bid -->
         <bid-tasks v-if="bid.job_tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
         </bid-tasks>
@@ -109,7 +106,7 @@
             },
             openTaskPanel(index) {
                 console.log(index);
-                
+
                 if (this.jobTaskIndex === index && this.showTaskPanel) {
                     this.showTaskPanel = false;
                 } else {
@@ -140,7 +137,7 @@
                 this.showAddTaskPanel = false;
             });
             Bus.$on('needsStripe', () => {
-                $('#stripe-modal').modal();             
+                $('#stripe-modal').modal();
             });
         }
     }

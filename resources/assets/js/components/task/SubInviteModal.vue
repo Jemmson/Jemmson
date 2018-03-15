@@ -15,7 +15,7 @@
                                     <label for="contractorName">Contractor Name *</label>
                                     <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')">Please Enter A Name</span>
                                     <input type="text" class="form-control" id="contractorName" name="contractorName" placeholder="Name" v-model="initiateBidForSubForm.name"
-                                        v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" required v-on:keyup="autoComplete">
+                                        v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" autofocus required v-on:keyup="autoComplete">
                                     <div class="panel-footer" v-if="aResults.length">
                                         <ul class="list-group">
                                             <button class="list-group-item" v-for="result in aResults" v-bind:key="result.id" :name="result.phone" @click.prevent="fillFields(result)">
