@@ -17,9 +17,23 @@ export default class Format {
     }
     
     static jobName(name) {
-        if (name.length > 15) {
-            return name.substring(0, 13) + '...';
-        }
+        // if (name.length > 20) {
+        //     return name.substring(0, 20) + '...';
+        // }
         return name;
+    }
+
+    static statusLabel(status) {
+        switch (status) {
+            case 'bid_task.accepted' : 
+                return 'label-success';
+                break;
+            case 'bid_task.finished_by_sub':
+                return 'label-warning';
+                break;
+            default: 
+                return 'label-info';
+                break;
+        }
     }
 }

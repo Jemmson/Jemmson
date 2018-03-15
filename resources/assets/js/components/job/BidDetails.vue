@@ -1,7 +1,8 @@
 <template>
     <!-- /all details of a bid -->
-    <div class="">
-
+    <div class="col-md-12">
+        <div class="row">
+            
         <!--<pre>{{ bid }}</pre>-->
 
         <!-- <div v-if="showArea()" class="form-group col-md-12">
@@ -41,6 +42,7 @@
                 <label for="price">Total Job Price:</label>
                 <label class="label label-info">${{ bid.bid_price }}</label>
             </p>
+        </div>
         </div>
     </div>
 </template>
