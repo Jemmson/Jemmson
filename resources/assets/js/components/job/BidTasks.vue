@@ -15,21 +15,26 @@
               </h4>
             </div>
             <!-- / quick info secion date/price -->
-            <div class="col-xs-6">
-              <span>
+            <div class="col-xs-6 form-group">
+                <i class="fas fa-money-bill-alt icon"></i>
+                <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.cust_final_price)"
+                  @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
+                <label v-if="isCustomer || !showTaskPriceInput()"> {{taskCustFinalPrice(jobTask.cust_final_price)}} </label>
+            </div>
+            <!-- / end total price -->
+            <div class="col-xs-6 form-group text-right">
+              <i class="fas fa-user icon" style="margin-right: 3.5px;"></i>
+                <!-- <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.sub_final_price)"
+                  @blur="updateSubTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)"> -->
+                <label> {{taskCustFinalPrice(jobTask.sub_final_price)}} </label>
+            </div>
+            <!-- / end total task price -->
+            
+            <div class="col-xs-12 form-group" v-if="isContractor">
                 <i class="fas fa-clock icon"></i>
                 <input type="date" class="form-control form-control-date" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                   @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
-                  <label v-if="isCustomer || !showTaskStartDate()"> {{prettyDate(jobTask.start_date)}} </label>
-              </span>
-            </div>
-            <div class="col-xs-6">
-              <span class="float-right">
-                <i class="fas fa-money-bill-alt icon"></i>
-                <input type="text" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.cust_final_price)"
-                  @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
-                <label v-if="isCustomer || !showTaskPriceInput()"> {{taskCustFinalPrice(jobTask.cust_final_price)}} </label>
-              </span>
+                <label v-if="isCustomer || !showTaskStartDate()"> {{prettyDate(jobTask.start_date)}} </label>
             </div>
 
             <div class="col-xs-12">
