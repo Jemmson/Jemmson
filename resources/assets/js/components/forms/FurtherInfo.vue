@@ -269,7 +269,7 @@
         if (!this.passwordsMatch) {
             return;
         }
-        User.submitFurtherInfo (this.form, this.disabled);
+        User.submitFurtherInfo(this.form, this.disabled);
       },
       /**
        * Update the user's profile photo.
@@ -287,12 +287,12 @@
         axios.post ('/settings/logo', this.gatherFormData ())
           .then (
             () => {
-              Bus.$emit ('updateUser');
-
+              Bus.$emit('updateUser');
               self.form.finishProcessing ();
             },
             (error) => {
-              self.form.setErrors (error.response.data);
+              self.form.setErrors(error.response.data);
+              Vue.toasted.error('Image needs to be 2MB or less');
             }
           );
       },
