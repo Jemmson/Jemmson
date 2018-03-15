@@ -26,9 +26,9 @@ class RegistrationContractorTest extends DuskTestCase
         echo "hello test contractor" . "\n";
 
         $con = [
-          'name' => $faker->name,
-          'email' => $faker->email,
-          'password' => bcrypt('asdasd')
+            'name' => $faker->name,
+            'email' => $faker->email,
+            'password' => 'asdasd'
         ];
 
         var_dump($con);
@@ -37,47 +37,54 @@ class RegistrationContractorTest extends DuskTestCase
         echo $con['email'] . "\n";
         echo $con['password'] . "\n";
 
-        $this->browse(function (Browser $browser) use ($faker) {
+        $this->browse(function (Browser $browser) use ($con) {
             $browser->visit('/register')
-                ->type('name', $faker->name)
-//                ->type('name', 'hello')
-//                ->type('email', $contractor['email'])
-                ->pause(50000);
+                ->type('name', $con['name'])
+                ->type('email', $con['email'])
+                ->radio('usertypeContractor', 'contractor')
+                ->type('password', $con['password'])
+                ->type('password_confirmation', $con['password'])
+                ->check('terms')
+                ->press('register')
+                ->pause(2000)
+                ->assertPathIs('/furtherInfo');
+//                ->pause(50000);
         });
 
-//        $user_info = [
-//            'company_name' => $faker->company,
-//            'phone_number' => $faker->phoneNumber,
-//            'address_line_1' => $faker->streetAddress,
-//            'city' => $faker->city,
-//            'state' => "AZ",
-//            'zip' => "85283",
-//        ];
+        $user_info = [
+            'company_name' => $faker->company,
+            'phone_number' => $faker->phoneNumber,
+            'address_line_1' => $faker->streetAddress,
+            'city' => $faker->city,
+            'state' => "AZ",
+            'zip' => "85283",
+        ];
 //
-//        $this->browse(function (Browser $browser) use ($user_info) {
-//            $browser->loginAs(User::find(1))->visit('/furtherInfo')
+        $this->browse(function (Browser $browser) use ($user_info) {
+            $browser->visit('/furtherInfo')
+                ->type('phone_number', $user_info['phone_number'])
+                ->type('company_name', $user_info['company_name'])
+                ->type('address_line_1', $user_info['address_line_1'])
+                ->type('city', $user_info['city'])
+                ->type('state', $user_info['state'])
+                ->type('zip', $user_info['zip'])
+                ->check('email_contact')
+                ->check('phone_contact')
+                ->pause(10000)
+                ->check('sms_text')
 //                ->pause(50000)
-//                ->type('phone_number', $user_info['phone_number'])
-//                ->type('company_name', $user_info['company_name'])
-//                ->type('address_line_1', $user_info['address_line_1'])
-//                ->type('city', $user_info['city'])
-//                ->type('state', $user_info['state'])
-//                ->type('zip', $user_info['zip'])
-//                ->check('email_contact')
-//                ->check('phone_contact')
-//                ->check('sms_text')
-//                ->press('submit')
+                ->press('submit')
+                ->pause(10000)
+                ->assertPathIs('/home')
+//                ->assertSee('I am a contractor')
+//                ->assertDontSee('I am a customer')
+//                ->assertSee('Initiate Bid')
+//                ->assertSee('Bid List')
 //                ->pause(10000)
-//                ->assertPathIs('/home')
-////                ->assertSee('I am a contractor')
-////                ->assertDontSee('I am a customer')
-////                ->assertSee('Initiate Bid')
-////                ->assertSee('Bid List')
-////                ->pause(10000)
-////                ->pause(50000);
-////                ->assertSee('I am in further Info');
-//                ->pause(0);
-//        });
+//                ->pause(50000);
+//                ->assertSee('I am in further Info');
+                ->pause(0);
+        });
     }
 
 //    public function testPikeShawnContractor()
