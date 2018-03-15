@@ -11,38 +11,41 @@
           </div>
         </div>
       </div>
+      <!-- / end title -->
       <div class="col-sm-12 col-md-6" v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
         <div class="panel" v-if="showBid(bidTask)">
           <div class="panel-body">
             <div class="col-xs-12">
+              <label for="job-stats" class="label label-info">{{ status(bidTask) }}</label>
+              <br>
               <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
-              <label for="job-stats" class="label label-info label-small job-status">{{ status(bidTask) }}</label>
             </div>
             <div class="col-xs-6">
               <p>
-              Start On:
-              <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
+                Start On:
+                <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
               </p>
               <div v-if="showStripeToggle(bidTask.job_task)">
-                              <p>
-              Stripe Payment:
-              </P>
-              <!-- Rounded switch -->
-              <label class="switch">
-                <input :id="'toggle-stripe-' + bidTask.job_task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.job_task)">
-                <span class="slider round"></span>
-              </label>
+                <p>
+                  Stripe Payment:
+                </P>
+                <!-- Rounded switch -->
+                <label class="switch">
+                  <input :id="'toggle-stripe-' + bidTask.job_task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.job_task)">
+                  <span class="slider round"></span>
+                </label>
               </div>
             </div>
-            <div v-if="isBidOpen(bidTask)" class="form-group col-md-6">
+            <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
               <label for="details">Task Price</label>
               <input type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
               />
             </div>
             <div class="col-xs-6" v-else>
               <span class="right-label">
-                Accepted Bid Price: <label>${{ bidTask.bid_price }}</label>
-              </span> 
+                Accepted Bid Price:
+                <label>${{ bidTask.bid_price }}</label>
+              </span>
             </div>
             <div class="col-xs-12">
               <span class="primary-action-btn">
@@ -67,9 +70,9 @@
           </div>
         </div>
       </div>
-      
-        <stripe>
-        </stripe>
+      <!-- / end tasks -->
+      <stripe>
+      </stripe>
     </div>
   </div>
 </template>
@@ -77,7 +80,7 @@
 <script>
   export default {
     props: ['user', 'bidTasks'],
-    data () {
+    data() {
       return {
         address: '',
         location: {
@@ -99,16 +102,17 @@
     methods: {
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
-        return (bid.id === bid.job_task.bid_id && bid.job_task.job.status === 'job.approved') || (bid.job_task.job.status !== 'job.approved');
+        return (bid.id === bid.job_task.bid_id && bid.job_task.job.status === 'job.approved') || (bid.job_task.job.status !==
+          'job.approved');
       },
       jobName(name) {
         return Format.jobName(name);
       },
       bidPrice(target) {
         let price = $('#' + target).val().replace(/[^0-9.]/g, "");
-        $('#' + target).val(price); 
+        $('#' + target).val(price);
       },
-      getArea (bidTask) {
+      getArea(bidTask) {
         // console.log(bidTask)
         // debugger
         // Customer.getArea(bidTask.job_id, this.area)
@@ -116,7 +120,7 @@
 
         // return this.localArea.area
       },
-      getAddress (bidTask) {
+      getAddress(bidTask) {
         // Customer.getAddress(bidTask.task.jobs[0].location_id, this.location)
         // if(bidTask.job_task.status === 'bid_task.accepted') {
         //     return this.location.location
@@ -124,10 +128,10 @@
         //   return 'Pending'
         // }
       },
-      showFinishedBtn (bid) {
+      showFinishedBtn(bid) {
         return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied';
       },
-      isBidOpen (bid) {
+      isBidOpen(bid) {
         let acceptedBid = bid.job_task.bid_id;
 
         // the contractor has not chosen a bid for the
@@ -138,15 +142,15 @@
 
         return false;
       },
-      status (bid_task) {
+      status(bid_task) {
         return User.status(bid_task.job_task.status, bid_task.job_task);
       },
-      prettyDate (date) {
+      prettyDate(date) {
 
         if (date == null)
           return '';
         // return the date and ignore the time
-        date = date.split (' ');
+        date = date.split(' ');
         return date[0];
       },
       showStripeToggle(jobTask) {
@@ -155,48 +159,48 @@
       toggleStripePaymentOption(jobTask) {
         SubContractor.toggleStripePaymentOption(jobTask);
       },
-      finished (bid) {
-        SubContractor.finishedTask (bid, this.disabled);
+      finished(bid) {
+        SubContractor.finishedTask(bid, this.disabled);
       },
-      update (e) {
+      update(e) {
         let id = e.target.id;
-        let bid_price = $ ('#price-' + id).val ();
+        let bid_price = $('#price-' + id).val();
         this.disabled.submit = true;
         console.log(id, bid_price);
-        axios.put ('/api/bid/task/' + id, {
+        axios.put('/api/bid/task/' + id, {
           id: id,
           bid_price: bid_price
-        }).then ((response) => {
+        }).then((response) => {
           // TODO: security review
-          console.log (response);
-          Vue.toasted.success ('Bid Sent.');
+          console.log(response);
+          Vue.toasted.success('Bid Sent.');
           User.emitChange('bidUpdated');
           this.disabled.submit = false;
-        }).catch ((error) => {
-          console.log (error.response, '#error-' + id);
-          Vue.toasted.error (error.response.data.message);
+        }).catch((error) => {
+          console.log(error.response, '#error-' + id);
+          Vue.toasted.error(error.response.data.message);
           this.disabled.submit = false;
         });
       },
-      getTasks () {
-        console.log ('getTasks');
-        axios.post ('/bid/tasks').then ((response) => {
+      getTasks() {
+        console.log('getTasks');
+        axios.post('/bid/tasks').then((response) => {
           this.tasks = response.data;
         });
       }
     },
     created: function () {
-      Bus.$on ('bidUpdated', (payload) => {
+      Bus.$on('bidUpdated', (payload) => {
         this.getTasks();
       });
-      Bus.$on ('needsStripe', () => {
-          $('#stripe-modal').modal();   
+      Bus.$on('needsStripe', () => {
+        $('#stripe-modal').modal();
       });
     },
-    mounted () {
-      const taskId = User.getParameterByName ('taskId');
+    mounted() {
+      const taskId = User.getParameterByName('taskId');
       if (taskId !== null && taskId !== '') {
-        $ ('#task_' + taskId).addClass ('info');
+        $('#task_' + taskId).addClass('info');
       }
     }
   }

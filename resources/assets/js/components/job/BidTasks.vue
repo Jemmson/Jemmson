@@ -7,20 +7,17 @@
           <div class="row">
             <div class="col-xs-12">
               <!-- / status -->
-              <label for="task-status" class="label label-info">
+              <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
                 {{ status(jobTask.status) }}
               </label>
-            </div>
-            <div class="col-xs-12">
-              <!-- / title -->
-              <h4 style="font-weight: bold;">
+              <h4 class="task-name">
                 {{ jobTask.task.name }}
               </h4>
             </div>
             <!-- / quick info secion date/price -->
             <div class="col-xs-6">
               <span>
-                <i class="fas fa-clock"></i>
+                <i class="fas fa-clock icon"></i>
                 <input type="date" class="form-control form-control-date" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                   @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
                   <label v-if="isCustomer || !showTaskStartDate()"> {{prettyDate(jobTask.start_date)}} </label>
@@ -28,7 +25,7 @@
             </div>
             <div class="col-xs-6">
               <span class="float-right">
-                <i class="fas fa-money-bill-alt"></i>
+                <i class="fas fa-money-bill-alt icon"></i>
                 <input type="text" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.cust_final_price)"
                   @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
                 <label v-if="isCustomer || !showTaskPriceInput()"> {{taskCustFinalPrice(jobTask.cust_final_price)}} </label>
@@ -40,7 +37,7 @@
             </div>
 
             <div class="col-xs-12">
-              <i class="fas fa-map-marker"></i>
+              <i class="fas fa-map-marker icon"></i>
               {{ location(jobTask) }}
             </div>
           </div>
@@ -222,6 +219,9 @@
       }
     },
     methods: {
+      getLabelClass(status) {
+          return Format.statusLabel(status);
+      },
       showAcceptBtn(status) {
           return status === 'bid_task.bid_sent';
       },

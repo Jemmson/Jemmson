@@ -7538,13 +7538,27 @@ body {
   background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
   font-family: 'Roboto', sans-serif;
 }
+.icon {
+  color: #747474;
+}
 .page-title {
   font-weight: 800;
 }
+.start-date {
+  font-size: 1.62rem;
+}
+.job-price {
+  font-size: 1.62rem;
+}
 .job-name {
   font-weight: 900;
-  font-size: 1.8rem;
-  font-style: italic;
+  font-size: 2rem;
+  margin: 16px 0px 16px 0px;
+}
+.task-name {
+  font-weight: 900;
+  font-size: 2rem;
+  margin: 16px 0px 16px 0px;
 }
 .job-status {
   float: right;

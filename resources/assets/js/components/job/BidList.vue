@@ -18,16 +18,16 @@
                         <div class="panel">
                             <div class="panel-body">
                                 <div class="col-xs-12">
-                                    <span>
-                                        <label for="job-name" class="job-name">{{ jobName(bid.job_name) }}</label>
-                                        <label for="job-stats" class="label label-info label-small job-status">{{ status(bid) }}</label>
-                                    </span>
+                                    <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
+                                    <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
                                 </div>
                                 <div class="col-xs-12">
                                         <p>
-                                            Start On: <label for="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
+                                            <i class="fas fa-clock icon"></i> 
+                                            <label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
                                             <span class="right-label">
-                                                Price: <label for="job-price">${{ bid.bid_price }}</label>
+                                                <i class="fas fa-money-bill-alt icon"></i> 
+                                                <label for="job-price" class="job-price">${{ bid.bid_price }}</label>
                                             </span> 
                                         </p>
                                 </div>
@@ -66,6 +66,9 @@
           }
       },
       methods: {
+          getLabelClass(status) {
+              return Format.statusLabel(status);
+          },
           jobName(name) {
               return Format.jobName(name);
           },
@@ -114,6 +117,7 @@
           Bus.$on('previewSubForTask', (payload) => {
               this.previewSubForTask(payload[0], payload[1], payload[2]);
           });
+
       },
       mounted() {
           this.bids = this.pbids;
