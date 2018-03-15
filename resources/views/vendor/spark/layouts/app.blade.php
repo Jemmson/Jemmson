@@ -38,7 +38,7 @@
 
 <!-- Main Content -->
 @yield('content')
-
+<router-view></router-view>
 <!-- Application Level Modals -->
     @if (Auth::check())
         @include('spark::modals.notifications')

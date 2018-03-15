@@ -5,7 +5,7 @@
       <div class="panel">
         <div class="panel-body">
           <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12 form-group">
               <!-- / status -->
               <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
                 {{ status(jobTask.status) }}

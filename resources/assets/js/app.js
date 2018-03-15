@@ -23,6 +23,7 @@ Vue.use(Toasted, {
   theme: 'bubble',
 })
 
+import { store } from './vuex/index';
 import Format from './classes/Format';
 import Language from './classes/Language';
 import GeneralContractor from './classes/GeneralContractor';
@@ -40,26 +41,6 @@ window.Customer = new Customer(Spark.state.user);
 window.TaskUtil = new TaskUtil();
 
 require('./components/bootstrap');
-
-import InitiateBid from './components/InitiateBid.vue';
-Vue.component('initiate-bid', InitiateBid);
-
-import Job from './components/job/Job.vue';
-Vue.component('job', Job);
-
-import Task from './components/job/Task.vue';
-Vue.component('task', Task);
-
-import InfoLabel from './components/job/InfoLabel.vue';
-Vue.component('infoLabel', InfoLabel);
-
-import Contracts from './components/job/Contracts.vue';
-Vue.component('contracts', Contracts);
-
-import CurrentTasksForJob from './components/job/CurrentTasksForJob.vue';
-Vue.component('currentTasksForJob', CurrentTasksForJob);
-
-import { store } from './vuex/index';
 
 Spark.forms.register = {
   usertype: ''
