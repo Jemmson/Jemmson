@@ -99,7 +99,7 @@ Route::group(['middleware' => ['auth']], function () {
         '/furtherInfo', function () {
             return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
         }
-    );
+    )->middleware('block.further.info');
 
     // home controller
     Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
