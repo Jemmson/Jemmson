@@ -190,6 +190,7 @@
       }
     },
     created: function () {
+      this.getTasks();
       Bus.$on('bidUpdated', (payload) => {
         this.getTasks();
       });

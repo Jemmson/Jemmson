@@ -1,5 +1,7 @@
 <template>
-    <div>
+    <div class="container">
+        <div class="row">
+
         <div class="col-md-12">
             <div class="panel panel-default">
                 <!-- <div class="panel-heading">Dashboard</div> -->
@@ -41,17 +43,18 @@
         <!-- / stripe testing delete after -->
         <stripe>
         </stripe>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         props: {
-            bid: Object,
-            showBid: false,
+            // bid: Object,
         },
         data() {
             return {
+                bid: {},
                 jobTaskIndex: 0,
                 bidForm: new SparkForm({
                     id: 0,
@@ -69,6 +72,13 @@
                     declineBid: false
                 },
                 showStripe: false
+            }
+        },
+        watch: {
+            '$route' (to, from) {
+                // get the bid
+                const bidId = this.$route.params.id;
+                this.getBid(bidId);
             }
         },
         computed: {
@@ -124,7 +134,30 @@
             closeBid: function () {
                 console.log('closeBid');
                 this.$emit('closeBid');
+            },
+            async getBid(id) {
+                try {
+                    const {data} = await axios.get('/job/' + id);
+                    this.bid = data;
+                } catch (error) {
+                    error = error.response.data;
+                    form.errors.errors = error.errors;
+                    Vue.toasted.error(error.message);
+                }
             }
+        },
+        created: function () {
+
+            // get the bid
+            const bidId = this.$route.params.id;
+            this.getBid(bidId);
+
+            Bus.$on('taskAdded', () => {
+                this.showAddTaskPanel = false;
+            });
+            Bus.$on('needsStripe', () => {
+                $('#stripe-modal').modal();
+            });
         },
         mounted: function () {
             // set up init data
@@ -132,13 +165,5 @@
             this.bidForm.status = this.bid.status;
             this.user = Spark.state.user;
         },
-        created: function () {
-            Bus.$on('taskAdded', () => {
-                this.showAddTaskPanel = false;
-            });
-            Bus.$on('needsStripe', () => {
-                $('#stripe-modal').modal();
-            });
-        }
     }
 </script>

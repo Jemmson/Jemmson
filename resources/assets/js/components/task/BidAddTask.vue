@@ -44,7 +44,7 @@
 
                         <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                             <label for="custTaskPrice">Customer Task Price</label>
-                            <input type="text" class="form-control" id="custTaskPrice" name="taskPrice" v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
+                            <input type="tel" class="form-control" id="custTaskPrice" name="taskPrice" v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
                                 {{ addNewTaskForm.errors.get('taskPrice') }}
                             </span>
@@ -52,7 +52,7 @@
 
                         <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
                             <label for="subTaskPrice">Sub Task Price</label>
-                            <input type="text" class="form-control" id="subTaskPrice" name="subTaskPrice" v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
+                            <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice" v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
                                 {{ addNewTaskForm.errors.get('subTaskPrice') }}
                             </span>

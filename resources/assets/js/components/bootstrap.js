@@ -11,9 +11,6 @@
 
 require('./../spark-components/bootstrap');
 
-require('./home');
-require('./registration');
-require('./InitiateBid.vue');
 require('./job/Job.vue');
 require('./job/Task.vue');
 require('./job/InfoLabel.vue');

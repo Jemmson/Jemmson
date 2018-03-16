@@ -19,6 +19,9 @@ export default class GeneralContractor {
             form.errors.errors = error.errors;
             Vue.toasted.error(error.message);
             disabled.submit = false;
+            if (error.errors['no_free_jobs'] !== undefined) {
+                window.location = '/settings#/subscription';
+            }
         }
     }
 
@@ -71,6 +74,9 @@ export default class GeneralContractor {
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('Invite Sent!');
                 disabled.invite = false;
+                form.name = '';
+                form.email = '';
+                form.phone = '';
             }).catch((error) => {
                 console.error(error);
                 form.errors.errors = error.errors;

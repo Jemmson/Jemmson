@@ -14,7 +14,7 @@
             </div>
             <transition name="slide-fade">
                 <div v-show="showBidList">
-                    <div class="col-sm-12 col-md-4" v-for="(bid, index) in bids" v-bind:key="bid.id">
+                    <div class="col-sm-12 col-md-4" v-for="(bid) in bids" v-bind:key="bid.id">
                         <div class="panel">
                             <div class="panel-body">
                                 <div class="col-xs-12">
@@ -33,7 +33,8 @@
                                 </div>
                                 <div class="col-xs-12">
                                     <span class="primary-action-btn">
-                                        <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button>
+                                        <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
+                                        <router-link :to="'/bid/' + bid.id" class="btn btn-primary">Review</router-link>
                                     </span>
                                 </div>
                             </div>
@@ -42,10 +43,10 @@
                 </div>
             </transition>
             <!-- /end col-md-8 -->
-            <transition name="slide-fade">
+            <!-- <transition name="slide-fade">
                 <bid v-if="showBid && bids[bidIndex] !== undefined" v-on:closeBid="closeBid" :bid="bids[bidIndex]">
                 </bid>
-            </transition>
+            </transition> -->
             <!-- /end transition -->
         </div>
     </div>
@@ -54,8 +55,8 @@
 <script>
   export default {
       props: {
-          user: Object,
-          pbids: Array
+          //user: Object,
+          //pbids: Array
       },
       data() {
           return {
@@ -65,6 +66,12 @@
               bidIndex: 0
           }
       },
+    watch: {
+        '$route' (to, from) {
+            // get the bids
+            this.getBids();
+        }
+    },
       methods: {
           getLabelClass(status) {
               return Format.statusLabel(status);
@@ -108,6 +115,7 @@
           }
       },
       created() {
+          this.getBids();
           Bus.$on('bidUpdated', (payload) => {
               if (payload !== undefined && payload[0] === 'closeBid') {
                   this.closeBid();
@@ -120,7 +128,6 @@
 
       },
       mounted() {
-          this.bids = this.pbids;
           const bidId = User.getParameterByName('jobId');
           if (bidId !== null && bidId !== '') {
               this.openBid(User.getBidIndex(bidId, this.bids));

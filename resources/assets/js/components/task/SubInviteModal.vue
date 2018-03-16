@@ -64,13 +64,6 @@
         },
         data() {
             return {
-                acceptSubForm: new SparkForm({
-                    id: 0,
-                    agreed_start_date: '',
-                    end_date: '',
-                    area: '',
-                    status: '',
-                }),
                 initiateBidForSubForm: new SparkForm({
                     task_id: 0,
                     email: '',
