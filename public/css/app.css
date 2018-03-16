@@ -7606,6 +7606,18 @@ body {
           transform: translateX(-20px);
   opacity: 0;
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition-property: opacity;
+  transition-duration: .25s;
+}
+.fade-enter-active {
+  transition-delay: .25s;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
 /**
  * The CSS shown here will not be introduced in the Quickstart guide, but shows
  * how you can use CSS to style your Element's container.
