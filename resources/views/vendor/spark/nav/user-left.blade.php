@@ -1,13 +1,13 @@
 <!-- Left Side Of Navbar -->
 <li>
-    <a href="/home">Home</a>
+    <router-link :to="'/home'">Home</router-link>
 </li>
 <li>
-    <a href="/initiate-bid">Initiate Bid</a>
+    <router-link :to="'/initiate-bid'">Initiate Bid</router-link>
 </li>
 <li>
-    <a href="/bid-list">Bids</a>
+    <router-link :to="'/bids'">Bids</router-link>
 </li>
 <li>
-    <a href="/bid/tasks">Tasks</a>
+    <router-link :to="'/tasks'">Tasks</router-link>
 </li>

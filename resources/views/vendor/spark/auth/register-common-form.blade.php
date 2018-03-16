@@ -100,7 +100,7 @@
 
         <div class="col-md-6">
             <input type="password" class="form-control" name="password_confirmation"
-                   v-model="registerForm.password_confirmation">
+                   v-model="registerForm.password_confirmation" @keyup="confirmPassword">
 
             <span class="help-block" v-show="registerForm.errors.has('password_confirmation')">
                 @{{ registerForm.errors.get('password_confirmation') }}

@@ -118,7 +118,7 @@
 
                                         <div class="col-md-8">
                                             <input type="password" name="password_confirmation"
-                                                   v-model="form.password_confirmation" @blur="confirmPassword">
+                                                   v-model="form.password_confirmation" @keyup="confirmPassword">
                                             <span class="help-block" v-show="form.errors.has('password_confirmation')">
                                                 {{ form.errors.get('password_confirmation') }}
                                             </span>
@@ -256,10 +256,11 @@
         confirmPassword() {
             if (this.form.password !== this.form.password_confirmation) {
                 this.form.errors.errors = {
-                    password: ['Passwords need to match.'],
                     password_confirmation: ['Passwords need to match.']
                 };
                 this.passwordsMatch = false;
+            } else {
+                this.form.errors.errors = {};
             }
             this.passwordsMatch = true;
         },
@@ -268,7 +269,7 @@
         if (!this.passwordsMatch) {
             return;
         }
-        User.submitFurtherInfo (this.form, this.disabled);
+        User.submitFurtherInfo(this.form, this.disabled);
       },
       /**
        * Update the user's profile photo.
@@ -286,12 +287,12 @@
         axios.post ('/settings/logo', this.gatherFormData ())
           .then (
             () => {
-              Bus.$emit ('updateUser');
-
+              Bus.$emit('updateUser');
               self.form.finishProcessing ();
             },
             (error) => {
-              self.form.setErrors (error.response.data);
+              self.form.setErrors(error.response.data);
+              Vue.toasted.error('Image needs to be 2MB or less');
             }
           );
       },

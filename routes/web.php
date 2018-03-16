@@ -13,7 +13,9 @@
 
 use App\User;
 
-Route::get('/', 'WelcomeController@show');
+Route::get('/', 'WebController@index');
+Route::get('/home', 'WebController@index');
+
 
 // login routes
 Route::get('login', 'Auth\LoginController@show');
@@ -61,18 +63,13 @@ Route::get('/public/contractorCommunication', function(){
 
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 
-    Route::get('/home', 'HomeController@show');
     // common routes
-    Route::get('/initiate-bid', 'InitiateBidController@index');
     Route::post('/initiate-bid', 'InitiateBidController@send');
-    Route::get('/bid-list', 'BidListController@index');
-    Route::get('/invoices', 'Controller@create');
     Route::get('/current-job', 'Controller@create');
     Route::get('/payments-and-review', 'Controller@create');
     Route::get('/my-contractors', 'Controller@create');
 
     // TaskController
-    Route::get('/bid/tasks', 'TaskController@bidContractorJobTasks');
     Route::post('/bid/tasks', 'TaskController@bidTasks');
     Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
     Route::post('/task/deny', 'TaskController@denyTask');
@@ -99,7 +96,7 @@ Route::group(['middleware' => ['auth']], function () {
         '/furtherInfo', function () {
             return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
         }
-    );
+    )->middleware('block.further.info');
 
     // home controller
     Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
@@ -112,5 +109,3 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('/login/{type}/{job_id}/{token}', 'PasswordlessController@JobBid');
 // passwordless login
 Route::get('/login/{type}/task/{task_id}/{token}', 'PasswordlessController@taskBid');
-
-

@@ -106,6 +106,21 @@ body {
   transform: translateX(-20px);
   opacity: 0;
 }
+
+
+.fade-enter-active, .fade-leave-active {
+  transition-property: opacity;
+  transition-duration: .25s;
+}
+
+.fade-enter-active {
+  transition-delay: .25s;
+}
+
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
+
 .btn-close {
   //padding: 10px 16px 10px 16px;
 }
@@ -172,7 +187,7 @@ body {
 
 .form-control-date {
     display: inline-block;
-    width: 87%;
+    width: 94%;
     padding-left: 6px;
     padding-right: 0px;
 }
@@ -185,12 +200,11 @@ body {
 }
 
 .divider2 {
-  margin-top: 16px;
   //margin-bottom: 16px;
   border-top-color: #eee;
   border-top-width: 2px;
   border-top-style: solid;
-  min-height: 12px;
+  min-height: 15px;
 }
 
 .action-icon {

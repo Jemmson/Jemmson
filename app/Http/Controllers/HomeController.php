@@ -155,7 +155,9 @@ class HomeController extends Controller
 
     public function uploadCompanyLogo(Request $request)
     {
-        
+        $this->validate($request, [
+                'photo' => 'max:2056',
+            ]);
         $file = $request->photo;
         $user = $request->user();
 

@@ -7606,6 +7606,18 @@ body {
           transform: translateX(-20px);
   opacity: 0;
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition-property: opacity;
+  transition-duration: .25s;
+}
+.fade-enter-active {
+  transition-delay: .25s;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
 /**
  * The CSS shown here will not be introduced in the Quickstart guide, but shows
  * how you can use CSS to style your Element's container.
@@ -7656,7 +7668,7 @@ body {
 }
 .form-control-date {
   display: inline-block;
-  width: 87%;
+  width: 94%;
   padding-left: 6px;
   padding-right: 0px;
 }
@@ -7667,11 +7679,10 @@ body {
   padding-right: 0px;
 }
 .divider2 {
-  margin-top: 16px;
   border-top-color: #eee;
   border-top-width: 2px;
   border-top-style: solid;
-  min-height: 12px;
+  min-height: 15px;
 }
 .action-icon {
   color: #0099CC;
