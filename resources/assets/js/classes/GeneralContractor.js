@@ -19,6 +19,9 @@ export default class GeneralContractor {
             form.errors.errors = error.errors;
             Vue.toasted.error(error.message);
             disabled.submit = false;
+            if (error.errors['no_free_jobs'] !== undefined) {
+                window.location = '/settings#/subscription';
+            }
         }
     }
 
@@ -71,6 +74,9 @@ export default class GeneralContractor {
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('Invite Sent!');
                 disabled.invite = false;
+                form.name = '';
+                form.email = '';
+                form.phone = '';
             }).catch((error) => {
                 console.error(error);
                 form.errors.errors = error.errors;
@@ -107,6 +113,7 @@ export default class GeneralContractor {
                 Bus.$emit('taskAdded', true);
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('New Task Added!');
+                $('#add-task-modal').modal('hide');
             }).catch(error => {
                 console.error(error);
                 // NOTICE: lets us do addNewTaskForm.errors.has('errorName') to check if this error exists & addNewTaskForm.errors.get('errorName') to get the error message

@@ -10,12 +10,12 @@
                     <h4 class="modal-title">Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}</h4>
                 </div>
                 <div class="modal-body">
-                        <form>
+                        <form role="form">
                                 <div class="form-group">
                                     <label for="contractorName">Contractor Name *</label>
                                     <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')">Please Enter A Name</span>
                                     <input type="text" class="form-control" id="contractorName" name="contractorName" placeholder="Name" v-model="initiateBidForSubForm.name"
-                                        v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" required v-on:keyup="autoComplete">
+                                        v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" autofocus required v-on:keyup="autoComplete">
                                     <div class="panel-footer" v-if="aResults.length">
                                         <ul class="list-group">
                                             <button class="list-group-item" v-for="result in aResults" v-bind:key="result.id" :name="result.phone" @click.prevent="fillFields(result)">
@@ -40,7 +40,7 @@
                                     </span>
                                 </div>
                         </form>
-                    <!-- /end col-md-6 -->
+                    <!-- /end col-md6ss -->
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
@@ -64,13 +64,6 @@
         },
         data() {
             return {
-                acceptSubForm: new SparkForm({
-                    id: 0,
-                    agreed_start_date: '',
-                    end_date: '',
-                    area: '',
-                    status: '',
-                }),
                 initiateBidForSubForm: new SparkForm({
                     task_id: 0,
                     email: '',

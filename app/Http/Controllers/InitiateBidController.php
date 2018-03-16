@@ -28,7 +28,7 @@ class InitiateBidController extends Controller
     }
 
     /**
-     * This method sends an email or sms to the customer
+     * Initiate a bid
      *
      * @param Request $request the incoming request
      *
@@ -45,6 +45,11 @@ class InitiateBidController extends Controller
             'customerName' => 'required',
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
+
+        $contractor = Auth::user()->contractor()->first();
+        if (!$contractor->freeJobsLeft() && !$contractor->isSubscribed()) {
+            return response()->json(['message' => 'No more free Jobs left.', 'errors' => ['no_free_jobs' => 'No more free Jobs left']], 422);
+        }
 
         $customerName = $request->customerName;
         $phone = SanatizeService::phone($request->phone);
@@ -93,6 +98,8 @@ class InitiateBidController extends Controller
                 'Sorry couldn\'t create the bid, please try again.'
             );
         }
+
+        $contractor->subtractFreeJob();
 
         $customer->notify(new BidInitiated($job, $customer));
 

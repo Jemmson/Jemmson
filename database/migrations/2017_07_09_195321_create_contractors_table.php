@@ -18,6 +18,9 @@ class CreateContractorsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unique();
             $table->integer('location_id')->unique()->nullable(); 
+
+            $table->tinyInteger('free_jobs')->unsigned()->default(5);
+            
             
             $table->string('company_name')->nullable();
             $table->string('company_logo_name')->nullable();

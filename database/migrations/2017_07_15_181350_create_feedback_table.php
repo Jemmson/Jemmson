@@ -17,10 +17,11 @@ class CreateFeedbackTable extends Migration
         // and customers to improve the site.
         Schema::create('feedback', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->text('comment');
-            $table->integer('page_id');
-            $table->integer('page_from_id');
+            $table->string('page_url');
+            $table->integer('page_id')->nullable();
+            $table->integer('page_from_id')->nullable();
             $table->timestamps();
         });
     }

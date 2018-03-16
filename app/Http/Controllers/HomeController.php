@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Contractor;
 use App\Customer;
 use App\User;
+use App\Feedback;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
@@ -123,9 +125,39 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * Submit Feedback
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function feedback(Request $request)
+    {
+        $this->validate($request, [
+                'user_id' => 'required',
+                'page_url' => 'required',
+                'comment' => 'required'
+            ]);
+        $feedback = new Feedback;
+        $feedback->user_id = $request->user_id;
+        $feedback->page_url = $request->page_url;
+        $feedback->comment = $request->comment;
+
+        try {
+            $feedback->save();
+        } catch (\Exception $e) {
+            Log::error('Feedback: ' . $e->getMessage());
+            return response()->json(['message' => 'error'], 400);
+        }
+        
+        return response()->json($feedback, 200);
+    }
+
     public function uploadCompanyLogo(Request $request)
     {
-        
+        $this->validate($request, [
+                'photo' => 'max:2056',
+            ]);
         $file = $request->photo;
         $user = $request->user();
 

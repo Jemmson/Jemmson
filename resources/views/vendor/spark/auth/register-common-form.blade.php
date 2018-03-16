@@ -63,7 +63,7 @@
         <label class="col-md-4 control-label">Contractor</label>
 
         <div class="col-md-6">
-            <input type="radio" name="usertype" value="contractor" v-model="registerForm.usertype">
+            <input type="radio" id="usertypeContractor" name="usertypeContractor" value="contractor" v-model="registerForm.usertype">
             <span class="help-block" v-show="registerForm.errors.has('usertype')">
                 @{{ registerForm.errors.get('usertype') }}
             </span>
@@ -100,7 +100,7 @@
 
         <div class="col-md-6">
             <input type="password" class="form-control" name="password_confirmation"
-                   v-model="registerForm.password_confirmation">
+                   v-model="registerForm.password_confirmation" @keyup="confirmPassword">
 
             <span class="help-block" v-show="registerForm.errors.has('password_confirmation')">
                 @{{ registerForm.errors.get('password_confirmation') }}
@@ -127,7 +127,7 @@
 
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
-                <button name=register class="btn btn-primary" @click.prevent="register" :disabled="registerForm.busy">
+                <button id="register" name=register class="btn btn-primary" @click.prevent="register" :disabled="registerForm.busy">
                     <span v-if="registerForm.busy">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
                     </span>

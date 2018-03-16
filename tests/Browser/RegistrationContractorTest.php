@@ -2,6 +2,7 @@
 
 namespace Tests\Browser;
 
+use FontLib\Table\Type\name;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -16,10 +17,40 @@ class RegistrationContractorTest extends DuskTestCase
      * A Dusk test example.
      *
      * @return void
+     * @group login1234
      */
-    public function testContratorRegistrationElements()
+    public function testContractorRegistrationElements()
     {
         $faker = Factory::create();
+
+        echo "hello test contractor" . "\n";
+
+        $con = [
+            'name' => $faker->name,
+            'email' => $faker->email,
+            'password' => 'asdasd'
+        ];
+
+        var_dump($con);
+
+        echo $con['name'] . "\n";
+        echo $con['email'] . "\n";
+        echo $con['password'] . "\n";
+
+        $this->browse(function (Browser $browser) use ($con) {
+            $browser->visit('/register')
+                ->type('name', $con['name'])
+                ->type('email', $con['email'])
+                ->radio('usertypeContractor', 'contractor')
+                ->type('password', $con['password'])
+                ->type('password_confirmation', $con['password'])
+                ->check('terms')
+                ->press('register')
+                ->pause(2000)
+                ->assertPathIs('/furtherInfo');
+//                ->pause(50000);
+        });
+
         $user_info = [
             'company_name' => $faker->company,
             'phone_number' => $faker->phoneNumber,
@@ -28,10 +59,9 @@ class RegistrationContractorTest extends DuskTestCase
             'state' => "AZ",
             'zip' => "85283",
         ];
-
+//
         $this->browse(function (Browser $browser) use ($user_info) {
-            $browser->loginAs(User::find(1))->visit('/furtherInfo')
-//                ->pause(50000)
+            $browser->visit('/furtherInfo')
                 ->type('phone_number', $user_info['phone_number'])
                 ->type('company_name', $user_info['company_name'])
                 ->type('address_line_1', $user_info['address_line_1'])
@@ -40,9 +70,11 @@ class RegistrationContractorTest extends DuskTestCase
                 ->type('zip', $user_info['zip'])
                 ->check('email_contact')
                 ->check('phone_contact')
+                ->pause(10000)
                 ->check('sms_text')
+//                ->pause(50000)
                 ->press('submit')
-//                ->pause(10000)
+                ->pause(10000)
                 ->assertPathIs('/home')
 //                ->assertSee('I am a contractor')
 //                ->assertDontSee('I am a customer')

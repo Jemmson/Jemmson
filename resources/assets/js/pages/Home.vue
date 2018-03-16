@@ -1,11 +1,4 @@
-@extends('spark::layouts.app')
-
-@section('content')
-    <style>
-        .margins {
-            margin: 1rem 1rem 1rem 1rem;
-        }
-    </style>
+<template>
     <div class="container text-center">
         <h1>Jemmson App</h1>
         <div class="row" style="margin-top: 5rem">
@@ -47,4 +40,21 @@
             </div>
         </div>
     </div>
-@endsection
+</template>
+
+<script>
+  export default {
+    props: {
+    },
+    data () {
+      return {
+      }
+    },
+    computed: {
+    },
+    methods: {
+    },
+    mounted: function () {
+    }
+  }
+</script>

@@ -1,46 +1,48 @@
 <template>
   <!-- /all tasks of a bid -->
   <div>
-    <div class="col-md-4" v-for="(jobTask) in bid.job_tasks" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
+    <div class="col-md-4" v-for="jobTask in bid.job_tasks" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
       <div class="panel">
         <div class="panel-body">
           <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12 form-group">
               <!-- / status -->
-              <label for="task-status" class="label label-info">
+              <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
                 {{ status(jobTask.status) }}
               </label>
-            </div>
-            <div class="col-xs-12">
-              <!-- / title -->
-              <h4 style="font-weight: bold;">
+              <h4 class="task-name">
                 {{ jobTask.task.name }}
               </h4>
             </div>
             <!-- / quick info secion date/price -->
-            <div class="col-xs-6">
-              <span>
-                <i class="fas fa-clock"></i>
-                <input type="date" class="form-control form-control-date" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
-                  @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
-                  <label v-if="isCustomer || !showTaskStartDate()"> {{prettyDate(jobTask.start_date)}} </label>
-              </span>
-            </div>
-            <div class="col-xs-6">
-              <span class="float-right">
-                <i class="fas fa-money-bill-alt"></i>
-                <input type="text" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.cust_final_price)"
+            <div class="col-xs-6 form-group">
+                <i class="fas fa-money-bill-alt icon"></i>
+                <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.cust_final_price)"
                   @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
                 <label v-if="isCustomer || !showTaskPriceInput()"> {{taskCustFinalPrice(jobTask.cust_final_price)}} </label>
-              </span>
+            </div>
+            <!-- / end total price -->
+            <div class="col-xs-6 form-group text-right">
+              <i class="fas fa-user icon" style="margin-right: 3.5px;"></i>
+                <!-- <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.sub_final_price)"
+                  @blur="updateSubTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)"> -->
+                <label> {{taskCustFinalPrice(jobTask.sub_final_price)}} </label>
+            </div>
+            <!-- / end total task price -->
+            
+            <div class="col-xs-12 form-group" v-if="isContractor">
+                <i class="fas fa-clock icon"></i>
+                <input type="date" class="form-control form-control-date" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
+                  @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
+                <label v-if="isCustomer || !showTaskStartDate()"> {{prettyDate(jobTask.start_date)}} </label>
             </div>
 
             <div class="col-xs-12">
-              <div class="divider"></div>
+              <div class="divider2"></div>
             </div>
 
             <div class="col-xs-12">
-              <i class="fas fa-map-marker"></i>
+              <i class="fas fa-map-marker icon"></i>
               {{ location(jobTask) }}
             </div>
           </div>
@@ -67,7 +69,7 @@
 
               <transition-group name="slide-fade">
                 <div class="col-xs-12 hidden" :id="'task-divider-' + jobTask.id" :key="1">
-                  <div class="divider"></div>
+                  <div class="divider2"></div>
                 </div>
 
                 <!-- / task options -->
@@ -222,6 +224,9 @@
       }
     },
     methods: {
+      getLabelClass(status) {
+          return Format.statusLabel(status);
+      },
       showAcceptBtn(status) {
           return status === 'bid_task.bid_sent';
       },

@@ -1,36 +1,35 @@
 <template>
-    <div>
+    <div class="container">
+        <div class="row">
+
         <div class="col-md-12">
-        <div class="panel panel-default">
-            <!-- <div class="panel-heading">Dashboard</div> -->
-            <div class="panel-body">
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <span style="float: right;">
-                            <button class="btn btn-danger btn-close" @click="closeBid">
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                            </button>
-                        </span>
+            <div class="panel panel-default">
+                <!-- <div class="panel-heading">Dashboard</div> -->
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                                <button class="btn btn-danger" @click.prevent="closeBid">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                        </div>
+
+                        <!-- /show all bid information -->
+                        <bid-details :bid="bid">
+                        </bid-details>
+
+                        <!-- /customer approve bid form -->
+                        <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
+                        </approve-bid>
+
+                        <!-- /buttons  -->
+                        <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid" @openAddTask="openAddTask">
+                        </general-contractor-bid-actions>
                     </div>
-
-                    <!-- /show all bid information -->
-                    <bid-details :bid="bid">
-                    </bid-details>
-
-                    <!-- /customer approve bid form -->
-                    <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-                    </approve-bid>
-
-                    <!-- /buttons  -->
-                    <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
-                        @openAddTask="openAddTask">
-                    </general-contractor-bid-actions>
                 </div>
             </div>
         </div>
-        </div>
 
-        
+
         <!-- /show all tasks associated to this bid -->
         <bid-tasks v-if="bid.job_tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
         </bid-tasks>
@@ -44,17 +43,18 @@
         <!-- / stripe testing delete after -->
         <stripe>
         </stripe>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         props: {
-            bid: Object,
-            showBid: false,
+            // bid: Object,
         },
         data() {
             return {
+                bid: {},
                 jobTaskIndex: 0,
                 bidForm: new SparkForm({
                     id: 0,
@@ -72,6 +72,13 @@
                     declineBid: false
                 },
                 showStripe: false
+            }
+        },
+        watch: {
+            '$route' (to, from) {
+                // get the bid
+                const bidId = this.$route.params.id;
+                this.getBid(bidId);
             }
         },
         computed: {
@@ -109,7 +116,7 @@
             },
             openTaskPanel(index) {
                 console.log(index);
-                
+
                 if (this.jobTaskIndex === index && this.showTaskPanel) {
                     this.showTaskPanel = false;
                 } else {
@@ -122,20 +129,35 @@
                 }
             },
             openAddTask() {
-                this.showTaskPanel = false;
-                if (this.showAddTaskPanel) {
-                    this.showAddTaskPanel = false;
-                } else {
-                    this.showAddTaskPanel = true;
-                    this.$nextTick(() => {
-                        document.getElementById('add-task').scrollIntoView();
-                    });
-                }
+                $('#add-task-modal').modal();
             },
             closeBid: function () {
                 console.log('closeBid');
                 this.$emit('closeBid');
+            },
+            async getBid(id) {
+                try {
+                    const {data} = await axios.get('/job/' + id);
+                    this.bid = data;
+                } catch (error) {
+                    error = error.response.data;
+                    form.errors.errors = error.errors;
+                    Vue.toasted.error(error.message);
+                }
             }
+        },
+        created: function () {
+
+            // get the bid
+            const bidId = this.$route.params.id;
+            this.getBid(bidId);
+
+            Bus.$on('taskAdded', () => {
+                this.showAddTaskPanel = false;
+            });
+            Bus.$on('needsStripe', () => {
+                $('#stripe-modal').modal();
+            });
         },
         mounted: function () {
             // set up init data
@@ -143,13 +165,5 @@
             this.bidForm.status = this.bid.status;
             this.user = Spark.state.user;
         },
-        created: function () {
-            Bus.$on('taskAdded', () => {
-                this.showAddTaskPanel = false;
-            });
-            Bus.$on('needsStripe', () => {
-                $('#stripe-modal').modal();             
-            });
-        }
     }
 </script>

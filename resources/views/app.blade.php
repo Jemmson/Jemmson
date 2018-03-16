@@ -37,7 +37,10 @@
 @endif
 
 <!-- Main Content -->
-@yield('content')
+<transition name="fade">
+    <router-view></router-view>
+</transition>
+
 
 <!-- Application Level Modals -->
     @if (Auth::check())

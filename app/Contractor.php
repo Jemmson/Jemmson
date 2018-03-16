@@ -32,6 +32,32 @@ class Contractor extends Model
         return $this->hasMany(Time::class, 'contractor_id', 'user_id');
     }
 
+    public function freeJobsLeft()
+    {
+        return $this->free_jobs > 0;
+    }
+
+    public function isSubscribed()
+    {
+        return $this->user()->first()->current_billing_plan !== null;
+    }
+
+    public function subtractFreeJob()
+    {
+        if ($this->free_jobs <= 0) {
+            return true;
+        }
+
+        $this->free_jobs -= 1;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Subtract Free Job: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
 
     public function customers()
     {

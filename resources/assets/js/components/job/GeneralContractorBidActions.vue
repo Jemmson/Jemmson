@@ -1,7 +1,7 @@
 <template>
     <!-- /contractor bid actions -->
     <div class="col-md-12">
-        <div v-if="showPreApprovedActions">
+        <div v-if="showPreApprovedActions" class="text-right">
             <button class="btn btn-sm btn-primary button" name="addTaskToBid" id="addTaskToBid" @click="openAddTask">
                 Add Task To Bid
             </button>

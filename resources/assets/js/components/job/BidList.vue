@@ -14,26 +14,27 @@
             </div>
             <transition name="slide-fade">
                 <div v-show="showBidList">
-                    <div class="col-sm-12 col-md-4" v-for="(bid, index) in bids" v-bind:key="bid.id">
+                    <div class="col-sm-12 col-md-4" v-for="(bid) in bids" v-bind:key="bid.id">
                         <div class="panel">
                             <div class="panel-body">
                                 <div class="col-xs-12">
-                                    <span>
-                                        <label for="job-name" class="job-name">{{ jobName(bid.job_name) }}</label>
-                                        <label for="job-stats" class="label label-info label-small job-status">{{ status(bid) }}</label>
-                                    </span>
+                                    <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
+                                    <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
                                 </div>
                                 <div class="col-xs-12">
                                         <p>
-                                            Start On: <label for="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
+                                            <i class="fas fa-clock icon"></i> 
+                                            <label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
                                             <span class="right-label">
-                                                Price: <label for="job-price">${{ bid.bid_price }}</label>
+                                                <i class="fas fa-money-bill-alt icon"></i> 
+                                                <label for="job-price" class="job-price">${{ bid.bid_price }}</label>
                                             </span> 
                                         </p>
                                 </div>
                                 <div class="col-xs-12">
                                     <span class="primary-action-btn">
-                                        <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button>
+                                        <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
+                                        <router-link :to="'/bid/' + bid.id" class="btn btn-primary">Review</router-link>
                                     </span>
                                 </div>
                             </div>
@@ -42,10 +43,10 @@
                 </div>
             </transition>
             <!-- /end col-md-8 -->
-            <transition name="slide-fade">
+            <!-- <transition name="slide-fade">
                 <bid v-if="showBid && bids[bidIndex] !== undefined" v-on:closeBid="closeBid" :bid="bids[bidIndex]">
                 </bid>
-            </transition>
+            </transition> -->
             <!-- /end transition -->
         </div>
     </div>
@@ -54,8 +55,8 @@
 <script>
   export default {
       props: {
-          user: Object,
-          pbids: Array
+          //user: Object,
+          //pbids: Array
       },
       data() {
           return {
@@ -65,7 +66,16 @@
               bidIndex: 0
           }
       },
+    watch: {
+        '$route' (to, from) {
+            // get the bids
+            this.getBids();
+        }
+    },
       methods: {
+          getLabelClass(status) {
+              return Format.statusLabel(status);
+          },
           jobName(name) {
               return Format.jobName(name);
           },
@@ -105,6 +115,7 @@
           }
       },
       created() {
+          this.getBids();
           Bus.$on('bidUpdated', (payload) => {
               if (payload !== undefined && payload[0] === 'closeBid') {
                   this.closeBid();
@@ -114,9 +125,9 @@
           Bus.$on('previewSubForTask', (payload) => {
               this.previewSubForTask(payload[0], payload[1], payload[2]);
           });
+
       },
       mounted() {
-          this.bids = this.pbids;
           const bidId = User.getParameterByName('jobId');
           if (bidId !== null && bidId !== '') {
               this.openBid(User.getBidIndex(bidId, this.bids));

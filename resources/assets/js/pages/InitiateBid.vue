@@ -42,7 +42,7 @@
 
               <div class="form-group col-md-6" :class="{'has-error': form.errors.has('phone')}">
                 <label for="phone">Phone</label>
-                <input name="phone" type="text" id="phone" class="form-control" maxlength="10" v-model="form.phone" @keyup="filterPhone">
+                <input name="phone" type="tel" id="phone" class="form-control" maxlength="10" v-model="form.phone" @keyup="filterPhone">
                 <span class="help-block" v-show="form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
                 </span>
@@ -61,7 +61,6 @@
         </div>
       </div>
     </div>
-    <hr>
   </div>
 </template>
 <script>
