@@ -119,7 +119,7 @@ class HomeController extends Controller
         $this->updateUsersPhoneNumber($phone, $user_id);
 
         if (empty(session('prevDestination'))) {
-            return response()->json('home', 200);
+            return response()->json('/', 200);
         } else {
             return response()->json(session('prevDestination'), 200);
         }

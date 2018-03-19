@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
 );
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/home', 'HomeController@create');
+    Route::post('/', 'HomeController@create');
     Route::get(
         '/furtherInfo', function () {
             return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
