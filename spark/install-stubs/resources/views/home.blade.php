@@ -1,7 +1,7 @@
 @extends('spark::layouts.app')
 
 @section('content')
-<home :user="user" inline-template>
+<home :user="{{ Auth::user() }}" inline-template>
     <div class="container">
         <!-- Application Dashboard -->
         <div class="row">
