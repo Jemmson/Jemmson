@@ -34,7 +34,7 @@
                                 <div class="col-xs-12">
                                     <span class="primary-action-btn">
                                         <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
-                                        <router-link :to="'/bid/' + bid.id" class="btn btn-primary">Review</router-link>
+                                        <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">ReviewBid{{ bid.id }}</router-link>
                                     </span>
                                 </div>
                             </div>

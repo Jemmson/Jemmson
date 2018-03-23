@@ -49,7 +49,7 @@
               </div>
 
               <div class="form-group col-md-12">
-                <button class="btn btn-default btn-primary" @click.prevent="submit" :disabled="disabled.submit">
+                <button  name="submit" class="btn btn-default btn-primary" @click.prevent="submit" :disabled="disabled.submit">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
