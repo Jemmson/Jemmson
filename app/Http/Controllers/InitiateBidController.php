@@ -36,6 +36,20 @@ class InitiateBidController extends Controller
      */
     public function send(Request $request)
     {
+        //Things this method should do
+        // 1. validate the input - done
+        // 2. Get the Contractor that initiated the bid - done
+        // 3. Check if there are any more free bids and whether the contractor is subscribed or not
+        // 4. If subscribed or has more bids then continue
+        // 5. Check if the customer exists in the database and return back to the application if the customer exists
+        // 6. If the customer does not exist then create the customer
+        // 7. create a jobName if one was not provided
+        // 8. if Job could not be created then redirect back
+        // 9. if job was created then subtract a job from the contractor or leave at zero if no more free jobs
+        // 10. notify the customer that the job was created through email and text
+        // 11. redirect to all bids
+
+
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
@@ -47,7 +61,13 @@ class InitiateBidController extends Controller
         ]);
 
         $contractor = Auth::user()->contractor()->first();
-        if (!$contractor->freeJobsLeft() && !$contractor->isSubscribed()) {
+
+        $this->logData($contractor, 65);
+
+        $this->logData($contractor->numberOfJobsLeft(), 67);
+        $this->logData($contractor->isSubscribed(), 68);
+
+        if (!$contractor->hasMoreFreeJobs() && !$contractor->isSubscribed()) {
             return response()->json(['message' => 'No more free Jobs left.', 'errors' => ['no_free_jobs' => 'No more free Jobs left']], 422);
         }
 
@@ -56,14 +76,22 @@ class InitiateBidController extends Controller
         $email = $request->email;
         $jobName = $request->jobName;
 
+        $this->logData($customerName, 79);
+        $this->logData($phone, 80);
+        $this->logData($email, 81);
+        $this->logData($jobName, 82);
 
         // find customer
         $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
+
+        $this->logData($customerExists['error']);
+        $this->logData($customerExists['customer']);
 
 
         if ($customerExists['error']) {
             if ($customerExists['errorText'] == 'Create a new customer') {
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
+                $this->logData($customer, 91);
                 if ($customer == null) {
                     return redirect()->back()->with(
                         'error',
@@ -80,16 +108,20 @@ class InitiateBidController extends Controller
             $customer = $customerExists['customer'];
         }
 
+
         // create a job name if one does not exist
         if (empty($jobName)) {
             $jobName = $this->jobName($customer);
         }
 
+//        $this->logData($jobName);
+
         // create a bid
         $job = $this->createBid($customer->id, $jobName);
         $job_id = $job->id;
 
-        // if we fail to create a job or token redirect back 
+//        $this->logData($job);
+
         // with error
         if ($job_id == null) {
             // TODO: delete job/token if only one was created
@@ -99,13 +131,23 @@ class InitiateBidController extends Controller
             );
         }
 
+//        $this->logData($job_id);
+
         $contractor->subtractFreeJob();
 
         $customer->notify(new BidInitiated($job, $customer));
 
         $request->session()->flash('status', 'Your bid was created');
 
-        return redirect('/bid-list');
+//        return redirect('/#/bids');
+        return "Bid was created";
+
+    }
+
+    public function logData ($data, $num = 0) {
+        $f = fopen('logs.txt', 'a+');
+        fwrite($f, "$num:\t$data\n");
+        fclose($f);
     }
 
     /**
@@ -168,8 +210,15 @@ class InitiateBidController extends Controller
      */
     public function customerExistsInTheDatabase($email, $phone, $customerName)
     {
+        // checking to see if a user exists that has an email or phone number that
+        // is already in the database
         $customer = User::where('email', $email)->orWhere('phone', $phone)->first();
 
+        $this->logData($customer, 214);
+
+        // if a user exists then I want to check if the name that was entered by the contractor matches
+        // the name of the customer because the names entered should be the same. if the name is different
+        // then the contractor should select the correct name from the drop down menu so that the names match.
         if ($customer != null) {
             if ($customer->name != $customerName) {
                 return [
