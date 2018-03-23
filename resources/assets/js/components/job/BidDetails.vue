@@ -30,12 +30,14 @@
                     Location :
                 </label>
             </p>
-            <p>
-                {{ bid.address_line_1 }}
-            </p>
-            <p>
-                {{ bid.city }}, {{ bid.state }} {{ bid.zip }}
-            </p>
+            <div v-if="bid.address_line_1 !== undefined">
+                <p>
+                    {{ bid.address_line_1 }}
+                </p>
+                <p>
+                    {{ bid.city }}, {{ bid.state }} {{ bid.zip }}
+                </p>
+            </div>
         </div>
         <div class="col-md-6">
             <p>
@@ -74,7 +76,8 @@
       }
     },
     mounted: function () {
-      Customer.getArea(this.bid.id, this.area)
+      // Customer.getArea(this.bid.id, this.area)
+      Customer.getArea(1, this.area)
     }
   }
 </script>
