@@ -64,6 +64,9 @@ class Customer extends Model
         } catch(\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
         }
+
+
+
     }
 
     // TODO: understand where an intermidate table relates to two other tables

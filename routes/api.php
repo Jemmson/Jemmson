@@ -92,7 +92,6 @@ Route::post('/job/getArea', 'JobController@getArea');
 
 Route::post('/customer/getAddress', 'CustomerController@getAddress');
 
-
 // stripe controller 
 Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');
 
