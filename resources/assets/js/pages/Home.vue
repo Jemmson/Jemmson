@@ -1,52 +1,93 @@
 <template>
     <div class="container text-center">
         <!--<pre>{{ user }}</pre>-->
-        <h1>Jemmson App</h1>
+        <!--<h1>Jemmson App</h1>-->
         <div v-if="(this.user.usertype === 'contractor')">
-            <h1>I am a contractor</h1>
-        </div>
-        <div v-else-if="(this.user.usertype === 'customer')">
-            <h1>I am a customer</h1>
-        </div>
-        <div v-else="">
-            <div class="row" style="margin-top: 5rem">
-                <div class="col-md-6">
-                    <div class="panel panel-default panel-flush">
-                        <div class="panel-heading">
-                            <h2>Are you a Customer?</h2>
-                        </div>
-                        <div class="panel-body">
-                            <p style="margin: 1rem 1rem 1rem 1rem; font-size: 2rem;">The Jemmson Application can offer you a
-                                great way to find a
-                                quality contractor that has a lot of great features.</p>
-                            <ol>
-                                <li style="font-size: 2rem;">Security</li>
-                                <li style="font-size: 2rem;">Job Tracking</li>
-                                <li style="font-size: 2rem;">In app messaging</li>
-                            </ol>
-                            <hr>
-                            <a href="/customerFeatures" class="btn btn-primary" style="margin-bottom: 2rem;">Learn More</a>
-                        </div>
+            <h1 class="home-page-title">{{ this.user.contractor.company_name }}</h1>
+            <div class="home-page-wrapper">
+                <div class="home-page-initiate-bid home-page-section-style" @click="route('initiate-bid')">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Initiate a Bid Here
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="panel panel-default panel-flush">
-                        <div class="panel-heading">
-                            <h2>Are you a Contractor?</h2>
-                        </div>
-                        <div class="panel-body">
-                            <p style="margin: 1rem 1rem 1rem 1rem; font-size: 2rem;">The Jemmson Application can offer you a
-                                great way to find a
-                                quality contractor that has a lot of great features.</p>
-                            <ol>
-                                <li style="font-size: 2rem;">Security</li>
-                                <li style="font-size: 2rem;">Job Tracking</li>
-                                <li style="font-size: 2rem;">In app messaging</li>
-                            </ol>
-                            <hr>
-                            <a href="/contractorFeatures" class="btn btn-primary" style="margin-bottom: 2rem;">Learn
-                                More</a>
-                        </div>
+                <div class="home-page-bid home-page-section-style" @click="route('bids')">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Look at Bids Here
+                    </div>
+                </div>
+                <div class="home-page-task home-page-section-style" @click="route('tasks')">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Look at Tasks Here
+                    </div>
+                </div>
+                <div class="home-page-past-invoices home-page-section-style" @click="">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Past Invoices
+                    </div>
+                </div>
+                <div class="home-page-past-stripe-dashboard home-page-section-style" @click="">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Stripe Dashboard
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else-if="(this.user.usertype === 'customer')">
+            <h1 class="home-page-title">{{ this.user.name }}</h1>
+            <div class="home-page-wrapper">
+                <div class="home-page-initiate-bid home-page-section-style" @click="route('initiate-bid')">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Initiate a Bid Here
+                    </div>
+                </div>
+                <div class="home-page-bid home-page-section-style" @click="route('bids')">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Look at Bids Here
+                    </div>
+                </div>
+                <div class="home-page-task home-page-section-style" @click="route('tasks')">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Look at Tasks Here
+                    </div>
+                </div>
+                <div class="home-page-task home-page-section-style" @click="">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Past Invoices
+                    </div>
+                </div>
+                <div class="home-page-past-stripe-dashboard home-page-section-style" @click="">
+                    <div class="home-page-initiate-bid-logo">
+                        <img src="/img/mono-logo.png" style="height: 32px;">
+                    </div>
+                    <div class="home-page-initiate-bid-text">
+                        Stripe Dashboard
                     </div>
                 </div>
             </div>
@@ -65,7 +106,11 @@
       }
     },
     computed: {},
-    methods: {},
+    methods: {
+      route(value){
+          this.$router.push (value)
+      }
+    },
     mounted: function () {
       console.log(Spark.state.user);
       this.user = Spark.state.user;

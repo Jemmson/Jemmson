@@ -7687,3 +7687,63 @@ body {
 .action-icon {
   color: #0099CC;
 }
+.home-page-wrapper {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 50px (1fr)[2] 50px;
+      grid-template-columns: 50px repeat(2, 1fr) 50px;
+  grid-gap: 1rem;
+}
+.home-page-initiate-bid {
+  -ms-grid-column: 2;
+      grid-column-start: 2;
+  grid-column-end: 3;
+}
+.home-page-bid {
+  -ms-grid-column: 3;
+      grid-column-start: 3;
+  grid-column-end: 4;
+}
+.home-page-task {
+  -ms-grid-column: 2;
+      grid-column-start: 2;
+  grid-column-end: 3;
+  -ms-grid-row: 2;
+      grid-row-start: 2;
+  grid-row-end: 3;
+}
+.home-page-past-invoices {
+  -ms-grid-column: 3;
+      grid-column-start: 3;
+  grid-column-end: 4;
+  -ms-grid-row: 2;
+      grid-row-start: 2;
+  grid-row-end: 3;
+}
+.home-page-section-style {
+  border: thin solid white;
+  background-color: white;
+  border-radius: 10px;
+}
+.home-page-initiate-bid-logo {
+  margin-top: 2rem;
+}
+.home-page-initiate-bid-text {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-weight: bolder;
+  font-size: 20px;
+}
+.home-page-title {
+  margin-bottom: 6rem;
+  font-size: 75px;
+  text-decoration: underline;
+}
+.home-page-past-stripe-dashboard {
+  -ms-grid-column: 2;
+      grid-column-start: 2;
+  grid-column-end: 3;
+  -ms-grid-row: 3;
+      grid-row-start: 3;
+  grid-row-end: 4;
+}
