@@ -40,6 +40,10 @@ import Tasks from './components/task/SubContractorTasks';
 
 import Home from './pages/Home';
 import InitiateBid from './pages/InitiateBid';
+import Invoices from './pages/Invoices';
+import Invoice from './pages/Invoice';
+
+
 
 
 
@@ -68,8 +72,9 @@ const routes = [
   { path: '/home', component: Home },
   { path: '/', component: Home },
   { path: '/initiate-bid', component: InitiateBid },
-  
-  
+  { path: '/invoices', component: Invoices },
+  { path: '/invoice/:id', component: Invoice },
+
 ]
 
 const router = new VueRouter({

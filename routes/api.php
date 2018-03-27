@@ -67,6 +67,8 @@ Route::delete('job/{job}', 'JobController@delete');
 Route::post('job/update', 'JobController@updateJobDate');
 Route::post('job/cancel', 'JobController@cancelJobBid');
 Route::post('job/completed', 'JobController@jobCompleted');
+Route::get('/invoices', 'JobController@getInvoices');
+
 
 
 // Tasks

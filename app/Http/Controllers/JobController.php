@@ -74,6 +74,42 @@ class JobController extends Controller
     }
 
     /**
+     * Invoices
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getInvoices()
+    {
+        if ($this->isCustomer()) {
+          $invoices = Auth::user()->jobs()
+          ->where(function ($query) {
+            $query->where('status', __('job.completed'));
+          })
+          ->with(
+            [
+              'jobTasks' => function ($query) {
+                $query->with(
+                [
+                  'task' => function ($q) {
+                      $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
+                  }
+                ]);
+              }
+            ])->get();
+
+        } else {
+          $invoices = Auth::user()->jobs()->where('status', __('bid.initiated'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+        }
+
+        return response()->json($invoices, 200); 
+    }
+
+    public function getInvoice(Job $job)
+    {
+        return $job;
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
