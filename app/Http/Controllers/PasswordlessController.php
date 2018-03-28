@@ -67,7 +67,7 @@ class PasswordlessController {
             if ($user->isValidToken($token->token)) {
                 Auth::login($user);
                 session(['task_id' => $task_id]);
-                return redirect('/bid/tasks/?taskId=' . $task_id);
+                return redirect('/#/tasks?taskId=' . $task_id);
             } else {
                 return redirect('login')->withErrors(__('passwordless.invalid'));
             }

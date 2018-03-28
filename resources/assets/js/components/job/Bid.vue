@@ -153,7 +153,7 @@
             this.getBid(bidId);
 
             Bus.$on('taskAdded', () => {
-                this.showAddTaskPanel = false;
+                this.getBid(bidId);
             });
             Bus.$on('needsStripe', () => {
                 $('#stripe-modal').modal();

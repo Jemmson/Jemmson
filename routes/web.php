@@ -63,6 +63,7 @@ Route::get('/public/contractorCommunication', function(){
 
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 
+    Route::post('/initiate-bid', 'InitiateBidController@send');
     
     // TaskController
     Route::post('/bid/tasks', 'TaskController@bidTasks');

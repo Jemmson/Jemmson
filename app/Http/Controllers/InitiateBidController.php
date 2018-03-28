@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use SimpleSoftwareIO\SMS\Facades\SMS;
 use App\User;
 use App\Job;
+use App\Customer;
 use App\Mail\PasswordlessBidPageLogin;
 use Illuminate\Support\Facades\DB;
 use App\Services\RandomPasswordService;
@@ -196,7 +197,7 @@ class InitiateBidController extends Controller
             ]
         );
 
-        Customer::create(
+        $cust = Customer::create(
             [
                 'user_id' => $customer->id
             ]
