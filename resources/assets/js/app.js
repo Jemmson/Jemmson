@@ -25,7 +25,9 @@ Vue.use(Toasted, {
   theme: 'bubble',
 })
 
-import { store } from './vuex/index';
+import {
+  store
+} from './vuex/index';
 import Format from './classes/Format';
 import Language from './classes/Language';
 import GeneralContractor from './classes/GeneralContractor';
@@ -42,6 +44,8 @@ import Home from './pages/Home';
 import InitiateBid from './pages/InitiateBid';
 import Invoices from './pages/Invoices';
 import Invoice from './pages/Invoice';
+import FurtherInfo from './pages/FurtherInfo';
+
 
 
 
@@ -65,20 +69,64 @@ Spark.forms.register = {
 
 
 // vue routes
-const routes = [
-  { path: '/bids', component: BidList },
-  { path: '/bid/:id', component: Bid },
-  { path: '/tasks', component: Tasks },
-  { path: '/home', component: Home },
-  { path: '/', component: Home },
-  { path: '/initiate-bid', component: InitiateBid },
-  { path: '/invoices', component: Invoices },
-  { path: '/invoice/:id', component: Invoice },
+const routes = [{
+    path: '/bids',
+    component: BidList
+  },
+  {
+    path: '/bid/:id',
+    component: Bid
+  },
+  {
+    path: '/tasks',
+    component: Tasks
+  },
+  {
+    path: '/home',
+    component: Home
+  },
+  {
+    path: '/',
+    component: Home
+  },
+  {
+    path: '/initiate-bid',
+    component: InitiateBid
+  },
+  {
+    path: '/invoices',
+    component: Invoices
+  },
+  {
+    path: '/invoice/:id',
+    component: Invoice
+  },
+  {
+    path: '/furtherInfo',
+    component: FurtherInfo
+  },
+
 
 ]
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  console.log(to.path);
+  const customer = Spark.state.user.customer;
+  const contractor = Spark.state.user.contractor;
+  if (to.path !== '/furtherInfo') {
+    if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
+      console.log('to further info');
+      next('/furtherInfo');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 })
 
 

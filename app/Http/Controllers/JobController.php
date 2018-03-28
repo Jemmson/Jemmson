@@ -106,6 +106,7 @@ class JobController extends Controller
 
     public function getInvoice(Job $job)
     {
+        $job->load('location', 'jobTasks.task');
         return $job;
     }
 

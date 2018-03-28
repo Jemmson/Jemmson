@@ -89,21 +89,6 @@
               date = date.split(' ');
               return date[0];
           },
-          openBid(index) {
-              console.log('openBid');
-
-              // clone bid
-              this.bidIndex = index;
-              
-              // hide show components
-              this.showBidList = false;
-              this.showBid = true;
-          },
-          closeBid() {
-              console.log('closeBid');
-              this.showBidList = true;
-              this.showBid = false;
-          },
           getBids() {
               console.log('getBids');
               axios.post('/jobs').then((response) => {
@@ -117,9 +102,6 @@
       created() {
           this.getBids();
           Bus.$on('bidUpdated', (payload) => {
-              if (payload !== undefined && payload[0] === 'closeBid') {
-                  this.closeBid();
-              }
               this.getBids();
           });
           Bus.$on('previewSubForTask', (payload) => {

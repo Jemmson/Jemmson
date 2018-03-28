@@ -196,6 +196,12 @@ class InitiateBidController extends Controller
             ]
         );
 
+        Customer::create(
+            [
+                'user_id' => $customer->id
+            ]
+        );
+
         return $customer;
 
     }

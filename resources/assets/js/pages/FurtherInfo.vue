@@ -214,21 +214,21 @@
 <script>
   export default {
     props: {
-        user: Object,
     },
     data () {
       return {
+        user: {},
         disabled: {
           submit: false
         },
         form: new SparkForm ({
-          company_name: this.user.company_name,
-          phone_number: this.user.phone,
-          address_line_1: this.user.address_line_1,
-          address_line_2: this.user.address_line_2,
-          city: this.user.city,
-          state: this.user.state,
-          zip: this.user.zip,
+          company_name: '',
+          phone_number: '',
+          address_line_1: '',
+          address_line_2: '',
+          city: '',
+          state: '',
+          zip: '',
           password: '',
           password_confirmation: '',
           email_contact: true,
@@ -308,6 +308,9 @@
 
         return data;
       }
+    },
+    mounted() {
+        this.user = Spark.state.user;
     }
   }
 </script>
