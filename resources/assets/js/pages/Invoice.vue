@@ -14,7 +14,7 @@
                         <div class="panel-body">
                             <section class="col-xs-12 col-md-6">
                                 <h3 for="company_name">{{ user.contractor.company_name }}</h3>
-                                <address>
+                                <address v-if="invoice.location !== null">
                                     <br> {{ invoice.location.address_line_1 }}
                                     <br> {{ invoice.location.city }}, {{ invoice.location.state }} {{ invoice.location.zip }}
                                 </address>
