@@ -55,15 +55,15 @@
                                     <tr v-for="task in invoice.job_tasks" :key="task.id">
                                         <td>{{ task.task.name }}</td>
                                         <td></td>
-                                        <td>$ {{ task.cust_final_price }}</td>
-                                        <td>$ {{ task.sub_final_price }}</td>
+                                        <td>${{ task.cust_final_price }}</td>
+                                        <td>${{ task.sub_final_price }}</td>
                                     </tr>
 
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td>Total: {{ totalCustomerPrice}}</td>
-                                        <td>Total: {{ totalSubPrice }}</td>
+                                        <td>Total: ${{ totalCustomerPrice}}</td>
+                                        <td>Total: ${{ totalSubPrice }}</td>
                                     </tr>
                                 </tbody>
                             </table>
