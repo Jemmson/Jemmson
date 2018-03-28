@@ -35,7 +35,7 @@ class PasswordlessController {
             if ($user->isValidToken($token->token)) {
                 Auth::login($user);
                 session(['job_id' => $job_id]);
-                return redirect('/bid-list/?jobId=' . $job_id);
+                return redirect('/#/bid/' . $job_id);
             } else {
                 return redirect('login')->withErrors(__('passwordless.invalid'));
             }
@@ -67,7 +67,7 @@ class PasswordlessController {
             if ($user->isValidToken($token->token)) {
                 Auth::login($user);
                 session(['task_id' => $task_id]);
-                return redirect('/bid/tasks/?taskId=' . $task_id);
+                return redirect('/#/tasks?taskId=' . $task_id);
             } else {
                 return redirect('login')->withErrors(__('passwordless.invalid'));
             }

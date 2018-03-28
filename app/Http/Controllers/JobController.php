@@ -83,7 +83,7 @@ class JobController extends Controller
         if ($this->isCustomer()) {
           $invoices = Auth::user()->jobs()
           ->where(function ($query) {
-            $query->where('status', __('job.completed'));
+            $query->where('status', __('bid.in_progress'));
           })
           ->with(
             [
@@ -98,7 +98,7 @@ class JobController extends Controller
             ])->get();
 
         } else {
-          $invoices = Auth::user()->jobs()->where('status', __('bid.initiated'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+          $invoices = Auth::user()->jobs()->where('status', __('bid.in_progress'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
         }
 
         return response()->json($invoices, 200); 
@@ -106,6 +106,7 @@ class JobController extends Controller
 
     public function getInvoice(Job $job)
     {
+        $job->load('location', 'jobTasks.task');
         return $job;
     }
 

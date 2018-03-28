@@ -11,3 +11,6 @@
 <li>
     <router-link :to="'/tasks'">Tasks</router-link>
 </li>
+<li>
+    <router-link :to="'/invoices'">Invoices</router-link>
+</li>

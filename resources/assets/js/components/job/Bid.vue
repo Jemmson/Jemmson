@@ -7,12 +7,6 @@
                 <!-- <div class="panel-heading">Dashboard</div> -->
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-12 text-right">
-                                <button class="btn btn-danger" @click.prevent="closeBid">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                        </div>
-
                         <!-- /show all bid information -->
                         <bid-details :bid="bid">
                         </bid-details>
@@ -153,7 +147,7 @@
             this.getBid(bidId);
 
             Bus.$on('taskAdded', () => {
-                this.showAddTaskPanel = false;
+                this.getBid(bidId);
             });
             Bus.$on('needsStripe', () => {
                 $('#stripe-modal').modal();
