@@ -149,6 +149,11 @@
             Bus.$on('taskAdded', () => {
                 this.getBid(bidId);
             });
+
+            Bus.$on('bidUpdated', () => {
+                this.getBid(bidId);
+            });
+
             Bus.$on('needsStripe', () => {
                 $('#stripe-modal').modal();
             });

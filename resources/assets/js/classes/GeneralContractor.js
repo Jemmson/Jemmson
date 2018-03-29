@@ -13,7 +13,7 @@ export default class GeneralContractor {
       price: bid.bid_price,
     }).then ((response) => {
       console.log (response.data)
-      User.emitChange ('bidUpdated');
+      User.emitChange('bidUpdated');
       Vue.toasted.success ('Accepted Bid!');
       disabled.accept = false;
     }).catch ((error) => {

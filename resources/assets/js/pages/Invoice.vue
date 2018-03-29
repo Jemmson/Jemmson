@@ -46,7 +46,7 @@
                                     <tr>
                                         <th scope="col">Task Name</th>
                                         <th scope="col"></th>
-                                        <th scope="col">Task Price (Customer)</th>
+                                        <th scope="col">Task Price (Contractor)</th>
                                         <th scope="col">Task Price (Sub Contractor)</th>
 
                                     </tr>
@@ -55,15 +55,21 @@
                                     <tr v-for="task in invoice.job_tasks" :key="task.id">
                                         <td>{{ task.task.name }}</td>
                                         <td></td>
-                                        <td>${{ task.cust_final_price }}</td>
+                                        <td>${{ task.cust_final_price - task.sub_final_price }}</td>
                                         <td>${{ task.sub_final_price }}</td>
                                     </tr>
 
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td>Total: ${{ totalCustomerPrice}}</td>
+                                        <td>Total: ${{ totalCustomerPrice }}</td>
                                         <td>Total: ${{ totalSubPrice }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -89,7 +95,7 @@
                 let total = 0;
                 if (this.invoice !== null) {
                     for (const task of this.invoice.job_tasks) {
-                        total += task.cust_final_price;
+                        total += task.cust_final_price - task.sub_final_price;
                     }
                 }
                 return total;
