@@ -83,7 +83,7 @@ class JobController extends Controller
         if ($this->isCustomer()) {
           $invoices = Auth::user()->jobs()
           ->where(function ($query) {
-            $query->where('status', __('bid.in_progress'));
+            $query->where('status', __('job.completed'));
           })
           ->with(
             [
@@ -98,7 +98,7 @@ class JobController extends Controller
             ])->get();
 
         } else {
-          $invoices = Auth::user()->jobs()->where('status', __('bid.in_progress'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+          $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
         }
 
         return response()->json($invoices, 200); 
@@ -331,8 +331,9 @@ class JobController extends Controller
           $jobsWithTasks = Auth::user()->jobs()
           ->where(function ($query) {
             $query->where('status', __('bid.sent'))
-              ->orwhere('status', __('job.approved'))
-              ->orwhere('status', __('bid.declined'));
+            ->orwhere('status', __('job.approved'))
+            ->orwhere('status', __('bid.declined'))
+            ->Where('status', '!=',__('job.completed'));
           })
           ->with(
             [
@@ -352,10 +353,11 @@ class JobController extends Controller
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
           ->Where('status', '!=',__('bid.declined'))
+          ->Where('status', '!=',__('job.completed'))
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+          $jobs = Auth::user()->jobs()->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->where('status', '!=',__('job.completed'))->get();
         }
 
         return response()->json($jobs, 200); 
