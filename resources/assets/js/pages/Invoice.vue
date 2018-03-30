@@ -13,7 +13,8 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <section class="col-xs-12 col-md-6">
-                                <h3 for="company_name">{{ user.contractor.company_name }}</h3>
+                                <h3 for="company_name" v-if="isContractor">{{ user.contractor.company_name }}</h3>
+                                <h3 for="company_name" v-if="!isContractor">{{ user.name }}</h3>
                                 <address v-if="invoice.location !== null">
                                     <br> {{ invoice.location.address_line_1 }}
                                     <br> {{ invoice.location.city }}, {{ invoice.location.state }} {{ invoice.location.zip }}
@@ -47,7 +48,7 @@
                                         <th scope="col">Task Name</th>
                                         <th scope="col"></th>
                                         <th scope="col">Task Price (Contractor)</th>
-                                        <th scope="col">Task Price (Sub Contractor)</th>
+                                        <th scope="col" v-if="isContractor">Task Price (Sub Contractor)</th>
 
                                     </tr>
                                 </thead>
@@ -56,10 +57,10 @@
                                         <td>{{ task.task.name }}</td>
                                         <td></td>
                                         <td>${{ task.cust_final_price - task.sub_final_price }}</td>
-                                        <td>${{ task.sub_final_price }}</td>
+                                        <td v-if="isContractor">${{ task.sub_final_price }}</td>
                                     </tr>
 
-                                    <tr>
+                                    <tr v-if="isContractor">
                                         <td></td>
                                         <td></td>
                                         <td>Total: ${{ totalCustomerPrice }}</td>
@@ -68,7 +69,7 @@
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
+                                        <td v-if="isContractor"></td>
                                         <td><label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label></td>
                                     </tr>
                                 </tbody>
@@ -91,6 +92,9 @@
             }
         },
         computed: {
+            isContractor() {
+                return User.isContractor();
+            },
             totalCustomerPrice() {
                 let total = 0;
                 if (this.invoice !== null) {
