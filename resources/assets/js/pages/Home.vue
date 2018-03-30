@@ -29,7 +29,7 @@
                         Look at Tasks Here
                     </div>
                 </div>
-                <div class="home-page-past-invoices home-page-section-style" @click="">
+                <div class="home-page-past-invoices home-page-section-style" @click="route('invoices')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -37,7 +37,7 @@
                         Past Invoices
                     </div>
                 </div>
-                <div class="home-page-past-stripe-dashboard home-page-section-style" @click="">
+                <div class="home-page-past-stripe-dashboard home-page-section-style" @click="route('express')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -74,7 +74,7 @@
                         Look at Tasks Here
                     </div>
                 </div>
-                <div class="home-page-task home-page-section-style" @click="">
+                <div class="home-page-task home-page-section-style" @click="route('invoices')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -82,14 +82,14 @@
                         Past Invoices
                     </div>
                 </div>
-                <div class="home-page-past-stripe-dashboard home-page-section-style" @click="">
+                <!-- <div class="home-page-past-stripe-dashboard home-page-section-style" @click="">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
                     <div class="home-page-initiate-bid-text">
                         Stripe Dashboard
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -108,7 +108,14 @@
     computed: {},
     methods: {
       route(value){
-          this.$router.push (value)
+          if(value === 'express') {
+            axios.post('/stripe/express/dashboard').then((response) => {
+                console.log(response.data);
+                window.location = response.data.url;
+            });
+          } else {
+              this.$router.push(value)
+          }
       }
     },
     mounted: function () {
