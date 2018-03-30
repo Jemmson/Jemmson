@@ -273,6 +273,9 @@ class InitiateBidController extends Controller
         $job->customer_id = $customer_id;       // also the user Id and not the customer Id
         $job->job_name = $job_name;
         $job->status = __("status.bid.initiated");
+        if (User::find($customer_id)->customer()->first() !== null) {
+            $job->location_id = User::find($customer_id)->customer()->first()->location_id;
+        }
 
 
         try {

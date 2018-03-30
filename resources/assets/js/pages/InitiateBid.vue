@@ -92,7 +92,7 @@
       autoComplete() {
         this.results = [];
         if (this.form.customerName.length > 2) {
-          axios.get('/api/search', {
+          axios.get('/api/customer/search', {
             params: {
               query: this.form.customerName
             }
