@@ -12,40 +12,46 @@
                     </div>
                 </div>
             </div>
-            <transition name="slide-fade">
-                <div v-show="showBidList">
-                    <div class="col-sm-12 col-md-4" v-for="bid in bids" v-bind:key="bid.id">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <div class="col-xs-12">
-                                    <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
-                                    <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
-                                </div>
-                                <div class="col-xs-12">
-                                    <p>
-                                        <i class="fas fa-clock icon"></i>
-                                        <label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
-                                        <span class="right-label">
-                                            <i class="fas fa-money-bill-alt icon"></i>
-                                            <label for="job-price" class="job-price">${{ bid.bid_price }}</label>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="panel-footer">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <span class="primary-action-btn">
-                                            <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
-                                            <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">ReviewBid{{ bid.id }}</router-link>
-                                        </span>
-                                    </div>
-                                </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="job-search">Search Jobs</label>
+                            <input type="text" id="job-search" class="form-control" placeholder="Search" v-model="searchTerm" @keyup="search">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4" v-for="bid in sBids" v-bind:key="bid.id">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="col-xs-12">
+                            <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
+                            <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
+                        </div>
+                        <div class="col-xs-12">
+                            <p>
+                                <i class="fas fa-clock icon"></i>
+                                <label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
+                                <span class="right-label">
+                                    <i class="fas fa-money-bill-alt icon"></i>
+                                    <label for="job-price" class="job-price">${{ bid.bid_price }}</label>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <span class="primary-action-btn">
+                                    <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
+                                    <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">ReviewBid{{ bid.id }}</router-link>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </transition>
+            </div>
             <!-- /end col-md-8 -->
         </div>
     </div>
@@ -60,9 +66,10 @@
         data() {
             return {
                 bids: [],
-                showBidList: true,
+                sBids: [],
                 showBid: false,
-                bidIndex: 0
+                bidIndex: 0,
+                searchTerm: ''
             }
         },
         watch: {
@@ -72,6 +79,14 @@
             }
         },
         methods: {
+            search() {
+                this.sBids = this.bids.filter((bid) => {
+                    if (this.searchTerm == '') {
+                        return true;
+                    }
+                    return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
+                })
+            },
             getLabelClass(status) {
                 return Format.statusLabel(status);
             },
@@ -92,6 +107,7 @@
                 console.log('getBids');
                 axios.post('/jobs').then((response) => {
                     this.bids = response.data;
+                    this.sBids = this.bids;
                 });
             },
             previewSubForTask(bidId, jobTaskId, subBidId) {
@@ -108,12 +124,5 @@
             });
 
         },
-        mounted() {
-            const bidId = User.getParameterByName('jobId');
-            if (bidId !== null && bidId !== '') {
-                this.openBid(User.getBidIndex(bidId, this.bids));
-            }
-
-        }
     }
 </script>

@@ -50,7 +50,7 @@
                     if (this.searchTerm == '') {
                         return true;
                     }
-                    return invoice.job_name.search(this.searchTerm) > -1;
+                    return invoice.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
                 })
             }
         },

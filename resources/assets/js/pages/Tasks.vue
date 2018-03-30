@@ -12,7 +12,18 @@
         </div>
       </div>
       <!-- / end title -->
-      <div class="col-sm-12 col-md-6" v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="task-search">Search Tasks</label>
+              <input type="text" id="task-search" class="form-control" placeholder="Search" v-model="searchTerm" @keyup="search">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- / end search bar -->
+      <div class="col-sm-12 col-md-6" v-for="bidTask in sTasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
         <div class="panel" v-if="showBid(bidTask)">
           <div class="panel-body">
             <div class="col-xs-12">
@@ -91,7 +102,6 @@
 
 <script>
   export default {
-    props: ['user', 'bidTasks'],
     data() {
       return {
         address: '',
@@ -103,8 +113,10 @@
           area: ''
         },
         hello: 'world',
-        tasks: this.bidTasks,
+        tasks: [],
+        sTasks: [],
         price: '',
+        searchTerm: '',
         disabled: {
           submit: false,
           finished: false
@@ -112,6 +124,14 @@
       }
     },
     methods: {
+      search() {
+        this.sTasks = this.tasks.filter((task) => {
+          if (this.searchTerm == '') {
+            return true;
+          }
+          return task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
+        })
+      },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
         return (bid.id === bid.job_task.bid_id && bid.job_task.job.status === 'job.approved') || (bid.job_task.job.status !==
@@ -198,6 +218,7 @@
         console.log('getTasks');
         axios.post('/bid/tasks').then((response) => {
           this.tasks = response.data;
+          this.sTasks = this.tasks;
         });
       }
     },
