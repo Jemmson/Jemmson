@@ -37,14 +37,15 @@ class JobController extends Controller
      */
     public function index()
     {
-        // load jobs and all their tasks along with those tasks relationships
+         // load jobs and all their tasks along with those tasks relationships
         if ($this->isCustomer()) {
           // only load tasks on jobs that are approved or need approval
           $jobsWithTasks = Auth::user()->jobs()
           ->where(function ($query) {
             $query->where('status', __('bid.sent'))
-              ->orwhere('status', __('job.approved'))
-              ->orwhere('status', __('bid.declined'));
+            ->orwhere('status', __('job.approved'))
+            ->orwhere('status', __('bid.declined'))
+            ->Where('status', '!=',__('job.completed'));
           })
           ->with(
             [
@@ -56,7 +57,7 @@ class JobController extends Controller
                       $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
                   }
                 ]);
-              }
+              },
               // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
             ])->get();
 
@@ -64,10 +65,11 @@ class JobController extends Controller
           ->where('status', '!=', __('bid.sent'))
           ->where('status', '!=', __('job.approved'))
           ->Where('status', '!=',__('bid.declined'))
+          ->Where('status', '!=',__('job.completed'))
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+          $jobs = Auth::user()->jobs()->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->where('status', '!=',__('job.completed'))->get();
         }
 
         return response()->json($jobs, 200); 
@@ -151,7 +153,7 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        $job->load('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor');
+        $job->load('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'location');
         return $job;
     }
 

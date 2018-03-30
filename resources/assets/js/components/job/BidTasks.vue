@@ -36,15 +36,31 @@
                   @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
                 <label v-if="isCustomer || !showTaskStartDate()"> {{prettyDate(jobTask.start_date)}} </label>
             </div>
+            <!-- / end quick info section -->
 
             <div class="col-xs-12">
               <div class="divider2"></div>
             </div>
 
-            <div class="col-xs-12">
+            <section class="col-xs-12">
+              <p>
               <i class="fas fa-map-marker icon"></i>
               {{ location(jobTask) }}
+              </p>
+            </section>
+            <!-- / end address section -->
+
+            <div class="col-xs-12">
+              <div class="divider2"></div>
             </div>
+
+             <section class="col-xs-12">
+              <p>
+                {{ jobTask.details }}
+              </p>
+            </section>
+            <!-- / end details section -->
+
           </div>
 
         </div>

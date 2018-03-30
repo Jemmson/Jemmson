@@ -12,7 +12,18 @@
         </div>
       </div>
       <!-- / end title -->
-      <div class="col-sm-12 col-md-6" v-for="bidTask in tasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="task-search">Search Tasks</label>
+              <input type="text" id="task-search" class="form-control" placeholder="Search" v-model="searchTerm" @keyup="search">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- / end search bar -->
+      <div class="col-sm-12 col-md-6" v-for="bidTask in sTasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
         <div class="panel" v-if="showBid(bidTask)">
           <div class="panel-body">
             <div class="col-xs-12">
@@ -37,7 +48,7 @@
               </div>
             </div>
             <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
-              <label for="details">Task Price</label>
+              <label for="details">Task Price:</label>
               <input type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
               />
             </div>
@@ -47,25 +58,37 @@
                 <label>${{ bidTask.bid_price }}</label>
               </span>
             </div>
-            <div class="col-xs-12">
-              <span class="primary-action-btn">
-                <div v-if="isBidOpen(bidTask)">
-                  <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
-                    <span v-if="disabled.submit">
-                      <i class="fa fa-btn fa-spinner fa-spin"></i>
-                    </span>
-                    Submit
-                  </button>
-                </div>
-                <div v-if="showFinishedBtn(bidTask)">
-                  <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
-                    <span v-if="disabled.finished">
-                      <i class="fa fa-btn fa-spinner fa-spin"></i>
-                    </span>
-                    Finished
-                  </button>
-                </div>
-              </span>
+            <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+              <div class="divider2"></div>
+            </div>
+            <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+              <p>
+                {{ bidTask.job_task.details }}
+              </p>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-xs-12">
+                <span class="primary-action-btn">
+                  <div v-if="isBidOpen(bidTask)">
+                    <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
+                      <span v-if="disabled.submit">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Submit
+                    </button>
+                  </div>
+                  <div v-if="showFinishedBtn(bidTask)">
+                    <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
+                      <span v-if="disabled.finished">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Finished
+                    </button>
+                  </div>
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -79,7 +102,6 @@
 
 <script>
   export default {
-    props: ['user', 'bidTasks'],
     data() {
       return {
         address: '',
@@ -91,8 +113,10 @@
           area: ''
         },
         hello: 'world',
-        tasks: this.bidTasks,
+        tasks: [],
+        sTasks: [],
         price: '',
+        searchTerm: '',
         disabled: {
           submit: false,
           finished: false
@@ -100,6 +124,14 @@
       }
     },
     methods: {
+      search() {
+        this.sTasks = this.tasks.filter((task) => {
+          if (this.searchTerm == '') {
+            return true;
+          }
+          return task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
+        })
+      },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
         return (bid.id === bid.job_task.bid_id && bid.job_task.job.status === 'job.approved') || (bid.job_task.job.status !==
@@ -186,6 +218,7 @@
         console.log('getTasks');
         axios.post('/bid/tasks').then((response) => {
           this.tasks = response.data;
+          this.sTasks = this.tasks;
         });
       }
     },

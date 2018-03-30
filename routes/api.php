@@ -43,6 +43,12 @@ Route::get('/search', function (Request $request) {
     return $users;
 });
 
+Route::get('/customer/search', function (Request $request) {
+    $query = $request->query('query');
+    $users = \App\User::where('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'contractor')->get();
+    return $users;
+});
+
 Route::post('/search/task', function (Request $request) {
     $taskName = $request->taskname;
     $jobId = $request->jobId;

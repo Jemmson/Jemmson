@@ -7747,3 +7747,6 @@ body {
       grid-row-start: 3;
   grid-row-end: 4;
 }
+.label-details {
+  margin-bottom: 16px;
+}

@@ -282,11 +282,11 @@
         // We need to gather a fresh FormData instance with the profile photo appended to
         // the data so we can POST it up to the server. This will allow us to do async
         // uploads of the profile photos. We will update the user after this action.
-        axios.post ('/settings/logo', this.gatherFormData ())
+        axios.post ('/settings/logo', this.gatherFormData())
           .then (
-            () => {
-              Bus.$emit('updateUser');
-              self.form.finishProcessing ();
+            (data) => {
+                this.user.logo_url = data.data;
+                self.form.finishProcessing();
             },
             (error) => {
               self.form.setErrors(error.response.data);
@@ -309,6 +309,7 @@
     },
     mounted() {
         this.user = Spark.state.user;
+        this.form.phone_number = this.user.phone;
     }
   }
 </script>

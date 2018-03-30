@@ -18,17 +18,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-md-6" v-if="(user.usertype === 'contractor')" v-for="invoice in sInvoices" :key="invoice.id">
+            <div class="col-xs-12 col-md-6" v-for="invoice in sInvoices" :key="invoice.id">
                 <div style="margin-bottom: 22px;">
                     <router-link :to="'/invoice/' + invoice.id" class="btn btn-block btn-default btn-lg" >{{invoice.job_name}}</router-link>
-                </div>
-            </div>
-            <div class="col-md-12" v-else-if="(user.usertype === 'customer')">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <h1>Invoces Page</h1>
-                        <h1>I am a customer</h1>
-                    </div>
                 </div>
             </div>
         </div>
@@ -58,7 +50,7 @@
                     if (this.searchTerm == '') {
                         return true;
                     }
-                    return invoice.job_name.search(this.searchTerm) > -1;
+                    return invoice.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
                 })
             }
         },
