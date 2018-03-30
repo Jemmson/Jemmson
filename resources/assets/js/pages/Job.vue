@@ -14,7 +14,10 @@
                         <!-- /customer approve bid form -->
                         <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
                         </approve-bid>
-
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
                         <!-- /buttons  -->
                         <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid" @openAddTask="openAddTask">
                         </general-contractor-bid-actions>

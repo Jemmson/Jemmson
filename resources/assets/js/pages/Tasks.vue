@@ -37,7 +37,7 @@
               </div>
             </div>
             <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
-              <label for="details">Task Price</label>
+              <label for="details">Task Price:</label>
               <input type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
               />
             </div>
@@ -47,25 +47,37 @@
                 <label>${{ bidTask.bid_price }}</label>
               </span>
             </div>
-            <div class="col-xs-12">
-              <span class="primary-action-btn">
-                <div v-if="isBidOpen(bidTask)">
-                  <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
-                    <span v-if="disabled.submit">
-                      <i class="fa fa-btn fa-spinner fa-spin"></i>
-                    </span>
-                    Submit
-                  </button>
-                </div>
-                <div v-if="showFinishedBtn(bidTask)">
-                  <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
-                    <span v-if="disabled.finished">
-                      <i class="fa fa-btn fa-spinner fa-spin"></i>
-                    </span>
-                    Finished
-                  </button>
-                </div>
-              </span>
+            <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+              <div class="divider2"></div>
+            </div>
+            <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+              <p>
+                {{ bidTask.job_task.details }}
+              </p>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-xs-12">
+                <span class="primary-action-btn">
+                  <div v-if="isBidOpen(bidTask)">
+                    <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
+                      <span v-if="disabled.submit">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Submit
+                    </button>
+                  </div>
+                  <div v-if="showFinishedBtn(bidTask)">
+                    <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
+                      <span v-if="disabled.finished">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Finished
+                    </button>
+                  </div>
+                </span>
+              </div>
             </div>
           </div>
         </div>

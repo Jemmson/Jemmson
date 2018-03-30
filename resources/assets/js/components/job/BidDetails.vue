@@ -3,7 +3,7 @@
     <div class="col-md-12">
         <section class="col-xs-12 col-md-6">
             <h3 for="job_name">{{ bid.job_name }}</h3>
-            <address v-if="bid.location !== undefined">
+            <address v-if="bid.location !== undefined && bid.location !== null">
                 <br> {{ bid.location.address_line_1 }}
                 <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
             </address>

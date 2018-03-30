@@ -2,10 +2,8 @@
   <div class="container">
     <!-- Application Dashboard -->
     <div class="row">
-      <div class="col-md-8 col-md-offset-2">
+      <div class="col-md-12">
         <div class="panel panel-default">
-          <div class="panel-heading">Initiate Bid</div>
-
           <div class="panel-body">
             <form method="post">
               <h1 class="text-center">Please Initiate a Bid With A Customer</h1>
@@ -47,16 +45,19 @@
                   {{ form.errors.get('phone') }}
                 </span>
               </div>
-
-              <div class="form-group col-md-12">
-                <button  name="submit" class="btn btn-default btn-primary" @click.prevent="submit" :disabled="disabled.submit">
+            </form>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-md-12 text-right">
+                <button name="submit" class="btn btn-default btn-primary" @click.prevent="submit" :disabled="disabled.submit">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
                   Submit
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -65,7 +66,7 @@
 </template>
 <script>
   export default {
-    data () {
+    data() {
       return {
         query: '',
         results: [],
@@ -85,23 +86,23 @@
         console.log('submit');
         GeneralContractor.initiateBid(this.form, this.disabled);
       },
-      filterPhone () {
+      filterPhone() {
         this.form.phone = Format.phone(this.form.phone);
       },
-      autoComplete () {
+      autoComplete() {
         this.results = [];
         if (this.form.customerName.length > 2) {
-          axios.get ('/api/search', {
+          axios.get('/api/search', {
             params: {
               query: this.form.customerName
             }
-          }).then (response => {
-            console.log (response.data);
+          }).then(response => {
+            console.log(response.data);
             this.results = response.data;
           });
         }
       },
-      fillFields (result) {
+      fillFields(result) {
         this.form.email = result.email;
         this.form.phone = result.phone;
         this.form.customerName = result.name;
