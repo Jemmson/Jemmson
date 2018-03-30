@@ -309,6 +309,7 @@
     },
     mounted() {
         this.user = Spark.state.user;
+        this.form.phone_number = this.user.phone;
     }
   }
 </script>
