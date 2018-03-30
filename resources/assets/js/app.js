@@ -36,22 +36,16 @@ import Customer from './classes/Customer';
 import User from './classes/User';
 import TaskUtil from './classes/TaskUtil';
 
-import Bid from './components/job/Bid';
-import BidList from './components/job/BidList';
-import Tasks from './components/task/SubContractorTasks';
 
 import Home from './pages/Home';
+import PublicHome from './pages/PublicHome';
+import Jobs from './pages/Jobs';
+import Job from './pages/Job';
 import InitiateBid from './pages/InitiateBid';
+import Tasks from './pages/Tasks';
 import Invoices from './pages/Invoices';
 import Invoice from './pages/Invoice';
 import FurtherInfo from './pages/FurtherInfo';
-
-
-
-
-
-
-
 
 window.Format = Format;
 window.Language = Language;
@@ -71,11 +65,11 @@ Spark.forms.register = {
 // vue routes
 const routes = [{
     path: '/bids',
-    component: BidList
+    component: Jobs
   },
   {
     path: '/bid/:id',
-    component: Bid
+    component: Job
   },
   {
     path: '/tasks',
@@ -87,7 +81,7 @@ const routes = [{
   },
   {
     path: '/',
-    component: Home
+    component: PublicHome
   },
   {
     path: '/initiate-bid',
@@ -115,9 +109,9 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   console.log(to.path);
-  const customer = Spark.state.user.customer;
-  const contractor = Spark.state.user.contractor;
-  if (to.path !== '/furtherInfo') {
+  if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/') {
+    const customer = Spark.state.user.customer;
+    const contractor = Spark.state.user.contractor;
     if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
       console.log('to further info');
       next('/furtherInfo');
