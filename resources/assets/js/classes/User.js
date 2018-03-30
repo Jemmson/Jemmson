@@ -121,6 +121,7 @@ export default class User {
         try {
             const data = await Spark.post('/home', form);
             Vue.toasted.success('info updated');
+            Bus.$emit('updateUser');
             disabled.submit = false;
             location.href = data;
         } catch (error) {

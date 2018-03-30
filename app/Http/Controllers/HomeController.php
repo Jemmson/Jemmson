@@ -54,7 +54,7 @@ class HomeController extends Controller
         $this->validate(
             $request,
             [
-                'phone_number' => 'required|min:10|max:14|unique:users,phone',
+                'phone_number' => 'required|min:10|max:14',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',
@@ -62,7 +62,9 @@ class HomeController extends Controller
                 ]
             );
 
+        $user_id = Auth::user()->id;
         $phone = SanatizeService::phone($request->phone_number);
+        $this->updateUsersPhoneNumber($phone, $user_id);
 
         if (!Auth::user()->password_updated) {
             $this->validate($request, [
@@ -72,7 +74,6 @@ class HomeController extends Controller
             Auth::user()->updatePassword(request('password'));
         }
         
-        $user_id = Auth::user()->id;
 
         if (Auth::user()->usertype == 'contractor') {
 
@@ -115,8 +116,6 @@ class HomeController extends Controller
                 'phone_method_of_contact' => request('phone_contact')
             ]);
         }
-
-        $this->updateUsersPhoneNumber($phone, $user_id);
 
         if (empty(session('prevDestination'))) {
             return response()->json('/#/home', 200);

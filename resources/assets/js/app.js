@@ -109,7 +109,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   console.log(to.path);
-  if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/') {
+  if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
     const customer = Spark.state.user.customer;
     const contractor = Spark.state.user.contractor;
     if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
