@@ -117,6 +117,7 @@ export default class User {
 
     async submitFurtherInfo(form, disabled) {
         disabled.submit = true;
+        form.phone_number = Format.numbersOnly(form.phone_number);
         try {
             const data = await Spark.post('/home', form);
             Vue.toasted.success('info updated');

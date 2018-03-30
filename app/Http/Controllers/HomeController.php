@@ -54,7 +54,7 @@ class HomeController extends Controller
         $this->validate(
             $request,
             [
-                'phone_number' => 'required|min:10|max:14',
+                'phone_number' => 'required|min:10|max:14|unique:users,phone',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',
@@ -121,7 +121,8 @@ class HomeController extends Controller
         if (empty(session('prevDestination'))) {
             return response()->json('/#/home', 200);
         } else {
-            return response()->json(session('prevDestination'), 200);
+            $link = session()->pull('prevDestination');
+            return response()->json($link, 200);
         }
     }
 
