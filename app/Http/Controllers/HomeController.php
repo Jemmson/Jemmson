@@ -171,13 +171,15 @@ class HomeController extends Controller
 
         $oldPhotoUrl = $user->logo_url;
         
+        $url = $disk->url($path);
         $user->forceFill([
-            'logo_url' => $disk->url($path),
+            'logo_url' => $url,
         ])->save();
 
         if (preg_match('/logos\/(.*)$/', $oldPhotoUrl, $matches)) {
             $disk->delete('logos/'.$matches[1]);
         }
+        return $url;
     }
 
     protected function formatImage($file)

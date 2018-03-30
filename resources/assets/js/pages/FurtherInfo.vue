@@ -284,9 +284,9 @@
         // uploads of the profile photos. We will update the user after this action.
         axios.post ('/settings/logo', this.gatherFormData ())
           .then (
-            () => {
-              Bus.$emit('updateUser');
-              self.form.finishProcessing ();
+            (data) => {
+                this.user.logo_url = data.data;
+                self.form.finishProcessing();
             },
             (error) => {
               self.form.setErrors(error.response.data);
