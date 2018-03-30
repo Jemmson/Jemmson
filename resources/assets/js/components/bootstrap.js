@@ -11,12 +11,6 @@
 
 require('./../spark-components/bootstrap');
 
-require('./job/Job.vue');
-require('./job/Task.vue');
-require('./job/InfoLabel.vue');
-require('./job/Contracts.vue');
-require('./job/CurrentTasksForJob.vue');
-
 // /bid components
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));

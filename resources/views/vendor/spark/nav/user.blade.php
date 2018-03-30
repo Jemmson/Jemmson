@@ -27,7 +27,12 @@
             <div class="collapse navbar-collapse" id="spark-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    @includeIf('spark::nav.user-left')
+                    @if (Auth::user()->usertype === 'contractor')
+                                @include('spark::nav.contractor-left')
+                    @endif
+                    @if (Auth::user()->usertype === 'customer')
+                                @include('spark::nav.customer-left')
+                    @endif
                 </ul>
 
                 <!-- Right Side Of Navbar -->

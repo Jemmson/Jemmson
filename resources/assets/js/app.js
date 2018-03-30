@@ -116,7 +116,25 @@ router.beforeEach((to, from, next) => {
       console.log('to further info');
       next('/furtherInfo');
     } else {
-      next();
+      switch (to.path) {
+        case '/initiate-bid':
+          if (Spark.state.user.usertype === 'customer') {
+            next('/home');
+          } else {
+            next();
+          }
+          break;
+        case '/tasks':
+          if (Spark.state.user.usertype === 'customer') {
+            next('/home');
+          } else {
+            next();
+          }
+          break;
+        default: 
+          next();
+          break;
+      }
     }
   } else {
     next();

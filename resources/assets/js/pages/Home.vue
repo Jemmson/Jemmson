@@ -50,28 +50,12 @@
         <div v-else-if="(this.user.usertype === 'customer')">
             <h1 class="home-page-title">{{ this.user.name }}</h1>
             <div class="home-page-wrapper">
-                <div class="home-page-initiate-bid home-page-section-style" @click="route('initiate-bid')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Initiate a Bid Here
-                    </div>
-                </div>
                 <div class="home-page-bid home-page-section-style" @click="route('bids')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
                     <div class="home-page-initiate-bid-text">
                         Look at Bids Here
-                    </div>
-                </div>
-                <div class="home-page-task home-page-section-style" @click="route('tasks')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Look at Tasks Here
                     </div>
                 </div>
                 <div class="home-page-task home-page-section-style" @click="route('invoices')">
