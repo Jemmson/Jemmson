@@ -282,7 +282,7 @@
         // We need to gather a fresh FormData instance with the profile photo appended to
         // the data so we can POST it up to the server. This will allow us to do async
         // uploads of the profile photos. We will update the user after this action.
-        axios.post ('/settings/logo', this.gatherFormData ())
+        axios.post ('/settings/logo', this.gatherFormData())
           .then (
             (data) => {
                 this.user.logo_url = data.data;

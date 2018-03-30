@@ -1,16 +1,16 @@
 <!-- Left Side Of Navbar -->
 <li>
-    <router-link :to="'/home'">Home</router-link>
+    <a href="/#/home">Home</a>
 </li>
 <li>
-    <router-link :to="'/initiate-bid'">Initiate Bid</router-link>
+    <a href="/#/initiate-bid">Initiate Bid</a>
 </li>
 <li>
-    <router-link :to="'/bids'">Bids</router-link>
+    <a href="/#/bids">Bids</a>
 </li>
 <li>
-    <router-link :to="'/tasks'">Tasks</router-link>
+    <a href="/#/tasks">Tasks</a>
 </li>
 <li>
-    <router-link :to="'/invoices'">Invoices</router-link>
+    <a href="/#/invoices">Invoices</a>
 </li>

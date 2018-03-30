@@ -1,10 +1,10 @@
 <!-- Left Side Of Navbar -->
 <li>
-    <router-link :to="'/home'">Home</router-link>
+    <a href="/#/home">Home</a>
 </li>
 <li>
-    <router-link :to="'/bids'">Bids</router-link>
+    <a href="/#/bids">Bids</a>
 </li>
 <li>
-    <router-link :to="'/invoices'">Invoices</router-link>
+    <a href="/#/invoices">Invoices</a>
 </li>
