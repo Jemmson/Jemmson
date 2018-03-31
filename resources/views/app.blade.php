@@ -38,7 +38,7 @@
 
 <!-- Main Content -->
 <transition name="fade">
-    <router-view></router-view>
+    <router-view :user='user'></router-view>
 </transition>
 
 

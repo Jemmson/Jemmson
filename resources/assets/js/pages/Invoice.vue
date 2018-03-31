@@ -84,10 +84,11 @@
 
 <script>
     export default {
-        props: {},
+        props: {
+            user: Object,
+        },
         data() {
             return {
-                user: {},
                 invoice: null
             }
         },
@@ -116,7 +117,6 @@
         },
         methods: {},
         mounted: function () {
-            this.user = Spark.state.user;
             const id = this.$route.params.id;
             axios.get('/invoice/' + id).then((data) => {
                 this.invoice = data.data;
