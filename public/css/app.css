@@ -7713,9 +7713,9 @@ body {
   grid-row-end: 3;
 }
 .home-page-past-invoices {
-  -ms-grid-column: 3;
-      grid-column-start: 3;
-  grid-column-end: 4;
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  grid-column-end: 2;
   -ms-grid-row: 2;
       grid-row-start: 2;
   grid-row-end: 3;
