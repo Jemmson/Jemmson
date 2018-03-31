@@ -58,7 +58,7 @@
                         Look at Bids Here
                     </div>
                 </div>
-                <div class="home-page-task home-page-section-style" @click="route('invoices')">
+                <div class="home-page-customer-past-invoices home-page-section-style" @click="route('invoices')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
