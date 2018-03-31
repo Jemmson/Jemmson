@@ -37,7 +37,7 @@
                         Past Invoices
                     </div>
                 </div>
-                <div class="home-page-past-stripe-dashboard home-page-section-style" @click="route('express')">
+                <div class="home-page-past-stripe-dashboard home-page-section-style" v-if="user.stripe_id !== null" @click="route('express')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
