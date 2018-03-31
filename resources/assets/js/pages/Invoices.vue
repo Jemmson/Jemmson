@@ -29,10 +29,11 @@
 
 <script>
     export default {
-        props: {},
+        props: {
+            user: Object,
+        },
         data() {
             return {
-                user: {},
                 invoices: {},
                 sInvoices: {},
                 searchTerm: '',
@@ -55,7 +56,6 @@
             }
         },
         mounted: function () {
-            this.user = Spark.state.user;
             axios.get('invoices').then((data) => {
                 this.invoices = data.data;
                 this.sInvoices = this.invoices;

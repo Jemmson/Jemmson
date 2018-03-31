@@ -212,10 +212,10 @@
 <script>
   export default {
     props: {
+        user: Object
     },
     data () {
       return {
-        user: {},
         disabled: {
           submit: false
         },
@@ -273,7 +273,7 @@
        * Update the user's profile photo.
        */
       update (e) {
-        e.preventDefault ();
+        e.preventDefault();
 
         var self = this;
 
@@ -308,7 +308,6 @@
       }
     },
     mounted() {
-        this.user = Spark.state.user;
         this.form.phone_number = this.user.phone;
     }
   }

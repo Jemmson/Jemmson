@@ -32,6 +32,9 @@
 
 <script>
 export default {
+    props: {
+        user: Object
+    },
   computed: {
       header() {
           return 'Stripe';
@@ -46,16 +49,16 @@ export default {
           return User.isCustomer();
       },
       showStripeExpress() {
-          if (Spark.state.user.contractor === null)
+          if (this.user.contractor === null)
             return false;
 
-          return Spark.state.user.contractor.stripe_express === null;
+          return this.user.contractor.stripe_express === null;
       },
       showDashboardLoginBtn() {
-          if (Spark.state.user.contractor === null)
+          if (this.user.contractor === null)
             return false;
 
-          return Spark.state.user.contractor.stripe_express !== null;
+          return this.user.contractor.stripe_express !== null;
       }
   },
   methods: {

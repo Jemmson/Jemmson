@@ -37,7 +37,7 @@
                         Past Invoices
                     </div>
                 </div>
-                <div class="home-page-past-stripe-dashboard home-page-section-style" v-if="user.stripe_id !== null" @click="route('express')">
+                <div class="home-page-past-stripe-dashboard home-page-section-style" v-if="user.contractor.stripe_express !== null" @click="route('express')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -83,10 +83,10 @@
 
   export default {
     props: {
+        user: Object
     },
     data () {
       return {
-        user: {}
       }
     },
     computed: {},
@@ -103,15 +103,6 @@
       }
     },
     mounted: function () {
-      console.log(Spark.state.user);
-      this.user = Spark.state.user;
-      if (this.user.contractor == null) {
-          axios.get('/user/current')
-                .then(response => {
-                    this.user = response.data;
-                    Bid.$emit('updateUser');
-                });
-      }
     }
   }
 </script>

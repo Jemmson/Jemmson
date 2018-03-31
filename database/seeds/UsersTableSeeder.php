@@ -87,6 +87,7 @@ class UsersTableSeeder extends Seeder
                 'sms_method_of_contact' => '1',
                 'phone_method_of_contact' => '1',
                 'company_name' => $faker->word,
+                'location_id' => 1
             ];
 
             Contractor::create($contractorData);
@@ -117,6 +118,7 @@ class UsersTableSeeder extends Seeder
                 'sms_method_of_contact' => '1',
                 'phone_method_of_contact' => '1',
                 'company_name' => $faker->word,
+                'location_id' => 2
             ];
 
             Contractor::create($contractorData);
