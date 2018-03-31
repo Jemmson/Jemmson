@@ -42,19 +42,19 @@
               <div class="divider2"></div>
             </div>
 
-            <section class="col-xs-12">
-              <p>
+            <section class="col-xs-12" style="margin-bottom: 8px;">
+              <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask)">
               <i class="fas fa-map-marker icon"></i>
               {{ location(jobTask) }}
-              </p>
+              </a>
             </section>
             <!-- / end address section -->
 
-            <div class="col-xs-12">
+            <div class="col-xs-12" v-if="jobTask.details != null">
               <div class="divider2"></div>
             </div>
 
-             <section class="col-xs-12">
+             <section class="col-xs-12" v-if="jobTask.details != null">
               <p>
                 {{ jobTask.details }}
               </p>
@@ -280,7 +280,7 @@
         } else if (task_location === null && job_location !== null) {
           return 'Default Adress';
         } else {
-          return '90210 W Hollywood St';
+          return jobTask.location.address_line_1;
         }
       },
       prettyDate(date) {

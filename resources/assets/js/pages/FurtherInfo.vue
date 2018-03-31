@@ -131,17 +131,17 @@
                         <div class="col-md-8">
                             <!-- upload company logo -->
                             <!-- Photo Preview-->
-                            <div v-if="isContractor">
-                                <div class="form-group">
+                            <!-- <div v-if="isContractor"> -->
+                                <!-- <div class="form-group">
                                     <label class="col-md-4 control-label">&nbsp;</label>
     
                                     <div class="col-md-6">
                                         <img :src="logoUrl">
                                     </div>
-                                </div>
+                                </div> -->
     
                                 <!-- Update Button -->
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-md-4 control-label">&nbsp;</label>
     
                                     <div class="col-md-6">
@@ -152,8 +152,8 @@
                                                    @change="update">
                                         </label>
                                     </div>
-                                </div>
-                            </div>
+                                </div> -->
+                            <!-- </div> -->
 
                             <h3>Preferred Method of Contact</h3>
                             <div class="preferred_contact" style="border: solid thin black">
@@ -212,10 +212,10 @@
 <script>
   export default {
     props: {
+        user: Object
     },
     data () {
       return {
-        user: {},
         disabled: {
           submit: false
         },
@@ -273,7 +273,7 @@
        * Update the user's profile photo.
        */
       update (e) {
-        e.preventDefault ();
+        e.preventDefault();
 
         var self = this;
 
@@ -308,7 +308,6 @@
       }
     },
     mounted() {
-        this.user = Spark.state.user;
         this.form.phone_number = this.user.phone;
     }
   }

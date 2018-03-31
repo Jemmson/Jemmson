@@ -10,16 +10,19 @@
                         <!-- /show all bid information -->
                         <bid-details :bid="bid">
                         </bid-details>
-
-                        <!-- /customer approve bid form -->
-                        <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-                        </approve-bid>
                     </div>
                 </div>
                 <div class="panel-footer">
                     <div class="row">
+                        <!-- /customer approve bid form -->
+                        <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
+                        </approve-bid>
+                        
                         <!-- /buttons  -->
-                        <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid" @openAddTask="openAddTask">
+                        <general-contractor-bid-actions
+                                :bid="bid"
+                                @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
+                                @openAddTask="openAddTask">
                         </general-contractor-bid-actions>
                     </div>
                 </div>
@@ -38,7 +41,7 @@
         </transition>
 
         <!-- / stripe testing delete after -->
-        <stripe>
+        <stripe :user='user'>
         </stripe>
         </div>
     </div>
@@ -47,7 +50,7 @@
 <script>
     export default {
         props: {
-            // bid: Object,
+            user: Object,
         },
         data() {
             return {
@@ -60,7 +63,6 @@
                     area: '',
                     status: '',
                 }),
-                user: '',
                 bidApproved: false,
                 showTaskPanel: false,
                 showAddTaskPanel: false,
@@ -165,7 +167,6 @@
             // set up init data
             this.bidForm.id = this.bid.id;
             this.bidForm.status = this.bid.status;
-            this.user = Spark.state.user;
         },
     }
 </script>

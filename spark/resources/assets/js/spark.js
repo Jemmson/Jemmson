@@ -133,9 +133,14 @@ module.exports = {
          * Get the current user of the application.
          */
         getUser() {
+            
             axios.get('/user/current')
                 .then(response => {
                     this.user = response.data;
+                    window.User.user = this.user;
+                    window.GeneralContractor.user = this.user;
+                    window.SubContractor.user = this.user;
+                    window.Customer.user = this.user;
                 });
         },
 

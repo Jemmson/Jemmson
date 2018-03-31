@@ -51,5 +51,7 @@
     <script src="{{ mix('js/app.js') }}"></script>
     <script src="/js/sweetalert.min.js"></script>
 
+<footer class="footer-spacing"></footer>
+
 </body>
 </html>

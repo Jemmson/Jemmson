@@ -40,6 +40,18 @@ class Customer extends Model
         Job::where('customer_id', $this->user()->first()->id)->update(['location_id' => $this->location_id]);
     }
 
+    public function updateTaskLocations()
+    {
+        $jobs = Job::where('customer_id', $this->user()->first()->id)->get();
+        foreach ($jobs as $job) {
+            $jobTasks = $job->jobTasks()->get();
+            foreach($jobTasks as $jobTask) {
+                $jobTask->location_id = $job->location_id;
+                $jobTask->save();
+            }
+        }
+    }
+
     public function updateLocation($request)
     {
         $newLocation = false;
@@ -70,6 +82,7 @@ class Customer extends Model
             $this->save();
             if ($newLocation) {
                 $this->updateJobLocations();
+                $this->updateTaskLocations();
             }
         } catch(\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());

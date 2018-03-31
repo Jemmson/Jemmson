@@ -140,7 +140,7 @@ export default class GeneralContractor {
   }
 
   notifyCustomerOfFinishedBid (bid) {
-    if (User.needsStripe ()) {
+    if (User.needsStripe (bid)) {
       return false;
     }
     console.log ('notifyCustomerOfFinishedBid', bid);

@@ -7720,6 +7720,14 @@ body {
       grid-row-start: 2;
   grid-row-end: 3;
 }
+.home-page-customer-past-invoices {
+  -ms-grid-column: 2;
+      grid-column-start: 2;
+  grid-column-end: 3;
+  -ms-grid-row: 1;
+      grid-row-start: 1;
+  grid-row-end: 2;
+}
 .home-page-section-style {
   border: thin solid white;
   background-color: white;
@@ -7749,4 +7757,7 @@ body {
 }
 .label-details {
   margin-bottom: 16px;
+}
+.footer-spacing {
+  height: 40rem;
 }

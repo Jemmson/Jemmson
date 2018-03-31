@@ -38,7 +38,7 @@
 
 <!-- Main Content -->
 <transition name="fade">
-    <router-view></router-view>
+    <router-view :user='user'></router-view>
 </transition>
 
 
@@ -56,6 +56,9 @@
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="/js/sweetalert.min.js"></script>
+
+<footer class="footer-spacing"></footer>
+
 
 </body>
 </html>
