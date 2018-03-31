@@ -108,6 +108,9 @@ export default class Language {
           general: 'Task Price Successfully Updated',
           customer: ''
         }
+      },
+      modal: {
+        reviewBidConfirmationModal: 'The bid may have changed since you last saw it, please review the bid if you have not done so.'
       }
     };
   }
