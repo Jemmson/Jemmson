@@ -38,7 +38,7 @@
         </transition>
 
         <!-- / stripe testing delete after -->
-        <stripe>
+        <stripe :user='user'>
         </stripe>
         </div>
     </div>
@@ -47,7 +47,7 @@
 <script>
     export default {
         props: {
-            // bid: Object,
+            user: Object,
         },
         data() {
             return {
@@ -60,7 +60,6 @@
                     area: '',
                     status: '',
                 }),
-                user: '',
                 bidApproved: false,
                 showTaskPanel: false,
                 showAddTaskPanel: false,
@@ -165,7 +164,6 @@
             // set up init data
             this.bidForm.id = this.bid.id;
             this.bidForm.status = this.bid.status;
-            this.user = Spark.state.user;
         },
     }
 </script>

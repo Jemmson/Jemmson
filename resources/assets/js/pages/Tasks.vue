@@ -94,7 +94,7 @@
         </div>
       </div>
       <!-- / end tasks -->
-      <stripe>
+      <stripe :user='user'>
       </stripe>
     </div>
   </div>
@@ -102,6 +102,9 @@
 
 <script>
   export default {
+    props: {
+      user: Object
+    },
     data() {
       return {
         address: '',
