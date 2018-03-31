@@ -3,10 +3,12 @@
     <div class="col-md-12">
         <section class="col-xs-12 col-md-6">
             <h3 for="job_name">{{ bid.job_name }}</h3>
-            <address v-if="bid.location !== undefined && bid.location !== null">
+            <a target="_blank" v-if="bid.location !== undefined && bid.location !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+            <address>
                 <br> {{ bid.location.address_line_1 }}
                 <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
             </address>
+            </a>
         </section>
         <section class="col-xs-12 col-md-6">
             <div class="label-details">
