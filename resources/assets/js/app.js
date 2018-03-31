@@ -25,7 +25,9 @@ Vue.use(Toasted, {
   theme: 'bubble',
 })
 
-import { store } from './vuex/index';
+import {
+  store
+} from './vuex/index';
 import Format from './classes/Format';
 import Language from './classes/Language';
 import GeneralContractor from './classes/GeneralContractor';
@@ -34,16 +36,16 @@ import Customer from './classes/Customer';
 import User from './classes/User';
 import TaskUtil from './classes/TaskUtil';
 
-import Bid from './components/job/Bid';
-import BidList from './components/job/BidList';
-import Tasks from './components/task/SubContractorTasks';
 
 import Home from './pages/Home';
+import PublicHome from './pages/PublicHome';
+import Jobs from './pages/Jobs';
+import Job from './pages/Job';
 import InitiateBid from './pages/InitiateBid';
-
-
-
-
+import Tasks from './pages/Tasks';
+import Invoices from './pages/Invoices';
+import Invoice from './pages/Invoice';
+import FurtherInfo from './pages/FurtherInfo';
 
 window.Format = Format;
 window.Language = Language;
@@ -61,19 +63,82 @@ Spark.forms.register = {
 
 
 // vue routes
-const routes = [
-  { path: '/bids', component: BidList },
-  { path: '/bid/:id', component: Bid },
-  { path: '/tasks', component: Tasks },
-  { path: '/home', component: Home },
-  { path: '/', component: Home },
-  { path: '/initiate-bid', component: InitiateBid },
-  
-  
+const routes = [{
+    path: '/bids',
+    component: Jobs
+  },
+  {
+    path: '/bid/:id',
+    component: Job
+  },
+  {
+    path: '/tasks',
+    component: Tasks
+  },
+  {
+    path: '/home',
+    component: Home
+  },
+  {
+    path: '/',
+    component: PublicHome
+  },
+  {
+    path: '/initiate-bid',
+    component: InitiateBid
+  },
+  {
+    path: '/invoices',
+    component: Invoices
+  },
+  {
+    path: '/invoice/:id',
+    component: Invoice
+  },
+  {
+    path: '/furtherInfo',
+    component: FurtherInfo
+  },
+
+
 ]
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  console.log(to.path);
+  if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
+    const customer = Spark.state.user.customer;
+    const contractor = Spark.state.user.contractor;
+    if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
+      console.log('to further info');
+      next('/furtherInfo');
+    } else {
+      switch (to.path) {
+        case '/initiate-bid':
+          if (Spark.state.user.usertype === 'customer') {
+            next('/home');
+          } else {
+            next();
+          }
+          break;
+        case '/tasks':
+          if (Spark.state.user.usertype === 'customer') {
+            next('/home');
+          } else {
+            next();
+          }
+          break;
+        default: 
+          next();
+          break;
+      }
+    }
+  } else {
+    next();
+  }
 })
 
 

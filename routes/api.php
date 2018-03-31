@@ -43,6 +43,12 @@ Route::get('/search', function (Request $request) {
     return $users;
 });
 
+Route::get('/customer/search', function (Request $request) {
+    $query = $request->query('query');
+    $users = \App\User::where('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'contractor')->get();
+    return $users;
+});
+
 Route::post('/search/task', function (Request $request) {
     $taskName = $request->taskname;
     $jobId = $request->jobId;
@@ -67,6 +73,8 @@ Route::delete('job/{job}', 'JobController@delete');
 Route::post('job/update', 'JobController@updateJobDate');
 Route::post('job/cancel', 'JobController@cancelJobBid');
 Route::post('job/completed', 'JobController@jobCompleted');
+Route::get('/invoices', 'JobController@getInvoices');
+
 
 
 // Tasks
@@ -91,7 +99,6 @@ Route::post('/job/updateArea', 'JobController@updateArea');
 Route::post('/job/getArea', 'JobController@getArea');
 
 Route::post('/customer/getAddress', 'CustomerController@getAddress');
-
 
 // stripe controller 
 Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');

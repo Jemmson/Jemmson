@@ -79,7 +79,7 @@ class StripeController extends Controller
         
         if (isset($result->error)) {
             Log::error('Stripe Express Auth: ' . $result->error_description);
-            return redirect('bid-list');
+            return redirect('/#/bids');
         }
 
         $stripeExpress = new StripeExpress();
@@ -92,10 +92,10 @@ class StripeController extends Controller
             $stripeExpress->save();
         } catch (\Exception $e) {
             Log::error('New StripeExpress: ' . $e->getMessage());
-            return redirect('bid-list');
+            return redirect('/#/bids');
         }
 
-        return redirect('bid-list');
+        return redirect('/#/bids');
     }
 
     /**

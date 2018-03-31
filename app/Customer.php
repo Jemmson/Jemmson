@@ -35,8 +35,14 @@ class Customer extends Model
         return $this->hasOne(Location::class, 'user_id', 'user_id')->where('default', '=', 1);
     }
 
+    private function updateJoblocations()
+    {
+        Job::where('customer_id', $this->user()->first()->id)->update(['location_id' => $this->location_id]);
+    }
+
     public function updateLocation($request)
     {
+        $newLocation = false;
         if ($this->location_id === null) {
             $location = new Location();
             $location->user_id = $this->user()->first()->id;
@@ -47,6 +53,7 @@ class Customer extends Model
             $location->area = $request->city;
             $location->state = $request->state;
             $location->zip = $request->zip;
+            $newLocation = true;
         } else {
             $location = $this->location()->first();
             $location->address_line_1 = $request->address_line_1;
@@ -61,9 +68,15 @@ class Customer extends Model
             $location->save();
             $this->location_id = $location->id;
             $this->save();
+            if ($newLocation) {
+                $this->updateJobLocations();
+            }
         } catch(\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
         }
+
+
+
     }
 
     // TODO: understand where an intermidate table relates to two other tables

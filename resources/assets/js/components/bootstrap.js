@@ -11,17 +11,7 @@
 
 require('./../spark-components/bootstrap');
 
-require('./job/Job.vue');
-require('./job/Task.vue');
-require('./job/InfoLabel.vue');
-require('./job/Contracts.vue');
-require('./job/CurrentTasksForJob.vue');
-
-Vue.component('subcontractor-tasks', require('./task/SubContractorTasks.vue'));
-
 // /bid components
-Vue.component('bidlist', require('./job/BidList.vue'));
-Vue.component('bid', require('./job/Bid.vue'));
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
 Vue.component('bid-tasks', require('./job/BidTasks.vue'));
@@ -44,7 +34,6 @@ Vue.component('signup-with-stripe', require('./stripe/SignupWithStripe'));
 
 
 // forms
-Vue.component('further-info', require('./forms/FurtherInfo'));
 Vue.component('approve-bid', require('./job/ApproveBid'));
 Vue.component('sub-invite-modal', require('./task/SubInviteModal'));
 Vue.component('deny-task-modal', require('./task/DenyTaskModal'));

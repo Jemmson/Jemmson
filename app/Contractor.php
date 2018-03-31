@@ -32,14 +32,19 @@ class Contractor extends Model
         return $this->hasMany(Time::class, 'contractor_id', 'user_id');
     }
 
-    public function freeJobsLeft()
+    public function numberOfJobsLeft()
     {
-        return $this->free_jobs > 0;
+        return $this->free_jobs;
+    }
+
+    public function hasMoreFreeJobs()
+    {
+        return $this->free_jobs > 0;  // means there are more free jobs that exist for the contractor
     }
 
     public function isSubscribed()
     {
-        return $this->user()->first()->current_billing_plan !== null;
+        return $this->user()->first()->current_billing_plan !== null; // means the contractor has subscribed
     }
 
     public function subtractFreeJob()
@@ -144,6 +149,9 @@ class Contractor extends Model
         } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
         }
+
+
+
     }
 }
 

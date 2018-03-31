@@ -62,7 +62,9 @@ class HomeController extends Controller
                 ]
             );
 
+        $user_id = Auth::user()->id;
         $phone = SanatizeService::phone($request->phone_number);
+        $this->updateUsersPhoneNumber($phone, $user_id);
 
         if (!Auth::user()->password_updated) {
             $this->validate($request, [
@@ -72,7 +74,6 @@ class HomeController extends Controller
             Auth::user()->updatePassword(request('password'));
         }
         
-        $user_id = Auth::user()->id;
 
         if (Auth::user()->usertype == 'contractor') {
 
@@ -116,12 +117,11 @@ class HomeController extends Controller
             ]);
         }
 
-        $this->updateUsersPhoneNumber($phone, $user_id);
-
         if (empty(session('prevDestination'))) {
-            return response()->json('/', 200);
+            return response()->json('/#/home', 200);
         } else {
-            return response()->json(session('prevDestination'), 200);
+            $link = session()->pull('prevDestination');
+            return response()->json($link, 200);
         }
     }
 
@@ -171,13 +171,15 @@ class HomeController extends Controller
 
         $oldPhotoUrl = $user->logo_url;
         
+        $url = $disk->url($path);
         $user->forceFill([
-            'logo_url' => $disk->url($path),
+            'logo_url' => $url,
         ])->save();
 
         if (preg_match('/logos\/(.*)$/', $oldPhotoUrl, $matches)) {
             $disk->delete('logos/'.$matches[1]);
         }
+        return $url;
     }
 
     protected function formatImage($file)

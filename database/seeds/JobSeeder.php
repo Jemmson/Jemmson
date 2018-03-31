@@ -5,6 +5,8 @@ use App\User;
 use App\Contractor;
 use App\Customer;
 use App\Job;
+use App\Location;
+
 
 class JobSeeder extends Seeder
 {
@@ -19,6 +21,18 @@ class JobSeeder extends Seeder
 
         $k = 0;
         $faker = Faker\Factory::create();
+
+        $location = [
+            'user_id' => 1,
+            'address_line_1' => $faker->streetAddress,
+            'city' => $faker->city,
+            'state' => $faker->state,
+            'zip' => $faker->postcode,
+
+        ];
+
+        Location::create($location);
+
         $data = [
                     'status' => "bid.in_progress",
                     'customer_id' => 3,
@@ -29,8 +43,20 @@ class JobSeeder extends Seeder
                     'agreed_end_date' => $faker->dateTime,
                     'actual_end_date' => $faker->dateTime,
                     'job_name' => 'Pool',
+                    'location_id' => 2
         ];
         Job::create($data);
+
+        $location = [
+            'user_id' => 2,
+            'address_line_1' => $faker->streetAddress,
+            'city' => $faker->city,
+            'state' => $faker->state,
+            'zip' => $faker->postcode,
+
+        ];
+
+        Location::create($location);
 
 
         $data = [
@@ -43,6 +69,7 @@ class JobSeeder extends Seeder
                     'agreed_end_date' => $faker->dateTime,
                     'actual_end_date' => $faker->dateTime,
                     'job_name' => 'Bathroom remodel',
+                    'location_id' => 1
         ];
         Job::create($data);
         // for ($i = 1; $i < 5; $i++) {

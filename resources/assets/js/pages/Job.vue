@@ -7,12 +7,6 @@
                 <!-- <div class="panel-heading">Dashboard</div> -->
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-12 text-right">
-                                <button class="btn btn-danger" @click.prevent="closeBid">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                        </div>
-
                         <!-- /show all bid information -->
                         <bid-details :bid="bid">
                         </bid-details>
@@ -20,7 +14,10 @@
                         <!-- /customer approve bid form -->
                         <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
                         </approve-bid>
-
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
                         <!-- /buttons  -->
                         <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid" @openAddTask="openAddTask">
                         </general-contractor-bid-actions>
@@ -153,8 +150,13 @@
             this.getBid(bidId);
 
             Bus.$on('taskAdded', () => {
-                this.showAddTaskPanel = false;
+                this.getBid(bidId);
             });
+
+            Bus.$on('bidUpdated', () => {
+                this.getBid(bidId);
+            });
+
             Bus.$on('needsStripe', () => {
                 $('#stripe-modal').modal();
             });

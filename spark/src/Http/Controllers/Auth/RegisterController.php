@@ -63,7 +63,7 @@ class RegisterController extends Controller
 
         return response()->json([
 //            'redirect' => $this->redirectPath()
-            'redirect' => '/furtherInfo'
+            'redirect' => '/#/furtherInfo'
         ]);
     }
 }

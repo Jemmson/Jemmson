@@ -20,7 +20,7 @@ class RedirectIfFurtherInfoNeeded
         session(['prevDestination' => $request->getRequestUri()]);
         $details = Auth::user()->getDetails();
         if (Auth::guard($guard)->check() && ($details === null || $details->location_id === null)) {
-            return redirect('furtherInfo');
+            return redirect('/#/furtherInfo');
         }
 
         return $next($request);

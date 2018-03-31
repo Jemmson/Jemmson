@@ -1,5 +1,4 @@
 <template>
-    <div>
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading" v-if="isContractor">Register Your Company</div>
@@ -208,27 +207,26 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
   export default {
     props: {
-        user: Object,
     },
     data () {
       return {
+        user: {},
         disabled: {
           submit: false
         },
         form: new SparkForm ({
-          company_name: this.user.company_name,
-          phone_number: this.user.phone,
-          address_line_1: this.user.address_line_1,
-          address_line_2: this.user.address_line_2,
-          city: this.user.city,
-          state: this.user.state,
-          zip: this.user.zip,
+          company_name: '',
+          phone_number: '',
+          address_line_1: '',
+          address_line_2: '',
+          city: '',
+          state: '',
+          zip: '',
           password: '',
           password_confirmation: '',
           email_contact: true,
@@ -284,11 +282,11 @@
         // We need to gather a fresh FormData instance with the profile photo appended to
         // the data so we can POST it up to the server. This will allow us to do async
         // uploads of the profile photos. We will update the user after this action.
-        axios.post ('/settings/logo', this.gatherFormData ())
+        axios.post ('/settings/logo', this.gatherFormData())
           .then (
-            () => {
-              Bus.$emit('updateUser');
-              self.form.finishProcessing ();
+            (data) => {
+                this.user.logo_url = data.data;
+                self.form.finishProcessing();
             },
             (error) => {
               self.form.setErrors(error.response.data);
@@ -308,6 +306,10 @@
 
         return data;
       }
+    },
+    mounted() {
+        this.user = Spark.state.user;
+        this.form.phone_number = this.user.phone;
     }
   }
 </script>

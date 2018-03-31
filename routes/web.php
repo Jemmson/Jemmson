@@ -63,12 +63,8 @@ Route::get('/public/contractorCommunication', function(){
 
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 
-    // common routes
     Route::post('/initiate-bid', 'InitiateBidController@send');
-    Route::get('/current-job', 'Controller@create');
-    Route::get('/payments-and-review', 'Controller@create');
-    Route::get('/my-contractors', 'Controller@create');
-
+    
     // TaskController
     Route::post('/bid/tasks', 'TaskController@bidTasks');
     Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
@@ -79,6 +75,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/jobs', 'JobController@jobs');
     Route::post('/bid/job/decline', 'JobController@declineJobBid');
     Route::post('job/approve/{job}', 'JobController@approveJob');
+    Route::get('invoices', 'JobController@getInvoices');
+    Route::get('invoice/{job}', 'JobController@getInvoice');
     
     // Stripe routes
     Route::get('/stripe/express/connect', 'StripeController@connectExpress');

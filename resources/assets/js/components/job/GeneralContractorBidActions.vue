@@ -5,10 +5,11 @@
             <button class="btn btn-sm btn-primary button" name="addTaskToBid" id="addTaskToBid" @click="openAddTask">
                 Add Task To Bid
             </button>
-            <button class="btn btn-sm btn-warning button" @click="openModal('notifyCustomerOfFinishedBid')">
-                Notify Customer of Finished Bid
+            <button class="btn btn-sm btn-warning button" @click="openModal('notifyCustomerOfFinishedBid')" :disabled="bid.job_tasks.length <= 0">
+                <div v-if="bid.job_tasks.length <= 0">Please add a Task before submitting bid</div>
+                <div v-else>Submit Bid</div>
             </button>
-            <button class="btn btn-danger" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
+            <button class="btn btn-sm btn-danger" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
