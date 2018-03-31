@@ -19,7 +19,10 @@
                 <div class="panel-footer">
                     <div class="row">
                         <!-- /buttons  -->
-                        <general-contractor-bid-actions :bid="bid" @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid" @openAddTask="openAddTask">
+                        <general-contractor-bid-actions
+                                :bid="bid"
+                                @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
+                                @openAddTask="openAddTask">
                         </general-contractor-bid-actions>
                     </div>
                 </div>

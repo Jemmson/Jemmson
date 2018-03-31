@@ -94,6 +94,7 @@ Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 Route::post('/task/togglestripe', 'TaskController@toggleStripe');
+Route::post('/task/checkStripeForJob', 'TaskController@checkStripeForJob');
 
 Route::post('/job/updateArea', 'JobController@updateArea');
 Route::post('/job/getArea', 'JobController@getArea');
