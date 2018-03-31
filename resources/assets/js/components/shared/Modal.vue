@@ -15,8 +15,8 @@
                 <div class="modal-footer">
                     <span>
                         <slot name="button"></slot>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-success btn-model-yes" @click="$emit('modal', modalId)">Yes</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">{{ no }}</button>
+                        <button type="button" class="btn btn-success btn-model-yes" @click="$emit('modal', modalId)">{{ yes }}</button>
                     </span>
                 </div>
             </div>
@@ -29,7 +29,9 @@
         props: {
             modalId: String,
             header: String,
-            body: String
+            body: String,
+            no: String,
+            yes: String
         }
     }
 </script>

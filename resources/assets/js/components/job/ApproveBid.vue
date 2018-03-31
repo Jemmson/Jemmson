@@ -28,13 +28,13 @@
             <!-- Address Line 2 -->
             <div class="form-group col-sm-12">
                 <label for="">Address Line 2</label>
-                <input type="text" class="form-control" name="address_line_2" v-model="form.address_line_2" autofocus>
+                <input type="text" class="form-control" name="address_line_2" v-model="form.address_line_2">
             </div>
 
             <!-- City -->
             <div class="form-group col-md-6" :class="{'has-error': form.errors.has('city')}">
                 <label class=" ">City</label>
-                <input type="text" class="form-control" name="city" v-model="form.city" autofocus>
+                <input type="text" class="form-control" name="city" v-model="form.city">
                 <span class="help-block" v-show="form.errors.has('city')">
                     {{ form.errors.get('city') }}
                 </span>
@@ -43,7 +43,7 @@
             <!-- State -->
             <div class="form-group col-md-6" :class="{'has-error': form.errors.has('state')}">
                 <label for="">State</label>
-                <input type="text" class="form-control" name="state" v-model="form.state" autofocus>
+                <input type="text" class="form-control" name="state" v-model="form.state">
                 <span class="help-block" v-show="form.errors.has('state')">
                     {{ form.errors.get('state') }}
                 </span>
@@ -52,7 +52,7 @@
             <!-- Zip Code -->
             <div class="form-group col-md-12" :class="{'has-error': form.errors.has('zip')}">
                 <label for="">ZipCode</label>
-                <input type="text" class="form-control" name="zip" v-model="form.zip" autofocus>
+                <input type="text" class="form-control" name="zip" v-model="form.zip">
                 <span class="help-block" v-show="form.errors.has('zip')">
                     {{ form.errors.get('zip') }}
                 </span>
@@ -60,7 +60,7 @@
         </div>
         <!-- / buttons -->
         <div class="form-group col-md-12">
-            <button class="btn btn-success" @click.prevent="approve" :disabled="disabled.approve">
+            <button class="btn btn-success" @click.prevent="confirm" :disabled="disabled.approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
@@ -97,6 +97,7 @@
                 </div>
             </div>
         </transition>
+        <modal modalId="bidConfirmed" header="Confirmation" :body="modalBody" @modal="approve" no="Review Bid" yes="Submit Bid"></modal>
     </form>
 </template>
 
@@ -122,21 +123,27 @@
                     zip: '',
                     message: '',
                 }),
-                user: Spark.state.user,
                 disabled: {
                     approve: false,
                     declineBid: false,
                     cancelBid: false
                 },
                 showDeclineForm: false,
+                modalBody: Language.lang().modal.reviewBidConfirmationModal
             }
         },
         methods: {
             openDeclineForm() {
                 this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
             },
-            approve() {
-                Customer.approveBid(this.form, this.disabled);
+            confirm() {
+                $('#modal').modal();
+            },
+            approve(data) {
+                if (data === 'bidConfirmed') {
+                    $('#modal').modal('toggle');
+                    Customer.approveBid(this.form, this.disabled);
+                }
             },
             declineBid() {
                 Customer.declineBid(this.form, this.disabled);

@@ -24,7 +24,7 @@
             </span>
             Job Completed
         </button>
-        <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()">
+        <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" no="no" yes="yes">
         </modal>
     </div>
 </template>

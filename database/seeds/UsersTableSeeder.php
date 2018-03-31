@@ -148,6 +148,7 @@ class UsersTableSeeder extends Seeder
                 'notes' => $faker->paragraph,
                 'phone_method_of_contact' => '1',
                 'sms_method_of_contact' => '1',
+                'location_id' => '1'
             ];
 
             Customer::create($customerData);
@@ -168,6 +169,7 @@ class UsersTableSeeder extends Seeder
                 'notes' => $faker->paragraph,
                 'phone_method_of_contact' => '1',
                 'sms_method_of_contact' => '1',
+                'location_id' => '2'
             ];
 
             Customer::create($customerData);
