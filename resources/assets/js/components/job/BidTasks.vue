@@ -5,6 +5,7 @@
       <div class="panel">
         <div class="panel-body">
           <div class="row">
+            <h3>Task Paid</h3>
             <div class="col-xs-12 form-group">
               <!-- / status -->
               <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
