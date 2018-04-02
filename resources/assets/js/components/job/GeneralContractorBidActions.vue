@@ -1,21 +1,23 @@
 <template>
     <!-- /contractor bid actions -->
-    <div class="col-md-12">
-        <div v-if="showPreApprovedActions" class="text-right">
-            <button class="btn btn-sm btn-primary button" name="addTaskToBid" id="addTaskToBid" @click="openAddTask">
-                Add Task To Bid
-            </button>
-            <button class="btn btn-sm btn-warning button" @click="openModal('notifyCustomerOfFinishedBid')"
+    <div>
+        <div v-if="showPreApprovedActions" class="text-center">
+            <button class="btn btn-sm btn-primary btn-contractor" @click="openModal('notifyCustomerOfFinishedBid')"
                     :disabled="bid.job_tasks.length <= 0">
                 <div v-if="bid.job_tasks.length <= 0">Please add a Task before submitting bid</div>
                 <div v-else>Submit Bid</div>
             </button>
-            <button class="btn btn-sm btn-danger" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
+            <div class="btn-group">
+                <button class="btn btn-sm btn-primary btn-contractor" name="addTaskToBid" id="addTaskToBid" @click="openAddTask">
+                    Add Task To Bid
+                </button>
+                <button class="btn btn-sm btn-primary btn-contractor" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
-                Cancel Job
-            </button>
+                    Cancel Job
+                </button>
+            </div>
         </div>
         <button v-if="showJobCompletedBtn" class="btn btn-success" @click.prevent="jobCompleted"
                 :disabled="disabled.jobCompleted">
@@ -89,7 +91,9 @@
         this.$emit ('openAddTask');
       },
       cancelBid () {
-        Customer.cancelBid (this.bid, this.disabled);
+        if(confirm("Do you really wish to Cancel the Job?")) {
+          Customer.cancelBid (this.bid, this.disabled);
+        }
       },
       jobCompleted () {
         GeneralContractor.jobCompleted (this.bid, this.disabled);
@@ -100,3 +104,9 @@
     }
   }
 </script>
+
+<style>
+    .btn-contractor {
+        margin: 1rem;
+    }
+</style>

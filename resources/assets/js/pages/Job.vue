@@ -2,29 +2,27 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-            <button class="btn btn-lg btn-primary refresh" @click="reloadPage()">Refresh Page</button>
-                <div class="panel panel-default">
+                <button class="btn btn-lg btn-primary refresh" @click="reloadPage()">Refresh Page</button>
+                <div class="panel panel-default job-body">
                     <!-- <div class="panel-heading">Dashboard</div> -->
                     <div class="panel-body">
-                        <div class="row">
-                            <!-- /show all bid information -->
-                            <bid-details :bid="bid">
-                            </bid-details>
-                        </div>
+                        <!-- /show all bid information -->
+                        <bid-details :bid="bid">
+                        </bid-details>
                     </div>
                     <div class="panel-footer">
-                        <div class="row">
-                            <!-- /customer approve bid form -->
-                            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-                            </approve-bid>
+                        <!-- /customer approve bid form -->
+                        <approve-bid
+                                v-if="isCustomer && needsApproval"
+                                :bid="bid">
+                        </approve-bid>
 
-                            <!-- /buttons  -->
-                            <general-contractor-bid-actions
-                                    :bid="bid"
-                                    @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
-                                    @openAddTask="openAddTask">
-                            </general-contractor-bid-actions>
-                        </div>
+                        <!-- /buttons  -->
+                        <general-contractor-bid-actions
+                                :bid="bid"
+                                @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
+                                @openAddTask="openAddTask">
+                        </general-contractor-bid-actions>
                     </div>
                 </div>
             </div>
@@ -173,3 +171,14 @@
     },
   }
 </script>
+
+<style scoped>
+    .job-body {
+        border: thin solid black;
+        border-radius: 10px;
+    }
+
+    .panel-body {
+
+    }
+</style>
