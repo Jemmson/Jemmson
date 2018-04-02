@@ -60,7 +60,7 @@
             </div>
         </div>
         <!-- / buttons -->
-        <div class="btn-group">
+        <div class="btn-group col-sm-12">
             <button class="btn btn-primary" @click.prevent="openModal('approveBid')" :disabled="disabled.approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -194,3 +194,9 @@
     }
   }
 </script>
+
+<style scoped>
+.btn-group {
+    margin-bottom: 16px;
+}
+</style>
