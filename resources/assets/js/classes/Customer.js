@@ -44,6 +44,7 @@ export default class Customer {
       Bus.$emit('bidUpdated', ['closeBid']);
       Vue.toasted.success('Bid Canceled');
       disabled.cancelBid = false;
+      location.href = "/#/bids";
     } catch (error) {
       error = error.response.data;
       Vue.toasted.error(error.message);
