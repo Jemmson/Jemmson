@@ -1,6 +1,6 @@
 <template>
     <!-- /all details of a bid -->
-    <div class="job-main-wrapper">
+    <div class="job-main-wrapper" v-if="bid.job_name !== undefined">
         <div class="job-main-row job-main-header">
             <span class="title">Job Name:</span>
             <span class="title-value text-center">{{ bid.job_name }}</span>
@@ -10,6 +10,7 @@
             <a class="text-center" target="_blank" v-if="bid.location !== undefined && bid.location !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
                 <address>
                     <span>{{ bid.location.address_line_1 }}</span>
+                    <br>
                     <span>{{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}</span>
                 </address>
             </a>
@@ -20,7 +21,7 @@
                 <span class="title job-status-label">Status:</span>
                 <span class="title-value text-center  job-status-value">{{ status }}</span>
             </div>
-            <div class="job-status">
+            <div class="job-status" v-if="showBidPrice">
                 <span class="title job-status-label">Total Job Price:</span>
                 <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
             </div>
@@ -57,38 +58,48 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      bid: Object
-    },
-    data () {
-      return {
-        area: {
-          area: ''
+    export default {
+        props: {
+            bid: Object
         },
-        areaError: '',
-        locationExists: false
-      }
-    },
-    computed: {
-      status () {
-        return User.status (this.bid.status, this.bid);
-      }
-    },
-    methods: {
-      updateArea () {
-        Customer.updateArea (this.area.area, this.bid.id);
-      },
-      showArea () {
-        console.log ('user type: ' + User.isContractor ())
-        return this.area.area !== '' && User.isContractor ();
-      }
-    },
-    mounted: function () {
-      // Customer.getArea(this.bid.id, this.area)
-      Customer.getArea (1, this.area)
+        data() {
+            return {
+                area: {
+                    area: ''
+                },
+                areaError: '',
+                locationExists: false
+            }
+        },
+        computed: {
+            showBidPrice() {
+                if (User.isCustomer()) {
+                    const status = this.bid.status;
+                    if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
+            status() {
+                return User.status(this.bid.status, this.bid);
+            }
+        },
+        methods: {
+            updateArea() {
+                Customer.updateArea(this.area.area, this.bid.id);
+            },
+            showArea() {
+                console.log('user type: ' + User.isContractor())
+                return this.area.area !== '' && User.isContractor();
+            }
+        },
+        mounted: function () {
+            // Customer.getArea(this.bid.id, this.area)
+            Customer.getArea(1, this.area)
+        }
     }
-  }
 </script>
 
 <style scoped>
@@ -98,7 +109,7 @@
     }
 
     .job-main-header {
-        background-color: skyblue;
+        background-color: #eee;
         display: grid;
     }
 
@@ -108,11 +119,11 @@
     }
 
     .job-main-row {
-        border-radius: 10px;
+        border-radius: 4px;
     }
 
     .job-main-status {
-        background-color: beige;
+        background-color: #eee;
         display: grid;
     }
 
@@ -133,12 +144,9 @@
         grid-template-columns: 1fr 1fr;
     }
 
-    .job-status-label {
-
-    }
+    .job-status-label {}
 
     .job-status-value {
         margin-left: auto;
     }
-
 </style>
