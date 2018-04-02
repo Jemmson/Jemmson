@@ -193,6 +193,12 @@ class HomeController extends Controller
     {
         $user = User::find($userId);
         $user->phone = $phoneNumber;
-        $user->save();
+        Log::debug('saving phone');
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            Log::error('Update Phone: ' . $e->getMessage());
+            abort(422, 'This number exists in the system already, please login or try another number.');
+        }
     }
 }
