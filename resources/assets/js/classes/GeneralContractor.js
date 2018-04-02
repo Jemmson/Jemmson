@@ -139,7 +139,8 @@ export default class GeneralContractor {
 
   }
 
-  notifyCustomerOfFinishedBid (bid) {
+  notifyCustomerOfFinishedBid (bid, disabled) {
+    disabled.submitBid = true;
     if (User.needsStripe (bid)) {
       return false;
     }
@@ -149,10 +150,12 @@ export default class GeneralContractor {
       customerId: bid.customer_id
     }).then ((response) => {
       console.log (response);
+      disabled.submitBid = false;
       User.emitChange ('bidUpdated');
       Vue.toasted.success ('Bid has been submitted and notification sent!');
     }).catch ((error) => {
       console.error (error);
+      disabled.submitBid = false;
       Vue.toasted.error ('Whoops! Something went wrong! Please try again.');
     });
   }

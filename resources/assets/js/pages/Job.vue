@@ -2,8 +2,9 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-lg btn-primary refresh" @click="reloadPage()">Refresh Page</button>
-                <div class="panel panel-default job-body">
+                <!-- / shouldn't need this -->
+                <!-- /<button class="btn btn-lg btn-primary refresh" @click="reloadPage()">Refresh Page</button> -->
+                <div class="panel job-body">
                     <!-- <div class="panel-heading">Dashboard</div> -->
                     <div class="panel-body">
                         <!-- /show all bid information -->
@@ -20,7 +21,6 @@
                         <!-- /buttons  -->
                         <general-contractor-bid-actions
                                 :bid="bid"
-                                @notifyCustomerOfFinishedBid="notifyCustomerOfFinishedBid"
                                 @openAddTask="openAddTask">
                         </general-contractor-bid-actions>
                     </div>
@@ -29,7 +29,7 @@
 
 
             <!-- /show all tasks associated to this bid -->
-            <bid-tasks v-if="bid.job_tasks !== undefined" :bid="bid" @openTaskPanel="openTaskPanel">
+            <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
             </bid-tasks>
 
             <!-- /add task to bid -->
@@ -79,6 +79,16 @@
       }
     },
     computed: {
+      showTasks() {
+        if (User.isCustomer()) {
+            const status = this.bid.status;
+            if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
+                return true;
+            }
+            return false;
+        }
+        return true;
+      },
       jobTask () {
         if (this.bid.job_tasks !== undefined) {
           return this.bid.job_tasks[this.jobTaskIndex];
@@ -107,9 +117,6 @@
       },
       declineBid () {
         Customer.declineBid (this.bid, this.disabled);
-      },
-      notifyCustomerOfFinishedBid () {
-        GeneralContractor.notifyCustomerOfFinishedBid (this.bid);
       },
       approve () {
         Customer.approveBid (this.bidForm, this.disabled);
@@ -174,8 +181,8 @@
 
 <style scoped>
     .job-body {
-        border: thin solid black;
-        border-radius: 10px;
+        /* /border: thin solid black; */
+        /* border-radius: 10px; */
     }
 
     .panel-body {
