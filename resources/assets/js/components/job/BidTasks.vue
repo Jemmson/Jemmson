@@ -69,23 +69,45 @@
         <div class="panel-footer">
           <div class="row">
             <center>
-              <div class="col-xs-4">
+              <div class="col-xs-4" v-if="isContractor">
                 <button class="btn btn-secondary" @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
                   <i class="fas fa-users fa-2x"></i>
                 </button>
               </div>
-              <div class="col-xs-4">
-                <button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral">
+              <div class="col-xs-4" v-if="isContractor">
+                <button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
                   <i class="fas fa-user-plus fa-2x"></i>
                 </button>
               </div>
-              <div class="col-xs-4">
+              <div class="col-xs-4" v-if="isContractor">
                 <button class="btn btn-secondary" @click.prevent="openTaskActions(jobTask.id)">
                   <i class="fas fa-cogs fa-2x"></i>
                 </button>
               </div>
 
-              <transition-group name="slide-fade">
+              <div class="col-xs-4" v-if="isCustomer">
+                <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                  Deny
+                </button>
+              </div>
+              <div class="col-xs-4" v-if="isCustomer">
+                <button class="btn btn-success" v-if="showPayCashForTaskBtn(jobTask)" @click.prevent="paidWithCashTask(jobTask)" :disabled="disabled.payCash">
+                  <span v-if="disabled.payCash">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                  </span>
+                  Cash
+                </button>
+              </div>
+              <div class="col-xs-4" v-if="isCustomer">
+                <button class="btn btn-success" v-if="showPayForTaskBtn(jobTask)" @click.prevent="payForTask(jobTask)" :disabled="disabled.pay">
+                  <span v-if="disabled.pay">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                  </span>
+                  Pay
+                </button>
+              </div>
+
+              <transition-group name="slide-fade" v-if="isContractor">
                 <div class="col-xs-12 hidden" :id="'task-divider-' + jobTask.id" :key="1">
                   <div class="divider2"></div>
                 </div>
@@ -94,14 +116,13 @@
                 <div class="col-xs-12 hidden" :id="'task-options-' + jobTask.id" :key="2">
                   <div class="col-xs-4">
                     <!-- Rounded switch -->
-                    <span class="stripe-label">Use Stripe</span>
+                    <span class="stripe-label" v-if="showStripeToggle(jobTask)">Use Stripe</span>
                     <label v-if="showStripeToggle(jobTask)" class="switch">
                       <input :id="'toggle-stripe-' + jobTask.id" type="checkbox" v-model="jobTask.stripe" @click="toggleStripePaymentOption(jobTask)">
                       <span class="slider round"></span>
                     </label>
                   </div>
                   <div class="col-xs-4">
-                    <!-- <button class="btn btn-primary" @click.prevent="openTaskPanel(index)">Details</button> -->
                     <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                       Deny
                     </button>
@@ -119,18 +140,6 @@
                     </button>
                   </div>
                   <div class="col-xs-4">
-                    <button class="btn btn-success" v-if="showPayForTaskBtn(jobTask)" @click.prevent="payForTask(jobTask)" :disabled="disabled.pay">
-                      <span v-if="disabled.pay">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Pay
-                    </button>
-                    <button class="btn btn-success" v-if="showPayCashForTaskBtn(jobTask)" @click.prevent="paidWithCashTask(jobTask)" :disabled="disabled.payCash">
-                      <span v-if="disabled.payCash">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Cash
-                    </button>
                     <button class="btn btn-success" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)" :disabled="disabled.finished">
                       <span v-if="disabled.finished">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -151,7 +160,6 @@
                       <tr>
                         <th>Sub</th>
                         <th>Price</th>
-                        <th>Privew Price</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -159,10 +167,6 @@
                       <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
                         <td>{{ bid.contractor.name }}</td>
                         <td>${{ bid.bid_price }}</td>
-                        <td>
-                          <button @click="preview(jobTask, bid.id)" class="button btn btn-sm btn-info">Preview
-                          </button>
-                        </td>
                         <td>
                           <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="button btn btn-sm btn-success"
                             :disabled="disabled.accept">
@@ -225,6 +229,12 @@
       },
       isContractor() {
         return User.isContractor();
+      },
+      showSendSubInvite() {
+        if (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.sent') {
+          return true;
+        }
+        return false;
       },
       generalTotalTaskPrice() {
         let total = 0;
