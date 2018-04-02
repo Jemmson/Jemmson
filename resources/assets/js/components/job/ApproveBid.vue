@@ -3,7 +3,8 @@
     <form role="form">
         <div class="form-group col-sm-12 col-md-6">
             <label for="job_location_same_as_home">Job Location Same as Home Location</label>
-            <input type="checkbox" class="form-control" id="job_location_same_as_home" v-model="form.job_location_same_as_home">
+            <input type="checkbox" class="form-control" id="job_location_same_as_home"
+                   v-model="form.job_location_same_as_home">
         </div>
 
         <div class="form-group col-sm-12 col-md-6" :class="{'has-error': form.errors.has('agreed_start_date')}">
@@ -59,21 +60,21 @@
             </div>
         </div>
         <!-- / buttons -->
-        <div class="form-group col-md-12">
-            <button class="btn btn-success" @click.prevent="confirm" :disabled="disabled.approve">
+        <div class="btn-group">
+            <button class="btn btn-primary" @click.prevent="confirm" :disabled="disabled.approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Approve
             </button>
             <button class="btn btn-primary" @click.prevent="openDeclineForm">
-                Open Decline Form
+                Decline
             </button>
-            <button class="btn btn-danger" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
+            <button class="btn btn-primary" @click.prevent="cancelBid" :disabled="disabled.cancelBid">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
-                Cancel Job
+                Cancel
             </button>
         </div>
         <!-- / decline bid section -->
@@ -82,7 +83,8 @@
                 <!-- deny message -->
                 <div class="form-group col-md-12" :class="{'has-error': form.errors.has('message')}">
                     <label for="">Message</label>
-                    <input type="text" class="form-control" name="message" v-model="form.message" placeholder="Optional Message">
+                    <input type="text" class="form-control" name="message" v-model="form.message"
+                           placeholder="Optional Message">
                     <span class="help-block" v-show="form.errors.has('message')">
                         {{ form.errors.get('message') }}
                     </span>
@@ -97,60 +99,64 @@
                 </div>
             </div>
         </transition>
-        <modal modalId="bidConfirmed" header="Confirmation" :body="modalBody" @modal="approve" no="Review Bid" yes="Submit Bid"></modal>
+        <modal modalId="bidConfirmed" header="Confirmation" :body="modalBody" @modal="approve" no="Review Bid"
+               yes="Submit Bid"></modal>
     </form>
 </template>
 
 <script>
-    export default {
-        props: {
-            bid: Object,
+  export default {
+    props: {
+      bid: Object,
+    },
+    data () {
+      return {
+        taskIndex: 0,
+        form: new SparkForm ({
+          id: this.bid.id,
+          agreed_start_date: '',
+          end_date: '',
+          area: '',
+          status: this.bid.status,
+          job_location_same_as_home: true,
+          address_line_1: '',
+          address_line_2: '',
+          city: '',
+          state: '',
+          zip: '',
+          message: '',
+        }),
+        disabled: {
+          approve: false,
+          declineBid: false,
+          cancelBid: false
         },
-        data() {
-            return {
-                taskIndex: 0,
-                form: new SparkForm({
-                    id: this.bid.id,
-                    agreed_start_date: '',
-                    end_date: '',
-                    area: '',
-                    status: this.bid.status,
-                    job_location_same_as_home: true,
-                    address_line_1: '',
-                    address_line_2: '',
-                    city: '',
-                    state: '',
-                    zip: '',
-                    message: '',
-                }),
-                disabled: {
-                    approve: false,
-                    declineBid: false,
-                    cancelBid: false
-                },
-                showDeclineForm: false,
-                modalBody: Language.lang().modal.reviewBidConfirmationModal
-            }
-        },
-        methods: {
-            openDeclineForm() {
-                this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
-            },
-            confirm() {
-                $('#modal').modal();
-            },
-            approve(data) {
-                if (data === 'bidConfirmed') {
-                    $('#modal').modal('toggle');
-                    Customer.approveBid(this.form, this.disabled);
-                }
-            },
-            declineBid() {
-                Customer.declineBid(this.form, this.disabled);
-            },
-            cancelBid() {
-                Customer.cancelBid(this.form, this.disabled);
-            }
+        showDeclineForm: false,
+        modalBody: Language.lang ().modal.reviewBidConfirmationModal
+      }
+    },
+    methods: {
+      openDeclineForm () {
+        this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
+      },
+      confirm () {
+        $ ('#modal').modal ();
+      },
+      approve (data) {
+        if (data === 'bidConfirmed') {
+          $ ('#modal').modal ('toggle');
+          Customer.approveBid (this.form, this.disabled);
         }
+      },
+      declineBid () {
+        Customer.declineBid (this.form, this.disabled);
+      },
+      cancelBid () {
+        if (confirm ('Do you really wish to Cancel the Job?')) {
+          Customer.cancelBid (this.bid, this.disabled);
+        }
+        // Customer.cancelBid (this.form, this.disabled);
+      }
     }
+  }
 </script>
