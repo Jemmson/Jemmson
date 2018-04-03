@@ -137,7 +137,6 @@ export default class Format {
                 break;
             // important update: blue
             case 'job.approved':
-            case 'bid.in_progress':
             case 'bid_task.approved_by_general':
             case 'bid_task.accepted':
                 return 'label-primary';
@@ -153,6 +152,7 @@ export default class Format {
                 return 'label-success';
             // don't need to do anything and not important info: grey
             case 'bid.initiated':
+            case 'bid.in_progress':
             case 'bid_task.initiated':
             case 'bid_task.bid_sent':
             case 'bid_task.finished_by_sub':

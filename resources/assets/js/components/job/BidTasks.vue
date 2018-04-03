@@ -69,7 +69,7 @@
 
         </div>
         <div class="panel-footer">
-          <div class="row">
+          <div class="row" v-if="showPanelActions(jobTask.status)">
             <center>
               <div class="col-xs-4" v-if="isContractor">
                 <button class="btn btn-secondary" @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
@@ -256,6 +256,12 @@
       }
     },
     methods: {
+      showPanelActions(status) {
+        if (status !== 'bid_task.customer_sent_payment') {
+          return true;
+        }
+        return false;
+      },
       getLabelClass(status) {
         return Format.statusLabel(status);
       },
