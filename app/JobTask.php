@@ -65,8 +65,10 @@ class JobTask extends Model
             $location->save();
             $this->location_id = $location->id;
             $this->save();
+            return $location;
         } catch(\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
+            return $e;
         }
     }
 

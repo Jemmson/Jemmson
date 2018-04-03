@@ -105,5 +105,7 @@ Route::post('/customer/getAddress', 'CustomerController@getAddress');
 Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');
 
 Route::post('feedback', 'HomeController@feedback');
+Route::post('location', 'TaskController@updateTaskLocation');
+
 
 

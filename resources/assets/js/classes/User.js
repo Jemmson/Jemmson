@@ -91,6 +91,10 @@ export default class User {
     return this.user.usertype === 'customer';
   }
 
+  /**
+   * 
+   * @param {JobTask} bid 
+   */
   isGeneral (bid) {
     if (bid !== null)
       return bid.contractor_id === this.user.id;
@@ -121,7 +125,7 @@ export default class User {
 
   /**
    * 
-   * @param {JobTask or BidContractorJobTask} jobTask 
+   * @param {JobTask or BidContractorJobTask.job_task} jobTask 
    */
   needsStripe (jobTask) {
     if (this.recievePaymentsWithStripe(jobTask)) {
@@ -141,7 +145,7 @@ export default class User {
 
   /**
    * 
-   * @param {JobTask or BidContractorJobTask} bid
+   * @param {JobTask or BidContractorJobTask.job_task} bid
    */
   recievePaymentsWithStripe (bid) {
     if (bid.job_task !== undefined) {
@@ -199,6 +203,21 @@ export default class User {
     // if stripe_express is anything other that undefined or null then return true
     return this.user.contractor.stripe_express !== undefined && this.user.contractor.stripe_express !== null;
 
+  }
+
+  async updateTaskLocation(form, disabled) {
+    disabled.update = true;
+    try {
+      const data = await axios.post('/api/location', form);
+      Bus.$emit('bidUpdated');
+      Vue.toasted.success('Location Updated');
+      disabled.update = false;
+      $('#update-task-location-modal').modal('hide');
+    } catch (error) {
+      console.log(error);
+      disabled.update = false;
+      Vue.toasted.error(error.message);
+    }
   }
 
   async submitFeedback (comment, disabled) {

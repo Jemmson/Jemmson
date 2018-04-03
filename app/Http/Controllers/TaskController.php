@@ -121,6 +121,19 @@ class TaskController extends Controller
     }
 
     /**
+     * Update jobtask location
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Task $task
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTaskLocation(Request $request)
+    {
+        $jobTask = JobTask::find($request->id);
+        return $jobTask->updateLocation($request);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Task $task

@@ -26,7 +26,9 @@
                 <div class="panel">
                     <div class="panel-body">
                         <div class="col-xs-12">
-                            <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
+                            <h4>
+                                <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
+                            </h4>
                             <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
                         </div>
                         <div class="col-xs-12">

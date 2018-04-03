@@ -7,9 +7,11 @@
           <div class="row">
             <div class="col-xs-12 form-group">
               <!-- / status -->
-              <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
-                {{ status(jobTask.status) }}
-              </label>
+              <h4>
+                <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
+                  {{ status(jobTask.status) }}
+                </label>
+              </h4>
               <h4 class="task-name">
                 {{ jobTask.task.name }}
               </h4>
@@ -49,6 +51,7 @@
                 <i class="fas fa-map-marker icon"></i>
                 {{ location(jobTask) }}
               </a>
+              <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)"><i class="fas fa-edit"></i></button>
             </section>
             <!-- / end address section -->
 
@@ -67,7 +70,7 @@
 
         </div>
         <div class="panel-footer">
-          <div class="row">
+          <div class="row" v-if="showPanelActions(jobTask.status)">
             <center>
               <div class="col-xs-4" v-if="isContractor">
                 <button class="btn btn-secondary" @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
@@ -191,6 +194,8 @@
     </sub-invite-modal>
     <deny-task-modal :jobTask="jTask">
     </deny-task-modal>
+    <update-task-location-modal :jobTask="jTask">
+    </update-task-location-modal>
   </div>
 </template>
 
@@ -254,6 +259,16 @@
       }
     },
     methods: {
+      openUpdateTaskLocation(jobTask) {
+        this.jTask = jobTask;
+        $('#update-task-location-modal').modal();
+      },
+      showPanelActions(status) {
+        if (status !== 'bid_task.customer_sent_payment') {
+          return true;
+        }
+        return false;
+      },
       getLabelClass(status) {
         return Format.statusLabel(status);
       },
