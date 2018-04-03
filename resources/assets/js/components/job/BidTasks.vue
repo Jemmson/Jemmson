@@ -51,6 +51,7 @@
                 <i class="fas fa-map-marker icon"></i>
                 {{ location(jobTask) }}
               </a>
+              <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)"><i class="fas fa-edit"></i></button>
             </section>
             <!-- / end address section -->
 
@@ -193,6 +194,8 @@
     </sub-invite-modal>
     <deny-task-modal :jobTask="jTask">
     </deny-task-modal>
+    <update-task-location-modal :jobTask="jTask">
+    </update-task-location-modal>
   </div>
 </template>
 
@@ -256,6 +259,10 @@
       }
     },
     methods: {
+      openUpdateTaskLocation(jobTask) {
+        this.jTask = jobTask;
+        $('#update-task-location-modal').modal();
+      },
       showPanelActions(status) {
         if (status !== 'bid_task.customer_sent_payment') {
           return true;

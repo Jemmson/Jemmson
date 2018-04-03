@@ -205,6 +205,21 @@ export default class User {
 
   }
 
+  async updateTaskLocation(form, disabled) {
+    disabled.update = true;
+    try {
+      const data = await axios.post('/api/location', form);
+      Bus.$emit('bidUpdated');
+      Vue.toasted.success('Location Updated');
+      disabled.update = false;
+      $('#update-task-location-modal').modal('hide');
+    } catch (error) {
+      console.log(error);
+      disabled.update = false;
+      Vue.toasted.error(error.message);
+    }
+  }
+
   async submitFeedback (comment, disabled) {
     disabled.submit = true;
     let page_url = window.location.href;
