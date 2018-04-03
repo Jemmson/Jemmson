@@ -108,6 +108,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    $('.navbar-collapse').collapse('hide');
   console.log(to.path);
   if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
     const customer = Spark.state.user.customer;
@@ -139,7 +140,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-})
+});
 
 
 var app = new Vue({
