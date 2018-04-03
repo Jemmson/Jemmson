@@ -7,9 +7,11 @@
           <div class="row">
             <div class="col-xs-12 form-group">
               <!-- / status -->
-              <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
-                {{ status(jobTask.status) }}
-              </label>
+              <h4>
+                <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
+                  {{ status(jobTask.status) }}
+                </label>
+              </h4>
               <h4 class="task-name">
                 {{ jobTask.task.name }}
               </h4>

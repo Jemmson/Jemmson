@@ -91,6 +91,10 @@ export default class User {
     return this.user.usertype === 'customer';
   }
 
+  /**
+   * 
+   * @param {JobTask} bid 
+   */
   isGeneral (bid) {
     if (bid !== null)
       return bid.contractor_id === this.user.id;
@@ -121,7 +125,7 @@ export default class User {
 
   /**
    * 
-   * @param {JobTask or BidContractorJobTask} jobTask 
+   * @param {JobTask or BidContractorJobTask.job_task} jobTask 
    */
   needsStripe (jobTask) {
     if (this.recievePaymentsWithStripe(jobTask)) {
@@ -141,7 +145,7 @@ export default class User {
 
   /**
    * 
-   * @param {JobTask or BidContractorJobTask} bid
+   * @param {JobTask or BidContractorJobTask.job_task} bid
    */
   recievePaymentsWithStripe (bid) {
     if (bid.job_task !== undefined) {

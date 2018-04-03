@@ -27,8 +27,9 @@
         <div class="panel" v-if="showBid(bidTask)">
           <div class="panel-body">
             <div class="col-xs-12">
-              <label for="job-stats" class="label label-info">{{ status(bidTask) }}</label>
-              <br>
+              <h4>
+                <label for="job-stats" class="label" :class="getLabelClass(bidTask.job_task.status)">{{ status(bidTask) }}</label>
+              </h4>
               <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
             </div>
             <div class="col-xs-6">
@@ -127,6 +128,9 @@
       }
     },
     methods: {
+      getLabelClass(status) {
+        return Format.statusLabel(status);
+      },
       search() {
         this.sTasks = this.tasks.filter((task) => {
           if (this.searchTerm == '') {
