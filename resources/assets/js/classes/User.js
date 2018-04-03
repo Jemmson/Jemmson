@@ -100,9 +100,32 @@ export default class User {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null;
   }
 
-  needsStripe (bid) {
-    if (this.recievePaymentsWithStripe ()) {
-      if (!this.stripeExpressConnected (bid)) {
+  /**
+   * Check all job tasks to see if any have
+   * stripe as the payment option active
+   * @param {Job} bid 
+   */
+  jobNeedsStripe(bid) {
+    let stripeNeeded = false;
+    for (const jobTask of bid.job_tasks) {
+      if (jobTask.stripe && jobTask.contractor_id === this.user.id) {
+        stripeNeeded = true;
+      }
+    }
+    if (stripeNeeded && !this.stripeExpressConnected()) {
+      Bus.$emit('needsStripe');
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 
+   * @param {JobTask or BidContractorJobTask} jobTask 
+   */
+  needsStripe (jobTask) {
+    if (this.recievePaymentsWithStripe(jobTask)) {
+      if (!this.stripeExpressConnected()) {
         console.log ('No Stripe Express');
         Bus.$emit ('needsStripe');
         return true;
@@ -116,8 +139,16 @@ export default class User {
     return true;
   }
 
-  recievePaymentsWithStripe () {
-    return true;
+  /**
+   * 
+   * @param {JobTask or BidContractorJobTask} bid
+   */
+  recievePaymentsWithStripe (bid) {
+    if (bid.job_task !== undefined) {
+      return bid.job_task.stripe;
+    } else {
+      return bid.stripe;
+    }
   }
 
   async saveCustomer (token) {
@@ -160,30 +191,13 @@ export default class User {
   /**
    * User has a stripe express account connected
    */
-  stripeExpressConnected (bid) {
-    if (!this.isContractor) {
+  stripeExpressConnected() {
+    if (!this.isContractor()) {
       return false;
     }
 
     // if stripe_express is anything other that undefined or null then return true
-    if (this.user.contractor.stripe_express !== undefined && this.user.contractor.stripe_express !== null) {
-      return true
-    }
-    else {
-      // if stripe express is null or undefined then check if stripe is 1 for any job task for current job and if
-      // not then return true to get a stripe_express account number.
-
-      let useStripe = true
-
-      for (let obj of bid.job_tasks) {
-        if (obj.stripe === 1) {
-          useStripe = false
-        }
-      }
-
-      return useStripe
-    }
-
+    return this.user.contractor.stripe_express !== undefined && this.user.contractor.stripe_express !== null;
 
   }
 
