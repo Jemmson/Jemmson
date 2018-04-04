@@ -5,6 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminate\Http\RedirectResponse;
+
 
 class Handler extends ExceptionHandler
 {
@@ -32,6 +35,15 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        // TODO - This exception should be handled better
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            //
+//            dd('hello');
+            dd('Sorry, the page you are looking for could not be found.');
+//            return redirect('home/dashboard');
+            return response()->view('errors.app', [], 500);
+        }
+
         parent::report($exception);
     }
 
@@ -62,4 +74,6 @@ class Handler extends ExceptionHandler
 
         return redirect()->guest(route('login'));
     }
+
+
 }

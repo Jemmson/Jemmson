@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Auth;
 use App\Location;
+use App\Exceptions;
 
 class BlockFurtherInfo
 {
@@ -19,6 +20,9 @@ class BlockFurtherInfo
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
+
+
 // //        dd(Auth::user()->location_id);
 // //        dd(Auth::user());
 // //        dd(Location);
