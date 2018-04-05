@@ -42,13 +42,6 @@ export default class User {
     };
     
     if (place !== undefined) {
-      for (let component in componentForm) {
-        if (component != 'route') {
-          document.getElementById(component).value = '';
-          document.getElementById(component).disabled = false;
-        }
-      }
-
       // Get each component of the address from the place details
       // and fill the corresponding field on the form.
       for (let i = 0; i < place.address_components.length; i++) {
