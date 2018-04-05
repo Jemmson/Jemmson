@@ -6,8 +6,9 @@
             <div class="panel-heading" v-if="!isContractor">Please Add Additional Information</div>
 
             <div class="panel-body">
-                <form class="form-horizontal" method="post" role="form">
-
+                <form class="form-horizontal" role="form">
+                    <input type="hidden" name="street_number" id="street_number">
+                    <input type="hidden" name="country" id="country">
                     <!-- Company Name -->
                     <div class="form-group" :class="{'has-error': form.errors.has('company_name')}"
                          v-if="isContractor">
@@ -37,8 +38,8 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                         <label class="col-md-3 control-label">Address Line 1</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="address_line_1"
-                                   v-model="form.address_line_1" autofocus>
+                            <input type="text" class="form-control" name="address_line_1" id="route"
+                                   v-model="form.address_line_1">
                             <span class="help-block" v-show="form.errors.has('address_line_1')">
                                     {{ form.errors.get('address_line_1') }}
                                 </span>
@@ -50,7 +51,7 @@
                         <label class="col-md-3 control-label">Address Line 2</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" name="address_line_2"
-                                   v-model="form.address_line_2" autofocus>
+                                   v-model="form.address_line_2">
                         </div>
                     </div>
 
@@ -58,7 +59,7 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('city')}">
                         <label class="col-md-3 control-label">City</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="city" v-model="form.city" autofocus>
+                            <input type="text" class="form-control" name="city" id="administrative_area_level_1" v-model="form.city">
                             <span class="help-block" v-show="form.errors.has('city')">
                                     {{ form.errors.get('city') }}
                                 </span>
@@ -69,7 +70,7 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('state')}">
                         <label class="col-md-3 control-label">State</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="state" v-model="form.state" autofocus>
+                            <input type="text" class="form-control" name="state" id="locality" v-model="form.state">
                             <span class="help-block" v-show="form.errors.has('state')">
                                     {{ form.errors.get('state') }}
                                 </span>
@@ -80,7 +81,7 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('zip')}">
                         <label class="col-md-3 control-label">ZipCode</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="zip" v-model="form.zip" autofocus>
+                            <input type="text" class="form-control" name="zip" id="postal_code" v-model="form.zip">
                             <span class="help-block" v-show="form.errors.has('zip')">
                                     {{ form.errors.get('zip') }}
                                 </span>
@@ -92,7 +93,7 @@
                         <label class="col-md-3 control-label">Any Special Notes</label>
                         <div class="col-md-8">
                                 <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10" class="form-control"
-                                          autofocus></textarea>
+                                        ></textarea>
                         </div>
                     </div>
 
@@ -251,8 +252,14 @@
       }
     },
     methods: {
+      updateFormLocation(location) {
+          this.form.address_line_1 = location.route;
+          this.form.city = location.locality;
+          this.form.state = location.administrative_area_level_1;
+          this.form.zip = location.postal_code;
+      },
       filterPhone () {
-        this.form.phone_number = Format.phone (this.form.phone_number);
+        this.form.phone_number = Format.phone(this.form.phone_number);
       },
       confirmPassword () {
         if (this.form.password !== this.form.password_confirmation) {
@@ -311,7 +318,11 @@
       }
     },
     mounted () {
-      this.form.phone_number = this.user.phone;
+      User.initAutocomplete('route');
+      this.form.phone_number = this.user.phone != null ? this.user.phone : '';
+      Bus.$on('updateFormLocation', (payload) => {
+                this.updateFormLocation(payload);
+            });
     }
   }
 </script>

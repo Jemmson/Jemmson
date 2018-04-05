@@ -79,7 +79,7 @@ class StripeController extends Controller
         
         if (isset($result->error)) {
             Log::error('Stripe Express Auth: ' . $result->error_description);
-            return redirect('/#/bids');
+            return redirect("/#/" . $request->state . "?error=" . $result->error_description);
         }
 
         $stripeExpress = new StripeExpress();
@@ -92,10 +92,10 @@ class StripeController extends Controller
             $stripeExpress->save();
         } catch (\Exception $e) {
             Log::error('New StripeExpress: ' . $e->getMessage());
-            return redirect('/#/bids');
+            return redirect("/#" . $request->state . "?error=Sorry we couldn't create your express account at this time");
         }
 
-        return redirect('/#/bids');
+        return redirect("/#" . $request->state . "?success=You may now submit the bid.");
     }
 
     /**
