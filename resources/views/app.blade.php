@@ -53,6 +53,7 @@
 </div>
 
 <!-- JavaScript -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2uX7JbkzcTpZ7Nb-_nu0CagS4lBSNdDw&libraries=places"></script>
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="/js/sweetalert.min.js"></script>
