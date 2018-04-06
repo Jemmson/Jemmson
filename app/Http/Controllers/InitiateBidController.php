@@ -63,11 +63,6 @@ class InitiateBidController extends Controller
 
         $contractor = Auth::user()->contractor()->first();
 
-        $this->logData($contractor, 65);
-
-        $this->logData($contractor->numberOfJobsLeft(), 67);
-        $this->logData($contractor->isSubscribed(), 68);
-
         if (!$contractor->hasMoreFreeJobs() && !$contractor->isSubscribed()) {
             return response()->json(['message' => 'No more free Jobs left.', 'errors' => ['no_free_jobs' => 'No more free Jobs left']], 422);
         }
@@ -77,22 +72,12 @@ class InitiateBidController extends Controller
         $email = $request->email;
         $jobName = $request->jobName;
 
-        $this->logData($customerName, 79);
-        $this->logData($phone, 80);
-        $this->logData($email, 81);
-        $this->logData($jobName, 82);
-
         // find customer
         $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
-
-        $this->logData($customerExists['error']);
-        $this->logData($customerExists['customer']);
-
 
         if ($customerExists['error']) {
             if ($customerExists['errorText'] == 'Create a new customer') {
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
-                $this->logData($customer, 91);
                 if ($customer == null) {
                     return redirect()->back()->with(
                         'error',
@@ -115,13 +100,10 @@ class InitiateBidController extends Controller
             $jobName = $this->jobName($customer);
         }
 
-//        $this->logData($jobName);
 
         // create a bid
         $job = $this->createBid($customer->id, $jobName);
         $job_id = $job->id;
-
-//        $this->logData($job);
 
         // with error
         if ($job_id == null) {
@@ -132,7 +114,6 @@ class InitiateBidController extends Controller
             );
         }
 
-//        $this->logData($job_id);
 
         $contractor->subtractFreeJob();
 
@@ -143,12 +124,6 @@ class InitiateBidController extends Controller
 //        return redirect('/#/bids');
         return "Bid was created";
 
-    }
-
-    public function logData ($data, $num = 0) {
-        $f = fopen('logs.txt', 'a+');
-        fwrite($f, "$num:\t$data\n");
-        fclose($f);
     }
 
     /**
@@ -221,7 +196,6 @@ class InitiateBidController extends Controller
         // is already in the database
         $customer = User::where('email', $email)->orWhere('phone', $phone)->first();
 
-        $this->logData($customer, 214);
 
         // if a user exists then I want to check if the name that was entered by the contractor matches
         // the name of the customer because the names entered should be the same. if the name is different
