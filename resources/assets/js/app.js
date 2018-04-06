@@ -54,6 +54,7 @@ window.GeneralContractor = new GeneralContractor(Spark.state.user);
 window.SubContractor = new SubContractor(Spark.state.user);
 window.Customer = new Customer(Spark.state.user);
 window.TaskUtil = new TaskUtil();
+window.autocomplete = {};
 
 require('./components/bootstrap');
 

@@ -7,7 +7,7 @@ export default {
   // /Set up an express account with our stripe platform
   methods: {
     connectWithStripe() {
-      let connectLink = "https://connect.stripe.com/express/oauth/authorize?client_id=" + Spark.stripeClientId +"&state={STATE_VALUE}";
+      let connectLink = "https://connect.stripe.com/express/oauth/authorize?client_id=" + Spark.stripeClientId +"&state="+ this.$route.path +"";
       window.location = connectLink;
     }
   }
