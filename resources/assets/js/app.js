@@ -25,6 +25,9 @@ Vue.use(Toasted, {
   theme: 'bubble',
 })
 
+import VuePaginate from 'vue-paginate'
+Vue.use(VuePaginate)
+
 import {
   store
 } from './vuex/index';
