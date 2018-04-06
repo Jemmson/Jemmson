@@ -297,3 +297,32 @@ body {
 .job-name {
   font-size: 2.5rem;
 }
+
+.paginate-links {
+  padding-left: 0px;
+  li {
+    list-style-type: none;
+    display: inline-block;
+    margin: 0 10px;
+  }
+  user-select: none;
+  a {
+    cursor: pointer;
+  }
+  li.active a {
+    font-weight: bold;
+  }
+  li.next:before {
+    content: ' | ';
+    margin-right: 13px;
+    color: #ddd;
+  }
+  li.disabled a {
+    color: #ccc;
+    cursor: no-drop;
+  }
+}
+
+.paginated {
+  padding-left: 0;
+}
