@@ -84,8 +84,10 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');
     Route::post('/stripe/express/task/payment', 'StripeController@sendExpressTaskPayment');    
     
+    
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
+    Route::delete('/stripe/customer/card', 'StripeController@deleteCard');    
 }
 );
 Route::group(['middleware' => ['auth']], function () {
