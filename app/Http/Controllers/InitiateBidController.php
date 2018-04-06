@@ -55,18 +55,13 @@ class InitiateBidController extends Controller
         // this link will then redirect them to the bid page
 
         $this->validate($request, [
-            'email' => 'required_without:phone|email',
-            'phone' => 'required_without:email|min:10|max:14',
+            'email' => 'required|email',
+            'phone' => 'required|min:10|max:14',
             'customerName' => 'required',
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
 
         $contractor = Auth::user()->contractor()->first();
-
-        $this->logData($contractor, 65);
-
-        $this->logData($contractor->numberOfJobsLeft(), 67);
-        $this->logData($contractor->isSubscribed(), 68);
 
         if (!$contractor->hasMoreFreeJobs() && !$contractor->isSubscribed()) {
             return response()->json(['message' => 'No more free Jobs left.', 'errors' => ['no_free_jobs' => 'No more free Jobs left']], 422);
@@ -77,22 +72,12 @@ class InitiateBidController extends Controller
         $email = $request->email;
         $jobName = $request->jobName;
 
-        $this->logData($customerName, 79);
-        $this->logData($phone, 80);
-        $this->logData($email, 81);
-        $this->logData($jobName, 82);
-
         // find customer
         $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
-
-        $this->logData($customerExists['error']);
-        $this->logData($customerExists['customer']);
-
 
         if ($customerExists['error']) {
             if ($customerExists['errorText'] == 'Create a new customer') {
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
-                $this->logData($customer, 91);
                 if ($customer == null) {
                     return redirect()->back()->with(
                         'error',
