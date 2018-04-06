@@ -22,35 +22,49 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4" v-for="bid in sBids" v-bind:key="bid.id">
-                <div class="panel">
-                    <div class="panel-body">
-                        <div class="col-xs-12">
-                            <h4>
-                                <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
-                            </h4>
-                            <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
-                        </div>
-                        <div class="col-xs-12">
-                            <p>
-                                <i class="fas fa-clock icon"></i>
-                                <label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
-                                <span class="right-label">
-                                    <i class="fas fa-money-bill-alt icon"></i>
-                                    <label for="job-price" class="job-price">${{ bid.bid_price }}</label>
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="row">
+            <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated">
+                <div class="col-sm-12 col-md-4" v-for="bid in paginated('sBids')" v-bind:key="bid.id">
+                    <div class="panel">
+                        <div class="panel-body">
                             <div class="col-xs-12">
-                                <span class="primary-action-btn">
-                                    <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
-                                    <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">ReviewBid{{ bid.id }}</router-link>
-                                </span>
+                                <h4>
+                                    <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
+                                </h4>
+                                <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
+                            </div>
+                            <div class="col-xs-12">
+                                <p>
+                                    <i class="fas fa-clock icon"></i>
+                                    <label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
+                                    <span class="right-label">
+                                        <i class="fas fa-money-bill-alt icon"></i>
+                                        <label for="job-price" class="job-price">${{ bid.bid_price }}</label>
+                                    </span>
+                                </p>
                             </div>
                         </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <span class="primary-action-btn">
+                                        <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
+                                        <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">ReviewBid{{ bid.id }}</router-link>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </paginate>
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <center>
+                            <h4>
+                                <paginate-links for="sBids" :limit="2" :show-step-links="true">
+                                </paginate-links>
+                            </h4>
+                        </center>
                     </div>
                 </div>
             </div>
@@ -71,7 +85,8 @@
                 sBids: [],
                 showBid: false,
                 bidIndex: 0,
-                searchTerm: ''
+                searchTerm: '',
+                paginate: ['sBids']
             }
         },
         watch: {
@@ -83,11 +98,14 @@
         methods: {
             search() {
                 this.sBids = this.bids.filter((bid) => {
-                    if (this.searchTerm == '') {
+                    if (this.searchTerm == '' || this.searchTerm.length <= 1) {
                         return true;
                     }
                     return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
-                })
+                });
+                if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
+                    this.$refs.paginator.goToPage(1);
+                }
             },
             getLabelClass(status) {
                 return Format.statusLabel(status);

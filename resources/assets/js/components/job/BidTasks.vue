@@ -1,192 +1,208 @@
 <template>
   <!-- /all tasks of a bid -->
   <div>
-    <div class="col-md-4" v-for="jobTask in bid.job_tasks" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
+    <paginate ref="paginator" name="bid.job_tasks" :list="bid.job_tasks" :per="6" class="paginated">
+      <div class="col-md-4" v-for="jobTask in paginated('bid.job_tasks')" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
+        <div class="panel">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-12 form-group">
+                <!-- / status -->
+                <h4>
+                  <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
+                    {{ status(jobTask.status) }}
+                  </label>
+                </h4>
+                <h4 class="task-name">
+                  {{ jobTask.task.name }}
+                </h4>
+              </div>
+              <!-- / quick info secion date/price -->
+              <div class="col-xs-6 form-group">
+                <i class="fas fa-money-bill-alt icon"></i>
+                <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.cust_final_price)"
+                  @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
+                <label v-if="isCustomer || !showTaskPriceInput()">
+                  {{taskCustFinalPrice(jobTask.cust_final_price)}} </label>
+              </div>
+              <!-- / end total price -->
+              <div class="col-xs-6 form-group text-right" v-if="isContractor">
+                <i class="fas fa-user icon" style="margin-right: 3.5px;"></i>
+                <!-- <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.sub_final_price)"
+                              @blur="updateSubTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)"> -->
+                <label> {{taskCustFinalPrice(jobTask.sub_final_price)}} </label>
+              </div>
+              <!-- / end total task price -->
+
+              <div class="col-xs-12 form-group" v-if="isContractor">
+                <i class="fas fa-clock icon"></i>
+                <input type="date" class="form-control form-control-date" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
+                  @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
+                <label v-if="isCustomer || !showTaskStartDate()">
+                  {{prettyDate(jobTask.start_date)}} </label>
+              </div>
+              <!-- / end quick info section -->
+
+              <div class="col-xs-12">
+                <div class="divider2"></div>
+              </div>
+
+              <section class="col-xs-12" style="margin-bottom: 8px;">
+                <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask)">
+                  <i class="fas fa-map-marker icon"></i>
+                  {{ location(jobTask) }}
+                </a>
+                <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </section>
+              <!-- / end address section -->
+
+              <div class="col-xs-12" v-if="jobTask.details != null">
+                <div class="divider2"></div>
+              </div>
+
+              <section class="col-xs-12" v-if="jobTask.details != null">
+                <p>
+                  {{ jobTask.details }}
+                </p>
+              </section>
+              <!-- / end details section -->
+
+            </div>
+
+          </div>
+          <div class="panel-footer">
+            <div class="row" v-if="showPanelActions(jobTask.status)">
+              <center>
+                <div class="col-xs-4" v-if="isContractor">
+                  <button class="btn btn-secondary" @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
+                    <i class="fas fa-users fa-2x"></i>
+                  </button>
+                </div>
+                <div class="col-xs-4" v-if="isContractor">
+                  <button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
+                    <i class="fas fa-user-plus fa-2x"></i>
+                  </button>
+                </div>
+                <div class="col-xs-4" v-if="isContractor">
+                  <button class="btn btn-secondary" @click.prevent="openTaskActions(jobTask.id)">
+                    <i class="fas fa-cogs fa-2x"></i>
+                  </button>
+                </div>
+
+                <div class="col-xs-4" v-if="isCustomer">
+                  <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                    Deny
+                  </button>
+                </div>
+                <div class="col-xs-4" v-if="isCustomer">
+                  <button class="btn btn-success" v-if="showPayCashForTaskBtn(jobTask)" @click.prevent="paidWithCashTask(jobTask)" :disabled="disabled.payCash">
+                    <span v-if="disabled.payCash">
+                      <i class="fa fa-btn fa-spinner fa-spin"></i>
+                    </span>
+                    Cash
+                  </button>
+                </div>
+                <div class="col-xs-4" v-if="isCustomer">
+                  <button class="btn btn-success" v-if="showPayForTaskBtn(jobTask)" @click.prevent="payForTask(jobTask)" :disabled="disabled.pay">
+                    <span v-if="disabled.pay">
+                      <i class="fa fa-btn fa-spinner fa-spin"></i>
+                    </span>
+                    Pay
+                  </button>
+                </div>
+
+                <transition-group name="slide-fade" v-if="isContractor">
+                  <div class="col-xs-12 hidden" :id="'task-divider-' + jobTask.id" :key="1">
+                    <div class="divider2"></div>
+                  </div>
+
+                  <!-- / task options -->
+                  <div class="col-xs-12 hidden" :id="'task-options-' + jobTask.id" :key="2">
+                    <div class="col-xs-4">
+                      <!-- Rounded switch -->
+                      <span class="stripe-label" v-if="showStripeToggle(jobTask)">Use Stripe</span>
+                      <label v-if="showStripeToggle(jobTask)" class="switch">
+                        <input :id="'toggle-stripe-' + jobTask.id" type="checkbox" v-model="jobTask.stripe" @click="toggleStripePaymentOption(jobTask)">
+                        <span class="slider round"></span>
+                      </label>
+                    </div>
+                    <div class="col-xs-4">
+                      <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                        Deny
+                      </button>
+                      <button class="btn btn-warning" v-if="showReopenBtn(jobTask)" @click="reopenTask(jobTask)" :disabled="disabled.reopen">
+                        <span v-if="disabled.reopen">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Reopen
+                      </button>
+                      <button class="btn btn-danger" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
+                        <span v-if="disabled.deleteTask">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Delete
+                      </button>
+                    </div>
+                    <div class="col-xs-4">
+                      <button class="btn btn-success" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)" :disabled="disabled.finished">
+                        <span v-if="disabled.finished">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Finished
+                      </button>
+                      <button class="btn btn-success" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
+                        <span v-if="disabled.approve">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Approve
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 hidden" :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved" :key="3">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Sub</th>
+                          <th>Price</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
+                          <td>{{ bid.contractor.name }}</td>
+                          <td>${{ bid.bid_price }}</td>
+                          <td>
+                            <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="button btn btn-sm btn-success"
+                              :disabled="disabled.accept">
+                              <span v-if="disabled.accept">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                              </span>
+                              Accept
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /end col-md-6 -->
+                </transition-group>
+              </center>
+            </div>
+          </div>
+        </div>
+      </div>
+    </paginate>
+    <div class="col-md-12">
       <div class="panel">
         <div class="panel-body">
-          <div class="row">
-            <div class="col-xs-12 form-group">
-              <!-- / status -->
-              <h4>
-                <label for="task-status" class="label" :class="getLabelClass(jobTask.status)">
-                  {{ status(jobTask.status) }}
-                </label>
-              </h4>
-              <h4 class="task-name">
-                {{ jobTask.task.name }}
-              </h4>
-            </div>
-            <!-- / quick info secion date/price -->
-            <div class="col-xs-6 form-group">
-              <i class="fas fa-money-bill-alt icon"></i>
-              <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.cust_final_price)"
-                @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
-              <label v-if="isCustomer || !showTaskPriceInput()">
-                {{taskCustFinalPrice(jobTask.cust_final_price)}} </label>
-            </div>
-            <!-- / end total price -->
-            <div class="col-xs-6 form-group text-right" v-if="isContractor">
-              <i class="fas fa-user icon" style="margin-right: 3.5px;"></i>
-              <!-- <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.sub_final_price)"
-                              @blur="updateSubTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)"> -->
-              <label> {{taskCustFinalPrice(jobTask.sub_final_price)}} </label>
-            </div>
-            <!-- / end total task price -->
-
-            <div class="col-xs-12 form-group" v-if="isContractor">
-              <i class="fas fa-clock icon"></i>
-              <input type="date" class="form-control form-control-date" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
-                @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
-              <label v-if="isCustomer || !showTaskStartDate()">
-                {{prettyDate(jobTask.start_date)}} </label>
-            </div>
-            <!-- / end quick info section -->
-
-            <div class="col-xs-12">
-              <div class="divider2"></div>
-            </div>
-
-            <section class="col-xs-12" style="margin-bottom: 8px;">
-              <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask)">
-                <i class="fas fa-map-marker icon"></i>
-                {{ location(jobTask) }}
-              </a>
-              <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)"><i class="fas fa-edit"></i></button>
-            </section>
-            <!-- / end address section -->
-
-            <div class="col-xs-12" v-if="jobTask.details != null">
-              <div class="divider2"></div>
-            </div>
-
-            <section class="col-xs-12" v-if="jobTask.details != null">
-              <p>
-                {{ jobTask.details }}
-              </p>
-            </section>
-            <!-- / end details section -->
-
-          </div>
-
-        </div>
-        <div class="panel-footer">
-          <div class="row" v-if="showPanelActions(jobTask.status)">
-            <center>
-              <div class="col-xs-4" v-if="isContractor">
-                <button class="btn btn-secondary" @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
-                  <i class="fas fa-users fa-2x"></i>
-                </button>
-              </div>
-              <div class="col-xs-4" v-if="isContractor">
-                <button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
-                  <i class="fas fa-user-plus fa-2x"></i>
-                </button>
-              </div>
-              <div class="col-xs-4" v-if="isContractor">
-                <button class="btn btn-secondary" @click.prevent="openTaskActions(jobTask.id)">
-                  <i class="fas fa-cogs fa-2x"></i>
-                </button>
-              </div>
-
-              <div class="col-xs-4" v-if="isCustomer">
-                <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
-                  Deny
-                </button>
-              </div>
-              <div class="col-xs-4" v-if="isCustomer">
-                <button class="btn btn-success" v-if="showPayCashForTaskBtn(jobTask)" @click.prevent="paidWithCashTask(jobTask)" :disabled="disabled.payCash">
-                  <span v-if="disabled.payCash">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
-                  Cash
-                </button>
-              </div>
-              <div class="col-xs-4" v-if="isCustomer">
-                <button class="btn btn-success" v-if="showPayForTaskBtn(jobTask)" @click.prevent="payForTask(jobTask)" :disabled="disabled.pay">
-                  <span v-if="disabled.pay">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
-                  Pay
-                </button>
-              </div>
-
-              <transition-group name="slide-fade" v-if="isContractor">
-                <div class="col-xs-12 hidden" :id="'task-divider-' + jobTask.id" :key="1">
-                  <div class="divider2"></div>
-                </div>
-
-                <!-- / task options -->
-                <div class="col-xs-12 hidden" :id="'task-options-' + jobTask.id" :key="2">
-                  <div class="col-xs-4">
-                    <!-- Rounded switch -->
-                    <span class="stripe-label" v-if="showStripeToggle(jobTask)">Use Stripe</span>
-                    <label v-if="showStripeToggle(jobTask)" class="switch">
-                      <input :id="'toggle-stripe-' + jobTask.id" type="checkbox" v-model="jobTask.stripe" @click="toggleStripePaymentOption(jobTask)">
-                      <span class="slider round"></span>
-                    </label>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
-                      Deny
-                    </button>
-                    <button class="btn btn-warning" v-if="showReopenBtn(jobTask)" @click="reopenTask(jobTask)" :disabled="disabled.reopen">
-                      <span v-if="disabled.reopen">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Reopen
-                    </button>
-                    <button class="btn btn-danger" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
-                      <span v-if="disabled.deleteTask">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Delete
-                    </button>
-                  </div>
-                  <div class="col-xs-4">
-                    <button class="btn btn-success" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)" :disabled="disabled.finished">
-                      <span v-if="disabled.finished">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Finished
-                    </button>
-                    <button class="btn btn-success" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
-                      <span v-if="disabled.approve">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Approve
-                    </button>
-                  </div>
-                </div>
-                <div class="col-xs-12 hidden" :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved" :key="3">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Sub</th>
-                        <th>Price</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
-                        <td>{{ bid.contractor.name }}</td>
-                        <td>${{ bid.bid_price }}</td>
-                        <td>
-                          <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="button btn btn-sm btn-success"
-                            :disabled="disabled.accept">
-                            <span v-if="disabled.accept">
-                              <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>
-                            Accept
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!-- /end col-md-6 -->
-              </transition-group>
-            </center>
-          </div>
+          <center>
+            <h4>
+              <paginate-links for="bid.job_tasks" :limit="2" :show-step-links="true">
+              </paginate-links>
+            </h4>
+          </center>
         </div>
       </div>
     </div>
@@ -206,6 +222,7 @@
     },
     data() {
       return {
+        paginate: ['bid.job_tasks'],
         user: '',
         jTask: {},
         message: '',
@@ -236,7 +253,8 @@
         return User.isContractor();
       },
       showSendSubInvite() {
-        if (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.sent') {
+        if (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status ===
+          'bid.sent') {
           return true;
         }
         return false;

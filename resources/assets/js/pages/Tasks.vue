@@ -23,74 +23,88 @@
         </div>
       </div>
       <!-- / end search bar -->
-      <div class="col-sm-12 col-md-6" v-for="bidTask in sTasks" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
-        <div class="panel" v-if="showBid(bidTask)">
-          <div class="panel-body">
-            <div class="col-xs-12">
-              <h4>
-                <label for="job-stats" class="label" :class="getLabelClass(bidTask.job_task.status)">{{ status(bidTask) }}</label>
-              </h4>
-              <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
-            </div>
-            <div class="col-xs-6">
-              <p>
-                Start On:
-                <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
-              </p>
-              <div v-if="showStripeToggle(bidTask.job_task)">
-                <p>
-                  Stripe Payment:
-                </P>
-                <!-- Rounded switch -->
-                <label class="switch">
-                  <input :id="'toggle-stripe-' + bidTask.job_task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.job_task)">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-            </div>
-            <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
-              <label for="details">Task Price:</label>
-              <input type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
-              />
-            </div>
-            <div class="col-xs-6" v-else>
-              <span class="right-label">
-                Accepted Bid Price:
-                <label>${{ bidTask.bid_price }}</label>
-              </span>
-            </div>
-            <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
-              <div class="divider2"></div>
-            </div>
-            <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
-              <p>
-                {{ bidTask.job_task.details }}
-              </p>
-            </div>
-          </div>
-          <div class="panel-footer">
-            <div class="row">
+      <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated">
+        <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
+          <div class="panel" v-if="showBid(bidTask)">
+            <div class="panel-body">
               <div class="col-xs-12">
-                <span class="primary-action-btn">
-                  <div v-if="isBidOpen(bidTask)">
-                    <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
-                      <span v-if="disabled.submit">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Submit
-                    </button>
-                  </div>
-                  <div v-if="showFinishedBtn(bidTask)">
-                    <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
-                      <span v-if="disabled.finished">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
-                      Finished
-                    </button>
-                  </div>
+                <h4>
+                  <label for="job-stats" class="label" :class="getLabelClass(bidTask.job_task.status)">{{ status(bidTask) }}</label>
+                </h4>
+                <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
+              </div>
+              <div class="col-xs-6">
+                <p>
+                  Start On:
+                  <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
+                </p>
+                <div v-if="showStripeToggle(bidTask.job_task)">
+                  <p>
+                    Stripe Payment:
+                  </P>
+                  <!-- Rounded switch -->
+                  <label class="switch">
+                    <input :id="'toggle-stripe-' + bidTask.job_task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.job_task)">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+              <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
+                <label for="details">Task Price:</label>
+                <input type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
+                />
+              </div>
+              <div class="col-xs-6" v-else>
+                <span class="right-label">
+                  Accepted Bid Price:
+                  <label>${{ bidTask.bid_price }}</label>
                 </span>
               </div>
+              <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+                <div class="divider2"></div>
+              </div>
+              <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+                <p>
+                  {{ bidTask.job_task.details }}
+                </p>
+              </div>
             </div>
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-xs-12">
+                  <span class="primary-action-btn">
+                    <div v-if="isBidOpen(bidTask)">
+                      <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
+                        <span v-if="disabled.submit">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Submit
+                      </button>
+                    </div>
+                    <div v-if="showFinishedBtn(bidTask)">
+                      <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
+                        <span v-if="disabled.finished">
+                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Finished
+                      </button>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </paginate>
+      <div class="col-md-12">
+        <div class="panel">
+          <div class="panel-body">
+            <center>
+              <h4>
+                <paginate-links for="sTasks" :limit="2" :show-step-links="true">
+                </paginate-links>
+              </h4>
+            </center>
           </div>
         </div>
       </div>
@@ -108,6 +122,7 @@
     },
     data() {
       return {
+        paginate: ['sTasks'],
         address: '',
         location: {
           location: []
@@ -133,11 +148,14 @@
       },
       search() {
         this.sTasks = this.tasks.filter((task) => {
-          if (this.searchTerm == '') {
+          if (this.searchTerm == '' || this.searchTerm.length <= 1) {
             return true;
           }
           return task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
-        })
+        });
+        if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
+            this.$refs.paginator.goToPage(1);
+        }
       },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted

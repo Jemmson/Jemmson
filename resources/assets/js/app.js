@@ -25,6 +25,9 @@ Vue.use(Toasted, {
   theme: 'bubble',
 })
 
+import VuePaginate from 'vue-paginate'
+Vue.use(VuePaginate)
+
 import {
   store
 } from './vuex/index';
@@ -109,9 +112,12 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    $('.navbar-collapse').collapse('hide');
+  $('.navbar-collapse').collapse('hide');
   console.log(to.path);
   if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
+    if (Spark.state.user === null) {
+      location.href = '/login';
+    }
     const customer = Spark.state.user.customer;
     const contractor = Spark.state.user.contractor;
     if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {

@@ -320,4 +320,19 @@ class StripeController extends Controller
 
         return response()->json(['message' => 'success'], 200);
     }
+
+    public function deleteCard()
+    {
+        $user = Auth::user();
+
+        $cards = \Stripe\Customer::retrieve($user->stripe_id)->sources->all(array(
+        'limit'=> 1, 'object' => 'card'));
+        $card = $cards->data[0];
+        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $response = $customer->sources->retrieve($card->id)->delete();
+        
+        $user->deleteCard();
+        
+        return $response;
+    }
 }

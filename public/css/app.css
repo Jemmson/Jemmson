@@ -7770,3 +7770,33 @@ body {
 .job-name {
   font-size: 2.5rem;
 }
+.paginate-links {
+  padding-left: 0px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.paginate-links li {
+  list-style-type: none;
+  display: inline-block;
+  margin: 0 10px;
+}
+.paginate-links a {
+  cursor: pointer;
+}
+.paginate-links li.active a {
+  font-weight: bold;
+}
+.paginate-links li.next:before {
+  content: ' | ';
+  margin-right: 13px;
+  color: #ddd;
+}
+.paginate-links li.disabled a {
+  color: #ccc;
+  cursor: no-drop;
+}
+.paginated {
+  padding-left: 0;
+}

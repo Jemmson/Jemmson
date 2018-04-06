@@ -55,8 +55,8 @@ class InitiateBidController extends Controller
         // this link will then redirect them to the bid page
 
         $this->validate($request, [
-            'email' => 'required_without:phone|email',
-            'phone' => 'required_without:email|min:10|max:14',
+            'email' => 'required|email',
+            'phone' => 'required|min:10|max:14',
             'customerName' => 'required',
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);

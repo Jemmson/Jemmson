@@ -107,12 +107,19 @@
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">
                         <button type="submit" class="btn btn-primary" @click.prevent="update" :disabled="form.busy">
-                            <span v-if="form.busy">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>Updating
+                            <span v-show="form.busy">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
-
-                            <span v-else>
+                            <span>
                                 Update
+                            </span>
+                        </button>
+                        <button class="btn btn-danger" v-if="user.stripe_id !== null" @click.prevent="deleteCard" :disabled="form.busy">
+                            <span v-show="form.busy">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>
+                            <span>
+                                Delete
                             </span>
                         </button>
                     </div>
