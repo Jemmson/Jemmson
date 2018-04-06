@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- / end search bar -->
-      <paginate name="sTasks" :list="sTasks" :per="4" class="paginated">
+      <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated">
         <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id">
           <div class="panel" v-if="showBid(bidTask)">
             <div class="panel-body">
@@ -148,11 +148,14 @@
       },
       search() {
         this.sTasks = this.tasks.filter((task) => {
-          if (this.searchTerm == '') {
+          if (this.searchTerm == '' || this.searchTerm.length <= 1) {
             return true;
           }
           return task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
-        })
+        });
+        if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
+            this.$refs.paginator.goToPage(1);
+        }
       },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted

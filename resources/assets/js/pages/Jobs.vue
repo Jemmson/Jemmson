@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <paginate name="sBids" :list="sBids" :per="6" class="paginated">
+            <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated">
                 <div class="col-sm-12 col-md-4" v-for="bid in paginated('sBids')" v-bind:key="bid.id">
                     <div class="panel">
                         <div class="panel-body">
@@ -98,11 +98,14 @@
         methods: {
             search() {
                 this.sBids = this.bids.filter((bid) => {
-                    if (this.searchTerm == '') {
+                    if (this.searchTerm == '' || this.searchTerm.length <= 1) {
                         return true;
                     }
                     return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
-                })
+                });
+                if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
+                    this.$refs.paginator.goToPage(1);
+                }
             },
             getLabelClass(status) {
                 return Format.statusLabel(status);
