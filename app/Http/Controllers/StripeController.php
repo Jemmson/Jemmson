@@ -12,6 +12,7 @@ use Log;
 
 use App\StripeExpress;
 use App\Task;
+use App\JobTask;
 use App\User;
 
 use App\Notifications\CustomerUnableToSendPaymentWithStripe;
