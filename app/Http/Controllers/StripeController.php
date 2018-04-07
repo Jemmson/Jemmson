@@ -132,8 +132,8 @@ class StripeController extends Controller
         ]);
         
         // get modals and relevant variables 
-        $task = Task::find($request->id);
-        $jobTask = $task->jobTask()->first();
+        $jobTask = JobTask::find($request->id);
+        $task = $jobTask->task()->first();
         $sub_contractor_id = $jobTask->contractor_id;
         $general_contractor_id = $task->contractor_id;
 
@@ -299,7 +299,8 @@ class StripeController extends Controller
         ]);
         
         // get modals and relevant variables 
-        $task = Task::find($request->id);
+        $jobTask = JobTask::find($request->id);
+        $task = $jobTask->task()->first();
         $jobTask = $task->jobTask()->first();
         $sub_contractor_id = $jobTask->contractor_id;
         $general_contractor_id = $task->contractor_id;
