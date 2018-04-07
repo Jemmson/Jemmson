@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\DB;
 use App\Services\RandomPasswordService;
 use App\Notifications\BidInitiated;
 use App\Services\SanatizeService;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
+use RuntimeException;
+
+
 
 class InitiateBidController extends Controller
 {
@@ -53,6 +57,8 @@ class InitiateBidController extends Controller
 
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
+
+        Bugsnag::notifyException(new RuntimeException("Test error"));
 
         $this->validate($request, [
             'email' => 'required|email',
