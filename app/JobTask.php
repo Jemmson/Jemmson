@@ -43,6 +43,27 @@ class JobTask extends Model
         return $this->hasMany(BidContractorJobTask::class, 'job_task_id');
     }
 
+    /**
+     * 
+     *
+     * @param String $id
+     * @return void
+     */
+    public function setStripeTransferId(String $id)
+    {
+        if ($id === null || $id === '' || $id === ' ') {
+            return;
+        } 
+        
+        $this->stripe_transfer_id = $id;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Update JobTask: ' . $e->getMessage());
+        }
+    }
+
     public function updateLocation($request)
     {
         if ($this->location_id === null) {
