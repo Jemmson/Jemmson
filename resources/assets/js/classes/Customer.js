@@ -123,6 +123,28 @@ export default class Customer {
     })
   }
 
+/**
+ * Pay for a all payable tasks
+ *
+ * @param {Object} job
+ */
+  async payAllPayableTasks(job, disabled) {
+    console.log('payAllPayableTasks', job);
+    disabled.payAll = true;
+
+    try {
+      const data = await axios.post('/stripe/customer/pay/tasks', job);
+      User.emitChange('bidUpdated');
+      Vue.toasted.success('Paid For All Payable Tasks');
+      disabled.payAll = false;
+    } catch (error) {
+      error = error.response.data;
+      Vue.toasted.error(error.message);
+      disabled.payAll = false;
+    }
+
+  }
+
   /**
    * Pay for a task
    *

@@ -2,10 +2,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <!-- / shouldn't need this -->
-                <!-- /<button class="btn btn-lg btn-primary refresh" @click="reloadPage()">Refresh Page</button> -->
-                <div class="panel job-body">
-                    <!-- <div class="panel-heading">Dashboard</div> -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">Job Details</div>
                     <div class="panel-body">
                         <!-- /show all bid information -->
                         <bid-details :bid="bid">
@@ -27,6 +25,9 @@
                 </div>
             </div>
 
+            <!-- / show all completed tasks-->
+            <completed-tasks :bid="bid">
+            </completed-tasks>
 
             <!-- /show all tasks associated to this bid -->
             <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
@@ -183,14 +184,3 @@
     },
   }
 </script>
-
-<style scoped>
-    .job-body {
-        /* /border: thin solid black; */
-        /* border-radius: 10px; */
-    }
-
-    .panel-body {
-
-    }
-</style>
