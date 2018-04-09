@@ -1,8 +1,8 @@
 <template>
   <!-- /all tasks of a bid -->
-  <div>
-    <paginate ref="paginator" name="bid.job_tasks" :list="bid.job_tasks" :per="6" class="paginated">
-      <div class="col-md-4" v-for="jobTask in paginated('bid.job_tasks')" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
+  <div v-if="show">
+    <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated">
+      <div class="col-md-4" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
         <div class="panel">
           <div class="panel-body">
             <div class="row">
@@ -199,7 +199,7 @@
         <div class="panel-body">
           <center>
             <h4>
-              <paginate-links for="bid.job_tasks" :limit="2" :show-step-links="true">
+              <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
               </paginate-links>
             </h4>
           </center>
@@ -222,7 +222,7 @@
     },
     data() {
       return {
-        paginate: ['bid.job_tasks'],
+        paginate: ['jobTasks'],
         user: '',
         jTask: {},
         message: '',
@@ -240,6 +240,12 @@
       }
     },
     computed: {
+      jobTasks() {
+        return User.getAllUnpaidTasks(this.bid.job_tasks);
+      },
+      show() {
+        return this.jobTasks.length > 0;
+      },
       taskApproved() {
         return this.jTask.status === 'bid_task.approved_by_customer';
       },
