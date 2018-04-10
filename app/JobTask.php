@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\BidContractorJobTask;
 
+use Log;
+
 
 class JobTask extends Model
 {
@@ -54,7 +56,7 @@ class JobTask extends Model
         if ($id === null || $id === '' || $id === ' ') {
             return;
         } 
-        
+
         $this->stripe_transfer_id = $id;
 
         try {
