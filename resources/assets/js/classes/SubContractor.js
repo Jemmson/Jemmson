@@ -6,11 +6,11 @@ export default class SubContractor {
         this.user = Spark.state.user;
     }
 
-    async toggleStripePaymentOption(jobTask) {
-        // if (User.needsStripe(jobTask)) {
-        //     User.emitChange('bidUpdated');
-        //     return false;
-        // }
+    async toggleStripePaymentOption(jobTask, sub) {
+        if (sub !== undefined && sub && User.needsStripe(jobTask)) {
+            User.emitChange('bidUpdated');
+            return false;
+        }
         try {
             const data = await axios.post('/api/task/togglestripe', jobTask);
             User.emitChange('bidUpdated');
