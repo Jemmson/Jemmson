@@ -123,14 +123,31 @@ export default class Customer {
     })
   }
 
-/**
- * Pay for a all payable tasks
- *
- * @param {Object} job
- */
+  /**
+   * 
+   * @param {object} job 
+   */
+  async paidWithCash(job) {
+
+  }
+
+  /**
+   * Pay for a all payable tasks
+   *
+   * @param {Object} job
+   */
   async payAllPayableTasks(job, disabled) {
     console.log('payAllPayableTasks', job);
     disabled.payAll = true;
+
+    if (User.payWithStripe()) {
+      if (!User.isSignedUpWithStripe()) {
+        console.log('No Stripe Account');
+        Bus.$emit('needsStripe');
+        disabled.payAll = false;
+        return false;
+      }
+    }
 
     try {
       const data = await axios.post('/stripe/customer/pay/tasks', job);
