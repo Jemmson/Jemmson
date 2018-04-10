@@ -22,6 +22,7 @@
                 </button>
             </div>
         </div>
+        <div class="text-right">
         <button v-if="showJobCompletedBtn" class="btn btn-success" @click.prevent="jobCompleted"
                 :disabled="disabled.jobCompleted">
             <span v-if="disabled.jobCompleted">
@@ -29,6 +30,7 @@
             </span>
             Job Completed
         </button>
+        </div>
         <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" :yes="mYes" :no="mNo">
         </modal>
     </div>

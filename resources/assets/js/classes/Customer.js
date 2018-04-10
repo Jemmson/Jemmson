@@ -124,6 +124,45 @@ export default class Customer {
   }
 
   /**
+   * 
+   * @param {object} job 
+   */
+  async paidWithCash(job) {
+
+  }
+
+  /**
+   * Pay for a all payable tasks
+   *
+   * @param {Object} job
+   */
+  async payAllPayableTasks(job, disabled) {
+    console.log('payAllPayableTasks', job);
+    disabled.payAll = true;
+
+    if (User.payWithStripe()) {
+      if (!User.isSignedUpWithStripe()) {
+        console.log('No Stripe Account');
+        Bus.$emit('needsStripe');
+        disabled.payAll = false;
+        return false;
+      }
+    }
+
+    try {
+      const data = await axios.post('/stripe/customer/pay/tasks', job);
+      User.emitChange('bidUpdated');
+      Vue.toasted.success('Paid For All Payable Tasks');
+      disabled.payAll = false;
+    } catch (error) {
+      error = error.response.data;
+      Vue.toasted.error(error.message);
+      disabled.payAll = false;
+    }
+
+  }
+
+  /**
    * Pay for a task
    *
    * @param {Object} jobTask

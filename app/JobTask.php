@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\BidContractorJobTask;
 
+use Log;
+
 
 class JobTask extends Model
 {
@@ -41,6 +43,49 @@ class JobTask extends Model
     public function bidContractorJobTasks()
     {
         return $this->hasMany(BidContractorJobTask::class, 'job_task_id');
+    }
+
+    /**
+     * 
+     *
+     * @param String $id stripe transfer id
+     * @return void
+     */
+    public function paid(String $id)
+    {
+        if ($id === null || $id === '' || $id === ' ') {
+            return;
+        } 
+
+        $this->stripe_transfer_id = $id;
+        $this->status = __("bid_task.customer_sent_payment");
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Update JobTask: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * 
+     *
+     * @param String $id
+     * @return void
+     */
+    public function setStripeTransferId(String $id)
+    {
+        if ($id === null || $id === '' || $id === ' ') {
+            return;
+        } 
+
+        $this->stripe_transfer_id = $id;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Update JobTask: ' . $e->getMessage());
+        }
     }
 
     public function updateLocation($request)
