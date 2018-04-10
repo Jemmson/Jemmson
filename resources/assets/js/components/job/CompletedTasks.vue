@@ -18,35 +18,43 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="task in jobTasks" :key="task.id">
-                            <td>{{ task.task.name }}</td>
+                        <tr v-for="jobTask in payableTasks" :key="jobTask.id">
+                            <td>{{ jobTask.task.name }}</td>
                             <td></td>
-                            <td v-if="isContractor">${{ task.cust_final_price - task.sub_final_price }}</td>
-                            <td v-else>${{ task.cust_final_price }}</td>
-                            <td v-if="isContractor">${{ task.sub_final_price }}</td>
+                            <td v-if="isContractor">${{ jobTask.cust_final_price - jobTask.sub_final_price }}</td>
+                            <td v-else>${{ jobTask.cust_final_price }}</td>
+                            <td v-if="isContractor">${{ jobTask.sub_final_price }}</td>
                             <td v-else>
-                                <button class="btn btn-danger">Decline</button>
+                                <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                                    Deny
+                                </button>
                             </td>
-                            <td v-if="isContractor">
-                                <button class="btn btn-warning">Reopen</button>
+                            <td v-if="showReopenBtn(jobTask)">
+                                <button class="btn btn-warning" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
+                                    <span v-if="disabled.reopen">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                    </span>
+                                    Reopen
+                                </button>
                             </td>
-                            
+
                         </tr>
 
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td>Total: ${{ totalCustomerPrice }}</td>
-                            <td v-if="isContractor">Total: ${{ totalSubPrice }}</td>
-                            <td v-else></td>
-                            <td v-if="isContractor"></td>
-                        </tr>
                         <tr v-if="isContractor">
                             <td></td>
                             <td></td>
+                            <td>Total: ${{ totalCustomerPrice }}</td>
+                            <td>Total: ${{ totalSubPrice }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
                             <td></td>
                             <td></td>
                             <td>
+                                <label v-if="isCustomer">Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
+                            </td>
+                            <td></td>
+                            <td v-if="isContractor">
                                 <label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
                             </td>
                         </tr>
@@ -55,11 +63,23 @@
             </div>
             <div class="panel-footer">
                 <div v-if="isCustomer" class="text-right">
-                    <button class="btn btn-success">Paid With Cash</button>
-                    <button class="btn btn-success">Pay With Stripe</button>
+                    <button class="btn btn-success" @click.prevent="paidWithCash()" :disabled="disabled.payCash">
+                        <span v-if="disabled.payCash">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Paid With Cash
+                    </button>
+                    <button class="btn btn-success" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+                        <span v-if="disabled.payAll">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        Pay With Stripe
+                    </button>
                 </div>
             </div>
         </div>
+            <deny-task-modal v-if="isCustomer" :jobTask="jTask">
+            </deny-task-modal>
     </div>
 </template>
 
@@ -70,13 +90,16 @@
         },
         data() {
             return {
+                jTask: {},
                 disabled: {
                     payAll: false,
+                    reopen: false,
+                    payCash: false,
                 }
             }
         },
         computed: {
-             totalCustomerPrice() {
+            totalCustomerPrice() {
                 let total = 0;
                 if (this.payableTasks !== null) {
                     for (const task of this.payableTasks) {
@@ -111,11 +134,39 @@
             }
         },
         methods: {
+            showDenyBtn(jobTask) {
+                const status = jobTask.status;
+                if (this.isCustomer) {
+                    return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general');
+                }
+                return status === 'bid_task.finished_by_sub';
+            },
+            showReopenBtn(jobTask) {
+                if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
+                        'bid_task.approved_by_general')) {
+                    return true;
+                }
+                return false;
+            },
+            showPayCashForTaskBtn(jobTask) {
+                return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
+                        'bid_task.approved_by_general') &&
+                    User.isCustomer();
+            },
+            openDenyTaskForm(jobTask) {
+                this.jTask = jobTask;
+                $('#deny-task-modal').modal();
+            },
+            paidWithCash() {
+                Customer.paidWithCash(this.bid);
+            },
+            reopenTask(jobTask) {
+                SubContractor.reopenTask(jobTask, this.disabled);
+            },
             payAllPayableTasks() {
-                Customer.payAllPayableTasks(bid, disabled);
+                Customer.payAllPayableTasks(this.bid, this.disabled);
             }
         },
-        mounted() {
-        }
+        mounted() {}
     }
 </script>
