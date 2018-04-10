@@ -263,7 +263,7 @@ class StripeController extends Controller
             return response()->json(['message' => $transfers], 422);
         }
 
-        $this->updateJobTasksWithPaymentId($jobTasks, $transfers);
+        $this->updateJobTasksAsPaid($jobTasks, $transfers);
 
         return response()->json(['message' => "Payment Succesful"], 200);
     }
@@ -465,10 +465,10 @@ class StripeController extends Controller
      * @param Array $transfers
      * @return void
      */
-    private function updateJobTasksWithPaymentId(Collection $jobTasks, Array $transfers)
+    private function updateJobTasksAsPaid(Collection $jobTasks, Array $transfers)
     {
         foreach ($jobTasks as $jobTask) {
-            $jobTask->setStripeTransferId($transfers[$jobTask->id]);
+            $jobTask->paid($transfers[$jobTask->id]);
         }
     }
 

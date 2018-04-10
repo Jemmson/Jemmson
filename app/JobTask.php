@@ -48,6 +48,28 @@ class JobTask extends Model
     /**
      * 
      *
+     * @param String $id stripe transfer id
+     * @return void
+     */
+    public function paid(String $id)
+    {
+        if ($id === null || $id === '' || $id === ' ') {
+            return;
+        } 
+
+        $this->stripe_transfer_id = $id;
+        $this->status = __("bid_task.customer_sent_payment");
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Update JobTask: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * 
+     *
      * @param String $id
      * @return void
      */
