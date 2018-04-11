@@ -48,9 +48,9 @@
               </div>
 
               <section class="col-xs-12" style="margin-bottom: 8px;">
-                <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask)">
+                <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, bid)">
                   <i class="fas fa-map-marker icon"></i>
-                  {{ location(jobTask) }}
+                  {{ location(jobTask, bid) }}
                 </a>
                 <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
                   <i class="fas fa-edit"></i>
@@ -325,15 +325,25 @@
       acceptSubBidForTask(bid, jobTask) {
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled);
       },
-      location(jobTask) {
+      location(jobTask, bid) {
         const task_location = jobTask.location_id;
         const job_location = this.bid.location_id;
+        console.log("task_location: " + task_location)
+        console.log("job_location: " + job_location)
         if (task_location === null && job_location === null) {
           return 'No Address Set Yet';
-        } else if (task_location === null && job_location !== null) {
-          return 'Default Adress';
-        } else {
-          return jobTask.location.address_line_1;
+        } else if (task_location !== null) {
+          return jobTask.location.address_line_1 + " " +
+            jobTask.location.address_line_2 + " " +
+            jobTask.location.city + " " +
+            jobTask.location.state + " " +
+            jobTask.location.zip;
+        } else if (job_location !== null) {
+          return bid.location.address_line_1 + " " +
+            bid.location.address_line_2 + " " +
+            bid.location.city + " " +
+            bid.location.state + " " +
+            bid.location.zip;
         }
       },
       prettyDate(date) {
