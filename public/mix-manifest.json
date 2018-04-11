@@ -1,6 +1,8 @@
 {
-  "/js/app.js": "/js/app.998424be9353f5c1d131.js",
-  "/mix.js": "/mix.e5d90071c074bc7b280e.js",
-  "/css/app.css": "/css/app.fdddbcf697e7072693cb30d2e08ee08b.css",
-  "/css/nav.css": "/css/nav.d41d8cd98f00b204e9800998ecf8427e.css"
+  "/js/app.js": "/js/app.js",
+  "/mix.js": "/mix.js",
+  "/css/app.css": "/css/app.css",
+  "/css/nav.css": "/css/nav.css",
+  "/css/home.css": "/css/home.css",
+  "/css/welcome.css": "/css/welcome.css"
 }
