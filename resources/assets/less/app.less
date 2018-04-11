@@ -1,9 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "./../../../node_modules/bootstrap/less/bootstrap";
-
 // @import "./spark/spark";
 @import "./../../../vendor/laravel/spark/resources/assets/less/spark";
-
 @import "./model.less";
 @import "./toggle.less";
 @import "./stripe/buttons.less";
@@ -13,8 +11,9 @@ html {
 }
 
 body {
-  background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
-  font-family: 'Roboto', sans-serif;
+  //background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
+  //font-family: 'Roboto', sans-serif;
+  background-color: white;
 }
 
 .icon {
@@ -43,11 +42,11 @@ body {
   font-weight: 900;
   font-size: 2rem;
   margin: 16px 0px 16px 0px;
-  
+
 }
 
 .bid-task-price {
-   //width: 40%;
+  //width: 40%;
   // float: right;
 }
 
@@ -92,21 +91,22 @@ body {
 .slide-fade-enter-active {
   transition: all .5s ease;
 }
+
 .slide-fade-leave-active {
   transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
+
 .slide-fade-enter
-/* .slide-fade-leave-active below version 2.1.8 */ {
+  /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(20px);
   opacity: 0;
 }
 
 .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
+  /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(-20px);
   opacity: 0;
 }
-
 
 .fade-enter-active, .fade-leave-active {
   transition-property: opacity;
@@ -186,17 +186,17 @@ body {
 }
 
 .form-control-date {
-    display: inline-block;
-    width: 94%;
-    padding-left: 6px;
-    padding-right: 0px;
+  display: inline-block;
+  width: 94%;
+  padding-left: 6px;
+  padding-right: 0px;
 }
 
 .form-control-text {
-    display: inline-block; 
-    width: 75%;
-    padding-left: 6px;
-    padding-right: 0px;
+  display: inline-block;
+  width: 75%;
+  padding-left: 6px;
+  padding-right: 0px;
 }
 
 .divider2 {
@@ -213,25 +213,73 @@ body {
 
 .home-page-wrapper {
   display: grid;
-  grid-template-columns: 50px repeat(2, 1fr) 50px;
-  grid-gap: 1rem;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(4, 300px);
+  //grid-gap: 1rem;
 }
 
 .home-page-initiate-bid {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  display: grid;
+  grid-template-rows: 75px 225px;
+}
+
+.home-page-invoices {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  background-color: rgba(214, 207, 146, 0.73);
+  display: grid;
+  grid-template-rows: 75px 225px;
+}
+
+.home-page-task {
+  grid-row-start: 3;
+  grid-row-end: 4;
+  display: grid;
+  grid-template-rows: 75px 225px;
+}
+
+.beige {
+  background-color: rgba(214, 207, 146, 0.73);
+}
+
+.blue {
+  background-color: #3275926b;
+}
+
+.home-page-powered-by {
+  grid-row-start: 4;
+  grid-row-end: 5;
+  display: grid;
+  grid-template-rows: 75px 225px;
+}
+
+.powered-by-content {
+  display:grid;
+  grid-template-columns: 30px 1fr 1fr 30px
+}
+
+.powered-by-content a {
   grid-column-start: 2;
   grid-column-end: 3;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.powered-by-content img {
+  grid-column-start: 3;
+  grid-column-end: 4;
+}
+
+.create-invoices {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .home-page-bid {
   grid-column-start: 3;
   grid-column-end: 4;
-}
-
-.home-page-task {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
 }
 
 .home-page-past-invoices {
@@ -325,4 +373,12 @@ body {
 
 .paginated {
   padding-left: 0;
+}
+
+.navbar {
+  height: 55px
+}
+
+img {
+  margin-bottom: auto;
 }
