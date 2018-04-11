@@ -333,17 +333,9 @@
         if (task_location === null && job_location === null) {
           return 'No Address Set Yet';
         } else if (task_location !== null) {
-          return jobTask.location.address_line_1 + " " +
-            jobTask.location.address_line_2 + " " +
-            jobTask.location.city + " " +
-            jobTask.location.state + " " +
-            jobTask.location.zip;
+          return jobTask.location.address_line_1;
         } else if (job_location !== null) {
-          return bid.location.address_line_1 + " " +
-            bid.location.address_line_2 + " " +
-            bid.location.city + " " +
-            bid.location.state + " " +
-            bid.location.zip;
+          return bid.location.address_line_1;
         }
       },
       prettyDate(date) {
