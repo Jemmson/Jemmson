@@ -257,7 +257,7 @@ class StripeController extends Controller
             return response()->json(['message' => $charge], 422);
         }
         
-        $transfers = $this->transferPaymentsToContractors($jobTasks, $order);
+        $transfers = $this->transferPaymentsToContractors($jobTasks, $charge->id);
         if (gettype($transfers) === 'string' && true) {
             $this->refundDetachedCharge($charge->id);
             return response()->json(['message' => $transfers], 422);
@@ -345,7 +345,7 @@ class StripeController extends Controller
      * @param String $order
      * @return void
      */
-    private function transferPaymentsToContractors(Collection $jobTasks, String $order)
+    private function transferPaymentsToContractors(Collection $jobTasks, String $chargeId)
     {
         $transfers = [];
         foreach ($jobTasks as $jobTask) {
@@ -370,8 +370,7 @@ class StripeController extends Controller
                         "amount" => $jobTask->sub_final_price * 100,
                         "currency" => "usd",
                         "destination" => $sub_stripeExpress->stripe_user_id,
-                        "transfer_group" => $order,
-                        "description" => $order
+                        "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
                 } catch(\Exception $e) {
@@ -388,8 +387,7 @@ class StripeController extends Controller
                         "amount" => $generalAmount * 100,
                         "currency" => "usd",
                         "destination" => $general_stripeExpress->stripe_user_id,
-                        "transfer_group" => $order,
-                        "description" => $order
+                        "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
                 } catch(\Exception $e) {
