@@ -9,13 +9,23 @@
                 <form class="form-horizontal" role="form">
                     <input type="hidden" name="street_number" id="street_number">
                     <input type="hidden" name="country" id="country">
+                     <!-- Company Name -->
+                    <div class="form-group" :class="{'has-error': form.errors.has('email')}">
+                        <label class="col-md-3 control-label">Update Login Email</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="email" v-model="form.email"
+                                   autofocus required>
+                            <span class="help-block" v-show="form.errors.has('email')">
+                                    {{ form.errors.get('email') }}
+                                </span>
+                        </div>
+                    </div>
                     <!-- Company Name -->
                     <div class="form-group" :class="{'has-error': form.errors.has('company_name')}"
                          v-if="isContractor">
                         <label class="col-md-3 control-label">Company Name</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="company_name" v-model="form.company_name"
-                                   autofocus>
+                            <input type="text" class="form-control" name="company_name" v-model="form.company_name">
                             <span class="help-block" v-show="form.errors.has('company_name')">
                                     {{ form.errors.get('company_name') }}
                                 </span>
@@ -157,46 +167,6 @@
                             </div>
                         </div> -->
                         <!-- </div> -->
-
-                        <h3>Preferred Method of Contact</h3>
-                        <div class="preferred_contact" style="border: solid thin black">
-                            <div class="preferred_contact_input"
-                                 style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
-                                <!-- preferred method of contact -->
-                                <div class="form-group" :class="{'has-error': form.errors.has('email_contact')}">
-                                    <label class="col-md-3 control-label">Email</label>
-
-                                    <div class="col-md-8">
-                                        <input type="checkbox" name="email_contact" v-model="form.email_contact">
-                                        <span class="help-block" v-show="form.errors.has('email_contact')">
-                                                {{ form.errors.get('email_contact') }}
-                                            </span>
-                                    </div>
-                                </div>
-
-                                <div class="form-group" :class="{'has-error': form.errors.has('phone_contact')}">
-                                    <label class="col-md-3 control-label">Phone Call</label>
-
-                                    <div class="col-md-8">
-                                        <input type="checkbox" name="phone_contact" v-model="form.phone_contact">
-                                        <span class="help-block" v-show="form.errors.has('phone_contact')">
-                                                {{ form.errors.get('phone_contact') }}
-                                            </span>
-                                    </div>
-                                </div>
-
-                                <div class="form-group" :class="{'has-error': form.errors.has('sms_text')}">
-                                    <label class="col-md-3 control-label">SMS Text</label>
-
-                                    <div class="col-md-8">
-                                        <input type="checkbox" name="sms_text" v-model="form.sms_text">
-                                        <span class="help-block" v-show="form.errors.has('sms_text')">
-                                                {{ form.errors.get('sms_text') }}
-                                            </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <button type="submit" name="submit" class="btn btn-default btn-primary"
                                 style="margin-top: 1rem" @click.prevent="submitFurtherInfo()"
                                 :disabled="disabled.submit">
@@ -223,6 +193,7 @@
           submit: false
         },
         form: new SparkForm ({
+          email: '',
           company_name: '',
           phone_number: '',
           address_line_1: '',
@@ -320,6 +291,8 @@
     mounted () {
       User.initAutocomplete('route');
       this.form.phone_number = this.user.phone != null ? this.user.phone : '';
+      this.form.email = this.user.email != null ? this.user.email : '';
+      
       Bus.$on('updateFormLocation', (payload) => {
                 this.updateFormLocation(payload);
             });
