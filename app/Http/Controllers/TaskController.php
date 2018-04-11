@@ -725,7 +725,8 @@ class TaskController extends Controller
         $jobTask->cust_final_price = $request->taskPrice;
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
-        $jobTask->details = $request->details;
+        $jobTask->sub_message = $request->sub_message;
+        $jobTask->customer_message = $request->customer_message;
         $jobTask->stripe = $request->useStripe;
         if ($request->start_when_accepted) {
             $jobTask->start_when_accepted = true;

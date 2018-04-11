@@ -58,13 +58,23 @@
               </section>
               <!-- / end address section -->
 
-              <div class="col-xs-12" v-if="jobTask.details != null">
+              <div class="col-xs-12" v-if="showSubMessage(jobTask)">
                 <div class="divider2"></div>
               </div>
 
-              <section class="col-xs-12" v-if="jobTask.details != null">
+              <section class="col-xs-12" v-if="showSubMessage(jobTask)">
                 <p>
-                  {{ jobTask.details }}
+                  {{ jobTask.sub_message }}
+                </p>
+              </section>
+
+              <div class="col-xs-12" v-if="showCustomerMessage(jobTask)">
+                <div class="divider2"></div>
+              </div>
+
+              <section class="col-xs-12" v-if="showCustomerMessage(jobTask)">
+                <p>
+                  {{ jobTask.customer_message }}
                 </p>
               </section>
               <!-- / end details section -->
@@ -283,6 +293,14 @@
       }
     },
     methods: {
+      showSubMessage(jobTask) {
+        let msg = jobTask.sub_message;
+        return (msg != null && msg != '' && msg != ' ' && this.isContractor) || (msg != null && msg != '' && msg != ' ' && this.isGeneral);
+      },
+      showCustomerMessage(jobTask) {
+        let msg = jobTask.customer_message;
+        return (msg != null && msg != '' && msg != ' ' && this.isCustomer) || (msg != null && msg != '' && msg != ' ' && this.isGeneral);
+      },
       openUpdateTaskLocation(jobTask) {
         this.jTask = jobTask;
         $('#update-task-location-modal').modal();
