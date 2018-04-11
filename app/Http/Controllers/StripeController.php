@@ -269,6 +269,8 @@ class StripeController extends Controller
         }
 
         $this->updateJobTasksAsPaid($jobTasks, $transfers, $excluded);
+        
+        $job->setJobAsCompleted();
 
         return response()->json(['message' => "Payment Succesful"], 200);
     }
