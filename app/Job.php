@@ -145,6 +145,31 @@ class Job extends Model
         }
     }
 
+    /**
+     * Set job as completed if all child task are paid for
+     *
+     * @return void
+     */
+    public function setJobAsCompleted()
+    {
+        if ($this->getCountOfUnpaidTasks() >= 1) {
+            return;
+        }
+
+        $this->status = __('job.completed');
+
+        try {
+            $this->save();    
+        } catch(\Exception $e) {
+            Log::error('Update Job' . $e->getMessage());
+        }
+    }
+
+    public function getCountOfUnpaidTasks()
+    {
+        return count($this->jobTasks()->where('status', '!=', __('bid_task.customer_sent_payment'))->get());
+    }
+
     public function getArea()
     {
 //        dd($this->location);

@@ -73,6 +73,7 @@
           case 'notifyCustomerOfFinishedBid':
             this.updateModal ('Bid Finished', 'You are about to submit this job bid to the customer,' +
               'you will not be able to edit this bid after its been approved by the customer.' +
+              'Please also make sure to check whether you have accepted the subcontractors you wanted for each task.' +
               ' Click yes to submit or no to cancel.',
               'notifyCustomerOfFinishedBid', 'yes', 'no');
             this.modalCurrentlyOpenFor = 'notifyCustomerOfFinishedBid';

@@ -54,6 +54,7 @@ class HomeController extends Controller
         $this->validate(
             $request,
             [
+                'email' => 'required|email',
                 'phone_number' => 'required|min:10|max:14',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
@@ -116,6 +117,11 @@ class HomeController extends Controller
                 'phone_method_of_contact' => request('phone_contact')
             ]);
         }
+
+        $user = Auth::user();
+        $user->email = $request->email;
+
+        $user->save();
 
         if (empty(session('prevDestination'))) {
             return response()->json('/#/home', 200);

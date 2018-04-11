@@ -13,8 +13,8 @@
                             <th scope="col"></th>
                             <th scope="col">Task Price</th>
                             <th scope="col" v-if="isContractor">Task Price (Sub Contractor)</th>
-                            <th scope="col" v-else></th>
-                            <th scope="col" v-if="isContractor"></th>
+                            <th scope="col" v-else>Exclude From Payment</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,9 +25,7 @@
                             <td v-else>${{ jobTask.cust_final_price }}</td>
                             <td v-if="isContractor">${{ jobTask.sub_final_price }}</td>
                             <td v-else>
-                                <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
-                                    Deny
-                                </button>
+                                <input type="checkbox" name="exclude" :id="'exclude-' + jobTask.id" @click="addJobTaskToExcludedList(jobTask)">
                             </td>
                             <td v-if="showReopenBtn(jobTask)">
                                 <button class="btn btn-warning" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
@@ -37,7 +35,11 @@
                                     Reopen
                                 </button>
                             </td>
-
+                            <td v-else>
+                                <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                                    Deny
+                                </button>
+                            </td>
                         </tr>
 
                         <tr v-if="isContractor">
@@ -51,7 +53,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <label v-if="isCustomer">Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
+                                <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - subtractFromTotal}}</label>
                             </td>
                             <td></td>
                             <td v-if="isContractor">
@@ -91,6 +93,8 @@
         data() {
             return {
                 jTask: {},
+                excluded: {},
+                subtractFromTotal: 0,
                 disabled: {
                     payAll: false,
                     reopen: false,
@@ -153,6 +157,15 @@
                         'bid_task.approved_by_general') &&
                     User.isCustomer();
             },
+            addJobTaskToExcludedList(jobTask) {
+                if (document.getElementById('exclude-' + jobTask.id).checked) {
+                    this.excluded[jobTask.id] = true;
+                    this.subtractFromTotal += jobTask.cust_final_price;
+                } else {
+                    this.excluded[jobTask.id] = false;
+                    this.subtractFromTotal -= jobTask.cust_final_price;
+                }
+            },
             openDenyTaskForm(jobTask) {
                 this.jTask = jobTask;
                 $('#deny-task-modal').modal();
@@ -164,7 +177,7 @@
                 SubContractor.reopenTask(jobTask, this.disabled);
             },
             payAllPayableTasks() {
-                Customer.payAllPayableTasks(this.bid, this.disabled);
+                Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled);
             }
         },
         mounted() {}
