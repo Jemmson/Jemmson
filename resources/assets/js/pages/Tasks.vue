@@ -214,7 +214,7 @@
         return jobTask.contractor_id === User.getId();
       },
       toggleStripePaymentOption(jobTask) {
-        SubContractor.toggleStripePaymentOption(jobTask);
+        SubContractor.toggleStripePaymentOption(jobTask, true);
       },
       finished(bid) {
         SubContractor.finishedTask(bid, this.disabled);

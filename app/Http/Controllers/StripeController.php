@@ -12,11 +12,14 @@ use Log;
 
 use App\StripeExpress;
 use App\Task;
+use App\JobTask;
 use App\User;
+use App\Job;
 
 use App\Notifications\CustomerUnableToSendPaymentWithStripe;
 use App\Notifications\CustomerPaidForTask;
 
+use Illuminate\Database\Eloquent\Collection;
 
 class StripeController extends Controller
 {
@@ -205,6 +208,268 @@ class StripeController extends Controller
         $jobTask->updateStatus(__('bid_task.customer_sent_payment'));
 
         return response()->json([$s_charge, $g_charge], 200);
+    }
+
+    /**
+     * Pay all payable tasks
+     * Adds up the total customer total
+     * Charges that price once
+     * Splits the payment for all general and subs involved with multiple transfers on stripes side
+     *
+     * @param Request $request
+     * @return response
+     */
+    public function payAllPayableTasks(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required' // job id
+        ]);
+
+        $customerId = Auth::user()->stripe_id;
+
+        if ($customerId === null) {
+            return response()->json(['message' => 'No Card On File'], 422);
+        }
+
+        // get all tasks that havent been paid for 
+        $job = Job::find($request->id);
+        $jobTasks = $job->jobTasks()->where('status', 'bid_task.finished_by_general')->orWhere('status', 'bid_task.approved_by_general')->get();
+
+        if (count($jobTasks) < 1) {
+            return response()->json(['message' => 'No Tasks'], 422);
+        }
+
+        // customer total
+        $total = 0;
+        $order = 'job.' . $job->id;
+
+        foreach ($jobTasks as $jobTask) {
+            $total += $jobTask->cust_final_price;
+            $order .= '.' . $jobTask->id;
+        }
+
+        if (!$this->allContractorsHaveExpressConnected($jobTasks)) {
+            return response()->json(['message' => 'Not all contractors have Stripe'], 422);
+        }
+
+        $charge = $this->createDetachedCharge($total, $order, $customerId);
+        if (gettype($charge) === 'string') {
+            return response()->json(['message' => $charge], 422);
+        }
+        
+        $transfers = $this->transferPaymentsToContractors($jobTasks, $order);
+        if (gettype($transfers) === 'string' && true) {
+            $this->refundDetachedCharge($charge->id);
+            return response()->json(['message' => $transfers], 422);
+        }
+
+        $this->updateJobTasksAsPaid($jobTasks, $transfers);
+
+        return response()->json(['message' => "Payment Succesful"], 200);
+    }
+
+    /**
+     * Create a charge with no destination ie it goes to the platform (jemsub)
+     * should be used along with @transferPaymentsToContractors
+     *
+     * @param Float $total
+     * @param String $order
+     * @param String $customerId
+     * @return bool|String 
+     */
+    private function createDetachedCharge(Float $total, String $order, String $customerId)
+    {
+        try {
+            $charge = \Stripe\Charge::create(array(
+                "amount" => $total * 100,
+                "currency" => "usd",
+                "customer" => $customerId,
+                "transfer_group" => $order,
+            ));
+        } catch(\Stripe\Error\Card $e) {
+            // Since it's a decline, \Stripe\Error\Card will be caught
+            Log::error('Stripe: ' . $e->getMessage());
+            return $e->getMessage();        
+        } catch (\Stripe\Error\RateLimit $e) {
+            // Too many requests made to the API too quickly
+            Log::error('Stripe: ' . $e->getMessage());
+            return $e->getMessage();     
+        } catch (\Stripe\Error\InvalidRequest $e) {
+            // Invalid parameters were supplied to Stripe's API
+            Log::error('Stripe: ' . $e->getMessage());
+            return $e->getMessage();     
+        } catch (\Stripe\Error\Authentication $e) {
+            // Authentication with Stripe's API failed
+            // (maybe you changed API keys recently)
+            Log::error('Stripe: ' . $e->getMessage());
+            return $e->getMessage();     
+        } catch (\Stripe\Error\ApiConnection $e) {
+            // Network communication with Stripe failed
+            Log::error('Stripe: ' . $e->getMessage());
+            return $e->getMessage();     
+        } catch (\Stripe\Error\Base $e) {
+            // Display a very generic error to the user, and maybe send
+            // yourself an email
+            Log::emergency('Stripe: ' . $e->getMessage());
+            return $e->getMessage();     
+        } catch (Exception $e) {
+            // Something else happened, completely unrelated to Stripe
+            Log::emergency('Stripe: ' . $e->getMessage());
+            return $e->getMessage();     
+        }
+        return $charge;
+    }
+
+    /**
+     * Refund detached charge
+     *
+     * @param String $chargeId
+     * @return void
+     */
+    private function refundDetachedCharge(String $chargeId)
+    {
+        try {
+            $re = \Stripe\Refund::create(array(
+                "charge" => $chargeId
+            ));
+        } catch (\Excpetion $e) {
+            Log::error('Stripe: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Transfer payments to all subs and generals attached to the
+     * passed in collection of PAID tasks
+     *
+     * @param Collection $jobTasks
+     * @param String $order
+     * @return void
+     */
+    private function transferPaymentsToContractors(Collection $jobTasks, String $order)
+    {
+        $transfers = [];
+        foreach ($jobTasks as $jobTask) {
+            $task = $jobTask->task()->first();
+            $sub_contractor_id = $jobTask->contractor_id;
+            $general_contractor_id = $task->contractor_id;
+            
+            // amounts
+            $subAmount = (int) $jobTask->sub_final_price;
+            $generalAmount = (int) $jobTask->cust_final_price - $subAmount;
+
+            $sub_contractor = User::find($sub_contractor_id);
+            $general_contractor = User::find($general_contractor_id);
+
+            $sub_stripeExpress = $sub_contractor->contractor()->first()->stripeExpress()->first();
+            $general_stripeExpress = $general_contractor->contractor()->first()->stripeExpress()->first();
+            
+            // transfer to sub
+            if ($subAmount > 0) {
+                try {
+                    $transfer = \Stripe\Transfer::create(array(
+                        "amount" => $jobTask->sub_final_price * 100,
+                        "currency" => "usd",
+                        "destination" => $sub_stripeExpress->stripe_user_id,
+                        "transfer_group" => $order,
+                        "description" => $order
+                    ));
+                    $transfers[$jobTask->id] = $transfer->id;
+                } catch(\Exception $e) {
+                    Log::emergency('Transfering Payments Sub: ' . $e->getMessage());
+                    $this->reverseTransfers($transfers);
+                    return $e->getMessage();                
+                }
+            }
+
+            // transfer to general
+            if ($generalAmount > 0) {
+                try {
+                    $transfer = \Stripe\Transfer::create(array(
+                        "amount" => $generalAmount * 100,
+                        "currency" => "usd",
+                        "destination" => $general_stripeExpress->stripe_user_id,
+                        "transfer_group" => $order,
+                        "description" => $order
+                    ));
+                    $transfers[$jobTask->id] = $transfer->id;
+                } catch(\Exception $e) {
+                    Log::emergency('Transfering Payments General: ' . $e->getMessage());
+                    $this->reverseTransfers($transfers);
+                    return $e->getMessage();                
+                }
+            }
+        }
+
+        return $transfers;
+    }
+
+    /**
+     * Check That all contractors have stripe express for
+     * the given collection
+     *
+     * @param Collection $jobTasks
+     * @return bool
+     */
+    private function allContractorsHaveExpressConnected(Collection $jobTasks)
+    {
+
+        foreach ($jobTasks as $jobTask) {
+            $task = $jobTask->task()->first();
+            $sub_contractor_id = $jobTask->contractor_id;
+            $general_contractor_id = $task->contractor_id;
+            // get stripe express modals
+            $sub_contractor = User::find($sub_contractor_id);
+            $general_contractor = User::find($general_contractor_id);
+            $sub_stripeExpress = $sub_contractor->contractor()->first()->stripeExpress()->first();
+            $general_stripeExpress = $general_contractor->contractor()->first()->stripeExpress()->first();
+            
+            // do contractors have an express account with us?
+            if ($sub_stripeExpress === null && $sub_stripeExpress !== $general_stripeExpress) {
+                $sub_contractor->notify(new CustomerUnableToSendPaymentWithStripe());
+            }
+            
+            if ($general_stripeExpress === null) {
+                $general_contractor->notify(new CustomerUnableToSendPaymentWithStripe());
+            }
+            
+            if ($sub_stripeExpress === null || $general_stripeExpress === null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Reverses any transfers completed with the given transfer ids
+     *
+     * @param Array $transfers
+     * @return void
+     */
+    private function reverseTransfers(Array $transfers)
+    {
+        foreach ($transfers as $transfer) {
+            $tr = \Stripe\Transfer::retrieve($transfer['transfer_id']);
+            try {
+                $re = $tr->reversals->create();
+            } catch (\Exception $e) {
+                Log::emergency('Reversing Transfer @ transferPaymentsToContractors: ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Update models with transfer id
+     *
+     * @param Collection $jobTasks
+     * @param Array $transfers
+     * @return void
+     */
+    private function updateJobTasksAsPaid(Collection $jobTasks, Array $transfers)
+    {
+        foreach ($jobTasks as $jobTask) {
+            $jobTask->paid($transfers[$jobTask->id]);
+        }
     }
 
     /**

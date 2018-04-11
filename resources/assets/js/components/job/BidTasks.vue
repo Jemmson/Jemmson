@@ -1,8 +1,8 @@
 <template>
   <!-- /all tasks of a bid -->
-  <div>
-    <paginate ref="paginator" name="bid.job_tasks" :list="bid.job_tasks" :per="6" class="paginated">
-      <div class="col-md-4" v-for="jobTask in paginated('bid.job_tasks')" v-if="jobTask !== null" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
+  <div v-if="show">
+    <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated">
+      <div class="col-md-4" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
         <div class="panel">
           <div class="panel-body">
             <div class="row">
@@ -91,27 +91,27 @@
                   </button>
                 </div>
 
-                <div class="col-xs-4" v-if="isCustomer">
+                <!-- <div class="col-xs-4" v-if="isCustomer">
                   <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                     Deny
                   </button>
-                </div>
-                <div class="col-xs-4" v-if="isCustomer">
+                </div> -->
+                <!-- <div class="col-xs-4" v-if="isCustomer">
                   <button class="btn btn-success" v-if="showPayCashForTaskBtn(jobTask)" @click.prevent="paidWithCashTask(jobTask)" :disabled="disabled.payCash">
                     <span v-if="disabled.payCash">
                       <i class="fa fa-btn fa-spinner fa-spin"></i>
                     </span>
                     Cash
                   </button>
-                </div>
-                <div class="col-xs-4" v-if="isCustomer">
+                </div> -->
+                <!-- <div class="col-xs-4" v-if="isCustomer">
                   <button class="btn btn-success" v-if="showPayForTaskBtn(jobTask)" @click.prevent="payForTask(jobTask)" :disabled="disabled.pay">
                     <span v-if="disabled.pay">
                       <i class="fa fa-btn fa-spinner fa-spin"></i>
                     </span>
                     Pay
                   </button>
-                </div>
+                </div> -->
 
                 <transition-group name="slide-fade" v-if="isContractor">
                   <div class="col-xs-12 hidden" :id="'task-divider-' + jobTask.id" :key="1">
@@ -132,12 +132,12 @@
                       <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                         Deny
                       </button>
-                      <button class="btn btn-warning" v-if="showReopenBtn(jobTask)" @click="reopenTask(jobTask)" :disabled="disabled.reopen">
+                      <!-- <button class="btn btn-warning" v-if="showReopenBtn(jobTask)" @click="reopenTask(jobTask)" :disabled="disabled.reopen">
                         <span v-if="disabled.reopen">
                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                         Reopen
-                      </button>
+                      </button> -->
                       <button class="btn btn-danger" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
                         <span v-if="disabled.deleteTask">
                           <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -199,16 +199,16 @@
         <div class="panel-body">
           <center>
             <h4>
-              <paginate-links for="bid.job_tasks" :limit="2" :show-step-links="true">
+              <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
               </paginate-links>
             </h4>
           </center>
         </div>
       </div>
     </div>
-    <sub-invite-modal :jobTask="jTask">
+    <sub-invite-modal v-if="isContractor" :jobTask="jTask">
     </sub-invite-modal>
-    <deny-task-modal :jobTask="jTask">
+    <deny-task-modal v-if="isContractor" :jobTask="jTask">
     </deny-task-modal>
     <update-task-location-modal :jobTask="jTask">
     </update-task-location-modal>
@@ -222,7 +222,7 @@
     },
     data() {
       return {
-        paginate: ['bid.job_tasks'],
+        paginate: ['jobTasks'],
         user: '',
         jTask: {},
         message: '',
@@ -240,6 +240,12 @@
       }
     },
     computed: {
+      jobTasks() {
+        return User.getAllUnpaidTasks(this.bid.job_tasks);
+      },
+      show() {
+        return this.jobTasks.length > 0;
+      },
       taskApproved() {
         return this.jTask.status === 'bid_task.approved_by_customer';
       },
@@ -373,21 +379,21 @@
       taskCustFinalPrice(price) {
         return '$' + price;
       },
-      showReopenBtn(jobTask) {
-        if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
-            'bid_task.approved_by_general')) {
-          return true;
-        }
-        return false;
-      },
-      showPayCashForTaskBtn(jobTask) {
-        return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
-          User.isCustomer();
-      },
-      showPayForTaskBtn(jobTask) {
-        return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
-          User.isCustomer() && jobTask.stripe;
-      },
+      // showReopenBtn(jobTask) {
+      //   if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
+      //       'bid_task.approved_by_general')) {
+      //     return true;
+      //   }
+      //   return false;
+      // },
+      // showPayCashForTaskBtn(jobTask) {
+      //   return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
+      //     User.isCustomer();
+      // },
+      // showPayForTaskBtn(jobTask) {
+      //   return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
+      //     User.isCustomer() && jobTask.stripe;
+      // },
       showFinishedBtn(jobTask) {
         if (this.isContractor && User.isAssignedToMe(jobTask) && (jobTask.status === 'bid_task.approved_by_customer' ||
             jobTask.status === 'bid_task.reopened' || jobTask.status === 'bid_task.denied')) {
@@ -409,9 +415,9 @@
         }
         return false;
       },
-      reopenTask(jobTask) {
-        SubContractor.reopenTask(jobTask, this.disabled);
-      },
+      // reopenTask(jobTask) {
+      //   SubContractor.reopenTask(jobTask, this.disabled);
+      // },
       deleteTask(jobTask) {
         GeneralContractor.deleteTask(jobTask, this.disabled);
       },
@@ -432,12 +438,12 @@
         jobTask.checked = $('#toggle-stripe-' + jobTask.id).is(':checked');
         SubContractor.toggleStripePaymentOption(jobTask);
       },
-      payForTask(jobTask) {
-        Customer.payForTask(jobTask, this.disabled);
-      },
-      paidWithCashTask(jobTask) {
-        Customer.paidWithCashTask(jobTask, this.disabled);
-      },
+      // payForTask(jobTask) {
+      //   Customer.payForTask(jobTask, this.disabled);
+      // },
+      // paidWithCashTask(jobTask) {
+      //   Customer.paidWithCashTask(jobTask, this.disabled);
+      // },
       openTaskPanel(index) {
         this.$emit('openTaskPanel', index);
       },
