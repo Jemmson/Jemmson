@@ -22,6 +22,10 @@ describe ('Home', () => {
       }
     })
     expect(wrapper.html()).toContain(`Initiate a Bid Here`)
+    expect(wrapper.html()).toContain(`Look at Bids Here`)
+    expect(wrapper.html()).toContain(`Look at Tasks Here`)
+    expect(wrapper.html()).toContain(`Past Invoices`)
+    expect(wrapper.html()).to(`Stripe Dashboard`)
   })
 
   // it ('only show customer and contractor fields if the user is a customer', () => {
