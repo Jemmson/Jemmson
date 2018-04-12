@@ -16,9 +16,6 @@
     <!-- CSS -->
     <link href="/css/sweetalert.css" rel="stylesheet">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <link href="{{ mix('css/home.css') }}" rel="stylesheet">
-    <link href="{{ mix('css/nav.css') }}" rel="stylesheet">
-    <link href="{{ mix('css/welcome.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
 @yield('scripts', '')

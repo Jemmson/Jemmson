@@ -376,11 +376,13 @@ class JobController extends Controller
     public function declineJobBid(Request $request) {
         $this->validate($request, [
             'id' => 'required',
-            'message' => 'string'
+            'message' => 'string|nullable'
         ]);
 
-        if ($request->message != '') {
+        if (isset($request->message) && $request->message != '') {
             $message = $request->message;
+        } else {
+            $message = '';
         }
 
         $job = Job::find($request->id);

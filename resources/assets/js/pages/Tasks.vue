@@ -60,12 +60,12 @@
                   <label>${{ bidTask.bid_price }}</label>
                 </span>
               </div>
-              <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+              <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
                 <div class="divider2"></div>
               </div>
-              <div class="col-xs-12" v-if="bidTask.job_task.details !== null">
+              <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
                 <p>
-                  {{ bidTask.job_task.details }}
+                  {{ bidTask.job_task.sub_message }}
                 </p>
               </div>
             </div>

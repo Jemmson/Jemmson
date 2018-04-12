@@ -72,7 +72,7 @@ export default class GeneralContractor {
         console.log (response);
         // show a toast notification
         User.emitChange ('bidUpdated');
-        Vue.toasted.success (Language.lang ().submit.approve_task.success);
+        Vue.toasted.success(Language.lang ().submit.approve_task.success);
         disabled.approve = false;
       }).catch (error => {
       console.error (error);
@@ -90,7 +90,7 @@ export default class GeneralContractor {
         jobId: jobTask.job_id
       });
       User.emitChange ('bidUpdated');
-      Vue.toasted.success ('Task Denied & Notification Sent');
+      Vue.toasted.success('Task Deleted');
       disabled.deleteTask = false;
     } catch (error) {
       error = error.response.data;

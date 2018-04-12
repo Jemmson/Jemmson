@@ -225,6 +225,8 @@ class StripeController extends Controller
             'id' => 'required' // job id
         ]);
 
+        $excluded = $request->excluded;
+
         $customerId = Auth::user()->stripe_id;
 
         if ($customerId === null) {
@@ -244,6 +246,9 @@ class StripeController extends Controller
         $order = 'job.' . $job->id;
 
         foreach ($jobTasks as $jobTask) {
+            if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
+                continue;
+            }
             $total += $jobTask->cust_final_price;
             $order .= '.' . $jobTask->id;
         }
@@ -257,13 +262,15 @@ class StripeController extends Controller
             return response()->json(['message' => $charge], 422);
         }
         
-        $transfers = $this->transferPaymentsToContractors($jobTasks, $order);
+        $transfers = $this->transferPaymentsToContractors($jobTasks, $charge->id, $excluded);
         if (gettype($transfers) === 'string' && true) {
             $this->refundDetachedCharge($charge->id);
             return response()->json(['message' => $transfers], 422);
         }
 
-        $this->updateJobTasksAsPaid($jobTasks, $transfers);
+        $this->updateJobTasksAsPaid($jobTasks, $transfers, $excluded);
+        
+        $job->setJobAsCompleted();
 
         return response()->json(['message' => "Payment Succesful"], 200);
     }
@@ -279,6 +286,9 @@ class StripeController extends Controller
      */
     private function createDetachedCharge(Float $total, String $order, String $customerId)
     {
+        if ($total <= 0) {
+            return "Nothing To Pay";
+        }
         try {
             $charge = \Stripe\Charge::create(array(
                 "amount" => $total * 100,
@@ -343,12 +353,16 @@ class StripeController extends Controller
      *
      * @param Collection $jobTasks
      * @param String $order
+     * @param Array $excluded
      * @return void
      */
-    private function transferPaymentsToContractors(Collection $jobTasks, String $order)
+    private function transferPaymentsToContractors(Collection $jobTasks, String $chargeId, Array $excluded)
     {
         $transfers = [];
         foreach ($jobTasks as $jobTask) {
+            if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
+                continue;
+            }
             $task = $jobTask->task()->first();
             $sub_contractor_id = $jobTask->contractor_id;
             $general_contractor_id = $task->contractor_id;
@@ -370,8 +384,7 @@ class StripeController extends Controller
                         "amount" => $jobTask->sub_final_price * 100,
                         "currency" => "usd",
                         "destination" => $sub_stripeExpress->stripe_user_id,
-                        "transfer_group" => $order,
-                        "description" => $order
+                        "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
                 } catch(\Exception $e) {
@@ -388,8 +401,7 @@ class StripeController extends Controller
                         "amount" => $generalAmount * 100,
                         "currency" => "usd",
                         "destination" => $general_stripeExpress->stripe_user_id,
-                        "transfer_group" => $order,
-                        "description" => $order
+                        "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
                 } catch(\Exception $e) {
@@ -414,6 +426,9 @@ class StripeController extends Controller
     {
 
         foreach ($jobTasks as $jobTask) {
+            if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
+                continue;
+            }
             $task = $jobTask->task()->first();
             $sub_contractor_id = $jobTask->contractor_id;
             $general_contractor_id = $task->contractor_id;
@@ -463,11 +478,15 @@ class StripeController extends Controller
      *
      * @param Collection $jobTasks
      * @param Array $transfers
+     * @param Array $excluded
      * @return void
      */
-    private function updateJobTasksAsPaid(Collection $jobTasks, Array $transfers)
+    private function updateJobTasksAsPaid(Collection $jobTasks, Array $transfers, Array $excluded)
     {
         foreach ($jobTasks as $jobTask) {
+            if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
+                continue;
+            }
             $jobTask->paid($transfers[$jobTask->id]);
         }
     }

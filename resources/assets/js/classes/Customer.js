@@ -132,12 +132,13 @@ export default class Customer {
   }
 
   /**
-   * Pay for a all payable tasks
-   *
-   * @param {Object} job
+   * 
+   * @param {int} id 
+   * @param {obj} excluded 
+   * @param {obj} disabled 
    */
-  async payAllPayableTasks(job, disabled) {
-    console.log('payAllPayableTasks', job);
+  async payAllPayableTasks(id, excluded, disabled) {
+    console.log('payAllPayableTasks', id);
     disabled.payAll = true;
 
     if (User.payWithStripe()) {
@@ -150,7 +151,7 @@ export default class Customer {
     }
 
     try {
-      const data = await axios.post('/stripe/customer/pay/tasks', job);
+      const data = await axios.post('/stripe/customer/pay/tasks', {id: id, excluded: excluded});
       User.emitChange('bidUpdated');
       Vue.toasted.success('Paid For All Payable Tasks');
       disabled.payAll = false;

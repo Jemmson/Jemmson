@@ -67,12 +67,23 @@
                             </span>
                         </div>
 
-                        <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('details')}">
-                            <label for="details">Details</label>
-                            <input type="text" class="form-control" id="details" name="details"
-                                   v-model="addNewTaskForm.details">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('details')">
-                                {{ addNewTaskForm.errors.get('details') }}
+                        <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
+                            <label for="sub_message">Details For Sub To See</label>
+                            <textarea class="form-control" id="sub_message" name="sub_message"
+                                   v-model="addNewTaskForm.sub_message">
+                            </textarea>
+                            <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
+                                {{ addNewTaskForm.errors.get('sub_message') }}
+                            </span>
+                        </div>
+
+                        <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
+                            <label for="customer_message">Details For Customer To See</label>
+                            <textarea class="form-control" id="customer_message" name="customer_message"
+                                   v-model="addNewTaskForm.customer_message">
+                            </textarea>
+                            <span class="help-block" v-show="addNewTaskForm.errors.has('customer_message')">
+                                {{ addNewTaskForm.errors.get('customer_message') }}
                             </span>
                         </div>
 
@@ -117,7 +128,8 @@
           start_date: '',
           start_when_accepted: true,
           useStripe: false,
-          details: '',
+          sub_message: '',
+          customer_message: '',
         }),
         taskResults: [],
       }
