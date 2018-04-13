@@ -13,7 +13,7 @@ export default class GeneralContractor {
       price: bid.bid_price,
     }).then ((response) => {
       console.log (response.data)
-      User.emitChange('bidUpdated');
+      User.emitChange ('bidUpdated');
       Vue.toasted.success ('Accepted Bid!');
       disabled.accept = false;
     }).catch ((error) => {
@@ -72,7 +72,7 @@ export default class GeneralContractor {
         console.log (response);
         // show a toast notification
         User.emitChange ('bidUpdated');
-        Vue.toasted.success(Language.lang ().submit.approve_task.success);
+        Vue.toasted.success (Language.lang ().submit.approve_task.success);
         disabled.approve = false;
       }).catch (error => {
       console.error (error);
@@ -90,7 +90,7 @@ export default class GeneralContractor {
         jobId: jobTask.job_id
       });
       User.emitChange ('bidUpdated');
-      Vue.toasted.success('Task Deleted');
+      Vue.toasted.success ('Task Deleted');
       disabled.deleteTask = false;
     } catch (error) {
       error = error.response.data;
@@ -104,8 +104,18 @@ export default class GeneralContractor {
     console.log (form)
     try {
       const data = await axios.post ('/initiate-bid', form);
-      console.log(data)
-
+      console.log (data)
+      User.emitChange ('bidUpdated');
+      Vue.toasted.success ('Bid Initiated');
+      disabled.submit = false;
+      window.location = '/#/bids';
+    } catch (error) {
+      error = error.response.data;
+      form.errors.errors = error.errors;
+      Vue.toasted.error (error.message);
+      console.log ('Initiate bid errors')
+      console.log (error)
+      disabled.submit = false;
       if (data.data.errorText === 'Customer already exists please correct the name.') {
         Vue.toasted.error (data.data.errorText);
         disabled.submit = false;
@@ -114,20 +124,7 @@ export default class GeneralContractor {
         Vue.toasted.error (data.data.errorText);
         disabled.submit = false;
         window.location = '/#/initiate-bid';
-      } else {
-        User.emitChange ('bidUpdated');
-        Vue.toasted.success ('Bid Initiated');
-        disabled.submit = false;
-        window.location = '/#/bids';
-      }
-    } catch (error) {
-      error = error.response.data;
-      form.errors.errors = error.errors;
-      Vue.toasted.error (error.message);
-      console.log ('Initiate bid errors')
-      console.log (error)
-      disabled.submit = false;
-      if (error.errors['no_free_jobs'] !== undefined) {
+      } else if (error.errors['no_free_jobs'] !== undefined) {
         window.location = '/settings#/subscription';
       }
     }
@@ -152,7 +149,7 @@ export default class GeneralContractor {
 
   notifyCustomerOfFinishedBid (bid, disabled) {
     disabled.submitBid = true;
-    if (User.jobNeedsStripe(bid)) {
+    if (User.jobNeedsStripe (bid)) {
       disabled.submitBid = false;
       return false;
     }

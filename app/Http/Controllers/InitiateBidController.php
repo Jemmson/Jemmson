@@ -97,7 +97,8 @@ class InitiateBidController extends Controller
                 Log::info("customerExists ErrorText: " . $customerExists['errorText']);
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
                 if ($customer == null) {
-                    return json_encode(["errorText" => "Customer could not be created. Please try initiating the bid again"]);
+                    return response()->json(['message' => 'Customer could not be created. Please try initiating the bid again'], 422);
+//                    return json_encode(["errorText" => "Customer could not be created. Please try initiating the bid again"]);
 //                    return redirect()->back()->with(
 //                        'error',
 //                        'Customer could not be created. Please try initiating the bid again'
@@ -105,7 +106,8 @@ class InitiateBidController extends Controller
                 }
             } else {
                 Log::info("customerExists ErrorText: " . $customerExists['errorText']);
-                return json_encode(["errorText" => "Customer already exists please correct the name.", "customerName" => $customerExists['name']]);
+                return response()->json(['message' => 'Customer already exists please correct the name.', "customerName" => $customerExists['name']], 422);
+//                return json_encode(["errorText" => "Customer already exists please correct the name.", "customerName" => $customerExists['name']]);
 //                return redirect()->back()->with(
 //                    'error',
 //                    $customerExists['errorText'] . " The customer name should be " . $customerExists['name']
