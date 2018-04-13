@@ -22,15 +22,6 @@
                 </button>
             </div>
         </div>
-        <div class="text-right">
-        <button v-if="showJobCompletedBtn" class="btn btn-success" @click.prevent="jobCompleted"
-                :disabled="disabled.jobCompleted">
-            <span v-if="disabled.jobCompleted">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-            </span>
-            Job Completed
-        </button>
-        </div>
         <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" :yes="mYes" :no="mNo">
         </modal>
     </div>
@@ -116,9 +107,6 @@
       },
       cancelBid () {
         Customer.cancelBid (this.bid, this.disabled);
-      },
-      jobCompleted () {
-        GeneralContractor.jobCompleted (this.bid, this.disabled);
       }
     },
     mounted: function () {
