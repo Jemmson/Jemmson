@@ -211,6 +211,47 @@ class StripeController extends Controller
     }
 
     /**
+     * Sets all payable tasks as paid
+     *
+     * @param Request $request
+     * @return response
+     */
+    public function payAllPayableTasksWithCash(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required' // job id
+        ]);
+
+        // job tasks excluded from this payment [jobtask ids => true]
+        $excluded = $request->excluded;
+
+        // get all tasks that havent been paid for 
+        $job = Job::find($request->id);
+        $jobTasks = $job->jobTasks()->where('status', 'bid_task.finished_by_general')->orWhere('status', 'bid_task.approved_by_general')->get();
+
+        if (count($jobTasks) < 1) {
+            return response()->json(['message' => 'No Tasks'], 422);
+        }
+
+        $order = 'job.' . $job->id;
+        $transfers = [];
+
+        foreach ($jobTasks as $jobTask) {
+            if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
+                continue;
+            }
+            $order .= '.' . $jobTask->id;
+            $transfers[$jobTask->id] = $order . '.cash';
+        }
+
+        $this->updateJobTasksAsPaid($jobTasks, $transfers, $excluded);
+        
+        $job->setJobAsCompleted();
+
+        return response()->json(['message' => "Payment Succesful"], 200);
+    }
+
+    /**
      * Pay all payable tasks
      * Adds up the total customer total
      * Charges that price once
@@ -225,6 +266,7 @@ class StripeController extends Controller
             'id' => 'required' // job id
         ]);
 
+        // job tasks excluded from this payment [jobtask ids => true]
         $excluded = $request->excluded;
 
         $customerId = Auth::user()->stripe_id;

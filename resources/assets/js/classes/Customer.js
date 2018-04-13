@@ -160,7 +160,28 @@ export default class Customer {
       Vue.toasted.error(error.message);
       disabled.payAll = false;
     }
+  }
 
+/**
+ * 
+ * @param {int} id 
+ * @param {obj} excluded 
+ * @param {obj} disabled 
+ */
+  async payAllPayableTasksWithCash(id, excluded, disabled) {
+    console.log('payAllPayableTasksWithCash', id);
+    disabled.payCash = true;
+
+    try {
+      const data = await axios.post('/stripe/customer/pay/tasks/cash', { id: id, excluded: excluded });
+      User.emitChange('bidUpdated');
+      Vue.toasted.success('Paid For All Payable Tasks');
+      disabled.payCash = false;
+    } catch (error) {
+      error = error.response.data;
+      Vue.toasted.error(error.message);
+      disabled.payCash = false;
+    }
   }
 
   /**

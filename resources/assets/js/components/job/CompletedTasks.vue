@@ -171,7 +171,7 @@
                 $('#deny-task-modal').modal();
             },
             paidWithCash() {
-                Customer.paidWithCash(this.bid);
+                Customer.payAllPayableTasksWithCash(this.bid.id, this.excluded, this.disabled);
             },
             reopenTask(jobTask) {
                 SubContractor.reopenTask(jobTask, this.disabled);
