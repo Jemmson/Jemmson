@@ -98,20 +98,10 @@ class InitiateBidController extends Controller
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
                 if ($customer == null) {
                     return response()->json(['message' => 'Customer could not be created. Please try initiating the bid again'], 422);
-//                    return json_encode(["errorText" => "Customer could not be created. Please try initiating the bid again"]);
-//                    return redirect()->back()->with(
-//                        'error',
-//                        'Customer could not be created. Please try initiating the bid again'
-//                    );
                 }
             } else {
                 Log::info("customerExists ErrorText: " . $customerExists['errorText']);
                 return response()->json(['message' => 'Customer already exists please correct the name.', "customerName" => $customerExists['name']], 422);
-//                return json_encode(["errorText" => "Customer already exists please correct the name.", "customerName" => $customerExists['name']]);
-//                return redirect()->back()->with(
-//                    'error',
-//                    $customerExists['errorText'] . " The customer name should be " . $customerExists['name']
-//                );
             }
         } else {
             Log::info("customerExists Customer: " . $customerExists['customer']);
@@ -119,7 +109,6 @@ class InitiateBidController extends Controller
         }
 
         Log::info("Check if job currently exists: ======================");
-//        Log::info("jobName: ". empty(jobName));
         // create a job name if one does not exist
         if (empty($jobName)) {
             $jobName = $this->jobName($customer);
@@ -148,7 +137,6 @@ class InitiateBidController extends Controller
 
         $request->session()->flash('status', 'Your bid was created');
 
-//        return redirect('/#/bids');
         return "Bid was created";
 
     }

@@ -116,15 +116,7 @@ export default class GeneralContractor {
       console.log ('Initiate bid errors')
       console.log (error)
       disabled.submit = false;
-      if (data.data.errorText === 'Customer already exists please correct the name.') {
-        Vue.toasted.error (data.data.errorText);
-        disabled.submit = false;
-        window.location = '/#/initiate-bid';
-      } else if (data.data.errorText === 'Customer could not be created. Please try initiating the bid again') {
-        Vue.toasted.error (data.data.errorText);
-        disabled.submit = false;
-        window.location = '/#/initiate-bid';
-      } else if (error.errors['no_free_jobs'] !== undefined) {
+      if (error.errors['no_free_jobs'] !== undefined) {
         window.location = '/settings#/subscription';
       }
     }
