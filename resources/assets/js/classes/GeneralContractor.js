@@ -105,10 +105,21 @@ export default class GeneralContractor {
     try {
       const data = await axios.post ('/initiate-bid', form);
       console.log(data)
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success ('Bid Initiated');
-      disabled.submit = false;
-      window.location = '/#/bids';
+
+      if (data.data.errorText === 'Customer already exists please correct the name.') {
+        Vue.toasted.error (data.data.errorText);
+        disabled.submit = false;
+        window.location = '/#/initiate-bid';
+      } else if (data.data.errorText === 'Customer could not be created. Please try initiating the bid again') {
+        Vue.toasted.error (data.data.errorText);
+        disabled.submit = false;
+        window.location = '/#/initiate-bid';
+      } else {
+        User.emitChange ('bidUpdated');
+        Vue.toasted.success ('Bid Initiated');
+        disabled.submit = false;
+        window.location = '/#/bids';
+      }
     } catch (error) {
       error = error.response.data;
       form.errors.errors = error.errors;

@@ -19,7 +19,6 @@ use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use RuntimeException;
 
 
-
 class InitiateBidController extends Controller
 {
     /**
@@ -58,7 +57,7 @@ class InitiateBidController extends Controller
         // send a passwordless link if the email is not in the system
         // this link will then redirect them to the bid page
 
-        Bugsnag::notifyException(new RuntimeException("Test error"));
+//        Bugsnag::notifyException(new RuntimeException("Test error"));
 
         $this->validate($request, [
             'email' => 'required|email',
@@ -67,40 +66,58 @@ class InitiateBidController extends Controller
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
 
+//        dd('initiating a bid');
+
         $contractor = Auth::user()->contractor()->first();
+
+        Log::info("contractor: $contractor");
+        Log::info("contractor->hasMoreFreeJobs: " . $contractor->hasMoreFreeJobs());
+        Log::info("contractor->isSubscribed(): " . $contractor->isSubscribed());
+
 
         if (!$contractor->hasMoreFreeJobs() && !$contractor->isSubscribed()) {
             return response()->json(['message' => 'No more free Jobs left.', 'errors' => ['no_free_jobs' => 'No more free Jobs left']], 422);
         }
 
         $customerName = $request->customerName;
+        Log::info("customerName: $customerName");
         $phone = SanatizeService::phone($request->phone);
+        Log::info("phone: $phone");
         $email = $request->email;
+        Log::info("email: $email");
         $jobName = $request->jobName;
+        Log::info("jobName: $jobName");
 
         // find customer
         $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
 
         if ($customerExists['error']) {
+            Log::info("customerExists Error: " . $customerExists['error']);
             if ($customerExists['errorText'] == 'Create a new customer') {
+                Log::info("customerExists ErrorText: " . $customerExists['errorText']);
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
                 if ($customer == null) {
-                    return redirect()->back()->with(
-                        'error',
-                        'Customer could not be created. Please try initiating the bid again'
-                    );
+                    return json_encode(["errorText" => "Customer could not be created. Please try initiating the bid again"]);
+//                    return redirect()->back()->with(
+//                        'error',
+//                        'Customer could not be created. Please try initiating the bid again'
+//                    );
                 }
             } else {
-                return redirect()->back()->with(
-                    'error',
-                    $customerExists['errorText'] . " The customer name should be " . $customerExists['name']
-                );
+                Log::info("customerExists ErrorText: " . $customerExists['errorText']);
+                return json_encode(["errorText" => "Customer already exists please correct the name.", "customerName" => $customerExists['name']]);
+//                return redirect()->back()->with(
+//                    'error',
+//                    $customerExists['errorText'] . " The customer name should be " . $customerExists['name']
+//                );
             }
         } else {
+            Log::info("customerExists Customer: " . $customerExists['customer']);
             $customer = $customerExists['customer'];
         }
 
-
+        Log::info("Check if job currently exists: ======================");
+//        Log::info("jobName: ". empty(jobName));
         // create a job name if one does not exist
         if (empty($jobName)) {
             $jobName = $this->jobName($customer);
@@ -109,7 +126,9 @@ class InitiateBidController extends Controller
 
         // create a bid
         $job = $this->createBid($customer->id, $jobName);
+        Log::info("job: $job");
         $job_id = $job->id;
+        Log::info("job_id: $job_id");
 
         // with error
         if ($job_id == null) {
@@ -121,7 +140,7 @@ class InitiateBidController extends Controller
         }
 
 
-        $contractor->subtractFreeJob();
+        Log::info("Subtracting a Free Job:" . $contractor->subtractFreeJob());
 
         $customer->notify(new BidInitiated($job, $customer));
 

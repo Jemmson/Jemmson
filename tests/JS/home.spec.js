@@ -9,7 +9,7 @@ describe ('Home', () => {
   //   wrapper = mount(Home);
   // })
 
-  it('renders the correct markup', () => {
+  it('Contractor not connected to Stripe rendering the correct markup', () => {
     const wrapper = mount(Home, {
       propsData: {
         user:{
@@ -25,7 +25,58 @@ describe ('Home', () => {
     expect(wrapper.html()).toContain(`Look at Bids Here`)
     expect(wrapper.html()).toContain(`Look at Tasks Here`)
     expect(wrapper.html()).toContain(`Past Invoices`)
-    expect(wrapper.html()).to(`Stripe Dashboard`)
+    expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
+  })
+
+  it('Contractor connected to Stripe renders the correct markup', () => {
+    const wrapper = mount(Home, {
+      propsData: {
+        user:{
+          usertype: 'contractor',
+          contractor: {
+            company_name: 'KPS Pools',
+            stripe_express: true,
+          }
+        }
+      }
+    })
+    expect(wrapper.html()).toContain(`Initiate a Bid Here`)
+    expect(wrapper.html()).toContain(`Look at Bids Here`)
+    expect(wrapper.html()).toContain(`Look at Tasks Here`)
+    expect(wrapper.html()).toContain(`Past Invoices`)
+    expect(wrapper.html()).toContain(`Stripe Dashboard`)
+  })
+
+  it('Customer not connected to Stripe rendering the correct markup', () => {
+    const wrapper = mount(Home, {
+      propsData: {
+        user:{
+          usertype: 'customer',
+          customer: null
+        }
+      }
+    })
+    expect(wrapper.html()).not.toContain(`Initiate a Bid Here`)
+    expect(wrapper.html()).not.toContain(`Look at Bids Here`)
+    expect(wrapper.html()).not.toContain(`Look at Tasks Here`)
+    expect(wrapper.html()).not.toContain(`Past Invoices`)
+    expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
+  })
+
+  it('Customer connected to Stripe renders the correct markup', () => {
+    const wrapper = mount(Home, {
+      propsData: {
+        user:{
+          usertype: 'customer',
+          customer: true
+        }
+      }
+    })
+    expect(wrapper.html()).toContain(`Look at Bids Here`)
+    expect(wrapper.html()).toContain(`Past Invoices`)
+    expect(wrapper.html()).not.toContain(`Initiate a Bid Here`)
+    expect(wrapper.html()).not.toContain(`Look at Tasks Here`)
+    expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
   })
 
   // it ('only show customer and contractor fields if the user is a customer', () => {

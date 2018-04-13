@@ -66,14 +66,6 @@
                         Past Invoices
                     </div>
                 </div>
-                <!-- <div class="home-page-past-stripe-dashboard home-page-section-style" @click="">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Stripe Dashboard
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>
