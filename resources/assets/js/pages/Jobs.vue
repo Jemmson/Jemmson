@@ -23,7 +23,7 @@
                 </div>
             </div>
             <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated">
-                <div class="col-sm-12 col-md-4" v-for="bid in paginated('sBids')" v-bind:key="bid.id">
+                <div class="col-sm-12 col-md-4" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 1000000000;">
                     <div class="panel">
                         <div class="panel-body">
                             <div class="col-xs-12">
@@ -47,8 +47,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <span class="primary-action-btn">
-                                        <!-- <button class="btn btn-primary" name="review" @click="openBid(index)">Review</button> -->
-                                        <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">ReviewBid{{ bid.id }}</router-link>
+                                        <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">Review Bid {{ bid.id }}</router-link>
                                     </span>
                                 </div>
                             </div>

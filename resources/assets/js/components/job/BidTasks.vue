@@ -374,6 +374,9 @@
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
       },
       showTaskPriceInput() {
+        console.log('isGeneral: ' + this.isGeneral())
+        console.log('bid.in_progress' + this.bid.status)
+        console.log('bid.initiated' + this.bid.status)
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
       },
       updateTaskStartDate(date, jobTaskId, bidId, jobTa) {
