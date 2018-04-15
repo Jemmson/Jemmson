@@ -371,13 +371,13 @@
         $('#deny-task-modal').modal();
       },
       showTaskStartDate() {
-        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
+        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid.status === 'bid.declined');
       },
       showTaskPriceInput() {
-        console.log('isGeneral: ' + this.isGeneral())
+        console.log('isGeneral: ' + this.isGeneral)
         console.log('bid.in_progress' + this.bid.status)
         console.log('bid.initiated' + this.bid.status)
-        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated');
+        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid.status === 'bid.declined');
       },
       updateTaskStartDate(date, jobTaskId, bidId, jobTa) {
         console.log(date);
@@ -397,7 +397,8 @@
         if (this.isCustomer) {
           return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general');
         }
-        return status === 'bid_task.finished_by_sub';
+        return (status === 'bid_task.finished_by_sub');
+        // return (status === 'bid_task.finished_by_sub' || this.bid.status === 'bid.declined');
       },
       taskCustFinalPrice(price) {
         return '$' + price;
@@ -433,7 +434,7 @@
       },
       showDeleteBtn(jobTask) {
         const status = jobTask.status;
-        if (this.isGeneral && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent')) {
+        if (this.isGeneral && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent' || this.bid.status === 'bid.declined')) {
           return true;
         }
         return false;
