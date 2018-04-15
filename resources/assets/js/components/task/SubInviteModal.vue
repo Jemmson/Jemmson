@@ -7,7 +7,8 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}</h4>
+                    <h4 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}</h4>
+                    <h4 v-else>Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }} - would you like to invite another sub to bid on this task?</h4>
                 </div>
                 <div class="modal-body">
                         <form role="form">
@@ -68,6 +69,7 @@
                     task_id: 0,
                     email: '',
                     phone: '',
+                    counter: 0,
                 }),
                 user: '',
                 results: [],
