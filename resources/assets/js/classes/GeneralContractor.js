@@ -171,6 +171,7 @@ export default class GeneralContractor {
         User.emitChange ('bidUpdated');
         Vue.toasted.success ('Invite Sent!');
         disabled.invite = false;
+        form.counter++;
         form.name = '';
         form.email = '';
         form.phone = '';
