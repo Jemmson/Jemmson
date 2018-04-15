@@ -430,7 +430,7 @@
             jobTask.status === 'bid_task.reopened')) {
           return true;
         }
-        return false;
+        return fa
       },
       showDeleteBtn(jobTask) {
         const status = jobTask.status;
