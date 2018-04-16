@@ -3,7 +3,7 @@
     <!-- Application Dashboard -->
     <div class="row">
       <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="card card-1">
           <div class="panel-body">
             <form method="post">
               <h1 class="text-center">Please Initiate a Bid With A Customer</h1>

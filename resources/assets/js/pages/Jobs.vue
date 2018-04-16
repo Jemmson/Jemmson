@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel">
+                <div class="card card-1">
                     <!-- <div class="panel-heading">Dashboard</div> -->
                     <div class="panel-body">
                         <center>
@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <div class="panel panel-default">
+                <div class="card card-1">
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="job-search">Search Jobs</label>
@@ -24,7 +24,7 @@
             </div>
             <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated">
                 <div class="col-sm-12 col-md-4" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 1000000000;">
-                    <div class="panel">
+                    <div class="card card-1">
                         <div class="panel-body">
                             <div class="col-xs-12">
                                 <h4>
@@ -56,7 +56,7 @@
                 </div>
             </paginate>
             <div class="col-md-12">
-                <div class="panel">
+                <div class="card card-1">
                     <div class="panel-body">
                         <center>
                             <h4>

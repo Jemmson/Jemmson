@@ -67,6 +67,16 @@ export default class User {
     return [];
   }
 
+  stripePaymentRequested(jobTasks) {
+    for (let jobTask of jobTasks) {
+      if (jobTask.stripe) {
+        return true;
+        break;
+      }
+    }
+    return false;
+  }
+
   getAllUnpaidTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {

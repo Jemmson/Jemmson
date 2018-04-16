@@ -3,7 +3,7 @@
   <div v-if="show">
     <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated">
       <div class="col-md-4" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
-        <div class="panel">
+        <div class="card card-1">
           <div class="panel-body">
             <div class="row">
               <div class="col-xs-12 form-group">
@@ -205,7 +205,7 @@
       </div>
     </paginate>
     <div class="col-md-12">
-      <div class="panel">
+      <div class="card card-1">
         <div class="panel-body">
           <center>
             <h4>
@@ -346,8 +346,6 @@
       location(jobTask, bid) {
         const task_location = jobTask.location_id;
         const job_location = this.bid.location_id;
-        console.log("task_location: " + task_location)
-        console.log("job_location: " + job_location)
         if (task_location === null && job_location === null) {
           return 'No Address Set Yet';
         } else if (task_location !== null) {
@@ -364,7 +362,7 @@
         return date[0];
       },
       showStripeToggle(jobTask) {
-        return User.isAssignedToMe(jobTask);
+        return User.isAssignedToMe(jobTask) && (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress');
       },
       openDenyTaskForm(jobTask) {
         this.jTask = jobTask;
@@ -374,9 +372,6 @@
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid.status === 'bid.declined');
       },
       showTaskPriceInput() {
-        console.log('isGeneral: ' + this.isGeneral)
-        console.log('bid.in_progress' + this.bid.status)
-        console.log('bid.initiated' + this.bid.status)
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid.status === 'bid.declined');
       },
       updateTaskStartDate(date, jobTaskId, bidId, jobTa) {

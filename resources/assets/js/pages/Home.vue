@@ -5,7 +5,7 @@
         <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
             <h1 class="home-page-title">{{ user.contractor.company_name }}</h1>
             <div class="home-page-wrapper">
-                <div class="home-page-initiate-bid home-page-section-style" @click="route('initiate-bid')">
+                <div class="home-page-initiate-bid home-page-section-style card card-1" @click="route('initiate-bid')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -13,7 +13,7 @@
                         Initiate a Bid Here
                     </div>
                 </div>
-                <div class="home-page-bid home-page-section-style" @click="route('bids')">
+                <div class="home-page-bid home-page-section-style card card-1" @click="route('bids')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -21,7 +21,7 @@
                         Look at Bids Here
                     </div>
                 </div>
-                <div class="home-page-task home-page-section-style" @click="route('tasks')">
+                <div class="home-page-task home-page-section-style card card-1" @click="route('tasks')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -29,7 +29,7 @@
                         Look at Tasks Here
                     </div>
                 </div>
-                <div class="home-page-past-invoices home-page-section-style" @click="route('invoices')">
+                <div class="home-page-past-invoices home-page-section-style card card-1" @click="route('invoices')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -37,7 +37,7 @@
                         Past Invoices
                     </div>
                 </div>
-                <div class="home-page-past-stripe-dashboard home-page-section-style" v-if="user.contractor.stripe_express !== null" @click="route('express')">
+                <div class="home-page-past-stripe-dashboard home-page-section-style card card-1" v-if="user.contractor.stripe_express !== null" @click="route('express')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -50,7 +50,7 @@
         <div v-else-if="(user.usertype === 'customer') && user.customer !== null">
             <h1 class="home-page-title">{{ user.name }}</h1>
             <div class="home-page-wrapper">
-                <div class="home-page-bid home-page-section-style" @click="route('bids')">
+                <div class="home-page-bid home-page-section-style card card-1" @click="route('bids')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
@@ -58,7 +58,7 @@
                         Look at Bids Here
                     </div>
                 </div>
-                <div class="home-page-customer-past-invoices home-page-section-style" @click="route('invoices')">
+                <div class="home-page-customer-past-invoices home-page-section-style card card-1" @click="route('invoices')">
                     <div class="home-page-initiate-bid-logo">
                         <img src="/img/mono-logo.png" style="height: 32px;">
                     </div>
