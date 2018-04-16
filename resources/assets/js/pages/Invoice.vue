@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
-                <div class="panel panel-default">
+                <div class="card card-1">
                     <div class="panel-body">
                         <h1>Invoice Page</h1>
                     </div>
@@ -10,7 +10,7 @@
             </div>
             <div v-if="invoice !== null">
                 <div class="col-md-12">
-                    <div class="panel panel-default">
+                    <div class="card card-1">
                         <div class="panel-body">
                             <section class="col-xs-12 col-md-6">
                                 <h3 for="company_name" v-if="isContractor">{{ user.contractor.company_name }}</h3>
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="col-md-12">
-                    <div class="panel panel-default">
+                    <div class="card card-1">
                         <div class="panel-body">
                             <table class="table">
                                 <thead>

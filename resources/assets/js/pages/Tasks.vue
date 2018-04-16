@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <div class="panel">
+        <div class="card card-1">
           <!-- <div class="panel-heading">Dashboard</div> -->
           <div class="panel-body">
             <center>
@@ -13,7 +13,7 @@
       </div>
       <!-- / end title -->
       <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="card card-1">
           <div class="panel-body">
             <div class="form-group">
               <label for="task-search">Search Tasks</label>
@@ -25,7 +25,7 @@
       <!-- / end search bar -->
       <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated">
         <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:1000000">
-          <div class="panel" v-if="showBid(bidTask)">
+          <div class="card card-1" v-if="showBid(bidTask)">
             <div class="panel-body">
               <div class="col-xs-12">
                 <h4>
@@ -97,7 +97,7 @@
         </div>
       </paginate>
       <div class="col-md-12">
-        <div class="panel">
+        <div class="card card-1">
           <div class="panel-body">
             <center>
               <h4>
@@ -200,7 +200,7 @@
         return false;
       },
       status(bid_task) {
-        return User.status(bid_task.job_task.status, bid_task.job_task);
+        return User.status(bid_task.job_task.status, bid_task.job_task, true);
       },
       prettyDate(date) {
 
@@ -211,10 +211,10 @@
         return date[0];
       },
       showStripeToggle(jobTask) {
-        return jobTask.contractor_id === User.getId();
+        return jobTask.contractor_id === User.getId() && (jobTask.job.status === 'bid.initiated' || jobTask.job.status === 'bid.in_progress');
       },
       toggleStripePaymentOption(jobTask) {
-        SubContractor.toggleStripePaymentOption(jobTask, true);
+        SubContractor.toggleStripePaymentOption(jobTask);
       },
       finished(bid) {
         SubContractor.finishedTask(bid, this.disabled);
@@ -261,7 +261,6 @@
       if (taskId !== null && taskId !== '') {
         $('#task_' + taskId).addClass('info');
       }
-
       const success = this.$route.query.success;
       Vue.toasted.success(success);
       const error = this.$route.query.error;

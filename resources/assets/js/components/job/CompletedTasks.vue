@@ -1,7 +1,7 @@
 <template>
     <!-- / all tasks ready for payment -->
     <div class="col-md-12" v-if="show">
-        <div class="panel panel-default">
+        <div class="card card-1">
             <div class="panel-heading">
                 Payable Tasks
             </div>
@@ -71,7 +71,7 @@
                         </span>
                         Paid With Cash
                     </button>
-                    <button class="btn btn-success" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+                    <button class="btn btn-success" v-if="showPayWithStripeBtn" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
@@ -126,6 +126,12 @@
             },
             payableTasks() {
                 return User.getAllPayableTasks(this.jobTasks);
+            },
+            showPayWithStripeBtn() {
+                if (this.payableTasks.length > 0) {
+                    return User.stripePaymentRequested(this.payableTasks);
+                }
+                return false;
             },
             show() {
                 return this.payableTasks.length > 0;

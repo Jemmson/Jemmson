@@ -67,6 +67,16 @@ export default class User {
     return [];
   }
 
+  stripePaymentRequested(jobTasks) {
+    for (let jobTask of jobTasks) {
+      if (jobTask.stripe) {
+        return true;
+        break;
+      }
+    }
+    return false;
+  }
+
   getAllUnpaidTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {
@@ -184,13 +194,15 @@ export default class User {
   /**
    * Check all job tasks to see if any have
    * stripe as the payment option active
+   * 
    * @param {Job} bid 
    */
   jobNeedsStripe(bid) {
     let stripeNeeded = false;
-    for (const jobTask of bid.job_tasks) {
-      if (jobTask.stripe && jobTask.contractor_id === this.user.id) {
+    for (let jobTask of bid.job_tasks) {
+      if (jobTask.stripe) {
         stripeNeeded = true;
+        break;
       }
     }
     if (stripeNeeded && !this.stripeExpressConnected()) {
@@ -254,16 +266,17 @@ export default class User {
   // /stripe functions
   // /NOTICE: not used just incase we need them later as functions need to fix the error
 
-  status(status, bid) {
+  status(status, bid, isSub) {
     status = Language.lang()[status];
     if (status === undefined) {
       return '';
     }
     if (this.isContractor()) {
+      if (isSub !== undefined && isSub) {
+        return status.sub;
+      }
       if (bid !== null && this.isGeneral(bid))
         return status.general;
-
-      return status.sub;
     }
 
     return status.customer;

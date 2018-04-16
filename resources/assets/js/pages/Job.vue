@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-default">
+                <div class="card card-1">
                     <div class="panel-heading">Job Details</div>
                     <div class="panel-body">
                         <!-- /show all bid information -->

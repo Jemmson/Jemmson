@@ -16,7 +16,7 @@ export default class Language {
       // general contractor accepted the subs bid
       'bid_task.accepted': {
         sub: 'Bid Accepted, Waiting On Customer Approval',
-        general: 'Bid Accepted',
+        general: 'You Accepted a Subs Bid',
         customer: 'Pending'
       },
       // sub saying this task is finished
