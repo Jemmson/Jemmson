@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal" aria-hidden="false">
+    <div class="modal fade" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal" aria-hidden="false" style="z-index: 1000000000;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

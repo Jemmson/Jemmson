@@ -184,13 +184,15 @@ export default class User {
   /**
    * Check all job tasks to see if any have
    * stripe as the payment option active
+   * 
    * @param {Job} bid 
    */
   jobNeedsStripe(bid) {
     let stripeNeeded = false;
-    for (const jobTask of bid.job_tasks) {
-      if (jobTask.stripe && jobTask.contractor_id === this.user.id) {
+    for (let jobTask of bid.job_tasks) {
+      if (jobTask.stripe) {
         stripeNeeded = true;
+        break;
       }
     }
     if (stripeNeeded && !this.stripeExpressConnected()) {
