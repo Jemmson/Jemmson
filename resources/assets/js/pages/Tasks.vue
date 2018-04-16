@@ -200,7 +200,7 @@
         return false;
       },
       status(bid_task) {
-        return User.status(bid_task.job_task.status, bid_task.job_task);
+        return User.status(bid_task.job_task.status, bid_task.job_task, true);
       },
       prettyDate(date) {
 

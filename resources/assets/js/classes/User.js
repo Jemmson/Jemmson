@@ -266,16 +266,17 @@ export default class User {
   // /stripe functions
   // /NOTICE: not used just incase we need them later as functions need to fix the error
 
-  status(status, bid) {
+  status(status, bid, isSub) {
     status = Language.lang()[status];
     if (status === undefined) {
       return '';
     }
     if (this.isContractor()) {
+      if (isSub !== undefined && isSub) {
+        return status.sub;
+      }
       if (bid !== null && this.isGeneral(bid))
         return status.general;
-
-      return status.sub;
     }
 
     return status.customer;
