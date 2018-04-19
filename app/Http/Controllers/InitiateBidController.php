@@ -215,8 +215,8 @@ class InitiateBidController extends Controller
         // if a user exists then I want to check if the name that was entered by the contractor matches
         // the name of the customer because the names entered should be the same. if the name is different
         // then the contractor should select the correct name from the drop down menu so that the names match.
-        if ($customer != null) {
-            if ($customer->name != $customerName) {
+        if (!empty($customer) && strcasecmp($customer->usertype, 'customer') == 0) {
+            if (!strcasecmp($customer->name, $customerName) == 0) {
                 return [
                     "error" => true,
                     "name" => $customer->name,
