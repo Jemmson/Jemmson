@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-8 col-md-offset-2">
         <!-- <pre> {{ form }}</pre> -->
-        <div class="panel panel-default">
+        <div class="panel panel-default card card-1">
             <div class="panel-heading" v-if="isContractor">Register Your Company</div>
             <div class="panel-heading" v-if="!isContractor">Please Add Additional Information</div>
 

@@ -145,7 +145,7 @@
 <!-- Basic Profile -->
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
+        <div class="panel panel-default card card-1">
             <div class="panel-heading">
                 <span v-if="paidPlans.length > 0">
                     Profile
