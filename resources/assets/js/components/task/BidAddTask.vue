@@ -140,10 +140,10 @@
       },
       getExistingTask () {
         this.taskResults = [];
-        if (this.addNewTaskForm.taskName.length > 2) {
+        if (this.addNewTaskForm.taskName.length > 1) {
           axios.post ('/api/search/task', {
             taskname: this.addNewTaskForm.taskName,
-            jobId: this.addNewTaskForm.jobId
+            jobId: this.bid.id
           }).then (response => {
             console.log (response.data)
             this.taskResults = response.data
