@@ -31,8 +31,8 @@
 
                         <div class="form-group"
                              :class="{'has-error': addNewTaskForm.errors.has('start_when_accepted')}">
-                            <label for="start_when_accepted">Start When Job Is Accepted</label>
-                            <input type="checkbox" class="form-control" id="start_when_accepted"
+                            <label for="start_when_accepted">Start Job When Customer Accepts Bid?</label>
+                            <input type="checkbox" class="checkbox-inline accepted-checkbox" id="start_when_accepted"
                                    name="start_when_accepted" required v-model="addNewTaskForm.start_when_accepted">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('start_when_accepted')">
                                 {{ addNewTaskForm.errors.get('start_when_accepted') }}
@@ -196,3 +196,9 @@
     }
   }
 </script>
+
+<style scoped>
+    .accepted-checkbox {
+
+    }
+</style>
