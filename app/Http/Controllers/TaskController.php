@@ -213,14 +213,14 @@ class TaskController extends Controller
 
     }
 
-    public function checkIfSubContractorExits($email, $phone)
+    public function checkIfSubContractorExits($name, $email, $phone)
     {
         $user = User::where('email', $email)->orWhere('phone', $phone)->first();
         $result = count($user);
         $userExists = false;
 
         if ($result !== 1) {
-            $user = $this->createNewUser($email, $phone);
+            $user = $this->createNewUser($name, $email, $phone);
             $userExists = false;
         } else {
             $userExists = true;
@@ -231,7 +231,7 @@ class TaskController extends Controller
         return $userData;
     }
 
-    public function createNewUser($email, $phone)
+    public function createNewUser($name, $email, $phone)
     {
         if (empty($email)) {
             $email = null;
@@ -245,7 +245,7 @@ class TaskController extends Controller
 
         $user = User::create(
             [
-                'name' => explode('@', $email)[0],
+                'name' => $name,
                 'email' => $email,
                 'phone' => $phone,
                 'usertype' => 'contractor',
@@ -256,7 +256,8 @@ class TaskController extends Controller
 
         Contractor::create(
             [
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'company_name' => $name
             ]
         );
 
@@ -322,7 +323,7 @@ class TaskController extends Controller
 
         if ($user === null) {
             // if no user found create one
-            $user = $this->createNewUser($email, $phone);
+            $user = $this->createNewUser($name, $email, $phone);
         } else if ($user->usertype === 'customer') {
             // return if the user is a customer
             return response()->json(["message" => "Not a valid user.", "errors" => ["error" => "No valid user."]], 422);
