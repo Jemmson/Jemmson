@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Dompdf\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +99,14 @@ class InitiateBidController extends Controller
                 $customer = $this->createNewCustomer($email, $phone, $customerName);
                 if ($customer == null) {
                     return response()->json(['message' => 'Customer could not be created. Please try initiating the bid again'], 422);
+                } else if (!empty($customer['code'])) {
+                    switch ($customer['code']) {
+                        case 23000:
+                            return response()->json(['message' => 'Customer Could Not Be Added. Please Check The Phone Number Or Email'], 409);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             } else {
                 Log::info("customerExists ErrorText: " . $customerExists['errorText']);
@@ -176,16 +185,23 @@ class InitiateBidController extends Controller
 
         $customer = null;
 
-        $customer = User::create(
-            [
-                'name' => $customerName,
-                'email' => $email,
-                'phone' => $phone,
-                'usertype' => 'customer',
-                'password_updated' => false,
-                'password' => bcrypt($pass),
-            ]
-        );
+
+        try {
+            $customer = User::create(
+                [
+                    'name' => $customerName,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'usertype' => 'customer',
+                    'password_updated' => false,
+                    'password' => bcrypt($pass),
+                ]
+            );
+        } catch (\Illuminate\Database\QueryException $exception) {
+            Log::error($exception);
+            return ["message" => $exception->getMessage(), "code" => $exception->getCode()];
+        }
+
 
         $cust = Customer::create(
             [

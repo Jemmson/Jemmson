@@ -99,6 +99,10 @@ export default class GeneralContractor {
     }
   }
 
+
+
+  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
+
   async initiateBid (form, disabled) {
     disabled.submit = true;
     console.log (form)
@@ -110,11 +114,13 @@ export default class GeneralContractor {
       disabled.submit = false;
       window.location = '/#/bids';
     } catch (error) {
+      console.log(error)
       error = error.response.data;
       form.errors.errors = error.errors;
       Vue.toasted.error (error.message);
       console.log ('Initiate bid errors')
       console.log (error)
+      console.log (error.message)
       disabled.submit = false;
       if (error.errors['no_free_jobs'] !== undefined) {
         window.location = '/settings#/subscription';
