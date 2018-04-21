@@ -9,7 +9,7 @@
                 <form class="form-horizontal" role="form">
                     <input type="hidden" name="street_number" id="street_number">
                     <input type="hidden" name="country" id="country">
-                     <!-- Company Name -->
+                     <!-- email -->
                     <div class="form-group" :class="{'has-error': form.errors.has('email')}">
                         <label class="col-md-3 control-label">Update Login Email</label>
                         <div class="col-md-8">
@@ -20,6 +20,18 @@
                                 </span>
                         </div>
                     </div>
+                    
+                    <!-- Name -->
+                    <div class="form-group" :class="{'has-error': form.errors.has('name')}">
+                        <label class="col-md-3 control-label">Full Name</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="name" v-model="form.name" required>
+                            <span class="help-block" v-show="form.errors.has('name')">
+                                    {{ form.errors.get('name') }}
+                                </span>
+                        </div>
+                    </div>
+
                     <!-- Company Name -->
                     <div class="form-group" :class="{'has-error': form.errors.has('company_name')}"
                          v-if="isContractor">
@@ -194,6 +206,7 @@
         },
         form: new SparkForm ({
           email: '',
+          name: '',
           company_name: '',
           phone_number: '',
           address_line_1: '',
@@ -292,6 +305,10 @@
       User.initAutocomplete('route');
       this.form.phone_number = this.user.phone != null ? this.user.phone : '';
       this.form.email = this.user.email != null ? this.user.email : '';
+      this.form.name = this.user.name != null ? this.user.name : '';
+
+      this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : '';
+      
       
       Bus.$on('updateFormLocation', (payload) => {
                 this.updateFormLocation(payload);

@@ -39,7 +39,9 @@ Route::group([
 
 Route::get('/search', function (Request $request) {
     $query = $request->query('query');
-    $users = \App\User::where('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'customer')->get();
+    $users = \App\User::whereHas('contractor', function ($q) use ($query) {
+        $q->where('company_name', 'like', '%'.$query.'%');
+    })->orWhere('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'customer')->with('contractor')->get();
     return $users;
 });
 
