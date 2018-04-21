@@ -10,7 +10,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Task Name</th>
-                            <th scope="col"></th>
+                            <th scope="col">QTY</th>
                             <th scope="col">Task Price</th>
                             <th scope="col" v-if="isContractor">Task Price (Sub Contractor)</th>
                             <th scope="col" v-else>Exclude From Payment</th>
@@ -20,7 +20,7 @@
                     <tbody>
                         <tr v-for="jobTask in payableTasks" :key="jobTask.id">
                             <td>{{ jobTask.task.name }}</td>
-                            <td></td>
+                            <td>{{ jobTask.qty }}</td>
                             <td v-if="isContractor">${{ jobTask.cust_final_price - jobTask.sub_final_price }}</td>
                             <td v-else>${{ jobTask.cust_final_price }}</td>
                             <td v-if="isContractor">${{ jobTask.sub_final_price }}</td>
@@ -107,7 +107,7 @@
                 let total = 0;
                 if (this.payableTasks !== null) {
                     for (const task of this.payableTasks) {
-                        total += task.cust_final_price - task.sub_final_price;
+                        total += (task.cust_final_price * task.qty) - (task.sub_final_price * task.qty);
                     }
                 }
                 return total;
@@ -116,7 +116,7 @@
                 let total = 0;
                 if (this.payableTasks !== null) {
                     for (const task of this.payableTasks) {
-                        total += task.sub_final_price;
+                        total += task.sub_final_price * task.qty;
                     }
                 }
                 return total;

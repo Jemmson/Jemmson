@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div id="feedback" style="position:fixed; bottom: 0; right: 0;">
+    <div id="feedback" style="position:fixed; bottom: 0; right: 0; z-index: 3;">
         <button class="btn btn-default" @click="open">
             <i class="fas fa-comment fa-2x"></i>
         </button>

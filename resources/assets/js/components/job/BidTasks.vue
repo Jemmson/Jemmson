@@ -47,6 +47,17 @@
                 <div class="divider2"></div>
               </div>
 
+              <div class="col-xs-6 form-group">
+                <label>QTY: {{ jobTask.qty }}</label>
+              </div>
+              <div class="col-xs-6 form-group text-right">
+                <label>Total: {{ jobTask.cust_final_price * jobTask.qty }}</label>
+              </div>
+
+              <div class="col-xs-12">
+                <div class="divider2"></div>
+              </div>
+
               <section class="col-xs-12" style="margin-bottom: 8px;">
                 <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, bid)">
                   <i class="fas fa-map-marker icon"></i>
