@@ -6,33 +6,79 @@
                 <button class="register btn btn-lg btn-primary" v-on:click="route('register')">REGISTER</button>
             </div>
         </div>
-        <div class="welcome-page-wrapper">
+        <div class="container">
 
-            <div class="welcome-page-invoices beige">
-                <h1 class="create-invoices">Subcontract Individual Tasks</h1>
-                <img class="create-invoices" src="/img/invoice.png" style="height: 200px;">
-            </div>
-            <div class="welcome-page-initiate-bid blue">
-                <h1 class="create-invoices">Initiate Bids/Invoices</h1>
-                <img class="create-invoices" src="/img/invoice.png" style="height: 200px;">
-            </div>
-            <div class="welcome-page-task beige">
-                <h1 class="create-invoices">Bid on Tasks</h1>
-                <img class="create-invoices" src="/img/invoice.png" style="height: 200px;">
-            </div>
-            <div class="welcome-page-powered-by blue">
-                <h1 class="create-invoices">Powered By:</h1>
-                <div class="powered-by-content">
-                    <a class="rootLink item-home colorize" href="/" aria-label="Stripe homepage">
-                        <h1>
-                            <svg width="62" height="25"><title>Stripe</title>
-                                <path d="M5 10.1c0-.6.6-.9 1.4-.9 1.2 0 2.8.4 4 1.1V6.5c-1.3-.5-2.7-.8-4-.8C3.2 5.7 1 7.4 1 10.3c0 4.4 6 3.6 6 5.6 0 .7-.6 1-1.5 1-1.3 0-3-.6-4.3-1.3v3.8c1.5.6 2.9.9 4.3.9 3.3 0 5.5-1.6 5.5-4.5.1-4.8-6-3.9-6-5.7zM29.9 20h4V6h-4v14zM16.3 2.7l-3.9.8v12.6c0 2.4 1.8 4.1 4.1 4.1 1.3 0 2.3-.2 2.8-.5v-3.2c-.5.2-3 .9-3-1.4V9.4h3V6h-3V2.7zm8.4 4.5L24.6 6H21v14h4v-9.5c1-1.2 2.7-1 3.2-.8V6c-.5-.2-2.5-.5-3.5 1.2zm5.2-2.3l4-.8V.8l-4 .8v3.3zM61.1 13c0-4.1-2-7.3-5.8-7.3s-6.1 3.2-6.1 7.3c0 4.8 2.7 7.2 6.6 7.2 1.9 0 3.3-.4 4.4-1.1V16c-1.1.6-2.3.9-3.9.9s-2.9-.6-3.1-2.5H61c.1-.2.1-1 .1-1.4zm-7.9-1.5c0-1.8 1.1-2.5 2.1-2.5s2 .7 2 2.5h-4.1zM42.7 5.7c-1.6 0-2.5.7-3.1 1.3l-.1-1h-3.6v18.5l4-.7v-4.5c.6.4 1.4 1 2.8 1 2.9 0 5.5-2.3 5.5-7.4-.1-4.6-2.7-7.2-5.5-7.2zm-1 11c-.9 0-1.5-.3-1.9-.8V10c.4-.5 1-.8 1.9-.8 1.5 0 2.5 1.6 2.5 3.7 0 2.2-1 3.8-2.5 3.8z"></path>
-                            </svg>
-                        </h1>
-                    </a>
-                    <img class="create-invoices" src="/img/invoice.png" style="height: 200px;">
+            <!-- Heading Row -->
+            <div class="row">
+                <div class="col-md-8">
+                    <img class="img-responsive img-rounded" src="/img/TreeGrove.jpg" alt="">
                 </div>
+                <!-- /.col-md-8 -->
+                <div class="col-md-4">
+                    <h1 class="text-center">JEMSUB</h1>
+                    <p>Welcome to your place where you can SUBCONTRACT work you dont have time for. A place where you
+                        can INVOICE your customers and get paid using Stripe or with cash.</p>
+                    <!--<a class="btn btn-primary btn-lg" href="#">Call to Action!</a>-->
+                </div>
+                <!-- /.col-md-4 -->
             </div>
+            <!-- /.row -->
+
+            <hr>
+
+            <!-- Call to Action Well -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="well text-center">
+                        SUBCONTRACT, INVOICE, GET PAID, EASILY!
+                    </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            <!-- Content Row -->
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Subcontract Work</h2>
+                    <p>How often at a job do you run into work that you do not do or work you dont have time for?
+                    How often do you simply lose income because you either call someone to handle the job for you or
+                    just tell the customer to find someone else? Now with this app you can easily create a task and then
+                     subcontract that task, mark up the task, and then easily get paid for the work.</p>
+                    <a class="btn btn-default" href="#">More Info</a>
+                </div>
+                <!-- /.col-md-4 -->
+                <div class="col-md-4">
+                    <h2>Invoice Customers</h2>
+                    <p>You can create an invoice at the beginning of a job and then use that as a commmunication tool
+                    throughout the jobs life cycle. You simply initiate a bid for all jobs. Then construct that bid,
+                        subcontract any of those tasks, and then submit the bid to the customer. The customer then has
+                    the ability to approve the bid. Once the bid has been approve then the work can be performed. Once the
+                    work has been performed the customer can now approve the finish work and pay using Stripe or cash.</p>
+                    <a class="btn btn-default" href="#">More Info</a>
+                </div>
+                <!-- /.col-md-4 -->
+                <div class="col-md-4">
+                    <h2>Get Paid Easily </h2>
+                    <p>How much money is wasted chasing down a check? How much of a pain is it to have to write a check
+                        to a subcontractor after a job has been finished? With Stripe this will happen easily.
+                     The customer pays the invoice and then the money is automatically split between the contractor
+                        and the sub.</p>
+                    <a class="btn btn-default" href="#">More Info</a>
+                </div>
+                <!-- /.col-md-4 -->
+            </div>
+            <!-- /.row -->
+
+            <!-- Footer -->
+            <footer>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p>Copyright &copy; Your Website 2018</p>
+                    </div>
+                </div>
+            </footer>
+
         </div>
     </div>
 </template>
