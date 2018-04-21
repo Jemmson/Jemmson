@@ -9,7 +9,7 @@ use App\User;
 use App\Feedback;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Log;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use App\Services\SanatizeService;
@@ -55,6 +55,7 @@ class HomeController extends Controller
             $request,
             [
                 'email' => 'required|email',
+                'name' => 'required|string',
                 'phone_number' => 'required|min:10|max:14',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
@@ -120,6 +121,7 @@ class HomeController extends Controller
 
         $user = Auth::user();
         $user->email = $request->email;
+        $user->name = $request->name;
 
         $user->save();
 
