@@ -30,6 +30,16 @@
                         </div>
 
                         <div class="form-group"
+                             :class="{'has-error': addNewTaskForm.errors.has('qty')}">
+                            <label for="qty">QTY</label>
+                            <input type="number" class="form-control" min="1" id="qty"
+                                   name="qty" required v-model="addNewTaskForm.qty">
+                            <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
+                                {{ addNewTaskForm.errors.get('qty') }}
+                            </span>
+                        </div>
+
+                        <div class="form-group"
                              :class="{'has-error': addNewTaskForm.errors.has('start_when_accepted')}">
                             <label for="start_when_accepted">Start Job When Customer Accepts Bid?</label>
                             <input type="checkbox" class="checkbox-inline accepted-checkbox" id="start_when_accepted"
@@ -130,6 +140,7 @@
           useStripe: false,
           sub_message: '',
           customer_message: '',
+          qty: 1,
         }),
         taskResults: [],
       }
@@ -183,7 +194,8 @@
         this.taskResults = [];
       },
       addNewTaskToBid () {
-        GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
+        GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
+        this.addNewTaskToBid.qty = 1;
       },
       // // showStripeToggle (jobTask) {
       // //   return User.isAssignedToMe (jobTask);

@@ -291,7 +291,7 @@ class StripeController extends Controller
             if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
                 continue;
             }
-            $total += $jobTask->cust_final_price;
+            $total += $jobTask->cust_final_price * $jobTask->qty;
             $order .= '.' . $jobTask->id;
         }
 
@@ -410,8 +410,11 @@ class StripeController extends Controller
             $general_contractor_id = $task->contractor_id;
             
             // amounts
-            $subAmount = (int) $jobTask->sub_final_price;
-            $generalAmount = (int) $jobTask->cust_final_price - $subAmount;
+            $subAmount = (int) $jobTask->sub_final_price * $jobTask->qty;
+            $generalAmount = (int) ($jobTask->cust_final_price * $jobTask->qty) - $subAmount;
+
+            Log::debug('Sub Amount: ' .  $subAmount);
+            Log::debug('Gen Amount: ' .  $generalAmount);
 
             $sub_contractor = User::find($sub_contractor_id);
             $general_contractor = User::find($general_contractor_id);
@@ -423,7 +426,7 @@ class StripeController extends Controller
             if ($subAmount > 0) {
                 try {
                     $transfer = \Stripe\Transfer::create(array(
-                        "amount" => $jobTask->sub_final_price * 100,
+                        "amount" => $subAmount * 100,
                         "currency" => "usd",
                         "destination" => $sub_stripeExpress->stripe_user_id,
                         "source_transaction" => $chargeId,
