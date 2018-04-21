@@ -208,7 +208,7 @@ class TaskController extends Controller
             return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
         }
 
-        $job->subtractPrice($jobTask->cust_final_price);
+        $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
         return response()->json(["message" => "Success"], 200);
 
     }
@@ -629,7 +629,8 @@ class TaskController extends Controller
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
-            'start_date' => 'required_if:start_when_accepted,false|date|after:today'
+            'start_date' => 'required_if:start_when_accepted,false|date|after:today',
+            'qty' => 'numeric|min:1'
         ]);
 
         $job_id = $request->jobId;
@@ -650,21 +651,12 @@ class TaskController extends Controller
             return response()->json(["message" => "Couldn't add/update task.", "errors" => ["error" => [$e->getMessage()]]], 404);
         }
 
-//        $useStripe = '';
-//        Log::info('stripe variable', $request->useStripe);
-//
-//        if ($request->useStripe) {
-//            $useStripe = 1;
-//        } else {
-//            $useStripe = 0;
-//        }
-
         // update or create job task for task
         $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
-//        $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
+
         $this->updateJobTask($request, $task->id, $jobTask);
         // add to total job price
-        $job->addPrice($request->taskPrice);
+        $job->addPrice(($request->taskPrice * $request->qty));
 
         $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
@@ -730,6 +722,7 @@ class TaskController extends Controller
         $jobTask->sub_message = $request->sub_message;
         $jobTask->customer_message = $request->customer_message;
         $jobTask->stripe = $request->useStripe;
+        $jobTask->qty = $request->qty;
         if ($request->start_when_accepted) {
             $jobTask->start_when_accepted = true;
             $jobTask->start_date = \Carbon\Carbon::now();

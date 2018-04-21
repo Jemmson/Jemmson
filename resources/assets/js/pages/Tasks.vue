@@ -60,6 +60,20 @@
                   <label>${{ bidTask.bid_price }}</label>
                 </span>
               </div>
+              <!-- / end main info section -->
+
+              <div class="col-xs-12">
+                <div class="divider2"></div>
+              </div>
+
+              <div class="col-xs-6 form-group">
+                <label>QTY: {{ bidTask.job_task.qty }}</label>
+              </div>
+              <div class="col-xs-6 form-group text-right">
+                <label>Total: {{ bidTask.bid_price * bidTask.job_task.qty }}</label>
+              </div>
+              <!-- / end qty section -->
+
               <div class="col-xs-12" v-if="showAddress(bidTask)">
                 <div class="divider2"></div>
               </div>
@@ -170,8 +184,8 @@
       },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
-        return (bid.id === bid.job_task.bid_id && bid.job_task.job.status === 'job.approved') || (bid.job_task.job.status !==
-          'job.approved');
+        return (bid.id === bid.job_task.bid_id && (bid.job_task.job.status === 'job.approved' || bid.job_task.job.status === 'job.completed' || bid.job_task.status === 'bid_task.accepted')) || (bid.job_task.status ===
+          'bid_task.bid_sent' || bid.job_task.status === 'bid_task.initiated');
       },
       jobName(name) {
         return Format.jobName(name);
@@ -193,7 +207,6 @@
          return status !== 'bid_task.initiated' && status !== 'bid_task.bid_sent' && status !== 'bid_task.finished_by_sub';
       },
       getAddress(bidTask) {
-        if(bidTask.job_task.status === 'bid_task.accepted') {
             let location_id = 0;
             if (bidTask.job_task.location_id !== null) {
               location_id = bidTask.job_task.location_id;
@@ -202,9 +215,6 @@
             }
             Customer.getAddress(location_id, this.location)
             return this.location.location
-        } else {
-          return 'Pending'
-        }
       },
       showFinishedBtn(bid) {
         return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied';
