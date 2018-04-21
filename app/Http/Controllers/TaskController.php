@@ -208,7 +208,7 @@ class TaskController extends Controller
             return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
         }
 
-        $job->subtractPrice($jobTask->cust_final_price);
+        $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
         return response()->json(["message" => "Success"], 200);
 
     }
@@ -653,7 +653,7 @@ class TaskController extends Controller
 
         // update or create job task for task
         $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
-        
+
         $this->updateJobTask($request, $task->id, $jobTask);
         // add to total job price
         $job->addPrice(($request->taskPrice * $request->qty));
