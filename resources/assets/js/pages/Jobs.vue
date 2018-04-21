@@ -23,7 +23,7 @@
                 </div>
             </div>
             <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated">
-                <div class="col-sm-12 col-md-4" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 1000000000;">
+                <div class="col-sm-12 col-md-4" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">
                     <div class="card card-1">
                         <div class="panel-body">
                             <div class="col-xs-12">

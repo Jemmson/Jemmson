@@ -24,7 +24,7 @@
       </div>
       <!-- / end search bar -->
       <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated">
-        <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:1000000">
+        <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
           <div class="card card-1" v-if="showBid(bidTask)">
             <div class="panel-body">
               <div class="col-xs-12">
