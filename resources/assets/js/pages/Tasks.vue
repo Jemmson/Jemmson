@@ -60,6 +60,17 @@
                   <label>${{ bidTask.bid_price }}</label>
                 </span>
               </div>
+              <div class="col-xs-12" v-if="showAddress(bidTask)">
+                <div class="divider2"></div>
+              </div>
+              <div class="col-xs-12" v-if="showAddress(bidTask)">
+                <p>
+                <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
+                  <i class="fas fa-map-marker icon"></i>
+                  {{ getAddress(bidTask) }}
+                </a>
+                </p>
+              </div>
               <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
                 <div class="divider2"></div>
               </div>
@@ -177,13 +188,23 @@
 
         // return this.localArea.area
       },
+      showAddress(bidTask) {
+         const status = bidTask.job_task.status;
+         return status !== 'bid_task.initiated' && status !== 'bid_task.bid_sent' && status !== 'bid_task.finished_by_sub';
+      },
       getAddress(bidTask) {
-        // Customer.getAddress(bidTask.task.jobs[0].location_id, this.location)
-        // if(bidTask.job_task.status === 'bid_task.accepted') {
-        //     return this.location.location
-        // } else {
-        //   return 'Pending'
-        // }
+        if(bidTask.job_task.status === 'bid_task.accepted') {
+            let location_id = 0;
+            if (bidTask.job_task.location_id !== null) {
+              location_id = bidTask.job_task.location_id;
+            } else {
+              location_id = bidTask.job_task.job.location_id;
+            }
+            Customer.getAddress(location_id, this.location)
+            return this.location.location
+        } else {
+          return 'Pending'
+        }
       },
       showFinishedBtn(bid) {
         return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied';
