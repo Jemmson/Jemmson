@@ -45,7 +45,7 @@
                     How often do you simply lose income because you either call someone to handle the job for you or
                     just tell the customer to find someone else? Now with this app you can easily create a task and then
                      subcontract that task, mark up the task, and then easily get paid for the work.</p>
-                    <a class="btn btn-default" href="#">More Info</a>
+                    <!--<a class="btn btn-default" href="#">More Info</a>-->
                 </div>
                 <!-- /.col-md-4 -->
                 <div class="col-md-4">
@@ -55,7 +55,7 @@
                         subcontract any of those tasks, and then submit the bid to the customer. The customer then has
                     the ability to approve the bid. Once the bid has been approve then the work can be performed. Once the
                     work has been performed the customer can now approve the finish work and pay using Stripe or cash.</p>
-                    <a class="btn btn-default" href="#">More Info</a>
+                    <!--<a class="btn btn-default" href="#">More Info</a>-->
                 </div>
                 <!-- /.col-md-4 -->
                 <div class="col-md-4">
@@ -64,7 +64,7 @@
                         to a subcontractor after a job has been finished? With Stripe this will happen easily.
                      The customer pays the invoice and then the money is automatically split between the contractor
                         and the sub.</p>
-                    <a class="btn btn-default" href="#">More Info</a>
+                    <!--<a class="btn btn-default" href="#">More Info</a>-->
                 </div>
                 <!-- /.col-md-4 -->
             </div>

@@ -102,7 +102,7 @@ class InitiateBidController extends Controller
                 } else if (!empty($customer['code'])) {
                     switch ($customer['code']) {
                         case 23000:
-                            return response()->json(['message' => 'Customer Could Not Be Added. Please Check The Phone Number Or Email'], 409);
+                            return response()->json(['message' => 'This email is already taken. Please use another email address.'], 409);
                             break;
                         default:
                             break;
