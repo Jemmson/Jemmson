@@ -29,14 +29,26 @@
                             </div>
                         </div>
 
-                        <div class="form-group"
-                             :class="{'has-error': addNewTaskForm.errors.has('qty')}">
-                            <label for="qty">QTY</label>
-                            <input type="number" class="form-control" min="1" id="qty"
-                                   name="qty" required v-model="addNewTaskForm.qty">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
+                        <div class="qty-wrapper">
+                            <div class="form-group"
+                                 :class="{'has-error': addNewTaskForm.errors.has('qty')}">
+                                <label for="qty">Quantity</label>
+                                <input type="number" class="form-control" min="1" id="qty"
+                                       name="qty" required v-model="addNewTaskForm.qty">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
                                 {{ addNewTaskForm.errors.get('qty') }}
                             </span>
+                            </div>
+
+                            <div class="form-group"
+                                 :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
+                                <label for="qtyUnit">Quantity Unit</label>
+                                <input type="text" class="form-control" min="1" id="qtyUnit"
+                                       name="qtyUnit" required v-model="addNewTaskForm.qtyUnit">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
+                                {{ addNewTaskForm.errors.get('qtyUnit') }}
+                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group"
@@ -60,7 +72,7 @@
                         </div>
 
                         <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
-                            <label for="custTaskPrice">Customer Task Price</label>
+                            <label for="custTaskPrice">Unit Price For Customer</label>
                             <input type="tel" class="form-control" id="custTaskPrice" name="taskPrice"
                                    v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
@@ -69,7 +81,7 @@
                         </div>
 
                         <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
-                            <label for="subTaskPrice">Sub Task Price</label>
+                            <label for="subTaskPrice">Unit Price For Subcontractor</label>
                             <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
                                    v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
@@ -130,7 +142,7 @@
           taskId: '',
           taskExists: '',
           jobId: this.bid.id,
-          subTaskPrice: '',
+          subTaskPrice: 0,
           taskPrice: '',
           taskName: '',
           contractorId: '',
@@ -141,6 +153,7 @@
           sub_message: '',
           customer_message: '',
           qty: 1,
+          qtyUnit: ''
         }),
         taskResults: [],
       }
@@ -186,6 +199,7 @@
         this.addNewTaskForm.taskName = result.name;
         this.addNewTaskForm.taskPrice = result.proposed_cust_price;
         this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
+        this.addNewTaskForm.qtyUnit = result.qtyUnit;
         this.formatPrice ('taskPrice');
         this.formatPrice ('subTaskPrice');
         this.clearTaskResults ()
@@ -212,5 +226,11 @@
 <style scoped>
     .accepted-checkbox {
 
+    }
+
+    .qty-wrapper{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 2rem;
     }
 </style>

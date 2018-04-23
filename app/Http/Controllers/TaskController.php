@@ -630,8 +630,11 @@ class TaskController extends Controller
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
             'start_date' => 'required_if:start_when_accepted,false|date|after:today',
-            'qty' => 'numeric|min:1'
+            'qty' => 'numeric|min:1',
+            'qtyUnit' => 'string|min:1'
         ]);
+
+        Log::info('quantity unit: '. $request->qtyUnit);
 
         $job_id = $request->jobId;
         $name = strtolower($request->taskName);
@@ -639,16 +642,24 @@ class TaskController extends Controller
         $job = Job::find($job_id);
 
         // find or create a task TODO: review
-        $task = Task::firstOrCreate(['name' => $name, 'job_id' => $job_id, 'contractor_id' => $request->contractorId]);
+        $task = Task::firstOrCreate([
+            'name' => $name,
+            'job_id' => $job_id,
+            'contractor_id' => $request->contractorId]);
 
         $task->proposed_cust_price = $request->taskPrice;
         $task->proposed_sub_price = $request->subTaskPrice;
+        $task->qtyUnit = $request->qtyUnit;
+
 
         try {
             $task->save();
         } catch (\Exception $e) {
             Log::error('Add/Update Task: ' . $e->getMessage());
-            return response()->json(["message" => "Couldn't add/update task.", "errors" => ["error" => [$e->getMessage()]]], 404);
+            return response()->json([
+                "message" => "Couldn't add/update task.",
+                "errors" => ["error" => [$e->getMessage()]]],
+                404);
         }
 
         // update or create job task for task
@@ -713,6 +724,9 @@ class TaskController extends Controller
 
     public function updateJobTask($request, $task_id, $jobTask)
     {
+
+        Log::info('quantity unit: '. $request->qtyUnit);
+
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;
         $jobTask->status = __('bid_task.initiated');
