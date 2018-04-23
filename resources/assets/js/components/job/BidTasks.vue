@@ -47,10 +47,13 @@
                 <div class="divider2"></div>
               </div>
 
-              <div class="col-xs-6 form-group">
+              <div class="col-xs-2 form-group">
                 <label>QTY: {{ jobTask.qty }}</label>
               </div>
               <div class="col-xs-6 form-group text-right">
+                <label>Price per Unit: <br> <span v-if="jobTask.task.qtyUnit !== null">{{ jobTask.cust_final_price }} / {{ jobTask.task.qtyUnit }}</span></label>
+              </div>
+              <div class="col-xs-4 form-group text-right">
                 <label>Total: {{ jobTask.cust_final_price * jobTask.qty }}</label>
               </div>
 
