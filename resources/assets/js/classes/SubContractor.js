@@ -57,6 +57,12 @@ export default class SubContractor {
                 return false;
             }
         }
+
+        if (User.needsStripe()) {
+            disabled.finished = false;
+            return false;
+        }
+
         let contractor_id = 0;
         if (bid.job_task !== undefined) {
             contractor_id = bid.job_task.task.contractor_id;

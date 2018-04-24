@@ -147,7 +147,7 @@ export default class GeneralContractor {
 
   notifyCustomerOfFinishedBid (bid, disabled) {
     disabled.submitBid = true;
-    if (User.jobNeedsStripe(bid)) {
+    if (User.needsStripe()) {
       disabled.submitBid = false;
       return false;
     }
