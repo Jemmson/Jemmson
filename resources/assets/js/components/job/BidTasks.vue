@@ -144,14 +144,13 @@
 
                   <!-- / task options -->
                   <div class="col-xs-12 hidden" :id="'task-options-' + jobTask.id" :key="2">
-                    <div class="col-xs-4">
-                      <!-- Rounded switch -->
+                    <!-- <div class="col-xs-4">
                       <span class="stripe-label" v-if="showStripeToggle(jobTask)">Use Stripe</span>
                       <label v-if="showStripeToggle(jobTask)" class="switch">
                         <input :id="'toggle-stripe-' + jobTask.id" type="checkbox" v-model="jobTask.stripe" @click="toggleStripePaymentOption(jobTask)">
                         <span class="slider round"></span>
                       </label>
-                    </div>
+                    </div> -->
                     <div class="col-xs-4">
                       <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                         Deny

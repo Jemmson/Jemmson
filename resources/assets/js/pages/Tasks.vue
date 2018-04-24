@@ -38,16 +38,15 @@
                   Start On:
                   <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
                 </p>
-                <div v-if="showStripeToggle(bidTask.job_task)">
+                <!-- <div v-if="showStripeToggle(bidTask.job_task)">
                   <p>
                     Stripe Payment:
                   </P>
-                  <!-- Rounded switch -->
                   <label class="switch">
                     <input :id="'toggle-stripe-' + bidTask.job_task.id" type="checkbox" v-model="bidTask.job_task.stripe" @click="toggleStripePaymentOption(bidTask.job_task)">
                     <span class="slider round"></span>
                   </label>
-                </div>
+                </div> -->
               </div>
               <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
                 <label for="details">Task Price:</label>
