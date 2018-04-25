@@ -634,22 +634,55 @@ class TaskController extends Controller
             'qtyUnit' => 'string|min:1'
         ]);
 
-        Log::info('quantity unit: '. $request->qtyUnit);
+        Log::info('quantity unit: ' . $request->qtyUnit);
+        Log::info("task_id: $request->taskId");
+
+        $task = Task::find($request->taskId);
+        $name = strtolower($request->taskName);
+
+        if (empty($task)) {
+            $taskByName = "Select name, contractorId from Task where name=$name and contractor_id= $request->contractorId";
+            Log::info("taskByName: $taskByName");
+            $taskResults = DB::select($taskByName);
+            if(empty($taskResults)){
+                // create a new task
+                $newTask = new Task;
+                $newTask->name = $request->name;
+                $newTask->contractor_id = $request->contractor_id;
+                $newTask->proposed_cust_price = $request->taskPrice;
+                $newTask->proposed_sub_price = $request->sucTaskPrice;
+//                $newTask->save();
+                try {
+                    $newTask->save();
+                } catch (\Exception $e) {
+                    Log::error('Add/Update Task: ' . $e->getMessage());
+                    return response()->json([
+                        "message" => "Couldn't add/update task.",
+                        "errors" => ["error" => [$e->getMessage()]]],
+                        404);
+                }
+            }
+        } else if($request->changePrice)  {
+//            just update the price and dont create a new one
+            $task->proposed_cust_price = $request->taskPrice;
+        }
 
         $job_id = $request->jobId;
-        $name = strtolower($request->taskName);
 
         $job = Job::find($job_id);
 
-        // find or create a task TODO: review
-        $task = Task::firstOrCreate([
-            'name' => $name,
-            'job_id' => $job_id,
-            'contractor_id' => $request->contractorId]);
-
-        $task->proposed_cust_price = $request->taskPrice;
-        $task->proposed_sub_price = $request->subTaskPrice;
-        $task->qtyUnit = $request->qtyUnit;
+//        // find or create a task TODO: review
+//        $task = Task::firstOrCreate([
+//            'name' => $name,
+//            'job_id' => $job_id,
+//            'contractor_id' => $request->contractorId]);
+//
+//        if (!$request->changePrice) {
+//            $task->proposed_cust_price = $request->taskPrice;
+//        }
+//
+//        $task->proposed_sub_price = $request->subTaskPrice;
+//        $task->qtyUnit = $request->qtyUnit;
 
 
         try {
@@ -725,7 +758,7 @@ class TaskController extends Controller
     public function updateJobTask($request, $task_id, $jobTask)
     {
 
-        Log::info('quantity unit: '. $request->qtyUnit);
+        Log::info('quantity unit: ' . $request->qtyUnit);
 
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;

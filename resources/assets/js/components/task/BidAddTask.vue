@@ -158,7 +158,7 @@
     data () {
       return {
         addNewTaskForm: new SparkForm ({
-          taskId: '',
+          taskId: -1,
           taskExists: '',
           jobId: this.bid.id,
           subTaskPrice: 0,
@@ -189,10 +189,20 @@
         console.log (price)
         console.log (this.addNewTaskForm.taskPrice)
         Format.addDollarSign (this.addNewTaskForm, price);
-        if (this.result.standardCustomerTaskPrice !== this.addNewTaskForm.taskPrice &&
+        let strippedTaskPrice = this.strippedTaskPrice(this.addNewTaskForm.taskPrice);
+        console.log(strippedTaskPrice)
+        console.log(this.result.standardCustomerTaskPrice)
+        if (this.result.standardCustomerTaskPrice !== strippedTaskPrice &&
           this.result.resultReturned === true
         ) {
           this.priceChange = true
+        }
+      },
+      strippedTaskPrice (taskPrice) {
+        if(taskPrice.charAt(0) === '$'){
+          return parseInt(taskPrice.substr(1));
+        } else {
+          return parseInt(taskPrice);
         }
       },
       getExistingTask () {
@@ -239,6 +249,7 @@
         this.result.standardCustomerTaskPrice = result.proposed_cust_price
         this.result.standardSubTaskPrice = result.proposed_sub_price
         this.clearTaskResults ()
+        this.priceChange = false
       },
       clearTaskResults () {
         this.taskResults = [];
