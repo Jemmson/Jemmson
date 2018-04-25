@@ -213,19 +213,15 @@ export default class User {
   }
 
   /**
-   * 
-   * @param {JobTask or BidContractorJobTask.job_task} jobTask 
+   * Has this user not connected withs tripe yet?
    */
-  needsStripe(jobTask) {
-    if (this.recievePaymentsWithStripe(jobTask)) {
+  needsStripe() {
       if (!this.stripeExpressConnected()) {
         console.log('No Stripe Express');
         Bus.$emit('needsStripe');
         return true;
       }
       return false;
-    }
-    return false;
   }
 
   payWithStripe() {

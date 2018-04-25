@@ -126,13 +126,13 @@
                             </span>
                         </div>
 
-                        <div class="stripe-tag">
+                        <!-- <div class="stripe-tag">
                             <h3>Use Stripe For Payment</h3>
                             <label class="switch">
                                 <input type="checkbox" @click="toggleStripePaymentOption()">
                                 <span class="slider round"></span>
                             </label>
-                        </div>
+                        </div> -->
 
                     </form>
                     <!-- /end col-md-6 -->

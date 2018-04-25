@@ -71,7 +71,7 @@
                         </span>
                         Paid With Cash
                     </button>
-                    <button class="btn btn-success" v-if="showPayWithStripeBtn" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+                    <button class="btn btn-success" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>

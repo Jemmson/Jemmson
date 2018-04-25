@@ -10,6 +10,7 @@
                 <div class="modal-body">
                     <div v-if="showStripeExpress">
                         Before you can continue you will need to connect with Stripe Express. 
+                        This is allows you to get paid with a credit or debit card easily.
                     </div>
                     <div v-if="isCustomer && notSignedUp">
                         Before You can pay with stripe you will need to complete the form below.
