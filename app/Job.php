@@ -260,12 +260,18 @@ class Job extends Model
 
     public function subtractPrice($amount)
     {
-        $this->bid_price -= $amount;
+        Log::debug('existing amount ' . $this->bid_price);
+        Log::debug('amount: ' . $amount);
+        $this->bid_price -= (int) $amount;
+        if ($this->bid_price < 0) {
+            $this->bid_price = 0;
+        }
 
         try {
             $this->save();
+            Log::debug('Saved subtract job ' .  $this);
         } catch(\Exception $e) {
-            Log::error('Adding Price To Job: ' . $e->getMessage());
+            Log::error('Subtracting Price To Job: ' . $e->getMessage());
             return false;
         }
         return true;

@@ -30,10 +30,6 @@ export default class GeneralContractor {
     // I want the task to associated to a job, customer, and contractor
     // I want to add the existing task to the job
 
-    // TODO: handle tasks existing
-    // form.taskId = 1;
-    // form.taskExists = false;
-
     form.jobId = bid.id;
     form.contractorId = Spark.state.user.id;
 
@@ -46,8 +42,11 @@ export default class GeneralContractor {
         // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
         // show a toast notification
         form.taskName = '';
-        form.taskPrice = '';
-        form.subTaskPrice = '';
+        form.taskPrice = 0;
+        form.subTaskPrice = 0;
+        form.qty = 1;
+        form.taskId = -1;
+        
         Bus.$emit ('taskAdded', true);
         User.emitChange ('bidUpdated');
         Vue.toasted.success ('New Task Added!');

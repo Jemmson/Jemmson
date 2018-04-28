@@ -41,7 +41,7 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
-            'days' => 7,
+            'days' => 100,
         ],
         'slack' => [
             'driver' => 'slack',
