@@ -217,25 +217,6 @@
           })
         }
       },
-      filterReturnedTasks (responseData, allTasks) {
-        let responseDataLength = responseData.length
-        let allTasksDataLength = allTasks.length
-        let newTasks = []
-
-        for (let i = 0; i < responseDataLength; i++) {
-          let flag = false
-          for (let j = 0; j < allTasksDataLength; j++) {
-            if (responseData[i].id === allTasks[j].id) {
-              flag = true
-            }
-          }
-          // debugger
-          if (flag === false) {
-            newTasks.push (responseData[i])
-          }
-        }
-        return newTasks
-      },
       fillTaskValues (result) {
         console.log (result)
         this.taskExists = true
