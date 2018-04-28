@@ -16,7 +16,7 @@
 
                         <div class="form-group wrapper-task-name" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                             <label for="taskName">Task Name</label>
-                            <input type="text" class="form-control" id="taskName" name="taskName" autofocus
+                            <input type="text" class="form-control" id="taskName" name="taskName" autofocus autocomplete="false"
                                    v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                  {{ addNewTaskForm.errors.get('taskName') }}
@@ -162,7 +162,7 @@
           taskExists: '',
           jobId: this.bid.id,
           subTaskPrice: 0,
-          taskPrice: '',
+          taskPrice: 0,
           taskName: '',
           contractorId: '',
           area: this.bid.city,
@@ -265,7 +265,7 @@
       },
       addNewTaskToBid () {
         GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
-        this.addNewTaskToBid.qty = 1;
+        this.clearTaskResults();
       },
       // // showStripeToggle (jobTask) {
       // //   return User.isAssignedToMe (jobTask);
