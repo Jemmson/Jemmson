@@ -61,7 +61,7 @@ class InitiateBidController extends Controller
 //        Bugsnag::notifyException(new RuntimeException("Test error"));
 
         $this->validate($request, [
-            'email' => 'required|email',
+//            'email' => 'required|email',
             'phone' => 'required|min:10|max:14',
             'customerName' => 'required',
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
@@ -84,33 +84,35 @@ class InitiateBidController extends Controller
         Log::info("customerName: $customerName");
         $phone = SanatizeService::phone($request->phone);
         Log::info("phone: $phone");
-        $email = $request->email;
-        Log::info("email: $email");
         $jobName = $request->jobName;
-        Log::info("jobName: $jobName");
+
+//        $email = $request->email;
+//        Log::info("email: $email");
+        // job name should be id + 1 of the latest Job entry
 
         // find customer
-        $customerExists = $this->customerExistsInTheDatabase($email, $phone, $customerName);
+        $customerExists = $this->customerExistsInTheDatabase($phone, $customerName);
 
         if ($customerExists['error']) {
             Log::info("customerExists Error: " . $customerExists['error']);
             if ($customerExists['errorText'] == 'Create a new customer') {
                 Log::info("customerExists ErrorText: " . $customerExists['errorText']);
-                $customer = $this->createNewCustomer($email, $phone, $customerName);
+                $customer = $this->createNewCustomer($phone, $customerName);
                 if ($customer == null) {
                     return response()->json(['message' => 'Customer could not be created. Please try initiating the bid again'], 422);
-                } else if (!empty($customer['code'])) {
-                    switch ($customer['code']) {
-                        case 23000:
-                            return response()->json(['message' => 'This email is already taken. Please use another email address.'], 409);
-                            break;
-                        default:
-                            break;
-                    }
                 }
+//                else if (!empty($customer['code'])) {
+//                    switch ($customer['code']) {
+//                        case 23000:
+//                            return response()->json(['message' => 'This email is already taken. Please use another email address.'], 409);
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
             } else {
                 Log::info("customerExists ErrorText: " . $customerExists['errorText']);
-                return response()->json(['message' => 'Customer already exists please correct the name.', "customerName" => $customerExists['name']], 422);
+                return response()->json(['message' => "Customer already exists please correct the name to" . $customerExists['name'], "customerName" => $customerExists['name']], 422);
             }
         } else {
             Log::info("customerExists Customer: " . $customerExists['customer']);
@@ -159,7 +161,12 @@ class InitiateBidController extends Controller
      */
     public function jobName($customer)
     {
-        return $customer->name . uniqid();
+        $nextJob = Job::all()->last()->id+1;
+
+        $jobName = "Job Number: {$nextJob}";
+        Log::info("jobName: $jobName");
+
+        return $jobName;
     }
 
 
@@ -171,11 +178,11 @@ class InitiateBidController extends Controller
      *
      * @return $this|\Illuminate\Database\Eloquent\Model
      */
-    public function createNewCustomer($email, $phone, $customerName)
+    public function createNewCustomer($phone, $customerName)
     {
-        if (empty($email)) {
-            $email = null;
-        }
+//        if (empty($email)) {
+//            $email = null;
+//        }
 
         if (empty($phone) || $phone === '') {
             $phone = null;
@@ -190,7 +197,7 @@ class InitiateBidController extends Controller
             $customer = User::create(
                 [
                     'name' => $customerName,
-                    'email' => $email,
+//                    'email' => $email,
                     'phone' => $phone,
                     'usertype' => 'customer',
                     'password_updated' => false,
@@ -221,11 +228,11 @@ class InitiateBidController extends Controller
      *
      * @return bool|\Illuminate\Database\Eloquent\Model|null|static
      */
-    public function customerExistsInTheDatabase($email, $phone, $customerName)
+    public function customerExistsInTheDatabase($phone, $customerName)
     {
         // checking to see if a user exists that has an email or phone number that
         // is already in the database
-        $customer = User::where('email', $email)->orWhere('phone', $phone)->first();
+        $customer = User::where('phone', $phone)->first();
 
 
         // if a user exists then I want to check if the name that was entered by the contractor matches

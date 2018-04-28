@@ -17,21 +17,21 @@ describe ('Welcome', () => {
       expect(wrapper.html()).toContain(`REGISTER`)
   });
 
-  it ('Page contains title subcontractor individual tasks', () => {
-      expect(wrapper.html()).toContain(`Subcontract Individual Tasks`)
-  });
-
-  it ('Page contains initiate bids/invoices', () => {
-      expect(wrapper.html()).toContain(`Initiate Bids/Invoices`)
-  });
-
-  it ('Page contains Bid on Tasks', () => {
-      expect(wrapper.html()).toContain(`Bid on Tasks`)
-  });
-
-  it ('Page contains Powered By:', () => {
-      expect(wrapper.html()).toContain(`Powered By:`)
-  });
+  // it ('Page contains title subcontractor individual tasks', () => {
+  //     expect(wrapper.html()).toContain(`Subcontract Individual Tasks`)
+  // });
+  //
+  // it ('Page contains initiate bids/invoices', () => {
+  //     expect(wrapper.html()).toContain(`Initiate Bids/Invoices`)
+  // });
+  //
+  // it ('Page contains Bid on Tasks', () => {
+  //     expect(wrapper.html()).toContain(`Bid on Tasks`)
+  // });
+  //
+  // it ('Page contains Powered By:', () => {
+  //     expect(wrapper.html()).toContain(`Powered By:`)
+  // });
 
   // it ('Clicking Login button takes me to the login page', () => {
   //     wrapper.find('button.login').trigger('click')
