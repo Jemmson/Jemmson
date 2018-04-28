@@ -643,8 +643,8 @@ class TaskController extends Controller
         if (empty($task)) {
             $taskByName = "Select name, contractorId from Task where name=$name and contractor_id= $request->contractorId";
             Log::info("taskByName: $taskByName");
-            $taskResults = DB::select($taskByName);
-            if(empty($taskResults)){
+            $task = DB::select($taskByName);
+            if (empty($task)) {
                 // create a new task
                 $newTask = new Task;
                 $newTask->name = $request->name;
@@ -661,10 +661,34 @@ class TaskController extends Controller
                         "errors" => ["error" => [$e->getMessage()]]],
                         404);
                 }
+            } else {
+                $task->qtyUnit = $request->qtyUnit;
+                try {
+                    $task->save();
+                } catch (\Exception $e) {
+                    Log::error('Add/Update Task: ' . $e->getMessage());
+                    return response()->json([
+                        "message" => "Couldn't add/update task.",
+                        "errors" => ["error" => [$e->getMessage()]]],
+                        404);
+                }
             }
-        } else if($request->changePrice)  {
+        } else {
+            $task->qtyUnit = $request->qtyUnit;
+            if ($request->changePrice) {
 //            just update the price and dont create a new one
-            $task->proposed_cust_price = $request->taskPrice;
+                $task->proposed_cust_price = $request->taskPrice;
+            }
+            try {
+                $task->save();
+            } catch (\Exception $e) {
+                Log::error('Add/Update Task: ' . $e->getMessage());
+                return response()->json([
+                    "message" => "Couldn't add/update task.",
+                    "errors" => ["error" => [$e->getMessage()]]],
+                    404);
+            }
+
         }
 
         $job_id = $request->jobId;
@@ -685,16 +709,6 @@ class TaskController extends Controller
 //        $task->qtyUnit = $request->qtyUnit;
 
 
-        try {
-            $task->save();
-        } catch (\Exception $e) {
-            Log::error('Add/Update Task: ' . $e->getMessage());
-            return response()->json([
-                "message" => "Couldn't add/update task.",
-                "errors" => ["error" => [$e->getMessage()]]],
-                404);
-        }
-
         // update or create job task for task
         $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
 
@@ -714,7 +728,8 @@ class TaskController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function denyTask(Request $request)
+    public
+    function denyTask(Request $request)
     {
         $this->validate($request, [
             'job_task_id' => 'required',
@@ -739,7 +754,8 @@ class TaskController extends Controller
         return response()->json($task, 200);
     }
 
-    public function updateTaskWithNewValuesIfValuesAreDifferent($task, $subTaskPrice, $taskPrice)
+    public
+    function updateTaskWithNewValuesIfValuesAreDifferent($task, $subTaskPrice, $taskPrice)
     {
         if ($task->proposed_cust_price != $taskPrice || $task->proposed_sub_price != $subTaskPrice) {
             $task->proposed_cust_price = $taskPrice;
@@ -749,13 +765,15 @@ class TaskController extends Controller
         return $task;
     }
 
-    public function switchJobStatusToInProgress($job, $message)
+    public
+    function switchJobStatusToInProgress($job, $message)
     {
         $job->status = $message;
         $job->save();
     }
 
-    public function updateJobTask($request, $task_id, $jobTask)
+    public
+    function updateJobTask($request, $task_id, $jobTask)
     {
 
         Log::info('quantity unit: ' . $request->qtyUnit);

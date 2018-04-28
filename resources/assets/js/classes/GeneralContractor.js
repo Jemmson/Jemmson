@@ -31,8 +31,8 @@ export default class GeneralContractor {
     // I want to add the existing task to the job
 
     // TODO: handle tasks existing
-    form.taskId = 1;
-    form.taskExists = false;
+    // form.taskId = 1;
+    // form.taskExists = false;
 
     form.jobId = bid.id;
     form.contractorId = Spark.state.user.id;
