@@ -239,6 +239,7 @@
       fillTaskValues (result) {
         console.log (result)
         this.taskExists = true
+        this.addNewTaskForm.taskId = result.id;
         this.addNewTaskForm.taskName = result.name;
         this.addNewTaskForm.taskPrice = result.proposed_cust_price;
         this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
