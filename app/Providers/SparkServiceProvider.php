@@ -35,7 +35,8 @@ class SparkServiceProvider extends ServiceProvider
      */
     protected $developers = [
         //
-        'pike.shawn@gmail.com'
+        'pike.shawn@gmail.com',
+        'davene1919@gmail.com'
     ];
 
     /**
@@ -64,24 +65,26 @@ class SparkServiceProvider extends ServiceProvider
             ];
         });
 
-        Spark::useStripe()->noCardUpFront()->trialDays(10);
+        Spark::useStripe()->noCardUpFront()->trialDays(30);
 
-        Spark::freePlan()
+//        Spark::freePlan()
+//            ->features([
+//                'First', 'Second', 'Third'
+//            ]);
+
+        Spark::plan('Subscription', 'basic-monthly')
+            ->price(15)
             ->features([
-                'First', 'Second', 'Third'
+                'Unlimited Jobs With Customers',
+                'Unlimited Subcontractors for a Job',
+                'Unlimited Payments from Stripe'
             ]);
 
-        Spark::plan('Basic', 'basic-monthly')
-            ->price(10)
-            ->features([
-                'First', 'Second', 'Third'
-            ]);
-
-        Spark::plan('Pro', 'pro-plan')
-            ->price(20)
-            ->features([
-                'First', 'Second', 'Third'
-            ]);
+//        Spark::plan('Pro', 'pro-plan')
+//            ->price(20)
+//            ->features([
+//                'First', 'Second', 'Third'
+//            ]);
     }
 
     /**
