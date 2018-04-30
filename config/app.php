@@ -24,8 +24,8 @@ return [
 
     'bid_task' => [
         'initiated' => 'bid_task.initiated',
-        'sent'       =>  'bid_task.sent',
-        'approved'   =>  'bid_task.approved',
+        'sent' => 'bid_task.sent',
+        'approved' => 'bid_task.approved',
     ],
 
     'job' => [
@@ -209,7 +209,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
 //        Laravel\Dusk\DuskServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 

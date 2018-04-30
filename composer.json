@@ -19,6 +19,7 @@
         "laravel/spark": "*@dev",
         "laravel/tinker": "~1.0",
         "nexmo/laravel": "^1.0",
+        "pusher/pusher-php-server": "~3.0",
         "simplesoftwareio/simple-sms": "3.0.*",
         "stripe/stripe-php": "^5.9"
     },
