@@ -114,10 +114,10 @@ class InitiateBidController extends Controller
                     $customerExists['errorText']);
                 return response()->json([
                     'message' =>
-                        "A customer already exists with this phone number but has".
+                        "<span class='notification-error-response'>A customer already exists with this phone number but has".
                          " this name - '" . $customerExists['name'] .
                         "'. <br>Please correct either the phone number or the name".
-                        " and then please resubmit the bid.",
+                        " and then please resubmit the bid.<span>",
                     "customerName" => $customerExists['name']
                 ], 422);
             }
