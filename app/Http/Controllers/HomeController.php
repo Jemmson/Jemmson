@@ -51,6 +51,9 @@ class HomeController extends Controller
 
     public function create(Request $request)
     {
+        //check that the phone number is unique for a contractor in the database
+
+
         $this->validate(
             $request,
             [
@@ -83,6 +86,17 @@ class HomeController extends Controller
             // TODO: if email method of contact is selected then there must be an email address
             // TODO: if sms or phone is selected then a phone number must be present
             // TODO: need to add functionality for handling images for company logos if a contractor wants to add it
+
+            $contractor = User::where('phone', $phone)->first();
+
+            if (!empty($contractor)) {
+                return response()->json([
+                    'message' =>
+                        "<span class='notification-error-response'>A contractor already has this phone number registered.<br>".
+                        "You may already be registered. ".
+                        "<br>Please verify the phone number ".
+                        " and resubmit.</span>"], 422);
+            }
 
             $this->validate($request, [
                 'company_name' => 'required|min:2'
