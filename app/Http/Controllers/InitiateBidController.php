@@ -60,6 +60,7 @@ class InitiateBidController extends Controller
 
 //        Bugsnag::notifyException(new RuntimeException("Test error"));
 
+
         $this->validate($request, [
 //            'email' => 'required|email',
             'phone' => 'required|min:10|max:14',
@@ -90,10 +91,6 @@ class InitiateBidController extends Controller
         Log::info("phone: $phone");
         $jobName = $request->jobName;
 
-//        $email = $request->email;
-//        Log::info("email: $email");
-        // job name should be id + 1 of the latest Job entry
-
         // find customer
         $customerExists = $this->customerExistsInTheDatabase($phone, $customerName);
 
@@ -112,22 +109,15 @@ class InitiateBidController extends Controller
                                 'Please try initiating the bid again'
                         ], 422);
                 }
-//                else if (!empty($customer['code'])) {
-//                    switch ($customer['code']) {
-//                        case 23000:
-//                            return response()->json(['message' => 'This email is already taken. Please use another email address.'], 409);
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                }
             } else {
                 Log::info("customerExists ErrorText: " .
                     $customerExists['errorText']);
                 return response()->json([
                     'message' =>
-                        "Customer already exists please correct the name to" .
-                    $customerExists['name'],
+                        "A customer already exists with this phone number but has".
+                         " this name - '" . $customerExists['name'] .
+                        "'. <br>Please correct either the phone number or the name".
+                        " and then please resubmit the bid.",
                     "customerName" => $customerExists['name']
                 ], 422);
             }
@@ -202,9 +192,6 @@ class InitiateBidController extends Controller
      */
     public function createNewCustomer($phone, $customerName)
     {
-//        if (empty($email)) {
-//            $email = null;
-//        }
 
         if (empty($phone) || $phone === '') {
             $phone = null;
@@ -254,32 +241,35 @@ class InitiateBidController extends Controller
     {
         // checking to see if a user exists that has an email or phone number that
         // is already in the database
-        $customer = User::where('phone', $phone)->first();
+        $customer = User::where('phone', $phone)->where('usertype', '=', 'customer')->first();
 
+        $errorArray = [];
 
         // if a user exists then I want to check if the name that was entered by the contractor matches
         // the name of the customer because the names entered should be the same. if the name is different
         // then the contractor should select the correct name from the drop down menu so that the names match.
         if (!empty($customer) && strcasecmp($customer->usertype, 'customer') == 0) {
             if (!strcasecmp($customer->name, $customerName) == 0) {
-                return [
+                $errorArray = [
                     "error" => true,
                     "name" => $customer->name,
                     "errorText" => "Error: Customer already exists please correct the name."
                 ];
             } else {
-                return [
+                $errorArray = [
                     "error" => false,
                     "customer" => $customer
                 ];
             }
         } else {
-            return [
+            $errorArray = [
                 "error" => true,
                 "customer" => $customer,
                 "errorText" => "Create a new customer"
             ];
         }
+
+        return $errorArray;
 
     }
 
@@ -293,6 +283,8 @@ class InitiateBidController extends Controller
      */
     public function createBid($customer_id, $job_name)
     {
+
+
         // not the best way but autoincrementing the id number
         // TODO: find a better way but this works for now
         $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
@@ -311,7 +303,6 @@ class InitiateBidController extends Controller
             $job->location_id = User::find($customer_id)->customer()->first()->location_id;
         }
 
-
         try {
             $job->save();
         } catch (\Exception $e) {
@@ -320,7 +311,6 @@ class InitiateBidController extends Controller
                 'error',
                 'Job could not be created. Please try initiating the bid again'
             );
-//            return null;
         }
         return $job;
     }
