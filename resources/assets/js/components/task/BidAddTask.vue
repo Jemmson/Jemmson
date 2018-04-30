@@ -16,7 +16,7 @@
 
                         <div class="form-group wrapper-task-name" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                             <label for="taskName">Task Name</label>
-                            <input type="text" class="form-control" id="taskName" name="taskName" autofocus
+                            <input type="text" class="form-control" id="taskName" name="taskName" autofocus autocomplete="false"
                                    v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                  {{ addNewTaskForm.errors.get('taskName') }}
@@ -162,7 +162,7 @@
           taskExists: '',
           jobId: this.bid.id,
           subTaskPrice: 0,
-          taskPrice: '',
+          taskPrice: 0,
           taskName: '',
           contractorId: '',
           area: this.bid.city,
@@ -217,28 +217,10 @@
           })
         }
       },
-      filterReturnedTasks (responseData, allTasks) {
-        let responseDataLength = responseData.length
-        let allTasksDataLength = allTasks.length
-        let newTasks = []
-
-        for (let i = 0; i < responseDataLength; i++) {
-          let flag = false
-          for (let j = 0; j < allTasksDataLength; j++) {
-            if (responseData[i].id === allTasks[j].id) {
-              flag = true
-            }
-          }
-          // debugger
-          if (flag === false) {
-            newTasks.push (responseData[i])
-          }
-        }
-        return newTasks
-      },
       fillTaskValues (result) {
         console.log (result)
         this.taskExists = true
+        this.addNewTaskForm.taskId = result.id;
         this.addNewTaskForm.taskName = result.name;
         this.addNewTaskForm.taskPrice = result.proposed_cust_price;
         this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
@@ -264,7 +246,7 @@
       },
       addNewTaskToBid () {
         GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
-        this.addNewTaskToBid.qty = 1;
+        this.clearTaskResults();
       },
       // // showStripeToggle (jobTask) {
       // //   return User.isAssignedToMe (jobTask);
