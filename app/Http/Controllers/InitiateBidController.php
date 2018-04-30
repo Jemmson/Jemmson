@@ -77,7 +77,11 @@ class InitiateBidController extends Controller
 
 
         if (!$contractor->hasMoreFreeJobs() && !$contractor->isSubscribed()) {
-            return response()->json(['message' => 'No more free Jobs left.', 'errors' => ['no_free_jobs' => 'No more free Jobs left']], 422);
+            return response()->json(
+                [
+                    'message' => 'No more free Jobs left.',
+                    'errors' => ['no_free_jobs' => 'No more free Jobs left']
+                ], 422);
         }
 
         $customerName = $request->customerName;
@@ -96,10 +100,17 @@ class InitiateBidController extends Controller
         if ($customerExists['error']) {
             Log::info("customerExists Error: " . $customerExists['error']);
             if ($customerExists['errorText'] == 'Create a new customer') {
-                Log::info("customerExists ErrorText: " . $customerExists['errorText']);
+                Log::info(
+                    "customerExists ErrorText: " . $customerExists['errorText']
+                );
                 $customer = $this->createNewCustomer($phone, $customerName);
                 if ($customer == null) {
-                    return response()->json(['message' => 'Customer could not be created. Please try initiating the bid again'], 422);
+                    return response()->json(
+                        [
+                            'message' =>
+                                'Customer could not be created. ' .
+                                'Please try initiating the bid again'
+                        ], 422);
                 }
 //                else if (!empty($customer['code'])) {
 //                    switch ($customer['code']) {
@@ -111,8 +122,14 @@ class InitiateBidController extends Controller
 //                    }
 //                }
             } else {
-                Log::info("customerExists ErrorText: " . $customerExists['errorText']);
-                return response()->json(['message' => "Customer already exists please correct the name to" . $customerExists['name'], "customerName" => $customerExists['name']], 422);
+                Log::info("customerExists ErrorText: " .
+                    $customerExists['errorText']);
+                return response()->json([
+                    'message' =>
+                        "Customer already exists please correct the name to" .
+                    $customerExists['name'],
+                    "customerName" => $customerExists['name']
+                ], 422);
             }
         } else {
             Log::info("customerExists Customer: " . $customerExists['customer']);
@@ -161,7 +178,12 @@ class InitiateBidController extends Controller
      */
     public function jobName($customer)
     {
-        $nextJob = Job::all()->last()->id+1;
+        // what if there are no Jobs?
+        if (empty(Job::all()->last()->id)) {
+            $nextJob = 1;
+        } else {
+            $nextJob = Job::all()->last()->id + 1;
+        }
 
         $jobName = "Job Number: {$nextJob}";
         Log::info("jobName: $jobName");
