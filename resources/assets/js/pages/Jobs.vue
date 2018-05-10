@@ -47,7 +47,8 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <span class="primary-action-btn">
-                                        <router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary">Review Bid {{ bid.id }}</router-link>
+                                        <button class="btn btn-primary" name="reviewBid" @click="goToBid(bid.id)">Review Bid {{ bid.id }}</button>
+                                        <!--<router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary"><button name="reviewBid">Review Bid {{ bid.id }}</button></router-link>-->
                                     </span>
                                 </div>
                             </div>
@@ -121,6 +122,9 @@
                 // return the date and ignore the time
                 date = date.split(' ');
                 return date[0];
+            },
+            goToBid(id){
+              this.$router.push("/bid/"+id);
             },
             getBids() {
                 console.log('getBids');
