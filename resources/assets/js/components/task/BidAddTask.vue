@@ -351,38 +351,37 @@
         }
 
         .customer-price {
-            grid-column: col-start / span 3;
+            grid-column: col-start / span 6;
             grid-row: 2;
 
         }
 
         .sub-price {
-            grid-column: col-start 4 / span 3;
+            grid-column: col-start 7 / span 6;
             grid-row: 2;
 
         }
 
         .start-date-flag {
-            grid-column: col-start 7 / span 3;
-            grid-row: 2;
-
+            grid-column: col-start  / span 6;
+            grid-row: 3;
         }
 
         .start-date {
-            grid-column: col-start 10 / span 3;
-            grid-row: 2;
+            grid-column: col-start 7 / span 6;
+            grid-row: 3;
 
         }
 
         .customer-notes {
             grid-column: col-start / span 6;
-            grid-row: 3;
+            grid-row: 4;
 
         }
 
         .sub-notes {
             grid-column: col-start 7 / span 6;
-            grid-row: 3;
+            grid-row: 4;
 
         }
 
