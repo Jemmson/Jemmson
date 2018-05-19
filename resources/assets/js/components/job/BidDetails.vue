@@ -2,12 +2,16 @@
     <!-- /all details of a bid -->
     <div class="job-main-wrapper" v-if="bid.job_name !== undefined">
         <div class="job-main-row job-main-header">
-            <span class="title">Job Name:</span>
             <span class="title-value text-center">{{ bid.job_name }}</span>
+            <span style="display: none">{{ actCustomerName(bid.customer_id) }}</span>
+            <div>
+                <span class="title">Customer Name:</span><span class="title-value">{{ getCustomerName }}</span>
+            </div>
         </div>
         <div class="job-main-row job-main-address">
             <span class="title">Address:</span>
-            <a class="text-center" target="_blank" v-if="bid.location !== undefined && bid.location !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+            <a class="text-center" target="_blank" v-if="bid.location !== undefined && bid.location !== null"
+               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
                 <address>
                     <span>{{ bid.location.address_line_1 }}</span>
                     <br>
@@ -26,80 +30,60 @@
                 <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
             </div>
         </div>
-
-        <!--<div class="col-md-12">-->
-        <!--<section class="col-xs-12 col-md-6">-->
-        <!--<div class="label-span">Job Name: </div>-->
-        <!--<div class="job-name" for="job_name">{{ bid.job_name }}</div>-->
-        <!--<a target="_blank" v-if="bid.location !== undefined && bid.location !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">-->
-        <!--<address>-->
-        <!--<br> {{ bid.location.address_line_1 }}-->
-        <!--<br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}-->
-        <!--</address>-->
-        <!--</a>-->
-        <!--</section>-->
-        <!--<section class="col-xs-12 col-md-6">-->
-        <!--<div class="label-details">-->
-        <!--<span class="label-span">Status: </span>-->
-        <!--<br>-->
-        <!--<label class="label label-warning">-->
-        <!--{{ status }}-->
-        <!--</label>-->
-        <!--</div>-->
-        <!--<div class="label-details">-->
-        <!--<span class="label-span">Total Job Price: </span>-->
-        <!--<label class="label label-info">-->
-        <!--${{ bid.bid_price }}-->
-        <!--</label>-->
-        <!--</div>-->
-        <!--</section>-->
-        <!-- /end detail header -->
     </div>
 </template>
 
 <script>
-    export default {
-        props: {
-            bid: Object
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  export default {
+    props: {
+      bid: Object
+    },
+    data () {
+      return {
+        area: {
+          area: ''
         },
-        data() {
-            return {
-                area: {
-                    area: ''
-                },
-                areaError: '',
-                locationExists: false
-            }
-        },
-        computed: {
-            showBidPrice() {
-                if (User.isCustomer()) {
-                    const status = this.bid.status;
-                    if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
-                        return true;
-                    }
-                    return false;
-                }
-                return true;
-            },
-            status() {
-                return User.status(this.bid.status, this.bid);
-            }
-        },
-        methods: {
-            updateArea() {
-                Customer.updateArea(this.area.area, this.bid.id);
-            },
-            showArea() {
-                console.log('user type: ' + User.isContractor())
-                return this.area.area !== '' && User.isContractor();
-            }
-        },
-        mounted: function () {
-            // Customer.getArea(this.bid.id, this.area)
-            Customer.getArea(1, this.area)
+        areaError: '',
+        locationExists: false
+      }
+    },
+    computed: {
+      ...mapGetters([
+          'getCustomerName'
+      ]),
+      showBidPrice () {
+        if (User.isCustomer ()) {
+          const status = this.bid.status;
+          if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
+            return true;
+          }
+          return false;
         }
+        return true;
+      },
+      status () {
+        return User.status (this.bid.status, this.bid);
+      }
+    },
+    methods: {
+      ...mapMutations([
+          'setCustomerName'
+      ]),
+      ...mapActions([
+          'actCustomerName'
+      ]),
+      updateArea () {
+        // Customer.updateArea (this.area.area, this.bid.id);
+      },
+      showArea () {
+        console.log ('user type: ' + User.isContractor ())
+        return this.area.area !== '' && User.isContractor ();
+      }
+    },
+    mounted: function () {
     }
+  }
 </script>
 
 <style scoped>
@@ -137,6 +121,7 @@
         padding-bottom: 1rem;
         padding-left: 1rem;
         font-size: 2rem;
+        float: right;
     }
 
     .job-status {
@@ -144,7 +129,8 @@
         grid-template-columns: 1fr 1fr;
     }
 
-    .job-status-label {}
+    .job-status-label {
+    }
 
     .job-status-value {
         margin-left: auto;

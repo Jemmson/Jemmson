@@ -12,7 +12,9 @@ export const store = new Vuex.Store({
     job
   },
   state: {
-
+    customer: {
+      name: ''
+    }
   },
   actions: actions,
   getters: getters,

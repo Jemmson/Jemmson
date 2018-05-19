@@ -137,4 +137,10 @@ class CustomerController extends Controller
     {
         //
     }
+
+    public function getName(Request $request)
+    {
+        $customer = User::select()->where("id", "=", $request->id)->get()->first();
+        return $customer;
+    }
 }

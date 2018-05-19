@@ -27,27 +27,27 @@
                     <div class="card card-1">
                         <div class="panel-body">
                             <div class="col-xs-12">
-                                <h4>
-                                    <label for="job-stats" class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
-                                </h4>
                                 <h4 for="job-name" class="job-name">{{ jobName(bid.job_name) }}</h4>
+                                <h4>
+                                    <span class="job-name">Job Status: </span><label class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
+                                </h4>
                             </div>
-                            <div class="col-xs-12">
-                                <p>
-                                    <i class="fas fa-clock icon"></i>
-                                    <label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>
-                                    <span class="right-label">
-                                        <i class="fas fa-money-bill-alt icon"></i>
-                                        <label for="job-price" class="job-price">${{ bid.bid_price }}</label>
-                                    </span>
-                                </p>
-                            </div>
+                            <!--<div class="col-xs-12">-->
+                                <!--<p>-->
+                                    <!--<i class="fas fa-clock icon"></i>-->
+                                    <!--<label for="start-date" class="start-date">{{ prettyDate(bid.agreed_start_date) }}</label>-->
+                                    <!--<span class="right-label">-->
+                                        <!--<i class="fas fa-money-bill-alt icon"></i>-->
+                                        <!--<label for="job-price" class="job-price">${{ bid.bid_price }}</label>-->
+                                    <!--</span>-->
+                                <!--</p>-->
+                            <!--</div>-->
                         </div>
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <span class="primary-action-btn">
-                                        <button class="btn btn-primary" name="reviewBid" @click="goToBid(bid.id)">Review Bid {{ bid.id }}</button>
+                                    <span class="primary-action-btn text-center">
+                                        <button class="btn btn-primary" name="reviewBid" @click="goToBid(bid.id)">Click To Edit Bid {{ bid.id }}</button>
                                         <!--<router-link :to="'/bid/' + bid.id" :name="'reviewBid'+ bid.id" class="btn btn-primary"><button name="reviewBid">Review Bid {{ bid.id }}</button></router-link>-->
                                     </span>
                                 </div>

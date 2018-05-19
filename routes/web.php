@@ -112,3 +112,5 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('/login/{type}/{job_id}/{token}', 'PasswordlessController@JobBid');
 // passwordless login
 Route::get('/login/{type}/task/{task_id}/{token}', 'PasswordlessController@taskBid');
+
+Route::post('/bid/customer/getName', 'CustomerController@getName');
