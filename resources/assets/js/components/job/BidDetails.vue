@@ -5,7 +5,7 @@
             <span class="title-value text-center">{{ bid.job_name }}</span>
             <span style="display: none">{{ actCustomerName(bid.customer_id) }}</span>
             <div>
-                <span class="title">Customer Name:</span><span class="title-value">{{ getCustomerName }}</span>
+                <span class="title">Customer Name:</span><span class="title-value">{{ bid.customer.name }}</span>
             </div>
         </div>
         <div class="job-main-row job-main-address">
