@@ -253,7 +253,7 @@
       // // },
       toggleStripePaymentOption () {
         this.addNewTaskForm.useStripe = !this.addNewTaskForm.useStripe
-      }
+      },
     },
     mounted: function () {
     }

@@ -51,7 +51,10 @@
                 <label>QTY: {{ jobTask.qty }}</label>
               </div>
               <div class="col-xs-6 form-group text-right">
-                <label>Price per Unit: <br> <span v-if="jobTask.task.qtyUnit !== null">{{ jobTask.cust_final_price }} / {{ jobTask.task.qtyUnit }}</span></label>
+                <label>Price per Unit:
+                  <br>
+                  <span v-if="jobTask.task.qtyUnit !== null">{{ jobTask.cust_final_price }} / {{ jobTask.task.qtyUnit }}</span>
+                </label>
               </div>
               <div class="col-xs-4 form-group text-right">
                 <label>Total: {{ jobTask.cust_final_price * jobTask.qty }}</label>
@@ -71,6 +74,25 @@
                 </button>
               </section>
               <!-- / end address section -->
+
+              <div class="col-xs-12">
+                <div class="divider2"></div>
+              </div>
+              <div class="col-xs-12">
+                <!-- upload images -->
+                <div class="form-group">
+                  <label class="col-md-4 control-label">&nbsp;</label>
+
+                  <div class="col-md-6 text-right">
+                    <label type="button" class="btn btn-primary btn-upload">
+                      <span>Attach Images</span>
+
+                      <input ref="photo" type="file" class="form-control" name="photo" @change="uploadTaskImage(jobTask.id)">
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- / end task images -->
 
               <div class="col-xs-12" v-if="showSubMessage(jobTask)">
                 <div class="divider2"></div>
@@ -306,13 +328,21 @@
       }
     },
     methods: {
+       uploadTaskImage(jobTaskId) {
+        const data = new FormData ();
+        data.append('photo', this.$refs.photo.files[0]);
+        data.append('task', jobTaskId);
+        User.uploadTaskImage(data);
+      },
       showSubMessage(jobTask) {
         let msg = jobTask.sub_message;
-        return (msg != null && msg != '' && msg != ' ' && this.isContractor) || (msg != null && msg != '' && msg != ' ' && this.isGeneral);
+        return (msg != null && msg != '' && msg != ' ' && this.isContractor) || (msg != null && msg != '' && msg != ' ' &&
+          this.isGeneral);
       },
       showCustomerMessage(jobTask) {
         let msg = jobTask.customer_message;
-        return (msg != null && msg != '' && msg != ' ' && this.isCustomer) || (msg != null && msg != '' && msg != ' ' && this.isGeneral);
+        return (msg != null && msg != '' && msg != ' ' && this.isCustomer) || (msg != null && msg != '' && msg != ' ' &&
+          this.isGeneral);
       },
       openUpdateTaskLocation(jobTask) {
         this.jTask = jobTask;
@@ -375,17 +405,20 @@
         return date[0];
       },
       showStripeToggle(jobTask) {
-        return User.isAssignedToMe(jobTask) && (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress');
+        return User.isAssignedToMe(jobTask) && (this.bid.status === 'bid.initiated' || this.bid.status ===
+          'bid.in_progress');
       },
       openDenyTaskForm(jobTask) {
         this.jTask = jobTask;
         $('#deny-task-modal').modal();
       },
       showTaskStartDate() {
-        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid.status === 'bid.declined');
+        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid
+          .status === 'bid.declined');
       },
       showTaskPriceInput() {
-        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid.status === 'bid.declined');
+        return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid
+          .status === 'bid.declined');
       },
       updateTaskStartDate(date, jobTaskId, bidId, jobTa) {
         console.log(date);
@@ -442,7 +475,8 @@
       },
       showDeleteBtn(jobTask) {
         const status = jobTask.status;
-        if (this.isGeneral && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent' || this.bid.status === 'bid.declined')) {
+        if (this.isGeneral && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent' || this.bid.status ===
+            'bid.declined')) {
           return true;
         }
         return false;

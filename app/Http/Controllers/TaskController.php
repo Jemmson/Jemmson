@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\DB;
 
 use Auth;
 use Log;
+use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -755,5 +757,39 @@ class TaskController extends Controller
             $jobTask->start_date = $request->start_date;
         }
         $jobTask->save();
+    }
+
+    /**
+     * Upload images and attach them to the task
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function uploadTaskImage(Request $request)
+    {
+        $this->validate($request, [
+                'photo' => 'max:2056',
+            ]);
+
+        $file = $request->photo;
+
+        $path = 'tasks/task.1.' . $file->getClientOriginalExtension();;
+
+        $disk = Storage::disk('public');
+
+        $disk->put(
+            $path, $this->formatImage($file)
+        );
+
+        $url = $disk->url($path);
+
+        return $url;
+    }
+
+    protected function formatImage($file)
+    {
+        $images = new ImageManager;
+        return (string) $images->make($file->path())
+                            ->fit(150)->encode();
     }
 }
