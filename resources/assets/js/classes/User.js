@@ -15,7 +15,7 @@ export default class User {
 
     // When the user selects an address from the dropdown, populate the address
     // fields in the form.
-    
+
     window.autocomplete.addListener('place_changed', this.fillInAddress);
 
     // make the dropdown list of addresses inside modals appear ontop of modals
@@ -38,9 +38,8 @@ export default class User {
       country: 'long_name',
       postal_code: 'short_name'
     };
-    let location = {
-    };
-    
+    let location = {};
+
     if (place !== undefined) {
       // Get each component of the address from the place details
       // and fill the corresponding field on the form.
@@ -216,12 +215,12 @@ export default class User {
    * Has this user not connected withs tripe yet?
    */
   needsStripe() {
-      if (!this.stripeExpressConnected()) {
-        console.log('No Stripe Express');
-        Bus.$emit('needsStripe');
-        return true;
-      }
-      return false;
+    if (!this.stripeExpressConnected()) {
+      console.log('No Stripe Express');
+      Bus.$emit('needsStripe');
+      return true;
+    }
+    return false;
   }
 
   payWithStripe() {
@@ -342,6 +341,16 @@ export default class User {
       form.errors.errors = error.errors;
       Vue.toasted.error(error.message);
       disabled.submit = false;
+    }
+  }
+
+  async uploadTaskImage(form) {
+    try {
+      const {data} = await axios.post('/task/image', form);
+      console.log(data);
+      Bus.$emit('bidUpdated');
+    } catch (error) {
+      Vue.toasted.error(error.message);
     }
   }
 }

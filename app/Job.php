@@ -79,6 +79,11 @@ class Job extends Model
         return $this->hasMany(JobTask::class, 'job_id', 'id');
     }
 
+    public function images()
+    {
+        return $this->hasMany(TaskImage::class, 'job_id');
+    }
+
     /**
      * Return related JobActions Model - create it
      * if it doesn't exist
