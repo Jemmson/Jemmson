@@ -19,6 +19,7 @@ use App\Customer;
 use App\User;
 use App\BidContractorJobTask;
 use App\JobTask;
+use App\TaskImage;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
@@ -26,6 +27,8 @@ use Illuminate\Support\Facades\DB;
 
 use Auth;
 use Log;
+use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -764,5 +767,54 @@ class TaskController extends Controller
             $jobTask->start_date = $request->start_date;
         }
         $jobTask->save();
+    }
+
+    /**
+     * Upload images and attach them to the task
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function uploadTaskImage(Request $request)
+    {
+        $this->validate($request, [
+                'photo' => 'max:2056',
+            ]);
+
+        $file = $request->photo;
+
+        $path = $file->hashName('tasks');
+
+        $disk = Storage::disk('public');
+
+        $disk->put(
+            $path, $this->formatImage($file)
+        );
+
+        $url = $disk->url($path);
+
+        $taskImage = new TaskImage;
+        $taskImage->job_id = $request->jobId;
+        $taskImage->job_task_id = $request->jobTaskId;
+        $taskImage->url = $url;
+
+        try {
+            $taskImage->save();
+        } catch (\Excpetion $e) {
+            Log::error('Saving Task Image: ' . $e->getMessage());
+            if (preg_match('/logos\/(.*)$/', $url, $matches)) {
+                $disk->delete('tasks/'.$matches[1]);
+            }
+            return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
+        }
+
+        return $url;
+    }
+
+    protected function formatImage($file)
+    {
+        $images = new ImageManager;
+        return (string) $images->make($file->path())
+                            ->fit(150)->encode();
     }
 }

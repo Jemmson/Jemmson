@@ -72,7 +72,7 @@
                 "profiler",
                 "webprofiler"
             ],
-            "time": "2018-03-06 08:35:31"
+            "time": "2018-03-06T08:35:31+00:00"
         },
         {
             "name": "bugsnag/bugsnag",

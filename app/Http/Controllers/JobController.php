@@ -70,7 +70,9 @@ class JobController extends Controller
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location')->where('status', '!=',__('job.completed'))->get();
+          $jobs = Auth::user()->jobs()->with(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'customer' => function($query) {
+              $query->select('id', 'name');
+          }])->where('status', '!=',__('job.completed'))->get();
         }
 
         return response()->json($jobs, 200); 
@@ -154,7 +156,9 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        $job->load('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'location', 'jobTasks.location');
+        $job->load(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'jobTasks.images', 'customer' => function($query) {
+              $query->select('id', 'name');
+          }]);
         return $job;
     }
 
@@ -361,7 +365,9 @@ class JobController extends Controller
           ->get();
           $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location')->where('status', '!=',__('job.completed'))->get();
+          $jobs = Auth::user()->jobs()->with(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'customer' => function($query) {
+              $query->select('id', 'name');
+          }])->where('status', '!=',__('job.completed'))->get();
         }
 
         return response()->json($jobs, 200); 
