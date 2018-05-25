@@ -45,6 +45,11 @@ class JobTask extends Model
         return $this->hasMany(BidContractorJobTask::class, 'job_task_id');
     }
 
+    public function images()
+    {
+        return $this->hasMany(TaskImage::class, 'job_task_id');
+    }
+
     /**
      * 
      *

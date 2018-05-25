@@ -19,6 +19,7 @@ use App\Customer;
 use App\User;
 use App\BidContractorJobTask;
 use App\JobTask;
+use App\TaskImage;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
@@ -773,7 +774,7 @@ class TaskController extends Controller
 
         $file = $request->photo;
 
-        $path = 'tasks/task.1.' . $file->getClientOriginalExtension();;
+        $path = $file->hashName('tasks');
 
         $disk = Storage::disk('public');
 
@@ -782,6 +783,21 @@ class TaskController extends Controller
         );
 
         $url = $disk->url($path);
+
+        $taskImage = new TaskImage;
+        $taskImage->job_id = $request->jobId;
+        $taskImage->job_task_id = $request->jobTaskId;
+        $taskImage->url = $url;
+
+        try {
+            $taskImage->save();
+        } catch (\Excpetion $e) {
+            Log::error('Saving Task Image: ' . $e->getMessage());
+            if (preg_match('/logos\/(.*)$/', $url, $matches)) {
+                $disk->delete('tasks/'.$matches[1]);
+            }
+            return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
+        }
 
         return $url;
     }

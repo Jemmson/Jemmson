@@ -156,7 +156,7 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        $job->load(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'customer' => function($query) {
+        $job->load(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'jobTasks.images', 'customer' => function($query) {
               $query->select('id', 'name');
           }]);
         return $job;
