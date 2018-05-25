@@ -629,6 +629,7 @@ class TaskController extends Controller
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
+//            'sub_sets_own_price_for_job' => 'required',
             'start_date' => 'required_if:start_when_accepted,false|date|after:today',
             'qty' => 'numeric|min:1',
             'qtyUnit' => 'string|min:1'
@@ -639,7 +640,7 @@ class TaskController extends Controller
 
         $name = strtolower($request->taskName);
         $contractor_id = $request->contractorId;
-        
+
         $task = Task::whereRaw('LOWER(`name`) = ? ', $name)->where('contractor_id', $contractor_id)->first();
 
         Log::debug($task);
@@ -657,7 +658,9 @@ class TaskController extends Controller
         }
 
         $task->proposed_cust_price = $request->taskPrice;
-        $task->proposed_sub_price = $request->subTaskPrice;
+        if (!$request->sub_sets_own_price_for_job) {
+            $task->proposed_sub_price = $request->subTaskPrice;
+        }
         $task->job_id = $job_id;
 
         try {
@@ -665,8 +668,8 @@ class TaskController extends Controller
         } catch (\Exception $e) {
             Log::error('Add/Update Task: ' . $e->getMessage());
             return response()->json([
-                    "message" => "Couldn't add/update task.",
-                    "errors" => ["error" => [$e->getMessage()]]], 404);
+                "message" => "Couldn't add/update task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
         }
 
 
@@ -737,6 +740,12 @@ class TaskController extends Controller
     {
 
         Log::info('quantity unit: ' . $request->qtyUnit);
+
+        if (!$request->sub_sets_own_price_for_job) {
+            $jobTask->sub_sets_own_price_for_job = 0;
+        } else {
+            $jobTask->sub_sets_own_price_for_job = 1;
+        }
 
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;

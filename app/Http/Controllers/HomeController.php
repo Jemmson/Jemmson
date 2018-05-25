@@ -69,7 +69,16 @@ class HomeController extends Controller
 
         $user_id = Auth::user()->id;
         $phone = SanatizeService::phone($request->phone_number);
-        $this->updateUsersPhoneNumber($phone, $user_id);
+
+//        if(!$this->updateUsersPhoneNumber($phone, $user_id, Auth::user()->usertype)){
+//            return response()->json([
+//                'message' =>
+//                    "<span class='notification-error-response'>".
+//                    "A ".Auth::user()->usertype." already has this phone number registered.<br>".
+//                    "You may already be registered. ".
+//                    "<br>Please verify the phone number ".
+//                    " and resubmit.</span>"], 422);
+//        }
 
         if (!Auth::user()->password_updated) {
             $this->validate($request, [
@@ -87,17 +96,6 @@ class HomeController extends Controller
             // TODO: if sms or phone is selected then a phone number must be present
             // TODO: need to add functionality for handling images for company logos if a contractor wants to add it
 
-            $contractor = User::where('phone', $phone)->first();
-
-            if (!empty($contractor)) {
-                return response()->json([
-                    'message' =>
-                        "<span class='notification-error-response'>A contractor already has this phone number registered.<br>".
-                        "You may already be registered. ".
-                        "<br>Please verify the phone number ".
-                        " and resubmit.</span>"], 422);
-            }
-
             $this->validate($request, [
                 'company_name' => 'required|min:2'
             ]);
@@ -109,9 +107,9 @@ class HomeController extends Controller
             $contractor->updateLocation($request);
             $contractor->update([
                 'company_logo_name' => request('file_name'), //
-                'email_method_of_contact' => request('email_contact'), //
-                'sms_method_of_contact' => request('sms_text'), //
-                'phone_method_of_contact' => request('phone_contact'), //
+//                'email_method_of_contact' => request('email_contact'), //
+//                'sms_method_of_contact' => request('sms_text'), //
+//                'phone_method_of_contact' => request('phone_contact'), //
                 'company_name' => request('company_name'), //
             ]);
 
@@ -211,16 +209,31 @@ class HomeController extends Controller
                             ->fit(150)->encode();
     }
 
-    public function updateUsersPhoneNumber($phoneNumber, $userId)
+    public function updateUsersPhoneNumber($phoneNumber, $userId, $usertype)
     {
+
+        if($usertype === 'contractor') {
+            $user = User::where('phone', $phoneNumber)
+                ->where('usertype', '=', 'contractor')->first();
+        } else {
+            $user = User::where('phone', $phoneNumber)
+                ->where('usertype', '=', 'customer')->first();
+        }
+
+        if (!empty($user)) {
+            return false;
+        }
+
         $user = User::find($userId);
         $user->phone = $phoneNumber;
         Log::debug('saving phone');
         try {
             $user->save();
+            return true;
         } catch (\Exception $e) {
             Log::error('Update Phone: ' . $e->getMessage());
             abort(422, 'This number exists in the system already, please login or try another number.');
+            return false;
         }
     }
 }

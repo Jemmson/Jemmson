@@ -25,6 +25,7 @@
       <!-- / end search bar -->
       <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated">
         <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
+          <!--<pre>{{ bidTask }}</pre>-->
           <div class="card card-1" v-if="showBid(bidTask)">
             <div class="panel-body">
               <div class="col-xs-12">
@@ -50,8 +51,18 @@
               </div>
               <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
                 <label for="details">Task Price:</label>
-                <input type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
-                />
+                <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1"
+                       type="text"
+                       class="form-control bid-task-price"
+                       v-bind:id="'price-' + bidTask.id"
+                       v-model="bidTask.bid_price"
+                       @keyup="bidPrice('price-' + bidTask.id)"/>
+                <input v-else
+                       type="text"
+                       class="form-control bid-task-price"
+                       v-bind:id="'price-' + bidTask.id"
+                       v-model="bidTask.bid_price"
+                       @keyup="bidPrice('price-' + bidTask.id)"/>
               </div>
               <div class="col-xs-6" v-else>
                 <span class="right-label">

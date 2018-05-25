@@ -72,9 +72,20 @@
                             </span>
                         </div>
 
+                        <div class="form-group sub_sets_own_price_for_job"
+                             :class="{'has-error': addNewTaskForm.errors.has('sub_sets_own_price_for_job')}">
+                            <label for="sub_sets_own_price_for_job">Sub Sets Own Price?</label>
+                            <input type="checkbox" class="checkbox-inline accepted-checkbox" id="sub_sets_own_price_for_job"
+                                   name="sub_sets_own_price_for_job" required v-model="addNewTaskForm.sub_sets_own_price_for_job">
+                            <span class="help-block" v-show="addNewTaskForm.errors.has('sub_sets_own_price_for_job')">
+                                {{ addNewTaskForm.errors.get('sub_sets_own_price_for_job') }}
+                            </span>
+                        </div>
+
                         <div class="form-group sub-price"
-                             :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
-                            <label for="subTaskPrice">Unit Price For Sub</label>
+                             :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}"
+                             v-if="!addNewTaskForm.sub_sets_own_price_for_job">
+                        <label for="subTaskPrice">Unit Price For Sub</label>
                             <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
                                    v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
@@ -168,6 +179,7 @@
           area: this.bid.city,
           start_date: '',
           start_when_accepted: true,
+          sub_sets_own_price_for_job: true,
           useStripe: false,
           sub_message: '',
           customer_message: '',
@@ -290,44 +302,50 @@
         }
 
         .customer-price {
-            grid-column: col-start / span 6;
+            grid-column: col-start / span 12;
             grid-row: 3;
+
+        }
+
+        .sub_sets_own_price_for_job {
+            grid-column: col-start 0 / span 6;
+            grid-row: 4;
 
         }
 
         .sub-price {
             grid-column: col-start 7 / span 6;
-            grid-row: 3;
+            grid-row: 4;
 
         }
 
         .start-date-flag {
             grid-column: col-start / span 6;
-            grid-row: 4;
+            grid-row: 5;
 
         }
 
         .start-date {
             grid-column: col-start 7 / span 6;
-            grid-row: 4;
+            grid-row: 5;
 
         }
 
         .customer-notes {
             grid-column: col-start / span 12;
-            grid-row: 5;
+            grid-row: 6;
 
         }
 
         .sub-notes {
             grid-column: col-start / span 12;
-            grid-row: 6;
+            grid-row: 7;
 
         }
 
         .stripe-tag {
             grid-column: col-start / span 6;
-            grid-row: 7;
+            grid-row: 8;
 
         }
 
@@ -356,38 +374,43 @@
 
         }
 
+        .sub_sets_own_price_for_job {
+            grid-column: col-start 0 / span 6;
+            grid-row: 3;
+        }
+
         .sub-price {
             grid-column: col-start 7 / span 6;
-            grid-row: 2;
+            grid-row: 3;
 
         }
 
         .start-date-flag {
             grid-column: col-start  / span 6;
-            grid-row: 3;
+            grid-row: 4;
         }
 
         .start-date {
             grid-column: col-start 7 / span 6;
-            grid-row: 3;
+            grid-row: 4;
 
         }
 
         .customer-notes {
             grid-column: col-start / span 6;
-            grid-row: 4;
+            grid-row: 5;
 
         }
 
         .sub-notes {
             grid-column: col-start 7 / span 6;
-            grid-row: 4;
+            grid-row: 5;
 
         }
 
         .stripe-tag {
             grid-column: col-start / span 6;
-            grid-row: 4;
+            grid-row: 6;
 
         }
     }
