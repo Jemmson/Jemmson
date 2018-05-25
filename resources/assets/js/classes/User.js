@@ -348,7 +348,7 @@ export default class User {
     try {
       const {data} = await axios.post('/task/image', form);
       console.log(data);
-      
+      Bus.$emit('bidUpdated');
     } catch (error) {
       Vue.toasted.error(error.message);
     }

@@ -77,17 +77,26 @@
 
               <div class="col-xs-12">
                 <div class="divider2"></div>
-              </div>
+              </div>         
+              <div class="col-xs-4" v-for="image of jobTask.images" :key="image.id">
+                <a class="lightbox" :href="'#image' + image.id">
+                  <img :src="image.url" alt="">
+                </a>
+                <!-- lightbox container hidden with CSS -->
+                <a class="lightbox-target" :id="'image' + image.id">
+                  <img :src="image.url">
+                  <a class="lightbox-close" :href="'#task' + jobTask.id"></a>
+                </a>
+              </div>     
               <div class="col-xs-12">
                 <!-- upload images -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label">&nbsp;</label>
-
+                  <label class="col-md-6 control-label">&nbsp;</label>
                   <div class="col-md-6 text-right">
                     <label type="button" class="btn btn-primary btn-upload">
                       <span>Attach Images</span>
 
-                      <input ref="photo" type="file" class="form-control" name="photo" @change="uploadTaskImage(jobTask.id)">
+                      <input :ref="'task_photo_' + jobTask.id" type="file" class="form-control" @change="uploadTaskImage(jobTask.id)">
                     </label>
                   </div>
                 </div>
@@ -330,8 +339,11 @@
     methods: {
        uploadTaskImage(jobTaskId) {
         const data = new FormData ();
-        data.append('photo', this.$refs.photo.files[0]);
-        data.append('task', jobTaskId);
+        console.log(this.$refs['task_photo_' + jobTaskId]);
+        
+        data.append('photo', this.$refs['task_photo_' + jobTaskId][0].files[0]);
+        data.append('jobTaskId', jobTaskId);
+        data.append('jobId', this.bid.id);
         User.uploadTaskImage(data);
       },
       showSubMessage(jobTask) {
