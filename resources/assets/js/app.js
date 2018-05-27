@@ -13,6 +13,17 @@
  |
  */
 
+import Echo from 'laravel-echo'
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo ({
+  broadcaster: 'pusher',
+  key: '07c3b89aa6d0a0206b23',
+  cluster: 'mt1',
+  encrypted: true
+});
+
 require('spark-bootstrap');
 
 import VueRouter from 'vue-router';
