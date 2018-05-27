@@ -3,19 +3,22 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 
 use App\User;
 
-class BidInitiated extends Notification
+class BidInitiated extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
     protected $user, $job, $pwLink, $contractor;
+    public $value = 10;
 
     /**
      * Create a new notification instance.
@@ -41,7 +44,7 @@ class BidInitiated extends Notification
         $notifyThrough = [];
 
         if ($notifiable->phone) {
-            array_push($notifyThrough, 'nexmo');
+            array_push($notifyThrough, 'nexmo', 'broadcast');
         }
 
         if ($notifiable->email) {
@@ -94,5 +97,12 @@ class BidInitiated extends Notification
                 $this->pwLink);
         return (new NexmoMessage)
             ->content($text);
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'A bid has been initiated by contractor: ' . $this->contractor,
+        ]);
     }
 }

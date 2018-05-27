@@ -9,8 +9,10 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 use App\Task;
 use App\User;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TaskWasNotApproved extends Notification
+
+class TaskWasNotApproved extends Notification implements ShouldBroadcast
 {
     use Queueable;
     protected $task, $user, $message;
@@ -19,7 +21,7 @@ class TaskWasNotApproved extends Notification
      *
      * @return void
      */
-    public function __construct(Task $task, User $user, string $message = '')
+    public function __construct(Task $task, User $user, string $message = null)
     {
         $this->task = $task;
         $this->user = $user;
@@ -72,4 +74,12 @@ class TaskWasNotApproved extends Notification
             //
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'Task was not approved. Sub Contractor.',
+        ]);
+    }
 }
+

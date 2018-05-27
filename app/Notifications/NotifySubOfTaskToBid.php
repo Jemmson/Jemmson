@@ -10,10 +10,12 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Laravel\Spark\Notifications\SparkChannel;
 use Laravel\Spark\Notifications\SparkNotification;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 
 
-class NotifySubOfTaskToBid extends Notification
+
+class NotifySubOfTaskToBid extends Notification implements ShouldBroadcast
 {
 
     protected $taskId;
@@ -90,5 +92,12 @@ class NotifySubOfTaskToBid extends Notification
                       ->action('View Task', '/bid/tasks?taskId=' . $this->taskId)
                       ->icon('fa-users')
                       ->body('A contractor sent you a task!');
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'Welcome ' . $this->user->name . ' back to Jemmson.',
+        ]);
     }
 }

@@ -9,8 +9,10 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 use App\Task;
 use App\User;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TaskFinished extends Notification
+
+class TaskFinished extends Notification implements ShouldBroadcast
 {
     use Queueable;
     protected $task, $customer, $user;
@@ -70,4 +72,12 @@ class TaskFinished extends Notification
             //
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => "The task: " . $this->task->name . " has been finished.",
+        ]);
+    }
 }
+

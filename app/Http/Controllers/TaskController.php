@@ -317,6 +317,7 @@ class TaskController extends Controller
             'email' => 'required|email',
         ]);
 
+        //
         $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
         $jobTaskId = $request->jobTaskId;
@@ -324,6 +325,8 @@ class TaskController extends Controller
 
         $user = User::where('phone', $phone)->orWhere('email', $email)->first();
 
+
+        // TODO: Not sure about this logic. Should be if a user is not a contractor then create a contractor. If a user is a customer then that should not throw an error becuase a user can be both a contractor and a customer
         if ($user === null) {
             // if no user found create one
             $user = $this->createNewUser($name, $email, $phone);
@@ -340,7 +343,7 @@ class TaskController extends Controller
             return response()->json(["message" => "Task Already Exists.", "errors" => ["error" => "Task Already Exists."]], 422);
         }
 
-        //   this code will redirect them to the page with information on the task
+        // this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
         $user->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user));
 

@@ -6,8 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CustomerUnableToSendPaymentWithStripe extends Notification
+
+class CustomerUnableToSendPaymentWithStripe extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
@@ -58,5 +60,12 @@ class CustomerUnableToSendPaymentWithStripe extends Notification
         return [
             //
         ];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'A customer tried to send you a payment through Stripe.',
+        ]);
     }
 }

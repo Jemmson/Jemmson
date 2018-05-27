@@ -6,8 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NotifyContractorOfAcceptedBid extends Notification
+
+class NotifyContractorOfAcceptedBid extends Notification implements ShouldBroadcast
 {
     use Queueable;
     protected $user, $bid;
@@ -61,4 +63,12 @@ class NotifyContractorOfAcceptedBid extends Notification
             //
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'Your bid for job: ' . $bid->name,
+        ]);
+    }
 }
+

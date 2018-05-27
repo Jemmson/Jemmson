@@ -6,8 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NotifyJobHasBeenApproved extends Notification
+
+class NotifyJobHasBeenApproved extends Notification implements ShouldBroadcast
 {
     use Queueable;
     protected $job, $user;
@@ -77,4 +79,12 @@ class NotifyJobHasBeenApproved extends Notification
             //
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'Job has been approved. Sub Contractor.',
+        ]);
+    }
 }
+
