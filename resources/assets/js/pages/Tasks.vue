@@ -296,6 +296,9 @@
       Bus.$on('needsStripe', () => {
         $('#stripe-modal').modal();
       });
+
+      window.Echo.private('')
+
     },
     mounted() {
       const taskId = User.getParameterByName('taskId');
