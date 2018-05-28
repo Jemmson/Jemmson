@@ -47,9 +47,9 @@ class BidInitiated extends Notification implements ShouldBroadcast
             array_push($notifyThrough, 'nexmo', 'broadcast');
         }
 
-        if ($notifiable->email) {
-            array_push($notifyThrough, 'email', 'broadcast');
-        }
+//        if ($notifiable->email) {
+//            array_push($notifyThrough, 'email', 'broadcast');
+//        }
 
         return $notifyThrough;
     }
