@@ -142,6 +142,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $user->email = $request->email;
         $user->name = $request->name;
+        $user->phone = $phone;
 
         $user->save();
 
