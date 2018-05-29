@@ -60,6 +60,8 @@ import Tasks from './pages/Tasks';
 import Invoices from './pages/Invoices';
 import Invoice from './pages/Invoice';
 import FurtherInfo from './pages/FurtherInfo';
+import TaskImages from './pages/TaskImages';
+
 
 window.Format = Format;
 window.Language = Language;
@@ -114,7 +116,13 @@ const routes = [{
     path: '/furtherInfo',
     component: FurtherInfo
   },
-
+  {
+    path: '/task/:id/images',
+    component: TaskImages
+  },
+  {
+    path: '/#*'
+  }
 
 ]
 

@@ -149,7 +149,6 @@
           this.bid = data;
         } catch (error) {
           error = error.response.data;
-          form.errors.errors = error.errors;
           Vue.toasted.error (error.message);
         }
       }

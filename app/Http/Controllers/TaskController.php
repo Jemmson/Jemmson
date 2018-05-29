@@ -91,7 +91,18 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Task $task
+     * @return \Illuminate\Http\Response
+     */
+    public function getJobTask(JobTask $jobTask)
+    {
+        Log::debug($jobTask);
+        return $jobTask->load(['images', 'task']);
     }
 
     /**
