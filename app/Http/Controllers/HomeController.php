@@ -113,6 +113,10 @@ class HomeController extends Controller
                 'company_name' => request('company_name'), //
             ]);
 
+            $updateUserLocationID = User::find($user_id);
+            $updateUserLocationID->location_id = $contractor->location_id;
+            $updateUserLocationID->save();
+
         } else if (Auth::user()->usertype == 'customer') {
 
             // TODO: if email method of contact is selected then there must be an email address
@@ -129,6 +133,10 @@ class HomeController extends Controller
                 'sms_method_of_contact' => request('sms_text'),
                 'phone_method_of_contact' => request('phone_contact')
             ]);
+
+            $updateUserLocationID = User::find($user_id);
+            $updateUserLocationID->location_id = $customer->location_id;
+            $updateUserLocationID->save();
         }
 
         $user = Auth::user();

@@ -60,7 +60,7 @@ export default class Language {
       'bid.initiated': {
         sub: 'Waiting on General Contractor to finish job bid',
         general: 'Bid Initiated',
-        customer: 'Your bid has been initiated'
+        customer: 'Bid is in Process. Please watch for my completed bid'
       },
       'bid.in_progress': {
         sub: 'Waiting on General Contractor to Submit Final Bid',
