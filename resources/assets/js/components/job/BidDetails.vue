@@ -10,14 +10,17 @@
         </div>
         <div class="job-main-row job-main-address">
             <span class="title">Address:</span>
-            <a class="text-center" target="_blank" v-if="bid.location !== undefined && bid.location !== null"
-               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+            <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
+               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.job_tasks[0].location.address_line_1">
                 <address>
-                    <span>{{ bid.location.address_line_1 }}</span>
+                    <span>{{ bid.job_tasks[0].location.address_line_1 }}</span>
                     <br>
-                    <span>{{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}</span>
+                    <span>{{ bid.job_tasks[0].location.city }}, {{ bid.job_tasks[0].location.state }} {{ bid.job_tasks[0].location.zip }}</span>
                 </address>
             </a>
+            <div v-else>
+                No Address is Set Yet
+            </div>
             <!--<span class="title-value text-center">{{ bid.job_name }}</span>-->
         </div>
         <div class="job-main-row job-main-status">

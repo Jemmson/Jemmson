@@ -65,6 +65,7 @@
 
               <section class="col-xs-12" style="margin-bottom: 8px;">
                 <span v-if="location(jobTask, bid) === 'No Address Set Yet'">
+                    <!--No Address Set Yet-->
                   <i class="fas fa-map-marker icon"></i>
                   {{ location(jobTask, bid) }}
                 </span>
@@ -442,6 +443,8 @@
       location(jobTask, bid) {
         const task_location = jobTask.location_id;
         const job_location = this.bid.location_id;
+        console.log(task_location)
+        console.log(job_location)
         if (task_location === null && job_location === null) {
           return 'No Address Set Yet';
         } else if (task_location !== null) {
