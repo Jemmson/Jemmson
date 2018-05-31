@@ -37,45 +37,67 @@ class JobController extends Controller
      */
     public function index()
     {
-         // load jobs and all their tasks along with those tasks relationships
+        // load jobs and all their tasks along with those tasks relationships
         if ($this->isCustomer()) {
-          // only load tasks on jobs that are approved or need approval
-          $jobsWithTasks = Auth::user()->jobs()
-          ->where(function ($query) {
-            $query->where('status', __('bid.sent'))
-            ->orwhere('status', __('job.approved'))
-            ->orwhere('status', __('bid.declined'))
-            ->Where('status', '!=',__('job.completed'));
-          })
-          ->with(
-            [
-              'jobTasks' => function ($query) {
-                //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
-                $query->with(
-                [
-                  'task' => function ($q) {
-                      $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
-                  }
-                ]);
-              },
-              'jobTasks.location'
-              // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
-            ])->get();
+            // only load tasks on jobs that are approved or need approval
+            $jobsWithTasks = Auth::user()->jobs()
+                ->where(function ($query) {
+                    $query->where('status', __('bid.sent'))
+                        ->orwhere('status', __('job.approved'))
+                        ->orwhere('status', __('bid.declined'))
+                        ->Where('status', '!=', __('job.completed'));
+                })
+                ->with(
+                    [
+                        'jobTasks' => function ($query) {
+                            //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
+                            $query->with(
+                                [
+                                    'task' => function ($q) {
+                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
+                                    }
+                                ]);
+                        },
+                        'jobTasks.location'
+                        // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
+                    ])->get();
 
-          $jobsWithoutTasks = Auth::user()->jobs()
-          ->where('status', '!=', __('bid.sent'))
-          ->where('status', '!=', __('job.approved'))
-          ->Where('status', '!=',__('bid.declined'))
-          ->Where('status', '!=',__('job.completed'))
-          ->get();
-          $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
+            $jobsWithoutTasks = Auth::user()->jobs()
+                ->where('status', '!=', __('bid.sent'))
+                ->where('status', '!=', __('job.approved'))
+                ->Where('status', '!=', __('bid.declined'))
+                ->Where('status', '!=', __('job.completed'))
+                ->get();
+            $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'customer' => function($query) {
-              $query->select('id', 'name');
-          }])->where('status', '!=',__('job.completed'))->get();
+
+//            $jobs = Auth::user()
+//                ->jobs()
+//                ->with(
+//                    'jobTasks.task',
+//                    'jobTasks.bidContractorJobTasks.contractor',
+//                    'jobTasks.location')
+//                ->where('status', '!=', __('job.completed'))
+//                ->get();
+
+
+            $jobs = Auth::user()
+                ->jobs()
+                ->with(
+                    [
+                        'jobTasks.task',
+                        'jobTasks.bidContractorJobTasks.contractor',
+                        'jobTasks.location',
+                        'customer' => function ($query) {
+                            $query->select('id', 'name');
+                        }
+                    ]
+                )
+                ->where('status', '!=', __('job.completed'))
+                ->get();
         }
 
-        return response()->json($jobs, 200); 
+        return response()->json($jobs, 200);
     }
 
     /**
@@ -86,27 +108,27 @@ class JobController extends Controller
     public function getInvoices()
     {
         if ($this->isCustomer()) {
-          $invoices = Auth::user()->jobs()
-          ->where(function ($query) {
-            $query->where('status', __('job.completed'));
-          })
-          ->with(
-            [
-              'jobTasks' => function ($query) {
-                $query->with(
-                [
-                  'task' => function ($q) {
-                      $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
-                  }
-                ]);
-              }
-            ])->get();
+            $invoices = Auth::user()->jobs()
+                ->where(function ($query) {
+                    $query->where('status', __('job.completed'));
+                })
+                ->with(
+                    [
+                        'jobTasks' => function ($query) {
+                            $query->with(
+                                [
+                                    'task' => function ($q) {
+                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
+                                    }
+                                ]);
+                        }
+                    ])->get();
 
         } else {
-          $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+            $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
         }
 
-        return response()->json($invoices, 200); 
+        return response()->json($invoices, 200);
     }
 
     public function getInvoice(Job $job)
@@ -132,7 +154,7 @@ class JobController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $validator = Validator::make($request->all(), [
             'agreed_start_date' => 'required',
             'agreed_end_date' => 'required',
@@ -142,7 +164,7 @@ class JobController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Missing fields'], 400);
         }
-        
+
         $job = Job::create($request->all());
 
         return response()->json($job, 201);
@@ -156,9 +178,25 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        $job->load(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'jobTasks.images', 'customer' => function($query) {
-              $query->select('id', 'name');
-          }]);
+//        $job->load(
+//            'jobTasks.task',
+//            'jobTasks.bidContractorJobTasks.contractor',
+//            'location',
+//            'jobTasks.location'
+//        );
+
+        $job->load(
+            [
+                'jobTasks.task',
+                'jobTasks.bidContractorJobTasks.contractor',
+                'location',
+                'jobTasks.location',
+                'jobTasks.images',
+                'customer' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ]
+        );
         return $job;
     }
 
@@ -174,11 +212,11 @@ class JobController extends Controller
         $bids = Task::getBidPrices($job->id);
         $contractor = User::with('contractor')->find($job->contractor_id);
         $customer = User::with('customer')->find($job->customer_id);
-        
+
         if ($customer == null) {
             $customer = "[]";
         }
-        
+
         $tasks = $job->tasks()->get();
         $userType = Auth::user()->usertype;
         return view('jobs.edit_job',
@@ -248,9 +286,9 @@ class JobController extends Controller
         // TODO: what date needs to be updated here?
         $job->agreed_start_date = $request->agreed_start_date;
         $job->status = __('job.approved');
-        
+
         $location_id = Auth::user()->customer()->first()->location_id;
-        
+
         $result = DB::transaction(function () use ($job, $request, $location_id) {
             if ($request->job_location_same_as_home) {
                 $job->location_id = $location_id;
@@ -260,11 +298,11 @@ class JobController extends Controller
             $job->save();
             // approve all tasks associated with this job, any exceptions?
             JobTask::where('job_id', $job->id)
-                    //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
-                    ->update(['status' => __('bid_task.approved_by_customer')]);
+                //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+                ->update(['status' => __('bid_task.approved_by_customer')]);
             JobTask::where('job_id', $job->id)
-                    ->where('start_when_accepted', true)
-                    ->update(['start_date' => Carbon::now()]);
+                ->where('start_when_accepted', true)
+                ->update(['start_date' => Carbon::now()]);
         });
 
         $this->notifyAll($job);
@@ -274,9 +312,9 @@ class JobController extends Controller
 
     /**
      * Notify all contractors and sub connected to the job
-     * that have approved bids 
+     * that have approved bids
      *
-     * @param Job                      $job
+     * @param Job $job
      * @return void
      */
     protected function notifyAll($job)
@@ -317,12 +355,12 @@ class JobController extends Controller
             case 'decline':
                 $job->declineJob();
                 break;
-            default: 
-                return response()->json(['error' => 'action required'], 400);       
+            default:
+                return response()->json(['error' => 'action required'], 400);
                 break;
         }
 
-        return response()->json($job->jobActions(), 200);        
+        return response()->json($job->jobActions(), 200);
     }
 
     /**
@@ -332,45 +370,63 @@ class JobController extends Controller
      */
     public function jobs(Request $request)
     {
-         // load jobs and all their tasks along with those tasks relationships
+        // load jobs and all their tasks along with those tasks relationships
         if ($this->isCustomer()) {
-          // only load tasks on jobs that are approved or need approval
-          $jobsWithTasks = Auth::user()->jobs()
-          ->where(function ($query) {
-            $query->where('status', __('bid.sent'))
-            ->orwhere('status', __('job.approved'))
-            ->orwhere('status', __('bid.declined'))
-            ->Where('status', '!=',__('job.completed'));
-          })
-          ->with(
-            [
-              'jobTasks' => function ($query) {
-                //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
-                $query->with(
-                [
-                  'task' => function ($q) {
-                      $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
-                  }
-                ]);
-              }, 
-              'jobTasks.location'
-              // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved 
-            ])->get();
+            // only load tasks on jobs that are approved or need approval
+            $jobsWithTasks = Auth::user()->jobs()
+                ->where(function ($query) {
+                    $query->where('status', __('bid.sent'))
+                        ->orwhere('status', __('job.approved'))
+                        ->orwhere('status', __('bid.declined'))
+                        ->Where('status', '!=', __('job.completed'));
+                })
+                ->with(
+                    [
+                        'jobTasks' => function ($query) {
+                            //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
+                            $query->with(
+                                [
+                                    'task' => function ($q) {
+                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
+                                    }
+                                ]);
+                        },
+                        'jobTasks.location'
+                        // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
+                    ])->get();
 
-          $jobsWithoutTasks = Auth::user()->jobs()
-          ->where('status', '!=', __('bid.sent'))
-          ->where('status', '!=', __('job.approved'))
-          ->Where('status', '!=',__('bid.declined'))
-          ->Where('status', '!=',__('job.completed'))
-          ->get();
-          $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
+            $jobsWithoutTasks = Auth::user()->jobs()
+                ->where('status', '!=', __('bid.sent'))
+                ->where('status', '!=', __('job.approved'))
+                ->Where('status', '!=', __('bid.declined'))
+                ->Where('status', '!=', __('job.completed'))
+                ->get();
+            $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-          $jobs = Auth::user()->jobs()->with(['jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor', 'jobTasks.location', 'customer' => function($query) {
-              $query->select('id', 'name');
-          }])->where('status', '!=',__('job.completed'))->get();
+//            $jobs = Auth::user()
+//                ->jobs()
+//                ->with(
+//                    'jobTasks.task',
+//                    'jobTasks.bidContractorJobTasks.contractor',
+//                    'jobTasks.location')
+//                ->where('status', '!=', __('job.completed'))
+//                ->get();
+
+            $jobs = Auth::user()
+                ->jobs()
+                ->with(
+                    [
+                        'jobTasks.task',
+                        'jobTasks.bidContractorJobTasks.contractor',
+                        'jobTasks.location',
+                        'customer' => function ($query) {
+                            $query->select('id', 'name');
+                        }
+                    ]
+                )->where('status', '!=', __('job.completed'))->get();
         }
 
-        return response()->json($jobs, 200); 
+        return response()->json($jobs, 200);
     }
 
     /**
@@ -379,7 +435,8 @@ class JobController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function declineJobBid(Request $request) {
+    public function declineJobBid(Request $request)
+    {
         $this->validate($request, [
             'id' => 'required',
             'message' => 'string|nullable'
@@ -397,7 +454,7 @@ class JobController extends Controller
         if ($job->updateStatus(__('bid.declined'))) {
             $contractor->notify(new JobBidDeclined($job, $contractor, $message));
             return response()->json(['message' => 'Success'], 200);
-        } 
+        }
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
     }
 
@@ -422,13 +479,14 @@ class JobController extends Controller
      * @param Request $request
      * @return boolean
      */
-    public function cancelJobBid(Request $request) {
+    public function cancelJobBid(Request $request)
+    {
         $this->validate($request, [
             'id' => 'required'
         ]);
 
         $job = Job::find($request->id);
-        
+
         if ($job->updatable(__('bid.canceled'))) {
             $job->updateStatus(__('bid.canceled'));
             $job->delete();
@@ -445,13 +503,14 @@ class JobController extends Controller
      * @param Request $request
      * @return boolean
      */
-    public function jobCompleted(Request $request) {
+    public function jobCompleted(Request $request)
+    {
         $this->validate($request, [
             'id' => 'required'
         ]);
 
         $job = Job::find($request->id);
-        
+
         if ($job->updatable(__('job.completed'))) {
             $job->updateStatus(__('job.completed'));
         } else {
