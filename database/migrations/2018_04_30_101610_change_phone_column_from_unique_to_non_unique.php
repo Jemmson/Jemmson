@@ -27,7 +27,7 @@ class ChangePhoneColumnFromUniqueToNonUnique extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->string('phone', 25)->nullable()->change();
+            $table->dropColumn('phone');
         });
     }
 }

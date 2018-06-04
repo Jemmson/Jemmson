@@ -3,7 +3,6 @@
 namespace App;
 
 use Laravel\Spark\User as SparkUser;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Notifications\Notifiable;
 
 class User extends SparkUser
@@ -243,15 +242,4 @@ class User extends SparkUser
         // this along with phone validation will need to be updated to handle other country phone numbers
         return '1' . $this->phone;
     }
-
-    /**
-     * The channels the user receives notification broadcasts on.
-     *
-     * @return string
-     */
-    public function receivesBroadcastNotificationsOn()
-    {
-        return 'users.'.$this->id;
-    }
-
 }
