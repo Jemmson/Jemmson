@@ -27,7 +27,7 @@ class AddSubAddsOwnPriceColumnToJobTaskTable extends Migration
     {
         Schema::table('job_task', function (Blueprint $table) {
             //
-            $table->boolean('sub_sets_own_price_for_job')->default(1);
+            $table->dropColumn('sub_sets_own_price_for_job');
         });
     }
 }
