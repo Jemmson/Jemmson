@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -13,4 +12,13 @@
 
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('user.job.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
+
+Broadcast::channel('users.{userId}', function ($user, $userId) {
+    Log::debug('notification channel: ' . $user->id . ' : ' . $userId);
+    return $user->id === (int) $userId;
 });
