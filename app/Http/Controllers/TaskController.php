@@ -828,7 +828,6 @@ class TaskController extends Controller
     protected function formatImage($file)
     {
         $images = new ImageManager;
-        return (string) $images->make($file->path())
-                            ->fit(150)->encode();
+        return (string) $images->make($file->path())->encode();
     }
 }
