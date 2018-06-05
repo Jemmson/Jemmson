@@ -242,6 +242,19 @@ class StripeController extends Controller
             }
             $order .= '.' . $jobTask->id;
             $transfers[$jobTask->id] = $order . '.cash';
+
+            // notify contractors that tasks were paid
+            $task = $jobTask->task()->first();
+            $sub_contractor_id = $jobTask->contractor_id;
+            $general_contractor_id = $task->contractor_id;
+
+            $general_contractor = User::find($general_contractor_id);
+            
+            if ($sub_contractor_id != $general_contractor_id) {
+                $sub_contractor = User::find($sub_contractor_id);
+                $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+            } 
+            $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
         }
 
         $this->updateJobTasksAsPaid($jobTasks, $transfers, $excluded);
@@ -432,6 +445,7 @@ class StripeController extends Controller
                         "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
+                    $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
                 } catch(\Exception $e) {
                     Log::emergency('Transfering Payments Sub: ' . $e->getMessage());
                     $this->reverseTransfers($transfers);
@@ -449,6 +463,7 @@ class StripeController extends Controller
                         "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
+                    $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
                 } catch(\Exception $e) {
                     Log::emergency('Transfering Payments General: ' . $e->getMessage());
                     $this->reverseTransfers($transfers);

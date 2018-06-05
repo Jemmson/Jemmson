@@ -8,23 +8,26 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\Task;
-use App\User;
+use Laravel\Spark\Notifications\SparkChannel;
+use Laravel\Spark\Notifications\SparkNotification;
 
-class TaskFinished extends Notification implements ShouldQueue
+use App\Task;
+
+
+class TaskReopened extends Notification implements ShouldQueue
 {
     use Queueable;
-    protected $task, $customer, $user;
+
+    protected $task;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Task $task, Bool $customer, User $user)
+    public function __construct(Task $task)
     {
         $this->task = $task;
-        $this->customer = $customer;
-        $this->user = $user;
     }
 
     /**
@@ -35,7 +38,7 @@ class TaskFinished extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return [SparkChannel::class, 'broadcast'];
     }
 
     /**
@@ -46,16 +49,9 @@ class TaskFinished extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $custom = '';
-        if ($this->customer) {
-            $custom = "Please approve the task";
-        } else {
-            $custom = "Please review the finished task.";
-        }
         return (new MailMessage)
-                    ->line("The task: " . $this->task->name . " has been finished.")
-                    ->line($custom)
-                    ->action('View Task', url('/login/mix/' . $this->task->jobTask()->first()->job_id . '/' . $this->user->generateToken(true)->token))
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
 
@@ -72,11 +68,18 @@ class TaskFinished extends Notification implements ShouldQueue
         ];
     }
 
+    public function toSpark($notifiable)
+    {
+        return (new SparkNotification)
+                      ->action('View Task', '/link/to/task')
+                      ->icon('fa-users')
+                      ->body('A Task Was Reopened!');
+    }
+
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'task' => $this->task,
+            'message' => 'task reopened',
         ]);
     }
 }
-

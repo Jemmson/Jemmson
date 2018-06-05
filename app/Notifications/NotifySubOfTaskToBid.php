@@ -6,16 +6,13 @@ use App\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Laravel\Spark\Notifications\SparkChannel;
 use Laravel\Spark\Notifications\SparkNotification;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-
-
-
-class NotifySubOfTaskToBid extends Notification implements ShouldBroadcast
+class NotifySubOfTaskToBid extends Notification implements ShouldQueue
 {
 
     protected $taskId;
@@ -42,7 +39,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldBroadcast
      */
     public function via($notifiable)
     {
-        $notifyThrough = [SparkChannel::class, 'mail'];
+        $notifyThrough = [SparkChannel::class, 'mail', 'broadcast'];
         if ($notifiable->smsOn() || !$notifiable->password_updated) {
             $notifyThrough[] = 'nexmo';
         }
@@ -96,8 +93,9 @@ class NotifySubOfTaskToBid extends Notification implements ShouldBroadcast
 
     public function toBroadcast($notifiable)
     {
+        $task = Task::find($this->taskId);
         return new BroadcastMessage([
-            'message' => 'Welcome ' . $this->user->name . ' back to Jemmson.',
+            'task' => $task,
         ]);
     }
 }

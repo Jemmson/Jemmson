@@ -6,13 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-
-class TaskApproved extends Notification implements ShouldBroadcast
+class TaskApproved extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $task, $customer, $user;
@@ -69,7 +68,7 @@ class TaskApproved extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => "The task: " . $this->task->name . " has been Approved.",
+            'task' => $this->queue,
         ]);
     }
 }

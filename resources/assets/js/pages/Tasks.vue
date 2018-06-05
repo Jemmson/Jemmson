@@ -194,6 +194,9 @@
       },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
+        if (bid.job_task === null) {
+          return false;
+        }
         return (bid.id === bid.job_task.bid_id && (bid.job_task.job.status === 'job.approved' || bid.job_task.job.status === 'job.completed' || bid.job_task.status === 'bid_task.accepted')) || (bid.job_task.status ===
           'bid_task.bid_sent' || bid.job_task.status === 'bid_task.initiated');
       },

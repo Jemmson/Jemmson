@@ -6,10 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 
-class NotifyJobHasBeenApproved extends Notification implements ShouldBroadcast
+
+class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $job, $user;
@@ -43,7 +44,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldBroadcast
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -83,7 +84,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => 'Job has been approved. Sub Contractor.',
+            'job' => $this->job,
         ]);
     }
 }
