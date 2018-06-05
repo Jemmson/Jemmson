@@ -13,11 +13,12 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\User;
 
-class BidInitiated extends Notification implements ShouldBroadcast
+class BidInitiated extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $user, $job, $pwLink, $contractor;
+    protected $user, $pwLink, $contractor;
+    public $job;
     public $value = 10;
 
     /**
@@ -41,10 +42,10 @@ class BidInitiated extends Notification implements ShouldBroadcast
      */
     public function via($notifiable)
     {
-        $notifyThrough = [];
+        $notifyThrough = ['broadcast'];
 
         if ($notifiable->phone) {
-            array_push($notifyThrough, 'nexmo', 'broadcast');
+            array_push($notifyThrough, 'nexmo');
         }
 
 //        if ($notifiable->email) {
@@ -102,7 +103,7 @@ class BidInitiated extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => 'A bid has been initiated by contractor: ' . $this->contractor,
+            'job' => $this->job,
         ]);
     }
 }

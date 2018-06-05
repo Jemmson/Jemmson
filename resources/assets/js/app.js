@@ -174,3 +174,6 @@ var app = new Vue({
   router,
   store
 });
+
+
+require('./bootstrap');
