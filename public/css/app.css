@@ -7622,6 +7622,99 @@ input:checked + .slider:before {
       grid-row-start: 3;
   grid-row-end: 4;
 }
+.jemmson-navbar {
+  height: 70px;
+  background-color: white;
+  border-bottom: solid black thin;
+  overflow: hidden;
+  position: fixed;
+  /* Set the navbar to fixed position */
+  top: 0;
+  /* Position the navbar at the top of the page */
+  width: 100%;
+  z-index: 100000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.jemmson-center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  width: 100%;
+}
+span {
+  cursor: pointer;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+  line-height: 20px;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 12px;
+  text-transform: uppercase;
+  width: 100.43px;
+  -webkit-font-smoothing: antialiased;
+}
+.jemmson-navbar div span a {
+  color: #586D7A;
+}
+.jemmson-footer {
+  height: 70px;
+  background-color: white;
+  border-top: solid black thin;
+  overflow: hidden;
+  position: fixed;
+  /* Set the navbar to fixed position */
+  bottom: 0;
+  /* Position the navbar at the top of the page */
+  width: 100%;
+  z-index: 100000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.jemmson-footer span a {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 300px) {
+  .jemmson-navbar span a {
+    font-size: 10px;
+  }
+  .jemmson-footer span a {
+    font-size: 10px;
+  }
+}
+@media (min-width: 762px) {
+  .jemmson-navbar span a {
+    font-size: 16px;
+  }
+  .jemmson-footer span a {
+    font-size: 16px;
+  }
+}
 .welcome-page-wrapper {
   display: -ms-grid;
   display: grid;
