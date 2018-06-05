@@ -494,7 +494,7 @@
         if (this.isCustomer) {
           return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general');
         }
-        return (status === 'bid_task.finished_by_sub');
+        return (status === 'bid_task.finished_by_sub' || status === 'bid_task.reopened');
         // return (status === 'bid_task.finished_by_sub' || this.bid.status === 'bid.declined');
       },
       taskCustFinalPrice(price) {
