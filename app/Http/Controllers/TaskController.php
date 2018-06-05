@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
-use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfAcceptedBid;
-use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\TaskFinished;
 use App\Notifications\TaskWasNotApproved;
 use App\Notifications\TaskApproved;
-//use Illuminate\Notifications\Notifiable;
+use App\Notifications\TaskReopened;
 use App\Task;
 use App\Job;
 use App\Contractor;
@@ -33,7 +31,7 @@ use Illuminate\Support\Facades\Storage;
 class TaskController extends Controller
 {
 
-//    use Notifiable;
+    //    use Notifiable;
 
     /**
      * Display a listing of the resource.
@@ -539,41 +537,23 @@ class TaskController extends Controller
         $jobTask = JobTask::find($request->id);
         $jobTask->updateStatus(__('bid_task.reopened'));
 
+        $task = $jobTask->task()->first();
+        $sub_contractor_id = $jobTask->contractor_id;
+        $general_contractor_id = $task->contractor_id;
+
+        $general_contractor = User::find($general_contractor_id);
+        $customer = $jobTask->job()->first()->customer()->first();
+        
+        if ($sub_contractor_id != $general_contractor_id) {
+            $sub_contractor = User::find($sub_contractor_id);
+            $sub_contractor->notify(new TaskReopened($task));
+        } 
+
+        $customer->notify(new TaskReopened($task));
+        
+
         return response()->json(['message' => 'task reopened'], 200);
         // change the status of the job to pending
-    }
-
-
-    public function acceptJob(Request $request)
-    {
-        $jobId = $request->jobId;
-        $contractorId = $request->contractorId;
-
-        $job = Job::find($jobId);
-        $job->status = __('job.accepted');
-        $job->save();
-
-        $user = User::find($contractorId);
-
-        $user->notify(new NotifyContractorOfAcceptedBid());
-    }
-
-    public function declineJob(Request $request)
-    {
-        $jobId = $request->jobId;
-        $contractorId = $request->contractorId;
-
-        $job = Job::find($jobId);
-        $job->status = config('app.jobIsDeclined');
-        $job->save();
-
-        $user_id = Contractor::where('id', $contractorId)
-            ->get()
-            ->first()
-            ->user_id;
-        $user = User::where('id', $user_id)->get()->first();
-
-        $user->notify(new NotifyContractorOfDeclinedBid());
     }
 
     public function updateCustomerPrice(Request $request)
@@ -616,28 +596,6 @@ class TaskController extends Controller
 
     }
 
-    /**
-     * TODO: move to job controller
-     * Notify customer that a contractor has finished
-     * his bid for the specific job
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function finishedBidNotification(Request $request)
-    {
-        $jobId = $request->jobId;
-        $customerId = $request->customerId;
-
-
-        $user = User::find($customerId);
-        $job = Job::find($jobId);
-
-        $this->switchJobStatusToInProgress($job, __('bid.sent'));
-
-        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user));
-    }
-
     public function addTask(Request $request)
     {
 
@@ -646,7 +604,7 @@ class TaskController extends Controller
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
-//            'sub_sets_own_price_for_job' => 'required',
+            //            'sub_sets_own_price_for_job' => 'required',
             'start_date' => 'required_if:start_when_accepted,false|date|after:today',
             'qty' => 'numeric|min:1',
             'qtyUnit' => 'string|min:1'
@@ -708,8 +666,7 @@ class TaskController extends Controller
      * @param Request $request
      * @return Response
      */
-    public
-    function denyTask(Request $request)
+    public function denyTask(Request $request)
     {
         $this->validate($request, [
             'job_task_id' => 'required',
@@ -734,8 +691,7 @@ class TaskController extends Controller
         return response()->json($task, 200);
     }
 
-    public
-    function updateTaskWithNewValuesIfValuesAreDifferent($task, $subTaskPrice, $taskPrice)
+    public function updateTaskWithNewValuesIfValuesAreDifferent($task, $subTaskPrice, $taskPrice)
     {
         if ($task->proposed_cust_price != $taskPrice || $task->proposed_sub_price != $subTaskPrice) {
             $task->proposed_cust_price = $taskPrice;
@@ -745,15 +701,13 @@ class TaskController extends Controller
         return $task;
     }
 
-    public
-    function switchJobStatusToInProgress($job, $message)
+    public function switchJobStatusToInProgress($job, $message)
     {
         $job->status = $message;
         $job->save();
     }
 
-    public
-    function updateJobTask($request, $task_id, $jobTask)
+    public function updateJobTask($request, $task_id, $jobTask)
     {
 
         Log::info('quantity unit: ' . $request->qtyUnit);

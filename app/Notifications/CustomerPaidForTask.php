@@ -6,12 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
 
-class CustomerPaidForTask extends Notification implements ShouldBroadcast
+class CustomerPaidForTask extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $task, $user;
@@ -79,7 +79,7 @@ class CustomerPaidForTask extends Notification implements ShouldBroadcast
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => 'Customer has sent you a payment for : '. $this->task->name,
+            'task' => $this->task,
         ]);
     }
 }

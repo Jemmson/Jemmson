@@ -18,6 +18,8 @@ use Auth;
 
 use App\Notifications\NotifyJobHasBeenApproved;
 use App\Notifications\JobBidDeclined;
+use App\Notifications\NotifyCustomerThatBidIsFinished;
+use App\Notifications\NotifyContractorOfDeclinedBid;
 
 
 class JobController extends Controller
@@ -70,16 +72,6 @@ class JobController extends Controller
                 ->get();
             $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-
-//            $jobs = Auth::user()
-//                ->jobs()
-//                ->with(
-//                    'jobTasks.task',
-//                    'jobTasks.bidContractorJobTasks.contractor',
-//                    'jobTasks.location')
-//                ->where('status', '!=', __('job.completed'))
-//                ->get();
-
 
             $jobs = Auth::user()
                 ->jobs()
@@ -178,12 +170,6 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-//        $job->load(
-//            'jobTasks.task',
-//            'jobTasks.bidContractorJobTasks.contractor',
-//            'location',
-//            'jobTasks.location'
-//        );
 
         $job->load(
             [
@@ -403,14 +389,6 @@ class JobController extends Controller
                 ->get();
             $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-//            $jobs = Auth::user()
-//                ->jobs()
-//                ->with(
-//                    'jobTasks.task',
-//                    'jobTasks.bidContractorJobTasks.contractor',
-//                    'jobTasks.location')
-//                ->where('status', '!=', __('job.completed'))
-//                ->get();
 
             $jobs = Auth::user()
                 ->jobs()
@@ -458,6 +436,71 @@ class JobController extends Controller
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
     }
 
+    /**
+     * Customer has accepted a customers bid
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function acceptJob(Request $request)
+    {
+        $jobId = $request->jobId;
+        $contractorId = $request->contractorId;
+
+        $job = Job::find($jobId);
+        $job->status = __('job.accepted');
+        $job->save();
+
+        $user = User::find($contractorId);
+
+        $user->notify(new NotifyContractorOfAcceptedBid());
+    }
+
+    /**
+     * Customer has not accepted a customer bid
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function declineJob(Request $request)
+    {
+        $jobId = $request->jobId;
+        $contractorId = $request->contractorId;
+
+        $job = Job::find($jobId);
+        $job->status = config('app.jobIsDeclined');
+        $job->save();
+
+        $user_id = Contractor::where('id', $contractorId)
+            ->get()
+            ->first()
+            ->user_id;
+        $user = User::where('id', $user_id)->get()->first();
+
+        $user->notify(new NotifyContractorOfDeclinedBid());
+    }
+
+    /**
+     * Notify customer that a contractor has finished
+     * his bid for the specific job
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function finishedBidNotification(Request $request)
+    {
+        Log::debug('wtf');
+        $jobId = $request->jobId;
+        $customerId = $request->customerId;
+
+
+        $user = User::find($customerId);
+        $job = Job::find($jobId);
+
+        $this->switchJobStatusToInProgress($job, __('bid.sent'));
+
+        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user));
+    }
 
     public function updateArea(Request $request)
     {
@@ -468,7 +511,6 @@ class JobController extends Controller
 
     public function getArea(Request $request)
     {
-//        dd($request->job_id);
         $job = Job::find($request->job_id);
         return $job->getArea();
     }
@@ -523,6 +565,12 @@ class JobController extends Controller
     private function isCustomer()
     {
         return Auth::user()->usertype === 'customer';
+    }
+
+    public function switchJobStatusToInProgress($job, $message)
+    {
+        $job->status = $message;
+        $job->save();
     }
 
 }

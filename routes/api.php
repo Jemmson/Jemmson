@@ -80,6 +80,9 @@ Route::post('job/update', 'JobController@updateJobDate');
 Route::post('job/cancel', 'JobController@cancelJobBid');
 Route::post('job/completed', 'JobController@jobCompleted');
 Route::get('/invoices', 'JobController@getInvoices');
+Route::post('/task/acceptJob', 'JobController@acceptJob');
+Route::post('/task/declineJob', 'JobController@declineJob');
+Route::post('/task/finishedBidNotification', 'JobController@finishedBidNotification');
 
 
 
@@ -90,11 +93,8 @@ Route::post('/task/notify', 'TaskController@notify');
 Route::post('/task/notifyAcceptedBid', 'TaskController@notifyAcceptedBid');
 Route::post('/task/updateTaskName', 'TaskController@updateTaskName');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
-Route::post('/task/finishedBidNotification', 'TaskController@finishedBidNotification');
 Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
-Route::post('/task/acceptJob', 'TaskController@acceptJob');
-Route::post('/task/declineJob', 'TaskController@declineJob');
 Route::post('/task/addTask', 'TaskController@addTask');
 Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
