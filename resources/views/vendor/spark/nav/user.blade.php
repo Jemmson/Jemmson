@@ -9,12 +9,12 @@
 
     <div>
         <div v-if="user" class="jemmson-navbar">
-            <span><a @click="showNotifications" class="has-activity-indicator">
-                <div class="navbar-icon">
+            <a @click="showNotifications" class="has-activity-indicator">
+                <div class="navbar-icon"><button>
                     <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i>
                     <i class="icon fas fa-bell"></i>
-                </div>
-            </a></span>
+                    </button></div>
+            </a>
 
         @if (session('spark:impersonator'))
             <!--<li class="dropdown-header">Impersonation</li> -->
