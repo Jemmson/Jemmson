@@ -20,6 +20,8 @@ use App\Notifications\NotifyJobHasBeenApproved;
 use App\Notifications\JobBidDeclined;
 use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfDeclinedBid;
+use App\Notifications\JobCanceled;
+
 
 
 class JobController extends Controller
@@ -534,6 +536,14 @@ class JobController extends Controller
             $job->delete();
         } else {
             return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
+        }
+
+        $currentUser = Auth::user()->id;
+        if ($currentUser == $job->customer_id) {
+            User::find($job->contractor_id)->notify(new JobCanceled());
+        }
+        if ($currentUser == $job->contractor_id) {
+            User::find($job->customer_id)->notify(new JobCanceled());
         }
 
         return response()->json(['message' => 'Success'], 200);
