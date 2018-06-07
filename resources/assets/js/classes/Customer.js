@@ -40,11 +40,11 @@ export default class Customer {
   async cancelBid(bid, disabled) {
     disabled.cancelBid = true;
     try {
-      const data = await axios.post('/api/job/cancel', bid);
-      Bus.$emit('bidUpdated', ['closeBid']);
+      const data = await axios.post('/job/cancel', bid);
       Vue.toasted.success('Bid Canceled');
       disabled.cancelBid = false;
       location.href = "/#/bids";
+      //Bus.$emit('bidUpdated', ['closeBid']);
     } catch (error) {
       error = error.response.data;
       Vue.toasted.error(error.message);
