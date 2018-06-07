@@ -43,5 +43,9 @@ Vue.component('update-task-location-modal', require('./task/UpdateTaskLocationMo
 Vue.component('bid-add-task', require('./task/BidAddTask.vue'));
 
 
+Vue.component('task-images', require('./task/TaskImages.vue'));
+
+
+
 
 
