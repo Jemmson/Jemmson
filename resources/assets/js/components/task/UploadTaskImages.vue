@@ -1,24 +1,24 @@
 <template>
     <div>
         <div class="col-xs-4" v-if="showTaskImage1(jobTask)">
-            <a class="lightbox" :href="'#image' + jobTask.images[jobTask.images.length - 1].id">
+            <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
                 <img :src="jobTask.images[jobTask.images.length - 1].url" alt="">
             </a>
             <!-- lightbox container hidden with CSS -->
             <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 1].id">
-                <img :src="jobTask.images[jobTask.images.length - 1].url">
-                <a class="lightbox-close" :href="closeLink"></a>
+                <img :src="jobTask.images[jobTask.images.length - 1].url" :id="'image-img' + jobTask.images[jobTask.images.length - 1].id">
+                <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 1].id" @click.prevent="closeImage(jobTask.images[jobTask.images.length - 1].id)"></a>
             </a>
         </div>
 
         <div class="col-xs-4" v-if="showTaskImage2(jobTask)">
-            <a class="lightbox" :href="'#image' + jobTask.images[jobTask.images.length - 2].id">
+            <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
                 <img :src="jobTask.images[jobTask.images.length - 2].url" alt="">
             </a>
             <!-- lightbox container hidden with CSS -->
             <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 2].id">
-                <img :src="jobTask.images[jobTask.images.length - 2].url">
-                <a class="lightbox-close" :href="closeLink"></a>
+                <img :src="jobTask.images[jobTask.images.length - 2].url" :id="'image-img' + jobTask.images[jobTask.images.length - 2].id">
+                <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 2].id" @click.prevent="closeImage(jobTask.images[jobTask.images.length - 2].id)"></a>
             </a>
         </div>
 
@@ -62,6 +62,20 @@
             }
         },
         methods: {
+            openImage(imageId) {
+                console.log(imageId);
+                $('#image' + imageId).addClass('lightbox-open');
+                $('#image-img' + imageId).addClass('lightbox-open-image');
+                $('#image-close' + imageId).addClass('lightbox-open-close');
+
+            },
+            closeImage(imageId) {
+                console.log(imageId);
+                $('#image' + imageId).removeClass('lightbox-open');
+                $('#image-img' + imageId).removeClass('lightbox-open-image');
+                $('#image-close' + imageId).removeClass('lightbox-open-close');
+
+            },
             showTaskImage1(jobTask) {
                 // first most recent
                 const length = jobTask.images.length;

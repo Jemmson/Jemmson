@@ -8096,15 +8096,15 @@ a.lightbox-close:after {
   transform: rotate(-45deg);
 }
 /* Uses the :target pseudo-class to perform the animations upon clicking the .lightbox-target anchor */
-.lightbox-target:target {
+.lightbox-open {
   opacity: 1;
   top: 0;
   bottom: 0;
 }
-.lightbox-target:target img {
-  max-height: 100%;
-  max-width: 100%;
+.lightbox-open-image {
+  max-height: 100% !important;
+  max-width: 100% !important;
 }
-.lightbox-target:target a.lightbox-close {
-  top: 80px;
+.lightbox-open-close {
+  top: 80px !important;
 }

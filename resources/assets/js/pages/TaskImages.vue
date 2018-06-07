@@ -14,15 +14,15 @@
                     <div class="panel-body">
                         <div class="col-xs-12 col-sm-4" v-for="(image, index) of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
                                 <div class="image-ct">
-                                <a class="lightbox" :href="'#image' + image.id">
+                                <a class="lightbox" @click.prevent="openImage(image.id)">
                                 <img :src="image.url" alt="">
                                 </a>
                                 <button class="btn btn-danger image-btn" :id="'image-' + image.id" @click="deleteImage(image.id, index)"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             <!-- lightbox container hidden with CSS -->
                             <a class="lightbox-target" :id="'image' + image.id">
-                                <img :src="image.url">
-                                <a class="lightbox-close" :href="'#/task/' + jobTask.id + '/images'"></a>
+                                <img :src="image.url" class="" :id="'image-img' + image.id">
+                                <a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>
                             </a>
                         </div>
                     </div>
@@ -51,6 +51,20 @@
         },
         computed: {},
         methods: {
+            openImage(imageId) {
+                console.log(imageId);
+                $('#image' + imageId).addClass('lightbox-open');
+                $('#image-img' + imageId).addClass('lightbox-open-image');
+                $('#image-close' + imageId).addClass('lightbox-open-close');
+
+            },
+            closeImage(imageId) {
+                console.log(imageId);
+                $('#image' + imageId).removeClass('lightbox-open');
+                $('#image-img' + imageId).removeClass('lightbox-open-image');
+                $('#image-close' + imageId).removeClass('lightbox-open-close');
+
+            },
             async deleteImage(imageId, index) {
                 console.log(index);
                 
