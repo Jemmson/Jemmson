@@ -784,4 +784,19 @@ class TaskController extends Controller
         $images = new ImageManager;
         return (string) $images->make($file->path())->encode();
     }
+
+    public function deleteImage(TaskImage $taskImage)
+    {
+        if (preg_match('/tasks\/(.*)$/', $taskImage->url, $matches)) {
+            $disk = Storage::disk('public');
+            try {
+                $disk->delete('tasks/' . $matches[1]);
+            } catch (\Exception $e) {
+                Log::error('Delete Image: ' . $e->getMessage());
+                return response()->json('Something Went Wrong', 422);
+            }
+
+            $taskImage->delete();
+        }
+    }
 }

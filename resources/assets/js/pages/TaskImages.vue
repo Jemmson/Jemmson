@@ -12,12 +12,12 @@
             <div class="col-md-12">
                 <div class="card card-1">
                     <div class="panel-body">
-                        <div class="col-xs-12 col-sm-4" v-for="image of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
+                        <div class="col-xs-12 col-sm-4" v-for="(image, index) of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
                                 <div class="image-ct">
                                 <a class="lightbox" :href="'#image' + image.id">
                                 <img :src="image.url" alt="">
                                 </a>
-                                <button class="btn btn-danger image-btn" @click="deleteImage(image.id)"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn btn-danger image-btn" :id="'image-' + image.id" @click="deleteImage(image.id, index)"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             <!-- lightbox container hidden with CSS -->
                             <a class="lightbox-target" :id="'image' + image.id">
@@ -40,17 +40,31 @@
         data() {
             return {
                 jobTask: {},
+                jobTaskId: this.$route.params.id
             }
         },
         watch: {
             '$route' (to, from) {
                 // get the bid
-                const jobTaskId = this.$route.params.id;
-                this.getJobTask(jobTaskId);
+                this.getJobTask(this.jobTaskId);
             }
         },
         computed: {},
         methods: {
+            async deleteImage(imageId, index) {
+                console.log(index);
+                
+                document.getElementById('image-' + imageId).disabled = true;
+                try {
+                    const data = await axios.delete('/task/image/' + imageId, {imageId: imageId});
+                    this.getJobTask(this.jobTaskId);
+                    document.getElementById('image-' + imageId).disabled = false;
+                } catch (error) {
+                    Vue.toasted.error(error.message);
+                    document.getElementById('image-' + imageId).disabled = false;
+
+                }
+            },
             async getJobTask(id) {
                 try {
                     const {
@@ -66,8 +80,7 @@
         created: function () {
 
             // get the bid
-            const jobTaskId = this.$route.params.id;
-            this.getJobTask(jobTaskId);
+            this.getJobTask(this.jobTaskId);
         },
         mounted: function () {},
     }
