@@ -68,6 +68,14 @@ window.Echo.private('App.User.' + Spark.state.user.id)
         Vue.toasted.info('A Task Was Reopened!');
         Bus.$emit('bidUpdated');
         break;
+      case "App\\Notifications\\TaskDeleted":
+        Vue.toasted.info('A Task Was Deleted!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\JobCanceled":
+        Vue.toasted.info('A Job Was Canceled!');
+        Bus.$emit('bidUpdated');
+        break;
       default:
         break;
     }
