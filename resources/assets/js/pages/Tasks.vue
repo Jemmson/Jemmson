@@ -95,6 +95,14 @@
                 </a>
                 </p>
               </div>
+
+              <div class="col-xs-12">
+                <div class="divider2"></div>
+              </div>
+              
+              <task-images :jobTask="bidTask.job_task" type="sub">
+              </task-images>
+
               <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
                 <div class="divider2"></div>
               </div>

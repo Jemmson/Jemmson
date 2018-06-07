@@ -108,7 +108,6 @@ export default class GeneralContractor {
     try {
       const data = await axios.post ('/initiate-bid', form);
       console.log (data)
-      User.emitChange ('bidUpdated');
       Vue.toasted.success ('Bid Initiated');
       disabled.submit = false;
       window.location = '/#/bids';

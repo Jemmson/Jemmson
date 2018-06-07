@@ -86,49 +86,8 @@
               </div>
               <!-- / end divider -->
 
-              <div class="col-xs-4" v-if="showTaskImage1(jobTask)">
-                <a class="lightbox" :href="'#image' + jobTask.images[jobTask.images.length - 1].id">
-                  <img :src="jobTask.images[jobTask.images.length - 1].url" alt="">
-                </a>
-                <!-- lightbox container hidden with CSS -->
-                <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 1].id">
-                  <img :src="jobTask.images[jobTask.images.length - 1].url">
-                  <a class="lightbox-close" :href="'#/bid/' + bid.id"></a>
-                </a>
-              </div>
-
-              <div class="col-xs-4" v-if="showTaskImage2(jobTask)">
-                <a class="lightbox" :href="'#image' + jobTask.images[jobTask.images.length - 2].id">
-                  <img :src="jobTask.images[jobTask.images.length - 2].url" alt="">
-                </a>
-                <!-- lightbox container hidden with CSS -->
-                <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 2].id">
-                  <img :src="jobTask.images[jobTask.images.length - 2].url">
-                  <a class="lightbox-close" :href="'#/bid/' + bid.id"></a>
-                </a>
-              </div>
-
-              <div class="col-xs-4" v-if="showMoreImagesBtn(jobTask)">
-                <a class="lightbox" :href="'/#/task/' + jobTask.id + '/images'">
-                  <img :src="'/img/more.png'" alt="">
-                </a>
-              </div>
-              <!-- / end task images preview -->
-
-              <div class="col-xs-12">
-                <!-- upload images -->
-                <div class="form-group">
-                  <label class="col-md-6 control-label">&nbsp;</label>
-                  <div class="col-md-6 text-right">
-                    <label type="button" class="btn btn-primary btn-upload">
-                      <span>Attach Images</span>
-
-                      <input :ref="'task_photo_' + jobTask.id" type="file" class="form-control" @change="uploadTaskImage(jobTask.id)">
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <!-- / end upload task images-->
+              <task-images :jobTask="jobTask" type="notsub">
+              </task-images>
 
               <div class="col-xs-12" v-if="showSubMessage(jobTask)">
                 <div class="divider2"></div>
@@ -366,28 +325,6 @@
       }
     },
     methods: {
-      showTaskImage1(jobTask) {
-        // first most recent
-        const length = jobTask.images.length;
-        return length > 0 && jobTask.images[length - 1] !== undefined;
-      },
-      showTaskImage2(jobTask) {
-        // second most recent
-        const length = jobTask.images.length;
-        return length > 1 && jobTask.images[length - 2] !== undefined;
-      },
-      showMoreImagesBtn(jobTask) {
-        return jobTask.images.length > 2;
-      },
-      uploadTaskImage(jobTaskId) {
-        const data = new FormData();
-        console.log(this.$refs['task_photo_' + jobTaskId]);
-
-        data.append('photo', this.$refs['task_photo_' + jobTaskId][0].files[0]);
-        data.append('jobTaskId', jobTaskId);
-        data.append('jobId', this.bid.id);
-        User.uploadTaskImage(data);
-      },
       showSubMessage(jobTask) {
         let msg = jobTask.sub_message;
         return (msg != null && msg != '' && msg != ' ' && this.isContractor) || (msg != null && msg != '' && msg != ' ' &&
