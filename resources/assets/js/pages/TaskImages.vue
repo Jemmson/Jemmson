@@ -12,10 +12,13 @@
             <div class="col-md-12">
                 <div class="card card-1">
                     <div class="panel-body">
-                        <div class="col-xs-4" v-for="image of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
-                            <a class="lightbox" :href="'#image' + image.id">
+                        <div class="col-xs-12 col-sm-4" v-for="image of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
+                                <div class="image-ct">
+                                <a class="lightbox" :href="'#image' + image.id">
                                 <img :src="image.url" alt="">
-                            </a>
+                                </a>
+                                <button class="btn btn-danger image-btn" @click="deleteImage(image.id)"><i class="fas fa-trash-alt"></i></button>
+                                </div>
                             <!-- lightbox container hidden with CSS -->
                             <a class="lightbox-target" :id="'image' + image.id">
                                 <img :src="image.url">
