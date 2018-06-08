@@ -11,6 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 
 use App\User;
+use Log;
 
 class BidInitiated extends Notification implements ShouldQueue
 {
@@ -44,6 +45,7 @@ class BidInitiated extends Notification implements ShouldQueue
         $notifyThrough = ['broadcast'];
 
         if ($notifiable->phone) {
+            Log::debug('bidinitiated - notify through phone');
             array_push($notifyThrough, 'nexmo');
         }
 

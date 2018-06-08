@@ -72,7 +72,7 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label">Address Line 2</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="address_line_2"
+                            <input type="text" class="form-control" name=""
                                    v-model="form.address_line_2">
                         </div>
                     </div>
