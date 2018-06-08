@@ -22,6 +22,7 @@ Vue.component('completed-tasks', require('./job/CompletedTasks.vue'));
 Vue.component('modal', require('./shared/Modal.vue'));
 Vue.component('brand', require('./shared/Brand.vue'));
 Vue.component('feedback', require('./shared/Feedback.vue'));
+Vue.component('jem-footer', require('./shared/Footer.vue'));
 
 
 // require('./Autocomplete.vue');
