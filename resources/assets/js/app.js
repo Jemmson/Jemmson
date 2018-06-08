@@ -133,12 +133,18 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   $('.navbar-collapse').collapse('hide');
   console.log(to.path);
+  let customer = Spark.state.user.customer;
+  let contractor = Spark.state.user.contractor;
+  if (to.path === '/furtherInfo') {
+    if ((customer !== null && customer.location_id !== null) || (contractor !== null && contractor.location_id !== null)) {  
+      console.log('wtf');
+      next('/home');
+    }
+  }
   if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
     if (Spark.state.user === null) {
       location.href = '/login';
     }
-    const customer = Spark.state.user.customer;
-    const contractor = Spark.state.user.contractor;
     if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
       console.log('to further info');
       next('/furtherInfo');

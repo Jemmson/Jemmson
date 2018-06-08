@@ -87,7 +87,7 @@
                 return length > 1 && jobTask.images[length - 2] !== undefined;
             },
             showMoreImagesBtn(jobTask) {
-                return jobTask.images.length > 2;
+                return jobTask.images.length > 0;
             },
             uploadTaskImage(jobTaskId) {
                 const data = new FormData();
