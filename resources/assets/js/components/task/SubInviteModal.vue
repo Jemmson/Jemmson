@@ -2,7 +2,7 @@
     <!-- Modal -->
     <div class="modal fade" id="sub-invite-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal" aria-hidden="false">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content styled">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -133,3 +133,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .styled {
+        margin-top: 10rem;
+        margin-bottom: 10rem;
+    }
+</style>

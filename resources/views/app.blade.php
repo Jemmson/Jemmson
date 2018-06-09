@@ -30,7 +30,7 @@
       )); ?>;
     </script>
 </head>
-<body class="with-navbar">
+<body class="with-navbar" style="padding-top: 10rem; padding-bottom: 10rem">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
 @if (Auth::check())
@@ -72,7 +72,6 @@
 </script>
 
 <footer class="footer-spacing"></footer>
-
 
 </body>
 </html>

@@ -1,5 +1,5 @@
 <template>
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-8 col-md-offset-2 styled">
         <!-- <pre> {{ form }}</pre> -->
         <div class="panel panel-default card card-1">
             <div class="panel-heading" v-if="isContractor">Register Your Company</div>
@@ -316,3 +316,10 @@
     }
   }
 </script>
+
+<style scoped>
+    .styled {
+        margin-top: 10rem;
+        margin-bottom: 10rem;
+    }
+</style>

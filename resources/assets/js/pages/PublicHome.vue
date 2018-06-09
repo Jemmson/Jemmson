@@ -10,7 +10,8 @@
         </div>
         <div class="section pricing">
             <h2 style="color:black">Invoice Customers</h2>
-            <p style="color:black">You can create an invoice at the beginning of a job and then use that as a commmunication tool
+            <p style="color:black">You can create an invoice at the beginning of a job and then use that as a
+                commmunication tool
                 throughout the jobs life cycle. You simply initiate a bid for all jobs. Then construct that bid,
                 subcontract any of those tasks, and then submit the bid to the customer. The customer then has
                 the ability to approve the bid. Once the bid has been approve then the work can be performed. Once the
