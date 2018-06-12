@@ -10,10 +10,12 @@
     <div>
         <div v-if="user" class="jemmson-navbar">
             <a @click="showNotifications" class="has-activity-indicator">
-                <div class="navbar-icon"><button>
-                    <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i>
-                    <i class="icon fas fa-bell"></i>
-                    </button></div>
+                <div class="navbar-icon">
+                    <button>
+                        <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i>
+                        <i class="icon fas fa-bell"></i>
+                    </button>
+                </div>
             </a>
 
         @if (session('spark:impersonator'))
@@ -47,9 +49,11 @@
         @endif
 
         <!-- Logout -->
-                    <span><a href="/logout">
-                <i class="fas fa-fw fa-btn fa-sign-out-alt"></i>Logout
-            </a></span>
+            <span>
+                <a href="/logout">
+                    <i class="fas fa-fw fa-btn fa-sign-out-alt"></i>Logout
+                </a>
+            </span>
 
         </div>
 

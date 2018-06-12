@@ -1,91 +1,63 @@
 
 .jemmson-navbar {
+  background-image: linear-gradient(to right, #161411, #82b690);
   height: 70px;
   background-color: white;
-  border-bottom: solid black thin;
+  //border-bottom: solid black thin;
   overflow: hidden;
-  //background-color: #333;
   position: fixed; /* Set the navbar to fixed position */
   top: 0; /* Position the navbar at the top of the page */
-  //height: 15rem;
   width: 100%;
+  color: white;
   z-index: 100000;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-}
-
-.jemmson-center {
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-}
-
-//
-//.jemmson-left {
-//  margin-top: 20px;
-//  display: flex;
-//  width: 10%;
-//  justify-content: center;
-//}
-//
-//.jemmson-right {
-//  margin-right: 20px;
-//  display: flex;
-//  width: 10%;
-//  justify-content: space-evenly;
-//}
-
-span {
-  cursor: pointer;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 700;
-  letter-spacing: 1.1px;
-  line-height: 20px;
-  margin-left: 12px;
-  margin-right: 12px;
-  margin-top: 10px;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-top: 12px;
-  text-transform: uppercase;
-  width: 100.43px;
-  -webkit-font-smoothing: antialiased;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .jemmson-navbar div span a {
-  color: #586D7A;
+  color: inherit;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.jemmson-navbar span a {
+  color: inherit;
+  padding-right: 2rem;
+  padding-left: 2rem;
 }
 
 .jemmson-footer {
+  background-image: linear-gradient(to right, #161411, #82b690);
   height: 70px;
   background-color: white;
-  border-top: solid black thin;
+  //border-bottom: solid black thin;
   overflow: hidden;
-  //background-color: #333;
   position: fixed; /* Set the navbar to fixed position */
   bottom: 0; /* Position the navbar at the top of the page */
-  //height: 15rem;
   width: 100%;
+  color: white;
   z-index: 100000;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .jemmson-footer span a {
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
+  color: inherit;
+  padding-right: 1rem;
+  padding-left: 1rem;
 }
 
 @media (min-width: 300px) {
   .jemmson-navbar span a {
-    font-size: 10px;
+    font-size: 1.5rem;
   }
 
   .jemmson-footer span a {
-    font-size: 10px;
+    font-size: 1.5rem;
   }
 }
 
