@@ -31,7 +31,7 @@
                 No Address is Set Yet
             </div>
         </div>
-        
+
         <!-- JOB TOTAL PRICE -->
         <div class="job-total" v-if="showBidPrice">
             <span class="title job-status-label">Total Job Price:</span>
