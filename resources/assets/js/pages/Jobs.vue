@@ -15,9 +15,16 @@
             <div v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">
                 <div class="container card card-1 bid">
                     <label class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
-                    <span for="job-name" class="job-name text-center">{{ jobName(bid.job_name) }}</span>
+                    <div class="customer">
+                        <span>Customer:</span>
+                        <span>{{ bid.customer.name }}</span>
+                    </div>
+                    <div class="customer">
+                        <span>Job Name:</span>
+                        <span>{{ jobName(bid.job_name) }}</span>
+                    </div>
                     <button class="btn btn-primary btn-lg" name="reviewBid" @click="goToBid(bid.id)">
-                        Click To Edit Bid {{ bid.id }}
+                        Click To Edit
                     </button>
 
                 </div>
@@ -110,6 +117,15 @@
 </script>
 
 <style scoped>
+    .customer {
+        display: flex;
+        justify-content: center;
+    }
+
+    .customer span {
+        margin: 1rem 2rem;
+    }
+
     .card-1 {
         width: 90%;
         display: flex;

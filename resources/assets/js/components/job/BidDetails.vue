@@ -6,16 +6,16 @@
         <div class="status">
             <span>{{ status }}</span>
         </div>
-
+        <hr>
         <!-- JOB NAME -->
         <h3 class="text-center">{{ bid.job_name }}</h3>
-
+        <hr>
         <!-- CUSTOMER NAME -->
         <div class="customer">
             <span style="display: none">{{ actCustomerName(bid.customer_id) }}</span>
             <span class="title">Customer Name:</span><span class="title-value">{{ bid.customer.name }}</span>
         </div>
-
+        <hr>
         <!-- CUSTOMER ADDRESS -->
         <div>
             <span class="title">Address:</span>
@@ -27,11 +27,11 @@
                     <span>{{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}</span>
                 </address>
             </a>
-            <div v-else>
+            <div v-else class="text-center">
                 No Address is Set Yet
             </div>
         </div>
-
+        <hr>
         <!-- JOB TOTAL PRICE -->
         <div class="job-total" v-if="showBidPrice">
             <span class="title job-status-label">Total Job Price:</span>
