@@ -1,14 +1,23 @@
 <template>
     <!-- /all details of a bid -->
-    <div class="job-main-wrapper" v-if="bid.job_name !== undefined">
-        <div class="job-main-row job-main-header">
-            <span class="title-value text-center">{{ bid.job_name }}</span>
-            <span style="display: none">{{ actCustomerName(bid.customer_id) }}</span>
-            <div>
-                <span class="title">Customer Name:</span><span class="title-value">{{ bid.customer.name }}</span>
-            </div>
+    <div v-if="bid.job_name !== undefined">
+
+        <!-- JOB STATUS -->
+        <div class="status">
+            <span>{{ status }}</span>
         </div>
-        <div class="job-main-row job-main-address">
+
+        <!-- JOB NAME -->
+        <h3 class="text-center">{{ bid.job_name }}</h3>
+
+        <!-- CUSTOMER NAME -->
+        <div class="customer">
+            <span style="display: none">{{ actCustomerName(bid.customer_id) }}</span>
+            <span class="title">Customer Name:</span><span class="title-value">{{ bid.customer.name }}</span>
+        </div>
+
+        <!-- CUSTOMER ADDRESS -->
+        <div>
             <span class="title">Address:</span>
             <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
                :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
@@ -21,23 +30,19 @@
             <div v-else>
                 No Address is Set Yet
             </div>
-            <!--<span class="title-value text-center">{{ bid.job_name }}</span>-->
         </div>
-        <div class="job-main-row job-main-status">
-            <div class="job-status">
-                <span class="title job-status-label">Status:</span>
-                <span class="title-value text-center  job-status-value">{{ status }}</span>
-            </div>
-            <div class="job-status" v-if="showBidPrice">
-                <span class="title job-status-label">Total Job Price:</span>
-                <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
-            </div>
+        
+        <!-- JOB TOTAL PRICE -->
+        <div class="job-total" v-if="showBidPrice">
+            <span class="title job-status-label">Total Job Price:</span>
+            <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
         </div>
     </div>
 </template>
 
 <script>
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
+
   export default {
     props: {
       bid: Object
@@ -52,8 +57,8 @@
       }
     },
     computed: {
-      ...mapGetters([
-          'getCustomerName'
+      ...mapGetters ([
+        'getCustomerName'
       ]),
       showBidPrice () {
         if (User.isCustomer ()) {
@@ -70,11 +75,11 @@
       }
     },
     methods: {
-      ...mapMutations([
-          'setCustomerName'
+      ...mapMutations ([
+        'setCustomerName'
       ]),
-      ...mapActions([
-          'actCustomerName'
+      ...mapActions ([
+        'actCustomerName'
       ]),
       updateArea () {
         // Customer.updateArea (this.area.area, this.bid.id);
@@ -90,52 +95,22 @@
 </script>
 
 <style scoped>
-    .job-main-wrapper {
-        display: grid;
-        grid-template-rows: repeat(3, 1fr);
+    .customer {
+        display: flex;
+        justify-content: space-between;
     }
 
-    .job-main-header {
-        background-color: #eee;
-        display: grid;
+    .job-total {
+        display: flex;
+        justify-content: space-between;
     }
 
-    .job-main-address {
-        background-color: white;
-        display: grid;
-    }
-
-    .job-main-row {
-        border-radius: 4px;
-    }
-
-    .job-main-status {
-        background-color: #eee;
-        display: grid;
-    }
-
-    .title {
-        padding-top: 1rem;
-        padding-left: 1rem;
-    }
-
-    .title-value {
-        /*padding-right: 1rem;*/
-        /*padding-bottom: 1rem;*/
-        /*padding-left: 1rem;*/
+    .status {
+        display: flex;
+        justify-content: center;
+        background-color: rgba(0, 128, 0, 0.34);
+        border-radius: 10px;
         font-size: 2rem;
-        /*float: right;*/
-    }
-
-    .job-status {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .job-status-label {
-    }
-
-    .job-status-value {
-        margin-left: auto;
+        padding: .5rem;
     }
 </style>
