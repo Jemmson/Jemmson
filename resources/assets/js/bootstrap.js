@@ -76,6 +76,14 @@ window.Echo.private('App.User.' + Spark.state.user.id)
         Vue.toasted.info('A Job Was Canceled!');
         Bus.$emit('bidUpdated');
         break;
+      case "App\\Notifications\\UploadedTaskImage":
+        Vue.toasted.info('An Image Was Uploaded.');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\TaskImageDeleted":
+        Vue.toasted.info('An Image Was Deleted.');
+        Bus.$emit('bidUpdated');
+        break;
       default:
         break;
     }
