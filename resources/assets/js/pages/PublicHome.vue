@@ -45,7 +45,8 @@
 <style scoped>
 
     .wrapper {
-        display: grid;
+        display: flex;
+        flex-direction: column;
         width: 100%;
     }
 
