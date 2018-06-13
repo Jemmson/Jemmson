@@ -10,6 +10,8 @@ use App\Notifications\TaskFinished;
 use App\Notifications\TaskWasNotApproved;
 use App\Notifications\TaskApproved;
 use App\Notifications\TaskReopened;
+use App\Notifications\UploadedTaskImage;
+use App\Notifications\TaskImageDeleted;
 use App\Task;
 use App\Job;
 use App\Contractor;
@@ -776,6 +778,23 @@ class TaskController extends Controller
             return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
         }
 
+        $job = Job::find($taskImage->job_id);
+        $jobTask = JobTask::find($taskImage->job_task_id);
+
+        $customer = $job->customer()->first();
+        $contractor = $job->contractor()->first();
+        if (Auth::user()->id !== $customer->id) {
+            $job->customer()->first()->notify(new UploadedTaskImage());
+        }
+        if (Auth::user()->id !== $contractor->id) {
+            $job->contractor()->first()->notify(new UploadedTaskImage());
+        }
+
+
+        if ($job->contractor_id !== $jobTask->contractor_id) {
+            $jobTask->contractor()->first()->notify(new UploadedTaskImage());
+        }
+
         return $url;
     }
 
@@ -797,6 +816,22 @@ class TaskController extends Controller
             }
 
             $taskImage->delete();
+        }
+
+        $job = Job::find($taskImage->job_id);
+        $jobTask = JobTask::find($taskImage->job_task_id);
+
+        $customer = $job->customer()->first();
+        $contractor = $job->contractor()->first();
+        if (Auth::user()->id !== $customer->id) {
+            $job->customer()->first()->notify(new TaskImageDeleted());
+        }
+        if (Auth::user()->id !== $contractor->id) {
+            $job->contractor()->first()->notify(new TaskImageDeleted());
+        }
+
+        if ($job->contractor_id !== $jobTask->contractor_id) {
+            $jobTask->contractor()->first()->notify(new TaskImageDeleted());
         }
     }
 }

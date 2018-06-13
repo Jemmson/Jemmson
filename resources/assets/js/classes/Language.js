@@ -111,6 +111,9 @@ export default class Language {
       },
       modal: {
         reviewBidConfirmationModal: 'The bid may have changed since you last saw it, please review the bid if you have not done so.'
+      },
+      sub: {
+        stripe_success: "Your stripe account is now active!",
       }
     };
   }

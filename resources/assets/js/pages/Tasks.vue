@@ -316,8 +316,11 @@
       if (taskId !== null && taskId !== '') {
         $('#task_' + taskId).addClass('info');
       }
-      const success = this.$route.query.success;
-      Vue.toasted.success(success);
+      let success = this.$route.query.success;
+      if (success !== undefined) {
+        success = Language.lang().sub.stripe_success;
+        Vue.toasted.success(success);
+      }      
       const error = this.$route.query.error;
       Vue.toasted.error(error);
     }
