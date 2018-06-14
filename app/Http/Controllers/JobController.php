@@ -410,7 +410,7 @@ class JobController extends Controller
     }
 
     /**
-     * Customer does not approve of the job bid
+     * Customer did not approve of the job bid
      *
      * @param Request $request
      * @return Response
@@ -433,6 +433,7 @@ class JobController extends Controller
 
         if ($job->updateStatus(__('bid.declined'))) {
             $contractor->notify(new JobBidDeclined($job, $contractor, $message));
+            $job->setJobDeclinedMessage($message);
             return response()->json(['message' => 'Success'], 200);
         }
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
