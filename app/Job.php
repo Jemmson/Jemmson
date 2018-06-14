@@ -368,4 +368,23 @@ class Job extends Model
         return $totalTasks === $totalTasksResolved;
     }
 
+    /**
+     * Declined message
+     *
+     * @param String $message
+     * @return void
+     */
+    public function setJobDeclinedMessage(String $message)
+    {
+        $this->declined_Message = $message;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Set Declined Job Message: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
 }

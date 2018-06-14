@@ -15,7 +15,7 @@
             <div v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">
                 <div class="container card card-1 bid">
                     <label class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
-                    <div class="customer">
+                    <div class="customer" v-if="user.usertype !== 'customer'">
                         <span>Customer:</span>
                         <span>{{ bid.customer.name }}</span>
                     </div>
@@ -42,7 +42,7 @@
 <script>
   export default {
     props: {
-      //user: Object,
+      user: Object,
       //pbids: Array
     },
     data () {

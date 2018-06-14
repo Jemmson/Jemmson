@@ -1,23 +1,69 @@
 <template>
-    <!-- /all details of a bid -->
-    <div v-if="bid.job_name !== undefined">
+<!-- /all details of a bid -->
+<div v-if="bid.job_name !== undefined">
+  <section class="col-xs-12">
+    <h3>
+      <label for="task-status" class="label" :class="getLabelClass(bid.status)">
+        {{ status }}
+      </label>
+    </h3>
+  </section>
+  <section class="col-xs-12 col-md-6">
+
+    <h3 for="company_name" v-if="isCustomer">{{ bid.job_name }}</h3>
+    <h3 for="company_name" v-else>{{ customerName }}</h3>
+
+    <a target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
+               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+      <address v-if="bid.location !== null">
+        <br> {{ bid.location.address_line_1 }}
+        <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+      </address>
+    </a>
+  </section>
+  <section class="col-xs-12 col-md-6">
+    <label for="job_name">
+      Job Name:
+    </label>
+    <p>
+      {{ bid.job_name }}
+    </p>
+
+    <label for="title">
+      Start Date:
+    </label>
+    <p>
+      {{ bid.agreed_start_date }}
+    </p>
+  </section>
+
+  <section class="col-xs-12" v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
+    <h4>
+      <label for="declined" class="label label-warning">Declined Reason</label>
+    </h4>
+    <p>
+      <b>
+        {{ bid.declined_message}}
+      </b>
+    </p>
+  </section>
 
         <!-- JOB STATUS -->
-        <div class="status">
+        <!-- <div class="status">
             <span>{{ status }}</span>
         </div>
-        <hr>
+        <hr> -->
         <!-- JOB NAME -->
-        <h3 class="text-center">{{ bid.job_name }}</h3>
-        <hr>
+        <!-- <h3 class="text-center">{{ bid.job_name }}</h3>
+        <hr> -->
         <!-- CUSTOMER NAME -->
-        <div class="customer">
+        <!-- <div class="customer">
             <span style="display: none">{{ actCustomerName(bid.customer_id) }}</span>
             <span class="title">Customer Name:</span><span class="title-value">{{ bid.customer.name }}</span>
         </div>
-        <hr>
+        <hr> -->
         <!-- CUSTOMER ADDRESS -->
-        <div>
+        <!-- <div>
             <span class="title">Address:</span>
             <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
                :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
@@ -31,13 +77,13 @@
                 No Address is Set Yet
             </div>
         </div>
-        <hr>
+        <hr> -->
         <!-- JOB TOTAL PRICE -->
-        <div class="job-total" v-if="showBidPrice">
+        <!-- <div class="job-total" v-if="showBidPrice">
             <span class="title job-status-label">Total Job Price:</span>
             <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
-        </div>
-    </div>
+        </div> -->
+</div>
 </template>
 
 <script>
@@ -45,7 +91,9 @@
 
   export default {
     props: {
-      bid: Object
+      bid: Object,
+      isCustomer: Boolean,
+      customerName: String
     },
     data () {
       return {
@@ -75,6 +123,9 @@
       }
     },
     methods: {
+      getLabelClass(status) {
+        return Format.statusLabel(status);
+      },
       ...mapMutations ([
         'setCustomerName'
       ]),
