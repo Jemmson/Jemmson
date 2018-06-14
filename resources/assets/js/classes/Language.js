@@ -70,14 +70,14 @@ export default class Language {
       // general is finished with their bids and has sent
       // the bid to the customer for approval
       'bid.sent': {
-        sub: 'Waiting on Customer Approval - sub',
-        general: 'Waiting on Customer Approval - general',
+        sub: 'Waiting on Customer Approval',
+        general: 'Waiting on Customer Approval',
         customer: 'Waiting on Approval'
       },
       'bid.declined': {
         sub: 'Waiting on Customer Approval - sub',
         general: 'Job Declined Please Review',
-        customer: 'Declined Waiting On Contractor To Resubmit'
+        customer: 'Declined'
       },
       'job.approved': {
         sub: 'Start Job',

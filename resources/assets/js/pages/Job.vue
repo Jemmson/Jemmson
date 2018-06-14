@@ -3,10 +3,10 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card card-1">
-          <div class="panel-heading">Job Details</div>
+          <!-- <div class="panel-heading">Job Details</div> -->
           <div class="panel-body">
             <!-- /show all bid information -->
-            <bid-details :bid="bid">
+            <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
             </bid-details>
           </div>
           <div class="panel-footer">
@@ -76,6 +76,15 @@
       }
     },
     computed: {
+      customerName() {
+        if (this.isCustomer) {
+          return this.user.name;
+        } 
+        
+        if (this.bid.customer !== undefined) {
+          return this.bid.customer.name;
+        }
+      },
       showTasks() {
         if (User.isCustomer()) {
           const status = this.bid.status;
