@@ -3,7 +3,7 @@
     <div v-if="bid.job_name !== undefined">
 
         <!-- JOB STATUS -->
-        <div for="task-status" class="status" :class="getLabelClass(bid.status)">
+        <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
             {{ status }}
         </div>
 
@@ -16,7 +16,7 @@
         </div>
 
         <!-- JOB NAME -->
-        <div class="jobName">
+        <div class="flex space-between">
             <span for="job_name">
                 Job Name:
             </span>
@@ -41,14 +41,14 @@
         </div>
 
         <!-- JOB TOTAL PRICE -->
-        <div class="job-total" v-if="showBidPrice">
+        <div class="flex space-between" v-if="showBidPrice">
             <span class="title job-status-label">Total Job Price:</span>
             <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
         </div>
 
 
         <!-- Job Start Date -->
-        <div>
+        <div class="flex space-between">
             <label for="title">
                 Start Date:
             </label>
@@ -59,79 +59,16 @@
 
 
         <!-- Declined Message -->
-        <div class="col-xs-12" v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
+        <div class="flex space-between flex-col"
+             v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
             <h4>
-                <label for="declined" class="label label-warning">Declined Reason</label>
+                <label class="status label label-warning red py-s">Declined Reason</label>
             </h4>
-            <p>
-                <b>
-                    {{ bid.declined_message}}
-                </b>
+            <p class="message">
+                {{ bid.declined_message}}
             </p>
         </div>
 
-
-        <!--<section class="col-xs-12 col-md-6">-->
-
-            <!--<h3 for="company_name" v-if="isCustomer">{{ bid.job_name }}</h3>-->
-            <!--<h3 for="company_name" v-else>{{ customerName }}</h3>-->
-
-            <!--<a target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"-->
-               <!--:href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">-->
-                <!--<address v-if="bid.location !== null">-->
-                    <!--<br> {{ bid.location.address_line_1 }}-->
-                    <!--<br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}-->
-                <!--</address>-->
-            <!--</a>-->
-        <!--</section>-->
-        <!--<section class="col-xs-12 col-md-6">-->
-            <!---->
-
-            <!--<label for="title">-->
-                <!--Start Date:-->
-            <!--</label>-->
-            <!--<p>-->
-                <!--{{ bid.agreed_start_date }}-->
-            <!--</p>-->
-        <!--</section>-->
-
-
-
-        <!-- JOB STATUS -->
-        <!-- <div class="status">
-            <span>{{ status }}</span>
-        </div>
-        <hr> -->
-        <!-- JOB NAME -->
-        <!-- <h3 class="text-center">{{ bid.job_name }}</h3>
-        <hr> -->
-        <!-- CUSTOMER NAME -->
-        <!-- <div class="customer">
-            <span style="display: none">{{ actCustomerName(bid.customer_id) }}</span>
-            <span class="title">Customer Name:</span><span class="title-value">{{ bid.customer.name }}</span>
-        </div>
-        <hr> -->
-        <!-- CUSTOMER ADDRESS -->
-        <!-- <div>
-            <span class="title">Address:</span>
-            <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
-               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                <address>
-                    <span>{{ bid.location.address_line_1 }}</span>
-                    <br>
-                    <span>{{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}</span>
-                </address>
-            </a>
-            <div v-else class="text-center">
-                No Address is Set Yet
-            </div>
-        </div>
-        <hr> -->
-        <!-- JOB TOTAL PRICE -->
-        <!-- <div class="job-total" v-if="showBidPrice">
-            <span class="title job-status-label">Total Job Price:</span>
-            <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
-        </div> -->
     </div>
 </template>
 
@@ -196,27 +133,65 @@
 
 <style scoped>
 
-    .jobName {
+    .flex {
         display: flex;
+    }
+
+    .space-between {
         justify-content: space-between;
     }
 
-    .customer {
-        display: flex;
-        justify-content: space-between;
+    .green {
+        background-color: rgba(0, 128, 0, 0.34);
     }
 
-    .job-total {
-        display: flex;
-        justify-content: space-between;
+    .red {
+        background-color: rgba(255, 64, 47, 0.78);
+    }
+
+    .py-l {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .py-m {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    .py-s {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .px-l {
+        padding-right: 3rem;
+        padding-left: 3rem;
+    }
+
+    .px-m {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
+
+    .px-s {
+        padding-right: 1rem;
+        padding-left: 1rem;
     }
 
     .status {
         display: flex;
         justify-content: center;
-        background-color: rgba(0, 128, 0, 0.34);
         border-radius: 10px;
         font-size: 2rem;
-        padding: .5rem;
+    }
+
+    .message {
+        font-size: 2.25rem;
+        font-weight: bold;
+    }
+
+    .flex-col {
+        flex-direction: column;
     }
 </style>
