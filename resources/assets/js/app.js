@@ -13,6 +13,17 @@
  |
  */
 
+import Echo from 'laravel-echo'
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo ({
+  broadcaster: 'pusher',
+  key: '07c3b89aa6d0a0206b23',
+  cluster: 'mt1',
+  encrypted: true
+});
+
 require('spark-bootstrap');
 
 import VueRouter from 'vue-router';
@@ -24,6 +35,9 @@ Vue.use(Toasted, {
   duration: 5000,
   theme: 'bubble',
 })
+
+import VuePaginate from 'vue-paginate'
+Vue.use(VuePaginate)
 
 import {
   store
@@ -46,6 +60,8 @@ import Tasks from './pages/Tasks';
 import Invoices from './pages/Invoices';
 import Invoice from './pages/Invoice';
 import FurtherInfo from './pages/FurtherInfo';
+import TaskImages from './pages/TaskImages';
+
 
 window.Format = Format;
 window.Language = Language;
@@ -54,6 +70,7 @@ window.GeneralContractor = new GeneralContractor(Spark.state.user);
 window.SubContractor = new SubContractor(Spark.state.user);
 window.Customer = new Customer(Spark.state.user);
 window.TaskUtil = new TaskUtil();
+window.autocomplete = {};
 
 require('./components/bootstrap');
 
@@ -99,7 +116,13 @@ const routes = [{
     path: '/furtherInfo',
     component: FurtherInfo
   },
-
+  {
+    path: '/task/:id/images',
+    component: TaskImages
+  },
+  {
+    path: '/#*'
+  }
 
 ]
 
@@ -108,10 +131,22 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  $('.navbar-collapse').collapse('hide');
   console.log(to.path);
+  if (to.path === '/furtherInfo') {
+      let customer = Spark.state.user.customer;
+  let contractor = Spark.state.user.contractor;
+    if ((customer !== null && customer.location_id !== null) || (contractor !== null && contractor.location_id !== null)) {  
+      console.log('wtf');
+      next('/home');
+    }
+  }
   if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
-    const customer = Spark.state.user.customer;
-    const contractor = Spark.state.user.contractor;
+    let customer = Spark.state.user.customer;
+    let contractor = Spark.state.user.contractor;
+    if (Spark.state.user === null) {
+      location.href = '/login';
+    }
     if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
       console.log('to further info');
       next('/furtherInfo');
@@ -139,7 +174,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-})
+});
 
 
 var app = new Vue({
@@ -147,3 +182,6 @@ var app = new Vue({
   router,
   store
 });
+
+
+require('./bootstrap');

@@ -40,11 +40,11 @@ export default class Customer {
   async cancelBid(bid, disabled) {
     disabled.cancelBid = true;
     try {
-      const data = await axios.post('/api/job/cancel', bid);
-      Bus.$emit('bidUpdated', ['closeBid']);
+      const data = await axios.post('/job/cancel', bid);
       Vue.toasted.success('Bid Canceled');
       disabled.cancelBid = false;
       location.href = "/#/bids";
+      //Bus.$emit('bidUpdated', ['closeBid']);
     } catch (error) {
       error = error.response.data;
       Vue.toasted.error(error.message);
@@ -121,6 +121,67 @@ export default class Customer {
     }).catch((error) => {
       console.log(error);
     })
+  }
+
+  /**
+   * 
+   * @param {object} job 
+   */
+  async paidWithCash(job) {
+
+  }
+
+  /**
+   * 
+   * @param {int} id 
+   * @param {obj} excluded 
+   * @param {obj} disabled 
+   */
+  async payAllPayableTasks(id, excluded, disabled) {
+    console.log('payAllPayableTasks', id);
+    disabled.payAll = true;
+
+    if (User.payWithStripe()) {
+      if (!User.isSignedUpWithStripe()) {
+        console.log('No Stripe Account');
+        Bus.$emit('needsStripe');
+        disabled.payAll = false;
+        return false;
+      }
+    }
+
+    try {
+      const data = await axios.post('/stripe/customer/pay/tasks', {id: id, excluded: excluded});
+      User.emitChange('bidUpdated');
+      Vue.toasted.success('Paid For All Payable Tasks');
+      disabled.payAll = false;
+    } catch (error) {
+      error = error.response.data;
+      Vue.toasted.error(error.message);
+      disabled.payAll = false;
+    }
+  }
+
+/**
+ * 
+ * @param {int} id 
+ * @param {obj} excluded 
+ * @param {obj} disabled 
+ */
+  async payAllPayableTasksWithCash(id, excluded, disabled) {
+    console.log('payAllPayableTasksWithCash', id);
+    disabled.payCash = true;
+
+    try {
+      const data = await axios.post('/stripe/customer/pay/tasks/cash', { id: id, excluded: excluded });
+      User.emitChange('bidUpdated');
+      Vue.toasted.success('Paid For All Payable Tasks');
+      disabled.payCash = false;
+    } catch (error) {
+      error = error.response.data;
+      Vue.toasted.error(error.message);
+      disabled.payCash = false;
+    }
   }
 
   /**

@@ -6,11 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
 
-class TaskWasNotApproved extends Notification
+class TaskWasNotApproved extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $task, $user, $message;
@@ -19,7 +20,7 @@ class TaskWasNotApproved extends Notification
      *
      * @return void
      */
-    public function __construct(Task $task, User $user, string $message = '')
+    public function __construct(Task $task, User $user, string $message = null)
     {
         $this->task = $task;
         $this->user = $user;
@@ -34,7 +35,7 @@ class TaskWasNotApproved extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -72,4 +73,12 @@ class TaskWasNotApproved extends Notification
             //
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'task' => $this->task,
+        ]);
+    }
 }
+

@@ -2,24 +2,25 @@
     <!-- Modal -->
     <div class="modal fade" id="sub-invite-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal" aria-hidden="false">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content styled">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}</h4>
+                    <h4 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}</h4>
+                    <h4 v-else>Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }} - would you like to invite another sub to bid on this task?</h4>
                 </div>
                 <div class="modal-body">
                         <form role="form">
                                 <div class="form-group">
-                                    <label for="contractorName">Contractor Name *</label>
+                                    <label for="contractorName">Company Name *</label>
                                     <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')">Please Enter A Name</span>
                                     <input type="text" class="form-control" id="contractorName" name="contractorName" placeholder="Name" v-model="initiateBidForSubForm.name"
                                         v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" autofocus required v-on:keyup="autoComplete">
                                     <div class="panel-footer" v-if="aResults.length">
                                         <ul class="list-group">
                                             <button class="list-group-item" v-for="result in aResults" v-bind:key="result.id" :name="result.phone" @click.prevent="fillFields(result)">
-                                                {{ result.name }}
+                                                {{ result.name }} - {{ result.contractor.company_name }}
                                             </button>
                                         </ul>
                                     </div>
@@ -68,6 +69,7 @@
                     task_id: 0,
                     email: '',
                     phone: '',
+                    counter: 0,
                 }),
                 user: '',
                 results: [],
@@ -131,3 +133,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .styled {
+        margin-top: 10rem;
+        margin-bottom: 10rem;
+    }
+</style>

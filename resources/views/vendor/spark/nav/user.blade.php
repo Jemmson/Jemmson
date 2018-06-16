@@ -1,116 +1,72 @@
 <!-- NavBar For Authenticated Users -->
 <spark-navbar
-    :user="user"
-    :teams="teams"
-    :current-team="currentTeam"
-    :has-unread-notifications="hasUnreadNotifications"
-    :has-unread-announcements="hasUnreadAnnouncements"
-    inline-template>
+        :user="user"
+        :teams="teams"
+        :current-team="currentTeam"
+        :has-unread-notifications="hasUnreadNotifications"
+        :has-unread-announcements="hasUnreadAnnouncements"
+        inline-template>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container" v-if="user">
-            <div class="navbar-header">
-                <!-- Collapsed Hamburger -->
-                <div class="hamburger">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#spark-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+    <div>
+        <div v-if="user" class="jemmson-navbar">
+            <a @click="showNotifications" class="has-activity-indicator">
+                <div class="navbar-icon">
+                    <button>
+                        <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i>
+                        <i class="icon fas fa-bell"></i>
                     </button>
                 </div>
+            </a>
 
-                <!-- Branding Image -->
-                <brand></brand>
-            </div>
+        @if (session('spark:impersonator'))
+            <!--<li class="dropdown-header">Impersonation</li> -->
 
-            <div class="collapse navbar-collapse" id="spark-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    @if (Auth::user()->usertype === 'contractor')
-                                @include('spark::nav.contractor-left')
-                    @endif
-                    @if (Auth::user()->usertype === 'customer')
-                                @include('spark::nav.customer-left')
-                    @endif
-                </ul>
+                <!-- Stop Impersonating -->
+                <span><a href="/spark/kiosk/users/stop-impersonating">
+                    <i class="fas fa-fw fa-btn fa-user-secret"></i>Back To My Account
+                </a></span>
 
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    @includeIf('spark::nav.user-right')
+            @endif
 
-                    <!-- Notifications -->
-                    <li>
-                        <a @click="showNotifications" class="has-activity-indicator">
-                            <div class="navbar-icon">
-                                <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i>
-                                <i class="icon fas fa-bell"></i>
-                            </div>
-                        </a>
-                    </li>
+            @if (Spark::developer(Auth::user()->email))
+                @include('spark::nav.developer')
+            @endif
 
-                    <li class="dropdown">
-                        <!-- User Photo / Name -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <img :src="user.photo_url" class="spark-nav-profile-photo m-r-xs">
-                            <span class="caret"></span>
-                        </a>
+            @include('spark::nav.subscriptions')
 
-                        <ul class="dropdown-menu" role="menu">
-                            <!-- Impersonation -->
-                            @if (session('spark:impersonator'))
-                                <li class="dropdown-header">Impersonation</li>
+            <span><a href="/settings">
+                <i class="fas fa-fw fa-btn fa-cog"></i>Your Settings
+            </a></span>
 
-                                <!-- Stop Impersonating -->
-                                <li>
-                                    <a href="/spark/kiosk/users/stop-impersonating">
-                                        <i class="fas fa-fw fa-btn fa-user-secret"></i>Back To My Account
-                                    </a>
-                                </li>
+        @if (Spark::usesTeams() && (Spark::createsAdditionalTeams() || Spark::showsTeamSwitcher()))
+            <!-- Team Settings -->
+            @include('spark::nav.teams')
+        @endif
 
-                                <li class="divider"></li>
-                            @endif
+        @if (Spark::hasSupportAddress())
+            <!-- Support -->
+            @include('spark::nav.support')
+        @endif
 
-                            <!-- Developer -->
-                            @if (Spark::developer(Auth::user()->email))
-                                @include('spark::nav.developer')
-                            @endif
+        <!-- Logout -->
+            <span>
+                <a href="/logout">
+                    <i class="fas fa-fw fa-btn fa-sign-out-alt"></i>Logout
+                </a>
+            </span>
 
-                            <!-- Subscription Reminders -->
-                            @include('spark::nav.subscriptions')
-
-                            <!-- Settings -->
-                            <li class="dropdown-header">Settings</li>
-
-                            <!-- Your Settings -->
-                            <li>
-                                <a href="/settings">
-                                    <i class="fas fa-fw fa-btn fa-cog"></i>Your Settings
-                                </a>
-                            </li>
-
-                            <li class="divider"></li>
-
-                            @if (Spark::usesTeams() && (Spark::createsAdditionalTeams() || Spark::showsTeamSwitcher()))
-                                <!-- Team Settings -->
-                                @include('spark::nav.teams')
-                            @endif
-
-                            @if (Spark::hasSupportAddress())
-                                <!-- Support -->
-                                @include('spark::nav.support')
-                            @endif
-
-                            <!-- Logout -->
-                            <li>
-                                <a href="/logout">
-                                    <i class="fas fa-fw fa-btn fa-sign-out-alt"></i>Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
         </div>
-    </nav>
+
+        <div v-if="user" class="jemmson-footer">
+            @if (Auth::user()->usertype === 'contractor')
+                @include('spark::nav.contractor-left')
+            @endif
+            @if (Auth::user()->usertype === 'customer')
+                @include('spark::nav.customer-left')
+            @endif
+            @includeIf('spark::nav.user-right')
+        </div>
+
+    </div>
+
 </spark-navbar>

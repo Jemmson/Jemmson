@@ -27,7 +27,7 @@
       )); ?>;
     </script>
 </head>
-<body class="with-navbar">
+<body class="with-navbar" style="background-image: linear-gradient(to right, #161411, #82b690)">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
 @if (Auth::check())

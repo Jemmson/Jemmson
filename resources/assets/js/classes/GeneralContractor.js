@@ -13,7 +13,7 @@ export default class GeneralContractor {
       price: bid.bid_price,
     }).then ((response) => {
       console.log (response.data)
-      User.emitChange('bidUpdated');
+      User.emitChange ('bidUpdated');
       Vue.toasted.success ('Accepted Bid!');
       disabled.accept = false;
     }).catch ((error) => {
@@ -30,10 +30,6 @@ export default class GeneralContractor {
     // I want the task to associated to a job, customer, and contractor
     // I want to add the existing task to the job
 
-    // TODO: handle tasks existing
-    form.taskId = 1;
-    form.taskExists = false;
-
     form.jobId = bid.id;
     form.contractorId = Spark.state.user.id;
 
@@ -46,8 +42,11 @@ export default class GeneralContractor {
         // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
         // show a toast notification
         form.taskName = '';
-        form.taskPrice = '';
-        form.subTaskPrice = '';
+        form.taskPrice = 0;
+        form.subTaskPrice = 0;
+        form.qty = 1;
+        form.taskId = -1;
+        
         Bus.$emit ('taskAdded', true);
         User.emitChange ('bidUpdated');
         Vue.toasted.success ('New Task Added!');
@@ -90,7 +89,7 @@ export default class GeneralContractor {
         jobId: jobTask.job_id
       });
       User.emitChange ('bidUpdated');
-      Vue.toasted.success ('Task Denied & Notification Sent');
+      Vue.toasted.success ('Task Deleted');
       disabled.deleteTask = false;
     } catch (error) {
       error = error.response.data;
@@ -99,22 +98,27 @@ export default class GeneralContractor {
     }
   }
 
+
+
+  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
+
   async initiateBid (form, disabled) {
     disabled.submit = true;
     console.log (form)
     try {
       const data = await axios.post ('/initiate-bid', form);
-      console.log(data)
-      User.emitChange ('bidUpdated');
+      console.log (data)
       Vue.toasted.success ('Bid Initiated');
       disabled.submit = false;
       window.location = '/#/bids';
     } catch (error) {
+      console.log(error)
       error = error.response.data;
       form.errors.errors = error.errors;
       Vue.toasted.error (error.message);
       console.log ('Initiate bid errors')
       console.log (error)
+      console.log (error.message)
       disabled.submit = false;
       if (error.errors['no_free_jobs'] !== undefined) {
         window.location = '/settings#/subscription';
@@ -141,7 +145,8 @@ export default class GeneralContractor {
 
   notifyCustomerOfFinishedBid (bid, disabled) {
     disabled.submitBid = true;
-    if (User.needsStripe (bid)) {
+    if (User.needsStripe()) {
+      disabled.submitBid = false;
       return false;
     }
     console.log ('notifyCustomerOfFinishedBid', bid);
@@ -170,6 +175,7 @@ export default class GeneralContractor {
         User.emitChange ('bidUpdated');
         Vue.toasted.success ('Invite Sent!');
         disabled.invite = false;
+        form.counter++;
         form.name = '';
         form.email = '';
         form.phone = '';

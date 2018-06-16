@@ -125,6 +125,29 @@ class User extends SparkUser
     }
 
     /**
+     * Delete card infromation
+     *
+     * @param [type] $card
+     * @return Boolean
+     */
+    public function deleteCard()
+    {
+        $this->card_brand = '';
+        $this->card_last_four = '';
+        $this->card_country = '';
+        $this->stripe_id = null;
+
+        try {
+            $this->save();
+        } catch (\Excpetion $e) {
+            Log::error('Deleting Card: ' . $e-getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get all jobs this user is associated with
      *
      * @return void
@@ -219,5 +242,4 @@ class User extends SparkUser
         // this along with phone validation will need to be updated to handle other country phone numbers
         return '1' . $this->phone;
     }
-
 }

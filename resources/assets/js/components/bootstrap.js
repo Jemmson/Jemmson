@@ -15,11 +15,14 @@ require('./../spark-components/bootstrap');
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
 Vue.component('bid-tasks', require('./job/BidTasks.vue'));
+Vue.component('completed-tasks', require('./job/CompletedTasks.vue'));
+
 
 // Shared Components
 Vue.component('modal', require('./shared/Modal.vue'));
 Vue.component('brand', require('./shared/Brand.vue'));
 Vue.component('feedback', require('./shared/Feedback.vue'));
+Vue.component('jem-footer', require('./shared/Footer.vue'));
 
 
 // require('./Autocomplete.vue');
@@ -37,7 +40,12 @@ Vue.component('signup-with-stripe', require('./stripe/SignupWithStripe'));
 Vue.component('approve-bid', require('./job/ApproveBid'));
 Vue.component('sub-invite-modal', require('./task/SubInviteModal'));
 Vue.component('deny-task-modal', require('./task/DenyTaskModal'));
+Vue.component('update-task-location-modal', require('./task/UpdateTaskLocationModal'));
 Vue.component('bid-add-task', require('./task/BidAddTask.vue'));
+
+
+Vue.component('task-images', require('./task/UploadTaskImages.vue'));
+
 
 
 

@@ -1,0 +1,72 @@
+
+.jemmson-navbar {
+  background-image: linear-gradient(to right, #161411, #82b690);
+  height: 70px;
+  background-color: white;
+  //border-bottom: solid black thin;
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%;
+  color: white;
+  z-index: 100000;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jemmson-navbar div span a {
+  color: inherit;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.jemmson-navbar span a {
+  color: inherit;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.jemmson-footer {
+  background-image: linear-gradient(to right, #161411, #82b690);
+  height: 70px;
+  background-color: white;
+  //border-bottom: solid black thin;
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  bottom: 0; /* Position the navbar at the top of the page */
+  width: 100%;
+  color: white;
+  z-index: 100000;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jemmson-footer span a {
+  color: inherit;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+@media (min-width: 300px) {
+  .jemmson-navbar span a {
+    font-size: 1.5rem;
+  }
+
+  .jemmson-footer span a {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 762px) {
+  .jemmson-navbar span a {
+    font-size: 16px;
+  }
+
+  .jemmson-footer span a {
+    font-size: 16px;
+  }
+}

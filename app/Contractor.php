@@ -124,7 +124,7 @@ class Contractor extends Model
 
         if ($this->location_id === null) {
             $location = new Location();
-            $location->user_id = $this->id;
+            $location->user_id = $this->user_id;
             $location->default = true;
             $location->address_line_1 = $request->address_line_1;
             $location->address_line_2 = $request->address_line_2;

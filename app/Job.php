@@ -79,6 +79,11 @@ class Job extends Model
         return $this->hasMany(JobTask::class, 'job_id', 'id');
     }
 
+    public function images()
+    {
+        return $this->hasMany(TaskImage::class, 'job_id');
+    }
+
     /**
      * Return related JobActions Model - create it
      * if it doesn't exist
@@ -143,6 +148,31 @@ class Job extends Model
         } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Set job as completed if all child task are paid for
+     *
+     * @return void
+     */
+    public function setJobAsCompleted()
+    {
+        if ($this->getCountOfUnpaidTasks() >= 1) {
+            return;
+        }
+
+        $this->status = __('job.completed');
+
+        try {
+            $this->save();    
+        } catch(\Exception $e) {
+            Log::error('Update Job' . $e->getMessage());
+        }
+    }
+
+    public function getCountOfUnpaidTasks()
+    {
+        return count($this->jobTasks()->where('status', '!=', __('bid_task.customer_sent_payment'))->get());
     }
 
     public function getArea()
@@ -235,12 +265,18 @@ class Job extends Model
 
     public function subtractPrice($amount)
     {
-        $this->bid_price -= $amount;
+        Log::debug('existing amount ' . $this->bid_price);
+        Log::debug('amount: ' . $amount);
+        $this->bid_price -= (int) $amount;
+        if ($this->bid_price < 0) {
+            $this->bid_price = 0;
+        }
 
         try {
             $this->save();
+            Log::debug('Saved subtract job ' .  $this);
         } catch(\Exception $e) {
-            Log::error('Adding Price To Job: ' . $e->getMessage());
+            Log::error('Subtracting Price To Job: ' . $e->getMessage());
             return false;
         }
         return true;
@@ -330,6 +366,25 @@ class Job extends Model
         $totalTasks = count(DB::table('job_task')->where('job_id', $this->id)->where('deleted_at', null)->get());
         $totalTasksResolved = count(DB::table('job_task')->where('job_id', $this->id)->where('status','bid_task.customer_sent_payment')->get());
         return $totalTasks === $totalTasksResolved;
+    }
+
+    /**
+     * Declined message
+     *
+     * @param String $message
+     * @return void
+     */
+    public function setJobDeclinedMessage(String $message)
+    {
+        $this->declined_Message = $message;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Set Declined Job Message: ' . $e->getMessage());
+            return false;
+        }
+        return true;
     }
 
 }

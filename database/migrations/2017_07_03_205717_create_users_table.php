@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('location_id')->unique()->nullable(); 
+            $table->integer('location_id')->nullable();
             $table->string('name');
             $table->string('email')->unique()->nullable();
             $table->string('usertype')->default('customer');
@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('uses_two_factor_auth')->default(0);
             $table->string('authy_id')->nullable();
             $table->string('country_code', 10)->nullable();
-            $table->string('phone', 25)->unique()->nullable();
+            $table->string('phone', 25)->nullable();
             $table->string('two_factor_reset_code', 100)->nullable();
             $table->integer('current_team_id')->nullable();
             $table->string('stripe_id')->nullable();

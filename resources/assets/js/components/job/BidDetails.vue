@@ -1,152 +1,197 @@
 <template>
     <!-- /all details of a bid -->
-    <div class="job-main-wrapper" v-if="bid.job_name !== undefined">
-        <div class="job-main-row job-main-header">
-            <span class="title">Job Name:</span>
-            <span class="title-value text-center">{{ bid.job_name }}</span>
+    <div v-if="bid.job_name !== undefined">
+
+        <!-- JOB STATUS -->
+        <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
+            {{ status }}
         </div>
-        <div class="job-main-row job-main-address">
+
+        <hr>
+
+        <!-- CUSTOMER NAME -->
+        <div>
+            <h3 for="company_name" class="text-center" v-if="isCustomer">{{ bid.job_name }}</h3>
+            <h3 for="company_name" class="text-center" v-else>{{ customerName }}</h3>
+        </div>
+
+        <!-- JOB NAME -->
+        <div class="flex space-between">
+            <span for="job_name">
+                Job Name:
+            </span>
+            <span>
+                {{ bid.job_name }}
+            </span>
+        </div>
+
+        <!-- CUSTOMER ADDRESS -->
+        <div>
             <span class="title">Address:</span>
-            <a class="text-center" target="_blank" v-if="bid.location !== undefined && bid.location !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                <address>
-                    <span>{{ bid.location.address_line_1 }}</span>
-                    <br>
-                    <span>{{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}</span>
+            <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
+               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                <address v-if="bid.location !== null">
+                    <br> {{ bid.location.address_line_1 }}
+                    <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
                 </address>
             </a>
-            <!--<span class="title-value text-center">{{ bid.job_name }}</span>-->
-        </div>
-        <div class="job-main-row job-main-status">
-            <div class="job-status">
-                <span class="title job-status-label">Status:</span>
-                <span class="title-value text-center  job-status-value">{{ status }}</span>
-            </div>
-            <div class="job-status" v-if="showBidPrice">
-                <span class="title job-status-label">Total Job Price:</span>
-                <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
+            <div v-else class="text-center">
+                No Address is Set Yet
             </div>
         </div>
 
-        <!--<div class="col-md-12">-->
-        <!--<section class="col-xs-12 col-md-6">-->
-        <!--<div class="label-span">Job Name: </div>-->
-        <!--<div class="job-name" for="job_name">{{ bid.job_name }}</div>-->
-        <!--<a target="_blank" v-if="bid.location !== undefined && bid.location !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">-->
-        <!--<address>-->
-        <!--<br> {{ bid.location.address_line_1 }}-->
-        <!--<br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}-->
-        <!--</address>-->
-        <!--</a>-->
-        <!--</section>-->
-        <!--<section class="col-xs-12 col-md-6">-->
-        <!--<div class="label-details">-->
-        <!--<span class="label-span">Status: </span>-->
-        <!--<br>-->
-        <!--<label class="label label-warning">-->
-        <!--{{ status }}-->
-        <!--</label>-->
-        <!--</div>-->
-        <!--<div class="label-details">-->
-        <!--<span class="label-span">Total Job Price: </span>-->
-        <!--<label class="label label-info">-->
-        <!--${{ bid.bid_price }}-->
-        <!--</label>-->
-        <!--</div>-->
-        <!--</section>-->
-        <!-- /end detail header -->
+        <!-- JOB TOTAL PRICE -->
+        <div class="flex space-between" v-if="showBidPrice">
+            <span class="title job-status-label">Total Job Price:</span>
+            <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
+        </div>
+
+
+        <!-- Job Start Date -->
+        <div class="flex space-between">
+            <label for="title">
+                Start Date:
+            </label>
+            <p>
+                {{ bid.agreed_start_date }}
+            </p>
+        </div>
+
+
+        <!-- Declined Message -->
+        <div class="flex space-between flex-col"
+             v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
+            <h4>
+                <label class="status label label-warning red py-s">Declined Reason</label>
+            </h4>
+            <p class="message">
+                {{ bid.declined_message}}
+            </p>
+        </div>
+
     </div>
 </template>
 
 <script>
-    export default {
-        props: {
-            bid: Object
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
+
+  export default {
+    props: {
+      bid: Object,
+      isCustomer: Boolean,
+      customerName: String
+    },
+    data () {
+      return {
+        area: {
+          area: ''
         },
-        data() {
-            return {
-                area: {
-                    area: ''
-                },
-                areaError: '',
-                locationExists: false
-            }
-        },
-        computed: {
-            showBidPrice() {
-                if (User.isCustomer()) {
-                    const status = this.bid.status;
-                    if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
-                        return true;
-                    }
-                    return false;
-                }
-                return true;
-            },
-            status() {
-                return User.status(this.bid.status, this.bid);
-            }
-        },
-        methods: {
-            updateArea() {
-                Customer.updateArea(this.area.area, this.bid.id);
-            },
-            showArea() {
-                console.log('user type: ' + User.isContractor())
-                return this.area.area !== '' && User.isContractor();
-            }
-        },
-        mounted: function () {
-            // Customer.getArea(this.bid.id, this.area)
-            Customer.getArea(1, this.area)
+        areaError: '',
+        locationExists: false
+      }
+    },
+    computed: {
+      ...mapGetters ([
+        'getCustomerName'
+      ]),
+      showBidPrice () {
+        if (User.isCustomer ()) {
+          const status = this.bid.status;
+          if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
+            return true;
+          }
+          return false;
         }
+        return true;
+      },
+      status () {
+        return User.status (this.bid.status, this.bid);
+      }
+    },
+    methods: {
+      getLabelClass (status) {
+        return Format.statusLabel (status);
+      },
+      ...mapMutations ([
+        'setCustomerName'
+      ]),
+      ...mapActions ([
+        'actCustomerName'
+      ]),
+      updateArea () {
+        // Customer.updateArea (this.area.area, this.bid.id);
+      },
+      showArea () {
+        console.log ('user type: ' + User.isContractor ())
+        return this.area.area !== '' && User.isContractor ();
+      }
+    },
+    mounted: function () {
     }
+  }
 </script>
 
 <style scoped>
-    .job-main-wrapper {
-        display: grid;
-        grid-template-rows: repeat(3, 1fr);
+
+    .flex {
+        display: flex;
     }
 
-    .job-main-header {
-        background-color: #eee;
-        display: grid;
+    .space-between {
+        justify-content: space-between;
     }
 
-    .job-main-address {
-        background-color: white;
-        display: grid;
+    .green {
+        background-color: rgba(0, 128, 0, 0.34);
     }
 
-    .job-main-row {
-        border-radius: 4px;
+    .red {
+        background-color: rgba(255, 64, 47, 0.78);
     }
 
-    .job-main-status {
-        background-color: #eee;
-        display: grid;
+    .py-l {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
     }
 
-    .title {
+    .py-m {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    .py-s {
         padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .px-l {
+        padding-right: 3rem;
+        padding-left: 3rem;
+    }
+
+    .px-m {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
+
+    .px-s {
+        padding-right: 1rem;
         padding-left: 1rem;
     }
 
-    .title-value {
-        padding-right: 1rem;
-        padding-bottom: 1rem;
-        padding-left: 1rem;
+    .status {
+        display: flex;
+        justify-content: center;
+        border-radius: 10px;
         font-size: 2rem;
     }
 
-    .job-status {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+    .message {
+        font-size: 2.25rem;
+        font-weight: bold;
     }
 
-    .job-status-label {}
-
-    .job-status-value {
-        margin-left: auto;
+    .flex-col {
+        flex-direction: column;
     }
 </style>

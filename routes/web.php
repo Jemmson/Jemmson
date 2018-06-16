@@ -69,14 +69,20 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/bid/tasks', 'TaskController@bidTasks');
     Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
     Route::post('/task/deny', 'TaskController@denyTask');
+    Route::post('/task/image', 'TaskController@uploadTaskImage');
+    Route::delete('/task/image/{taskImage}', 'TaskController@deleteImage');
+
+    
 
     // JobController
     Route::resource('/job', 'JobController');
+    Route::get('/jobtask/{jobTask}', 'TaskController@getJobTask');
     Route::post('/jobs', 'JobController@jobs');
     Route::post('/bid/job/decline', 'JobController@declineJobBid');
     Route::post('job/approve/{job}', 'JobController@approveJob');
     Route::get('invoices', 'JobController@getInvoices');
     Route::get('invoice/{job}', 'JobController@getInvoice');
+    Route::post('job/cancel', 'JobController@cancelJobBid');
     
     // Stripe routes
     Route::get('/stripe/express/connect', 'StripeController@connectExpress');
@@ -84,8 +90,12 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');
     Route::post('/stripe/express/task/payment', 'StripeController@sendExpressTaskPayment');    
     
+    
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer'); 
+    Route::post('/stripe/customer/pay/tasks', 'StripeController@payAllPayableTasks'); 
+    Route::post('/stripe/customer/pay/tasks/cash', 'StripeController@payAllPayableTasksWithCash'); 
+    Route::delete('/stripe/customer/card', 'StripeController@deleteCard');    
 }
 );
 Route::group(['middleware' => ['auth']], function () {
@@ -108,3 +118,5 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('/login/{type}/{job_id}/{token}', 'PasswordlessController@JobBid');
 // passwordless login
 Route::get('/login/{type}/task/{task_id}/{token}', 'PasswordlessController@taskBid');
+
+Route::post('/bid/customer/getName', 'CustomerController@getName');

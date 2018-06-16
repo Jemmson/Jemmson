@@ -6,11 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Job;
 use App\User;
 
-class JobBidDeclined extends Notification
+class JobBidDeclined extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -23,7 +24,7 @@ class JobBidDeclined extends Notification
      * @param User $user
      * @param string $message
      */
-    public function __construct(Job $bid, User $user, string $message = '')
+    public function __construct(Job $bid, User $user, string $message = null)
     {
         $this->bid = $bid;
         $this->user = $user;
@@ -38,7 +39,7 @@ class JobBidDeclined extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -68,4 +69,12 @@ class JobBidDeclined extends Notification
             //
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'job' => $this->bid,
+        ]);
+    }
 }
+

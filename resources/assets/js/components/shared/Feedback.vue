@@ -1,12 +1,12 @@
 <template>
 <div>
-    <div id="feedback" style="position:fixed; bottom: 0; right: 0;">
+    <div id="feedback" style="position:fixed; bottom: 0; right: 0; margin-bottom: 7rem">
         <button class="btn btn-default" @click="open">
             <i class="fas fa-comment fa-2x"></i>
         </button>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="feedback-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+    <div class="modal fade" id="feedback-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false" style="margin-top: 7rem">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

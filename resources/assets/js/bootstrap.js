@@ -1,53 +1,91 @@
-
-window._ = require('lodash');
-
-/**
- * We'll load jQuery and the Bootstrap jQuery plugin which provides support
- * for JavaScript based Bootstrap features such as modals and tabs. This
- * code may be modified to fit the specific needs of your application.
- */
-
-try {
-    window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap-sass');
-} catch (e) {}
+window.Echo.private(`user.job.${Spark.state.user.id}`)
+  .listen('BidInitiated', (e) => {
+    console.log(e);
+  });
 
 /**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
+ * Capture all notification events
  */
-
-window.axios = require('axios');
-
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-/**
- * Next we will register the CSRF Token as a common header with Axios so that
- * all outgoing HTTP requests automatically have it attached. This is just
- * a simple convenience so we don't have to attach every token manually.
- */
-
-let token = document.head.querySelector('meta[name="csrf-token"]');
-
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
-
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
-// import Echo from 'laravel-echo'
-
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key'
-// });
+window.Echo.private('App.User.' + Spark.state.user.id)
+  .notification((notification) => {
+    console.log(notification);
+    switch (notification.type) {
+      case "App\\Notifications\\BidInitiated":
+        console.log('bid initiated');
+        Vue.toasted.info('A Contractor Initiated A Bid With You!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\NotifyCustomerThatBidIsFinished":
+        Vue.toasted.info('A Contractor Submitted A Bid!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\NotifyJobHasBeenApproved":
+        Vue.toasted.info('A Customer Accepted One of Your Bids!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\TaskFinished":
+        Vue.toasted.info('A Task Has Been Finished!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\NotifyJobHasBeenApproved":
+        console.log('bid initiated');
+        Vue.toasted.info('A Job Has Been Approved!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\NotifyContractorOfSubBid":
+        Vue.toasted.info('A Sub Has Submitted A Bid!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\JobBidDeclined":
+        Vue.toasted.info('A Bid Has Been Declined!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\CustomerUnableToSendPaymentWithStripe":
+        Vue.toasted.info('A Customer Failed To Pay You Through Stripe!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\CustomerPaidForTask":
+        Vue.toasted.info('A Customer Paid For A Task!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\NotifySubOfAcceptedBid":
+        Vue.toasted.info('One of Your Bids Has Been Accepted!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\NotifySubOfTaskToBid":
+        Vue.toasted.info('You Were Sent A Task!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\TaskWasNotApproved":
+        Vue.toasted.info('A Task Was Not Approved!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\TaskWasNotApproved":
+        Vue.toasted.info('A Task Was Approved!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\TaskReopened":
+        Vue.toasted.info('A Task Was Reopened!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\TaskDeleted":
+        Vue.toasted.info('A Task Was Deleted!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\JobCanceled":
+        Vue.toasted.info('A Job Was Canceled!');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\UploadedTaskImage":
+        Vue.toasted.info('An Image Was Uploaded.');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\TaskImageDeleted":
+        Vue.toasted.info('An Image Was Deleted.');
+        Bus.$emit('bidUpdated');
+        break;
+      default:
+        break;
+    }
+  });
+  

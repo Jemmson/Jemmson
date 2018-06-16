@@ -6,11 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
 
-class CustomerPaidForTask extends Notification
+class CustomerPaidForTask extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $task, $user;
@@ -35,7 +36,7 @@ class CustomerPaidForTask extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -73,5 +74,12 @@ class CustomerPaidForTask extends Notification
         return [
             //
         ];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'task' => $this->task,
+        ]);
     }
 }

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
-                <div class="panel panel-default">
+                <div class="card card-1">
                     <div class="panel-body">
                         <h1>Invoice Page</h1>
                     </div>
@@ -10,7 +10,7 @@
             </div>
             <div v-if="invoice !== null">
                 <div class="col-md-12">
-                    <div class="panel panel-default">
+                    <div class="card card-1">
                         <div class="panel-body">
                             <section class="col-xs-12 col-md-6">
                                 <h3 for="company_name" v-if="isContractor">{{ user.contractor.company_name }}</h3>
@@ -40,13 +40,13 @@
                 </div>
 
                 <div class="col-md-12">
-                    <div class="panel panel-default">
+                    <div class="card card-1">
                         <div class="panel-body">
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th scope="col">Task Name</th>
-                                        <th scope="col"></th>
+                                        <th scope="col">QTY</th>
                                         <th scope="col">Task Price (Contractor)</th>
                                         <th scope="col" v-if="isContractor">Task Price (Sub Contractor)</th>
 
@@ -55,7 +55,7 @@
                                 <tbody>
                                     <tr v-for="task in invoice.job_tasks" :key="task.id">
                                         <td>{{ task.task.name }}</td>
-                                        <td></td>
+                                        <td>{{ task.qty }}</td>
                                         <td>${{ task.cust_final_price - task.sub_final_price }}</td>
                                         <td v-if="isContractor">${{ task.sub_final_price }}</td>
                                     </tr>
@@ -100,7 +100,7 @@
                 let total = 0;
                 if (this.invoice !== null) {
                     for (const task of this.invoice.job_tasks) {
-                        total += task.cust_final_price - task.sub_final_price;
+                        total += (task.cust_final_price * task.qty) - (task.sub_final_price * task.qty);
                     }
                 }
                 return total;
@@ -109,7 +109,7 @@
                 let total = 0;
                 if (this.invoice !== null) {
                     for (const task of this.invoice.job_tasks) {
-                        total += task.sub_final_price;
+                        total += task.sub_final_price * task.qty;
                     }
                 }
                 return total;

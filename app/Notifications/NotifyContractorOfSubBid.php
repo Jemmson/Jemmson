@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Auth;
 use App\User;
 use App\Job;
 
-class NotifyContractorOfSubBid extends Notification
+class NotifyContractorOfSubBid extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $user, $subName, $bid;
@@ -38,7 +39,7 @@ class NotifyContractorOfSubBid extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -68,4 +69,12 @@ class NotifyContractorOfSubBid extends Notification
             //
         ];
     }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'bid' => $this->bid,
+        ]);
+    }
 }
+

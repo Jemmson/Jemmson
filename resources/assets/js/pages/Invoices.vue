@@ -2,14 +2,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">
-                <div class="panel panel-default">
+                <div class="card card-1">
                     <div class="panel-body">
                         <h1>Invoices Page</h1>
                     </div>
                 </div>
             </div>
             <div class="col-md-12">
-                <div class="panel panel-default">
+                <div class="card card-1">
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="invoice-search">Search Invoices</label>

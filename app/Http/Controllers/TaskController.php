@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
-use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfAcceptedBid;
-use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\TaskFinished;
 use App\Notifications\TaskWasNotApproved;
 use App\Notifications\TaskApproved;
-//use Illuminate\Notifications\Notifiable;
+use App\Notifications\TaskReopened;
+use App\Notifications\UploadedTaskImage;
+use App\Notifications\TaskImageDeleted;
 use App\Task;
 use App\Job;
 use App\Contractor;
@@ -19,6 +19,7 @@ use App\Customer;
 use App\User;
 use App\BidContractorJobTask;
 use App\JobTask;
+use App\TaskImage;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
@@ -26,11 +27,13 @@ use Illuminate\Support\Facades\DB;
 
 use Auth;
 use Log;
+use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
 
-//    use Notifiable;
+    //    use Notifiable;
 
     /**
      * Display a listing of the resource.
@@ -55,7 +58,7 @@ class TaskController extends Controller
      */
     public function bidTasks()
     {
-        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['jobTask.job', 'jobTask.task'])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['jobTask.job', 'jobTask.task', 'jobTask.images'])->get();
         return response()->json($bidTasks, 200);
     }
 
@@ -88,7 +91,18 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Task $task
+     * @return \Illuminate\Http\Response
+     */
+    public function getJobTask(JobTask $jobTask)
+    {
+        Log::debug($jobTask);
+        return $jobTask->load(['images', 'task']);
     }
 
     /**
@@ -118,6 +132,19 @@ class TaskController extends Controller
         } catch (\Exception $e) {
             Log::error('Update Task:' . $e->getMessage());
         }
+    }
+
+    /**
+     * Update jobtask location
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Task $task
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTaskLocation(Request $request)
+    {
+        $jobTask = JobTask::find($request->id);
+        return $jobTask->updateLocation($request);
     }
 
     /**
@@ -195,19 +222,19 @@ class TaskController extends Controller
             return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
         }
 
-        $job->subtractPrice($jobTask->cust_final_price);
+        $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
         return response()->json(["message" => "Success"], 200);
 
     }
 
-    public function checkIfSubContractorExits($email, $phone)
+    public function checkIfSubContractorExits($name, $email, $phone)
     {
         $user = User::where('email', $email)->orWhere('phone', $phone)->first();
         $result = count($user);
         $userExists = false;
 
         if ($result !== 1) {
-            $user = $this->createNewUser($email, $phone);
+            $user = $this->createNewUser($name, $email, $phone);
             $userExists = false;
         } else {
             $userExists = true;
@@ -218,7 +245,7 @@ class TaskController extends Controller
         return $userData;
     }
 
-    public function createNewUser($email, $phone)
+    public function createNewUser($name, $email, $phone)
     {
         if (empty($email)) {
             $email = null;
@@ -232,7 +259,7 @@ class TaskController extends Controller
 
         $user = User::create(
             [
-                'name' => explode('@', $email)[0],
+                'name' => $name,
                 'email' => $email,
                 'phone' => $phone,
                 'usertype' => 'contractor',
@@ -243,7 +270,8 @@ class TaskController extends Controller
 
         Contractor::create(
             [
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'company_name' => $name
             ]
         );
 
@@ -300,6 +328,7 @@ class TaskController extends Controller
             'email' => 'required|email',
         ]);
 
+        //
         $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
         $jobTaskId = $request->jobTaskId;
@@ -307,9 +336,11 @@ class TaskController extends Controller
 
         $user = User::where('phone', $phone)->orWhere('email', $email)->first();
 
+
+        // TODO: Not sure about this logic. Should be if a user is not a contractor then create a contractor. If a user is a customer then that should not throw an error becuase a user can be both a contractor and a customer
         if ($user === null) {
             // if no user found create one
-            $user = $this->createNewUser($email, $phone);
+            $user = $this->createNewUser($name, $email, $phone);
         } else if ($user->usertype === 'customer') {
             // return if the user is a customer
             return response()->json(["message" => "Not a valid user.", "errors" => ["error" => "No valid user."]], 422);
@@ -323,7 +354,7 @@ class TaskController extends Controller
             return response()->json(["message" => "Task Already Exists.", "errors" => ["error" => "Task Already Exists."]], 422);
         }
 
-        //   this code will redirect them to the page with information on the task
+        // this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
         $user->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user));
 
@@ -381,6 +412,7 @@ class TaskController extends Controller
         $jobTask->sub_final_price = $price;
         $jobTask->contractor_id = $contractorId;
         $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
+        $jobTask->stripe = false;
         $jobTask->status = __('bid_task.accepted');
 
         try {
@@ -507,41 +539,23 @@ class TaskController extends Controller
         $jobTask = JobTask::find($request->id);
         $jobTask->updateStatus(__('bid_task.reopened'));
 
+        $task = $jobTask->task()->first();
+        $sub_contractor_id = $jobTask->contractor_id;
+        $general_contractor_id = $task->contractor_id;
+
+        $general_contractor = User::find($general_contractor_id);
+        $customer = $jobTask->job()->first()->customer()->first();
+        
+        if ($sub_contractor_id != $general_contractor_id) {
+            $sub_contractor = User::find($sub_contractor_id);
+            $sub_contractor->notify(new TaskReopened($task));
+        } 
+
+        $customer->notify(new TaskReopened($task));
+        
+
         return response()->json(['message' => 'task reopened'], 200);
         // change the status of the job to pending
-    }
-
-
-    public function acceptJob(Request $request)
-    {
-        $jobId = $request->jobId;
-        $contractorId = $request->contractorId;
-
-        $job = Job::find($jobId);
-        $job->status = __('job.accepted');
-        $job->save();
-
-        $user = User::find($contractorId);
-
-        $user->notify(new NotifyContractorOfAcceptedBid());
-    }
-
-    public function declineJob(Request $request)
-    {
-        $jobId = $request->jobId;
-        $contractorId = $request->contractorId;
-
-        $job = Job::find($jobId);
-        $job->status = config('app.jobIsDeclined');
-        $job->save();
-
-        $user_id = Contractor::where('id', $contractorId)
-            ->get()
-            ->first()
-            ->user_id;
-        $user = User::where('id', $user_id)->get()->first();
-
-        $user->notify(new NotifyContractorOfDeclinedBid());
     }
 
     public function updateCustomerPrice(Request $request)
@@ -584,28 +598,6 @@ class TaskController extends Controller
 
     }
 
-    /**
-     * TODO: move to job controller
-     * Notify customer that a contractor has finished
-     * his bid for the specific job
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function finishedBidNotification(Request $request)
-    {
-        $jobId = $request->jobId;
-        $customerId = $request->customerId;
-
-
-        $user = User::find($customerId);
-        $job = Job::find($jobId);
-
-        $this->switchJobStatusToInProgress($job, __('bid.sent'));
-
-        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user));
-    }
-
     public function addTask(Request $request)
     {
 
@@ -614,47 +606,60 @@ class TaskController extends Controller
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
-            'start_date' => 'required_if:start_when_accepted,false|date|after:today'
+            //            'sub_sets_own_price_for_job' => 'required',
+            'start_date' => 'required_if:start_when_accepted,false|date|after:today',
+            'qty' => 'numeric|min:1',
+            'qtyUnit' => 'string|min:1'
         ]);
 
         $job_id = $request->jobId;
-        $name = strtolower($request->taskName);
-
         $job = Job::find($job_id);
 
-        // find or create a task TODO: review
-        $task = Task::firstOrCreate(['name' => $name, 'job_id' => $job_id, 'contractor_id' => $request->contractorId]);
+        $name = strtolower($request->taskName);
+        $contractor_id = $request->contractorId;
+
+        $task = Task::whereRaw('LOWER(`name`) = ? ', $name)->where('contractor_id', $contractor_id)->first();
+
+        Log::debug($task);
+
+        if (empty($task)) {
+            $task = new Task;
+            $task->name = $name;
+            $task->contractor_id = $contractor_id;
+        } else {
+            // they did not select a task from the dropdown list
+            if ($request->taskId == -1) {
+                $jobTask = $task->jobTask()->first();
+                $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
+            }
+        }
 
         $task->proposed_cust_price = $request->taskPrice;
-        $task->proposed_sub_price = $request->subTaskPrice;
+        if (!$request->sub_sets_own_price_for_job) {
+            $task->proposed_sub_price = $request->subTaskPrice;
+        }
+        $task->job_id = $job_id;
 
         try {
             $task->save();
         } catch (\Exception $e) {
             Log::error('Add/Update Task: ' . $e->getMessage());
-            return response()->json(["message" => "Couldn't add/update task.", "errors" => ["error" => [$e->getMessage()]]], 404);
+            return response()->json([
+                "message" => "Couldn't add/update task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
         }
 
-//        $useStripe = '';
-//        Log::info('stripe variable', $request->useStripe);
-//
-//        if ($request->useStripe) {
-//            $useStripe = 1;
-//        } else {
-//            $useStripe = 0;
-//        }
 
         // update or create job task for task
         $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
-//        $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
+
         $this->updateJobTask($request, $task->id, $jobTask);
         // add to total job price
-        $job->addPrice($request->taskPrice);
+        $job->addPrice(($request->taskPrice * $request->qty));
 
         $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
         return response()->json($job->tasks()->get(), 200);
-        // change the status of the job to pending
     }
 
     /**
@@ -706,14 +711,25 @@ class TaskController extends Controller
 
     public function updateJobTask($request, $task_id, $jobTask)
     {
+
+        Log::info('quantity unit: ' . $request->qtyUnit);
+
+        if (!$request->sub_sets_own_price_for_job) {
+            $jobTask->sub_sets_own_price_for_job = 0;
+        } else {
+            $jobTask->sub_sets_own_price_for_job = 1;
+        }
+
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;
         $jobTask->status = __('bid_task.initiated');
         $jobTask->cust_final_price = $request->taskPrice;
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
-        $jobTask->details = $request->details;
+        $jobTask->sub_message = $request->sub_message;
+        $jobTask->customer_message = $request->customer_message;
         $jobTask->stripe = $request->useStripe;
+        $jobTask->qty = $request->qty;
         if ($request->start_when_accepted) {
             $jobTask->start_when_accepted = true;
             $jobTask->start_date = \Carbon\Carbon::now();
@@ -721,5 +737,101 @@ class TaskController extends Controller
             $jobTask->start_date = $request->start_date;
         }
         $jobTask->save();
+    }
+
+    /**
+     * Upload images and attach them to the task
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function uploadTaskImage(Request $request)
+    {
+        // $this->validate($request, [
+        //         'photo' => 'required|max:4012',
+        //     ]);
+
+        $file = $request->photo;
+
+        $path = $file->hashName('tasks');
+
+        $disk = Storage::disk('public');
+
+        $disk->put(
+            $path, $this->formatImage($file)
+        );
+
+        $url = $disk->url($path);
+
+        $taskImage = new TaskImage;
+        $taskImage->job_id = $request->jobId;
+        $taskImage->job_task_id = $request->jobTaskId;
+        $taskImage->url = $url;
+
+        try {
+            $taskImage->save();
+        } catch (\Excpetion $e) {
+            Log::error('Saving Task Image: ' . $e->getMessage());
+            if (preg_match('/logos\/(.*)$/', $url, $matches)) {
+                $disk->delete('tasks/'.$matches[1]);
+            }
+            return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
+        }
+
+        $job = Job::find($taskImage->job_id);
+        $jobTask = JobTask::find($taskImage->job_task_id);
+
+        $customer = $job->customer()->first();
+        $contractor = $job->contractor()->first();
+        if (Auth::user()->id !== $customer->id) {
+            $job->customer()->first()->notify(new UploadedTaskImage());
+        }
+        if (Auth::user()->id !== $contractor->id) {
+            $job->contractor()->first()->notify(new UploadedTaskImage());
+        }
+
+
+        if ($job->contractor_id !== $jobTask->contractor_id) {
+            $jobTask->contractor()->first()->notify(new UploadedTaskImage());
+        }
+
+        return $url;
+    }
+
+    protected function formatImage($file)
+    {
+        $images = new ImageManager;
+        return (string) $images->make($file->path())->encode();
+    }
+
+    public function deleteImage(TaskImage $taskImage)
+    {
+        if (preg_match('/tasks\/(.*)$/', $taskImage->url, $matches)) {
+            $disk = Storage::disk('public');
+            try {
+                $disk->delete('tasks/' . $matches[1]);
+            } catch (\Exception $e) {
+                Log::error('Delete Image: ' . $e->getMessage());
+                return response()->json('Something Went Wrong', 422);
+            }
+
+            $taskImage->delete();
+        }
+
+        $job = Job::find($taskImage->job_id);
+        $jobTask = JobTask::find($taskImage->job_task_id);
+
+        $customer = $job->customer()->first();
+        $contractor = $job->contractor()->first();
+        if (Auth::user()->id !== $customer->id) {
+            $job->customer()->first()->notify(new TaskImageDeleted());
+        }
+        if (Auth::user()->id !== $contractor->id) {
+            $job->contractor()->first()->notify(new TaskImageDeleted());
+        }
+
+        if ($job->contractor_id !== $jobTask->contractor_id) {
+            $jobTask->contractor()->first()->notify(new TaskImageDeleted());
+        }
     }
 }

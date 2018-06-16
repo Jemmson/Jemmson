@@ -16,7 +16,7 @@ export default class Language {
       // general contractor accepted the subs bid
       'bid_task.accepted': {
         sub: 'Bid Accepted, Waiting On Customer Approval',
-        general: 'Bid Accepted',
+        general: 'You Accepted a Subs Bid',
         customer: 'Pending'
       },
       // sub saying this task is finished
@@ -60,7 +60,7 @@ export default class Language {
       'bid.initiated': {
         sub: 'Waiting on General Contractor to finish job bid',
         general: 'Bid Initiated',
-        customer: 'Bid Initiated'
+        customer: 'Bid is in Process. Please watch for my completed bid'
       },
       'bid.in_progress': {
         sub: 'Waiting on General Contractor to Submit Final Bid',
@@ -70,14 +70,14 @@ export default class Language {
       // general is finished with their bids and has sent
       // the bid to the customer for approval
       'bid.sent': {
-        sub: 'Waiting on Customer Approval - sub',
-        general: 'Waiting on Customer Approval - general',
+        sub: 'Waiting on Customer Approval',
+        general: 'Waiting on Customer Approval',
         customer: 'Waiting on Approval'
       },
       'bid.declined': {
         sub: 'Waiting on Customer Approval - sub',
         general: 'Job Declined Please Review',
-        customer: 'Declined Waiting On Contractor To Resubmit'
+        customer: 'Declined'
       },
       'job.approved': {
         sub: 'Start Job',
@@ -111,6 +111,9 @@ export default class Language {
       },
       modal: {
         reviewBidConfirmationModal: 'The bid may have changed since you last saw it, please review the bid if you have not done so.'
+      },
+      sub: {
+        stripe_success: "Your stripe account is now active!",
       }
     };
   }

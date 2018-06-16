@@ -1,20 +1,51 @@
+//@tailwind preflight;
+//@tailwind components;
+
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "./../../../node_modules/bootstrap/less/bootstrap";
-
 // @import "./spark/spark";
 @import "./../../../vendor/laravel/spark/resources/assets/less/spark";
-
 @import "./model.less";
 @import "./toggle.less";
 @import "./stripe/buttons.less";
+@import "./home.less";
+@import "./nav.less";
+@import "./welcome.less";
+@import "./notification";
+
+
+//@tailwind utilities;
 
 html {
   min-height: 100%;
 }
 
 body {
-  background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
+  //background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
   font-family: 'Roboto', sans-serif;
+  background-color: #eee;
+}
+.card {
+  background: #fff;
+  border-radius: 4px;
+  display: inline-block;
+  height: auto;
+  margin-bottom: 1rem;
+  position: relative;
+  width: 100%;
+}
+
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.card-1:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card-2 {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 .icon {
@@ -43,11 +74,11 @@ body {
   font-weight: 900;
   font-size: 2rem;
   margin: 16px 0px 16px 0px;
-  
+
 }
 
 .bid-task-price {
-   //width: 40%;
+  //width: 40%;
   // float: right;
 }
 
@@ -60,7 +91,7 @@ body {
 }
 
 .primary-action-btn {
-  float: right;
+  //align-content: center;
 }
 
 .label-xsmall {
@@ -92,21 +123,22 @@ body {
 .slide-fade-enter-active {
   transition: all .5s ease;
 }
+
 .slide-fade-leave-active {
   transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
+
 .slide-fade-enter
-/* .slide-fade-leave-active below version 2.1.8 */ {
+  /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(20px);
   opacity: 0;
 }
 
 .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
+  /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(-20px);
   opacity: 0;
 }
-
 
 .fade-enter-active, .fade-leave-active {
   transition-property: opacity;
@@ -172,11 +204,6 @@ body {
   margin: auto;
 }
 
-.home-nav {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .icon-color {
   color: rgb(74, 81, 88);
 }
@@ -186,17 +213,17 @@ body {
 }
 
 .form-control-date {
-    display: inline-block;
-    width: 94%;
-    padding-left: 6px;
-    padding-right: 0px;
+  display: inline-block;
+  width: 94%;
+  padding-left: 6px;
+  padding-right: 0px;
 }
 
 .form-control-text {
-    display: inline-block; 
-    width: 75%;
-    padding-left: 6px;
-    padding-right: 0px;
+  display: inline-block;
+  width: 75%;
+  padding-left: 6px;
+  padding-right: 0px;
 }
 
 .divider2 {
@@ -211,71 +238,12 @@ body {
   color: #0099CC;
 }
 
-.home-page-wrapper {
-  display: grid;
-  grid-template-columns: 50px repeat(2, 1fr) 50px;
-  grid-gap: 1rem;
+.beige {
+  background-color: rgba(214, 207, 146, 0.73);
 }
 
-.home-page-initiate-bid {
-  grid-column-start: 2;
-  grid-column-end: 3;
-}
-
-.home-page-bid {
-  grid-column-start: 3;
-  grid-column-end: 4;
-}
-
-.home-page-task {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
-
-.home-page-past-invoices {
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
-
-.home-page-customer-past-invoices {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 2;
-}
-
-.home-page-section-style {
-  border: thin solid white;
-  background-color: white;
-  border-radius: 10px;
-}
-
-.home-page-initiate-bid-logo {
-  margin-top: 2rem;
-}
-
-.home-page-initiate-bid-text {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  font-weight: bolder;
-  font-size: 20px;
-}
-
-.home-page-title {
-  margin-bottom: 6rem;
-  font-size: 75px;
-  text-decoration: underline;
-}
-
-.home-page-past-stripe-dashboard {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 3;
-  grid-row-end: 4;
+.blue {
+  background-color: #3275926b;
 }
 
 .label-details {
@@ -290,14 +258,183 @@ body {
   margin-bottom: .5rem;
 }
 
-.label {
-  font-size: 2rem;
-}
-
 .label-span {
   font-size: 1rem;
 }
 
 .job-name {
   font-size: 2.5rem;
+}
+
+.paginate-links {
+  padding-left: 0px;
+  li {
+    list-style-type: none;
+    display: inline-block;
+    margin: 0 10px;
+  }
+  user-select: none;
+  a {
+    cursor: pointer;
+  }
+  li.active a {
+    font-weight: bold;
+  }
+  li.next:before {
+    content: ' | ';
+    margin-right: 13px;
+    color: #ddd;
+  }
+  li.disabled a {
+    color: #ccc;
+    cursor: no-drop;
+  }
+}
+
+.paginated {
+  padding-left: 0;
+}
+
+.navbar {
+  //height: 55px
+}
+
+img {
+  margin-bottom: auto;
+}
+
+/* Styles the thumbnail */
+
+a.lightbox img {
+  height: 75px;
+  width: 90px;
+  border: 3px solid white;
+  box-shadow: 0px 0px 8px rgba(0,0,0,.3);
+  margin-bottom: 8px;
+  border: 3px solid white;
+  box-shadow: 0px 0px 8px rgba(0,0,0,.3);
+  margin-bottom: 8px;
+}
+
+.image-ct img {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.image-ct .image-btn {
+  position: absolute;
+  top: 8px;
+  right: 24px;
+  padding: 8px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Styles the lightbox, removes it from sight and adds the fade-in transition */
+
+.lightbox-target {
+  z-index: 5;
+position: fixed;
+top: 0;
+left:0;
+top: -100%;
+width: 100%;
+background: rgba(0,0,0,.7);
+width: 100%;
+opacity: 0;
+-webkit-transition: opacity .5s ease-in-out;
+-moz-transition: opacity .5s ease-in-out;
+-o-transition: opacity .5s ease-in-out;
+transition: opacity .5s ease-in-out;
+overflow: hidden;
+}
+
+/* Styles the lightbox image, centers it vertically and horizontally, adds the zoom-in transition and makes it responsive using a combination of margin and absolute positioning */
+
+.lightbox-target img {
+margin: auto;
+position: absolute;
+top: 0;
+left:0;
+right:0;
+bottom: 0;
+max-height: 0%;
+max-width: 0%;
+border: 3px solid white;
+box-shadow: 0px 0px 8px rgba(0,0,0,.3);
+box-sizing: border-box;
+-webkit-transition: .5s ease-in-out;
+-moz-transition: .5s ease-in-out;
+-o-transition: .5s ease-in-out;
+transition: .5s ease-in-out;
+}
+
+/* Styles the close link, adds the slide down transition */
+
+a.lightbox-close {
+display: block;
+width:50px;
+height:50px;
+box-sizing: border-box;
+background: white;
+color: black;
+text-decoration: none;
+position: absolute;
+top: 80px;
+right: 0;
+-webkit-transition: .5s ease-in-out;
+-moz-transition: .5s ease-in-out;
+-o-transition: .5s ease-in-out;
+transition: .5s ease-in-out;
+}
+
+/* Provides part of the "X" to eliminate an image from the close link */
+
+a.lightbox-close:before {
+content: "";
+display: block;
+height: 30px;
+width: 1px;
+background: black;
+position: absolute;
+left: 26px;
+top:10px;
+-webkit-transform:rotate(45deg);
+-moz-transform:rotate(45deg);
+-o-transform:rotate(45deg);
+transform:rotate(45deg);
+}
+
+/* Provides part of the "X" to eliminate an image from the close link */
+
+a.lightbox-close:after {
+content: "";
+display: block;
+height: 30px;
+width: 1px;
+background: black;
+position: absolute;
+left: 26px;
+top:10px;
+-webkit-transform:rotate(-45deg);
+-moz-transform:rotate(-45deg);
+-o-transform:rotate(-45deg);
+transform:rotate(-45deg);
+}
+
+/* Uses the :target pseudo-class to perform the animations upon clicking the .lightbox-target anchor */
+
+.lightbox-open {
+  opacity: 1;
+  top: 0;
+  bottom: 0;
+}
+
+.lightbox-open-image {
+  max-height: 100% !important;
+  max-width: 100% !important;
+}
+
+.lightbox-open-close {
+  top: 80px !important;
 }

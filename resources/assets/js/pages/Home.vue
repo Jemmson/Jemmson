@@ -1,81 +1,50 @@
 <template>
     <div class="container text-center">
-        <!--<pre>{{ user }}</pre>-->
-        <!--<h1>Jemmson App</h1>-->
         <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
-            <h1 class="home-page-title">{{ user.contractor.company_name }}</h1>
-            <div class="home-page-wrapper">
-                <div class="home-page-initiate-bid home-page-section-style" @click="route('initiate-bid')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Initiate a Bid Here
-                    </div>
-                </div>
-                <div class="home-page-bid home-page-section-style" @click="route('bids')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Look at Bids Here
-                    </div>
-                </div>
-                <div class="home-page-task home-page-section-style" @click="route('tasks')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Look at Tasks Here
-                    </div>
-                </div>
-                <div class="home-page-past-invoices home-page-section-style" @click="route('invoices')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Past Invoices
-                    </div>
-                </div>
-                <div class="home-page-past-stripe-dashboard home-page-section-style" v-if="user.contractor.stripe_express !== null" @click="route('express')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Stripe Dashboard
-                    </div>
-                </div>
-            </div>
+            <h1>{{ user.contractor.company_name }}</h1>
         </div>
         <div v-else-if="(user.usertype === 'customer') && user.customer !== null">
-            <h1 class="home-page-title">{{ user.name }}</h1>
-            <div class="home-page-wrapper">
-                <div class="home-page-bid home-page-section-style" @click="route('bids')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Look at Bids Here
-                    </div>
-                </div>
-                <div class="home-page-customer-past-invoices home-page-section-style" @click="route('invoices')">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Past Invoices
-                    </div>
-                </div>
-                <!-- <div class="home-page-past-stripe-dashboard home-page-section-style" @click="">
-                    <div class="home-page-initiate-bid-logo">
-                        <img src="/img/mono-logo.png" style="height: 32px;">
-                    </div>
-                    <div class="home-page-initiate-bid-text">
-                        Stripe Dashboard
-                    </div>
-                </div> -->
+            <h1>{{ user.name }}</h1>
+        </div>
+        <h3 class="home-sub-heading">Bids</h3>
+        <hr>
+        <div class="home-summary-data">
+            <h4>Needs Approval</h4>
+            <h5>5</h5>
+        </div>
+        <div class="home-summary-data">
+            <h4>In Process</h4>
+            <h5>3</h5>
+        </div>
+        <div class="home-summary-data">
+            <h4>Waiting to be finished</h4>
+            <h5>4</h5>
+        </div>
+        <div class="home-summary-data">
+            <h4>Number of Finished Jobs</h4>
+            <h5>4</h5>
+        </div>
+        <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
+            <h3 class="home-sub-heading home-sub-heading-tasks">Tasks</h3>
+            <hr>
+            <div class="home-summary-data">
+                <h4>Needs To be Bid on</h4>
+                <h5>5</h5>
+            </div>
+            <div class="home-summary-data">
+                <h4>To Be Finished</h4>
+                <h5>3</h5>
+            </div>
+            <div class="home-summary-data">
+                <h4>Waiting on Customer Payment</h4>
+                <h5>4</h5>
+            </div>
+            <div class="home-summary-data">
+                <h4>Paid</h4>
+                <h5>4</h5>
             </div>
         </div>
+        <div class="summary-footer"></div>
     </div>
 </template>
 
@@ -83,26 +52,75 @@
 
   export default {
     props: {
-        user: Object
+      user: Object
     },
     data () {
-      return {
-      }
+      return {}
     },
     computed: {},
     methods: {
-      route(value){
-          if(value === 'express') {
-            axios.post('/stripe/express/dashboard').then((response) => {
-                console.log(response.data);
-                window.location = response.data.url;
-            });
-          } else {
-              this.$router.push(value)
-          }
+      route (value) {
+        if (value === 'express') {
+          axios.post ('/stripe/express/dashboard').then ((response) => {
+            console.log (response.data);
+            window.location = response.data.url;
+          });
+        } else {
+          this.$router.push (value)
+        }
       }
     },
     mounted: function () {
     }
   }
 </script>
+
+<style scoped>
+    .container {
+        background-color: white;
+        width: 90%;
+        border-radius: 10px;
+        background-image: linear-gradient(to right, rgba(22, 20, 17, 0.20), rgba(130, 182, 144, 0.20));
+    }
+
+    .home-sub-heading {
+        display: flex;
+        justify-content: left;
+        margin-top: 2rem;
+        margin-bottom: 0px;
+        color: #81171F;
+    }
+
+    h3 {
+        margin-top: 0rem;
+        margin-bottom: 0px;
+        display: flex;
+    }
+
+    .home-summary-data {
+        display: flex;
+        justify-content: space-between;
+        margin-top: -1.5rem;
+        padding-left: 3em;
+        padding-right: 1em;
+        color: black;
+    }
+
+    .summary-footer {
+        height: 2rem;
+    }
+
+    .home-sub-heading-tasks {
+        margin-top: 5rem;
+    }
+
+    h1 {
+        color: #81171F;
+    }
+
+    h5 {
+        color: #81171F;
+        font-size: 2rem;
+        font-weight: bolder;
+    }
+</style>

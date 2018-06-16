@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name'))</title>
 
@@ -17,6 +18,8 @@
     <link href="/css/sweetalert.css" rel="stylesheet">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
+
+
     <!-- Scripts -->
 @yield('scripts', '')
 
@@ -27,7 +30,8 @@
       )); ?>;
     </script>
 </head>
-<body class="with-navbar">
+<body class="with-navbar" style="background-image: linear-gradient(to right, #161411, #82b690);
+padding-top: 10rem; padding-bottom: 10rem">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
 @if (Auth::check())
@@ -53,12 +57,22 @@
 </div>
 
 <!-- JavaScript -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2uX7JbkzcTpZ7Nb-_nu0CagS4lBSNdDw&libraries=places"></script>
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="/js/sweetalert.min.js"></script>
 
-<footer class="footer-spacing"></footer>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-117973760-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-117973760-1');
+</script>
+
+<footer class="footer-spacing"></footer>
 
 </body>
 </html>

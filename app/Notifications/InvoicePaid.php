@@ -6,8 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class InvoicePaid extends Notification
+
+class InvoicePaid extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
@@ -57,5 +59,12 @@ class InvoicePaid extends Notification
         return [
             //
         ];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'message' => 'The introduction to the notification.',
+        ]);
     }
 }

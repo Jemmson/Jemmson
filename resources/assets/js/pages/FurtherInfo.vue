@@ -1,20 +1,43 @@
 <template>
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-8 col-md-offset-2 styled">
         <!-- <pre> {{ form }}</pre> -->
-        <div class="panel panel-default">
+        <div class="panel panel-default card card-1">
             <div class="panel-heading" v-if="isContractor">Register Your Company</div>
             <div class="panel-heading" v-if="!isContractor">Please Add Additional Information</div>
 
             <div class="panel-body">
-                <form class="form-horizontal" method="post" role="form">
+                <form class="form-horizontal" role="form">
+                    <input type="hidden" name="street_number" id="street_number">
+                    <input type="hidden" name="country" id="country">
+                     <!-- email -->
+                    <div class="form-group" :class="{'has-error': form.errors.has('email')}">
+                        <label class="col-md-3 control-label">Update Login Email</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="email" v-model="form.email"
+                                   autofocus required>
+                            <span class="help-block" v-show="form.errors.has('email')">
+                                    {{ form.errors.get('email') }}
+                                </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Name -->
+                    <div class="form-group" :class="{'has-error': form.errors.has('name')}">
+                        <label class="col-md-3 control-label">Full Name</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="name" v-model="form.name" required>
+                            <span class="help-block" v-show="form.errors.has('name')">
+                                    {{ form.errors.get('name') }}
+                                </span>
+                        </div>
+                    </div>
 
                     <!-- Company Name -->
                     <div class="form-group" :class="{'has-error': form.errors.has('company_name')}"
                          v-if="isContractor">
                         <label class="col-md-3 control-label">Company Name</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="company_name" v-model="form.company_name"
-                                   autofocus>
+                            <input type="text" class="form-control" name="company_name" v-model="form.company_name">
                             <span class="help-block" v-show="form.errors.has('company_name')">
                                     {{ form.errors.get('company_name') }}
                                 </span>
@@ -37,8 +60,8 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                         <label class="col-md-3 control-label">Address Line 1</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="address_line_1"
-                                   v-model="form.address_line_1" autofocus>
+                            <input type="text" class="form-control" name="address_line_1" id="route"
+                                   v-model="form.address_line_1">
                             <span class="help-block" v-show="form.errors.has('address_line_1')">
                                     {{ form.errors.get('address_line_1') }}
                                 </span>
@@ -49,8 +72,8 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label">Address Line 2</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="address_line_2"
-                                   v-model="form.address_line_2" autofocus>
+                            <input type="text" class="form-control" name=""
+                                   v-model="form.address_line_2">
                         </div>
                     </div>
 
@@ -58,7 +81,7 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('city')}">
                         <label class="col-md-3 control-label">City</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="city" v-model="form.city" autofocus>
+                            <input type="text" class="form-control" name="city" id="administrative_area_level_1" v-model="form.city">
                             <span class="help-block" v-show="form.errors.has('city')">
                                     {{ form.errors.get('city') }}
                                 </span>
@@ -69,7 +92,7 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('state')}">
                         <label class="col-md-3 control-label">State</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="state" v-model="form.state" autofocus>
+                            <input type="text" class="form-control" name="state" id="locality" v-model="form.state">
                             <span class="help-block" v-show="form.errors.has('state')">
                                     {{ form.errors.get('state') }}
                                 </span>
@@ -80,7 +103,7 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('zip')}">
                         <label class="col-md-3 control-label">ZipCode</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="zip" v-model="form.zip" autofocus>
+                            <input type="text" class="form-control" name="zip" id="postal_code" v-model="form.zip">
                             <span class="help-block" v-show="form.errors.has('zip')">
                                     {{ form.errors.get('zip') }}
                                 </span>
@@ -89,10 +112,10 @@
 
                     <!-- Notes -->
                     <div class="form-group" v-if="!isContractor">
-                        <label class="col-md-3 control-label">Any Special Notes</label>
+                        <label class="col-md-3 control-label">Any Special Notes For The Contractor</label>
                         <div class="col-md-8">
                                 <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10" class="form-control"
-                                          autofocus></textarea>
+                                        ></textarea>
                         </div>
                     </div>
 
@@ -156,46 +179,6 @@
                             </div>
                         </div> -->
                         <!-- </div> -->
-
-                        <h3>Preferred Method of Contact</h3>
-                        <div class="preferred_contact" style="border: solid thin black">
-                            <div class="preferred_contact_input"
-                                 style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
-                                <!-- preferred method of contact -->
-                                <div class="form-group" :class="{'has-error': form.errors.has('email_contact')}">
-                                    <label class="col-md-3 control-label">Email</label>
-
-                                    <div class="col-md-8">
-                                        <input type="checkbox" name="email_contact" v-model="form.email_contact">
-                                        <span class="help-block" v-show="form.errors.has('email_contact')">
-                                                {{ form.errors.get('email_contact') }}
-                                            </span>
-                                    </div>
-                                </div>
-
-                                <div class="form-group" :class="{'has-error': form.errors.has('phone_contact')}">
-                                    <label class="col-md-3 control-label">Phone Call</label>
-
-                                    <div class="col-md-8">
-                                        <input type="checkbox" name="phone_contact" v-model="form.phone_contact">
-                                        <span class="help-block" v-show="form.errors.has('phone_contact')">
-                                                {{ form.errors.get('phone_contact') }}
-                                            </span>
-                                    </div>
-                                </div>
-
-                                <div class="form-group" :class="{'has-error': form.errors.has('sms_text')}">
-                                    <label class="col-md-3 control-label">SMS Text</label>
-
-                                    <div class="col-md-8">
-                                        <input type="checkbox" name="sms_text" v-model="form.sms_text">
-                                        <span class="help-block" v-show="form.errors.has('sms_text')">
-                                                {{ form.errors.get('sms_text') }}
-                                            </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <button type="submit" name="submit" class="btn btn-default btn-primary"
                                 style="margin-top: 1rem" @click.prevent="submitFurtherInfo()"
                                 :disabled="disabled.submit">
@@ -222,6 +205,8 @@
           submit: false
         },
         form: new SparkForm ({
+          email: '',
+          name: '',
           company_name: '',
           phone_number: '',
           address_line_1: '',
@@ -251,8 +236,14 @@
       }
     },
     methods: {
+      updateFormLocation(location) {
+          this.form.address_line_1 = location.route;
+          this.form.city = location.locality;
+          this.form.state = location.administrative_area_level_1;
+          this.form.zip = location.postal_code;
+      },
       filterPhone () {
-        this.form.phone_number = Format.phone (this.form.phone_number);
+        this.form.phone_number = Format.phone(this.form.phone_number);
       },
       confirmPassword () {
         if (this.form.password !== this.form.password_confirmation) {
@@ -311,7 +302,24 @@
       }
     },
     mounted () {
-      this.form.phone_number = this.user.phone;
+      User.initAutocomplete('route');
+      this.form.phone_number = this.user.phone != null ? this.user.phone : '';
+      this.form.email = this.user.email != null ? this.user.email : '';
+      this.form.name = this.user.name != null ? this.user.name : '';
+
+      this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : '';
+      
+      
+      Bus.$on('updateFormLocation', (payload) => {
+                this.updateFormLocation(payload);
+            });
     }
   }
 </script>
+
+<style scoped>
+    .styled {
+        margin-top: 10rem;
+        margin-bottom: 10rem;
+    }
+</style>

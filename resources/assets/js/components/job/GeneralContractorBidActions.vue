@@ -22,13 +22,6 @@
                 </button>
             </div>
         </div>
-        <button v-if="showJobCompletedBtn" class="btn btn-success" @click.prevent="jobCompleted"
-                :disabled="disabled.jobCompleted">
-            <span v-if="disabled.jobCompleted">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-            </span>
-            Job Completed
-        </button>
         <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" :yes="mYes" :no="mNo">
         </modal>
     </div>
@@ -71,6 +64,7 @@
           case 'notifyCustomerOfFinishedBid':
             this.updateModal ('Bid Finished', 'You are about to submit this job bid to the customer,' +
               'you will not be able to edit this bid after its been approved by the customer.' +
+              'Please also make sure to check whether you have accepted the subcontractors you wanted for each task.' +
               ' Click yes to submit or no to cancel.',
               'notifyCustomerOfFinishedBid', 'yes', 'no');
             this.modalCurrentlyOpenFor = 'notifyCustomerOfFinishedBid';
@@ -113,9 +107,6 @@
       },
       cancelBid () {
         Customer.cancelBid (this.bid, this.disabled);
-      },
-      jobCompleted () {
-        GeneralContractor.jobCompleted (this.bid, this.disabled);
       }
     },
     mounted: function () {

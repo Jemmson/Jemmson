@@ -7,10 +7,6 @@ export default class SubContractor {
     }
 
     async toggleStripePaymentOption(jobTask) {
-        if (User.needsStripe()) {
-            User.emitChange('bidUpdated');
-            return false;
-        }
         try {
             const data = await axios.post('/api/task/togglestripe', jobTask);
             User.emitChange('bidUpdated');
@@ -53,14 +49,11 @@ export default class SubContractor {
         let general = false;
         disabled.finished = true;
 
-        if (User.recievePaymentsWithStripe()) {
-            if (!User.stripeExpressConnected()) {
-                console.log('No Stripe Account');
-                Bus.$emit('needsStripe');
-                disabled.finished = false;
-                return false;
-            }
+        if (User.needsStripe()) {
+            disabled.finished = false;
+            return false;
         }
+
         let contractor_id = 0;
         if (bid.job_task !== undefined) {
             contractor_id = bid.job_task.task.contractor_id;
