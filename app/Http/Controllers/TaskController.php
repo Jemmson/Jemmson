@@ -748,7 +748,7 @@ class TaskController extends Controller
     public function uploadTaskImage(Request $request)
     {
         $this->validate($request, [
-                'photo' => 'max:2056',
+                'photo' => 'required|max:4012',
             ]);
 
         $file = $request->photo;
