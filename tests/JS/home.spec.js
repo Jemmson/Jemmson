@@ -9,75 +9,138 @@ describe ('Home', () => {
   //   wrapper = mount(Home);
   // })
 
-  it('Contractor not connected to Stripe rendering the correct markup', () => {
-    const wrapper = mount(Home, {
-      propsData: {
-        user:{
-          usertype: 'contractor',
-          contractor: {
-            company_name: 'KPS Pools',
-            stripe_express: null,
-          }
+  const wrapper = mount (Home, {
+    propsData: {
+      user: {
+        usertype: 'contractor',
+        contractor: {
+          company_name: 'KPS Pools'
         }
       }
-    })
-    expect(wrapper.html()).toContain(`Initiate a Bid Here`)
-    expect(wrapper.html()).toContain(`Look at Bids Here`)
-    expect(wrapper.html()).toContain(`Look at Tasks Here`)
-    expect(wrapper.html()).toContain(`Past Invoices`)
-    expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
-  })
+    },
+    data () {
+      return {
+        bids: {
+          needsApproval: 6,
+          inProcess: 4,
+          waitingToBeFinished: 3,
+          finishedJobs: 2,
+        },
+        tasks: {
+          needsToBeBidOn: 10,
+          toBeFinished: 9,
+          watingOnCustomerPayment: 8,
+          paid: 7,
+        }
+      }
+    }
+  });
 
-  it('Contractor connected to Stripe renders the correct markup', () => {
-    const wrapper = mount(Home, {
-      propsData: {
-        user:{
-          usertype: 'contractor',
-          contractor: {
-            company_name: 'KPS Pools',
-            stripe_express: true,
-          }
-        }
-      }
-    })
-    expect(wrapper.html()).toContain(`Initiate a Bid Here`)
-    expect(wrapper.html()).toContain(`Look at Bids Here`)
-    expect(wrapper.html()).toContain(`Look at Tasks Here`)
-    expect(wrapper.html()).toContain(`Past Invoices`)
-    expect(wrapper.html()).toContain(`Stripe Dashboard`)
-  })
+  it ('needsApproval should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="needsApproval">6</h5>');
+  });
 
-  it('Customer not connected to Stripe rendering the correct markup', () => {
-    const wrapper = mount(Home, {
-      propsData: {
-        user:{
-          usertype: 'customer',
-          customer: null
-        }
-      }
-    })
-    expect(wrapper.html()).not.toContain(`Initiate a Bid Here`)
-    expect(wrapper.html()).not.toContain(`Look at Bids Here`)
-    expect(wrapper.html()).not.toContain(`Look at Tasks Here`)
-    expect(wrapper.html()).not.toContain(`Past Invoices`)
-    expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
-  })
+  it ('inProcess should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="inProcess">4</h5>');
+  });
 
-  it('Customer connected to Stripe renders the correct markup', () => {
-    const wrapper = mount(Home, {
-      propsData: {
-        user:{
-          usertype: 'customer',
-          customer: true
-        }
-      }
-    })
-    expect(wrapper.html()).toContain(`Look at Bids Here`)
-    expect(wrapper.html()).toContain(`Past Invoices`)
-    expect(wrapper.html()).not.toContain(`Initiate a Bid Here`)
-    expect(wrapper.html()).not.toContain(`Look at Tasks Here`)
-    expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
-  })
+  it ('waitingToBeFinished should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="waitingToBeFinished">3</h5>');
+  });
+
+  it ('finishedJobs should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="finishedJobs">2</h5>');
+  });
+
+  it ('needsToBeBidOn should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="needsToBeBidOn">10</h5>');
+  });
+
+  it ('toBeFinished should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="toBeFinished">9</h5>');
+  });
+
+  it ('watingOnCustomerPayment should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="watingOnCustomerPayment">8</h5>');
+  });
+
+  it ('paid should render the correct markup', function () {
+    expect (wrapper.html ()).toContain ('<h5 class="paid">7</h5>');
+  });
+
+  // it('Contractor not connected to Stripe rendering the correct markup', () => {
+  // const wrapper = mount(Home, {
+  //   propsData: {
+  //     user:{
+  //       usertype: 'contractor',
+  //       contractor: {
+  //         company_name: 'KPS Pools',
+  //         stripe_express: null,
+  //       }
+  //     }
+  //   }
+  // })
+  // const vm = wrapper.vm;
+  // // console.log(vm)
+  // console.log(vm.propsData)
+  // console.log(wrapper);
+  // expect(wrapper.html()).toContain(`Initiate a Bid Here`)
+  // expect(wrapper.html()).toContain(`Look at Bids Here`)
+  // expect(wrapper.html()).toContain(`Look at Tasks Here`)
+  // expect(wrapper.html()).toContain(`Past Invoices`)
+  // expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
+  // })
+
+  // it('Contractor connected to Stripe renders the correct markup', () => {
+  //   const wrapper = mount(Home, {
+  //     propsData: {
+  //       user:{
+  //         usertype: 'contractor',
+  //         contractor: {
+  //           company_name: 'KPS Pools',
+  //           stripe_express: true,
+  //         }
+  //       }
+  //     }
+  //   })
+  //   expect(wrapper.html()).toContain(`Initiate a Bid Here`)
+  //   expect(wrapper.html()).toContain(`Look at Bids Here`)
+  //   expect(wrapper.html()).toContain(`Look at Tasks Here`)
+  //   expect(wrapper.html()).toContain(`Past Invoices`)
+  //   expect(wrapper.html()).toContain(`Stripe Dashboard`)
+  // })
+  //
+  // it('Customer not connected to Stripe rendering the correct markup', () => {
+  //   const wrapper = mount(Home, {
+  //     propsData: {
+  //       user:{
+  //         usertype: 'customer',
+  //         customer: null
+  //       }
+  //     }
+  //   })
+  //   expect(wrapper.html()).not.toContain(`Initiate a Bid Here`)
+  //   expect(wrapper.html()).not.toContain(`Look at Bids Here`)
+  //   expect(wrapper.html()).not.toContain(`Look at Tasks Here`)
+  //   expect(wrapper.html()).not.toContain(`Past Invoices`)
+  //   expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
+  // })
+  //
+  // it('Customer connected to Stripe renders the correct markup', () => {
+  //   const wrapper = mount(Home, {
+  //     propsData: {
+  //       user:{
+  //         usertype: 'customer',
+  //         customer: true
+  //       }
+  //     }
+  //   })
+  //   expect(wrapper.html()).toContain(`Look at Bids Here`)
+  //   expect(wrapper.html()).toContain(`Past Invoices`)
+  //   expect(wrapper.html()).not.toContain(`Initiate a Bid Here`)
+  //   expect(wrapper.html()).not.toContain(`Look at Tasks Here`)
+  //   expect(wrapper.html()).not.toContain(`Stripe Dashboard`)
+  // })
 
   // it ('only show customer and contractor fields if the user is a customer', () => {
   //   expect ()
