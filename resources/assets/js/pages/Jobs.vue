@@ -41,8 +41,7 @@
 <script>
   export default {
     props: {
-      user: Object,
-      //pbids: Array
+      user: Object
     },
     data () {
       return {
@@ -63,7 +62,7 @@
     methods: {
       search () {
         this.sBids = this.bids.filter ((bid) => {
-          if (this.searchTerm == '' || this.searchTerm.length <= 1) {
+          if (this.searchTerm === '' || this.searchTerm.length <= 1) {
             return true;
           }
           return bid.job_name.toLowerCase ().search (this.searchTerm.toLowerCase ()) > -1;

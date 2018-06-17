@@ -27,7 +27,8 @@
             </div>
 
             <!-- Phone Number -->
-            <div class="flex flex-col w-50 pady padx customer-input" :class="{'has-error': form.errors.has('phone')}">
+            <div class="flex flex-col w-50 pady padx customer-input"
+                 :class="{'has-error': form.errors.has('phone')}">
                 <label for="phone">Phone *</label>
                 <input class="borderR input"
                        id="phone"
