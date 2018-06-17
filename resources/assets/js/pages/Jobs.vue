@@ -26,7 +26,6 @@
                     <button class="btn btn-primary btn-lg" name="reviewBid" @click="goToBid(bid.id)">
                         Click To Edit
                     </button>
-
                 </div>
             </div>
         </paginate>

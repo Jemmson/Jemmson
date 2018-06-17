@@ -15,7 +15,7 @@
 
 import Echo from 'laravel-echo'
 
-window.Pusher = require('pusher-js');
+window.Pusher = require ('pusher-js');
 
 window.Echo = new Echo ({
   broadcaster: 'pusher',
@@ -24,20 +24,23 @@ window.Echo = new Echo ({
   encrypted: true
 });
 
-require('spark-bootstrap');
+require ('spark-bootstrap');
 
 import VueRouter from 'vue-router';
-Vue.use(VueRouter);
+
+Vue.use (VueRouter);
 
 // register the plugin on vue
 import Toasted from 'vue-toasted';
-Vue.use(Toasted, {
+
+Vue.use (Toasted, {
   duration: 5000,
   theme: 'bubble',
 })
 
 import VuePaginate from 'vue-paginate'
-Vue.use(VuePaginate)
+
+Vue.use (VuePaginate)
 
 import {
   store
@@ -65,14 +68,14 @@ import TaskImages from './pages/TaskImages';
 
 window.Format = Format;
 window.Language = Language;
-window.User = new User(Spark.state.user);
-window.GeneralContractor = new GeneralContractor(Spark.state.user);
-window.SubContractor = new SubContractor(Spark.state.user);
-window.Customer = new Customer(Spark.state.user);
-window.TaskUtil = new TaskUtil();
+window.User = new User (Spark.state.user);
+window.GeneralContractor = new GeneralContractor (Spark.state.user);
+window.SubContractor = new SubContractor (Spark.state.user);
+window.Customer = new Customer (Spark.state.user);
+window.TaskUtil = new TaskUtil ();
 window.autocomplete = {};
 
-require('./components/bootstrap');
+require ('./components/bootstrap');
 
 Spark.forms.register = {
   usertype: ''
@@ -81,9 +84,9 @@ Spark.forms.register = {
 
 // vue routes
 const routes = [{
-    path: '/bids',
-    component: Jobs
-  },
+  path: '/bids',
+  component: Jobs
+},
   {
     path: '/bid/:id',
     component: Job
@@ -126,19 +129,23 @@ const routes = [{
 
 ]
 
-const router = new VueRouter({
+const router = new VueRouter ({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  $('.navbar-collapse').collapse('hide');
-  console.log(to.path);
+router.beforeEach ((to, from, next) => {
+  // $('.navbar-collapse').collapse('hide');
+  // console.log(to.path);
+  // if (Spark.state.user === null) {
+  //   location.href = '/login';
+  // }
+
   if (to.path === '/furtherInfo') {
-      let customer = Spark.state.user.customer;
-  let contractor = Spark.state.user.contractor;
-    if ((customer !== null && customer.location_id !== null) || (contractor !== null && contractor.location_id !== null)) {  
-      console.log('wtf');
-      next('/home');
+    let customer = Spark.state.user.customer;
+    let contractor = Spark.state.user.contractor;
+    if ((customer !== null && customer.location_id !== null) || (contractor !== null && contractor.location_id !== null)) {
+      console.log ('wtf');
+      next ('/home');
     }
   }
   if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
@@ -148,40 +155,40 @@ router.beforeEach((to, from, next) => {
       location.href = '/login';
     }
     if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
-      console.log('to further info');
-      next('/furtherInfo');
+      console.log ('to further info');
+      next ('/furtherInfo');
     } else {
       switch (to.path) {
         case '/initiate-bid':
           if (Spark.state.user.usertype === 'customer') {
-            next('/home');
+            next ('/home');
           } else {
-            next();
+            next ();
           }
           break;
         case '/tasks':
           if (Spark.state.user.usertype === 'customer') {
-            next('/home');
+            next ('/home');
           } else {
-            next();
+            next ();
           }
           break;
-        default: 
-          next();
+        default:
+          next ();
           break;
       }
     }
   } else {
-    next();
+    next ();
   }
 });
 
 
-var app = new Vue({
-  mixins: [require('spark')],
+var app = new Vue ({
+  mixins: [require ('spark')],
   router,
   store
 });
 
 
-require('./bootstrap');
+require ('./bootstrap');

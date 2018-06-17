@@ -1,67 +1,56 @@
 <template>
     <div class="container">
-        <!-- Application Dashboard -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-1">
-                    <div class="panel-body">
-                        <form method="post">
-                            <h1 class="text-center">Please Initiate a Bid With A Customer</h1>
+        <div class="header text-center">
+            Please Initiate a Bid With A Customer
+        </div>
+        <div class="customer-inputs">
+            <div class="flex flex-col w-50 pady padx customer-input">
+                <label for="customerName">Customer Name *</label>
 
-                            <div class="form-group col-md-6" :class="{'has-error': form.errors.has('customerName')}">
-                                <label for="customerName">Customer Name *</label>
+                <input name="customer"
+                       id="customerName"
+                       type="text"
+                       v-model="form.customerName"
+                       v-on:keyup="autoComplete"
+                       class="borderR input"
+                       required>
+                <div class="customer-name-results"
+                     v-if="results.length">
+                    <button class="customer-name-result"
+                            v-for="result in results"
+                            v-bind:key="result.id"
+                            :name="result.phone"
+                            @click.prevent="fillFields(result)">
+                        {{ result.name }}
+                    </button>
+                </div>
+            </div>
 
-                                <input name="customerName" id="customerName" type="text" v-model="form.customerName"
-                                       v-on:keyup="autoComplete" class="form-control"
-                                       required>
-                                <div class="panel-footer" v-if="results.length">
-                                    <ul class="list-group">
-                                        <button class="list-group-item" v-for="result in results" v-bind:key="result.id"
-                                                :name="result.phone" @click.prevent="fillFields(result)">
-                                            {{ result.name }}
-                                        </button>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!--<div class="form-group col-md-6" :class="{'has-error': form.errors.has('jobName')}">-->
-                            <!--<label for="job-name">Job Name</label>-->
-                            <!--<input name="jobName" type="text" id="job-name" class="form-control" v-model="form.jobName">-->
-                            <!--<span class="help-block" v-show="form.errors.has('jobName')">-->
-                            <!--{{ form.errors.get('jobName') }}-->
-                            <!--</span>-->
-                            <!--</div>-->
-
-                            <!--<div class="form-group col-md-6" :class="{'has-error': form.errors.has('email')}">-->
-                            <!--<label for="email">Email</label>-->
-                            <!--<input name="email" type="email" id="email" class="form-control" v-model="form.email">-->
-                            <!--<span class="help-block" v-show="form.errors.has('email')">-->
-                            <!--{{ form.errors.get('email') }}-->
-                            <!--</span>-->
-                            <!--</div>-->
-
-                            <div class="form-group col-md-6" :class="{'has-error': form.errors.has('phone')}">
-                                <label for="phone">Phone *</label>
-                                <input name="phone" type="tel" id="phone" class="form-control" maxlength="10"
-                                       v-model="form.phone" @keyup="filterPhone">
-                                <span class="help-block" v-show="form.errors.has('phone')">
+            <!-- Phone Number -->
+            <div class="flex flex-col w-50 pady padx customer-input" :class="{'has-error': form.errors.has('phone')}">
+                <label for="phone">Phone *</label>
+                <input class="borderR input"
+                       id="phone"
+                       @keyup="filterPhone"
+                       maxlength="10"
+                       name="phone"
+                       type="tel"
+                       v-model="form.phone">
+                <span class="help-block"
+                      v-show="form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
                 </span>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-md-12 text-right">
-                                <button name="submit" id="submit" class="btn btn-default btn-primary"
-                                        @click.prevent="submit" :disabled="disabled.submit">
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <button name="submit" id="submit" class="btn btn-default btn-primary"
+                                @click.prevent="submit" :disabled="disabled.submit">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
+                            Submit
+                        </button>
                     </div>
                 </div>
             </div>
@@ -113,3 +102,66 @@
     }
   }
 </script>
+
+<style scoped>
+    .container {
+        background-color: white;
+        width: 90%;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+    }
+
+    .input {
+        height: 4rem;
+        background-color: #80808014;
+        width: 100%;
+    }
+
+    .borderR {
+        border-radius: 10px;
+    }
+
+    .pady {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .padx {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .header {
+        font-weight: bold;
+        font-size: 3rem;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .flex-col {
+        flex-direction: column;
+    }
+
+    .customer-inputs {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .w-50 {
+    }
+
+    @media (min-width: 500px) {
+        .customer-inputs {
+            flex-direction: row;
+        }
+
+        .customer-input {
+            width: 50%;
+        }
+    }
+</style>
