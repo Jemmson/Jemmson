@@ -117,7 +117,7 @@ class User extends SparkUser
         try {
             $this->save();
         } catch (\Excpetion $e) {
-            Log::error('Saving Stripe Id: ' . $e-getMessage());
+            Log::error('Saving Stripe Id: ' . $e->getMessage());
             return false;
         }
 
@@ -140,7 +140,7 @@ class User extends SparkUser
         try {
             $this->save();
         } catch (\Excpetion $e) {
-            Log::error('Deleting Card: ' . $e-getMessage());
+            Log::error('Deleting Card: ' . $e->getMessage());
             return false;
         }
 
