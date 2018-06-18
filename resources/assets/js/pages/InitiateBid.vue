@@ -42,19 +42,31 @@
                   {{ form.errors.get('phone') }}
                 </span>
             </div>
-            <div class="panel-footer">
-                <div class="row">
-                    <div class="col-md-12 text-right">
-                        <button name="submit" id="submit" class="btn btn-default btn-primary"
-                                @click.prevent="submit" :disabled="disabled.submit">
+
+        </div>
+
+        <div class="customer-inputs">
+            <div class="flex flex-col w-50 pady padx customer-input"
+                 :class="{'has-error': form.errors.has('jobName')}">
+                <label for="jobName">Job Name</label>
+                <input class="borderR input"
+                       id="jobName"
+                       name="jobName"
+                       type="text"
+                       v-model="form.jobName">
+                <span class="help-block"
+                      v-show="form.errors.has('jobName')">
+                  {{ form.errors.get('jobName') }}
+                </span>
+            </div>
+
+            <button name="submit" id="submit" class="btn btn-default btn-primary"
+                    @click.prevent="submit" :disabled="disabled.submit">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </div>
+                Submit
+            </button>
         </div>
     </div>
 </template>
@@ -66,7 +78,8 @@
         results: [],
         form: new SparkForm ({
           phone: '',
-          customerName: ''
+          customerName: '',
+          jobName: ''
         }),
         disabled: {
           submit: false
@@ -154,6 +167,13 @@
     }
 
     .w-50 {
+    }
+
+    button {
+        height: 5rem;
+        margin-top: auto;
+        margin-bottom: 1rem;
+        margin-right: 1rem;
     }
 
     @media (min-width: 500px) {

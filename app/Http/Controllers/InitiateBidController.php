@@ -175,7 +175,7 @@ class InitiateBidController extends Controller
             $nextJob = Job::all()->last()->id + 1;
         }
 
-        $jobName = "Job Number: {$nextJob}";
+        $jobName = "{$nextJob}";
         Log::info("jobName: $jobName");
 
         return $jobName;
