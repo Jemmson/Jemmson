@@ -452,7 +452,7 @@ class JobController extends Controller
 
         $job = Job::find($jobId);
         $job->status = __('job.accepted');
-        $job->save();
+        $job->save();                           // TODO: needs try catch here
 
         $user = User::find($contractorId);
 
@@ -532,12 +532,20 @@ class JobController extends Controller
 
         $job = Job::find($request->id);
 
-        if ($job->updatable(__('bid.canceled'))) {
-            $job->updateStatus(__('bid.canceled'));
+        try {
             $job->delete();
-        } else {
+        } catch (\Exception $e) {
+            Log::error('Updating Job Status: ' . $e->getMessage());
             return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
+            return false;
         }
+
+//        if ($job->updatable(__('bid.canceled'))) {
+//            $job->updateStatus(__('bid.canceled'));
+//            $job->delete();
+//        } else {
+//            return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
+//        }
 
         $currentUser = Auth::user()->id;
         if ($currentUser == $job->customer_id) {

@@ -1,74 +1,93 @@
 <template>
     <!-- /all details of a bid -->
-    <div v-if="bid.job_name !== undefined">
 
-        <!-- JOB STATUS -->
-        <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
-            {{ status }}
-        </div>
+    <div>
+        <div v-if="bid.job_name !== undefined">
 
-        <hr>
+            <!-- JOB STATUS -->
+            <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
+                {{ status }}
+            </div>
 
-        <!-- CUSTOMER NAME -->
-        <div>
-            <h3 for="company_name" class="text-center" v-if="isCustomer">{{ bid.job_name }}</h3>
-            <h3 for="company_name" class="text-center" v-else>{{ customerName }}</h3>
-        </div>
+            <hr>
 
-        <!-- JOB NAME -->
-        <div class="flex space-between">
+            <!-- CUSTOMER NAME -->
+            <div>
+                <h3 for="company_name" class="text-center" v-if="isCustomer">{{ bid.job_name }}</h3>
+                <h3 for="company_name" class="text-center" v-else>{{ customerName }}</h3>
+            </div>
+
+            <!-- JOB NAME -->
+            <div class="flex space-between">
             <span for="job_name">
                 Job Name:
             </span>
-            <span>
+                <span>
                 {{ bid.job_name }}
             </span>
-        </div>
-
-        <!-- CUSTOMER ADDRESS -->
-        <div>
-            <span class="title">Address:</span>
-            <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
-               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                <address v-if="bid.location !== null">
-                    <br> {{ bid.location.address_line_1 }}
-                    <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                </address>
-            </a>
-            <div v-else class="text-center">
-                No Address is Set Yet
             </div>
+
+            <!-- CUSTOMER ADDRESS -->
+            <div>
+                <span class="title">Address:</span>
+                <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
+                   :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                    <address v-if="bid.location !== null">
+                        <br> {{ bid.location.address_line_1 }}
+                        <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+                    </address>
+                </a>
+                <div v-else class="text-center">
+                    No Address is Set Yet
+                </div>
+            </div>
+
+            <!-- JOB TOTAL PRICE -->
+            <div class="flex space-between" v-if="showBidPrice">
+                <span class="title job-status-label">Total Job Price:</span>
+                <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
+            </div>
+
+
+            <!-- Job Start Date -->
+            <div class="flex space-between">
+                <label>
+                    Start Date:
+                </label>
+                <p>
+                    {{ bid.agreed_start_date }}
+                </p>
+            </div>
+
+
+            <!-- Declined Message -->
+            <div class="flex space-between flex-col"
+                 v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
+                <h4>
+                    <label class="status label label-warning red py-s">Declined Reason</label>
+                </h4>
+                <p class="message">
+                    {{ bid.declined_message}}
+                </p>
+            </div>
+
+            <button class="btn btn-sm btn-primary btn-contractor"
+                    @click.prevent="openModal('confirmJobCancellation')"
+                    :disabled="disabled.cancelBid">
+                <span v-if="disabled.cancelBid">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                </span>
+                Cancel Job
+            </button>
         </div>
-
-        <!-- JOB TOTAL PRICE -->
-        <div class="flex space-between" v-if="showBidPrice">
-            <span class="title job-status-label">Total Job Price:</span>
-            <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
-        </div>
-
-
-        <!-- Job Start Date -->
-        <div class="flex space-between">
-            <label for="title">
-                Start Date:
-            </label>
-            <p>
-                {{ bid.agreed_start_date }}
-            </p>
-        </div>
-
-
-        <!-- Declined Message -->
-        <div class="flex space-between flex-col"
-             v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
-            <h4>
-                <label class="status label label-warning red py-s">Declined Reason</label>
-            </h4>
-            <p class="message">
-                {{ bid.declined_message}}
-            </p>
-        </div>
-
+        <modal
+                :header="modalHeader"
+                :body="modalBody"
+                :modalId="modalId"
+                @modal="modalYes()"
+                :yes="mYes"
+                :no="mNo">
+        </modal>
     </div>
 </template>
 
@@ -87,7 +106,18 @@
           area: ''
         },
         areaError: '',
-        locationExists: false
+        locationExists: false,
+        modalCurrentlyOpenFor: '',
+        modalHeader: '',
+        modalBody: '',
+        modalId: '',
+        mYes: 'yes',
+        mNo: 'no',
+        disabled: {
+          cancelBid: false,
+          jobCompleted: false,
+          submitBid: false
+        }
       }
     },
     computed: {
@@ -109,6 +139,37 @@
       }
     },
     methods: {
+      openModal (forBtn) {
+        // update model header and body
+            this.updateModal ('Confirm Cancellation', 'You are about to cancel this job,' +
+              ' Click delete job to cancel and delete the job or back to cancel this action.',
+              'confirmJobCancellation', 'Delete Job', 'back');
+            this.modalCurrentlyOpenFor = 'confirmJobCancellation';
+        // open model after content has been updated
+        $ ('#modal').modal ();
+      },
+      updateModal (header, body, id, yes, no) {
+        this.modalHeader = header;
+        this.modalBody = body;
+        this.modalId = id;
+        this.mYes = yes;
+        this.mNo = no;
+      },
+      modalYes () {
+        switch (this.modalCurrentlyOpenFor) {
+          case 'notifyCustomerOfFinishedBid':
+            this.notifyCustomerOfFinishedBid();
+            $ ('#modal').modal ('hide');
+            break;
+          case 'confirmJobCancellation':
+            this.cancelBid();
+            $ ('#modal').modal ('hide');
+            break;
+        }
+      },
+      cancelBid () {
+        Customer.cancelBid (this.bid, this.disabled);
+      },
       getLabelClass (status) {
         return Format.statusLabel (status);
       },

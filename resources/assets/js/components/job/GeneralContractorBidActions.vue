@@ -14,12 +14,12 @@
                 <button class="btn btn-sm btn-primary btn-contractor" name="addTaskToBid" id="addTaskToBid" @click="openAddTask">
                     Add Task To Bid
                 </button>
-                <button class="btn btn-sm btn-primary btn-contractor" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid">
-                <span v-if="disabled.cancelBid">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                    Cancel Job
-                </button>
+                <!--<button class="btn btn-sm btn-primary btn-contractor" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid">-->
+                <!--<span v-if="disabled.cancelBid">-->
+                    <!--<i class="fa fa-btn fa-spinner fa-spin"></i>-->
+                <!--</span>-->
+                    <!--Cancel Job-->
+                <!--</button>-->
             </div>
         </div>
         <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" :yes="mYes" :no="mNo">
