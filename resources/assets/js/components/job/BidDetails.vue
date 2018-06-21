@@ -70,24 +70,7 @@
                     {{ bid.declined_message}}
                 </p>
             </div>
-
-            <button class="btn btn-sm btn-primary btn-contractor"
-                    @click.prevent="openModal('confirmJobCancellation')"
-                    :disabled="disabled.cancelBid">
-                <span v-if="disabled.cancelBid">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                Cancel Job
-            </button>
         </div>
-        <modal
-                :header="modalHeader"
-                :body="modalBody"
-                :modalId="modalId"
-                @modal="modalYes()"
-                :yes="mYes"
-                :no="mNo">
-        </modal>
     </div>
 </template>
 
@@ -107,17 +90,6 @@
         },
         areaError: '',
         locationExists: false,
-        modalCurrentlyOpenFor: '',
-        modalHeader: '',
-        modalBody: '',
-        modalId: '',
-        mYes: 'yes',
-        mNo: 'no',
-        disabled: {
-          cancelBid: false,
-          jobCompleted: false,
-          submitBid: false
-        }
       }
     },
     computed: {
@@ -139,37 +111,6 @@
       }
     },
     methods: {
-      openModal (forBtn) {
-        // update model header and body
-            this.updateModal ('Confirm Cancellation', 'You are about to cancel this job,' +
-              ' Click delete job to cancel and delete the job or back to cancel this action.',
-              'confirmJobCancellation', 'Delete Job', 'back');
-            this.modalCurrentlyOpenFor = 'confirmJobCancellation';
-        // open model after content has been updated
-        $ ('#modal').modal ();
-      },
-      updateModal (header, body, id, yes, no) {
-        this.modalHeader = header;
-        this.modalBody = body;
-        this.modalId = id;
-        this.mYes = yes;
-        this.mNo = no;
-      },
-      modalYes () {
-        switch (this.modalCurrentlyOpenFor) {
-          case 'notifyCustomerOfFinishedBid':
-            this.notifyCustomerOfFinishedBid();
-            $ ('#modal').modal ('hide');
-            break;
-          case 'confirmJobCancellation':
-            this.cancelBid();
-            $ ('#modal').modal ('hide');
-            break;
-        }
-      },
-      cancelBid () {
-        Customer.cancelBid (this.bid, this.disabled);
-      },
       getLabelClass (status) {
         return Format.statusLabel (status);
       },
