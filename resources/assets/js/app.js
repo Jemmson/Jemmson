@@ -206,9 +206,11 @@ $(window).resize(function () {
   // Check if the available height is smaller (keyboard is shown) so we hide the footer.
   if (document.documentElement.clientHeight < originalHeight) {
     $('.jemmson-footer').hide();
+    $('.feedback').hide();
     console.log('hide');
   } else {
     $('.jemmson-footer').show();
+    $('.feedback').show();
     console.log('show');
   }
 });
