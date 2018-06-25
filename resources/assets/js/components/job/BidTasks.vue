@@ -128,9 +128,9 @@
                   </button>
                 </div>
                 <div class="col-xs-4" v-if="isContractor">
-                  <h5>Settings</h5>
+                  <h5>Task Actions</h5>
                   <button class="btn btn-secondary" @click.prevent="openTaskActions(jobTask.id)">
-                    <i class="fas fa-cogs fa-2x"></i>
+                    <i class="fas fa-wrench fa-2x"></i>
                   </button>
                 </div>
 
