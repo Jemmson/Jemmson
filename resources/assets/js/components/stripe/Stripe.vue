@@ -14,8 +14,6 @@
                     </div>
                     <div v-if="isCustomer && notSignedUp">
                         Before You can pay with stripe you will need to complete the form below.
-                        <signup-with-stripe>
-                        </signup-with-stripe>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -23,6 +21,10 @@
                         <div v-if="isContractor">
                             <connect-with-stripe v-if="showStripeExpress">
                             </connect-with-stripe>
+                        </div>
+                        <div v-if="isCustomer && notSignedUp">
+                            <signup-with-stripe>
+                            </signup-with-stripe>
                         </div>
                     </span>
                 </div>
