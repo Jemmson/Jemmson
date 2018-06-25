@@ -11,7 +11,7 @@
                    @keyup="search">
         </div>
 
-        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated">
+        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
             <div v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">
                 <div class="container card card-1 bid">
                     <label class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
