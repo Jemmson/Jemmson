@@ -608,9 +608,15 @@ class TaskController extends Controller
             'start_when_accepted' => 'required',
             //            'sub_sets_own_price_for_job' => 'required',
             'start_date' => 'required_if:start_when_accepted,false|date|after:today',
-            'qty' => 'numeric|min:1',
-            'qtyUnit' => 'string|min:1'
+            'qty' => 'numeric',
+            'qtyUnit' => 'string'
         ]);
+
+        if (!$this->isPriceGtE($request->taskPrice, $request->subTaskPrice)) {
+            return response()->json([
+                "message" => "Unit price for customer needs to be greater than or equal to Unit Price for Sub",
+                "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
+        }
 
         $job_id = $request->jobId;
         $job = Job::find($job_id);
@@ -833,5 +839,15 @@ class TaskController extends Controller
         if ($job->contractor_id !== $jobTask->contractor_id) {
             $jobTask->contractor()->first()->notify(new TaskImageDeleted());
         }
+    }
+
+    /**
+     *
+     * @param Float $priceToCheck
+     * @param Float $price
+     * @return boolean
+     */
+    private function isPriceGtE(Float $priceToCheck, Float $price) {
+        return $priceToCheck >= $price;
     }
 }

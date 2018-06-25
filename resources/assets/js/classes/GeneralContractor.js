@@ -59,7 +59,9 @@ export default class GeneralContractor {
       // without catching the error and assigning the errors
       form.errors.errors = error.errors;
       // show a toast notification
-      Vue.toasted.error ('Whoops! Something went wrong! Please try again.');
+      if (error.message !== undefined && error.message !== null) {
+        Vue.toasted.error (error.message);
+      }
     });
   }
 

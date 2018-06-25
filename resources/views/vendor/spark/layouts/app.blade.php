@@ -53,6 +53,31 @@
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="/js/sweetalert.min.js"></script>
+<script>
+var originalHeight = document.documentElement.clientHeight;
+var originalWidth = document.documentElement.clientWidth;
+$(window).resize(function () {
+  console.log('inside resize');
+  
+  // Control landscape/portrait mode switch
+  if (document.documentElement.clientHeight == originalWidth &&
+    document.documentElement.clientWidth == originalHeight) {
+    originalHeight = document.documentElement.clientHeight;
+    originalWidth = document.documentElement.clientWidth;
+  }
 
+  // Check if the available height is smaller (keyboard is shown) so we hide the footer.
+  if (document.documentElement.clientHeight < originalHeight) {
+    $('.jemmson-footer').hide();
+    $('#feedback').hide();
+    console.log('hide');
+  } else {
+    $('.jemmson-footer').show();
+    $('#feedback').show();
+    console.log('show');
+  }
+});
+
+</script>
 </body>
 </html>
