@@ -1,82 +1,72 @@
 <template>
-    <div class="container text-center">
-        <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
-            <h1>{{ user.contractor.company_name }}</h1>
+    <div>
+        <div class="header-section">
+            <div class="upper txt-white font-12">{{ user.name }}</div>
+            <div class="home-title upper txt-white font-3rem">home</div>
+            <div class="home-icon">
+                <span class="text-center">J</span>
+            </div>
+            <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
+                <div class="txt-white upper company-name">{{ user.contractor.company_name }}</div>
+            </div>
         </div>
-        <div v-else-if="(user.usertype === 'customer') && user.customer !== null">
-            <h1>{{ user.name }}</h1>
-        </div>
-        <h3 class="home-sub-heading">Bids</h3>
-        <hr>
-        <div class="home-summary-data">
-            <h4>Initiated</h4>
-            <h5 class="needsApproval">{{ bidData(bids, 'bid.initiated') }}</h5>
-        </div>
-        <div class="home-summary-data">
-            <h4>In Progress</h4>
-            <h5 class="inProcess">{{ bidData(bids, 'bid.in_progress') }}</h5>
-        </div>
-        <div class="home-summary-data">
-            <h4>Needs Approval</h4>
-            <h5 class="inProcess">{{ bidData(bids, 'bid.sent') }}</h5>
-        </div>
-        <div class="home-summary-data">
-            <h4>Declined</h4>
-            <h5 class="inProcess">{{ bidData(bids, 'bid.declined') }}</h5>
-        </div>
-        <div class="home-summary-data">
-            <h4>Job Approved (Waiting to be Finished)</h4>
-            <h5 class="waitingToBeFinished">{{ bidData(bids, 'job.approved') }}</h5>
-        </div>
-        <div class="home-summary-data">
-            <h4>Number of Finished Jobs</h4>
-            <h5 class="finishedJobs">{{ bidData(bids, 'job.completed') }}</h5>
-        </div>
-        <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
-            <h3 class="home-sub-heading home-sub-heading-tasks">Tasks</h3>
+        <div class="container">
+            <div class="header-section">
+                <div class="mini-slogan upper">mini slogan</div>
+                <div class="main-slogan upper">main slogan</div>
+            </div>
+            <div class="feature-section first-feature">
+                <div class="feature-main-section">
+                    <div class="feature-main-icon-section">
+                        <div class="icon">icon</div>
+                        <div class="feature">9 Bids</div>
+                    </div>
+                    <div class="feature-main-icon-section">
+                        <div class="manage">Manage</div>
+                        <div class="icon">icon</div>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-main-section-statuses">
+                <div class="status">6 are waiting for approval</div>
+                <div class="status">2 are initited</div>
+            </div>
             <hr>
-            <div class="home-summary-data">
-                <h4>Initiated</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.initiated') }}</h5>
+            <div class="feature-section">
+                <div class="feature-main-section">
+                    <div class="feature-main-icon-section">
+                        <div class="icon">icon</div>
+                        <div class="feature">6 Tasks</div>
+                    </div>
+                    <div class="feature-main-icon-section">
+                        <div class="manage">Manage</div>
+                        <div class="icon">icon</div>
+                    </div>
+                </div>
             </div>
-            <div class="home-summary-data">
-                <h4>Sent</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.bid_sent') }}</h5>
+            <div class="feature-main-section-statuses">
+                <div class="status">2 are ready for you</div>
+                <div class="status">23 are completed</div>
             </div>
-            <div class="home-summary-data">
-                <h4>Accepted</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.accepted') }}</h5>
+            <hr>
+            <div class="feature-section">
+                <div class="feature-main-section">
+                    <div class="feature-main-icon-section">
+                        <div class="icon">icon</div>
+                        <div class="feature">5 Invoices</div>
+                    </div>
+                    <div class="feature-main-icon-section">
+                        <div class="manage">Manage</div>
+                        <div class="icon">icon</div>
+                    </div>
+                </div>
             </div>
-            <div class="home-summary-data">
-                <h4>Finished</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.finished_by_sub') }}</h5>
+            <div class="feature-main-section-statuses">
+                <div class="status">4 are wating for payment</div>
+                <div class="status">1 is processing</div>
             </div>
-            <div class="home-summary-data">
-                <h4>Approved by General</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.approved_by_general') }}</h5>
-            </div>
-            <div class="home-summary-data">
-                <h4>Sent to Customer for Approval</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.finished_by_general') }}</h5>
-            </div>
-            <div class="home-summary-data">
-                <h4>Approved by Customer</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.approved_by_customer') }}</h5>
-            </div>
-            <div class="home-summary-data">
-                <h4>Customer Sent Payment</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.customer_sent_payment') }}</h5>
-            </div>
-            <div class="home-summary-data">
-                <h4>Reopened Tasks</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.reopened') }}</h5>
-            </div>
-            <div class="home-summary-data">
-                <h4>Denied Tasks</h4>
-                <h5 class="needsToBeBidOn">{{ taskData(tasks, 'bid_task.denied') }}</h5>
-            </div>
+            <hr>
         </div>
-        <div class="summary-footer"></div>
     </div>
 </template>
 
@@ -130,8 +120,8 @@
         this.sBids = this.bids;
         console.log (this.bids)
       });
-      console.log('getTasks');
-      axios.post('/bid/tasks').then((response) => {
+      console.log ('getTasks');
+      axios.post ('/bid/tasks').then ((response) => {
         this.tasks = response.data;
         this.sTasks = this.tasks;
       });
@@ -140,11 +130,128 @@
 </script>
 
 <style scoped>
+
+    .header-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .company-name {
+        font-size: 1.75rem;
+        margin-top: .75rem;
+    }
+
+    .home-icon {
+        margin-top: 2rem;
+        border-radius: 50%;
+        background-color: white;
+        height: 9rem;
+        width: 9rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .home-title {
+        margin-top: -.5rem;
+    }
+
+    .home-icon span {
+        font-size: 4rem;
+        font-weight: bolder;
+    }
+
+    .txt-white {
+        color: white;
+    }
+
+    .upper {
+        text-transform: uppercase;
+    }
+
+    .font-12 {
+        font-size: 12px;
+    }
+
+    .font-3rem {
+        font-size: 3rem;
+
+    }
+
+    .mini-slogan {
+        margin-top: 2.15rem;
+        font-size: 12px;
+        color: #888888;
+    }
+
+    .main-slogan {
+        font-size: 2.5rem;
+        font-family: 'Anton', sans-serif;
+        font-weight: 900;
+    }
+
     .container {
         background-color: white;
         width: 90%;
-        border-radius: 10px;
-        background-image: linear-gradient(to right, rgba(22, 20, 17, 0.20), rgba(130, 182, 144, 0.20));
+        height: 300rem;
+        margin-top: 3rem;
+        /*border-radius: 10px;*/
+        /*background-image: linear-gradient(to right, rgba(22, 20, 17, 0.20), rgba(130, 182, 144, 0.20));*/
+    }
+
+    @media (min-width: 575px) {
+        .container {
+            width: 1200px;
+        }
+    }
+
+    .feature-section {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1.25rem;
+        margin-right: 1.25rem;
+    }
+
+    .feature-main-section {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .feature-main-icon-section {
+        display: flex;
+    }
+
+    .feature-main-section-statuses {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+    }
+
+    .icon {
+        margin-right: 1rem;
+    }
+
+    .feature {
+        font-size: 2.25rem;
+        font-weight: 900;
+        font-family: 'Anton', sans-serif;
+    }
+
+    .manage {
+        margin-right: 1rem;
+        font-size: 2.25rem;
+        font-weight: 900;
+        font-family: 'Anton', sans-serif;
+    }
+
+    .status {
+        margin-left: 5rem;
+        color: #0000005c;
+    }
+
+    .first-feature {
+        margin-top: 1.13rem;
     }
 
     .home-sub-heading {
@@ -187,4 +294,5 @@
         font-size: 2rem;
         font-weight: bolder;
     }
+
 </style>

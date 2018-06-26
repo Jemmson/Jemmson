@@ -7623,7 +7623,7 @@ input:checked + .slider:before {
   grid-row-end: 4;
 }
 .jemmson-navbar {
-  background-image: linear-gradient(to right, #161411, #82b690);
+  background-image: linear-gradient(to right, #232320, #809cdc);
   height: 70px;
   background-color: white;
   overflow: hidden;
@@ -7659,7 +7659,7 @@ input:checked + .slider:before {
   padding-left: 2rem;
 }
 .jemmson-footer {
-  background-image: linear-gradient(to right, #161411, #82b690);
+  background-image: linear-gradient(to right, #232320, #809cdc);
   height: 70px;
   background-color: white;
   overflow: hidden;
