@@ -45,7 +45,7 @@
                              :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
                             <label for="qtyUnit">Quantity Unit</label>
                             <input type="text" class="form-control" min="1" id="qtyUnit"
-                                   name="qtyUnit" required v-model="addNewTaskForm.qtyUnit">
+                                   name="qtyUnit" v-model="addNewTaskForm.qtyUnit">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
                                 {{ addNewTaskForm.errors.get('qtyUnit') }}
                             </span>
@@ -84,7 +84,7 @@
 
                         <div class="form-group sub-price"
                              :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}"
-                             v-if="!addNewTaskForm.sub_sets_own_price_for_job">
+                             v-show="!addNewTaskForm.sub_sets_own_price_for_job">
                         <label for="subTaskPrice">Unit Price For Sub</label>
                             <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
                                    v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
@@ -257,7 +257,7 @@
         this.priceChange = false
       },
       addNewTaskToBid () {
-        GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
+        GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
         this.clearTaskResults();
       },
       // // showStripeToggle (jobTask) {

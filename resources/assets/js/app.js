@@ -196,6 +196,8 @@ require ('./bootstrap');
 var originalHeight = document.documentElement.clientHeight;
 var originalWidth = document.documentElement.clientWidth;
 $(window).resize(function () {
+  console.log('inside resize');
+  
   // Control landscape/portrait mode switch
   if (document.documentElement.clientHeight == originalWidth &&
     document.documentElement.clientWidth == originalHeight) {
