@@ -64,6 +64,9 @@ import Invoices from './pages/Invoices';
 import Invoice from './pages/Invoice';
 import FurtherInfo from './pages/FurtherInfo';
 import TaskImages from './pages/TaskImages';
+import Benefits from './pages/Benefits';
+import Demo from './pages/Demo';
+import HowTo from './pages/HowTo';
 
 
 window.Format = Format;
@@ -83,10 +86,23 @@ Spark.forms.register = {
 
 
 // vue routes
-const routes = [{
-  path: '/bids',
-  component: Jobs
-},
+const routes = [
+  {
+    path: '/bids',
+    component: Jobs
+  },
+  {
+    path: '/benefits',
+    component: Benefits
+  },
+  {
+    path: '/demo',
+    component: Demo
+  },
+  {
+    path: '/howto',
+    component: HowTo
+  },
   {
     path: '/bid/:id',
     component: Job
@@ -139,6 +155,18 @@ router.beforeEach ((to, from, next) => {
   // if (Spark.state.user === null) {
   //   location.href = '/login';
   // }
+
+  if(to.path === '/demo'){
+    next();
+  }
+
+  if(to.path === '/howto'){
+    next();
+  }
+
+  if(to.path === '/benefits'){
+    next();
+  }
 
   if (to.path === '/furtherInfo') {
     let customer = Spark.state.user.customer;
@@ -195,9 +223,9 @@ require ('./bootstrap');
 
 var originalHeight = document.documentElement.clientHeight;
 var originalWidth = document.documentElement.clientWidth;
-$(window).resize(function () {
-  console.log('inside resize');
-  
+$ (window).resize (function () {
+  console.log ('inside resize');
+
   // Control landscape/portrait mode switch
   if (document.documentElement.clientHeight == originalWidth &&
     document.documentElement.clientWidth == originalHeight) {
@@ -207,12 +235,12 @@ $(window).resize(function () {
 
   // Check if the available height is smaller (keyboard is shown) so we hide the footer.
   if (document.documentElement.clientHeight < originalHeight) {
-    $('.jemmson-footer').hide();
-    $('#feedback').hide();
-    console.log('hide');
+    $ ('.jemmson-footer').hide ();
+    $ ('#feedback').hide ();
+    console.log ('hide');
   } else {
-    $('.jemmson-footer').show();
-    $('#feedback').show();
-    console.log('show');
+    $ ('.jemmson-footer').show ();
+    $ ('#feedback').show ();
+    console.log ('show');
   }
 });
