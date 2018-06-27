@@ -17,7 +17,9 @@
                                 <a class="lightbox" @click.prevent="openImage(image.id)">
                                 <img :src="image.url" alt="">
                                 </a>
-                                <button class="btn btn-danger image-btn" :id="'image-' + image.id" @click="deleteImage(image.id, index)"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn btn-danger image-btn" :id="'image-' + image.id" @click="deleteImage(image.id, index)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                                 </div>
                             <!-- lightbox container hidden with CSS -->
                             <a class="lightbox-target" :id="'image' + image.id">

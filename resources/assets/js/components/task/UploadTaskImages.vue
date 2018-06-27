@@ -34,10 +34,14 @@
             <div class="form-group">
                 <label class="col-md-6 control-label">&nbsp;</label>
                 <div class="col-md-6 text-right">
-                    <label type="button" class="btn btn-primary btn-upload">
+                    <label type="button" :class="disabled.uploadTaskImageBtn ? 'btn btn-primary btn-upload disabled' : 'btn btn-primary btn-upload'">
                         <span>Attach Images</span>
-
-                        <input :ref="'task_photo_' + jobTask.id" type="file" class="form-control" @change="uploadTaskImage(jobTask.id)">
+                        <span v-show="disabled.uploadTaskImageBtn">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                        <span v-if="!disabled.uploadTaskImageBtn">
+                            <input :ref="'task_photo_' + jobTask.id" type="file" class="form-control" @change="uploadTaskImage(jobTask.id)">
+                        </span>
                     </label>
                 </div>
             </div>
@@ -51,6 +55,13 @@
         props: {
             jobTask: Object,
             type: String
+        },
+        data () {
+            return {
+                disabled: {
+                    uploadTaskImageBtn: false
+                }
+            };
         },
         computed: {
             closeLink() {
@@ -96,7 +107,7 @@
                 data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0]);
                 data.append('jobTaskId', jobTaskId);
                 data.append('jobId', this.jobTask.job_id);
-                User.uploadTaskImage(data);
+                User.uploadTaskImage(data, this.disabled);
             },
         }
     }
