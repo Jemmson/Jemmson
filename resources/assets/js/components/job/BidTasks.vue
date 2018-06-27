@@ -1,7 +1,7 @@
 <template>
   <!-- /all tasks of a bid -->
   <div v-if="show">
-    <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated">
+    <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated" v-if="jobTasks.length > 0">
       <div class="col-md-4" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
         <div class="card card-1">
           <div class="panel-body">
