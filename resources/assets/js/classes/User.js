@@ -344,13 +344,16 @@ export default class User {
     }
   }
 
-  async uploadTaskImage(form) {
+  async uploadTaskImage(form, disabled) {
+    disabled.uploadTaskImageBtn = true;
     try {
       const {data} = await axios.post('/task/image', form);
       console.log(data);
       Bus.$emit('bidUpdated');
+      disabled.uploadTaskImageBtn = false;
     } catch (error) {
       Vue.toasted.error(error.message);
+      disabled.uploadTaskImageBtn = false;
     }
   }
 }
