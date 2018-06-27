@@ -84,6 +84,18 @@
               </div>
               <!-- / end qty section -->
 
+              <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
+                <div class="divider2"></div>
+              </div>
+
+              <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
+                <label for="declined_message" class="label label-danger">Declined Reason</label>
+                <p>
+                  {{ bidTask.job_task.declined_message }}
+                </p>
+              </div>
+              <!-- / end declined message section -->
+
               <div class="col-xs-12" v-if="showAddress(bidTask)">
                 <div class="divider2"></div>
               </div>
@@ -186,6 +198,9 @@
       }
     },
     methods: {
+      showDeclinedMsg(msg) {
+        return msg !== null && msg !== "";
+      },
       getLabelClass(status) {
         return Format.statusLabel(status);
       },
