@@ -520,6 +520,8 @@ class TaskController extends Controller
             $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
         }
 
+        $jobTask->resetDeclinedMessage();
+
         return response()->json(["message" => "Success"], 200);
     }
 
@@ -695,6 +697,8 @@ class TaskController extends Controller
             $subContractor = User::find($jobTask->contractor_id);
             $subContractor->notify(new TaskWasNotApproved($task, $subContractor, $request->message));
         }
+
+        $jobTask->setDeclinedMessage($request->message);
 
         return response()->json($task, 200);
     }
