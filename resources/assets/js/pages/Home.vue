@@ -10,7 +10,7 @@
                 <div class="txt-white upper company-name">{{ user.contractor.company_name }}</div>
             </div>
         </div>
-        <div class="container">
+        <div class="container card-1">
             <div class="header-section">
                 <div class="mini-slogan upper">mini slogan</div>
                 <div class="main-slogan upper">main slogan</div>
@@ -18,53 +18,177 @@
             <div class="feature-section first-feature">
                 <div class="feature-main-section">
                     <div class="feature-main-icon-section">
-                        <div class="icon">icon</div>
-                        <div class="feature">9 Bids</div>
+                        <img class="icon" src="img/bid2.png" alt="">
+                        <div class="feature" v-if="bids.length === 0">No Current Bids</div>
+                        <div class="feature" v-else-if="bids.length === 1">1 Bid</div>
+                        <div class="feature" v-else="">{{ bids.length }} Bids</div>
                     </div>
                     <div class="feature-main-icon-section">
                         <div class="manage">Manage</div>
-                        <div class="icon">icon</div>
+                        <a href="/#/bids"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
             </div>
             <div class="feature-main-section-statuses">
-                <div class="status">6 are waiting for approval</div>
-                <div class="status">2 are initited</div>
+                <div class="status" v-if="bidData(bids, 'bid.initiated') === 1">
+                    {{ bidData(bids, 'bid.initiated') }} has been Initiated
+                </div>
+                <div class="status" v-if="bidData(bids, 'bid.initiated') > 1">
+                    {{ bidData(bids, 'bid.initiated') }} are Initiated
+                </div>
+                
+                <div class="status" v-if="bidData(bids, 'bid.in_progress') === 1">
+                    {{ bidData(bids, 'bid.in_progress') }} is in Progress
+                </div>
+                <div class="status" v-if="bidData(bids, 'bid.initiated') > 1">
+                    {{ bidData(bids, 'bid.in_progress') }} are in Progress
+                </div>
+
+                <div class="status" v-if="bidData(bids, 'bid.sent') === 1">
+                    {{ bidData(bids, 'bid.sent') }} has been Sent
+                </div>
+                <div class="status" v-if="bidData(bids, 'bid.sent') > 1">
+                    {{ bidData(bids, 'bid.sent') }} have been Sent
+                </div>
+
+                <div class="status" v-if="bidData(bids, 'bid.declined') === 1">
+                    {{ bidData(bids, 'bid.declined') }} has been Declined
+                </div>
+                <div class="status" v-if="bidData(bids, 'bid.declined') > 1">
+                    {{ bidData(bids, 'bid.declined') }} have been Declined
+                </div>
+
+                <div class="status" v-if="bidData(bids, 'job.approved') === 1">
+                    {{ bidData(bids, 'job.approved') }} has been Approved
+                </div>
+                <div class="status" v-if="bidData(bids, 'job.approved') > 1">
+                    {{ bidData(bids, 'job.approved') }} are Approved
+                </div>
+
+                <div class="status" v-if="bidData(bids, 'job.completed') === 1">
+                    {{ bidData(bids, 'job.completed') }} has been Completed
+                </div>
+                <div class="status" v-if="bidData(bids, 'job.completed') > 1">
+                    {{ bidData(bids, 'job.completed') }} are Completed
+                </div>
             </div>
             <hr>
+            <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
+                <div class="feature-section">
+                    <div class="feature-main-section">
+                        <div class="feature-main-icon-section">
+                            <img class="icon" src="img/task.png" alt="">
+                            <div class="feature" v-if="tasks.length === 0">No Current Tasks</div>
+                            <div class="feature" v-else-if="tasks.length === 1">1 Task</div>
+                            <div class="feature" v-else="">{{ tasks.length }} Tasks</div>
+                        </div>
+                        <div class="feature-main-icon-section">
+                            <div class="manage">Manage</div>
+                            <a href="/#/tasks"><i class="fas fa-4x fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-main-section-statuses">
+                    <div class="status" v-if="taskData(tasks, 'bid_task.initiated') === 1">
+                        {{ taskData(tasks, 'bid_task.initiated') }} has been Initiated
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.initiated') > 1">
+                        {{ taskData(tasks, 'bid_task.initiated') }} are Initiated
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.bid_sent') === 1">
+                        {{ taskData(tasks, 'bid_task.bid_sent') }} has been Sent
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.bid_sent') > 1">
+                        {{ taskData(tasks, 'bid_task.bid_sent') }} have been Sent
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.accepted') === 1">
+                        {{ taskData(tasks, 'bid_task.accepted') }} has been Accepted
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.accepted') > 1">
+                        {{ taskData(tasks, 'bid_task.accepted') }} have been Accepted
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_sub') === 1">
+                        {{ taskData(tasks, 'bid_task.finished_by_sub') }} has been Finished by the Sub
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_sub') > 1">
+                        {{ taskData(tasks, 'bid_task.finished_by_sub') }} have been Finished by the Sub
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_general') === 1">
+                        {{ taskData(tasks, 'bid_task.approved_by_general') }} has been Approved by the General Contractor
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_general') > 1">
+                        {{ taskData(tasks, 'bid_task.approved_by_general') }} have been Approved by the General Contractor
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_general') === 1">
+                        {{ taskData(tasks, 'bid_task.finished_by_general') }} has been Finished by the General Contractor
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_general') > 1">
+                        {{ taskData(tasks, 'bid_task.finished_by_general') }} have been Finished by the General Contractor
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_customer') === 1">
+                        {{ taskData(tasks, 'bid_task.approved_by_customer') }} has been Approved by the Customer
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_customer') > 1">
+                        {{ taskData(tasks, 'bid_task.approved_by_customer') }} have been Approved by the Customer
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 1">
+                        {{ taskData(tasks, 'bid_task.customer_sent_payment') }} has had the Customer Send Payment
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.reopened') === 1">
+                        {{ taskData(tasks, 'bid_task.reopened') }} has been Reopened
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.reopened') > 1">
+                        {{ taskData(tasks, 'bid_task.reopened') }} have been Reopened
+                    </div>
+
+                    <div class="status" v-if="taskData(tasks, 'bid_task.denied') === 1">
+                        {{ taskData(tasks, 'bid_task.denied') }} has been Denied
+                    </div>
+                    <div class="status" v-if="taskData(tasks, 'bid_task.denied') > 1">
+                        {{ taskData(tasks, 'bid_task.denied') }} have been Denied
+                    </div>
+                </div>
+                <hr>
+            </div>
             <div class="feature-section">
                 <div class="feature-main-section">
                     <div class="feature-main-icon-section">
-                        <div class="icon">icon</div>
-                        <div class="feature">6 Tasks</div>
+                        <img class="icon" src="img/invoice.png" alt="">
+                        <div class="feature" v-if="invoices.length === 0">No Current Invoices</div>
+                        <div class="feature" v-else-if="invoices.length === 1">1 Invoice</div>
+                        <div class="feature" v-else="">{{ invoices.length }} Invoices</div>
                     </div>
                     <div class="feature-main-icon-section">
                         <div class="manage">Manage</div>
-                        <div class="icon">icon</div>
+                        <a href="/#/invoices"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
-            </div>
-            <div class="feature-main-section-statuses">
-                <div class="status">2 are ready for you</div>
-                <div class="status">23 are completed</div>
             </div>
             <hr>
-            <div class="feature-section">
+            <div class="feature-section" v-if="user.contractor.stripe_express !== null">
                 <div class="feature-main-section">
                     <div class="feature-main-icon-section">
-                        <div class="icon">icon</div>
-                        <div class="feature">5 Invoices</div>
+                        <i class="fas fa-3x fa-money-bill-alt icon"></i>
+                        <div class="feature">Stripe</div>
                     </div>
                     <div class="feature-main-icon-section">
                         <div class="manage">Manage</div>
-                        <div class="icon">icon</div>
+                        <a @click="route('express')"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="feature-main-section-statuses">
-                <div class="status">4 are wating for payment</div>
-                <div class="status">1 is processing</div>
-            </div>
+            <!--<div class="feature-main-section-statuses">-->
+                <!--<div class="status">4 are wating for payment</div>-->
+                <!--<div class="status">1 is processing</div>-->
+            <!--</div>-->
             <hr>
         </div>
     </div>
@@ -79,7 +203,11 @@
     data () {
       return {
         bids: '',
-        tasks: ''
+        invoices: '',
+        tasks: '',
+        sBids: 0,
+        sTasks: 0,
+        sInvoices: 0,
       }
     },
     computed: {},
@@ -124,6 +252,11 @@
       axios.post ('/bid/tasks').then ((response) => {
         this.tasks = response.data;
         this.sTasks = this.tasks;
+      });
+      console.log ('getInvoices');
+      axios.get ('/invoices').then ((response) => {
+        this.invoices = response.data;
+        this.sInvoices = this.invoices;
       });
     }
   }
@@ -193,8 +326,8 @@
 
     .container {
         background-color: white;
-        width: 90%;
-        height: 300rem;
+
+        height: auto;
         margin-top: 3rem;
         /*border-radius: 10px;*/
         /*background-image: linear-gradient(to right, rgba(22, 20, 17, 0.20), rgba(130, 182, 144, 0.20));*/
@@ -202,7 +335,7 @@
 
     @media (min-width: 575px) {
         .container {
-            width: 1200px;
+            /*width: 1200px;*/
         }
     }
 

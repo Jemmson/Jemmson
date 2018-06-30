@@ -164,7 +164,7 @@ router.beforeEach ((to, from, next) => {
     next();
   }
 
-  if(to.path === '/benefits'){
+  if(to.path === '/benefits '){
     next();
   }
 

@@ -9,6 +9,7 @@
     "jswatch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js tests/JS/**/*.spec.js"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.1.0",
     "axios": "^0.15.2",
     "bootstrap": "^3.0.0",
     "cross-env": "^3.2.3",
