@@ -40,7 +40,7 @@
                 <div class="status" v-if="bidData(bids, 'bid.in_progress') === 1">
                     {{ bidData(bids, 'bid.in_progress') }} is in Progress
                 </div>
-                <div class="status" v-if="bidData(bids, 'bid.initiated') > 1">
+                <div class="status" v-if="bidData(bids, 'bid.in_progress') > 1">
                     {{ bidData(bids, 'bid.in_progress') }} are in Progress
                 </div>
 
