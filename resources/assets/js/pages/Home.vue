@@ -172,7 +172,6 @@
                     </div>
                 </div>
             </div>
-            <hr>
             <div class="feature-section" v-if="user.contractor.stripe_express !== null">
                 <div class="feature-main-section">
                     <div class="feature-main-icon-section">
