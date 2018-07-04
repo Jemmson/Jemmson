@@ -864,8 +864,15 @@ class TaskController extends Controller
 
         $customer = $job->customer()->first();
         $contractor = $job->contractor()->first();
+
+
         if (Auth::user()->id !== $customer->id) {
-            $job->customer()->first()->notify(new UploadedTaskImage());
+
+            if ($job->status != 'bid.in_progress' && $job->status != 'bid.initiated') {
+                $job->customer()->first()->notify(new UploadedTaskImage());
+            }
+
+
         }
         if (Auth::user()->id !== $contractor->id) {
             $job->contractor()->first()->notify(new UploadedTaskImage());
@@ -905,7 +912,11 @@ class TaskController extends Controller
         $customer = $job->customer()->first();
         $contractor = $job->contractor()->first();
         if (Auth::user()->id !== $customer->id) {
-            $job->customer()->first()->notify(new TaskImageDeleted());
+
+            if ($job->status != 'bid.in_progress' && $job->status != 'bid.initiated') {
+                $job->customer()->first()->notify(new TaskImageDeleted());
+            }
+
         }
         if (Auth::user()->id !== $contractor->id) {
             $job->contractor()->first()->notify(new TaskImageDeleted());
