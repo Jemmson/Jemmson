@@ -1,6 +1,7 @@
 <template>
     <!-- /contractor bid actions -->
     <div>
+        <div class="btn-danger" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE</div>
         <div v-if="showPreApprovedActions" class="text-center">
             <button class="btn btn-sm btn-primary btn-contractor"
                     @click="openModal('notifyCustomerOfFinishedBid')"
@@ -52,7 +53,8 @@
           cancelBid: false,
           jobCompleted: false,
           submitBid: false
-        }
+        },
+        subTaskWarning: false
       }
     },
     computed: {
@@ -109,7 +111,24 @@
         this.$emit ('openAddTask');
       },
       notifyCustomerOfFinishedBid () {
-        GeneralContractor.notifyCustomerOfFinishedBid (this.bid, this.disabled);
+
+        // go through each job task and compare the sub price to the contractor task price
+        // first check if there is a sub.
+        // check if the sub price is an accepted price
+        // compare the the accepted sub price to the contractor price
+        // if the accepted sub price is higher then throw an error
+
+        this.subTaskWarning = false;
+        for (let i = 0; i < this.bid.job_tasks.length; i++) {
+            if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+              this.subTaskWarning = true;
+            }
+        }
+
+        if (!this.subTaskWarning) {
+          GeneralContractor.notifyCustomerOfFinishedBid (this.bid, this.disabled);
+        }
+
       },
       cancelBid () {
         Customer.cancelBid (this.bid, this.disabled);
