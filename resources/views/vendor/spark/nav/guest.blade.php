@@ -4,7 +4,7 @@
     <span><a href="/#/demo">Demo</a></span>
 </div>
 
-<div class="jemmson-footer">
+<div class="jemmson-footer flex">
     <span><a href="/login">Login</a></span>
     <span><a href="/register">Register</a></span>
 </div>
