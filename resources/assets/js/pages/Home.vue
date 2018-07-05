@@ -36,7 +36,7 @@
                 <div class="status" v-if="bidData(bids, 'bid.initiated') > 1">
                     {{ bidData(bids, 'bid.initiated') }} are Initiated
                 </div>
-                
+
                 <div class="status" v-if="bidData(bids, 'bid.in_progress') === 1">
                     {{ bidData(bids, 'bid.in_progress') }} is in Progress
                 </div>
@@ -118,17 +118,21 @@
                     </div>
 
                     <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_general') === 1">
-                        {{ taskData(tasks, 'bid_task.approved_by_general') }} has been Approved by the General Contractor
+                        {{ taskData(tasks, 'bid_task.approved_by_general') }} has been Approved by the General
+                        Contractor
                     </div>
                     <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_general') > 1">
-                        {{ taskData(tasks, 'bid_task.approved_by_general') }} have been Approved by the General Contractor
+                        {{ taskData(tasks, 'bid_task.approved_by_general') }} have been Approved by the General
+                        Contractor
                     </div>
 
                     <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_general') === 1">
-                        {{ taskData(tasks, 'bid_task.finished_by_general') }} has been Finished by the General Contractor
+                        {{ taskData(tasks, 'bid_task.finished_by_general') }} has been Finished by the General
+                        Contractor
                     </div>
                     <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_general') > 1">
-                        {{ taskData(tasks, 'bid_task.finished_by_general') }} have been Finished by the General Contractor
+                        {{ taskData(tasks, 'bid_task.finished_by_general') }} have been Finished by the General
+                        Contractor
                     </div>
 
                     <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_customer') === 1">
@@ -171,6 +175,7 @@
                         <a href="/#/invoices"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
+                <hr>
             </div>
             <div class="feature-section" v-if="user.contractor.stripe_express !== null">
                 <div class="feature-main-section">
@@ -185,10 +190,9 @@
                 </div>
             </div>
             <!--<div class="feature-main-section-statuses">-->
-                <!--<div class="status">4 are wating for payment</div>-->
-                <!--<div class="status">1 is processing</div>-->
+            <!--<div class="status">4 are wating for payment</div>-->
+            <!--<div class="status">1 is processing</div>-->
             <!--</div>-->
-            <hr>
         </div>
     </div>
 </template>

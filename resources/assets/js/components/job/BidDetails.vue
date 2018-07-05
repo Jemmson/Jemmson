@@ -55,7 +55,7 @@
                     Start Date:
                 </label>
                 <p>
-                    {{ bid.agreed_start_date }}
+                    {{ agreedStartDate }}
                 </p>
             </div>
 
@@ -96,6 +96,14 @@
       ...mapGetters ([
         'getCustomerName'
       ]),
+      agreedStartDate () {
+        if (this.bid.agreed_start_date !== null) {
+          let d = this.bid.agreed_start_date;
+          let date = d.split(" ");
+          let format_date = date[0].split("-");
+          return format_date[1]+"/"+format_date[2]+"/"+format_date[0];
+        }
+      },
       showBidPrice () {
         if (User.isCustomer ()) {
           const status = this.bid.status;
