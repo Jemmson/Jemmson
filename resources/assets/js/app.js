@@ -62,6 +62,7 @@ import InitiateBid from './pages/InitiateBid';
 import Tasks from './pages/Tasks';
 import Invoices from './pages/Invoices';
 import Invoice from './pages/Invoice';
+import SubInvoice from './pages/SubInvoice';
 import FurtherInfo from './pages/FurtherInfo';
 import TaskImages from './pages/TaskImages';
 import Benefits from './pages/Benefits';
@@ -130,6 +131,10 @@ const routes = [
   {
     path: '/invoice/:id',
     component: Invoice
+  },
+  {
+    path: '/sub/invoice/:id',
+    component: SubInvoice
   },
   {
     path: '/furtherInfo',
