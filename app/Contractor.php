@@ -27,6 +27,11 @@ class Contractor extends Model
         return $this->hasMany(Job::class, 'contractor_id', 'user_id');
     }
 
+    public function jobTasks()
+    {
+        return $this->hasMany(JobTask::class, 'contractor_id', 'user_id');
+    }
+
     public function time()
     {
         return $this->hasMany(Time::class, 'contractor_id', 'user_id');

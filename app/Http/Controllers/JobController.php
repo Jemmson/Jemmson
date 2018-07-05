@@ -120,6 +120,8 @@ class JobController extends Controller
 
         } else {
             $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+            $subInvoices = Auth::user()->contractor()->first()->jobTasks()->where('bid_id', '!=', null)->where('status', 'bid_task.customer_sent_payment')->with('task')->get();
+            $invoices = $invoices->merge($subInvoices);
         }
 
         return response()->json($invoices, 200);
@@ -129,6 +131,12 @@ class JobController extends Controller
     {
         $job->load('location', 'jobTasks.task');
         return $job;
+    }
+
+    public function getSubInvoice(JobTask $jobTask)
+    {
+        $jobTask->load('task', 'location');
+        return $jobTask;
     }
 
     /**
