@@ -19,8 +19,15 @@
                 </div>
             </div>
             <div class="col-xs-12 col-md-6" v-for="invoice in sInvoices" :key="invoice.id">
-                <div style="margin-bottom: 22px;">
-                    <router-link :to="'/invoice/' + invoice.id" class="btn btn-block btn-default btn-lg" >{{invoice.job_name}}</router-link>
+                <div v-if="invoice.job_id !== undefined">
+                    <div style="margin-bottom: 22px;">
+                        <router-link :to="'/sub/invoice/' + invoice.id" class="btn btn-block btn-default btn-lg" >{{invoice.task.name}}</router-link>
+                    </div>
+                </div>
+                <div v-else>
+                    <div style="margin-bottom: 22px;">
+                        <router-link :to="'/invoice/' + invoice.id" class="btn btn-block btn-default btn-lg" >{{invoice.job_name}}</router-link>
+                    </div>
                 </div>
             </div>
         </div>

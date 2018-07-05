@@ -4,20 +4,20 @@
             <div class="col-md-12 text-center">
                 <div class="card card-1">
                     <div class="panel-body">
-                        <h1>Invoice Page</h1>
+                        <h3>Invoice Page</h3>
                     </div>
                 </div>
             </div>
-            <div v-if="invoice !== null">
+            <div v-if="subInvoice !== null">
                 <div class="col-md-12">
                     <div class="card card-1">
                         <div class="panel-body">
                             <section class="col-xs-12 col-md-6">
                                 <h3 for="company_name" v-if="isContractor">{{ user.contractor.company_name }}</h3>
                                 <h3 for="company_name" v-if="!isContractor">{{ user.name }}</h3>
-                                <address v-if="invoice.location !== null">
-                                    <br> {{ invoice.location.address_line_1 }}
-                                    <br> {{ invoice.location.city }}, {{ invoice.location.state }} {{ invoice.location.zip }}
+                                <address v-if="subInvoice.location !== null">
+                                    <br> {{ subInvoice.location.address_line_1 }}
+                                    <br> {{ subInvoice.location.city }}, {{ subInvoice.location.state }} {{ subInvoice.location.zip }}
                                 </address>
                             </section>
                             <section class="col-xs-12 col-md-6">
@@ -25,14 +25,14 @@
                                     Job Name:
                                 </label>
                                 <p>
-                                    {{ invoice.job_name }}
+                                    {{ subInvoice.task.name }}
                                 </p>
 
                                 <label for="title">
                                     Date Completed:
                                 </label>
                                 <p>
-                                    {{ invoice.updated_at }}
+                                    {{ subInvoice.updated_at }}
                                 </p>
                             </section>
                         </div>
@@ -48,30 +48,14 @@
                                         <th scope="col">Task Name</th>
                                         <th scope="col">QTY</th>
                                         <th scope="col">Task Price</th>
-                                        <th scope="col" v-if="isContractor">Task Price (Sub Contractor)</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="task in invoice.job_tasks" :key="task.id">
-                                        <td>{{ task.task.name }}</td>
-                                        <td>{{ task.qty }}</td>
-                                        <td v-if="isContractor">${{ task.cust_final_price - task.sub_final_price }}</td>
-                                        <td v-else>${{ task.cust_final_price }}</td>
-                                        <td v-if="isContractor">${{ task.sub_final_price }}</td>
-                                    </tr>
-
-                                    <tr v-if="isContractor">
-                                        <td></td>
-                                        <td></td>
-                                        <td>Total: ${{ totalCustomerPrice }}</td>
-                                        <td>Total: ${{ totalSubPrice }}</td>
-                                    </tr>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td v-if="isContractor"></td>
-                                        <td><label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label></td>
+                                        <td>{{ subInvoice.task.name }}</td>
+                                        <td>{{ subInvoice.qty }}</td>
+                                        <td>${{ subInvoice.sub_final_price }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -90,37 +74,19 @@
         },
         data() {
             return {
-                invoice: null
+                subInvoice: null
             }
         },
         computed: {
             isContractor() {
                 return User.isContractor();
             },
-            totalCustomerPrice() {
-                let total = 0;
-                if (this.invoice !== null) {
-                    for (const task of this.invoice.job_tasks) {
-                        total += (task.cust_final_price * task.qty) - (task.sub_final_price * task.qty);
-                    }
-                }
-                return total;
-            },
-            totalSubPrice() {
-                let total = 0;
-                if (this.invoice !== null) {
-                    for (const task of this.invoice.job_tasks) {
-                        total += task.sub_final_price * task.qty;
-                    }
-                }
-                return total;
-            }
         },
         methods: {},
         mounted: function () {
             const id = this.$route.params.id;
-            axios.get('/invoice/' + id).then((data) => {
-                this.invoice = data.data;
+            axios.get('/sub/invoice/' + id).then((data) => {
+                this.subInvoice = data.data;
             });
         }
     }

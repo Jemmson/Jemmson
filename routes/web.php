@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('job/approve/{job}', 'JobController@approveJob');
     Route::get('invoices', 'JobController@getInvoices');
     Route::get('invoice/{job}', 'JobController@getInvoice');
+    Route::get('/sub/invoice/{jobTask}', 'JobController@getSubInvoice');
     Route::post('job/cancel', 'JobController@cancelJobBid');
     
     // Stripe routes
