@@ -7756,14 +7756,6 @@ input:checked + .slider:before {
   width: 100%;
   color: white;
   z-index: 100000;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: row;
-      flex-direction: row;
-  -ms-flex-pack: justify;
-      justify-content: space-between;
-  -ms-flex-align: center;
-      align-items: center;
 }
 .jemmson-navbar div span a {
   color: inherit;
@@ -7787,10 +7779,6 @@ input:checked + .slider:before {
   width: 100%;
   color: white;
   z-index: 100000;
-  -ms-flex-pack: justify;
-      justify-content: space-between;
-  -ms-flex-align: center;
-      align-items: center;
 }
 .jemmson-footer span a {
   color: inherit;
