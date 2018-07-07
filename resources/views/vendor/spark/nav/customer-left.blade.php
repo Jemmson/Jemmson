@@ -1,4 +1,6 @@
 <!-- Left Side Of Navbar -->
-<span><a href="/#/home">Home</a></span>
-<span><a href="/#/bids">Bids</a></span>
-<span><a href="/#/invoices">Invoices</a></span>
+<div class="flex justify-between text-3xl p-r-16 p-l-16">
+    <a class="text-white" href="/#/home">Home</a>
+    <a class="text-white" href="/#/bids">Bids</a>
+    <a class="text-white" href="/#/invoices">Invoices</a>
+</div>

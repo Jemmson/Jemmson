@@ -6866,6 +6866,9 @@ button.close {
 .w-five-sixth {
   width: 83.33333%;
 }
+.w-90 {
+  width: 90%;
+}
 .w-full {
   width: 100%;
 }
@@ -6877,6 +6880,12 @@ button.close {
 }
 .text-white {
   color: white;
+}
+.text-grey {
+  color: #B8C2CC;
+}
+.text-dark-grey {
+  color: #0000005c;
 }
 .text-xs {
   font-size: .75rem;
@@ -7895,11 +7904,26 @@ button.close {
 .-m-l-auto {
   margin-left: auto;
 }
+.p-l-46 {
+  padding-left: 4.6rem;
+}
 .bg-white {
   background-color: white;
 }
 .rounded-circle {
   border-radius: 50%;
+}
+.rounded-sm {
+  border-radius: .125rem;
+}
+.rounded {
+  border-radius: .25rem;
+}
+.rounded-lg {
+  border-radius: .5rem;
+}
+.rounded-full {
+  border-radius: 9999px;
 }
 .p-t-lg {
   padding-top: 20px;

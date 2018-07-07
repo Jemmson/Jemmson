@@ -1,6 +1,8 @@
 <!-- Left Side Of Navbar -->
-<span><a href="/#/home">Home</a></span>
-<span><a href="/#/initiate-bid">Initiate Bid</a></span>
-<span><a href="/#/bids">Bids</a></span>
-<span><a href="/#/tasks">Tasks</a></span>
-<span><a href="/#/invoices">Invoices</a></span>
+<div class="flex justify-between text-3xl p-r-16 p-l-16">
+    <a class="text-white" href="/#/home">Home</a>
+    <a class="text-white" href="/#/initiate-bid">Initiate Bid</a>
+    <a class="text-white" href="/#/bids">Bids</a>
+    <a class="text-white" href="/#/tasks">Tasks</a>
+    <a class="text-white" href="/#/invoices">Invoices</a>
+</div>

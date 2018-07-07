@@ -8,7 +8,10 @@
         inline-template>
 
     <div>
-        <div v-if="user" class="jemmson-navbar">
+        <div v-if="user" class="jemmson-navbar
+            flex
+            justify-between
+            items-center p-r-16 p-l-16">
             <a @click="showNotifications" class="has-activity-indicator">
                 <div class="navbar-icon">
                     <button>

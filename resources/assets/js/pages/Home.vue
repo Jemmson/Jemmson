@@ -16,188 +16,192 @@
                 <div class="text-white upper m-t-3 text-3xl">{{ user.contractor.company_name }}</div>
             </div>
         </div>
-        <div class="container w-five-sixth card-1">
-            <div class="header-section">
-                <div class="mini-slogan upper">mini slogan</div>
-                <div class="main-slogan upper">main slogan</div>
+        <div class="container
+                    w-90
+                    bg-white
+                    rounded-lg
+                    card-1">
+            <div class="flex flex-col items-center">
+                <div class="m-t-10 text-sm text-grey upper">mini slogan</div>
+                <div class="text-4xl font-black upper">main slogan</div>
             </div>
-            <div class="feature-section first-feature">
-                <div class="feature-main-section">
-                    <div class="feature-main-icon-section">
-                        <img class="icon" src="img/bid2.png" alt="">
-                        <div class="feature" v-if="bids.length === 0">No Current Bids</div>
-                        <div class="feature" v-else-if="bids.length === 1">1 Bid</div>
-                        <div class="feature" v-else="">{{ bids.length }} Bids</div>
+            <div class="flex flex-col m-l-5 m-r-5 m-t-6">
+                <div class="flex justify-between">
+                    <div class="flex">
+                        <img class="m-r-4" src="img/bid2.png" alt="">
+                        <div class="text-4xl font-black" v-if="bids.length === 0">No Current Bids</div>
+                        <div class="text-4xl font-black" v-else-if="bids.length === 1">1 Bid</div>
+                        <div class="text-4xl font-black" v-else="">{{ bids.length }} Bids</div>
                     </div>
-                    <div class="feature-main-icon-section">
-                        <div class="manage">Manage</div>
+                    <div class="flex">
+                        <div class="m-r-4 text-4xl font-black">Manage</div>
                         <a href="/#/bids"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="feature-main-section-statuses">
-                <div class="status" v-if="bidData(bids, 'bid.initiated') === 1">
+            <div class="flex flex-col items-start">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.initiated') === 1">
                     {{ bidData(bids, 'bid.initiated') }} has been Initiated
                 </div>
-                <div class="status" v-if="bidData(bids, 'bid.initiated') > 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.initiated') > 1">
                     {{ bidData(bids, 'bid.initiated') }} are Initiated
                 </div>
 
-                <div class="status" v-if="bidData(bids, 'bid.in_progress') === 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.in_progress') === 1">
                     {{ bidData(bids, 'bid.in_progress') }} is in Progress
                 </div>
-                <div class="status" v-if="bidData(bids, 'bid.in_progress') > 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.in_progress') > 1">
                     {{ bidData(bids, 'bid.in_progress') }} are in Progress
                 </div>
 
-                <div class="status" v-if="bidData(bids, 'bid.sent') === 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.sent') === 1">
                     {{ bidData(bids, 'bid.sent') }} has been Sent
                 </div>
-                <div class="status" v-if="bidData(bids, 'bid.sent') > 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.sent') > 1">
                     {{ bidData(bids, 'bid.sent') }} have been Sent
                 </div>
 
-                <div class="status" v-if="bidData(bids, 'bid.declined') === 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.declined') === 1">
                     {{ bidData(bids, 'bid.declined') }} has been Declined
                 </div>
-                <div class="status" v-if="bidData(bids, 'bid.declined') > 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.declined') > 1">
                     {{ bidData(bids, 'bid.declined') }} have been Declined
                 </div>
 
-                <div class="status" v-if="bidData(bids, 'job.approved') === 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'job.approved') === 1">
                     {{ bidData(bids, 'job.approved') }} has been Approved
                 </div>
-                <div class="status" v-if="bidData(bids, 'job.approved') > 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'job.approved') > 1">
                     {{ bidData(bids, 'job.approved') }} are Approved
                 </div>
 
-                <div class="status" v-if="bidData(bids, 'job.completed') === 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'job.completed') === 1">
                     {{ bidData(bids, 'job.completed') }} has been Completed
                 </div>
-                <div class="status" v-if="bidData(bids, 'job.completed') > 1">
+                <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'job.completed') > 1">
                     {{ bidData(bids, 'job.completed') }} are Completed
                 </div>
             </div>
             <hr>
             <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
-                <div class="feature-section">
-                    <div class="feature-main-section">
-                        <div class="feature-main-icon-section">
-                            <img class="icon" src="img/task.png" alt="">
-                            <div class="feature" v-if="tasks.length === 0">No Current Tasks</div>
-                            <div class="feature" v-else-if="tasks.length === 1">1 Task</div>
-                            <div class="feature" v-else="">{{ tasks.length }} Tasks</div>
+                <div class="flex flex-col m-l-5 m-r-5">
+                    <div class="flex justify-between">
+                        <div class="flex">
+                            <img class="m-r-4" src="img/task.png" alt="">
+                            <div class="text-4xl font-black" v-if="tasks.length === 0">No Current Tasks</div>
+                            <div class="text-4xl font-black" v-else-if="tasks.length === 1">1 Task</div>
+                            <div class="text-4xl font-black" v-else="">{{ tasks.length }} Tasks</div>
                         </div>
-                        <div class="feature-main-icon-section">
-                            <div class="manage">Manage</div>
+                        <div class="flex">
+                            <div class="m-r-4 text-4xl font-black">Manage</div>
                             <a href="/#/tasks"><i class="fas fa-4x fa-angle-right"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="feature-main-section-statuses">
-                    <div class="status" v-if="taskData(tasks, 'bid_task.initiated') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.initiated') === 1">
                         {{ taskData(tasks, 'bid_task.initiated') }} has been Initiated
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.initiated') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.initiated') > 1">
                         {{ taskData(tasks, 'bid_task.initiated') }} are Initiated
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.bid_sent') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.bid_sent') === 1">
                         {{ taskData(tasks, 'bid_task.bid_sent') }} has been Sent
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.bid_sent') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.bid_sent') > 1">
                         {{ taskData(tasks, 'bid_task.bid_sent') }} have been Sent
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.accepted') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.accepted') === 1">
                         {{ taskData(tasks, 'bid_task.accepted') }} has been Accepted
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.accepted') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.accepted') > 1">
                         {{ taskData(tasks, 'bid_task.accepted') }} have been Accepted
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_sub') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.finished_by_sub') === 1">
                         {{ taskData(tasks, 'bid_task.finished_by_sub') }} has been Finished by the Sub
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_sub') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.finished_by_sub') > 1">
                         {{ taskData(tasks, 'bid_task.finished_by_sub') }} have been Finished by the Sub
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_general') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.approved_by_general') === 1">
                         {{ taskData(tasks, 'bid_task.approved_by_general') }} has been Approved by the General
                         Contractor
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_general') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.approved_by_general') > 1">
                         {{ taskData(tasks, 'bid_task.approved_by_general') }} have been Approved by the General
                         Contractor
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_general') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.finished_by_general') === 1">
                         {{ taskData(tasks, 'bid_task.finished_by_general') }} has been Finished by the General
                         Contractor
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.finished_by_general') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.finished_by_general') > 1">
                         {{ taskData(tasks, 'bid_task.finished_by_general') }} have been Finished by the General
                         Contractor
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_customer') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.approved_by_customer') === 1">
                         {{ taskData(tasks, 'bid_task.approved_by_customer') }} has been Approved by the Customer
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.approved_by_customer') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.approved_by_customer') > 1">
                         {{ taskData(tasks, 'bid_task.approved_by_customer') }} have been Approved by the Customer
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 1">
                         {{ taskData(tasks, 'bid_task.customer_sent_payment') }} has had the Customer Send Payment
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.reopened') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.reopened') === 1">
                         {{ taskData(tasks, 'bid_task.reopened') }} has been Reopened
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.reopened') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.reopened') > 1">
                         {{ taskData(tasks, 'bid_task.reopened') }} have been Reopened
                     </div>
 
-                    <div class="status" v-if="taskData(tasks, 'bid_task.denied') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.denied') === 1">
                         {{ taskData(tasks, 'bid_task.denied') }} has been Denied
                     </div>
-                    <div class="status" v-if="taskData(tasks, 'bid_task.denied') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.denied') > 1">
                         {{ taskData(tasks, 'bid_task.denied') }} have been Denied
                     </div>
                 </div>
                 <hr>
             </div>
-            <div class="feature-section">
-                <div class="feature-main-section">
-                    <div class="feature-main-icon-section">
-                        <img class="icon" src="img/invoice.png" alt="">
-                        <div class="feature" v-if="invoices.length === 0">No Current Invoices</div>
-                        <div class="feature" v-else-if="invoices.length === 1">1 Invoice</div>
-                        <div class="feature" v-else="">{{ invoices.length }} Invoices</div>
+            <div class="flex flex-col m-l-5 m-r-5">
+                <div class="flex justify-between">
+                    <div class="flex">
+                        <img class="m-r-4" src="img/invoice.png" alt="">
+                        <div class="text-4xl font-black" v-if="invoices.length === 0">No Current Invoices</div>
+                        <div class="text-4xl font-black" v-else-if="invoices.length === 1">1 Invoice</div>
+                        <div class="text-4xl font-black" v-else="">{{ invoices.length }} Invoices</div>
                     </div>
-                    <div class="feature-main-icon-section">
-                        <div class="manage">Manage</div>
+                    <div class="flex">
+                        <div class="m-r-4 text-4xl font-black">Manage</div>
                         <a href="/#/invoices"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
                 <hr>
             </div>
-            <div class="feature-section" v-if="user.contractor.stripe_express !== null">
-                <div class="feature-main-section">
-                    <div class="feature-main-icon-section">
-                        <i class="fas fa-3x fa-money-bill-alt icon"></i>
-                        <div class="feature">Stripe</div>
+            <div class="flex flex-col m-l-5 m-r-5" v-if="user.contractor.stripe_express !== null">
+                <div class="flex justify-between">
+                    <div class="flex">
+                        <i class="fas fa-3x fa-money-bill-alt icon m-r-3"></i>
+                        <div class="text-4xl font-black">Stripe</div>
                     </div>
-                    <div class="feature-main-icon-section">
-                        <div class="manage">Manage</div>
+                    <div class="flex">
+                        <div class="m-r-4 text-4xl font-black">Manage</div>
                         <a @click="route('express')"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
             </div>
             <!--<div class="feature-main-section-statuses">-->
-            <!--<div class="status">4 are wating for payment</div>-->
-            <!--<div class="status">1 is processing</div>-->
+            <!--<div class="m-l-5 text-dark-grey p-l-46">4 are wating for payment</div>-->
+            <!--<div class="m-l-5 text-dark-grey p-l-46">1 is processing</div>-->
             <!--</div>-->
         </div>
     </div>
@@ -273,160 +277,9 @@
 
 <style>
 
-    /*.header-section {*/
-        /*display: flex;*/
-        /*flex-direction: column;*/
-        /*align-items: center;*/
-    /*}*/
-
-    /*.company-name {*/
-        /*font-size: 1.75rem;*/
-        /*margin-top: .75rem;*/
-    /*}*/
-
     .home-icon {
         height: 9rem;
         width: 9rem;
     }
-
-    /*.home-title {*/
-        /*margin-top: -.5rem;*/
-    /*}*/
-
-    /*.home-icon span {*/
-        /*font-size: 4rem;*/
-        /*font-weight: bolder;*/
-    /*}*/
-
-    /*.txt-white {*/
-        /*color: white;*/
-    /*}*/
-
-
-
-    /*.font-12 {*/
-        /*font-size: 12px;*/
-    /*}*/
-
-    /*.font-3rem {*/
-        /*font-size: 3rem;*/
-
-    /*}*/
-
-    /*.mini-slogan {*/
-        /*margin-top: 2.15rem;*/
-        /*font-size: 12px;*/
-        /*color: #888888;*/
-    /*}*/
-
-    /*.main-slogan {*/
-        /*font-size: 2.5rem;*/
-        /*font-family: 'Anton', sans-serif;*/
-        /*font-weight: 900;*/
-    /*}*/
-
-    /*.container {*/
-        /*background-color: white;*/
-
-        /*height: auto;*/
-        /*margin-top: 3rem;*/
-        /*!*border-radius: 10px;*!*/
-        /*!*background-image: linear-gradient(to right, rgba(22, 20, 17, 0.20), rgba(130, 182, 144, 0.20));*!*/
-    /*}*/
-
-    /*!*@media (min-width: 575px) {*!*/
-        /*!*.container {*!*/
-            /*!*!*width: 1200px;*!*!*/
-        /*!*}*!*/
-    /*!*}*!*/
-
-    /*.feature-section {*/
-        /*display: flex;*/
-        /*flex-direction: column;*/
-        /*margin-left: 1.25rem;*/
-        /*margin-right: 1.25rem;*/
-    /*}*/
-
-    /*.feature-main-section {*/
-        /*display: flex;*/
-        /*justify-content: space-between;*/
-    /*}*/
-
-    /*.feature-main-icon-section {*/
-        /*display: flex;*/
-    /*}*/
-
-    /*.feature-main-section-statuses {*/
-        /*display: flex;*/
-        /*flex-direction: column;*/
-        /*align-items: left;*/
-    /*}*/
-
-    /*.icon {*/
-        /*margin-right: 1rem;*/
-    /*}*/
-
-    /*.feature {*/
-        /*font-size: 2.25rem;*/
-        /*font-weight: 900;*/
-        /*font-family: 'Anton', sans-serif;*/
-    /*}*/
-
-    /*.manage {*/
-        /*margin-right: 1rem;*/
-        /*font-size: 2.25rem;*/
-        /*font-weight: 900;*/
-        /*font-family: 'Anton', sans-serif;*/
-    /*}*/
-
-    /*.status {*/
-        /*margin-left: 5rem;*/
-        /*color: #0000005c;*/
-    /*}*/
-
-    /*.first-feature {*/
-        /*margin-top: 1.13rem;*/
-    /*}*/
-
-    /*.home-sub-heading {*/
-        /*display: flex;*/
-        /*justify-content: left;*/
-        /*margin-top: 2rem;*/
-        /*margin-bottom: 0px;*/
-        /*color: #81171F;*/
-    /*}*/
-
-    /*h3 {*/
-        /*margin-top: 0rem;*/
-        /*margin-bottom: 0px;*/
-        /*display: flex;*/
-    /*}*/
-
-    /*.home-summary-data {*/
-        /*display: flex;*/
-        /*justify-content: space-between;*/
-        /*margin-top: -1.5rem;*/
-        /*padding-left: 3em;*/
-        /*padding-right: 1em;*/
-        /*color: black;*/
-    /*}*/
-
-    /*.summary-footer {*/
-        /*height: 2rem;*/
-    /*}*/
-
-    /*.home-sub-heading-tasks {*/
-        /*margin-top: 5rem;*/
-    /*}*/
-
-    /*h1 {*/
-        /*color: #81171F;*/
-    /*}*/
-
-    /*h5 {*/
-        /*color: #81171F;*/
-        /*font-size: 2rem;*/
-        /*font-weight: bolder;*/
-    /*}*/
 
 </style>
