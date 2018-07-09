@@ -52,7 +52,7 @@
               <div class="col-xs-6 form-group text-right">
                 <label>Price per Unit:
                   <br>
-                  <span v-if="jobTask.task.qtyUnit !== null">{{ jobTask.cust_final_price }} / {{ jobTask.task.qtyUnit }}</span>
+                  <span v-if="jobTask.task.qty !== null">{{ jobTask.cust_final_price }}</span>
                 </label>
               </div>
               <div class="col-xs-4 form-group text-right">
