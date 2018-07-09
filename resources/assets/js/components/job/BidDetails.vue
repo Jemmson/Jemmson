@@ -11,54 +11,40 @@
 
             <hr>
 
-            <!-- CUSTOMER NAME -->
-            <div>
-                <h3 for="company_name" class="text-center" v-if="isCustomer">{{ bid.job_name }}</h3>
-                <h3 for="company_name" class="text-center" v-else>{{ customerName }}</h3>
+            <div class="flex justify-between">
+                <span>CUSTOMER NAME</span>
+                <span>JOB NAME</span>
+                <span>START DATE</span>
             </div>
 
-            <!-- JOB NAME -->
-            <div class="flex space-between">
-            <span for="job_name">
-                Job Name:
-            </span>
-                <span>
-                {{ bid.job_name }}
-            </span>
+            <div class="flex justify-between">
+                <span v-if="isCustomer">{{ bid.job_name }}</span>
+                <span v-else>{{ customerName }}</span>
+                <span>{{ bid.job_name }}</span>
+                <span>{{ agreedStartDate }}</span>
             </div>
 
-            <!-- CUSTOMER ADDRESS -->
-            <div>
-                <span class="title">Address:</span>
-                <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
-                   :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                    <address v-if="bid.location !== null">
-                        <br> {{ bid.location.address_line_1 }}
-                        <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                    </address>
-                </a>
-                <div v-else class="text-center">
-                    No Address is Set Yet
+
+            <hr>
+            <div class="flex justify-between">
+                <span class="">JOB ADDRESS:</span>
+                <span class="">TOTAL JOB PRICE:</span>
+            </div>
+            <div class="flex justify-between">
+                <div>
+                    <a class="" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
+                       :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                        <address v-if="bid.location !== null">
+                            <br> {{ bid.location.address_line_1 }}
+                            <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+                        </address>
+                    </a>
+                    <div v-else class="">
+                        No Address is Set Yet
+                    </div>
                 </div>
-            </div>
-
-            <!-- JOB TOTAL PRICE -->
-            <div class="flex space-between" v-if="showBidPrice">
-                <span class="title job-status-label">Total Job Price:</span>
                 <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
             </div>
-
-
-            <!-- Job Start Date -->
-            <div class="flex space-between">
-                <label>
-                    Start Date:
-                </label>
-                <p>
-                    {{ agreedStartDate }}
-                </p>
-            </div>
-
 
             <!-- Declined Message -->
             <div class="flex space-between flex-col"
@@ -99,9 +85,9 @@
       agreedStartDate () {
         if (this.bid.agreed_start_date !== null) {
           let d = this.bid.agreed_start_date;
-          let date = d.split(" ");
-          let format_date = date[0].split("-");
-          return format_date[1]+"/"+format_date[2]+"/"+format_date[0];
+          let date = d.split (' ');
+          let format_date = date[0].split ('-');
+          return format_date[1] + '/' + format_date[2] + '/' + format_date[0];
         }
       },
       showBidPrice () {

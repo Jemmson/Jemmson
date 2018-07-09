@@ -25,7 +25,7 @@
                 <div class="m-t-10 text-sm text-grey upper">mini slogan</div>
                 <div class="text-4xl font-black upper">main slogan</div>
             </div>
-            <div class="flex flex-col m-l-5 m-r-5 m-t-6">
+            <a href="/#/bids" class="flex flex-col m-l-5 m-r-5 m-t-6">
                 <div class="flex justify-between">
                     <div class="flex">
                         <img class="m-r-4" src="img/bid2.png" alt="">
@@ -38,7 +38,7 @@
                         <a href="/#/bids"><i class="fas fa-4x fa-angle-right"></i></a>
                     </div>
                 </div>
-            </div>
+            </a>
             <div class="flex flex-col items-start">
                 <div class="m-l-5 text-dark-grey p-l-46" v-if="bidData(bids, 'bid.initiated') === 1">
                     {{ bidData(bids, 'bid.initiated') }} has been Initiated

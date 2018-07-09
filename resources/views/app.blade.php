@@ -32,7 +32,7 @@
     </script>
 </head>
 {{--<body class="with-navbar" style="background-image: linear-gradient(to right, #161411, #82b690);--}}
-<body class="with-navbar" style="background-image: linear-gradient(to right, rgb(35, 35, 32), rgb(128, 156, 220));
+<body class="with-navbar" style="background-image: linear-gradient(to right, rgb(5, 17, 44), rgb(128, 156, 220));
 padding-top: 10rem; padding-bottom: 10rem">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
