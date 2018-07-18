@@ -120,6 +120,8 @@ class JobController extends Controller
 
         } else {
             $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+            $subInvoices = Auth::user()->contractor()->first()->jobTasks()->where('bid_id', '!=', null)->where('status', 'bid_task.customer_sent_payment')->with('task')->get();
+            $invoices = $invoices->merge($subInvoices);
         }
 
         return response()->json($invoices, 200);
@@ -129,6 +131,12 @@ class JobController extends Controller
     {
         $job->load('location', 'jobTasks.task');
         return $job;
+    }
+
+    public function getSubInvoice(JobTask $jobTask)
+    {
+        $jobTask->load('task', 'location');
+        return $jobTask;
     }
 
     /**
@@ -452,7 +460,7 @@ class JobController extends Controller
 
         $job = Job::find($jobId);
         $job->status = __('job.accepted');
-        $job->save();
+        $job->save();                           // TODO: needs try catch here
 
         $user = User::find($contractorId);
 
@@ -532,12 +540,20 @@ class JobController extends Controller
 
         $job = Job::find($request->id);
 
-        if ($job->updatable(__('bid.canceled'))) {
-            $job->updateStatus(__('bid.canceled'));
+        try {
             $job->delete();
-        } else {
+        } catch (\Exception $e) {
+            Log::error('Updating Job Status: ' . $e->getMessage());
             return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
+            return false;
         }
+
+//        if ($job->updatable(__('bid.canceled'))) {
+//            $job->updateStatus(__('bid.canceled'));
+//            $job->delete();
+//        } else {
+//            return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
+//        }
 
         $currentUser = Auth::user()->id;
         if ($currentUser == $job->customer_id) {

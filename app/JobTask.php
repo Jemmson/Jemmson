@@ -171,6 +171,37 @@ class JobTask extends Model
         }
     }
 
+    /**
+     *
+     * @param String $msg
+     * @return bool
+     */
+    public function setDeclinedMessage(String $msg)
+    {
+        $this->declined_message = $msg;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Set Declined Message: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public function resetDeclinedMessage()
+    {
+        $this->declined_message = null;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Reset Declined Message: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
     private function isPayable()
     {
         return $this->status === 'bid_task.finished_by_general' || $this->status === 'bid_task.approved_by_general';

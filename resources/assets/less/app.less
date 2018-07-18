@@ -4,6 +4,12 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "./../../../node_modules/bootstrap/less/bootstrap";
 // @import "./spark/spark";
+@import "./screensizes/mobile";
+@import "./screensizes/small";
+@import "./screensizes/medium";
+@import "./screensizes/large";
+@import "./screensizes/extraLarge";
+@import "./screensizeIndependent";
 @import "./../../../vendor/laravel/spark/resources/assets/less/spark";
 @import "./model.less";
 @import "./toggle.less";
@@ -12,7 +18,11 @@
 @import "./nav.less";
 @import "./welcome.less";
 @import "./notification";
-
+@import "../../../node_modules/@fortawesome/fontawesome-free/less/fontawesome";
+@import "./dist/components.css";
+@import "./dist/preflight.css";
+@import "./dist/tailwind.css";
+@import "./dist/utilities.css";
 
 //@tailwind utilities;
 
@@ -21,10 +31,11 @@ html {
 }
 
 body {
-  //background: linear-gradient(to top, #3b5998, #667cb2, #8fa1cb, #bac8e5, #e7efff) fixed;
+  background: linear-gradient(to right, #0a174b, #223dab) fixed;
   font-family: 'Roboto', sans-serif;
   background-color: #eee;
 }
+
 .card {
   background: #fff;
   border-radius: 4px;
@@ -251,7 +262,7 @@ body {
 }
 
 .footer-spacing {
-  height: 40rem;
+  height: 8rem;
 }
 
 .refresh {

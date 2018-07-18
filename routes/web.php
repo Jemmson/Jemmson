@@ -21,46 +21,6 @@ Route::get('/home', 'WebController@index');
 Route::get('login', 'Auth\LoginController@show');
 Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
 
-Route::get('/contractorFeatures/', function(){
-    return view('/public.contractorFeatures');
-});
-
-Route::get('/customerFeatures/', function(){
-    return view('/public.customerFeatures');
-});
-
-Route::get('/public/customerJobTracking', function(){
-    return view('/public.customerJobTracking');
-});
-
-Route::get('/public/customerSecurity', function(){
-    return view('/public.customerSecurity');
-});
-
-Route::get('/public/customerInvoiceManagement', function(){
-    return view('/public.customerInvoiceManagement');
-});
-
-Route::get('/public/customerCommunication', function(){
-    return view('/public.customerCommunication');
-});
-
-Route::get('/public/contractorJobTracking', function(){
-    return view('/public.contractorJobTracking');
-});
-
-Route::get('/public/contractorSecurity', function(){
-    return view('/public.contractorSecurity');
-});
-
-Route::get('/public/contractorInvoiceManagement', function(){
-    return view('/public.contractorInvoiceManagement');
-});
-
-Route::get('/public/contractorCommunication', function(){
-    return view('/public.contractorCommunication');
-});
-
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 
     Route::post('/initiate-bid', 'InitiateBidController@send');
@@ -72,8 +32,6 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/task/image', 'TaskController@uploadTaskImage');
     Route::delete('/task/image/{taskImage}', 'TaskController@deleteImage');
 
-    
-
     // JobController
     Route::resource('/job', 'JobController');
     Route::get('/jobtask/{jobTask}', 'TaskController@getJobTask');
@@ -82,6 +40,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('job/approve/{job}', 'JobController@approveJob');
     Route::get('invoices', 'JobController@getInvoices');
     Route::get('invoice/{job}', 'JobController@getInvoice');
+    Route::get('/sub/invoice/{jobTask}', 'JobController@getSubInvoice');
     Route::post('job/cancel', 'JobController@cancelJobBid');
     
     // Stripe routes

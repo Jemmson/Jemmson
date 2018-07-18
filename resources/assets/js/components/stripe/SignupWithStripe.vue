@@ -1,7 +1,6 @@
 <template>
   <form @submit="submit" method="post" id="payment-form">
-    <br>
-    <div class="form-row">
+    <div class="form-row text-left">
       <label for="card-element">
         Sign Up With A Credit or Debit Card
       </label>

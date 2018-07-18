@@ -38,6 +38,7 @@ export default class Customer {
    * @param {Object} disabled
    */
   async cancelBid(bid, disabled) {
+    console.log(bid)
     disabled.cancelBid = true;
     try {
       const data = await axios.post('/job/cancel', bid);

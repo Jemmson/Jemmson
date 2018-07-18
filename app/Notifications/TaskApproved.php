@@ -34,7 +34,7 @@ class TaskApproved extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -68,7 +68,7 @@ class TaskApproved extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'task' => $this->queue,
+            'task' => 'task approved',
         ]);
     }
 }

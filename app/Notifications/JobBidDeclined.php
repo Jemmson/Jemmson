@@ -15,7 +15,7 @@ class JobBidDeclined extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $bid, $user;
+    protected $bid, $user, $message;
 
     /**
      * Create a new notification instance.

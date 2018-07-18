@@ -11,22 +11,19 @@
                    @keyup="search">
         </div>
 
-        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated">
-            <div v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">
-                <div class="container card card-1 bid">
-                    <label class="label" :class="getLabelClass(bid.status)">{{ status(bid) }}</label>
-                    <div class="customer" v-if="user.usertype !== 'customer'">
-                        <span>Customer:</span>
-                        <span>{{ bid.customer.name }}</span>
-                    </div>
-                    <div class="customer">
-                        <span>Job Name:</span>
-                        <span>{{ jobName(bid.job_name) }}</span>
-                    </div>
-                    <button class="btn btn-primary btn-lg" name="reviewBid" @click="goToBid(bid.id)">
-                        Click To Edit
-                    </button>
+        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
+            <!--<div class="flex" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">-->
+            <!---->
+            <!--</div>-->
+            <!---->
 
+
+            <div class="" v-for="bid in paginated('sBids')" v-bind:key="bid.id"
+                 style="z-index: 2;" @click="goToBid(bid.id)">
+                <div class="container justify-between justify-around card card-1 p-2">
+                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow text-center">{{ status(bid) }}</span>
+                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</span>
+                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow">{{ jobName(bid.job_name) }}</span>
                 </div>
             </div>
         </paginate>
@@ -42,8 +39,7 @@
 <script>
   export default {
     props: {
-      user: Object,
-      //pbids: Array
+      user: Object
     },
     data () {
       return {
@@ -64,7 +60,7 @@
     methods: {
       search () {
         this.sBids = this.bids.filter ((bid) => {
-          if (this.searchTerm == '' || this.searchTerm.length <= 1) {
+          if (this.searchTerm === '' || this.searchTerm.length <= 1) {
             return true;
           }
           return bid.job_name.toLowerCase ().search (this.searchTerm.toLowerCase ()) > -1;
@@ -129,7 +125,7 @@
     .card-1 {
         width: 90%;
         display: flex;
-        justify-content: center;
+        align-items: stretch;
     }
 
     .search {

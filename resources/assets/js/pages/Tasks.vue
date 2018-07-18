@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- / end search bar -->
-      <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated">
+      <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated" v-show="sTasks.length > 0">
         <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
           <!--<pre>{{ bidTask }}</pre>-->
           <div class="card card-1" v-if="showBid(bidTask)">
@@ -83,6 +83,18 @@
                 <label>Total: {{ bidTask.bid_price * bidTask.job_task.qty }}</label>
               </div>
               <!-- / end qty section -->
+
+              <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
+                <div class="divider2"></div>
+              </div>
+
+              <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
+                <label for="declined_message" class="label label-danger">Declined Reason</label>
+                <p>
+                  {{ bidTask.job_task.declined_message }}
+                </p>
+              </div>
+              <!-- / end declined message section -->
 
               <div class="col-xs-12" v-if="showAddress(bidTask)">
                 <div class="divider2"></div>
@@ -186,6 +198,9 @@
       }
     },
     methods: {
+      showDeclinedMsg(msg) {
+        return msg !== null && msg !== "";
+      },
       getLabelClass(status) {
         return Format.statusLabel(status);
       },

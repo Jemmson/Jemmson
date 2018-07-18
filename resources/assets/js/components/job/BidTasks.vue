@@ -1,7 +1,7 @@
 <template>
   <!-- /all tasks of a bid -->
   <div v-if="show">
-    <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated">
+    <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated" v-if="jobTasks.length > 0">
       <div class="col-md-4" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
         <div class="card card-1">
           <div class="panel-body">
@@ -52,7 +52,7 @@
               <div class="col-xs-6 form-group text-right">
                 <label>Price per Unit:
                   <br>
-                  <span v-if="jobTask.task.qtyUnit !== null">{{ jobTask.cust_final_price }} / {{ jobTask.task.qtyUnit }}</span>
+                  <span v-if="jobTask.task.qty !== null">{{ jobTask.cust_final_price }}</span>
                 </label>
               </div>
               <div class="col-xs-4 form-group text-right">
@@ -128,9 +128,9 @@
                   </button>
                 </div>
                 <div class="col-xs-4" v-if="isContractor">
-                  <h5>Settings</h5>
+                  <h5>Task Actions</h5>
                   <button class="btn btn-secondary" @click.prevent="openTaskActions(jobTask.id)">
-                    <i class="fas fa-cogs fa-2x"></i>
+                    <i class="fas fa-wrench fa-2x"></i>
                   </button>
                 </div>
 

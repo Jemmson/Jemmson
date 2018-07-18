@@ -45,7 +45,7 @@
                              :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
                             <label for="qtyUnit">Quantity Unit</label>
                             <input type="text" class="form-control" min="1" id="qtyUnit"
-                                   name="qtyUnit" required v-model="addNewTaskForm.qtyUnit">
+                                   name="qtyUnit" v-model="addNewTaskForm.qtyUnit">
                             <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
                                 {{ addNewTaskForm.errors.get('qtyUnit') }}
                             </span>
@@ -84,7 +84,7 @@
 
                         <div class="form-group sub-price"
                              :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}"
-                             v-if="!addNewTaskForm.sub_sets_own_price_for_job">
+                             v-show="!addNewTaskForm.sub_sets_own_price_for_job">
                         <label for="subTaskPrice">Unit Price For Sub</label>
                             <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
                                    v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
@@ -115,17 +115,6 @@
                             </span>
                         </div>
 
-                        <div class="form-group sub-notes"
-                             :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
-                            <label for="sub_message">Details For Sub To See</label>
-                            <textarea class="form-control" id="sub_message" name="sub_message"
-                                      v-model="addNewTaskForm.sub_message">
-                            </textarea>
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
-                                {{ addNewTaskForm.errors.get('sub_message') }}
-                            </span>
-                        </div>
-
                         <div class="form-group customer-notes"
                              :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
                             <label for="customer_message">Details For Customer To See</label>
@@ -134,6 +123,17 @@
                             </textarea>
                             <span class="help-block" v-show="addNewTaskForm.errors.has('customer_message')">
                                 {{ addNewTaskForm.errors.get('customer_message') }}
+                            </span>
+                        </div>
+
+                        <div class="form-group sub-notes"
+                             :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
+                            <label for="sub_message">Details For Sub To See</label>
+                            <textarea class="form-control" id="sub_message" name="sub_message"
+                                      v-model="addNewTaskForm.sub_message">
+                            </textarea>
+                            <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
+                                {{ addNewTaskForm.errors.get('sub_message') }}
                             </span>
                         </div>
 
@@ -169,7 +169,7 @@
     data () {
       return {
         addNewTaskForm: new SparkForm ({
-          taskId: -1,
+          taskId: -1,  // if -1 then the task did not come from the drop down
           taskExists: '',
           jobId: this.bid.id,
           subTaskPrice: 0,
@@ -229,13 +229,22 @@
           })
         }
       },
-      fillTaskValues (result) {
+      fillTaskValues (result) {  // this method fills values of the form when a drop down item is selected  x
         console.log (result)
         this.taskExists = true
         this.addNewTaskForm.taskId = result.id;
         this.addNewTaskForm.taskName = result.name;
         this.addNewTaskForm.taskPrice = result.proposed_cust_price;
-        this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
+        if (result.proposed_cust_price === null) {
+          this.addNewTaskForm.taskPrice = 0;
+        } else {
+          this.addNewTaskForm.taskPrice = result.proposed_cust_price;
+        }
+        if (result.proposed_sub_price === null) {
+          this.addNewTaskForm.subTaskPrice = 0;
+        } else {
+          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
+        }
         this.addNewTaskForm.qtyUnit = result.qtyUnit;
         this.formatPrice ('taskPrice');
         this.formatPrice ('subTaskPrice');
@@ -257,7 +266,7 @@
         this.priceChange = false
       },
       addNewTaskToBid () {
-        GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
+        GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
         this.clearTaskResults();
       },
       // // showStripeToggle (jobTask) {

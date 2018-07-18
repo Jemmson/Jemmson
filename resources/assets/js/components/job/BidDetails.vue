@@ -1,74 +1,62 @@
 <template>
     <!-- /all details of a bid -->
-    <div v-if="bid.job_name !== undefined">
 
-        <!-- JOB STATUS -->
-        <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
-            {{ status }}
-        </div>
+    <div>
+        <div v-if="bid.job_name !== undefined">
 
-        <hr>
+            <!-- JOB STATUS -->
+            <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
+                {{ status }}
+            </div>
 
-        <!-- CUSTOMER NAME -->
-        <div>
-            <h3 for="company_name" class="text-center" v-if="isCustomer">{{ bid.job_name }}</h3>
-            <h3 for="company_name" class="text-center" v-else>{{ customerName }}</h3>
-        </div>
+            <hr>
 
-        <!-- JOB NAME -->
-        <div class="flex space-between">
-            <span for="job_name">
-                Job Name:
-            </span>
-            <span>
-                {{ bid.job_name }}
-            </span>
-        </div>
+            <div class="flex justify-between">
+                <span>CUSTOMER NAME</span>
+                <span>JOB NAME</span>
+                <span>START DATE</span>
+            </div>
 
-        <!-- CUSTOMER ADDRESS -->
-        <div>
-            <span class="title">Address:</span>
-            <a class="text-center" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
-               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                <address v-if="bid.location !== null">
-                    <br> {{ bid.location.address_line_1 }}
-                    <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                </address>
-            </a>
-            <div v-else class="text-center">
-                No Address is Set Yet
+            <div class="flex justify-between">
+                <span v-if="isCustomer">{{ bid.job_name }}</span>
+                <span v-else>{{ customerName }}</span>
+                <span>{{ bid.job_name }}</span>
+                <span>{{ agreedStartDate }}</span>
+            </div>
+
+
+            <hr>
+            <div class="flex justify-between">
+                <span class="">JOB ADDRESS:</span>
+                <span class="">TOTAL JOB PRICE:</span>
+            </div>
+            <div class="flex justify-between">
+                <div>
+                    <a class="" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
+                       :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                        <address v-if="bid.location !== null">
+                            <br> {{ bid.location.address_line_1 }}
+                            <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+                        </address>
+                    </a>
+                    <div v-else class="">
+                        No Address is Set Yet
+                    </div>
+                </div>
+                <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
+            </div>
+
+            <!-- Declined Message -->
+            <div class="flex space-between flex-col"
+                 v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
+                <h4>
+                    <label class="status label label-warning red py-s">Declined Reason</label>
+                </h4>
+                <p class="message">
+                    {{ bid.declined_message}}
+                </p>
             </div>
         </div>
-
-        <!-- JOB TOTAL PRICE -->
-        <div class="flex space-between" v-if="showBidPrice">
-            <span class="title job-status-label">Total Job Price:</span>
-            <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
-        </div>
-
-
-        <!-- Job Start Date -->
-        <div class="flex space-between">
-            <label for="title">
-                Start Date:
-            </label>
-            <p>
-                {{ bid.agreed_start_date }}
-            </p>
-        </div>
-
-
-        <!-- Declined Message -->
-        <div class="flex space-between flex-col"
-             v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
-            <h4>
-                <label class="status label label-warning red py-s">Declined Reason</label>
-            </h4>
-            <p class="message">
-                {{ bid.declined_message}}
-            </p>
-        </div>
-
     </div>
 </template>
 
@@ -87,13 +75,21 @@
           area: ''
         },
         areaError: '',
-        locationExists: false
+        locationExists: false,
       }
     },
     computed: {
       ...mapGetters ([
         'getCustomerName'
       ]),
+      agreedStartDate () {
+        if (this.bid.agreed_start_date !== null) {
+          let d = this.bid.agreed_start_date;
+          let date = d.split (' ');
+          let format_date = date[0].split ('-');
+          return format_date[1] + '/' + format_date[2] + '/' + format_date[0];
+        }
+      },
       showBidPrice () {
         if (User.isCustomer ()) {
           const status = this.bid.status;

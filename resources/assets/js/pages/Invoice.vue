@@ -47,7 +47,7 @@
                                     <tr>
                                         <th scope="col">Task Name</th>
                                         <th scope="col">QTY</th>
-                                        <th scope="col">Task Price (Contractor)</th>
+                                        <th scope="col">Task Price</th>
                                         <th scope="col" v-if="isContractor">Task Price (Sub Contractor)</th>
 
                                     </tr>
@@ -56,7 +56,8 @@
                                     <tr v-for="task in invoice.job_tasks" :key="task.id">
                                         <td>{{ task.task.name }}</td>
                                         <td>{{ task.qty }}</td>
-                                        <td>${{ task.cust_final_price - task.sub_final_price }}</td>
+                                        <td v-if="isContractor">${{ task.cust_final_price - task.sub_final_price }}</td>
+                                        <td v-else>${{ task.cust_final_price }}</td>
                                         <td v-if="isContractor">${{ task.sub_final_price }}</td>
                                     </tr>
 

@@ -1,24 +1,69 @@
 <template>
     <!-- /contractor bid actions -->
     <div>
-        <div v-if="showPreApprovedActions" class="text-center">
-            <button class="btn btn-sm btn-primary btn-contractor" @click="openModal('notifyCustomerOfFinishedBid')"
-                    :disabled="bid.job_tasks.length <= 0 || disabled.submitBid">
-                <span v-if="disabled.submitBid">
-                  <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                <div v-if="bid.job_tasks.length <= 0">Please add a Task before submitting bid</div>
-                <div v-else>Submit Bid</div>
-            </button>
-            <div class="btn-group">
-                <button class="btn btn-sm btn-primary btn-contractor" name="addTaskToBid" id="addTaskToBid" @click="openAddTask">
-                    Add Task To Bid
+        <div class="text-white bg-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB
+            PRICES HIGHER THAN CONTRACTOR PRICE
+        </div>
+        <div v-if="showPreApprovedActions" class="">
+            <div class="bg-blue-light
+                            w-full
+                            p-r-20
+                            text-center
+                            text-white
+                            p-l-20
+                            p-t-1
+                            p-b-1
+                            rounded-lg
+                            " v-if="bid.job_tasks.length <= 0">Please Add A Task
+            </div>
+            <div class="flex justify-between">
+                <button class="bg-blue
+                               p-r-4
+                            p-l-4
+                            p-t-1
+                            p-b-1
+                            m-t-2
+                            text-center
+                            text-white
+                            rounded-lg"
+                        name="addTaskToBid"
+                        id="addTaskToBid"
+                        @click="openAddTask"
+                        v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">
+                    Add A Task
                 </button>
-                <button class="btn btn-sm btn-primary btn-contractor" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid">
-                <span v-if="disabled.cancelBid">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
+                <button class="bg-blue
+                               p-r-4
+                            p-l-4
+                            p-t-1
+                            p-b-1
+                            m-t-2
+                            text-center
+                            text-white
+                            rounded-lg"
+                        @click.prevent="openModal('confirmJobCancellation')"
+                        :disabled="disabled.cancelBid">
+                    <span v-if="disabled.cancelBid">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                    </span>
                     Cancel Job
+                </button>
+                <button class="bg-blue
+                               p-r-4
+                            p-l-4
+                            p-t-1
+                            p-b-1
+                            m-t-2
+                            text-center
+                            text-white
+                            rounded-lg"
+                        v-if="bid.job_tasks.length > 0"
+                        @click="openModal('notifyCustomerOfFinishedBid')"
+                        :disabled="bid.job_tasks.length <= 0 || disabled.submitBid">
+                    <span v-if="disabled.submitBid">
+                      <i class="fa fa-btn fa-spinner fa-spin"></i>
+                    </span>
+                    <span>Submit Bid</span>
                 </button>
             </div>
         </div>
@@ -46,7 +91,8 @@
           cancelBid: false,
           jobCompleted: false,
           submitBid: false
-        }
+        },
+        subTaskWarning: false
       }
     },
     computed: {
@@ -90,11 +136,11 @@
       modalYes () {
         switch (this.modalCurrentlyOpenFor) {
           case 'notifyCustomerOfFinishedBid':
-            this.notifyCustomerOfFinishedBid();
+            this.notifyCustomerOfFinishedBid ();
             $ ('#modal').modal ('hide');
             break;
           case 'confirmJobCancellation':
-            this.cancelBid();
+            this.cancelBid ();
             $ ('#modal').modal ('hide');
             break;
         }
@@ -103,7 +149,24 @@
         this.$emit ('openAddTask');
       },
       notifyCustomerOfFinishedBid () {
-        GeneralContractor.notifyCustomerOfFinishedBid (this.bid, this.disabled);
+
+        // go through each job task and compare the sub price to the contractor task price
+        // first check if there is a sub.
+        // check if the sub price is an accepted price
+        // compare the the accepted sub price to the contractor price
+        // if the accepted sub price is higher then throw an error
+
+        this.subTaskWarning = false;
+        for (let i = 0; i < this.bid.job_tasks.length; i++) {
+          if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+            this.subTaskWarning = true;
+          }
+        }
+
+        if (!this.subTaskWarning) {
+          GeneralContractor.notifyCustomerOfFinishedBid (this.bid, this.disabled);
+        }
+
       },
       cancelBid () {
         Customer.cancelBid (this.bid, this.disabled);
