@@ -49298,33 +49298,21 @@ input:checked + .slider:before {
       grid-row-start: 3;
   grid-row-end: 4;
 }
+.with-navbar {
+  padding-top: 0px;
+}
 .jemmson-navbar {
-  background-image: linear-gradient(to right, #05112c, #809cdc);
-  height: 70px;
-  background-color: white;
+  height: 49pt;
   overflow: hidden;
-  position: fixed;
-  /* Set the navbar to fixed position */
   top: 0;
   /* Position the navbar at the top of the page */
   width: 100%;
-  color: white;
-  z-index: 100000;
-}
-.jemmson-navbar div span a {
-  color: inherit;
-  padding-right: 2rem;
-  padding-left: 2rem;
-}
-.jemmson-navbar span a {
-  color: inherit;
-  padding-right: 2rem;
-  padding-left: 2rem;
+  color: white !important;
+  margin-bottom: 1rem;
 }
 .jemmson-footer {
-  background-image: linear-gradient(to right, #05112c, #809cdc);
-  height: 70px;
-  background-color: white;
+  background: linear-gradient(to right, #0a174b, #223dab) fixed;
+  height: 49pt;
   overflow: hidden;
   position: fixed;
   /* Set the navbar to fixed position */
@@ -49334,10 +49322,30 @@ input:checked + .slider:before {
   color: white;
   z-index: 100000;
 }
-.jemmson-footer span a {
-  color: inherit;
-  padding-right: 1rem;
-  padding-left: 1rem;
+.jemmson-navbar > div {
+  margin: auto !important;
+}
+.jemmson-footer > div {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.jemmson-navbar > div > a {
+  color: white;
+}
+.jemmson-navbar > div > a:hover,
+a:visited,
+a:link,
+a:active {
+  text-decoration: none;
+}
+.jemmson-footer > div > a:hover,
+a:visited,
+a:link,
+a:active {
+  text-decoration: none;
+}
+.bell {
+  color: white !important;
 }
 @media (min-width: 300px) {
   .jemmson-navbar span a {
@@ -52988,6 +52996,7 @@ html {
   min-height: 100%;
 }
 body {
+  background: linear-gradient(to right, #0a174b, #223dab) fixed;
   font-family: 'Roboto', sans-serif;
   background-color: #eee;
 }
@@ -53162,7 +53171,7 @@ body {
   margin-bottom: 16px;
 }
 .footer-spacing {
-  height: 40rem;
+  height: 8rem;
 }
 .refresh {
   margin-bottom: .5rem;

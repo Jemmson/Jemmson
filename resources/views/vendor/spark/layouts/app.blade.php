@@ -27,7 +27,7 @@
       )); ?>;
     </script>
 </head>
-<body class="with-navbar" style="background-image: linear-gradient(to right, #161411, #82b690)">
+<body class="with-navbar">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
 @if (Auth::check())
@@ -79,5 +79,6 @@ $(window).resize(function () {
 });
 
 </script>
+<footer class="footer-spacing"></footer>
 </body>
 </html>

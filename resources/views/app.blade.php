@@ -31,9 +31,7 @@
       )); ?>;
     </script>
 </head>
-{{--<body class="with-navbar" style="background-image: linear-gradient(to right, #161411, #82b690);--}}
-<body class="with-navbar" style="background-image: linear-gradient(to right, rgb(5, 17, 44), rgb(128, 156, 220));
-padding-top: 10rem; padding-bottom: 10rem">
+<body class="with-navbar">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
 @if (Auth::check())
@@ -73,8 +71,6 @@ padding-top: 10rem; padding-bottom: 10rem">
 
   gtag('config', 'UA-117973760-1');
 </script>
-
 <footer class="footer-spacing"></footer>
-
 </body>
 </html>

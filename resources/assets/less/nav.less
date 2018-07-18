@@ -1,35 +1,24 @@
 
+.with-navbar {
+  padding-top: 0px;
+}
+
 .jemmson-navbar {
   //background-image: linear-gradient(to right, #161411, #82b690);
-  background-image: linear-gradient(to right, rgb(5, 17, 44), rgb(128, 156, 220));
-  height: 70px;
-  background-color: white;
+  height: 49pt;
   //border-bottom: solid black thin;
   overflow: hidden;
-  position: fixed; /* Set the navbar to fixed position */
+  // position: fixed; /* Set the navbar to fixed position */
   top: 0; /* Position the navbar at the top of the page */
   width: 100%;
-  color: white;
-  z-index: 100000;
+  color: white !important;
+  margin-bottom: 1rem; // p-b-1
 }
 
-.jemmson-navbar div span a {
-  color: inherit;
-  padding-right: 2rem;
-  padding-left: 2rem;
-}
-
-.jemmson-navbar span a {
-  color: inherit;
-  padding-right: 2rem;
-  padding-left: 2rem;
-}
 
 .jemmson-footer {
-  //background-image: linear-gradient(to right, #161411, #82b690);
-  background-image: linear-gradient(to right, rgb(5, 17, 44), rgb(128, 156, 220));
-  height: 70px;
-  background-color: white;
+  background: linear-gradient(to right, #0a174b, #223dab) fixed;
+  height: 49pt;
   //border-bottom: solid black thin;
   overflow: hidden;
   position: fixed; /* Set the navbar to fixed position */
@@ -39,11 +28,31 @@
   z-index: 100000;
 }
 
-.jemmson-footer span a {
-  color: inherit;
-  padding-right: 1rem;
-  padding-left: 1rem;
+.jemmson-navbar > div {
+  margin: auto !important;
 }
+
+.jemmson-footer > div {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.jemmson-navbar > div > a {
+  color: white;
+}
+
+.jemmson-navbar > div > a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+}
+
+.jemmson-footer > div > a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+}
+
+.bell {
+  color: white !important;
+}
+
 
 @media (min-width: 300px) {
   .jemmson-navbar span a {
