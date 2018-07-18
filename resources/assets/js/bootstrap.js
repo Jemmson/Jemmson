@@ -27,6 +27,10 @@ window.Echo.private('App.User.' + Spark.state.user.id)
         Vue.toasted.info('A Task Has Been Finished!');
         Bus.$emit('bidUpdated');
         break;
+      case "App\\Notifications\\TaskApproved":
+        Vue.toasted.info('A Task Has Been Approved!');
+        Bus.$emit('bidUpdated');
+        break;
       case "App\\Notifications\\NotifyJobHasBeenApproved":
         console.log('bid initiated');
         Vue.toasted.info('A Job Has Been Approved!');
