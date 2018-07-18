@@ -72,7 +72,7 @@ export default class Language {
       'bid.sent': {
         sub: 'Waiting on Customer Approval',
         general: 'Waiting on Customer Approval',
-        customer: 'Waiting on Approval'
+        customer: 'Please Review and Approve'
       },
       'bid.declined': {
         sub: 'Waiting on Customer Approval - sub',
@@ -80,8 +80,8 @@ export default class Language {
         customer: 'Declined'
       },
       'job.approved': {
-        sub: 'Start Job',
-        general: 'Start Job',
+        sub: 'In Progress',
+        general: 'In Progress',
         customer: 'Approved'
       },
       'job.completed': {

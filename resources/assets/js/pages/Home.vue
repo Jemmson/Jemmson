@@ -31,7 +31,7 @@
                         <img class="m-r-4" src="img/bid2.png" alt="">
                         <div class="text-4xl font-black" v-if="bids.length === 0">No Current Bids</div>
                         <div class="text-4xl font-black" v-else-if="bids.length === 1">1 Bid</div>
-                        <div class="text-4xl font-black" v-else="">{{ bids.length }} Bids</div>
+                        <div class="text-4xl font-black" v-else>{{ bids.length }} Bids</div>
                     </div>
                     <div class="flex">
                         <div class="m-r-4 text-4xl font-black">Manage</div>
@@ -90,7 +90,7 @@
                             <img class="m-r-4" src="img/task.png" alt="">
                             <div class="text-4xl font-black" v-if="tasks.length === 0">No Current Tasks</div>
                             <div class="text-4xl font-black" v-else-if="tasks.length === 1">1 Task</div>
-                            <div class="text-4xl font-black" v-else="">{{ tasks.length }} Tasks</div>
+                            <div class="text-4xl font-black" v-else>{{ tasks.length }} Tasks</div>
                         </div>
                         <div class="flex">
                             <div class="m-r-4 text-4xl font-black">Manage</div>
@@ -178,7 +178,7 @@
                         <img class="m-r-4" src="img/invoice.png" alt="">
                         <div class="text-4xl font-black" v-if="invoices.length === 0">No Current Invoices</div>
                         <div class="text-4xl font-black" v-else-if="invoices.length === 1">1 Invoice</div>
-                        <div class="text-4xl font-black" v-else="">{{ invoices.length }} Invoices</div>
+                        <div class="text-4xl font-black" v-else>{{ invoices.length }} Invoices</div>
                     </div>
                     <div class="flex">
                         <div class="m-r-4 text-4xl font-black">Manage</div>
@@ -187,7 +187,7 @@
                 </div>
                 <hr>
             </div>
-            <div class="flex flex-col m-l-5 m-r-5" v-if="user.contractor.stripe_express !== null">
+            <div class="flex flex-col m-l-5 m-r-5" v-if="user.contractor !== null && user.contractor.stripe_express !== null">
                 <div class="flex justify-between">
                     <div class="flex">
                         <i class="fas fa-3x fa-money-bill-alt icon m-r-3"></i>
