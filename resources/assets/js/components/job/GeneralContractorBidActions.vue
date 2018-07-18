@@ -67,6 +67,8 @@
                 </button>
             </div>
         </div>
+        <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" :yes="mYes" :no="mNo">
+        </modal>
     </div>
 </template>
 
