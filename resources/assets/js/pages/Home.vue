@@ -187,7 +187,7 @@
                 </div>
                 <hr>
             </div>
-            <div class="flex flex-col m-l-5 m-r-5" v-if="user.contractor.stripe_express !== null">
+            <div class="flex flex-col m-l-5 m-r-5" v-if="user.contractor !== null && user.contractor.stripe_express !== null">
                 <div class="flex justify-between">
                     <div class="flex">
                         <i class="fas fa-3x fa-money-bill-alt icon m-r-3"></i>
