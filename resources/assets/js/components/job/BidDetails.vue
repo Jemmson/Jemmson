@@ -18,7 +18,7 @@
             </div>
 
             <div class="flex justify-between">
-                <span v-if="isCustomer">{{ bid.job_name }}</span>
+                <span v-if="isCustomer">{{ customerName }}</span>
                 <span v-else>{{ customerName }}</span>
                 <span>{{ bid.job_name }}</span>
                 <span>{{ agreedStartDate }}</span>

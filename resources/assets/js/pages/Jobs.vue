@@ -20,10 +20,15 @@
 
             <div class="" v-for="bid in paginated('sBids')" v-bind:key="bid.id"
                  style="z-index: 2;" @click="goToBid(bid.id)">
-                <div class="container justify-between justify-around card card-1 p-2">
-                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow text-center">{{ status(bid) }}</span>
+                <div class="container justify-between justify-around items-center card card-1 p-0" style="border-radius: 5px;">
+                    <span style="border-bottom-left-radius: 5px; border-top-left-radius: 5px;" :class="getLabelClass(bid.status)" class="text-white flex-grow text-center">{{ status(bid) }}</span>
                     <span :class="getLabelClass(bid.status)" class="text-white flex-grow" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</span>
                     <span :class="getLabelClass(bid.status)" class="text-white flex-grow">{{ jobName(bid.job_name) }}</span>
+                    <span style="border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+    background-color: lightsteelblue;">click to view</span>
                 </div>
             </div>
         </paginate>
