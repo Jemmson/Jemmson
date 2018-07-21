@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="add-task-modal" tabindex="-1" role="dialog" aria-labelledby="add-task-modal"
+    <div class="modal fade m-b-lg" id="add-task-modal" tabindex="-1" role="dialog" aria-labelledby="add-task-modal"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content styled">
@@ -14,105 +14,92 @@
                     <form role="form" class="wrapper">
 
 
-                        <div class="form-group wrapper-task-name" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
-                            <label for="taskName">Task Name</label>
-                            <input type="text" class="form-control" id="taskName" name="taskName" autofocus autocomplete="false"
-                                   v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
+                        <div class="flex justify-between flex-wrap">
+                            <div class="form-group wrapper-task-name"
+                                 :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
+                                <label for="taskName">Task Description</label>
+                                <input type="text" class="form-control" id="taskName" name="taskName" autofocus
+                                       autocomplete="false"
+                                       v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                  {{ addNewTaskForm.errors.get('taskName') }}
                                 </span>
-                            <div class="panel-footer" v-if="taskResults.length">
-                                <ul class="list-group">
-                                    <button class="list-group-item" v-for="result in taskResults" v-bind:key="result.id"
-                                            @click.prevent="fillTaskValues(result)">
-                                        {{ result.name }}
-                                    </button>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="form-group qty"
-                             :class="{'has-error': addNewTaskForm.errors.has('qty')}">
-                            <label for="qty">Quantity</label>
-                            <input type="number" class="form-control" min="1" id="qty"
-                                   name="qty" required v-model="addNewTaskForm.qty">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
-                                {{ addNewTaskForm.errors.get('qty') }}
-                            </span>
-                        </div>
-
-                        <div class="form-group qty-unit"
-                             :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
-                            <label for="qtyUnit">Quantity Unit</label>
-                            <input type="text" class="form-control" min="1" id="qtyUnit"
-                                   name="qtyUnit" v-model="addNewTaskForm.qtyUnit">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
-                                {{ addNewTaskForm.errors.get('qtyUnit') }}
-                            </span>
-                        </div>
-
-
-                        <div class="form-group customer-price"
-                             :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
-                            <label for="custTaskPrice">Unit Price For Customer</label>
-                            <input type="tel" class="form-control" id="custTaskPrice" name="taskPrice"
-                                   v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
-                            <div v-if="priceChange">
-                                <label for="acceptNewStandardPrice">Would you like for this to be the new standard
-                                    Price?</label>
-                                <div id="acceptNewStandardPrice" class="btn-group">
-                                    <button class="btn btn-sm btn-primary" @click.prevent="changePrice('Yes')">Yes
-                                    </button>
-                                    <button class="btn btn-sm btn-primary" @click.prevent="changePrice('No')">No
-                                    </button>
+                                <div class="panel-footer" v-if="taskResults.length">
+                                    <ul class="list-group">
+                                        <button class="list-group-item" v-for="result in taskResults"
+                                                v-bind:key="result.id"
+                                                @click.prevent="fillTaskValues(result)">
+                                            {{ result.name }}
+                                        </button>
+                                    </ul>
                                 </div>
                             </div>
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
+
+                            <div class="form-group customer-price"
+                                 :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
+                                <label for="custTaskPrice">Price</label>
+                                <input type="tel" class="form-control" id="custTaskPrice" name="taskPrice"
+                                       v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
+                                <div v-if="priceChange">
+                                    <label for="acceptNewStandardPrice">Would you like for this to be the new standard
+                                        Price?</label>
+                                    <div id="acceptNewStandardPrice" class="btn-group">
+                                        <button class="btn btn-sm btn-primary" @click.prevent="changePrice('Yes')">Yes
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" @click.prevent="changePrice('No')">No
+                                        </button>
+                                    </div>
+                                </div>
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
                                 {{ addNewTaskForm.errors.get('taskPrice') }}
                             </span>
+                            </div>
                         </div>
 
-                        <div class="form-group sub_sets_own_price_for_job"
-                             :class="{'has-error': addNewTaskForm.errors.has('sub_sets_own_price_for_job')}">
-                            <label for="sub_sets_own_price_for_job">Sub Sets Own Price?</label>
-                            <input type="checkbox" class="checkbox-inline accepted-checkbox" id="sub_sets_own_price_for_job"
-                                   name="sub_sets_own_price_for_job" required v-model="addNewTaskForm.sub_sets_own_price_for_job">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('sub_sets_own_price_for_job')">
-                                {{ addNewTaskForm.errors.get('sub_sets_own_price_for_job') }}
+                        <div class="flex justify-between flex-wrap">
+                            <div class="form-group qty"
+                                 :class="{'has-error': addNewTaskForm.errors.has('qty')}">
+                                <label for="qty">Quantity</label>
+                                <input type="number" class="form-control" min="1" id="qty"
+                                       name="qty" required v-model="addNewTaskForm.qty">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
+                                {{ addNewTaskForm.errors.get('qty') }}
                             </span>
+                            </div>
+
+                            <div class="form-group qty-unit"
+                                 :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
+                                <label for="qtyUnit">Item Label</label>
+                                <input type="text" class="form-control" min="1" id="qtyUnit"
+                                       placeholder="ex. ft, sq. ft, etc."
+                                       name="qtyUnit" v-model="addNewTaskForm.qtyUnit" :onblur="validateInput()">
+                                <span :class="{ error: hasQtyUnitError }" v-show="hasQtyUnitError">{{ qtyUnitErrorMessage }}</span>
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
+                                {{ addNewTaskForm.errors.get('qtyUnit') }}
+                            </span>
+                            </div>
                         </div>
 
-                        <div class="form-group sub-price"
-                             :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}"
-                             v-show="!addNewTaskForm.sub_sets_own_price_for_job">
-                        <label for="subTaskPrice">Unit Price For Sub</label>
-                            <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
-                                   v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
+                        <div class="flex justify-between flex-wrap">
+                            <div class="form-group sub-price"
+                                 :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
+                                <label for="subTaskPrice">Subcontractor Price</label>
+                                <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
+                                       v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
                                 {{ addNewTaskForm.errors.get('subTaskPrice') }}
                             </span>
-                        </div>
+                            </div>
 
-
-                        <div class="form-group start-date-flag"
-                             :class="{'has-error': addNewTaskForm.errors.has('start_when_accepted')}">
-                            <label for="start_when_accepted">Start Job When Customer Accepts Bid?</label>
-                            <input type="checkbox" class="checkbox-inline accepted-checkbox" id="start_when_accepted"
-                                   name="start_when_accepted" required v-model="addNewTaskForm.start_when_accepted">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('start_when_accepted')">
-                                {{ addNewTaskForm.errors.get('start_when_accepted') }}
-                            </span>
-                        </div>
-
-                        <div class="form-group start-date"
-                             :class="{'has-error': addNewTaskForm.errors.has('start_date')}"
-                             v-if="!addNewTaskForm.start_when_accepted">
-                            <label for="start_date">Start Date</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date" required
-                                   v-model="addNewTaskForm.start_date">
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">
+                            <div class="form-group start-date"
+                                 :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
+                                <label for="start_date">Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required
+                                       v-model="addNewTaskForm.start_date">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">
                                 {{ addNewTaskForm.errors.get('start_date') }}
                             </span>
+                            </div>
                         </div>
 
                         <div class="form-group customer-notes"
@@ -179,13 +166,15 @@
           area: this.bid.city,
           start_date: '',
           start_when_accepted: true,
-          sub_sets_own_price_for_job: true,
+          // sub_sets_own_price_for_job: true,
           useStripe: false,
           sub_message: '',
           customer_message: '',
           qty: 1,
           qtyUnit: '',
-          changePrice: false
+          changePrice: false,
+          qtyUnitErrorMessage: '',
+          hasQtyUnitError: false
         }),
         result: {
           resultReturned: false,
@@ -197,13 +186,23 @@
       }
     },
     methods: {
+      validateInput () {
+        // debugger;
+        if (this.addNewTaskForm.qtyUnit !== '' && !isNaN (this.addNewTaskForm.qtyUnit)) {
+          this.qtyUnitErrorMessage = 'numbers not allowed';
+          this.hasQtyUnitError = true;
+        } else {
+          this.qtyUnitErrorMessage = '';
+          this.hasQtyUnitError = false;
+        }
+      },
       formatPrice (price) {
         console.log (price)
         console.log (this.addNewTaskForm.taskPrice)
         Format.addDollarSign (this.addNewTaskForm, price);
-        let strippedTaskPrice = this.strippedTaskPrice(this.addNewTaskForm.taskPrice);
-        console.log(strippedTaskPrice)
-        console.log(this.result.standardCustomerTaskPrice)
+        let strippedTaskPrice = this.strippedTaskPrice (this.addNewTaskForm.taskPrice);
+        console.log (strippedTaskPrice)
+        console.log (this.result.standardCustomerTaskPrice)
         if (this.result.standardCustomerTaskPrice !== strippedTaskPrice &&
           this.result.resultReturned === true
         ) {
@@ -211,10 +210,10 @@
         }
       },
       strippedTaskPrice (taskPrice) {
-        if(taskPrice.charAt(0) === '$'){
-          return parseInt(taskPrice.substr(1));
+        if (taskPrice.charAt (0) === '$') {
+          return parseInt (taskPrice.substr (1));
         } else {
-          return parseInt(taskPrice);
+          return parseInt (taskPrice);
         }
       },
       getExistingTask () {
@@ -266,8 +265,8 @@
         this.priceChange = false
       },
       addNewTaskToBid () {
-        GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
-        this.clearTaskResults();
+        GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
+        this.clearTaskResults ();
       },
       // // showStripeToggle (jobTask) {
       // //   return User.isAssignedToMe (jobTask);
@@ -283,168 +282,174 @@
 
 <style scoped>
 
-    .styled {
-        margin-top: 10rem;
-        margin-bottom: 10rem;
+    .error {
+        color: red;
+        font-size: 12pt;
+        font-weight: 900;
     }
 
-    .wrapper {
-        display: grid;
-        grid-template-columns: repeat(12, [col-start] 1fr);
-        grid-column-gap: 7.5px;
-    }
+    /*.styled {*/
+    /*margin-top: 10rem;*/
+    /*margin-bottom: 10rem;*/
+    /*}*/
 
-    .wrapper > * {
-        grid-column: col-start / span 12;
-    }
+    /*.wrapper {*/
+    /*display: grid;*/
+    /*grid-template-columns: repeat(12, [col-start] 1fr);*/
+    /*grid-column-gap: 7.5px;*/
+    /*}*/
 
-    @media (min-width: 300px) {
+    /*.wrapper > * {*/
+    /*grid-column: col-start / span 12;*/
+    /*}*/
 
-        .wrapper-task-name {
-            grid-column: col-start / span 12;
-            grid-row: 1;
-        }
+    /*@media (min-width: 300px) {*/
 
-        .qty {
-            grid-column: col-start  / span 4;
-            grid-row: 2;
-        }
+    /*.wrapper-task-name {*/
+    /*grid-column: col-start / span 12;*/
+    /*grid-row: 1;*/
+    /*}*/
 
-        .qty-unit {
-            grid-column: col-start 5 / span 8;
-            grid-row: 2;
-        }
+    /*.qty {*/
+    /*grid-column: col-start  / span 4;*/
+    /*grid-row: 2;*/
+    /*}*/
 
-        .customer-price {
-            grid-column: col-start / span 12;
-            grid-row: 3;
+    /*.qty-unit {*/
+    /*grid-column: col-start 5 / span 8;*/
+    /*grid-row: 2;*/
+    /*}*/
 
-        }
+    /*.customer-price {*/
+    /*grid-column: col-start / span 12;*/
+    /*grid-row: 3;*/
 
-        .sub_sets_own_price_for_job {
-            grid-column: col-start 0 / span 6;
-            grid-row: 4;
+    /*}*/
 
-        }
+    /*.sub_sets_own_price_for_job {*/
+    /*grid-column: col-start 0 / span 6;*/
+    /*grid-row: 4;*/
 
-        .sub-price {
-            grid-column: col-start 7 / span 6;
-            grid-row: 4;
+    /*}*/
 
-        }
+    /*.sub-price {*/
+    /*grid-column: col-start 7 / span 6;*/
+    /*grid-row: 4;*/
 
-        .start-date-flag {
-            grid-column: col-start / span 6;
-            grid-row: 5;
+    /*}*/
 
-        }
+    /*.start-date-flag {*/
+    /*grid-column: col-start / span 6;*/
+    /*grid-row: 5;*/
 
-        .start-date {
-            grid-column: col-start 7 / span 6;
-            grid-row: 5;
+    /*}*/
 
-        }
+    /*.start-date {*/
+    /*grid-column: col-start 7 / span 6;*/
+    /*grid-row: 5;*/
 
-        .customer-notes {
-            grid-column: col-start / span 12;
-            grid-row: 6;
+    /*}*/
 
-        }
+    /*.customer-notes {*/
+    /*grid-column: col-start / span 12;*/
+    /*grid-row: 6;*/
 
-        .sub-notes {
-            grid-column: col-start / span 12;
-            grid-row: 7;
+    /*}*/
 
-        }
+    /*.sub-notes {*/
+    /*grid-column: col-start / span 12;*/
+    /*grid-row: 7;*/
 
-        .stripe-tag {
-            grid-column: col-start / span 6;
-            grid-row: 8;
+    /*}*/
 
-        }
+    /*.stripe-tag {*/
+    /*grid-column: col-start / span 6;*/
+    /*grid-row: 8;*/
 
-    }
+    /*}*/
 
-    @media (min-width: 500px) {
+    /*}*/
 
-        .wrapper-task-name {
-            grid-column: col-start / span 8;
-            grid-row: 1;
-        }
+    /*@media (min-width: 500px) {*/
 
-        .qty {
-            grid-column: col-start 9 / span 2;
-            grid-row: 1;
-        }
+    /*.wrapper-task-name {*/
+    /*grid-column: col-start / span 8;*/
+    /*grid-row: 1;*/
+    /*}*/
 
-        .qty-unit {
-            grid-column: col-start 11 / span 2;
-            grid-row: 1;
-        }
+    /*.qty {*/
+    /*grid-column: col-start 9 / span 2;*/
+    /*grid-row: 1;*/
+    /*}*/
 
-        .customer-price {
-            grid-column: col-start / span 6;
-            grid-row: 2;
+    /*.qty-unit {*/
+    /*grid-column: col-start 11 / span 2;*/
+    /*grid-row: 1;*/
+    /*}*/
 
-        }
+    /*.customer-price {*/
+    /*grid-column: col-start / span 6;*/
+    /*grid-row: 2;*/
 
-        .sub_sets_own_price_for_job {
-            grid-column: col-start 0 / span 6;
-            grid-row: 3;
-        }
+    /*}*/
 
-        .sub-price {
-            grid-column: col-start 7 / span 6;
-            grid-row: 3;
+    /*.sub_sets_own_price_for_job {*/
+    /*grid-column: col-start 0 / span 6;*/
+    /*grid-row: 3;*/
+    /*}*/
 
-        }
+    /*.sub-price {*/
+    /*grid-column: col-start 7 / span 6;*/
+    /*grid-row: 3;*/
 
-        .start-date-flag {
-            grid-column: col-start  / span 6;
-            grid-row: 4;
-        }
+    /*}*/
 
-        .start-date {
-            grid-column: col-start 7 / span 6;
-            grid-row: 4;
+    /*.start-date-flag {*/
+    /*grid-column: col-start  / span 6;*/
+    /*grid-row: 4;*/
+    /*}*/
 
-        }
+    /*.start-date {*/
+    /*grid-column: col-start 7 / span 6;*/
+    /*grid-row: 4;*/
 
-        .customer-notes {
-            grid-column: col-start / span 6;
-            grid-row: 5;
+    /*}*/
 
-        }
+    /*.customer-notes {*/
+    /*grid-column: col-start / span 6;*/
+    /*grid-row: 5;*/
 
-        .sub-notes {
-            grid-column: col-start 7 / span 6;
-            grid-row: 5;
+    /*}*/
 
-        }
+    /*.sub-notes {*/
+    /*grid-column: col-start 7 / span 6;*/
+    /*grid-row: 5;*/
 
-        .stripe-tag {
-            grid-column: col-start / span 6;
-            grid-row: 6;
+    /*}*/
 
-        }
-    }
+    /*.stripe-tag {*/
+    /*grid-column: col-start / span 6;*/
+    /*grid-row: 6;*/
 
-    .accepted-checkbox {
+    /*}*/
+    /*}*/
 
-    }
+    /*.accepted-checkbox {*/
 
-    .qty-wrapper {
-        display: grid;
-        grid-template-columns: 33rem 7rem 12rem;
-        grid-gap: 2rem;
-        grid-auto-flow: column;
-    }
+    /*}*/
 
-    .price-wrapper {
-        display: grid;
-        grid-template-columns: 16rem 19rem;
-        grid-gap: 2rem;
-    }
+    /*.qty-wrapper {*/
+    /*display: grid;*/
+    /*grid-template-columns: 33rem 7rem 12rem;*/
+    /*grid-gap: 2rem;*/
+    /*grid-auto-flow: column;*/
+    /*}*/
+
+    /*.price-wrapper {*/
+    /*display: grid;*/
+    /*grid-template-columns: 16rem 19rem;*/
+    /*grid-gap: 2rem;*/
+    /*}*/
 
     /*.task-name {*/
     /*grid-area: theTaskName*/
