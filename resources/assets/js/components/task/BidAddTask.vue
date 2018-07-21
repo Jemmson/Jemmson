@@ -38,7 +38,7 @@
                             <div class="form-group customer-price"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                                 <label for="custTaskPrice">Price</label>
-                                <input type="tel" class="form-control" id="custTaskPrice" name="taskPrice"
+                                <input type="tel" class="form-control" step="0.01" id="custTaskPrice" name="taskPrice"
                                        v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
                                 <div v-if="priceChange">
                                     <label for="acceptNewStandardPrice">Would you like for this to be the new standard
