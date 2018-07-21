@@ -69,7 +69,7 @@
 
                             <div class="form-group qty-unit"
                                  :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
-                                <label for="qtyUnit">Item Label</label>
+                                <label for="qtyUnit">Quanity Description</label>
                                 <input type="text" class="form-control" min="1" id="qtyUnit"
                                        placeholder="ex. ft, sq. ft, etc."
                                        name="qtyUnit" v-model="addNewTaskForm.qtyUnit" :onblur="validateInput()">
@@ -159,8 +159,8 @@
           taskId: -1,  // if -1 then the task did not come from the drop down
           taskExists: '',
           jobId: this.bid.id,
-          subTaskPrice: 0,
-          taskPrice: 0,
+          subTaskPrice: 0.0,
+          taskPrice: 0.0,
           taskName: '',
           contractorId: '',
           area: this.bid.city,
@@ -178,8 +178,8 @@
         }),
         result: {
           resultReturned: false,
-          standardCustomerTaskPrice: 0,
-          standardSubTaskPrice: 0
+          standardCustomerTaskPrice: 0.0,
+          standardSubTaskPrice: 0.0
         },
         priceChange: false,
         taskResults: [],
