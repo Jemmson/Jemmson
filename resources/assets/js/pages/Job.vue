@@ -153,6 +153,7 @@
           const {
             data
           } = await axios.get('/job/' + id);
+          // debugger
           this.bid = data;
         } catch (error) {
           error = error.response.data;

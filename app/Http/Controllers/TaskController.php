@@ -582,7 +582,9 @@ class TaskController extends Controller
             Log::error('Updating JobTask: ' . $e->getMessage);
         }
 
-        $job->addPrice($price - $oldPrice);
+        $job->jobTotal();
+
+//        $job->addPrice($price - $oldPrice);
 
         $data = ["price" => $price, "taskId" => $taskId];
         $data = json_encode($data);
@@ -680,11 +682,13 @@ class TaskController extends Controller
         // ****************************
         // Set Job Price
         // ****************************
-        if (!empty($request->qty)) {
-            $job->addPrice(($request->taskPrice * $request->qty));
-        } else {
-            $job->addPrice(($request->taskPrice * 1));
-        }
+//        $job->jobTotal();
+
+//        if (!empty($request->qty)) {
+//            $job->addPrice(($request->taskPrice * $request->qty));
+//        } else {
+//            $job->addPrice(($request->taskPrice * 1));
+//        }
 
 
         // ****************************
@@ -739,6 +743,8 @@ class TaskController extends Controller
 //            $jobTask = $task->jobTask()->first();
 //            $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
 //        }
+
+        $job->jobTotal();
     }
 
     /**
