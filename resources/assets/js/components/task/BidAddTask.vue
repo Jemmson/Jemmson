@@ -14,8 +14,8 @@
                     <form role="form" class="wrapper">
 
 
-                        <div class="flex justify-between flex-wrap">
-                            <div class="form-group wrapper-task-name"
+                        <div class="flex m-t-2">
+                            <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                                 <label for="taskName">Task Description</label>
                                 <input type="text" class="form-control" id="taskName" name="taskName" autofocus
@@ -35,10 +35,10 @@
                                 </div>
                             </div>
 
-                            <div class="form-group customer-price"
+                            <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                                 <label for="custTaskPrice">Price</label>
-                                <input type="tel" class="form-control" step="0.01" id="custTaskPrice" name="taskPrice"
+                                <input type="number" class="form-control" id="custTaskPrice" name="taskPrice"
                                        v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
                                 <div v-if="priceChange">
                                     <label for="acceptNewStandardPrice">Would you like for this to be the new standard
@@ -56,8 +56,8 @@
                             </div>
                         </div>
 
-                        <div class="flex justify-between flex-wrap">
-                            <div class="form-group qty"
+                        <div class="flex m-t-2">
+                            <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('qty')}">
                                 <label for="qty">Quantity</label>
                                 <input type="number" class="form-control" min="1" id="qty"
@@ -67,7 +67,7 @@
                             </span>
                             </div>
 
-                            <div class="form-group qty-unit"
+                            <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
                                 <label for="qtyUnit">Quanity Description</label>
                                 <input type="text" class="form-control" min="1" id="qtyUnit"
@@ -80,8 +80,8 @@
                             </div>
                         </div>
 
-                        <div class="flex justify-between flex-wrap">
-                            <div class="form-group sub-price"
+                        <div class="flex m-t-2">
+                            <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
                                 <label for="subTaskPrice">Subcontractor Price</label>
                                 <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
@@ -91,7 +91,7 @@
                             </span>
                             </div>
 
-                            <div class="form-group start-date"
+                            <div class="flex-1"
                                  :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
                                 <label for="start_date">Start Date</label>
                                 <input type="date" class="form-control" id="start_date" name="start_date" required
@@ -102,26 +102,28 @@
                             </div>
                         </div>
 
-                        <div class="form-group customer-notes"
-                             :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
-                            <label for="customer_message">Details For Customer To See</label>
-                            <textarea class="form-control" id="customer_message" name="customer_message"
-                                      v-model="addNewTaskForm.customer_message">
+                        <div class="flex flex-col m-t-4">
+                            <div class="form-group customer-notes"
+                                 :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
+                                <label for="customer_message">Details For Customer To See</label>
+                                <textarea class="form-control" id="customer_message" name="customer_message"
+                                          v-model="addNewTaskForm.customer_message">
                             </textarea>
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('customer_message')">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('customer_message')">
                                 {{ addNewTaskForm.errors.get('customer_message') }}
                             </span>
-                        </div>
+                            </div>
 
-                        <div class="form-group sub-notes"
-                             :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
-                            <label for="sub_message">Details For Sub To See</label>
-                            <textarea class="form-control" id="sub_message" name="sub_message"
-                                      v-model="addNewTaskForm.sub_message">
+                            <div class="form-group sub-notes"
+                                 :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
+                                <label for="sub_message">Details For Sub To See</label>
+                                <textarea class="form-control" id="sub_message" name="sub_message"
+                                          v-model="addNewTaskForm.sub_message">
                             </textarea>
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
+                                <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
                                 {{ addNewTaskForm.errors.get('sub_message') }}
                             </span>
+                            </div>
                         </div>
 
                         <!-- <div class="stripe-tag">
@@ -244,7 +246,9 @@
         } else {
           this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
         }
-        this.addNewTaskForm.qtyUnit = result.qtyUnit;
+        if (result.qtyUnit !== null) {
+          this.addNewTaskForm.qtyUnit = result.qtyUnit;
+        }
         this.formatPrice ('taskPrice');
         this.formatPrice ('subTaskPrice');
         this.result.resultReturned = true
