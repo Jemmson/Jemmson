@@ -56,7 +56,7 @@ Route::post('/search/task', function (Request $request) {
     $jobId = $request->jobId;
     $job = \App\Job::find($jobId);
     $tasks = DB::select("select * from tasks where id not in 
-                (SELECT jt.task_id from tasks t join job_task jt on jt.task_id = t.id and t.job_id=".$jobId." and deleted_at = null) 
+                (SELECT jt.task_id from tasks t join job_task jt on jt.task_id = t.id and deleted_at = null) 
                 and contractor_id = ".$job->contractor_id." and name like '%".$request->taskname."%'");
     return $tasks;
 });
