@@ -100,8 +100,6 @@ export default class GeneralContractor {
     }
   }
 
-
-
   // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
 
   async initiateBid (form, disabled) {
@@ -187,6 +185,19 @@ export default class GeneralContractor {
       Vue.toasted.error ('Error: ' + error.message);
       disabled.invite = false;
     });
+  }
+
+  async updateCustomerTaskQuantity (quantity, taskId) {
+    try {
+      const data = await axios.post ('/api/task/updateTaskQuantity', {
+        quantity: quantity,
+        taskId: taskId
+      });
+      User.emitChange ('bidUpdated');
+      Vue.toasted.success (Language.lang ().bid_task.quantity_updated.general);
+    } catch (error) {
+      Vue.toasted.error ('Error: ' + error.message);
+    }
   }
 
   updateCustomerPrice (price, jobTaskId, jobId) {

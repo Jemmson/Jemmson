@@ -107,6 +107,11 @@ export default class Language {
           sub: '',
           general: 'Task Price Successfully Updated',
           customer: ''
+        },
+        quantity_updated: {
+          sub: '',
+          general: 'Task Quantity Successfully Updated',
+          customer: ''
         }
       },
       modal: {

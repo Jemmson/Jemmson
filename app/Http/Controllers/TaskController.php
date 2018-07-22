@@ -560,6 +560,33 @@ class TaskController extends Controller
         // change the status of the job to pending
     }
 
+    public function updateTaskQuantity(Request $request)
+    {
+
+
+        $this->validateRequest($request, [
+            'quantity' => 'required|numeric',
+            'taskId' => 'required|numeric'
+        ]);
+
+        $quantity = $request->quantity;
+        $taskId = $request->taskId;
+
+        $jobTask = JobTask::find($taskId);
+        $job = Job::find($jobTask->job_id);
+
+        try {
+            $jobTask->qty = $quantity;
+            $jobTask->save();
+        } catch (\Excpetion $e) {
+            Log::error('Updating JobTask: ' . $e->getMessage);
+            return 'Updating JobTask: ' . $e->getMessage;
+        }
+
+        $job->jobTotal();
+
+    }
+
     public function updateCustomerPrice(Request $request)
     {
         $this->validate($request, [

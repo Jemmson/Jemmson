@@ -193,8 +193,6 @@ class JobController extends Controller
             ]
         );
 
-        $job->jobTotal();
-
         return $job;
     }
 

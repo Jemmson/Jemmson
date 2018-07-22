@@ -52918,6 +52918,16 @@ a:active {
   position: static;
   width: auto;
 }
+.dollarSign {
+  margin-right: 2px;
+  font-size: 18pt;
+  padding-right: .2rem;
+  background-color: lightgrey;
+  padding-left: .2rem;
+  border-radius: 5px;
+  width: 30px;
+  text-align: center;
+}
 html {
   min-height: 100%;
 }

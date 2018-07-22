@@ -85,6 +85,7 @@ Route::put('bid/task/{id}', 'TaskController@updateBidContractorJobTask');
 Route::post('/task/notify', 'TaskController@notify');
 Route::post('/task/notifyAcceptedBid', 'TaskController@notifyAcceptedBid');
 Route::post('/task/updateTaskName', 'TaskController@updateTaskName');
+Route::post('/task/updateTaskQuantity', 'TaskController@updateTaskQuantity');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
