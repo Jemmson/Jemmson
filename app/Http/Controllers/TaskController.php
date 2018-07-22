@@ -613,7 +613,7 @@ class TaskController extends Controller
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
             //            'sub_sets_own_price_for_job' => 'required',
-            'start_date' => 'required_if:start_when_accepted,false|date|after:today',
+            'start_date' => 'required_if:start_when_accepted,false|date|after:yesterday',
             'qty' => 'numeric',
             'qtyUnit' => 'nullable|string'
         ]);
@@ -678,34 +678,8 @@ class TaskController extends Controller
 
         }
 
-
-        // ****************************
-        // Set Job Price
-        // ****************************
-//        $job->jobTotal();
-
-//        if (!empty($request->qty)) {
-//            $job->addPrice(($request->taskPrice * $request->qty));
-//        } else {
-//            $job->addPrice(($request->taskPrice * 1));
-//        }
-
-
-        // ****************************
-        // Sub Sets own Price for job
-        //
-        // if you want to have the sub set their own price then
-        // $request->sub_sets_own_price_for_job == true
-        // if the subTaskPrice = 0 then $task->proposed_sub_price = 0;
-        // ****************************
-        if (!$request->sub_sets_own_price_for_job || $request->subTaskPrice == 0) {       // set sub price
-            $task->proposed_sub_price = 0;
-        } else {
-            $task->proposed_sub_price = $request->subTaskPrice;
-        }
-
-        $task->job_id = $job_id;  // set job ID
-
+        $task->proposed_sub_price = $request->subTaskPrice;
+        $task->qtyUnit = $request->qtyUnit;
 
         // ****************************
         // Save the Changes to the Task Table
@@ -733,6 +707,8 @@ class TaskController extends Controller
 
         $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
 
+        $job->jobTotal();
+
         return response()->json($job->tasks()->get(), 200);
 
 
@@ -743,8 +719,6 @@ class TaskController extends Controller
 //            $jobTask = $task->jobTask()->first();
 //            $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
 //        }
-
-        $job->jobTotal();
     }
 
     /**

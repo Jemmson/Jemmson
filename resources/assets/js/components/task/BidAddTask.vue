@@ -18,9 +18,11 @@
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                                 <label for="taskName">Task Description</label>
+
                                 <input type="text" class="form-control" id="taskName" name="taskName" autofocus
                                        autocomplete="false"
                                        v-model="addNewTaskForm.taskName" v-on:keyup="getExistingTask">
+
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                  {{ addNewTaskForm.errors.get('taskName') }}
                                 </span>
@@ -38,8 +40,14 @@
                             <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                                 <label for="custTaskPrice">Price</label>
-                                <input type="number" class="form-control" id="custTaskPrice" name="taskPrice"
-                                       v-model="addNewTaskForm.taskPrice" @blur="formatPrice('taskPrice')">
+                                <div class="flex items-center">
+                                    <span class="dollarSign">$</span>
+                                    <input type="text" class="form-control"
+                                           id="custTaskPrice"
+                                           name="taskPrice"
+                                           autocomplete="text"
+                                           v-model="addNewTaskForm.taskPrice" @blur="formatPrice($event.target.value)">
+                                </div>
                                 <div v-if="priceChange">
                                     <label for="acceptNewStandardPrice">Would you like for this to be the new standard
                                         Price?</label>
@@ -84,8 +92,13 @@
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
                                 <label for="subTaskPrice">Subcontractor Price</label>
-                                <input type="tel" class="form-control" id="subTaskPrice" name="subTaskPrice"
-                                       v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
+                                <div class="flex items-center">
+                                    <span class="dollarSign">$</span>
+                                    <input type="text"
+                                           autocomplete="text"
+                                           class="form-control" id="subTaskPrice" name="subTaskPrice"
+                                           v-model="addNewTaskForm.subTaskPrice" @blur="formatPrice('subTaskPrice')">
+                                </div>
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
                                 {{ addNewTaskForm.errors.get('subTaskPrice') }}
                             </span>
@@ -199,17 +212,33 @@
         }
       },
       formatPrice (price) {
-        console.log (price)
-        console.log (this.addNewTaskForm.taskPrice)
-        Format.addDollarSign (this.addNewTaskForm, price);
-        let strippedTaskPrice = this.strippedTaskPrice (this.addNewTaskForm.taskPrice);
-        console.log (strippedTaskPrice)
-        console.log (this.result.standardCustomerTaskPrice)
-        if (this.result.standardCustomerTaskPrice !== strippedTaskPrice &&
+
+        // debugger
+
+        // want to add a $ to the number
+        // Format.addDollarSign (this.addNewTaskForm, price);
+
+        // send flag that the price has been changed
+        if (this.result.standardCustomerTaskPrice !== price &&
           this.result.resultReturned === true
         ) {
           this.priceChange = true
         }
+
+        //
+        //
+        // console.log (price)  //
+        // console.log (this.addNewTaskForm.taskPrice)
+        //
+        // let strippedTaskPrice = this.strippedTaskPrice (this.addNewTaskForm.taskPrice);
+        //
+        //
+        // console.log (strippedTaskPrice)
+        //
+        //
+        // console.log (this.result.standardCustomerTaskPrice)
+
+
       },
       strippedTaskPrice (taskPrice) {
         if (taskPrice.charAt (0) === '$') {
@@ -269,8 +298,10 @@
         this.priceChange = false
       },
       addNewTaskToBid () {
-        GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
-        this.clearTaskResults ();
+        if(!this.hasQtyUnitError){
+          GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
+          this.clearTaskResults ();
+        }
       },
       // // showStripeToggle (jobTask) {
       // //   return User.isAssignedToMe (jobTask);
