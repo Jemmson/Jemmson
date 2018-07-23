@@ -119,14 +119,13 @@
                     </task-images>
 
                     <div>
-                        <div v-if="showSubMessage(jobTask.sub_message) ||
-                               showCustomerMessage(jobTask.customer_message)"
+                        <div
                              class="messageHeader">Messages
                         </div>
 
                         <div class="flex flex-col">
                             <div class="container">
-                                <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
+                                <div class="flex flex-col items-center box">
                                     <span>Subcontractor</span>
                                     <textarea
                                             cols="0"
@@ -141,7 +140,7 @@
                                     <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
                                     <!--:value="jobTask.sub_message">-->
                                 </div>
-                                <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
+                                <div class="flex flex-col items-center box">
                                     <span>Customer</span>
                                     <textarea
                                             cols="0"
