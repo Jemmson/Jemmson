@@ -6,33 +6,30 @@
             <div class="container">
 
                 <!-- / status -->
-                <div class="card card-1" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id"
+                <div class="card card-1 flex flex-col" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id"
                      :id="'task-' + jobTask.id">
-                    <span for="task-status" class="flex
-                                                   justify-center
-                                                   text-xl
-                                                   rounded
-                                                   m-l-24
-                                                   m-r-24
-                                                   p-1
-                                                   text-white"
-                          :class="getLabelClass(jobTask.status)">
-                      {{ status(jobTask.status) }}
-                    </span>
+                    <div for="task-status" class="flex
+                                                  justify-center
+                                                  text-xl
+                                                  rounded
+                                                  m-l-24
+                                                  m-r-24
+                                                  p-1
+                                                  text-white"
+                         :class="getLabelClass(jobTask.status)">{{ status(jobTask.status) }}</div>
 
 
                     <!-- task name-->
-                    <span class="flex
+                    <div class="flex
                                  justify-center
                                  text-2xl
                                  rounded
                                  m-l-24
                                  m-r-24
                                  p-1
-                                 text-black">
+                                 text-black" style="font-size: 20pt">
                         {{ jobTask.task.name }}
-                    </span>
-
+                    </div>
 
                     <!-- Task Prices -->
 
@@ -61,8 +58,7 @@
                         </div>
                     </div>
 
-
-                    <div class="flex justify-around m-l-2 m-r-2">
+                    <div class="flex justify-around m-l-2 m-r-2 m-b-10">
                         <div class="flex flex-col">
                             <label>Quantity:</label>
                             <input type="text" class="form-control" v-if="showTaskPriceInput()"
@@ -83,8 +79,7 @@
                         </div>
                     </div>
 
-
-                    <div class="flex justify-around">
+                    <div class="flex justify-around m-b-10">
                         <div>
                             <span v-if="location(jobTask, bid) === 'No Address Set Yet'">
                             <!--No Address Set Yet-->
@@ -120,42 +115,46 @@
                         </div>
                     </div>
 
-                    <div v-if="showSubMessage(jobTask.sub_message) ||
+                    <task-images :jobTask="jobTask" type="notsub">
+                    </task-images>
+
+                    <div>
+                        <div v-if="showSubMessage(jobTask.sub_message) ||
                                showCustomerMessage(jobTask.customer_message)"
-                         class="messageHeader">Messages
-                    </div>
+                             class="messageHeader">Messages
+                        </div>
 
-                    <div class="flex flex-col">
-                        <div class="container">
-                            <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
-                                <span>Subcontractor</span>
-                                <textarea
-                                        cols="0"
-                                        rows="0"
-                                        class="form-control"
-                                        @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
-                                >{{ jobTask.sub_message }}</textarea>
+                        <div class="flex flex-col">
+                            <div class="container">
+                                <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
+                                    <span>Subcontractor</span>
+                                    <textarea
+                                            cols="0"
+                                            rows="0"
+                                            class="form-control"
+                                            @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
+                                    >{{ jobTask.sub_message }}</textarea>
 
-                                <!--<input-->
-                                <!--type="text"-->
-                                <!--class="form-control"-->
-                                <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
-                                <!--:value="jobTask.sub_message">-->
-                            </div>
-                            <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
-                                <span>Customer</span>
-                                <textarea
-                                        cols="0"
-                                        rows="0"
-                                        class="form-control"
-                                        @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
-                                >{{ jobTask.customer_message }}</textarea>
+                                    <!--<input-->
+                                    <!--type="text"-->
+                                    <!--class="form-control"-->
+                                    <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
+                                    <!--:value="jobTask.sub_message">-->
+                                </div>
+                                <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
+                                    <span>Customer</span>
+                                    <textarea
+                                            cols="0"
+                                            rows="0"
+                                            class="form-control"
+                                            @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
+                                    >{{ jobTask.customer_message }}</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-
-                    <div class="flex justify-around">
+                    <div class="flex justify-around m-t-6 m-b-6">
 
                         <div v-if="isContractor">
                             <button class="bg-blue
@@ -181,7 +180,7 @@
                                             text-white
                                             rounded-lg"
                                     @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
-                                Display Invited Subs
+                                Display Subs
                             </button>
 
                         </div>
@@ -254,9 +253,6 @@
 
                     </div>
 
-                    <task-images :jobTask="jobTask" type="notsub">
-                    </task-images>
-
                     <div>
                         <div v-if="showPanelActions(jobTask.status)">
                             <transition-group name="slide-fade" v-if="isContractor">
@@ -306,6 +302,7 @@
 
                 </div>
             </div>
+
         </paginate>
 
 

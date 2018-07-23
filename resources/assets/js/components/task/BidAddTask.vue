@@ -13,7 +13,6 @@
                 <div class="modal-body">
                     <form role="form" class="wrapper">
 
-
                         <div class="flex m-t-2">
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">

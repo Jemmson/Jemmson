@@ -1,5 +1,31 @@
 <template>
     <div class="container">
+
+
+        <!--<div class="flex flex-col items-center">-->
+            <!--<h2>Task Images</h2>-->
+            <!--<label for="task-name" v-if="jobTask.task !== undefined">{{ jobTask.task.name }}</label>-->
+
+
+            <!--<div class="" v-for="(image, index) of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">-->
+                <!--<div class="image-ct">-->
+                    <!--<a class="lightbox" @click.prevent="openImage(image.id)">-->
+                        <!--<img :src="image.url" alt="">-->
+                    <!--</a>-->
+                    <!--<button class="btn btn-danger image-btn" :id="'image-' + image.id" @click="deleteImage(image.id, index)">-->
+                        <!--<i class="fas fa-trash-alt"></i>-->
+                    <!--</button>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; lightbox container hidden with CSS &ndash;&gt;-->
+                <!--<a class="lightbox-target" :id="'image' + image.id">-->
+                    <!--<img :src="image.url" class="" :id="'image-img' + image.id">-->
+                    <!--<a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-1">

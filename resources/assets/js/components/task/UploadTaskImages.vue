@@ -1,35 +1,37 @@
 <template>
-    <div>
-        <div class="col-xs-4" v-if="showTaskImage1(jobTask)">
-            <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
-                <img :src="jobTask.images[jobTask.images.length - 1].url" alt="">
-            </a>
-            <!-- lightbox container hidden with CSS -->
-            <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 1].id">
-                <img :src="jobTask.images[jobTask.images.length - 1].url" :id="'image-img' + jobTask.images[jobTask.images.length - 1].id">
-                <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 1].id" @click.prevent="closeImage(jobTask.images[jobTask.images.length - 1].id)"></a>
-            </a>
-        </div>
+    <div class="flex flex-col">
+        <div class="flex justify-around">
+            <div class="" v-if="showTaskImage1(jobTask)">
+                <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
+                    <img :src="jobTask.images[jobTask.images.length - 1].url" alt="">
+                </a>
+                <!-- lightbox container hidden with CSS -->
+                <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 1].id">
+                    <img :src="jobTask.images[jobTask.images.length - 1].url" :id="'image-img' + jobTask.images[jobTask.images.length - 1].id">
+                    <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 1].id" @click.prevent="closeImage(jobTask.images[jobTask.images.length - 1].id)"></a>
+                </a>
+            </div>
 
-        <div class="col-xs-4" v-if="showTaskImage2(jobTask)">
-            <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
-                <img :src="jobTask.images[jobTask.images.length - 2].url" alt="">
-            </a>
-            <!-- lightbox container hidden with CSS -->
-            <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 2].id">
-                <img :src="jobTask.images[jobTask.images.length - 2].url" :id="'image-img' + jobTask.images[jobTask.images.length - 2].id">
-                <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 2].id" @click.prevent="closeImage(jobTask.images[jobTask.images.length - 2].id)"></a>
-            </a>
-        </div>
+            <div class="" v-if="showTaskImage2(jobTask)">
+                <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
+                    <img :src="jobTask.images[jobTask.images.length - 2].url" alt="">
+                </a>
+                <!-- lightbox container hidden with CSS -->
+                <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 2].id">
+                    <img :src="jobTask.images[jobTask.images.length - 2].url" :id="'image-img' + jobTask.images[jobTask.images.length - 2].id">
+                    <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 2].id" @click.prevent="closeImage(jobTask.images[jobTask.images.length - 2].id)"></a>
+                </a>
+            </div>
 
-        <div class="col-xs-4" v-if="showMoreImagesBtn(jobTask)">
-            <a class="lightbox" :href="'/#/task/' + jobTask.id + '/images'">
-                <img :src="'/img/more.png'" alt="">
-            </a>
+            <div class="" v-if="showMoreImagesBtn(jobTask)">
+                <a class="lightbox" :href="'/#/task/' + jobTask.id + '/images'">
+                    <img :src="'/img/more.png'" alt="">
+                </a>
+            </div>
         </div>
         <!-- / end task images preview -->
 
-        <div class="col-xs-12">
+        <div class="">
             <!-- upload images -->
             <div class="form-group">
                 <label class="col-md-6 control-label">&nbsp;</label>
