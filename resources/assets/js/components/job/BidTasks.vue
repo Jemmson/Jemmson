@@ -149,6 +149,7 @@
                                             @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
                                     >{{ jobTask.customer_message }}</textarea>
                                 </div>
+                                <button class="btn btn-success btn-large m-t-3">Send</button>
                             </div>
                         </div>
                     </div>
