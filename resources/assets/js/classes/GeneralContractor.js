@@ -187,6 +187,20 @@ export default class GeneralContractor {
     });
   }
 
+  async updateMessage (message, jobTaskId, actor) {
+    try {
+      const data = await axios.post ('/api/task/updateMessage', {
+        message: message,
+        jobTaskId: jobTaskId,
+        actor: actor
+      });
+      User.emitChange ('bidUpdated');
+      Vue.toasted.success (Language.lang ().bid_task.message_updated.general);
+    } catch (error) {
+      Vue.toasted.error ('Error: ' + error.message);
+    }
+  }
+
   async updateCustomerTaskQuantity (quantity, taskId) {
     try {
       const data = await axios.post ('/api/task/updateTaskQuantity', {

@@ -112,6 +112,11 @@ export default class Language {
           sub: '',
           general: 'Task Quantity Successfully Updated',
           customer: ''
+        },
+        message_updated: {
+          sub: '',
+          general: 'Your Message has been Successfully Updated',
+          customer: ''
         }
       },
       modal: {

@@ -80,8 +80,8 @@
                                 <label for="qtyUnit">Quanity Description</label>
                                 <input type="text" class="form-control" min="1" id="qtyUnit"
                                        placeholder="ex. ft, sq. ft, etc."
-                                       name="qtyUnit" v-model="addNewTaskForm.qtyUnit" :onblur="validateInput()">
-                                <span :class="{ error: hasQtyUnitError }" v-show="hasQtyUnitError">{{ qtyUnitErrorMessage }}</span>
+                                       name="qtyUnit" v-model="addNewTaskForm.qtyUnit" @onblur="validateInput()">
+                                <span :class="{ error: addNewTaskForm.hasQtyUnitError }" v-show="addNewTaskForm.hasQtyUnitError">{{ addNewTaskForm.qtyUnitErrorMessage }}</span>
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
                                 {{ addNewTaskForm.errors.get('qtyUnit') }}
                             </span>
@@ -204,11 +204,11 @@
       validateInput () {
         // debugger;
         if (this.addNewTaskForm.qtyUnit !== '' && !isNaN (this.addNewTaskForm.qtyUnit)) {
-          this.qtyUnitErrorMessage = 'numbers not allowed';
-          this.hasQtyUnitError = true;
+          this.addNewTaskForm.qtyUnitErrorMessage = 'numbers not allowed';
+          this.addNewTaskForm.hasQtyUnitError = true;
         } else {
-          this.qtyUnitErrorMessage = '';
-          this.hasQtyUnitError = false;
+          this.addNewTaskForm.qtyUnitErrorMessage = '';
+          this.addNewTaskForm.hasQtyUnitError = false;
         }
       },
       formatPrice (price) {
@@ -298,7 +298,7 @@
         this.priceChange = false
       },
       addNewTaskToBid () {
-        if(!this.hasQtyUnitError){
+        if(!this.addNewTaskForm.hasQtyUnitError){
           GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
           this.clearTaskResults ();
         }

@@ -61,8 +61,8 @@
                         </div>
                     </div>
 
-                    <div class="divider2"></div>
-                    <div class="flex justify-around">
+
+                    <div class="flex justify-around m-l-2 m-r-2">
                         <div class="flex flex-col">
                             <label>Quantity:</label>
                             <input type="text" class="form-control" v-if="showTaskPriceInput()"
@@ -81,8 +81,228 @@
                                        @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
                             </div>
                         </div>
+                    </div>
+
+
+                    <div class="flex justify-around">
+                        <div>
+                            <span v-if="location(jobTask, bid) === 'No Address Set Yet'">
+                            <!--No Address Set Yet-->
+                              <i class="fas fa-map-marker icon"></i>
+                              {{ location(jobTask, bid) }}
+                            </span>
+                            <div class="flex justify-around items-center"
+                                 v-else-if="location(jobTask, bid) === 'Same as Job Location'">
+                                <span>Change Task Location</span>
+                                <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div v-else class="flex justify-around items-center">
+                                <a target="_blank"
+                                   :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, bid)">
+                                    <i class="fas fa-map-marker icon"></i>
+                                    {{ location(jobTask, bid) }}
+                                </a>
+                                <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center" v-if="isContractor">
+                            <i class="fas fa-clock icon m-r-2"></i>
+                            <input type="date" class="form-control form-control-date" style=""
+                                   v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
+                                   @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
+                            <label v-if="isCustomer || !showTaskStartDate()">
+                                {{prettyDate(jobTask.start_date)}} </label>
+                        </div>
+                    </div>
+
+                    <div v-if="showSubMessage(jobTask.sub_message) ||
+                               showCustomerMessage(jobTask.customer_message)"
+                         class="messageHeader">Messages
+                    </div>
+
+                    <div class="flex flex-col">
+                        <div class="container">
+                            <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
+                                <span>Subcontractor</span>
+                                <textarea
+                                        cols="0"
+                                        rows="0"
+                                        class="form-control"
+                                        @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
+                                >{{ jobTask.sub_message }}</textarea>
+
+                                <!--<input-->
+                                <!--type="text"-->
+                                <!--class="form-control"-->
+                                <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
+                                <!--:value="jobTask.sub_message">-->
+                            </div>
+                            <div class="flex flex-col items-center box" v-if="showSubMessage(jobTask.sub_message)">
+                                <span>Customer</span>
+                                <textarea
+                                        cols="0"
+                                        rows="0"
+                                        class="form-control"
+                                        @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
+                                >{{ jobTask.customer_message }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex justify-around">
+
+                        <div v-if="isContractor">
+                            <button class="bg-blue
+                                            p-r-4
+                                            p-l-4
+                                            p-t-1
+                                            p-b-1
+                                            m-t-2
+                                            text-center
+                                            text-white
+                                            rounded-lg"
+                                    @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
+                                Add A Sub
+                            </button>
+
+                            <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="bg-blue
+                                            p-r-4
+                                            p-l-4
+                                            p-t-1
+                                            p-b-1
+                                            m-t-2
+                                            text-center
+                                            text-white
+                                            rounded-lg"
+                                    @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
+                                Display Invited Subs
+                            </button>
+
+                        </div>
+
+                        <button class="bg-blue
+                                        p-r-4
+                                        p-l-4
+                                        p-t-1
+                                        p-b-1
+                                        m-t-2
+                                        text-center
+                                        text-white
+                                        rounded-lg"
+                                v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                            Deny
+                        </button>
+
+                        <button class="bg-blue
+                                        p-r-4
+                                        p-l-4
+                                        p-t-1
+                                        p-b-1
+                                        m-t-2
+                                        text-center
+                                        text-white
+                                        rounded-lg"
+                                v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
+                                :disabled="disabled.deleteTask">
+                            <span v-if="disabled.deleteTask">
+                              <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>
+                            Delete
+                        </button>
+
+
+                        <button class="bg-blue
+                                        p-r-4
+                                        p-l-4
+                                        p-t-1
+                                        p-b-1
+                                        m-t-2
+                                        text-center
+                                        text-white
+                                        rounded-lg"
+                                v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
+                                :disabled="disabled.finished">
+                            <span v-if="disabled.finished">
+                              <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>
+                            Finished
+                        </button>
+
+                        <button class="bg-blue
+                                        p-r-4
+                                        p-l-4
+                                        p-t-1
+                                        p-b-1
+                                        m-t-2
+                                        text-center
+                                        text-white
+                                        rounded-lg"
+                                v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)"
+                                :disabled="disabled.approve">
+                            <span v-if="disabled.approve">
+                              <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>
+                            Approve
+                        </button>
+
 
                     </div>
+
+                    <task-images :jobTask="jobTask" type="notsub">
+                    </task-images>
+
+                    <div>
+                        <div v-if="showPanelActions(jobTask.status)">
+                            <transition-group name="slide-fade" v-if="isContractor">
+
+                                <div :id="'task-divider-' + jobTask.id" :key="1"></div>
+
+                                <div :id="'task-subs-' + jobTask.id"
+                                     v-if="isGeneral && !taskApproved &&  jobTask.bid_contractor_job_tasks.length > 0" :key="3">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Sub</th>
+                                            <th>Price</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks"
+                                            :key="bid.id">
+                                            <td>{{ bid.contractor.name }}</td>
+                                            <td>${{ bid.bid_price }}</td>
+                                            <td>
+                                                <button v-if="showAcceptBtn(jobTask.status)"
+                                                        @click="acceptSubBidForTask(bid, jobTask)"
+                                                        class="button btn btn-sm btn-success"
+                                                        :disabled="disabled.accept">
+                                                          <span v-if="disabled.accept">
+                                                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                                          </span>
+                                                    Accept
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--&lt;!&ndash; /end col-md-6 &ndash;&gt;-->
+                            </transition-group>
+                        </div>
+                    </div>
+
+                    <!--<button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">-->
+                    <!--&lt;!&ndash;<i class="fas fa-user-plus fa-2x"></i>&ndash;&gt;-->
+                    <!--Add Sub-->
+                    <!--</button>-->
+
 
                 </div>
             </div>
@@ -178,15 +398,25 @@
       }
     },
     methods: {
-      showSubMessage (jobTask) {
-        let msg = jobTask.sub_message;
-        return (msg != null && msg != '' && msg != ' ' && this.isContractor) || (msg != null && msg != '' && msg != ' ' &&
-          this.isGeneral);
+      showSubMessage (msg) {
+        return (msg != null &&
+          msg != '' &&
+          msg != ' ' &&
+          this.isContractor) ||
+          (msg != null &&
+            msg != '' &&
+            msg != ' ' &&
+            this.isGeneral);
       },
-      showCustomerMessage (jobTask) {
-        let msg = jobTask.customer_message;
-        return (msg != null && msg != '' && msg != ' ' && this.isCustomer) || (msg != null && msg != '' && msg != ' ' &&
-          this.isGeneral);
+      showCustomerMessage (msg) {
+        return (msg != null &&
+          msg != '' &&
+          msg != ' ' &&
+          this.isCustomer) ||
+          (msg != null &&
+            msg != '' &&
+            msg != ' ' &&
+            this.isGeneral);
       },
       openUpdateTaskLocation (jobTask) {
         this.jTask = jobTask;
@@ -237,11 +467,15 @@
         console.log (job_location)
         if (task_location === null && job_location === null) {
           return 'No Address Set Yet';
+        } else if (job_location === job_location) {
+          return 'Same as Job Location'
         } else if (task_location !== null) {
           return jobTask.location.address_line_1;
         } else if (job_location !== null) {
           return bid.location.address_line_1;
         }
+
+
       },
       prettyDate (date) {
         if (date == null)
@@ -268,12 +502,18 @@
       },
       updateTaskStartDate (date, jobTaskId, bidId, jobTa) {
         console.log (date);
+      },
+      updateMessage (message, jobTaskId, currentMessage, actor) {
+
+        if (message !== currentMessage) {
+          GeneralContractor.updateMessage (message, jobTaskId, actor);
+        }
 
       },
       updateCustomerTaskQuantity (quantity, taskId, currentQuantityValue) {
 
         quantity = Number (quantity);
-        
+
         if (quantity != currentQuantityValue) {
           GeneralContractor.updateCustomerTaskQuantity (quantity, taskId);
         }
@@ -395,6 +635,17 @@
 </script>
 
 <style scope>
+
+    .box {
+        width: 95%;
+    }
+
+    .messageHeader {
+        font-size: 12pt;
+        font-weight: bold;
+        font-family: Roboto, serif;
+        text-align: center;
+    }
 
     .totalCost {
         padding-left: .5rem;
