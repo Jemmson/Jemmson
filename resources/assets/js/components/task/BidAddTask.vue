@@ -263,6 +263,8 @@
         this.taskExists = true
         this.addNewTaskForm.taskId = result.id;
         this.addNewTaskForm.taskName = result.name;
+        this.addNewTaskForm.sub_message = result.sub_instructions;
+        this.addNewTaskForm.customer_message = result.customer_instructions;
         this.addNewTaskForm.taskPrice = result.proposed_cust_price;
         if (result.proposed_cust_price === null) {
           this.addNewTaskForm.taskPrice = 0;

@@ -739,6 +739,8 @@ class TaskController extends Controller
 
         $task->proposed_sub_price = $request->subTaskPrice;
         $task->qtyUnit = $request->qtyUnit;
+        $task->sub_instructions = $request->sub_message;
+        $task->customer_instructions = $request->customer_message;
 
         // ****************************
         // Save the Changes to the Task Table
