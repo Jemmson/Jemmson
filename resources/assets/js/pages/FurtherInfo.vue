@@ -46,7 +46,7 @@
 
                     <!-- Phone Number -->
                     <div class="form-group" :class="{'has-error': form.errors.has('phone_number')}">
-                        <label class="col-md-3 control-label">Phone Number</label>
+                        <label class="col-md-3 control-label">Mobile Phone Number</label>
                         <div class="col-md-8">
                             <input type="tel" class="form-control" name="phone_number" maxlength="10"
                                    v-model="form.phone_number" @keyup="filterPhone">

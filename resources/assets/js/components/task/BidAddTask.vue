@@ -16,7 +16,7 @@
                         <div class="flex m-t-2">
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
-                                <label for="taskName">Task Description</label>
+                                <label for="taskName">Task Description *</label>
 
                                 <input type="text" class="form-control" id="taskName" name="taskName" autofocus
                                        autocomplete="false"

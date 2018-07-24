@@ -12,7 +12,7 @@
                        type="text"
                        v-model="form.customerName"
                        v-on:keyup="autoComplete"
-                       class="borderR input"
+                       class="form-control"
                        required>
                 <div class="customer-name-results"
                      v-if="results.length">
@@ -29,8 +29,8 @@
             <!-- Phone Number -->
             <div class="flex flex-col w-50 pady padx customer-input"
                  :class="{'has-error': form.errors.has('phone')}">
-                <label for="phone">Phone *</label>
-                <input class="borderR input"
+                <label for="phone">Mobile Phone *</label>
+                <input class="form-control"
                        id="phone"
                        @keyup="filterPhone"
                        maxlength="10"
@@ -49,7 +49,7 @@
             <div class="flex flex-col w-50 pady padx customer-input"
                  :class="{'has-error': form.errors.has('jobName')}">
                 <label for="jobName">Job Name</label>
-                <input class="borderR input"
+                <input class="form-control"
                        id="jobName"
                        name="jobName"
                        type="text"
