@@ -609,6 +609,7 @@ class TaskController extends Controller
 
         try {
             $jobTask->qty = $quantity;
+            $jobTask->cust_final_price = $quantity * $jobTask->unit_price;
             $jobTask->save();
         } catch (\Excpetion $e) {
             Log::error('Updating JobTask: ' . $e->getMessage);
@@ -635,7 +636,8 @@ class TaskController extends Controller
         $oldPrice = $jobTask->cust_final_price;
 
         try {
-            $jobTask->cust_final_price = $price;
+            $jobTask->unit_price = $price;
+            $jobTask->cust_final_price = $price * $jobTask->qty;
             $jobTask->save();
         } catch (\Excpetion $e) {
             Log::error('Updating JobTask: ' . $e->getMessage);

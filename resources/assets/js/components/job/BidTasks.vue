@@ -40,7 +40,7 @@
                                 <span>Total Task Price</span>
                                 <div>
                                     <i class="fas fa-money-bill-alt icon"></i>
-                                    <span class="totalCost" v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price * jobTask.qty)}}</span>
+                                    <span class="totalCost" v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
                                 </div>
                             </div>
                             <label v-if="isCustomer || !showTaskPriceInput()">{{taskCustFinalPrice(jobTask.cust_final_price)}}</label>
@@ -75,7 +75,7 @@
                                 <div class="flex">
                                     <span class="dollarSign m-l-6">$</span>
                                     <input type="text" class="form-control" v-if="showTaskPriceInput()"
-                                           :value="taskCustFinalPrice(jobTask.cust_final_price)"
+                                           :value="taskCustFinalPrice(jobTask.unit_price)"
                                            @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
                                 </div>
                             </div>
