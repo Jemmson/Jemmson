@@ -63,8 +63,8 @@
                                        name="qty" required v-model="addNewTaskForm.qty"
                                 >
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
-                                {{ addNewTaskForm.errors.get('qty') }}
-                            </span>
+                                    {{ addNewTaskForm.errors.get('qty') }}
+                                </span>
                             </div>
 
                             <div class="flex-1 m-l-4"
@@ -76,10 +76,11 @@
                                        @keyup="checkIfQuantityUnitHasChanged($event.target.value)"
                                 >
                                 <span :class="{ error: addNewTaskForm.hasQtyUnitError }"
-                                      v-show="addNewTaskForm.hasQtyUnitError">{{ addNewTaskForm.qtyUnitErrorMessage }}</span>
+                                      v-show="addNewTaskForm.hasQtyUnitError">{{ addNewTaskForm.qtyUnitErrorMessage }}
+                                </span>
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
-                                {{ addNewTaskForm.errors.get('qtyUnit') }}
-                            </span>
+                                    {{ addNewTaskForm.errors.get('qtyUnit') }}
+                                </span>
                             </div>
                         </div>
 
@@ -106,10 +107,19 @@
                                 <label for="start_date">Start Date</label>
                                 <input type="date" class="form-control" id="start_date" name="start_date" required
                                        v-model="addNewTaskForm.start_date"
+                                       @blur="checkDateIsTodayorLater($event.target.value)"
                                 >
-                                <span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">
-                                {{ addNewTaskForm.errors.get('start_date') }}
-                            </span>
+                                <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
+                                <!--{{ addNewTaskForm.errors.get('start_date') }}-->
+                            <!--</span>-->
+
+                                <span :class="{ error: addNewTaskForm.hasStartDateError }"
+                                      v-show="addNewTaskForm.hasStartDateError">{{ addNewTaskForm.startDateErrorMessage }}
+                                </span>
+                                <!--<span class="help-block" v-show="addNewTaskForm.errors.has('startDate')">-->
+                                    <!--{{ addNewTaskForm.errors.get('startDate') }}-->
+                                <!--</span>-->
+
                             </div>
                         </div>
 
@@ -219,7 +229,9 @@
           qtyUnit: '',
           updateTask: false,
           qtyUnitErrorMessage: '',
-          hasQtyUnitError: false
+          hasQtyUnitError: false,
+          startDateErrorMessage: '',
+          hasStartDateError: false
         }),
         result: {
           resultReturned: false,
@@ -246,6 +258,7 @@
         startDateChanged: false,
         customerMessageChanged: false,
         subMessageChanged: false,
+        startDateError: false
       }
     },
     computed: {
@@ -254,6 +267,79 @@
       }
     },
     methods: {
+      checkDateIsTodayorLater (value) {
+        let pickerDate = this.adjustDate (value);
+        let today = this.adjustDate ('today');
+
+        if (
+          (pickerDate[0] < today[0]) ||
+          (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
+          (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
+        ) {
+          this.addNewTaskForm.startDateErrorMessage = 'Start Date cannot be before todays date';
+          this.addNewTaskForm.hasStartDateError = true;
+        } else {
+          this.addNewTaskForm.hasStartDateError = false;
+        }
+
+
+
+          // if (pickerDate[0] === today[0]) {
+        //   if (pickerDate[1] < today[1]) {
+        //     this.startDateError = true;
+        //   }
+        //
+        //   if (pickerDate[1] === today[1]) {
+        //     if (pickerDate[2] < today[2]) {
+        //       this.startDateError = true;
+        //     } else {
+        //       this.startDateError = false;
+
+      },
+      adjustDate (date) {
+
+        let d = '';
+        if (date === 'today') {
+          d = new Date ()
+        } else {
+          d = new Date (date)
+        }
+
+        let year = d.getFullYear ();
+        let month = d.getMonth () + 1;
+        let day = d.getDate () + 1;
+
+        if (month === 12 && day === 32) {
+          year = year + 1;
+          month = 1;
+          day = 1;
+        } else if (day === 32) {
+          month = month + 1;
+          day = 1;
+        } else if (day === 31 && (
+          month === 4 ||
+          month === 6 ||
+          month === 9 ||
+          month === 11
+        )
+        ) {
+          day = 1;
+          month = month + 1;
+        } else if (
+          day === 29 && month === 2 && (year % 4 !== 0)
+        ) {
+          day = 1;
+          month = month + 1;
+        } else if (
+          day === 30 && month === 2 && (year % 4 === 0)
+        ) {
+          day = 1;
+          month = month + 1;
+        }
+
+        return [year, month, day];
+
+      },
       validateInput () {
         if (this.addNewTaskForm.qtyUnit !== '' && !isNaN (this.addNewTaskForm.qtyUnit)) {
           this.addNewTaskForm.qtyUnitErrorMessage = 'numbers not allowed';
@@ -482,8 +568,10 @@
         }
       },
       addNewTaskToBid () {
-        if (!this.addNewTaskForm.hasQtyUnitError) {
+        if (!this.addNewTaskForm.hasQtyUnitError && !this.addNewTaskForm.hasStartDateError) {
           GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
+          console.log (newTask);
+          debugger;
           this.clearTaskResults ();
         }
       },
