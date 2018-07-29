@@ -281,20 +281,7 @@
         } else {
           this.addNewTaskForm.hasStartDateError = false;
         }
-
-
-
-          // if (pickerDate[0] === today[0]) {
-        //   if (pickerDate[1] < today[1]) {
-        //     this.startDateError = true;
-        //   }
-        //
-        //   if (pickerDate[1] === today[1]) {
-        //     if (pickerDate[2] < today[2]) {
-        //       this.startDateError = true;
-        //     } else {
-        //       this.startDateError = false;
-
+        
       },
       adjustDate (date) {
 
