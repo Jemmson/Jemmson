@@ -677,109 +677,45 @@ class TaskController extends Controller
             'qtyUnit' => 'nullable|string'
         ]);
 
+//        dd($request);
+
         if (!$this->isPriceGtE($request->taskPrice, $request->subTaskPrice)) {
             return response()->json([
                 "message" => "Unit price for customer needs to be greater than or equal to Unit Price for Sub",
                 "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
         }
 
-        // Get the job to add the task to, contractor and task name
-        $job_id = $request->jobId;
-        $job = Job::find($job_id);
-        $name = strtolower($request->taskName);
-        $contractor_id = $request->contractorId;
 
+        if ($request->updateTask && !$request->createNew) {
+            // find the existing task and update the standard task table
+            // add task to job task table
+            $task = Task::find($request->taskId);
+            $task->update($request);
 
-        // Does the task exist?
-        // Does the task exist for the contractor?
-        // if both are false then the task does not exist.
+            $jobTask = new JobTask;
+            $jobTask->create($request, $request->taskId);
 
-        // trying to find if the added task currently exists for the contractor
-        $task = Task::whereRaw('LOWER(`name`) = ? ', $name)->where('contractor_id', $contractor_id)->first();
-        Log::debug($task);
+        } else if (!$request->updateTask && !$request->createNew) {
+            // find the existing task but dont update the standard task table
+            $jobTask = new JobTask;
+            $jobTask->create($request, $request->taskId);
 
-        // if the task does not exist then create a new task for the contractor.
-        // it could be a new task that the contractor does not have assccoiated with them
-        // it could be an existing task that the contractor has associated with him
-        // it could also be an existing task that is not associated with the contractor
-
-        // if the task is empty then then a new task for the contractor needs to be added
-        // else the task for that contractor exists.
-        // if the task exists for the contractor then was it selected from the drop down?
-        // if it was selected from the drop down was the standard price changed?
-        // if the standard price was changed then does the contractor want a new standard price?
-        // if the contractor selected no then dont update the task tables price.
-        // if the contractor selected yes then update the task tables price.
-
-
-        // ****************************
-        // NEW TASK
-        // ****************************
-        if (empty($task)) {
+        } else if (!$request->updateTask && $request->createNew) {
+            // create a new task and add it to the standard task table
+            // add a new task to the job task table
             $task = new Task;
-            $task->name = $name;
-            $task->contractor_id = $contractor_id;
+            $task->create($request);
 
-
-            // ****************************
-            // Set Task Price
-            // ****************************
-            $task->proposed_cust_price = $request->taskPrice;  // set customer price
-
-
-        } else {
-            // ****************************
-            // TASK ALREADY EXISTS - Update Task Price
-            // ****************************
-            if ($request->changePrice) {
-                $task->proposed_cust_price = $request->taskPrice;  // set customer price
-            }
+            $jobTask = new JobTask;
+            $jobTask->create($request, $task->id);
 
         }
 
-        $task->proposed_sub_price = $request->subTaskPrice;
-        $task->qtyUnit = $request->qtyUnit;
-        $task->sub_instructions = $request->sub_message;
-        $task->customer_instructions = $request->customer_message;
-
-        // ****************************
-        // Save the Changes to the Task Table
-        // ****************************
-        try {
-            $task->save();
-        } catch (\Exception $e) {
-            Log::error('Add/Update Task: ' . $e->getMessage());
-            return response()->json([
-                "message" => "Couldn't add/update task.",
-                "errors" => ["error" => [$e->getMessage()]]], 404);
-        }
-
-
-        // ****************************
-        // Set Job Task Price
-        // ****************************
-
-        // Once the Standard task has been updated the job task needs to be updated or created.
-        // update or create job task for task
-        // check if a jobtask has this job id and this task ID. if it does not then create a job task with these
-        // values
-        $jobTask = JobTask::firstOrCreate(['job_id' => $job_id, 'task_id' => $task->id]);
-        $this->updateJobTask($request, $task->id, $jobTask);
-
-        $this->switchJobStatusToInProgress($job, __('bid.in_progress'));
-
+        $job = Job::find($request->jobId);
+        $job->changeJobStatus($job, __('bid.in_progress'));
         $job->jobTotal();
 
         return response()->json($job->tasks()->get(), 200);
-
-
-        // not sure the point of this but it seems to get the first task of the job and then
-        // subtracts the price of the contractors price times the quantity from the jobs total
-        // not sure why this is helpful.
-//        if ($request->taskId == -1) {
-//            $jobTask = $task->jobTask()->first();
-//            $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
-//        }
     }
 
     /**
@@ -825,22 +761,22 @@ class TaskController extends Controller
         return $task;
     }
 
-    public function switchJobStatusToInProgress($job, $message)
-    {
-        $job->status = $message;
-        $job->save();
-    }
+//    public function switchJobStatusToInProgress($job, $message)
+//    {
+//        $job->status = $message;
+//        $job->save();
+//    }
 
     public function updateJobTask($request, $task_id, $jobTask)
     {
 
         Log::info('quantity unit: ' . $request->qtyUnit);
 
-        if (!$request->sub_sets_own_price_for_job) {
-            $jobTask->sub_sets_own_price_for_job = 0;
-        } else {
-            $jobTask->sub_sets_own_price_for_job = 1;
-        }
+//        if (!$request->sub_sets_own_price_for_job) {
+//            $jobTask->sub_sets_own_price_for_job = 0;
+//        } else {
+//            $jobTask->sub_sets_own_price_for_job = 1;
+//        }
 
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;

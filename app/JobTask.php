@@ -1,5 +1,7 @@
 <?php
+
 namespace App;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +15,32 @@ class JobTask extends Model
 {
     use SoftDeletes;
     protected $table = "job_task";
-    protected $fillable = ['job_id', 'task_id'];
+    protected $fillable = [
+        'job_id',
+        'task_id',
+        'bid_id',
+        'location_id',
+        'contractor_id',
+        'status',
+        'cust_final_price',
+        'sub_final_price',
+        'start_when_accepted',
+        'stripe',
+        'start_date',
+        'deleted_at',
+        'stripe_transfer_is',
+        'customer_message',
+        'sub_message',
+        'qty',
+        'sub_sets_own_price',
+        'declined_message',
+        'unit_price'
+    ];
+
+    public function __construct()
+    {
+
+    }
 
     /**
      * Get the task this bid belongs to
@@ -23,6 +50,40 @@ class JobTask extends Model
     public function task()
     {
         return $this->belongsTo(Task::class);
+    }
+
+    public function create($request, $taskId)
+    {
+        // standard task column = new column value
+        $this->job_id = $request->jobId;
+        $this->task_id = $taskId;
+        $this->status = 'bid_task.initiated';
+        $this->contractor_id = $request->contractorId;
+        $this->cust_final_price = $request->qty * $request->taskPrice;
+        $this->sub_final_price = (int)$request->subTaskPrice;
+        if (empty($request->start_date)) {
+            $this->start_date = \Carbon\Carbon::now();
+        } else {
+            $this->start_date = $request->start_date;
+        }
+        $this->customer_message = $request->customer_message;
+        $this->sub_message = $request->sub_message;
+        $this->stripe = $request->useStripe;
+        $this->qty = (int)$request->qty;
+        $this->unit_price = (int)$request->taskPrice;
+
+//        Log::message($task);
+
+//        dd($this);
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Add Job Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't add Job Task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
     }
 
     public function job()
@@ -51,7 +112,7 @@ class JobTask extends Model
     }
 
     /**
-     * 
+     *
      *
      * @param String $id stripe transfer id
      * @return void
@@ -60,7 +121,7 @@ class JobTask extends Model
     {
         if ($id === null || $id === '' || $id === ' ') {
             return;
-        } 
+        }
 
         $this->stripe_transfer_id = $id;
         $this->status = __("bid_task.customer_sent_payment");
@@ -73,7 +134,7 @@ class JobTask extends Model
     }
 
     /**
-     * 
+     *
      *
      * @param String $id
      * @return void
@@ -82,7 +143,7 @@ class JobTask extends Model
     {
         if ($id === null || $id === '' || $id === ' ') {
             return;
-        } 
+        }
 
         $this->stripe_transfer_id = $id;
 
@@ -110,19 +171,20 @@ class JobTask extends Model
             $location->state = $request->state;
             $location->zip = $request->zip;
         }
-        
+
         try {
             $location->save();
             $this->location_id = $location->id;
             $this->save();
             return $location;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
             return $e;
         }
     }
 
-    public function toggleStripe() {
+    public function toggleStripe()
+    {
         $this->stripe = $this->stripe ? false : true;
 
         try {
@@ -159,7 +221,7 @@ class JobTask extends Model
      * @param string $status
      * @return bool
      */
-    public function updatable(string $status) 
+    public function updatable(string $status)
     {
         switch ($status) {
             case 'bid_task.customer_sent_payment':
@@ -187,6 +249,35 @@ class JobTask extends Model
             return false;
         }
         return true;
+    }
+
+    public function add(Request $request)
+    {
+        // standard task column = new column value
+        $this->job_id = $request->jobId;
+        $this->task_id = $request->taskId;
+        $this->contractor_id = $request->contractorId;
+        $this->cust_final_price = $request->qty * $request->taskPrice;
+        $this->sub_final_price = $request->subTaskPrice;
+        $this->start_when_accepted = $request->customer_message;
+        if (empty($request->start_date)) {
+            $this->start_date = \Carbon\Carbon::now();
+        } else {
+            $this->start_date = $request->start_date;
+        }
+        $this->customer_message = $request->customer_message;
+        $this->sub_message = $request->sub_message;
+        $this->qty = $request->qty;
+        $this->unit_price = $request->taskPrice;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Add/Update Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't add task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
     }
 
     public function resetDeclinedMessage()

@@ -16,7 +16,8 @@
                                                   m-r-24
                                                   p-1
                                                   text-white"
-                         :class="getLabelClass(jobTask.status)">{{ status(jobTask.status) }}</div>
+                         :class="getLabelClass(jobTask.status)">{{ status(jobTask.status) }}
+                    </div>
 
 
                     <!-- task name-->
@@ -58,26 +59,30 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-around m-l-2 m-r-2 m-b-10">
-                        <div class="flex flex-col">
-                            <label>Quantity:</label>
-                            <input type="text" class="form-control" v-if="showTaskPriceInput()"
-                                   :value="jobTask.qty"
-                                   @blur="updateCustomerTaskQuantity(
+                    <div class="flex flex-col m-l-2 m-r-2 m-b-10">
+                        <div class="flex justify-around">
+                            <div class="flex flex-col">
+                                <label>Quantity:</label>
+                                <input type="text" class="form-control" v-if="showTaskPriceInput()"
+                                       :value="jobTask.qty"
+                                       @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
-                        </div>
-                        <div class="flex flex-col">
-                            <label class="m-l-6">Price:</label>
-                            <div class="flex">
-                                <span class="dollarSign m-l-6">$</span>
-                                <input type="text" class="form-control" v-if="showTaskPriceInput()"
-                                       :value="taskCustFinalPrice(jobTask.cust_final_price)"
-                                       @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="m-l-6">Price:</label>
+                                <div class="flex">
+                                    <span class="dollarSign m-l-6">$</span>
+                                    <input type="text" class="form-control" v-if="showTaskPriceInput()"
+                                           :value="taskCustFinalPrice(jobTask.cust_final_price)"
+                                           @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
+                                </div>
                             </div>
                         </div>
+                        <button class="btn btn-success btn-large m-t-3" style="width: 20%">Update</button>
                     </div>
+
 
                     <div class="flex justify-around m-b-10">
                         <div>
@@ -120,7 +125,7 @@
 
                     <div>
                         <div
-                             class="messageHeader">Messages
+                                class="messageHeader">Messages
                         </div>
 
                         <div class="flex flex-col">
@@ -260,7 +265,8 @@
                                 <div :id="'task-divider-' + jobTask.id" :key="1"></div>
 
                                 <div :id="'task-subs-' + jobTask.id"
-                                     v-if="isGeneral && !taskApproved &&  jobTask.bid_contractor_job_tasks.length > 0" :key="3">
+                                     v-if="isGeneral && !taskApproved &&  jobTask.bid_contractor_job_tasks.length > 0"
+                                     :key="3">
                                     <table class="table">
                                         <thead>
                                         <tr>

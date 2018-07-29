@@ -250,6 +250,20 @@ class Job extends Model
         }
     }
 
+    public function changeJobStatus($job, $message)
+    {
+        $this->status = $message;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Add Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't update job status message.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
+    }
+
     public function jobTotal()
     {
         // for each task that is related to the job -> SUM(qty * cust_final_price)
