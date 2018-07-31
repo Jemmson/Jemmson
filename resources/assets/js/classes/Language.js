@@ -119,6 +119,11 @@ export default class Language {
           customer: ''
         }
       },
+      phone: {
+        success: 'This is a valid mobile number',
+        failure: 'This is not a valid mobile number',
+        error: 'Please check the number. There was an unkown error'
+      },
       modal: {
         reviewBidConfirmationModal: 'The bid may have changed since you last saw it, please review the bid if you have not done so.'
       },

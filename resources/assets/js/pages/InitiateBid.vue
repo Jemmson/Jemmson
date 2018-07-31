@@ -36,7 +36,10 @@
                        maxlength="10"
                        name="phone"
                        type="tel"
+                       @blur="validateMobileNumber($event.target.value)"
                        v-model="form.phone">
+                <div v-if="checkThatNumberIsMobile()" style="color: green">{{ this.getMobileValidResponse[1] }}</div>
+                <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1] }}</div>
                 <span class="help-block"
                       v-show="form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
@@ -61,20 +64,30 @@
             </div>
 
             <button name="submit" id="submit" class="btn btn-default btn-primary"
-                    @click.prevent="submit" :disabled="disabled.submit">
+                    @click.prevent="submit" :disabled="checkValidData()">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
                 Submit
             </button>
         </div>
+
+        <pre>{{ this.getMobileValidResponse[1] }}</pre>
+        <pre>{{ this.getMobileValidResponse[2] }}</pre>
+        <pre>{{ this.form.customerName }}</pre>
+        <pre>{{ this.form.phone }}</pre>
+
     </div>
 </template>
 <script>
+
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
+
   export default {
     data () {
       return {
         query: '',
+        validMobileNumber: '',
         results: [],
         form: new SparkForm ({
           phone: '',
@@ -82,14 +95,74 @@
           jobName: ''
         }),
         disabled: {
-          submit: false
-        }
+          submit: false,
+          validData: true
+        },
+        numberType: ''
       }
     },
+    computed: {
+      ...mapGetters ([
+        'getMobileValidResponse'
+      ])
+    },
     methods: {
+      ...mapMutations ([
+        'setMobileResponse'
+      ]),
+      ...mapActions ([
+        'checkMobileNumber',
+      ]),
       submit () {
         console.log ('submit');
         GeneralContractor.initiateBid (this.form, this.disabled);
+      },
+      unformatNumber (number) {
+        let unformattedNumber = '';
+        for (let i = 0; i < number.length; i++) {
+          if (!isNaN (parseInt (number[i]))) {
+            unformattedNumber = unformattedNumber + number[i];
+          }
+        }
+        let numberLength = unformattedNumber.length;
+        if (numberLength < 10) {
+          if (this.getMobileValidResponse[1] !== '') {
+            this.$store.commit ('setTheMobileResponse', ['', '', '']);
+          }
+        }
+        // debugger;
+        return numberLength;
+      },
+      checkValidData () {
+        // debugger
+        let phone = this.unformatNumber (this.form.phone);
+        if ((this.getMobileValidResponse[1] === 'mobile' ||
+          this.getMobileValidResponse[2] === 'mobile') &&
+          this.form.customerName !== '' && (phone === 10)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      validateMobileNumber (phone) {
+        this.checkMobileNumber (phone);
+      },
+      checkThatNumberIsMobile () {
+        if (this.getMobileValidResponse[1] === 'mobile' ||
+          this.getMobileValidResponse[2] === 'mobile') {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      checkLandLineNumber () {
+        if (this.getMobileValidResponse[1] === 'landline' ||
+          this.getMobileValidResponse[2] === 'landline') {
+          return true;
+        } else {
+          return false;
+        }
       },
       filterPhone () {
         this.form.phone = Format.phone (this.form.phone);

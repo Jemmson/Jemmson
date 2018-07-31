@@ -281,7 +281,7 @@
         } else {
           this.addNewTaskForm.hasStartDateError = false;
         }
-        
+
       },
       adjustDate (date) {
 

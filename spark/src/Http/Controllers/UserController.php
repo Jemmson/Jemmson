@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Laravel\Spark\Spark;
 use Illuminate\Http\Request;
 use Laravel\Spark\Contracts\Repositories\UserRepository;
+use App\User;
 
 class UserController extends Controller
 {
@@ -29,6 +30,11 @@ class UserController extends Controller
     public function current()
     {
         return Spark::interact(UserRepository::class.'@current');
+    }
+
+    public function validatePhoneNumber(Request $request)
+    {
+        return User::validatePhoneNumber($request->number);
     }
 
     /**

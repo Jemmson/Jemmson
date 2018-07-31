@@ -5,3 +5,7 @@
 export const getCustomerName = state => {
   return state.customer.name;
 }
+
+export const getMobileValidResponse = state => {
+  return state.mobile.response;
+}

@@ -13,6 +13,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\User;
+
 
 Route::group([
     'middleware' => 'auth:api'
@@ -40,7 +42,7 @@ Route::group([
 Route::get('/search', function (Request $request) {
     $query = $request->query('query');
     $users = \App\User::whereHas('contractor', function ($q) use ($query) {
-        $q->where('company_name', 'like', '%'.$query.'%');
+        $q->where('company_name', 'like', '%' . $query . '%');
     })->orWhere('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'customer')->with('contractor')->get();
     return $users;
 });
@@ -57,7 +59,7 @@ Route::post('/search/task', function (Request $request) {
     $job = \App\Job::find($jobId);
     $tasks = DB::select("select * from tasks where id not in 
                 (SELECT jt.task_id from tasks t join job_task jt on jt.task_id = t.id and deleted_at = null) 
-                and contractor_id = ".$job->contractor_id." and name like '%".$request->taskname."%'");
+                and contractor_id = " . $job->contractor_id . " and name like '%" . $request->taskname . "%'");
     return $tasks;
 });
 
@@ -78,7 +80,6 @@ Route::post('/task/declineJob', 'JobController@declineJob');
 Route::post('/task/finishedBidNotification', 'JobController@finishedBidNotification');
 
 
-
 // Tasks
 Route::resource('task', 'TaskController');
 Route::put('bid/task/{id}', 'TaskController@updateBidContractorJobTask');
@@ -96,6 +97,17 @@ Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 Route::post('/task/togglestripe', 'TaskController@toggleStripe');
 Route::post('/task/checkStripeForJob', 'TaskController@checkStripeForJob');
+
+
+Route::post('/user/validatePhoneNumber', function (Request $request) {
+//    dd($request->num);
+    $user = User::select()->where("phone", "=", $request->num)->get()->first();
+    if (empty($user)) {
+        return User::validatePhoneNumber($request->num);
+    } else {
+        return ['success', 'mobile', 'mobile', 'alreadyExists'];
+    }
+});
 
 Route::post('/job/updateArea', 'JobController@updateArea');
 Route::post('/job/getArea', 'JobController@getArea');
