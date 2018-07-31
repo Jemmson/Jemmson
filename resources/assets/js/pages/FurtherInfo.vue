@@ -49,10 +49,14 @@
                         <label class="col-md-3 control-label">Mobile Phone Number</label>
                         <div class="col-md-8">
                             <input type="tel" class="form-control" name="phone_number" maxlength="10"
-                                   v-model="form.phone_number" @keyup="filterPhone">
+                                   v-model="form.phone_number"
+                                   @blur="validateMobileNumber($event.target.value)"
+                                   @keyup="filterPhone">
+                            <div v-if="checkThatNumberIsMobile()" style="color: green">{{ this.getMobileValidResponse[1] }}</div>
+                            <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1] }}</div>
                             <span class="help-block" v-show="form.errors.has('phone_number')">
                                     {{ form.errors.get('phone_number') }}
-                                </span>
+                            </span>
                         </div>
                     </div>
 
@@ -181,7 +185,7 @@
                         <!-- </div> -->
                         <button type="submit" name="submit" class="btn btn-default btn-primary"
                                 style="margin-top: 1rem" @click.prevent="submitFurtherInfo()"
-                                :disabled="disabled.submit">
+                                :disabled="checkValidData()">
                                 <span v-if="disabled.submit">
                                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                                 </span>
@@ -195,6 +199,9 @@
 </template>
 
 <script>
+
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
+
   export default {
     props: {
       user: Object
@@ -202,7 +209,8 @@
     data () {
       return {
         disabled: {
-          submit: false
+          submit: false,
+          validData: true
         },
         form: new SparkForm ({
           email: '',
@@ -225,6 +233,9 @@
       }
     },
     computed: {
+      ...mapGetters ([
+        'getMobileValidResponse'
+      ]),
       passwordUpdated () {
         return this.user.password_updated;
       },
@@ -236,6 +247,59 @@
       }
     },
     methods: {
+      ...mapMutations ([
+        'setMobileResponse'
+      ]),
+      ...mapActions ([
+        'checkMobileNumber',
+      ]),
+      unformatNumber (number) {
+        let unformattedNumber = '';
+        for (let i = 0; i < number.length; i++) {
+          if (!isNaN (parseInt (number[i]))) {
+            unformattedNumber = unformattedNumber + number[i];
+          }
+        }
+        let numberLength = unformattedNumber.length;
+        if (numberLength < 10) {
+          if (this.getMobileValidResponse[1] !== '') {
+            this.$store.commit ('setTheMobileResponse', ['', '', '']);
+          }
+        }
+        // debugger;
+        return numberLength;
+      },
+      checkValidData () {
+        // debugger
+        let phone = this.unformatNumber (this.form.phone_number);
+        if ((this.getMobileValidResponse[1] === 'mobile' ||
+          this.getMobileValidResponse[2] === 'mobile') &&
+          this.form.customerName !== '' && (phone === 10)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      validateMobileNumber (phone) {
+        this.checkMobileNumber (phone);
+      },
+      checkThatNumberIsMobile () {
+        if (this.getMobileValidResponse[1] === 'mobile' ||
+          this.getMobileValidResponse[2] === 'mobile') {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      checkLandLineNumber () {
+        if (this.getMobileValidResponse[1] === 'landline' ||
+          this.getMobileValidResponse[2] === 'landline') {
+          return true;
+        } else {
+          return false;
+        }
+      },
       updateFormLocation(location) {
           this.form.address_line_1 = location.route;
           this.form.city = location.locality;
