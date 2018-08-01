@@ -503,8 +503,8 @@
         return this.isGeneral && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid
           .status === 'bid.declined');
       },
-      updateTaskStartDate (date, jobTaskId, bidId, jobTa) {
-        console.log (date);
+      updateTaskStartDate (date, jobTaskId) {
+        GeneralContractor.updateTaskStartDate(date, jobTaskId);
       },
       updateMessage (message, jobTaskId, currentMessage, actor) {
 

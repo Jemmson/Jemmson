@@ -52,6 +52,21 @@ class JobTask extends Model
         return $this->belongsTo(Task::class);
     }
 
+    public function updateTaskStartDate($date)
+    {
+        $this->start_date = $date;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('update job task start date: ' . $e->getMessage());
+            return response()->json([
+                "message" => "couldn't update job task start date.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
+
+    }
+
     public function create($request, $taskId)
     {
         // standard task column = new column value

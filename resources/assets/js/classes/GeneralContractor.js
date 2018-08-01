@@ -201,6 +201,19 @@ export default class GeneralContractor {
     }
   }
 
+  async updateTaskStartDate (date, jobTaskId) {
+    try {
+      const data = await axios.post ('/api/task/updateTaskStartDate', {
+        date: date,
+        jobTaskId: jobTaskId,
+      });
+      User.emitChange ('bidUpdated');
+      Vue.toasted.success (Language.lang ().bid_task.start_date.general);
+    } catch (error) {
+      Vue.toasted.error ('Error: ' + error.message);
+    }
+  }
+
   async updateCustomerTaskQuantity (quantity, taskId) {
     try {
       const data = await axios.post ('/api/task/updateTaskQuantity', {

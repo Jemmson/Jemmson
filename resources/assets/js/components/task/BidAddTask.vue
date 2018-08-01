@@ -557,8 +557,8 @@
       addNewTaskToBid () {
         if (!this.addNewTaskForm.hasQtyUnitError && !this.addNewTaskForm.hasStartDateError) {
           GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
-          console.log (newTask);
-          debugger;
+          // console.log (newTask);
+          // debugger;
           this.clearTaskResults ();
         }
       },

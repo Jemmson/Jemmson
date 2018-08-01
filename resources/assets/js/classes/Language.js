@@ -103,6 +103,11 @@ export default class Language {
       },
       // general contractor accepted the subs bid
       bid_task: {
+        start_date: {
+          sub: '',
+          general: 'Start Date Has Been Updated',
+          customer: ''
+        },
         price_updated: {
           sub: '',
           general: 'Task Price Successfully Updated',

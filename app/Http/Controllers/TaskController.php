@@ -699,6 +699,7 @@ class TaskController extends Controller
                 "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
         }
 
+        $jobTask = "";
 
         if ($request->updateTask && !$request->createNew) {
             // find the existing task and update the standard task table
@@ -728,6 +729,7 @@ class TaskController extends Controller
         $job = Job::find($request->jobId);
         $job->changeJobStatus($job, __('bid.in_progress'));
         $job->jobTotal();
+        $job->updateStartDate($jobTask->start_date);
 
         return response()->json($job->tasks()->get(), 200);
     }

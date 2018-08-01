@@ -150,6 +150,17 @@ class Job extends Model
         }
     }
 
+    public function updateStartDate($date)
+    {
+        $this->agreed_start_date = $date;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Job Start Date was unsuccessful: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Set job as completed if all child task are paid for
      *

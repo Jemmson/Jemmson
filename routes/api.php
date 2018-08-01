@@ -14,6 +14,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\JobTask;
 
 
 Route::group([
@@ -92,6 +93,12 @@ Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
 Route::post('/task/addTask', 'TaskController@addTask');
+Route::post('/task/updateTaskStartDate', function (Request $request) {
+
+    $jt = JobTask::find($request->jobTaskId);
+    $jt->updateTaskStartDate($request->date);
+
+});
 Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
