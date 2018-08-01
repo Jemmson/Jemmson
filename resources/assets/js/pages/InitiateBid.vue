@@ -72,10 +72,10 @@
             </button>
         </div>
 
-        <pre>{{ this.getMobileValidResponse[1] }}</pre>
-        <pre>{{ this.getMobileValidResponse[2] }}</pre>
-        <pre>{{ this.form.customerName }}</pre>
-        <pre>{{ this.form.phone }}</pre>
+        <!--<pre>{{ this.getMobileValidResponse[1] }}</pre>-->
+        <!--<pre>{{ this.getMobileValidResponse[2] }}</pre>-->
+        <!--<pre>{{ this.form.customerName }}</pre>-->
+        <!--<pre>{{ this.form.phone }}</pre>-->
 
     </div>
 </template>

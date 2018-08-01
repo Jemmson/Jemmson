@@ -129,23 +129,23 @@
                             <div class="update_password_inputs"
                                  style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
                                 <!-- Update password -->
-                                <div class="form-group" :class="{'has-error': form.errors.has('password')}">
+                                <div class="form-group p-r-8" :class="{'has-error': form.errors.has('password')}">
                                     <label class="col-md-3 control-label">Password</label>
 
                                     <div class="col-md-8">
-                                        <input type="password" name="password" v-model="form.password">
+                                        <input class="form-control" type="password" name="password" v-model="form.password">
                                         <span class="help-block" v-show="form.errors.has('password')">
                                                 {{ form.errors.get('password') }}
                                             </span>
                                     </div>
                                 </div>
 
-                                <div class="form-group"
+                                <div class="form-group p-r-8"
                                      :class="{'has-error': form.errors.has('password_confirmation')}">
                                     <label class="col-md-3 control-label">Confirm Password</label>
 
                                     <div class="col-md-8">
-                                        <input type="password" name="password_confirmation"
+                                        <input class="form-control" type="password" name="password_confirmation"
                                                v-model="form.password_confirmation" @keyup="confirmPassword">
                                         <span class="help-block" v-show="form.errors.has('password_confirmation')">
                                                 {{ form.errors.get('password_confirmation') }}
