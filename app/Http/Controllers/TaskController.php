@@ -12,6 +12,8 @@ use App\Notifications\TaskApproved;
 use App\Notifications\TaskReopened;
 use App\Notifications\UploadedTaskImage;
 use App\Notifications\TaskImageDeleted;
+use App\Notifications\NotifyCustomerOfUpdatedMessage;
+use App\Notifications\NotifySubOfUpdatedMessage;
 use App\Task;
 use App\Job;
 use App\Contractor;
@@ -576,13 +578,23 @@ class TaskController extends Controller
         $actor = $request->actor;
 
         $jobTask = JobTask::find($jobTaskId);
+        $job = Job::find($jobTask->job_id);
+        $customer = Customer::find($job->customer_id);
+
+        $jobTask = JobTask::find(12);
+        $job = Job::find($jobTask->job_id);
+//        $user = Customer::select()->where("user_id", "=", $job->customer_id)->get()->first();
+
+        if ($actor == 'sub') {
+            $jobTask->sub_message = $message;
+//            $customer->notify(new NotifySubOfUpdatedMessage($job, $customer));
+        } else {
+            $customer = User::find($job->customer_id);
+            $jobTask->customer_message = $message;
+            $customer->notify(new NotifyCustomerOfUpdatedMessage);
+        }
 
         try {
-            if ($actor == 'sub') {
-                $jobTask->sub_message = $message;
-            } else {
-                $jobTask->customer_message = $message;
-            }
             $jobTask->save();
         } catch (\Excpetion $e) {
             Log::error('Updating JobTask: ' . $e->getMessage);

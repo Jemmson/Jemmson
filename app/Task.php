@@ -4,12 +4,17 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Notifications\Notifiable;
+use Nexmo\Laravel\Facade\Nexmo;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Log;
 use Zend\Diactoros\Request;
 
 class Task extends Model
 {
+
+    use Notifiable;
+
     protected $fillable = [
         'name',
         'standard_task_id',
