@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\JobTask;
+use App\Job;
 
 
 Route::group([
@@ -97,6 +98,9 @@ Route::post('/task/updateTaskStartDate', function (Request $request) {
 
     $jt = JobTask::find($request->jobTaskId);
     $jt->updateTaskStartDate($request->date);
+    $earliestDate = JobTask::findEarliestStartDate($jt->job_id);
+    $job = Job::find($jt->job_id);
+    $job->updateJobAgreedStartDate($earliestDate);
 
 });
 Route::post('/task/delete', 'TaskController@destroy');

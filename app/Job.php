@@ -152,13 +152,7 @@ class Job extends Model
 
     public function updateStartDate($date)
     {
-        $this->agreed_start_date = $date;
 
-        try {
-            $this->save();
-        } catch (\Exception $e) {
-            Log::error('Updating Job Start Date was unsuccessful: ' . $e->getMessage());
-        }
     }
 
     /**
@@ -178,6 +172,17 @@ class Job extends Model
             $this->save();    
         } catch(\Exception $e) {
             Log::error('Update Job' . $e->getMessage());
+        }
+    }
+
+    public function updateJobAgreedStartDate($date)
+    {
+        $this->agreed_start_date = $date;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Job Start Date was unsuccessful: ' . $e->getMessage());
         }
     }
 

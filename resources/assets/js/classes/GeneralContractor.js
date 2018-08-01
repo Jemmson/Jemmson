@@ -46,7 +46,7 @@ export default class GeneralContractor {
         form.subTaskPrice = 0;
         form.qty = 1;
         form.taskId = -1;
-        
+
         Bus.$emit ('taskAdded', true);
         User.emitChange ('bidUpdated');
         Vue.toasted.success ('New Task Added!');
@@ -63,6 +63,59 @@ export default class GeneralContractor {
         Vue.toasted.error (error.message);
       }
     });
+  }
+
+  adjustDate (date) {
+    let d = '';
+    if (date === 'today') {
+      d = new Date ()
+      let year = d.getFullYear ();
+      let month = d.getMonth () + 1;
+      let day = d.getDate ();
+      return [year, month, day];
+    } else {
+      let dateArray = date.split ('-');
+      dateArray[0] = parseInt(dateArray[0]);
+      dateArray[1] = parseInt(dateArray[1]);
+      dateArray[2] = parseInt(dateArray[2]);
+      return dateArray;
+    }
+
+    //
+    // let year = d.getFullYear ();
+    // let month = d.getMonth () + 1;
+    // let day = d.getDate () + 1;
+    //
+    // if (month === 12 && day === 32) {
+    //   year = year + 1;
+    //   month = 1;
+    //   day = 1;
+    // } else if (day === 32) {
+    //   month = month + 1;
+    //   day = 1;
+    // } else if (day === 31 && (
+    //   month === 4 ||
+    //   month === 6 ||
+    //   month === 9 ||
+    //   month === 11
+    // )
+    // ) {
+    //   day = 1;
+    //   month = month + 1;
+    // } else if (
+    //   day === 29 && month === 2 && (year % 4 !== 0)
+    // ) {
+    //   day = 1;
+    //   month = month + 1;
+    // } else if (
+    //   day === 30 && month === 2 && (year % 4 === 0)
+    // ) {
+    //   day = 1;
+    //   month = month + 1;
+    // }
+    //
+    // return [year, month, day];
+
   }
 
   approveTaskHasBeenFinished (jobTask, disabled) {
@@ -83,6 +136,26 @@ export default class GeneralContractor {
     });
   }
 
+  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
+
+  checkDateIsTodayorLater (firstDate, secondDate) {
+    let pickerDate = this.adjustDate (firstDate);
+    let today = this.adjustDate (secondDate);
+    let errorMessage = '';
+    let hasDateError = false;
+    if (
+      (pickerDate[0] < today[0]) ||
+      (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
+      (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
+    ) {
+      errorMessage = 'Start Date cannot be before todays date';
+      hasDateError = true;
+    } else {
+      hasDateError = false;
+    }
+    return [errorMessage, hasDateError]
+  }
+
   async deleteTask (jobTask, disabled) {
     disabled.deleteTask = true;
     try {
@@ -100,8 +173,6 @@ export default class GeneralContractor {
     }
   }
 
-  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
-
   async initiateBid (form, disabled) {
     disabled.submit = true;
     console.log (form)
@@ -112,7 +183,7 @@ export default class GeneralContractor {
       disabled.submit = false;
       window.location = '/#/bids';
     } catch (error) {
-      console.log(error)
+      console.log (error)
       error = error.response.data;
       form.errors.errors = error.errors;
       Vue.toasted.error (error.message);
@@ -145,7 +216,7 @@ export default class GeneralContractor {
 
   notifyCustomerOfFinishedBid (bid, disabled) {
     disabled.submitBid = true;
-    if (User.needsStripe()) {
+    if (User.needsStripe ()) {
       disabled.submitBid = false;
       return false;
     }
@@ -187,6 +258,41 @@ export default class GeneralContractor {
     });
   }
 
+  updateCustomerPrice (price, jobTaskId, jobId) {
+    console.log (price)
+    if (price === '') {
+      price = 0
+    }
+    console.log (price)
+    axios.post ('/api/task/updateCustomerPrice', {
+      jobId: jobId,
+      jobTaskId: jobTaskId,
+      price: price
+    }).then ((response) => {
+      User.emitChange ('bidUpdated');
+      Vue.toasted.success (Language.lang ().bid_task.price_updated.general);
+      // console.log(response.data)
+      // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
+    }).catch (error => {
+      console.error (error);
+      // show a toast notification
+      Vue.toasted.error ('Error: ' + error.message);
+    });
+  }
+
+  async updateCustomerTaskQuantity (quantity, taskId) {
+    try {
+      const data = await axios.post ('/api/task/updateTaskQuantity', {
+        quantity: quantity,
+        taskId: taskId
+      });
+      User.emitChange ('bidUpdated');
+      Vue.toasted.success (Language.lang ().bid_task.quantity_updated.general);
+    } catch (error) {
+      Vue.toasted.error ('Error: ' + error.message);
+    }
+  }
+
   async updateMessage (message, jobTaskId, actor) {
     try {
       const data = await axios.post ('/api/task/updateMessage', {
@@ -212,41 +318,6 @@ export default class GeneralContractor {
     } catch (error) {
       Vue.toasted.error ('Error: ' + error.message);
     }
-  }
-
-  async updateCustomerTaskQuantity (quantity, taskId) {
-    try {
-      const data = await axios.post ('/api/task/updateTaskQuantity', {
-        quantity: quantity,
-        taskId: taskId
-      });
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success (Language.lang ().bid_task.quantity_updated.general);
-    } catch (error) {
-      Vue.toasted.error ('Error: ' + error.message);
-    }
-  }
-
-  updateCustomerPrice (price, jobTaskId, jobId) {
-    console.log (price)
-    if (price === '') {
-      price = 0
-    }
-    console.log (price)
-    axios.post ('/api/task/updateCustomerPrice', {
-      jobId: jobId,
-      jobTaskId: jobTaskId,
-      price: price
-    }).then ((response) => {
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success (Language.lang ().bid_task.price_updated.general);
-      // console.log(response.data)
-      // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
-    }).catch (error => {
-      console.error (error);
-      // show a toast notification
-      Vue.toasted.error ('Error: ' + error.message);
-    });
   }
 
   constructor () {

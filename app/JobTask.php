@@ -67,6 +67,15 @@ class JobTask extends Model
 
     }
 
+    static function findEarliestStartDate($jobId)
+    {
+
+        return JobTask::select('start_date')
+            ->where("job_id", "=", $jobId)
+            ->latest()->get()->last()->start_date;
+
+    }
+
     public function create($request, $taskId)
     {
         // standard task column = new column value

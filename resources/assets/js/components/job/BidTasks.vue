@@ -112,11 +112,16 @@
 
                         <div class="flex items-center" v-if="isContractor">
                             <i class="fas fa-clock icon m-r-2"></i>
-                            <input type="date" class="form-control form-control-date" style=""
-                                   v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
-                                   @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
-                            <label v-if="isCustomer || !showTaskStartDate()">
-                                {{prettyDate(jobTask.start_date)}} </label>
+                            <div class="flex flex-col">
+                                <input type="date" class="form-control form-control-date" style=""
+                                       v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
+                                       @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
+                                <span :class="{ error: hasStartDateError }"
+                                      v-show="hasStartDateError">{{ startDateErrorMessage }}
+                                </span>
+                            </div>
+                            <!--<label v-if="isCustomer || !showTaskStartDate()">-->
+                                <!--{{prettyDate(jobTask.start_date)}} </label>-->
                         </div>
                     </div>
 
@@ -344,6 +349,14 @@
         user: '',
         jTask: {},
         message: '',
+
+        start_date: '',
+        start_when_accepted: true,
+        startDateErrorMessage: '',
+        hasStartDateError: false,
+        startDateChanged: false,
+        startDateError: false,
+
         disabled: {
           showDenyForm: false,
           pay: false,
@@ -504,7 +517,18 @@
           .status === 'bid.declined');
       },
       updateTaskStartDate (date, jobTaskId) {
-        GeneralContractor.updateTaskStartDate(date, jobTaskId);
+
+        let dateArray = GeneralContractor.checkDateIsTodayorLater (date, this.bid.created_at);
+        this.startDateErrorMessage = dateArray[0];
+        this.hasStartDateError = dateArray[1];
+
+        let bidStartDate = new Date;
+
+        if (!this.hasStartDateError) {
+          GeneralContractor.updateTaskStartDate (date, jobTaskId);
+        } else {
+          this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
+        }
       },
       updateMessage (message, jobTaskId, currentMessage, actor) {
 
@@ -638,6 +662,12 @@
 </script>
 
 <style scope>
+
+    .error {
+        color: red;
+        font-size: 12pt;
+        font-weight: 900;
+    }
 
     .box {
         width: 95%;

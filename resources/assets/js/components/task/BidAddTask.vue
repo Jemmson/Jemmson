@@ -72,7 +72,7 @@
                                 <label for="qtyUnit">Quanity Description</label>
                                 <input type="text" class="form-control" min="1" id="qtyUnit"
                                        placeholder="ex. ft, sq. ft, etc."
-                                       name="qtyUnit" v-model="addNewTaskForm.qtyUnit" @onblur="validateInput()"
+                                       name="qtyUnit" v-model="addNewTaskForm.qtyUnit" @blur="validateInput()"
                                        @keyup="checkIfQuantityUnitHasChanged($event.target.value)"
                                 >
                                 <span :class="{ error: addNewTaskForm.hasQtyUnitError }"
@@ -167,6 +167,7 @@
                                 drop down is selected
                                 any of the selected values change -->
                         <button v-if="dropdownSelected && valueChanged" class="btn btn-sm btn-primary"
+                                :disabled="checkErrors"
                                 @click.prevent="changeTask('Update')">Update and Add
                         </button>
 
@@ -174,6 +175,7 @@
                             drop down is selected and
                             any of the values have changed -->
                         <button v-if="dropdownSelected && valueChanged" class="btn btn-sm btn-primary"
+                                :disabled="checkErrors"
                                 @click.prevent="changeTask('Ignore')">Ignore and Add
                         </button>
 
@@ -181,7 +183,7 @@
                             drop down is selected
                             drop down name is changed -> gives option to create a new task based on an existing one -->
                         <button v-if="dropdownSelected && nameChanged"
-                                class="btn btn-sm btn-primary"
+                                class="btn btn-sm btn-primary" :disabled="checkErrors"
                                 @click.prevent="changeTask('New')">
                             Create New and Add
                         </button>
@@ -190,7 +192,7 @@
                             drop down selected but no values have changed or
                             drop down not selected -> if drop down not selected then create a new standard task -->
                         <button v-if="(dropdownSelected && !valueChanged) || !dropdownSelected"
-                                class="btn btn-sm btn-primary"
+                                class="btn btn-sm btn-primary" :disabled="checkErrors"
                                 @click.prevent="changeTask('Add')">
                             Add Task
                         </button>
@@ -264,68 +266,16 @@
     computed: {
       newTask () {
         return this.addNewTaskForm.taskName !== this.result.taskName;
+      },
+      checkErrors () {
+        return this.addNewTaskForm.hasQtyUnitError || this.addNewTaskForm.hasStartDateError;
       }
     },
     methods: {
-      checkDateIsTodayorLater (value) {
-        let pickerDate = this.adjustDate (value);
-        let today = this.adjustDate ('today');
-
-        if (
-          (pickerDate[0] < today[0]) ||
-          (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
-          (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
-        ) {
-          this.addNewTaskForm.startDateErrorMessage = 'Start Date cannot be before todays date';
-          this.addNewTaskForm.hasStartDateError = true;
-        } else {
-          this.addNewTaskForm.hasStartDateError = false;
-        }
-
-      },
-      adjustDate (date) {
-
-        let d = '';
-        if (date === 'today') {
-          d = new Date ()
-        } else {
-          d = new Date (date)
-        }
-
-        let year = d.getFullYear ();
-        let month = d.getMonth () + 1;
-        let day = d.getDate () + 1;
-
-        if (month === 12 && day === 32) {
-          year = year + 1;
-          month = 1;
-          day = 1;
-        } else if (day === 32) {
-          month = month + 1;
-          day = 1;
-        } else if (day === 31 && (
-          month === 4 ||
-          month === 6 ||
-          month === 9 ||
-          month === 11
-        )
-        ) {
-          day = 1;
-          month = month + 1;
-        } else if (
-          day === 29 && month === 2 && (year % 4 !== 0)
-        ) {
-          day = 1;
-          month = month + 1;
-        } else if (
-          day === 30 && month === 2 && (year % 4 === 0)
-        ) {
-          day = 1;
-          month = month + 1;
-        }
-
-        return [year, month, day];
-
+      checkDateIsTodayorLater (date) {
+        let dateArray = GeneralContractor.checkDateIsTodayorLater(date, 'today');
+        this.addNewTaskForm.startDateErrorMessage = dateArray[0];
+        this.addNewTaskForm.hasStartDateError = dateArray[1];
       },
       validateInput () {
         if (this.addNewTaskForm.qtyUnit !== '' && !isNaN (this.addNewTaskForm.qtyUnit)) {
