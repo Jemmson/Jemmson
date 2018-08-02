@@ -127,7 +127,8 @@
                         {{ taskData(tasks, 'bid_task.finished_by_sub') }} have been Finished by the Sub
                     </div>
 
-                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.approved_by_general') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46"
+                         v-if="taskData(tasks, 'bid_task.approved_by_general') === 1">
                         {{ taskData(tasks, 'bid_task.approved_by_general') }} has been Approved by the General
                         Contractor
                     </div>
@@ -136,7 +137,8 @@
                         Contractor
                     </div>
 
-                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.finished_by_general') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46"
+                         v-if="taskData(tasks, 'bid_task.finished_by_general') === 1">
                         {{ taskData(tasks, 'bid_task.finished_by_general') }} has been Finished by the General
                         Contractor
                     </div>
@@ -145,14 +147,17 @@
                         Contractor
                     </div>
 
-                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.approved_by_customer') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46"
+                         v-if="taskData(tasks, 'bid_task.approved_by_customer') === 1">
                         {{ taskData(tasks, 'bid_task.approved_by_customer') }} has been Approved by the Customer
                     </div>
-                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.approved_by_customer') > 1">
+                    <div class="m-l-5 text-dark-grey p-l-46"
+                         v-if="taskData(tasks, 'bid_task.approved_by_customer') > 1">
                         {{ taskData(tasks, 'bid_task.approved_by_customer') }} have been Approved by the Customer
                     </div>
 
-                    <div class="m-l-5 text-dark-grey p-l-46" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 1">
+                    <div class="m-l-5 text-dark-grey p-l-46"
+                         v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 1">
                         {{ taskData(tasks, 'bid_task.customer_sent_payment') }} has had the Customer Send Payment
                     </div>
 
@@ -187,7 +192,8 @@
                 </div>
                 <hr>
             </div>
-            <div class="flex flex-col m-l-5 m-r-5" v-if="user.contractor !== null && user.contractor.stripe_express !== null">
+            <div class="flex flex-col m-l-5 m-r-5"
+                 v-if="user.contractor !== null && user.contractor.stripe_express !== null">
                 <div class="flex justify-between">
                     <div class="flex">
                         <i class="fas fa-3x fa-money-bill-alt icon m-r-3"></i>
@@ -208,6 +214,8 @@
 </template>
 
 <script>
+
+  // import axios from 'axios';
 
   export default {
     props: {

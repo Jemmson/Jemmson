@@ -1,13 +1,20 @@
 <template>
     <!-- /all tasks of a bid -->
     <div v-if="show">
-        <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated"
+        <paginate ref="paginator"
+                  name="jobTasks"
+                  :list="jobTasks"
+                  :per="6"
+                  class="paginated"
                   v-if="jobTasks.length > 0">
             <div class="container">
 
                 <!-- / status -->
-                <div class="card card-1 flex flex-col" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id"
-                     :id="'task-' + jobTask.id">
+                <div class="card card-1 flex flex-col"
+                     v-for="jobTask of paginated('jobTasks')"
+                     v-bind:key="jobTask.id"
+                     :id="'task-' + jobTask.id"
+                >
                     <div for="task-status" class="flex
                                                   justify-center
                                                   text-xl
@@ -31,6 +38,10 @@
                                  text-black" style="font-size: 20pt">
                         {{ jobTask.task.name }}
                     </div>
+
+                    <h1 class="flex text-center justify-center"
+                        style="border-radius: 10px; width: 70%; font-size: 24pt; background-color: skyblue; color: black"
+                        v-if="jobTask.deleted_at">DELETED AT {{ jobTask.deleted_at }}</h1>
 
                     <!-- Task Prices -->
 

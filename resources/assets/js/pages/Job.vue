@@ -79,8 +79,8 @@
       customerName() {
         if (this.isCustomer) {
           return this.user.name;
-        } 
-        
+        }
+
         if (this.bid.customer !== undefined) {
           return this.bid.customer.name;
         }
