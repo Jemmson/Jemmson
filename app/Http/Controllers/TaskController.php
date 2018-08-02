@@ -729,7 +729,7 @@ class TaskController extends Controller
         $job = Job::find($request->jobId);
         $job->changeJobStatus($job, __('bid.in_progress'));
         $job->jobTotal();
-        $earliestDate = JobTask::findEarliestStartDate($jt->job_id);
+        $earliestDate = JobTask::findEarliestStartDate($request->jobId);
         $job->updateJobAgreedStartDate($earliestDate);
 
         return response()->json($job->tasks()->get(), 200);
