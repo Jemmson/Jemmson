@@ -185,6 +185,7 @@
         this.form.phone = result.phone;
         this.form.customerName = result.name;
         this.results = [];
+        this.validateMobileNumber(result.phone);
       }
     }
   }
