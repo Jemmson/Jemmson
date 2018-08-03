@@ -72,7 +72,7 @@ class JobTask extends Model
 
         return JobTask::select('start_date')
             ->where("job_id", "=", $jobId)
-            ->latest()->get()->last()->start_date;
+            ->oldest('start_date')->get()->first()->start_date;
 
     }
 
