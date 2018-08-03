@@ -36,13 +36,7 @@ class Job extends Model
         'actual_end_date',
         'job_name'
     ];
-
-//
-//    public function time()
-//    {
-//        return $this->hasMany(Time::class);
-//    }
-
+    
     public function customer()
     {
         return $this->belongsTo(User::class)->with('customer');
@@ -283,11 +277,11 @@ class Job extends Model
     public function jobTotal()
     {
         // for each task that is related to the job -> SUM(qty * cust_final_price)
-        $jt = $this->jobTasks()->get();
+        $jt = $this->jobTasks()->where("deleted_at", "=", NULL)->get();
 
         $bid_price = 0;
 
-        foreach ($jt as $j){$bid_price = $bid_price + ($j->qty * $j->cust_final_price);}
+        foreach ($jt as $j){$bid_price = $bid_price + ($j->qty * $j->unit_price);}
 
         $this->bid_price = $bid_price;
 
@@ -299,47 +293,6 @@ class Job extends Model
         }
         return true;
 
-
-//        $j = Job::find(1);
-//        $jt = $j->jobTasks()->get();
-//        $bid_price = 0;
-//        foreach ($jt as $t){$bid_price = $bid_price + ($t->qty * $t->cust_final_price);}
-//        $j->bid_price = $bid_price;
-//        $j->save();
-
-
-    }
-
-    public function addPrice($amount)
-    {
-        $this->bid_price += $amount;
-
-        try {
-            $this->save();
-        } catch(\Exception $e) {
-            Log::error('Adding Price To Job: ' . $e->getMessage());
-            return false;
-        }
-        return true;
-    }
-
-    public function subtractPrice($amount)
-    {
-        Log::debug('existing amount ' . $this->bid_price);
-        Log::debug('amount: ' . $amount);
-        $this->bid_price -= (int) $amount;
-        if ($this->bid_price < 0) {
-            $this->bid_price = 0;
-        }
-
-        try {
-            $this->save();
-            Log::debug('Saved subtract job ' .  $this);
-        } catch(\Exception $e) {
-            Log::error('Subtracting Price To Job: ' . $e->getMessage());
-            return false;
-        }
-        return true;
     }
 
     /**

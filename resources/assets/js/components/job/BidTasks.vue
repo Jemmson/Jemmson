@@ -124,6 +124,7 @@
                         <div class="flex items-center" v-if="isContractor">
                             <i class="fas fa-clock icon m-r-2"></i>
                             <div class="flex flex-col">
+                                <div style="font-size: 12pt;">Task Start Date</div>
                                 <input type="date" class="form-control form-control-date" style=""
                                        v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                                        @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
@@ -529,6 +530,8 @@
       },
       updateTaskStartDate (date, jobTaskId) {
 
+        // debugger
+
         let dateArray = GeneralContractor.checkDateIsTodayorLater (date, this.bid.created_at);
         this.startDateErrorMessage = dateArray[0];
         this.hasStartDateError = dateArray[1];
@@ -559,7 +562,7 @@
       },
       updateCustomerTaskPrice (price, jobTaskId, bidId, jobTask) {
         price = price.replace (/[^0-9.]/g, '');
-        let taskPrice = jobTask.cust_final_price;
+        let taskPrice = jobTask.unit_price;
         taskPrice = taskPrice.toString ();
         // debugger
         if ((taskPrice !== price)) {

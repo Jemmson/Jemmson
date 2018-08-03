@@ -224,7 +224,8 @@ class TaskController extends Controller
             return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
         }
 
-        $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
+//        $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
+        $job->jobTotal();
         return response()->json(["message" => "Success"], 200);
 
     }
