@@ -233,6 +233,7 @@ class User extends SparkUser
     static public function validatePhoneNumber($number)
     {
 
+        $number = '1'.$number;
         $client = new Client();
 
         $res = $client->request('POST', 'https://api.nexmo.com/ni/advanced/json', [
