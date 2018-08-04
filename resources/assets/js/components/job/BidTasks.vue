@@ -492,8 +492,6 @@
         // debugger;
         const task_location = jobTask.location_id;
         const job_location = this.bid.location_id;
-        console.log (task_location)
-        console.log (job_location)
         if (task_location === null && job_location === null) {
           return 'No Address Set Yet';
         } else if (job_location === job_location) {
