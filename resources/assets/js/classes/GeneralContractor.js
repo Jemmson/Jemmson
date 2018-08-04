@@ -320,6 +320,19 @@ export default class GeneralContractor {
     }
   }
 
+  // async updateJobStartDate (date, jobId) {
+  //   try {
+  //     const data = await axios.post ('/api/task/updateJobStartDate', {
+  //       date: date,
+  //       jobId: jobId,
+  //     });
+  //     User.emitChange ('bidUpdated');
+  //     Vue.toasted.success (Language.lang ().bid_task.start_date.general);
+  //   } catch (error) {
+  //     Vue.toasted.error ('Error: ' + error.message);
+  //   }
+  // }
+
   constructor () {
     this.user = Spark.state.user;
   }

@@ -582,8 +582,8 @@ class TaskController extends Controller
         $job = Job::find($jobTask->job_id);
         $customer = Customer::find($job->customer_id);
 
-        $jobTask = JobTask::find(12);
-        $job = Job::find($jobTask->job_id);
+//        $jobTask = JobTask::find(12);
+//        $job = Job::find($jobTask->job_id);
 //        $user = Customer::select()->where("user_id", "=", $job->customer_id)->get()->first();
 
         if ($actor == 'sub') {

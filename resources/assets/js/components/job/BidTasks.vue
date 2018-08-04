@@ -127,13 +127,13 @@
                                 <div style="font-size: 12pt;">Task Start Date</div>
                                 <input type="date" class="form-control form-control-date" style=""
                                        v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
-                                       @blur="updateTaskStartDate($event.target.value, jobTask.id, bid.id, jobTask)">
+                                       @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                                 <span :class="{ error: hasStartDateError }"
                                       v-show="hasStartDateError">{{ startDateErrorMessage }}
                                 </span>
                             </div>
                             <!--<label v-if="isCustomer || !showTaskStartDate()">-->
-                                <!--{{prettyDate(jobTask.start_date)}} </label>-->
+                            <!--{{prettyDate(jobTask.start_date)}} </label>-->
                         </div>
                     </div>
 

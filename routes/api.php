@@ -38,7 +38,7 @@ Route::group([
 });
 
 // TODO: need to lock these routes down
-// based on user and the resources they 
+// based on user and the resources they
 // try to edit
 
 Route::get('/search', function (Request $request) {
@@ -103,6 +103,14 @@ Route::post('/task/updateTaskStartDate', function (Request $request) {
     $job->updateJobAgreedStartDate($earliestDate);
 
 });
+
+//Route::post('/task/updateJobStartDate', function (Request $request) {
+//
+//    $job = Job::find($jt->jobId);
+//    $job->updateJobAgreedStartDate(date);
+//
+//});
+
 Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
@@ -125,11 +133,8 @@ Route::post('/job/getArea', 'JobController@getArea');
 
 Route::post('/customer/getAddress', 'CustomerController@getAddress');
 
-// stripe controller 
+// stripe controller
 Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');
 
 Route::post('feedback', 'HomeController@feedback');
 Route::post('location', 'TaskController@updateTaskLocation');
-
-
-
