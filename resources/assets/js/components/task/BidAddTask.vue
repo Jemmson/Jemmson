@@ -377,6 +377,7 @@
           })
         }
 
+        // debugger
         for (let i = 0; i < this.taskResults.length; i++) {
           if (this.taskResults[i].name === message) {
             this.nameExistsInDB = true;
@@ -485,6 +486,7 @@
         this.taskResults = [];
         this.valueChanged = false;
         this.dropdownSelected = false;
+        this.nameExistsInDB = false;
       },
       changeTask (message) {
         if (message === 'Update') {
