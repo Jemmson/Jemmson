@@ -9,7 +9,7 @@
                 <form class="form-horizontal" role="form">
                     <input type="hidden" name="street_number" id="street_number">
                     <input type="hidden" name="country" id="country">
-                     <!-- email -->
+                    <!-- email -->
                     <div class="form-group" :class="{'has-error': form.errors.has('email')}">
                         <label class="col-md-3 control-label">Update Login Email</label>
                         <div class="col-md-8">
@@ -20,7 +20,7 @@
                                 </span>
                         </div>
                     </div>
-                    
+
                     <!-- Name -->
                     <div class="form-group" :class="{'has-error': form.errors.has('name')}">
                         <label class="col-md-3 control-label">Full Name</label>
@@ -119,7 +119,7 @@
                         <label class="col-md-3 control-label">Any Special Notes For The Contractor</label>
                         <div class="col-md-8">
                                 <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10" class="form-control"
-                                        ></textarea>
+                                ></textarea>
                         </div>
                     </div>
 
@@ -301,10 +301,10 @@
         }
       },
       updateFormLocation(location) {
-          this.form.address_line_1 = location.route;
-          this.form.city = location.locality;
-          this.form.state = location.administrative_area_level_1;
-          this.form.zip = location.postal_code;
+        this.form.address_line_1 = location.route;
+        this.form.city = location.locality;
+        this.form.state = location.administrative_area_level_1;
+        this.form.zip = location.postal_code;
       },
       filterPhone () {
         this.form.phone_number = Format.phone(this.form.phone_number);
@@ -372,11 +372,14 @@
       this.form.name = this.user.name != null ? this.user.name : '';
 
       this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : '';
-      
-      
+
+      if (this.user.phone != null) {
+        this.validateMobileNumber(this.user.phone);
+      }
+
       Bus.$on('updateFormLocation', (payload) => {
-                this.updateFormLocation(payload);
-            });
+        this.updateFormLocation(payload);
+      });
     }
   }
 </script>

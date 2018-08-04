@@ -36,7 +36,7 @@ class Job extends Model
         'actual_end_date',
         'job_name'
     ];
-    
+
     public function customer()
     {
         return $this->belongsTo(User::class)->with('customer');
@@ -163,7 +163,7 @@ class Job extends Model
         $this->status = __('job.completed');
 
         try {
-            $this->save();    
+            $this->save();
         } catch(\Exception $e) {
             Log::error('Update Job' . $e->getMessage());
         }
