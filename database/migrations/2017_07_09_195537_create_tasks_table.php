@@ -26,9 +26,9 @@ class CreateTasksTable extends Migration
             $table->float('average_cust_price')->nullable();
             $table->float('proposed_sub_price')->nullable();
             $table->float('average_sub_price')->nullable();
-//            $table->integer('job_id')->unsigned();
+            $table->integer('job_id')->unsigned();
             $table->timestamps();
-//            $table->foreign('job_id')->references('id')->on('jobs');
+            $table->foreign('job_id')->references('id')->on('jobs');
         });
     }
 

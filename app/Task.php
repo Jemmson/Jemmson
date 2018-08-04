@@ -38,7 +38,6 @@ class Task extends Model
         $this->qtyUnit = $request->qtyUnit;
         $this->sub_instructions = $request->sub_message;
         $this->customer_instructions = $request->customer_message;
-        $this->job_id = $request->jobId;
 
         try {
             $this->save();
