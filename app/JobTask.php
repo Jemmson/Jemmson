@@ -27,7 +27,6 @@ class JobTask extends Model
         'start_when_accepted',
         'stripe',
         'start_date',
-        'deleted_at',
         'stripe_transfer_is',
         'customer_message',
         'sub_message',
@@ -39,7 +38,7 @@ class JobTask extends Model
 
     public function __construct()
     {
-
+        parent::__construct();
     }
 
     /**

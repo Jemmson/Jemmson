@@ -23,7 +23,6 @@ class TaskSeeder extends Seeder
                     'average_cust_price' => rand(1, 100),
                     'proposed_sub_price' => rand(1, 100),
                     'average_sub_price' => rand(1, 100),
-                    'job_id' => 1
         ];
         Task::create($data);
 
@@ -35,7 +34,6 @@ class TaskSeeder extends Seeder
                     'average_cust_price' => rand(1, 100),
                     'proposed_sub_price' => rand(1, 100),
                     'average_sub_price' => rand(1, 100),
-                    'job_id' => 2
         ];
         Task::create($data);
         // for ($i = 1; $i < 5; $i++) {
