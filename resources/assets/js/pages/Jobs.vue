@@ -96,8 +96,10 @@
       getBids () {
         console.log ('getBids');
         axios.post ('/jobs').then ((response) => {
-          this.bids = response.data;
-          this.sBids = this.bids;
+          if (Array.isArray(response.data)) {
+            this.bids = response.data;
+            this.sBids = this.bids;
+          }
         });
       },
       previewSubForTask (bidId, jobTaskId, subBidId) {
