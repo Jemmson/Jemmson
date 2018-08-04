@@ -88,6 +88,10 @@ window.Echo.private('App.User.' + Spark.state.user.id)
         Vue.toasted.info('An Image Was Deleted.');
         Bus.$emit('bidUpdated');
         break;
+      case "App\\Notifications\\NotifyCustomerOfUpdatedMessage":
+        Vue.toasted.info('Your Contractor Has Sent an Updated Message.');
+        Bus.$emit('bidUpdated');
+        break;
       default:
         break;
     }
