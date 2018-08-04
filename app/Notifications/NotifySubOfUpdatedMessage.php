@@ -29,7 +29,7 @@ class NotifySubOfUpdatedMessage extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -57,5 +57,12 @@ class NotifySubOfUpdatedMessage extends Notification
         return [
             //
         ];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'job' => $this->bid,
+        ]);
     }
 }
