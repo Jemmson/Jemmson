@@ -489,6 +489,7 @@
         GeneralContractor.acceptSubBidForTask (jobTask, bid, this.disabled);
       },
       location (jobTask, bid) {
+        // debugger;
         const task_location = jobTask.location_id;
         const job_location = this.bid.location_id;
         console.log (task_location)

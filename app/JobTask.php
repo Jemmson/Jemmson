@@ -76,7 +76,7 @@ class JobTask extends Model
 
     }
 
-    public function create($request, $taskId)
+    public function createJobTask($request, $taskId)
     {
         // standard task column = new column value
         $this->job_id = $request->jobId;

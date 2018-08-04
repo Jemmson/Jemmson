@@ -700,30 +700,39 @@ class TaskController extends Controller
                 "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
         }
 
+        Log::debug($request);
+
         $jobTask = "";
 
         if ($request->updateTask && !$request->createNew) {
             // find the existing task and update the standard task table
             // add task to job task table
             $task = Task::find($request->taskId);
-            $task->update($request);
+            $task->updateTask($request);
+
+            Log::debug('updateTask is true; CreateNew is false');
 
             $jobTask = new JobTask;
-            $jobTask->create($request, $request->taskId);
+            $jobTask->createJobTask($request, $request->taskId);
 
         } else if (!$request->updateTask && !$request->createNew) {
             // find the existing task but dont update the standard task table
             $jobTask = new JobTask;
-            $jobTask->create($request, $request->taskId);
+            $jobTask->createJobTask($request, $request->taskId);
+
+            Log::debug('updateTask is false; CreateNew is false');
 
         } else if (!$request->updateTask && $request->createNew) {
             // create a new task and add it to the standard task table
             // add a new task to the job task table
+
+            Log::debug('updateTask is false; CreateNew is true');
+
             $task = new Task;
-            $task->create($request);
+            $task->createTask($request);
 
             $jobTask = new JobTask;
-            $jobTask->create($request, $task->id);
+            $jobTask->createJobTask($request, $task->id);
 
         }
 

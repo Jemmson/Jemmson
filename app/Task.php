@@ -29,7 +29,7 @@ class Task extends Model
         'job_id'
     ];
 
-    public function create($request)
+    public function createTask($request)
     {
         $this->name = strtolower($request->taskName);
         $this->contractor_id = $request->contractorId;
@@ -38,6 +38,7 @@ class Task extends Model
         $this->qtyUnit = $request->qtyUnit;
         $this->sub_instructions = $request->sub_message;
         $this->customer_instructions = $request->customer_message;
+        $this->job_id = $request->jobId;
 
         try {
             $this->save();
@@ -109,7 +110,7 @@ class Task extends Model
         }
     }
 
-    public function update($request = [], $options = null)
+    public function updateTask($request = [], $options = null)
     {
         // standard task column = new column value
         $this->name = $request->taskName;
