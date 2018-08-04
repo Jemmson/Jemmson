@@ -166,7 +166,8 @@
                         <!-- show if
                                 drop down is selected
                                 any of the selected values change -->
-                        <button v-if="dropdownSelected && valueChanged" class="btn btn-sm btn-primary"
+                        <button v-if="nameExistsInDB ||
+                                    (dropdownSelected && valueChanged)" class="btn btn-sm btn-primary"
                                 :disabled="checkErrors"
                                 @click.prevent="changeTask('Update')">Update and Add
                         </button>
@@ -174,7 +175,8 @@
                         <!-- show if
                             drop down is selected and
                             any of the values have changed -->
-                        <button v-if="dropdownSelected && valueChanged" class="btn btn-sm btn-primary"
+                        <button v-if="nameExistsInDB ||
+                                    (dropdownSelected && valueChanged)" class="btn btn-sm btn-primary"
                                 :disabled="checkErrors"
                                 @click.prevent="changeTask('Ignore')">Ignore and Add
                         </button>
@@ -191,7 +193,7 @@
                         <!-- show if
                             drop down selected but no values have changed or
                             drop down not selected -> if drop down not selected then create a new standard task -->
-                        <button v-if="(dropdownSelected && !valueChanged) || !dropdownSelected"
+                        <button v-if="(dropdownSelected && !valueChanged) || (!dropdownSelected && !nameExistsInDB)"
                                 class="btn btn-sm btn-primary" :disabled="checkErrors"
                                 @click.prevent="changeTask('Add')">
                             Add Task
@@ -251,7 +253,7 @@
         valueChanged: false,
         taskResultsChange: false,
         taskResults: [],
-
+        nameExistsInDB: false,
         nameChanged: false,
         priceChanged: false,
         quantityChanged: false,
@@ -375,11 +377,17 @@
           })
         }
 
-        if (this.dropdownSelected && (message !== this.result.taskName)) {
-          this.nameChanged = true;
-        } else {
-          this.nameChanged = false;
+        for (let i = 0; i < this.taskResults.length; i++) {
+          if (this.taskResults[i].name === message) {
+            this.nameExistsInDB = true;
+          }
         }
+
+        // if (this.dropdownSelected && (message !== this.result.taskName)) {
+        //   this.nameChanged = true;
+        // } else {
+        //   this.nameChanged = false;
+        // }
 
         this.checkIfValuesChanged ();
 
