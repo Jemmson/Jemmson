@@ -74,7 +74,7 @@
                         <div class="flex justify-around">
                             <div class="flex flex-col">
                                 <label>Quantity:</label>
-                                <input type="text" class="form-control" v-if="showTaskPriceInput()"
+                                <input type="text" class="form-control" :disabled="!showTaskPriceInput()"
                                        :value="jobTask.qty"
                                        @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
@@ -85,7 +85,7 @@
                                 <label class="m-l-6">Price:</label>
                                 <div class="flex">
                                     <span class="dollarSign m-l-6">$</span>
-                                    <input type="text" class="form-control" v-if="showTaskPriceInput()"
+                                    <input type="text" class="form-control" :disabled="!showTaskPriceInput()"
                                            :value="taskCustFinalPrice(jobTask.unit_price)"
                                            @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
                                 </div>
