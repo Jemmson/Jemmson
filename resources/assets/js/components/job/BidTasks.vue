@@ -154,6 +154,7 @@
                                             rows="0"
                                             class="form-control"
                                             @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
+                                            :disabled="disableMessages"
                                     >{{ jobTask.sub_message }}</textarea>
 
                                     <!--<input-->
@@ -169,6 +170,7 @@
                                             rows="0"
                                             class="form-control"
                                             @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
+                                            :disabled="disableMessages"
                                     >{{ jobTask.customer_message }}</textarea>
                                 </div>
                                 <button class="btn btn-success btn-large m-t-3">Send</button>
@@ -423,6 +425,9 @@
           total += this.subTaskPrice (jobTask);
         }
         return total;
+      },
+      disableMessages () {
+        return this.bid.status === "job.completed";
       }
     },
     methods: {
