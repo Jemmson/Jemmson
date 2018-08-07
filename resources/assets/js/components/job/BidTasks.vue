@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-success btn-large m-t-3" style="width: 20%">Update</button>
+                        <button class="btn btn-success btn-large m-t-3" style="width: 20%" v-show="jobTask.status !== 'bid_task.customer_sent_payment'">Update</button>
                     </div>
 
 
