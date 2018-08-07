@@ -9,6 +9,7 @@
 
                 <input name="customer"
                        id="customerName"
+                       dusk="customerName"
                        type="text"
                        v-model="form.customerName"
                        v-on:keyup="autoComplete"
@@ -35,11 +36,14 @@
                        @keyup="filterPhone"
                        maxlength="10"
                        name="phone"
+                       dusk="phone"
                        type="tel"
                        @blur="validateMobileNumber($event.target.value)"
                        v-model="form.phone">
-                <div v-if="checkThatNumberIsMobile()" style="color: green">{{ this.getMobileValidResponse[1] }}</div>
-                <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1] }}</div>
+                <div dusk="networkType" v-if="checkThatNumberIsMobile()" style="color: green">{{ networkType.originalCarrier }}
+                </div>
+                <div dusk="networkType" v-if="checkLandLineNumber()" style="color: red">{{ networkType.originalCarrier }}
+                </div>
                 <span class="help-block"
                       v-show="form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
@@ -55,6 +59,7 @@
                 <input class="form-control"
                        id="jobName"
                        name="jobName"
+                       dusk="jobName"
                        type="text"
                        v-model="form.jobName">
                 <span class="help-block"
@@ -63,7 +68,7 @@
                 </span>
             </div>
 
-            <button name="submit" id="submit" class="btn btn-default btn-primary"
+            <button name="submit" dusk="submitBid" id="submit" class="btn btn-default btn-primary"
                     @click.prevent="submit" :disabled="checkValidData()">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -94,6 +99,12 @@
           customerName: '',
           jobName: ''
         }),
+        networkType: {
+          success: '',
+          originalCarrier: '',
+          currentCarrier: '',
+          exists: '',
+        },
         disabled: {
           submit: false,
           validData: true
@@ -104,7 +115,13 @@
     computed: {
       ...mapGetters ([
         'getMobileValidResponse'
-      ])
+      ]),
+      validResponse () {
+        this.networkType.success = this.getMobileValidResponse[0];
+        this.networkType.originalCarrier = this.getMobileValidResponse[1];
+        this.networkType.currentCarrier = this.getMobileValidResponse[2];
+        this.networkType.exists = this.getMobileValidResponse[3];
+      }
     },
     methods: {
       ...mapMutations ([
@@ -185,7 +202,7 @@
         this.form.phone = result.phone;
         this.form.customerName = result.name;
         this.results = [];
-        this.validateMobileNumber(result.phone);
+        this.validateMobileNumber (result.phone);
       }
     }
   }
