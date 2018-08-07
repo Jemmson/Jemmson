@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App;
@@ -10,7 +11,7 @@ use App;
 class UserTest extends TestCase
 {
 //    use DatabaseMigrations;
-    /**s
+    /*
      * A basic test example.
      *
      * @return void
@@ -18,11 +19,22 @@ class UserTest extends TestCase
 
     public function testUsersHaveContractors()
     {
-        $users = factory(App\User::class, 3)
-            ->create()
-            ->each(function ($u) {
-                $u->contractors()->save(factory(App\Contractor::class)->make());
-            });
+//        $contractor = factory(\App\Contractor::class)->create();
+//        $location = factory(\App\Location::class)
+//            ->create(['user_id' => $contractor->user_id]);
+//        $contractor->location_id = $location->id;
+//        $contractor->save();
+//        $user = User::find($contractor->user_id);
+//        $user->location_id = $location->id;
+//        $user->save();
+
+//        $this->visit('/')->see('Jemmson');
+
+//        $users = factory(App\User::class, 3)
+//            ->create()
+//            ->each(function ($u) {
+//                $u->contractors()->save(factory(App\Contractor::class)->make());
+//            });
     }
 
 }
