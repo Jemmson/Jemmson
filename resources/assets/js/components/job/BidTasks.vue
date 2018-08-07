@@ -181,56 +181,24 @@
                     <div class="flex justify-around m-t-6 m-b-6">
 
                         <div v-if="isContractor">
-                            <button class="bg-blue
-                                            p-r-4
-                                            p-l-4
-                                            p-t-1
-                                            p-b-1
-                                            m-t-2
-                                            text-center
-                                            text-white
-                                            rounded-lg"
+                            <button class="btn-blue"
                                     @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
                                 Add A Sub
                             </button>
 
-                            <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="bg-blue
-                                            p-r-4
-                                            p-l-4
-                                            p-t-1
-                                            p-b-1
-                                            m-t-2
-                                            text-center
-                                            text-white
-                                            rounded-lg"
+                            <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="btn-blue"
                                     @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
                                 Display Subs
                             </button>
 
                         </div>
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                             Deny
                         </button>
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                                 :disabled="disabled.deleteTask">
                             <span v-if="disabled.deleteTask">
@@ -240,15 +208,7 @@
                         </button>
 
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                                 :disabled="disabled.finished">
                             <span v-if="disabled.finished">
@@ -257,15 +217,7 @@
                             Finished
                         </button>
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)"
                                 :disabled="disabled.approve">
                             <span v-if="disabled.approve">
@@ -679,7 +631,7 @@
   }
 </script>
 
-<style scope>
+<style lang="less" scoped>
 
     .error {
         color: red;
