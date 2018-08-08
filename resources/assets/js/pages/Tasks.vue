@@ -80,7 +80,7 @@
                 <label>QTY: {{ bidTask.job_task.qty }}</label>
               </div>
               <div class="col-xs-6 form-group text-right">
-                <label>Total: {{ bidTask.bid_price * bidTask.job_task.qty }}</label>
+                <label>Total: {{ bidTask.bid_price }}</label>
               </div>
               <!-- / end qty section -->
 

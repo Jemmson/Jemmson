@@ -83,7 +83,7 @@ class JobTask extends Model
         $this->status = 'bid_task.initiated';
         $this->contractor_id = $request->contractorId;
         $this->cust_final_price = $request->qty * $request->taskPrice;
-        $this->sub_final_price = (int)$request->subTaskPrice;
+        $this->sub_final_price = 0;
         if (empty($request->start_date)) {
             $this->start_date = \Carbon\Carbon::now();
         } else {
@@ -281,7 +281,7 @@ class JobTask extends Model
         $this->task_id = $request->taskId;
         $this->contractor_id = $request->contractorId;
         $this->cust_final_price = $request->qty * $request->taskPrice;
-        $this->sub_final_price = $request->subTaskPrice;
+        $this->sub_final_price = 0;
         $this->start_when_accepted = $request->customer_message;
         if (empty($request->start_date)) {
             $this->start_date = \Carbon\Carbon::now();

@@ -181,24 +181,24 @@
                     <div class="flex justify-around m-t-6 m-b-6">
 
                         <div v-if="isContractor">
-                            <button class="btn-blue"
+                            <button class="bttn bg-blue"
                                     @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
                                 Add A Sub
                             </button>
 
-                            <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="btn-blue"
+                            <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="bttn bg-blue"
                                     @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
                                 Display Subs
                             </button>
 
                         </div>
 
-                        <button class="btn-blue"
+                        <button class="bttn bg-red"
                                 v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                             Deny
                         </button>
 
-                        <button class="btn-blue"
+                        <button class="bttn bg-red"
                                 v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                                 :disabled="disabled.deleteTask">
                             <span v-if="disabled.deleteTask">
@@ -208,7 +208,7 @@
                         </button>
 
 
-                        <button class="btn-blue"
+                        <button class="bttn bg-green"
                                 v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                                 :disabled="disabled.finished">
                             <span v-if="disabled.finished">
@@ -217,7 +217,7 @@
                             Finished
                         </button>
 
-                        <button class="btn-blue"
+                        <button class="bttn bg-green"
                                 v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)"
                                 :disabled="disabled.approve">
                             <span v-if="disabled.approve">
@@ -254,7 +254,7 @@
                                             <td>
                                                 <button v-if="showAcceptBtn(jobTask.status)"
                                                         @click="acceptSubBidForTask(bid, jobTask)"
-                                                        class="button btn btn-sm btn-success"
+                                                        class="btn-green"
                                                         :disabled="disabled.accept">
                                                           <span v-if="disabled.accept">
                                                             <i class="fa fa-btn fa-spinner fa-spin"></i>

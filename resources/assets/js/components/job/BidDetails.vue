@@ -5,7 +5,7 @@
         <div v-if="bid.job_name !== undefined">
 
             <!-- JOB STATUS -->
-            <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
+            <div for="task-status" class="status" :class="getLabelClass(bid.status)">
                 {{ status }}
             </div>
 
@@ -182,13 +182,6 @@
     .px-s {
         padding-right: 1rem;
         padding-left: 1rem;
-    }
-
-    .status {
-        display: flex;
-        justify-content: center;
-        border-radius: 10px;
-        font-size: 2rem;
     }
 
     .message {
