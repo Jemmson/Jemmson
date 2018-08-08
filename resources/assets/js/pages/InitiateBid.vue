@@ -68,7 +68,7 @@
                 </span>
             </div>
 
-            <button name="submit" dusk="submitBid" id="submit" class="btn btn-default btn-primary"
+            <button name="submit" dusk="submitBid" id="submit" class="bttn bg-green"
                     @click.prevent="submit" :disabled="checkValidData()">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
