@@ -520,6 +520,9 @@
         }
       },
       addNewTaskToBid () {
+        if (this.addNewTaskForm.subTaskPrice === ''){
+          this.addNewTaskForm.subTaskPrice = 0.0
+        }
         if (!this.addNewTaskForm.hasQtyUnitError && !this.addNewTaskForm.hasStartDateError) {
           GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
           // console.log (newTask);
