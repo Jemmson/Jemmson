@@ -28657,3 +28657,30 @@ a.lightbox-close:after {
   color: #fff;
   border-radius: .5rem;
 }
+.btn-red {
+  background-color: #e3342f;
+  padding: 1rem;
+  margin-top: .5rem;
+  text-align: center;
+  color: white;
+  color: #fff;
+  border-radius: .5rem;
+}
+.btn-green {
+  background-color: #38c172;
+  padding: 1rem;
+  margin-top: .5rem;
+  text-align: center;
+  color: white;
+  color: #fff;
+  border-radius: .5rem;
+}
+.btn-yellow {
+  background-color: #ffed4a;
+  padding: 1rem;
+  margin-top: .5rem;
+  text-align: center;
+  color: white;
+  color: #fff;
+  border-radius: .5rem;
+}

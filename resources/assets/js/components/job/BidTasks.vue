@@ -193,12 +193,12 @@
 
                         </div>
 
-                        <button class="btn-blue"
+                        <button class="btn-red"
                                 v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                             Deny
                         </button>
 
-                        <button class="btn-blue"
+                        <button class="btn-red"
                                 v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                                 :disabled="disabled.deleteTask">
                             <span v-if="disabled.deleteTask">
@@ -208,7 +208,7 @@
                         </button>
 
 
-                        <button class="btn-blue"
+                        <button class="btn-green"
                                 v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                                 :disabled="disabled.finished">
                             <span v-if="disabled.finished">
@@ -217,7 +217,7 @@
                             Finished
                         </button>
 
-                        <button class="btn-blue"
+                        <button class="btn-green"
                                 v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)"
                                 :disabled="disabled.approve">
                             <span v-if="disabled.approve">
@@ -254,7 +254,7 @@
                                             <td>
                                                 <button v-if="showAcceptBtn(jobTask.status)"
                                                         @click="acceptSubBidForTask(bid, jobTask)"
-                                                        class="button btn btn-sm btn-success"
+                                                        class="btn-green"
                                                         :disabled="disabled.accept">
                                                           <span v-if="disabled.accept">
                                                             <i class="fa fa-btn fa-spinner fa-spin"></i>

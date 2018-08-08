@@ -28,7 +28,7 @@
                                 <input type="checkbox" name="exclude" :id="'exclude-' + jobTask.id" @click="addJobTaskToExcludedList(jobTask)">
                             </td>
                             <td v-if="showReopenBtn(jobTask)">
-                                <button class="btn btn-warning" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
+                                <button class="btn-yellow" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
                                     <span v-if="disabled.reopen">
                                         <i class="fa fa-btn fa-spinner fa-spin"></i>
                                     </span>
@@ -36,7 +36,7 @@
                                 </button>
                             </td>
                             <td v-else>
-                                <button class="btn btn-primary" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                                <button class="btn-blue" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                                     Deny
                                 </button>
                             </td>
@@ -65,13 +65,13 @@
             </div>
             <div class="panel-footer">
                 <div v-if="isCustomer" class="text-right">
-                    <button class="btn btn-success" @click.prevent="paidWithCash()" :disabled="disabled.payCash">
+                    <button class="btn-green" @click.prevent="paidWithCash()" :disabled="disabled.payCash">
                         <span v-if="disabled.payCash">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                         Paid With Cash
                     </button>
-                    <button class="btn btn-success" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+                    <button class="btn-green" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
