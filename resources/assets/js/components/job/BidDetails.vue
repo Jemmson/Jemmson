@@ -46,6 +46,14 @@
                 <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
             </div>
 
+            <!-- Customer Notes -->
+            <button class="btn btn-sm btn-info" @click="customerInfo = !customerInfo">Customer Info</button>
+            <div v-show="customerInfo" class="flex space-between flex-col">
+                <p class="message">
+                    {{ bid.customer.customer.notes }}
+                </p>
+            </div>
+
             <!-- Declined Message -->
             <div class="flex space-between flex-col"
                  v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
@@ -76,6 +84,7 @@
         },
         areaError: '',
         locationExists: false,
+        customerInfo: false
       }
     },
     computed: {
