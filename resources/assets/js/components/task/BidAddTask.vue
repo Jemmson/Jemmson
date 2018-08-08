@@ -12,7 +12,7 @@
                 </div>
                 <div class="modal-body">
                     <form role="form" class="wrapper">
-
+                        <h1 class="text-center error-lg" v-show="errors.general.errorExists">{{ errors.general.message }}</h1>
                         <div class="flex m-t-2">
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
@@ -47,11 +47,15 @@
                                            autocomplete="text"
                                            v-model="addNewTaskForm.taskPrice"
                                            @keyup="checkIfPriceChanged($event.target.value)"
+                                           @blur="verifyInputIsANumber($event.target.value, 'price')"
                                     >
                                 </div>
+                                <span :class="{ error: errors.notANumber.price }"
+                                      v-show="errors.notANumber.price">Customer Price {{ errors.notANumber.message }}
+                                </span>
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
                                 {{ addNewTaskForm.errors.get('taskPrice') }}
-                            </span>
+                                </span>
                             </div>
                         </div>
 
@@ -59,9 +63,18 @@
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('qty')}">
                                 <label for="qty">Quantity</label>
-                                <input type="number" class="form-control" min="1" id="qty"
-                                       name="qty" required v-model="addNewTaskForm.qty"
+                                <input type="number"
+                                       class="form-control"
+                                       min="1"
+                                       id="qty"
+                                       name="qty"
+                                       required
+                                       @blur="verifyInputIsANumber($event.target.value, 'quantity')"
+                                       v-model="addNewTaskForm.qty"
                                 >
+                                <span :class="{ error: errors.notANumber.quantity }"
+                                      v-show="errors.notANumber.quantity">Quantity {{ errors.notANumber.message }}
+                                </span>
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
                                     {{ addNewTaskForm.errors.get('qty') }}
                                 </span>
@@ -95,8 +108,12 @@
                                            class="form-control" id="subTaskPrice" name="subTaskPrice"
                                            v-model="addNewTaskForm.subTaskPrice"
                                            @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
+                                           @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')"
                                     >
                                 </div>
+                                <span :class="{ error: errors.notANumber.subTaskPrice }"
+                                      v-show="errors.notANumber.subTaskPrice">Sub Price {{ errors.notANumber.message }}
+                                </span>
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
                                 {{ addNewTaskForm.errors.get('subTaskPrice') }}
                             </span>
@@ -248,6 +265,18 @@
           customer_instructions: '',
           sub_instructions: ''
         },
+        errors: {
+          general: {
+            errorExists: false,
+            message: 'Errors exist on page. Please review'
+          },
+          notANumber: {
+            price: false,
+            quantity: false,
+            subTaskPrice: false,
+            message: 'must be a number'
+          }
+        },
         dropdownSelected: false,
         dropDownSelectedNameIsDifferent: false,
         valueChanged: false,
@@ -287,6 +316,25 @@
         } else {
           this.addNewTaskForm.qtyUnitErrorMessage = '';
           this.addNewTaskForm.hasQtyUnitError = false;
+        }
+      },
+      verifyInputIsANumber (input, target){
+        if (input !== '' && isNaN (input)) {
+          if (target === 'price') {
+            this.errors.notANumber.price = true
+          } else if (target === 'quantity') {
+            this.errors.notANumber.quantity = true
+          } else if (target === 'subTaskPrice') {
+            this.errors.notANumber.subTaskPrice = true
+          }
+        } else {
+          if (target === 'price') {
+            this.errors.notANumber.price = false
+          } else if (target === 'quantity') {
+            this.errors.notANumber.quantity = false
+          } else if (target === 'subTaskPrice') {
+            this.errors.notANumber.subTaskPrice = false
+          }
         }
       },
       strippedTaskPrice (taskPrice) {
@@ -492,6 +540,13 @@
         this.dropdownSelected = false;
         this.nameExistsInDB = false;
         this.submitted = true;
+        this.addNewTaskForm.hasQtyUnitError = false;
+        this.addNewTaskForm.hasStartDateError = false;
+        this.errors.notANumber.price = false;
+        this.errors.notANumber.quantity = false;
+        this.errors.notANumber.subTaskPrice = false;
+        this.errors.general.errorExists = false;
+
       },
       changeTask (message) {
         if (message === 'Update') {
@@ -523,11 +578,19 @@
         if (this.addNewTaskForm.subTaskPrice === ''){
           this.addNewTaskForm.subTaskPrice = 0.0
         }
-        if (!this.addNewTaskForm.hasQtyUnitError && !this.addNewTaskForm.hasStartDateError) {
+        if (
+          !this.addNewTaskForm.hasQtyUnitError &&
+          !this.addNewTaskForm.hasStartDateError &&
+          !this.errors.notANumber.price &&
+          !this.errors.notANumber.quantity &&
+          !this.errors.notANumber.subTaskPrice
+        ) {
           GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
           // console.log (newTask);
           // debugger;
           this.clearTaskResults ();
+        } else {
+          this.errors.general.errorExists = true;
         }
       },
       toggleStripePaymentOption () {
@@ -544,6 +607,12 @@
     .error {
         color: red;
         font-size: 12pt;
+        font-weight: 900;
+    }
+
+    .error-lg {
+        color: red;
+        font-size: 20pt;
         font-weight: 900;
     }
 
