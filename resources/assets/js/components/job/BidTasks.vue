@@ -74,7 +74,7 @@
                         <div class="flex justify-around">
                             <div class="flex flex-col">
                                 <label>Quantity:</label>
-                                <input type="text" class="form-control" v-if="showTaskPriceInput()"
+                                <input type="text" class="form-control" :disabled="!showTaskPriceInput()"
                                        :value="jobTask.qty"
                                        @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
@@ -85,13 +85,13 @@
                                 <label class="m-l-6">Price:</label>
                                 <div class="flex">
                                     <span class="dollarSign m-l-6">$</span>
-                                    <input type="text" class="form-control" v-if="showTaskPriceInput()"
+                                    <input type="text" class="form-control" :disabled="!showTaskPriceInput()"
                                            :value="taskCustFinalPrice(jobTask.unit_price)"
                                            @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-success btn-large m-t-3" style="width: 20%">Update</button>
+                        <button class="btn btn-success btn-large m-t-3" style="width: 20%" v-show="jobTask.status !== 'bid_task.customer_sent_payment'">Update</button>
                     </div>
 
 
@@ -154,6 +154,7 @@
                                             rows="0"
                                             class="form-control"
                                             @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
+                                            :disabled="disableMessages"
                                     >{{ jobTask.sub_message }}</textarea>
 
                                     <!--<input-->
@@ -169,6 +170,7 @@
                                             rows="0"
                                             class="form-control"
                                             @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
+                                            :disabled="disableMessages"
                                     >{{ jobTask.customer_message }}</textarea>
                                 </div>
                                 <button class="btn btn-success btn-large m-t-3">Send</button>
@@ -179,56 +181,24 @@
                     <div class="flex justify-around m-t-6 m-b-6">
 
                         <div v-if="isContractor">
-                            <button class="bg-blue
-                                            p-r-4
-                                            p-l-4
-                                            p-t-1
-                                            p-b-1
-                                            m-t-2
-                                            text-center
-                                            text-white
-                                            rounded-lg"
+                            <button class="btn-blue"
                                     @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
                                 Add A Sub
                             </button>
 
-                            <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="bg-blue
-                                            p-r-4
-                                            p-l-4
-                                            p-t-1
-                                            p-b-1
-                                            m-t-2
-                                            text-center
-                                            text-white
-                                            rounded-lg"
+                            <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="btn-blue"
                                     @click.prevent="openTaskBids(jobTask.id)" v-if="isGeneral">
                                 Display Subs
                             </button>
 
                         </div>
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                             Deny
                         </button>
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                                 :disabled="disabled.deleteTask">
                             <span v-if="disabled.deleteTask">
@@ -238,15 +208,7 @@
                         </button>
 
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                                 :disabled="disabled.finished">
                             <span v-if="disabled.finished">
@@ -255,15 +217,7 @@
                             Finished
                         </button>
 
-                        <button class="bg-blue
-                                        p-r-4
-                                        p-l-4
-                                        p-t-1
-                                        p-b-1
-                                        m-t-2
-                                        text-center
-                                        text-white
-                                        rounded-lg"
+                        <button class="btn-blue"
                                 v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)"
                                 :disabled="disabled.approve">
                             <span v-if="disabled.approve">
@@ -423,6 +377,9 @@
           total += this.subTaskPrice (jobTask);
         }
         return total;
+      },
+      disableMessages () {
+        return this.bid.status === "job.completed";
       }
     },
     methods: {
@@ -674,7 +631,7 @@
   }
 </script>
 
-<style scope>
+<style lang="less" scoped>
 
     .error {
         color: red;

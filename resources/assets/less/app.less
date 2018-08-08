@@ -19,12 +19,8 @@
 @import "./welcome.less";
 @import "./notification";
 @import "../../../node_modules/@fortawesome/fontawesome-free/less/fontawesome";
-@import "./dist/components.css";
-@import "./dist/preflight.css";
-@import "./dist/tailwind.css";
-@import "./dist/utilities.css";
+@import "./dist/tailwind";
 
-//@tailwind utilities;
 
 .dollarSign {
   margin-right: 2px;
@@ -459,4 +455,13 @@ transform:rotate(-45deg);
 
 .lightbox-open-close {
   top: 80px !important;
+}
+
+.btn-blue {
+  .bg-blue;
+  .p-4;
+  .m-t-2;
+  .text-center;
+  .text-white;
+  .rounded-lg;
 }
