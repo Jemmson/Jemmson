@@ -107,7 +107,7 @@
                 let total = 0;
                 if (this.payableTasks !== null) {
                     for (const task of this.payableTasks) {
-                        total += (task.cust_final_price * task.qty) - (task.sub_final_price * task.qty);
+                        total += (task.cust_final_price - task.sub_final_price);
                     }
                 }
                 return total;
@@ -116,7 +116,7 @@
                 let total = 0;
                 if (this.payableTasks !== null) {
                     for (const task of this.payableTasks) {
-                        total += task.sub_final_price * task.qty;
+                        total += task.sub_final_price;
                     }
                 }
                 return total;

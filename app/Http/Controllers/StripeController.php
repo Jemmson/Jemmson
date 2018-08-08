@@ -304,7 +304,7 @@ class StripeController extends Controller
             if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
                 continue;
             }
-            $total += $jobTask->cust_final_price * $jobTask->qty;
+            $total += $jobTask->cust_final_price;
             $order .= '.' . $jobTask->id;
         }
 
@@ -423,8 +423,8 @@ class StripeController extends Controller
             $general_contractor_id = $task->contractor_id;
             
             // amounts
-            $subAmount = (int) $jobTask->sub_final_price * $jobTask->qty;
-            $generalAmount = (int) ($jobTask->cust_final_price * $jobTask->qty) - $subAmount;
+            $subAmount = (int) $jobTask->sub_final_price;
+            $generalAmount = (int) ($jobTask->cust_final_price) - $subAmount;
 
             Log::debug('Sub Amount: ' .  $subAmount);
             Log::debug('Gen Amount: ' .  $generalAmount);
