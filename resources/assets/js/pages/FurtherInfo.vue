@@ -116,7 +116,7 @@
 
                     <!-- Notes -->
                     <div class="form-group" v-if="!isContractor">
-                        <label class="col-md-3 control-label">Any Special Notes For The Contractor</label>
+                        <label class="col-md-3 control-label">Contractor Instructions</label>
                         <div class="col-md-8">
                                 <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10" class="form-control"
                                 ></textarea>
