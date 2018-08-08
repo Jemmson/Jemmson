@@ -28684,3 +28684,31 @@ a.lightbox-close:after {
   color: #fff;
   border-radius: .5rem;
 }
+.status {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-radius: .5rem;
+  font-size: 1.875rem;
+  color: white;
+  color: #fff;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: .5rem;
+}
+.status-green {
+  background-color: #1f9d55;
+}
+.status-blue {
+  background-color: #2779bd;
+}
+.status-yellow {
+  background-color: #f2d024;
+}
+.status-red {
+  background-color: #cc1f1a;
+}
+.status-grey {
+  background-color: #8795a1;
+}

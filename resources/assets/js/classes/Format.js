@@ -9,24 +9,24 @@ export default class Format {
       case 'bid_task.approved_by_general':
       case 'bid_task.finished_by_general':
       case 'bid.sent':
-        return 'label-warning';
+        return 'status-yellow';
         break;
       // important update: blue
       case 'job.approved':
       case 'bid.in_progress':
       case 'bid_task.approved_by_customer':
       case 'bid_task.reopened':
-        return 'label-primary';
+        return 'status-blue';
         break;
       // rejected something: red
       case 'bid.declined':
       case 'bid_task.denied':
-        return 'label-danger';
+        return 'status-red';
         break;
       // finished: green
       case 'job.completed':
       case 'bid_task.customer_sent_payment':
-        return 'label-success';
+        return 'status-green';
       // don't need to do anything and not important info: grey
       case 'bid.initiated':
       case 'bid_task.initiated':
@@ -34,7 +34,7 @@ export default class Format {
       case 'bid_task.accepted':
       case 'bid_task.finished_by_sub':
       default:
-        return 'label-default';
+        return 'status-grey';
         break;
     }
   }
@@ -47,22 +47,22 @@ export default class Format {
       case 'bid_task.finished_by_sub':
       case 'bid_task.approved_by_customer':
       case 'job.approved':
-        return 'label-warning';
+        return 'status-yellow';
         break;
       // important update: blue
       case 'bid_task.accepted':
       case 'bid.sent':
-        return 'label-primary';
+        return 'status-blue';
         break;
       // rejected something: red
       case 'bid.declined':
       case 'bid_task.denied':
-        return 'label-danger';
+        return 'status-red';
         break;
       // finished: green
       case 'job.completed':
       case 'bid_task.customer_sent_payment':
-        return 'label-success';
+        return 'status-green';
         break;
       // don't need to do anything and not important info: grey
       case 'bid.initiated':
@@ -71,7 +71,7 @@ export default class Format {
       case 'bid_task.approved_by_general':
       case 'bid_task.finished_by_general':
       default:
-        return 'label-default';
+        return 'status-grey';
         break;
     }
   }
@@ -133,23 +133,23 @@ export default class Format {
       // action required: yellow
       case 'bid_task.reopened':
       case 'bid_task.approved_by_customer':
-        return 'label-warning';
+        return 'status-yellow';
         break;
       // important update: blue
       case 'job.approved':
       case 'bid_task.approved_by_general':
       case 'bid_task.accepted':
-        return 'label-primary';
+        return 'status-blue';
         break;
       // rejected something: red
       case 'bid.declined':
       case 'bid_task.denied':
-        return 'label-danger';
+        return 'status-red';
         break;
       // finished: green
       case 'job.completed':
       case 'bid_task.customer_sent_payment':
-        return 'label-success';
+        return 'status-green';
       // don't need to do anything and not important info: grey
       case 'bid.initiated':
       case 'bid.in_progress':
@@ -159,7 +159,7 @@ export default class Format {
       case 'bid_task.finished_by_general':
       case 'bid.sent':
       default:
-        return 'label-default';
+        return 'status-grey';
         break;
     }
   }
