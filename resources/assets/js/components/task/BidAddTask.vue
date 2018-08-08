@@ -166,7 +166,7 @@
                         <!-- show if
                                 drop down is selected
                                 any of the selected values change -->
-                        <button v-if="nameExistsInDB ||
+                        <button v-if="(nameExistsInDB && !nameChanged) ||
                                     (dropdownSelected && valueChanged)" class="btn btn-sm btn-primary"
                                 :disabled="checkErrors"
                                 @click.prevent="changeTask('Update')">Update and Add
@@ -175,7 +175,7 @@
                         <!-- show if
                             drop down is selected and
                             any of the values have changed -->
-                        <button v-if="nameExistsInDB ||
+                        <button v-if="(nameExistsInDB && !nameChanged) ||
                                     (dropdownSelected && valueChanged)" class="btn btn-sm btn-primary"
                                 :disabled="checkErrors"
                                 @click.prevent="changeTask('Ignore')">Ignore and Add
@@ -184,7 +184,7 @@
                         <!-- show if
                             drop down is selected
                             drop down name is changed -> gives option to create a new task based on an existing one -->
-                        <button v-if="dropdownSelected && nameChanged"
+                        <button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"
                                 class="btn btn-sm btn-primary" :disabled="checkErrors"
                                 @click.prevent="changeTask('New')">
                             Create New and Add
@@ -193,7 +193,7 @@
                         <!-- show if
                             drop down selected but no values have changed or
                             drop down not selected -> if drop down not selected then create a new standard task -->
-                        <button v-if="(dropdownSelected && !valueChanged) || (!dropdownSelected && !nameExistsInDB)"
+                        <button v-if="(dropdownSelected && !valueChanged && !nameChanged)"
                                 class="btn btn-sm btn-primary" :disabled="checkErrors"
                                 @click.prevent="changeTask('Add')">
                             Add Task
@@ -262,7 +262,8 @@
         startDateChanged: false,
         customerMessageChanged: false,
         subMessageChanged: false,
-        startDateError: false
+        startDateError: false,
+        submitted: false
       }
     },
     computed: {
@@ -367,6 +368,7 @@
       },
       getExistingTask (message) {
         this.taskResults = [];
+        this.submitted = false;
         if (this.addNewTaskForm.taskName.length > 1) {
           axios.post ('/api/search/task', {
             taskname: this.addNewTaskForm.taskName,
@@ -374,14 +376,18 @@
           }).then (response => {
             console.log (response.data)
             this.taskResults = response.data
+            // debugger
+            for (let i = 0; i < this.taskResults.length; i++) {
+              if (this.taskResults[i].name === message) {
+                this.nameExistsInDB = true;
+                this.fillTaskValues(this.taskResults[i]);
+              } else {
+                this.nameExistsInDB = false;
+                // this.clearTaskResults('notName');
+              }
+            }
+            this.checkIfValuesChanged ();
           })
-        }
-
-        // debugger
-        for (let i = 0; i < this.taskResults.length; i++) {
-          if (this.taskResults[i].name === message) {
-            this.nameExistsInDB = true;
-          }
         }
 
         // if (this.dropdownSelected && (message !== this.result.taskName)) {
@@ -389,8 +395,6 @@
         // } else {
         //   this.nameChanged = false;
         // }
-
-        this.checkIfValuesChanged ();
 
       },
       fillTaskValues (result) {  // this method fills values of the form when a drop down item is selected  x
@@ -487,6 +491,7 @@
         this.valueChanged = false;
         this.dropdownSelected = false;
         this.nameExistsInDB = false;
+        this.submitted = true;
       },
       changeTask (message) {
         if (message === 'Update') {
