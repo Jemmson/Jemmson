@@ -1,22 +1,22 @@
 <template>
   <!-- /contractor bid actions -->
   <div>
-    <div class="text-white bg-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
+    <div class="text-white btn-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
     </div>
     <div v-if="showPreApprovedActions" class="">
-      <div class="bttn bg-blue" v-if="bid.job_tasks.length <= 0">Please Add A Task
+      <div class="btn btn-blue" v-if="bid.job_tasks.length <= 0">Please Add A Task
       </div>
       <div class="flex justify-between">
-        <button class="bttn bg-red" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid">
+        <button class="btn btn-red" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid">
           <span v-if="disabled.cancelBid">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
           </span>
           Cancel Job
         </button>
-        <button class="bttn bg-blue" name="addTaskToBid" id="addTaskToBid" @click="openAddTask" v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">
+        <button class="btn btn-blue" name="addTaskToBid" id="addTaskToBid" @click="openAddTask" v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">
           Add A Task
         </button>
-        <button class="bttn bg-green" v-if="bid.job_tasks.length > 0" @click="openModal('notifyCustomerOfFinishedBid')" :disabled="bid.job_tasks.length <= 0 || disabled.submitBid">
+        <button class="btn btn-green" v-if="bid.job_tasks.length > 0" @click="openModal('notifyCustomerOfFinishedBid')" :disabled="bid.job_tasks.length <= 0 || disabled.submitBid">
           <span v-if="disabled.submitBid">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
           </span>
