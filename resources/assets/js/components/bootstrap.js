@@ -19,6 +19,9 @@ Vue.component('completed-tasks', require('./job/CompletedTasks.vue'));
 
 
 // Shared Components
+Vue.component('card', require('./shared/Card.vue'));
+Vue.component('search-bar', require('./shared/SearchBar.vue'));
+
 Vue.component('modal', require('./shared/Modal.vue'));
 Vue.component('brand', require('./shared/Brand.vue'));
 Vue.component('feedback', require('./shared/Feedback.vue'));

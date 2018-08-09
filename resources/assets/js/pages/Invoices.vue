@@ -1,23 +1,9 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-md-12 text-center">
-                <div class="card card-1">
-                    <div class="panel-body">
-                        <h1>Invoices Page</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card card-1">
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="invoice-search">Search Invoices</label>
-                            <input type="text" id="invoice-search" class="form-control" placeholder="Search" v-model="searchTerm" @keyup="search">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <search-bar>
+                <input type="text" placeholder="Search Invoices" v-model="searchTerm" @keyup="search">
+            </search-bar>
             <div class="col-xs-12 col-md-6" v-for="invoice in sInvoices" :key="invoice.id">
                 <div v-if="invoice.job_id !== undefined">
                     <div style="margin-bottom: 22px;">

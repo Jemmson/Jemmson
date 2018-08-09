@@ -2,7 +2,7 @@
 //@tailwind components;
 
 @import url('https://fonts.googleapis.com/css?family=Roboto');
-@import "./../../../node_modules/bootstrap/less/bootstrap";
+@import "./dist/tailwind";
 // @import "./spark/spark";
 @import "./screensizes/mobile";
 @import "./screensizes/small";
@@ -10,7 +10,6 @@
 @import "./screensizes/large";
 @import "./screensizes/extraLarge";
 @import "./screensizeIndependent";
-@import "./../../../vendor/laravel/spark/resources/assets/less/spark";
 @import "./model.less";
 @import "./toggle.less";
 @import "./stripe/buttons.less";
@@ -19,7 +18,6 @@
 @import "./welcome.less";
 @import "./notification";
 @import "../../../node_modules/@fortawesome/fontawesome-free/less/fontawesome";
-@import "./dist/tailwind";
 
 
 .dollarSign {
@@ -43,15 +41,113 @@ body {
   background-color: #eee;
 }
 
+.btn {
+  .font-bold;
+  .py-2;
+  .px-4;
+  .rounded;
+  .text-white;
+  .uppercase;
+  //.bg-blue;//
+}
+
+.btn-green {
+  .bg-green;
+}
+
+.btn-blue {
+  .bg-blue;
+}
+
+.btn-red {
+  .bg-red;
+}
+
+.btn-full {
+  .w-full;
+  .p-4;
+}
+
+.status {
+  .flex;
+  .rounded-lg;
+  .text-3xl;
+  .text-white;
+  .justify-center;
+  .p-2;
+}
+
+.status-green {
+  .bg-green-dark;
+}
+.status-blue {
+  .bg-blue-dark;
+}
+.status-yellow {
+  .bg-yellow-dark;
+}
+.status-red {
+  .bg-red-dark;
+}
+.status-grey {
+  .bg-grey-dark;
+}
+
 .card {
+  .flex;
   background: #fff;
   border-radius: 4px;
-  display: inline-block;
   height: auto;
   margin-bottom: 1rem;
   position: relative;
   width: 100%;
 }
+
+.card-header > h2 {
+  .text-center;
+}
+
+.search-bar {
+  .card;
+  .flex-row;
+  .bg-grey-lighter;
+}
+
+.search-bar > input {
+  .h-auto;
+  .w-full;
+  .appearance-none;
+  .block;
+  .bg-grey-lighter;
+  .text-grey-darker; 
+  .rounded;
+  .py-3;
+  .px-4;
+  .leading-tight;
+}
+
+.form-group {
+  .mb-4;
+}
+
+.form-group > input {
+  .mt-2;
+}
+
+.form-control {
+  .h-auto;
+  .w-full;
+  .appearance-none;
+  .block;
+  .bg-grey-lighter;
+  .text-grey-darker;
+  .rounded;
+  .py-3;
+  .px-4;
+  .leading-tight;
+}
+
+
 
 .card-1 {
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -455,39 +551,4 @@ transform:rotate(-45deg);
 
 .lightbox-open-close {
   top: 80px !important;
-}
-
-.bttn {
-  .font-bold;
-  .py-2;
-  .px-4;
-  .rounded;
-  .text-white;
-  .uppercase;
-  //.bg-blue;//
-}
-
-.status {
-  .flex;
-  .rounded-lg;
-  .text-3xl;
-  .text-white;
-  .justify-center;
-  .p-2;
-}
-
-.status-green {
-  .bg-green-dark;
-}
-.status-blue {
-  .bg-blue-dark;
-}
-.status-yellow {
-  .bg-yellow-dark;
-}
-.status-red {
-  .bg-red-dark;
-}
-.status-grey {
-  .bg-grey-dark;
 }
