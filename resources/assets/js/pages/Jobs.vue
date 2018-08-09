@@ -1,11 +1,11 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
-    <div>
-        <div class="container card card-1">
+    <div class="flex flex-col">
+        <div class="card">
             <h1 class="text-center">Open Bids</h1>
         </div>
 
-        <div class="container card card-1 search">
+        <div class="card search">
             <label for="job-search">Search Jobs</label>
             <input type="text" id="job-search" class="form-control" placeholder="Search" v-model="searchTerm"
                    @keyup="search">
@@ -20,7 +20,7 @@
 
             <div class="" v-for="bid in paginated('sBids')" v-bind:key="bid.id"
                  style="z-index: 2;" @click="goToBid(bid.id)">
-                <div class="container justify-between justify-around items-center card card-1 p-0" style="border-radius: 5px;">
+                <div class=" justify-between justify-around items-center card p-0" style="border-radius: 5px;">
                     <span style="border-bottom-left-radius: 5px; border-top-left-radius: 5px;" :class="getLabelClass(bid.status)" class="text-white flex-grow text-center">{{ status(bid) }}</span>
                     <span :class="getLabelClass(bid.status)" class="text-white flex-grow" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</span>
                     <span :class="getLabelClass(bid.status)" class="text-white flex-grow">{{ jobName(bid.job_name) }}</span>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </paginate>
-        <div class="container card card-1">
+        <div class="card">
             <h4>
                 <paginate-links for="sBids" :limit="2" :show-step-links="true">
                 </paginate-links>
