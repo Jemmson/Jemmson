@@ -1,16 +1,10 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
     <div class="flex flex-col">
-        <div class="card">
-            <h1 class="text-center">Open Bids</h1>
-        </div>
-
-        <div class="card search">
-            <label for="job-search">Search Jobs</label>
-            <input type="text" id="job-search" class="form-control" placeholder="Search" v-model="searchTerm"
+        <search-bar>
+          <input type="text" placeholder="Search Jobs" v-model="searchTerm"
                    @keyup="search">
-        </div>
-
+        </search-bar>
         <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
             <!--<div class="flex" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">-->
             <!---->

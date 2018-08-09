@@ -17240,7 +17240,6 @@ input:checked + .slider:before {
   /* Position the navbar at the top of the page */
   width: 100%;
   color: white !important;
-  margin-bottom: 1rem;
 }
 .jemmson-footer {
   background: linear-gradient(to right, #0a174b, #223dab) fixed;
