@@ -20952,6 +20952,10 @@ body {
 .btn-red {
   background-color: #e3342f;
 }
+.btn-full {
+  width: 100%;
+  padding: 1rem;
+}
 .status {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -20984,10 +20988,6 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
   background: #fff;
   border-radius: 4px;
   height: auto;
@@ -20995,41 +20995,23 @@ body {
   position: relative;
   width: 100%;
 }
-.card-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-.card-body {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-.card-footer {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+.card-header > h2 {
+  text-align: center;
 }
 .search-bar {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
   background: #fff;
   border-radius: 4px;
   height: auto;
   margin-bottom: 1rem;
   position: relative;
   width: 100%;
-  -ms-flex-direction: row;
-      flex-direction: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
   background-color: #f1f5f8;
 }
 .search-bar > input {
@@ -21047,6 +21029,12 @@ body {
   padding-left: 1rem;
   padding-right: 1rem;
   line-height: 1.25;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group > input {
+  margin-top: .5rem;
 }
 .form-control {
   height: auto;

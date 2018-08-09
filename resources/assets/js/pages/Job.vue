@@ -1,44 +1,37 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-1">
-          <!-- <div class="panel-heading">Job Details</div> -->
-          <div class="panel-body">
-            <!-- /show all bid information -->
-            <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
-            </bid-details>
-          </div>
-          <div class="panel-footer">
-            <!-- /customer approve bid form -->
-            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-            </approve-bid>
+  <div class="flex flex-col">
+    <card>
+      <!-- /show all bid information -->
+      <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
+      </bid-details>
+      <template slot="card-footer">
+        <!-- /customer approve bid form -->
+        <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
+        </approve-bid>
 
-            <!-- /buttons  -->
-            <general-contractor-bid-actions :bid="bid" @openAddTask="openAddTask">
-            </general-contractor-bid-actions>
-          </div>
-        </div>
-      </div>
+        <!-- /buttons  -->
+        <general-contractor-bid-actions :bid="bid" @openAddTask="openAddTask">
+        </general-contractor-bid-actions>
+      </template>
+    </card>
 
-      <!-- / show all completed tasks-->
-      <completed-tasks :bid="bid">
-      </completed-tasks>
+    <!-- / show all completed tasks-->
+    <completed-tasks :bid="bid">
+    </completed-tasks>
 
-      <!-- /show all tasks associated to this bid -->
-      <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
-      </bid-tasks>
+    <!-- /show all tasks associated to this bid -->
+    <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
+    </bid-tasks>
 
-      <!-- /add task to bid -->
-      <transition name="slide-fade">
-        <bid-add-task :show="showAddTaskPanel" :bid="bid" v-if="!jobApproved">
-        </bid-add-task>
-      </transition>
+    <!-- /add task to bid -->
+    <transition name="slide-fade">
+      <bid-add-task :show="showAddTaskPanel" :bid="bid" v-if="!jobApproved">
+      </bid-add-task>
+    </transition>
 
-      <!-- / stripe testing delete after -->
-      <stripe :user='user'>
-      </stripe>
-    </div>
+    <!-- / stripe testing delete after -->
+    <stripe :user='user'>
+    </stripe>
   </div>
 </template>
 

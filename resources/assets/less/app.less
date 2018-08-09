@@ -63,6 +63,11 @@ body {
   .bg-red;
 }
 
+.btn-full {
+  .w-full;
+  .p-4;
+}
+
 .status {
   .flex;
   .rounded-lg;
@@ -90,7 +95,6 @@ body {
 
 .card {
   .flex;
-  .flex-col;
   background: #fff;
   border-radius: 4px;
   height: auto;
@@ -99,17 +103,8 @@ body {
   width: 100%;
 }
 
-.card-header {
-  .flex;
-}
-
-.card-body {
-  .flex;
-  .flex-col;
-}
-
-.card-footer {
-  .flex;
+.card-header > h2 {
+  .text-center;
 }
 
 .search-bar {
@@ -131,13 +126,21 @@ body {
   .leading-tight;
 }
 
+.form-group {
+  .mb-4;
+}
+
+.form-group > input {
+  .mt-2;
+}
+
 .form-control {
   .h-auto;
   .w-full;
   .appearance-none;
   .block;
   .bg-grey-lighter;
-  .text-grey-darker; 
+  .text-grey-darker;
   .rounded;
   .py-3;
   .px-4;

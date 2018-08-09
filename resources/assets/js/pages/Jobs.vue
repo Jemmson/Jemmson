@@ -1,38 +1,24 @@
 <template>
-    <!-- /all bids shown in a list as a customer should see it -->
-    <div class="flex flex-col">
-        <search-bar>
-          <input type="text" placeholder="Search Jobs" v-model="searchTerm"
-                   @keyup="search">
-        </search-bar>
-        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-            <!--<div class="flex" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">-->
-            <!---->
-            <!--</div>-->
-            <!---->
-
-
-            <div class="" v-for="bid in paginated('sBids')" v-bind:key="bid.id"
-                 style="z-index: 2;" @click="goToBid(bid.id)">
-                <div class=" justify-between justify-around items-center card p-0" style="border-radius: 5px;">
-                    <span style="border-bottom-left-radius: 5px; border-top-left-radius: 5px;" :class="getLabelClass(bid.status)" class="text-white flex-grow text-center">{{ status(bid) }}</span>
-                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</span>
-                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow">{{ jobName(bid.job_name) }}</span>
-                    <span style="border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
-    padding-left: 4px;
-    padding-right: 4px;
-    background-color: lightsteelblue;">click to view</span>
-                </div>
-            </div>
-        </paginate>
-        <div class="card">
-            <h4>
-                <paginate-links for="sBids" :limit="2" :show-step-links="true">
-                </paginate-links>
-            </h4>
-        </div>
+  <!-- /all bids shown in a list as a customer should see it -->
+  <div class="flex flex-col">
+    <search-bar>
+      <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
+    </search-bar>
+    <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
+      <div class="card flex-row" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
+          <span :class="getLabelClass(bid.status)" class="text-white text-center">{{ status(bid) }}</span>
+          <span :class="getLabelClass(bid.status)" class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</span>
+          <span :class="getLabelClass(bid.status)" class="text-white">{{ jobName(bid.job_name) }}</span>
+          <span >click to view</span>
+      </div>
+    </paginate>
+    <div class="card">
+      <h4>
+        <paginate-links for="sBids" :limit="2" :show-step-links="true">
+        </paginate-links>
+      </h4>
     </div>
+  </div>
 </template>
 
 <script>
