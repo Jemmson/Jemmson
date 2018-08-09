@@ -1,27 +1,10 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-1">
-          <!-- <div class="panel-heading">Dashboard</div> -->
-          <div class="panel-body">
-            <center>
-              <h2 class="page-title">Open Tasks</h2>
-            </center>
-          </div>
-        </div>
-      </div>
+  <div>
       <!-- / end title -->
-      <div class="col-md-12">
-        <div class="card card-1">
-          <div class="panel-body">
-            <div class="form-group">
-              <label for="task-search">Search Tasks</label>
-              <input type="text" id="task-search" class="form-control" placeholder="Search" v-model="searchTerm" @keyup="search">
-            </div>
-          </div>
-        </div>
-      </div>
+      <search-bar>
+        <input type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
+      </search-bar>
+
       <!-- / end search bar -->
       <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated" v-show="sTasks.length > 0">
         <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
@@ -166,7 +149,6 @@
       <!-- / end tasks -->
       <stripe :user='user'>
       </stripe>
-    </div>
   </div>
 </template>
 
