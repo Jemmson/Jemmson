@@ -34,26 +34,28 @@
 <body class="with-navbar">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
-@if (Auth::check())
-    @include('spark::nav.user')
-@else
-    @include('spark::nav.guest')
-@endif
+        @if (Auth::check())
+        @include('spark::nav.user')
+        @else
+        @include('spark::nav.guest')
+        @endif
 
 <!-- Main Content -->
 <transition name="fade">
-    <router-view :user='user'></router-view>
+    <router-view :user='user' class="container mx-auto p-4"></router-view>
 </transition>
 
 
 <!-- Application Level Modals -->
+{{-- 
     @if (Auth::check())
-        @include('spark::modals.notifications')
-        @include('spark::modals.support')
-        @include('spark::modals.session-expired')
-        <feedback>
-        </feedback>
-    @endif
+    @include('spark::modals.notifications')
+    @include('spark::modals.support')
+    @include('spark::modals.session-expired')
+    <!-- <feedback>
+        </feedback> -->
+        @endif
+        --}}
 </div>
 
 <!-- JavaScript -->
