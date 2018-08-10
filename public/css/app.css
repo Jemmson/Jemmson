@@ -17368,7 +17368,7 @@ a:active {
   padding: 1rem;
 }
 /*!
- * Font Awesome Free 5.1.0 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.2.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 .fa,
@@ -17589,6 +17589,9 @@ a:active {
 .fa-affiliatetheme:before {
   content: "\f36b";
 }
+.fa-air-freshener:before {
+  content: "\f5d0";
+}
 .fa-algolia:before {
   content: "\f36c";
 }
@@ -17676,6 +17679,9 @@ a:active {
 .fa-apple:before {
   content: "\f179";
 }
+.fa-apple-alt:before {
+  content: "\f5d1";
+}
 .fa-apple-pay:before {
   content: "\f415";
 }
@@ -17744,6 +17750,9 @@ a:active {
 }
 .fa-atlas:before {
   content: "\f558";
+}
+.fa-atom:before {
+  content: "\f5d2";
 }
 .fa-audible:before {
   content: "\f373";
@@ -17889,6 +17898,9 @@ a:active {
 .fa-bomb:before {
   content: "\f1e2";
 }
+.fa-bone:before {
+  content: "\f5d7";
+}
 .fa-bong:before {
   content: "\f55c";
 }
@@ -17897,6 +17909,9 @@ a:active {
 }
 .fa-book-open:before {
   content: "\f518";
+}
+.fa-book-reader:before {
+  content: "\f5da";
 }
 .fa-bookmark:before {
   content: "\f02e";
@@ -17915,6 +17930,9 @@ a:active {
 }
 .fa-braille:before {
   content: "\f2a1";
+}
+.fa-brain:before {
+  content: "\f5dc";
 }
 .fa-briefcase:before {
   content: "\f0b1";
@@ -17997,6 +18015,18 @@ a:active {
 .fa-car:before {
   content: "\f1b9";
 }
+.fa-car-alt:before {
+  content: "\f5de";
+}
+.fa-car-battery:before {
+  content: "\f5df";
+}
+.fa-car-crash:before {
+  content: "\f5e1";
+}
+.fa-car-side:before {
+  content: "\f5e4";
+}
 .fa-caret-down:before {
   content: "\f0d7";
 }
@@ -18068,6 +18098,9 @@ a:active {
 }
 .fa-chalkboard-teacher:before {
   content: "\f51c";
+}
+.fa-charging-station:before {
+  content: "\f5e7";
 }
 .fa-chart-area:before {
   content: "\f1fe";
@@ -18408,6 +18441,9 @@ a:active {
 .fa-digital-tachograph:before {
   content: "\f566";
 }
+.fa-directions:before {
+  content: "\f5eb";
+}
 .fa-discord:before {
   content: "\f392";
 }
@@ -18462,6 +18498,9 @@ a:active {
 .fa-drafting-compass:before {
   content: "\f568";
 }
+.fa-draw-polygon:before {
+  content: "\f5ee";
+}
 .fa-dribbble:before {
   content: "\f17d";
 }
@@ -18509,6 +18548,9 @@ a:active {
 }
 .fa-ellipsis-v:before {
   content: "\f142";
+}
+.fa-ello:before {
+  content: "\f5f1";
 }
 .fa-ember:before {
   content: "\f423";
@@ -19005,6 +19047,9 @@ a:active {
 .fa-hacker-news-square:before {
   content: "\f3af";
 }
+.fa-hackerrank:before {
+  content: "\f5f7";
+}
 .fa-hand-holding:before {
   content: "\f4bd";
 }
@@ -19230,6 +19275,9 @@ a:active {
 .fa-jsfiddle:before {
   content: "\f1cc";
 }
+.fa-kaggle:before {
+  content: "\f5fa";
+}
 .fa-key:before {
   content: "\f084";
 }
@@ -19269,6 +19317,9 @@ a:active {
 .fa-laptop:before {
   content: "\f109";
 }
+.fa-laptop-code:before {
+  content: "\f5fc";
+}
 .fa-laravel:before {
   content: "\f3bd";
 }
@@ -19289,6 +19340,9 @@ a:active {
 }
 .fa-laugh-wink:before {
   content: "\f59c";
+}
+.fa-layer-group:before {
+  content: "\f5fd";
 }
 .fa-leaf:before {
   content: "\f06c";
@@ -19422,6 +19476,9 @@ a:active {
 .fa-map-signs:before {
   content: "\f277";
 }
+.fa-markdown:before {
+  content: "\f60f";
+}
 .fa-marker:before {
   content: "\f5a1";
 }
@@ -19500,6 +19557,9 @@ a:active {
 .fa-microphone-slash:before {
   content: "\f131";
 }
+.fa-microscope:before {
+  content: "\f610";
+}
 .fa-microsoft:before {
   content: "\f3ca";
 }
@@ -19572,6 +19632,9 @@ a:active {
 .fa-napster:before {
   content: "\f3d2";
 }
+.fa-neos:before {
+  content: "\f612";
+}
 .fa-neuter:before {
   content: "\f22c";
 }
@@ -19616,6 +19679,9 @@ a:active {
 }
 .fa-odnoklassniki-square:before {
   content: "\f264";
+}
+.fa-oil-can:before {
+  content: "\f613";
 }
 .fa-old-republic:before {
   content: "\f510";
@@ -19815,6 +19881,9 @@ a:active {
 .fa-poo:before {
   content: "\f2fe";
 }
+.fa-poop:before {
+  content: "\f619";
+}
 .fa-portrait:before {
   content: "\f3e0";
 }
@@ -19950,6 +20019,9 @@ a:active {
 .fa-retweet:before {
   content: "\f079";
 }
+.fa-rev:before {
+  content: "\f5b2";
+}
 .fa-ribbon:before {
   content: "\f4d6";
 }
@@ -19967,6 +20039,9 @@ a:active {
 }
 .fa-rockrms:before {
   content: "\f3e9";
+}
+.fa-route:before {
+  content: "\f4d7";
 }
 .fa-rss:before {
   content: "\f09e";
@@ -20045,6 +20120,9 @@ a:active {
 }
 .fa-servicestack:before {
   content: "\f3ec";
+}
+.fa-shapes:before {
+  content: "\f61f";
 }
 .fa-share:before {
   content: "\f064";
@@ -20253,6 +20331,9 @@ a:active {
 .fa-star-half-alt:before {
   content: "\f5c0";
 }
+.fa-star-of-life:before {
+  content: "\f621";
+}
 .fa-staylinked:before {
   content: "\f3f5";
 }
@@ -20406,6 +20487,12 @@ a:active {
 .fa-teamspeak:before {
   content: "\f4f9";
 }
+.fa-teeth:before {
+  content: "\f62e";
+}
+.fa-teeth-open:before {
+  content: "\f62f";
+}
 .fa-telegram:before {
   content: "\f2c6";
 }
@@ -20432,6 +20519,9 @@ a:active {
 }
 .fa-th-list:before {
   content: "\f00b";
+}
+.fa-theater-masks:before {
+  content: "\f630";
 }
 .fa-themeco:before {
   content: "\f5c6";
@@ -20502,6 +20592,9 @@ a:active {
 .fa-trademark:before {
   content: "\f25c";
 }
+.fa-traffic-light:before {
+  content: "\f637";
+}
 .fa-train:before {
   content: "\f238";
 }
@@ -20535,8 +20628,14 @@ a:active {
 .fa-truck-loading:before {
   content: "\f4de";
 }
+.fa-truck-monster:before {
+  content: "\f63b";
+}
 .fa-truck-moving:before {
   content: "\f4df";
+}
+.fa-truck-pickup:before {
+  content: "\f63c";
 }
 .fa-tshirt:before {
   content: "\f553";
@@ -20894,6 +20993,9 @@ a:active {
 }
 .fa-youtube-square:before {
   content: "\f431";
+}
+.fa-zhihu:before {
+  content: "\f63f";
 }
 .sr-only {
   border: 0;
