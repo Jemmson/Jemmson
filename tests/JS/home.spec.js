@@ -2,7 +2,7 @@ import {mount} from 'vue-test-utils'
 import expect from 'expect'
 import Home from '../../resources/assets/js/pages/Home.vue'
 
-describe ('Home', () => {
+describe ('Home.vue', () => {
   // let wrapper;
   //
   // beforeEach (() => {
@@ -37,35 +37,7 @@ describe ('Home', () => {
   });
 
   it ('needsApproval should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="needsApproval">6</h5>');
-  });
-
-  it ('inProcess should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="inProcess">4</h5>');
-  });
-
-  it ('waitingToBeFinished should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="waitingToBeFinished">3</h5>');
-  });
-
-  it ('finishedJobs should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="finishedJobs">2</h5>');
-  });
-
-  it ('needsToBeBidOn should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="needsToBeBidOn">10</h5>');
-  });
-
-  it ('toBeFinished should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="toBeFinished">9</h5>');
-  });
-
-  it ('watingOnCustomerPayment should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="watingOnCustomerPayment">8</h5>');
-  });
-
-  it ('paid should render the correct markup', function () {
-    expect (wrapper.html ()).toContain ('<h5 class="paid">7</h5>');
+    expect(wrapper.html()).toContain('<div class="-m-t-2 upper text-white text-5xl">home</div>');
   });
 
   // it('Contractor not connected to Stripe rendering the correct markup', () => {
