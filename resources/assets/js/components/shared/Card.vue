@@ -3,7 +3,7 @@
         <div class="flex flex-col border-b p-4 card-header" v-if="header !== undefined && header">
             <slot name="card-header" class="text-center"></slot>
         </div>
-        <div class="flex flex-col p-6 card-body">
+        <div class="flex flex-col p-5 card-body">
             <!-- default content goes here -->
             <slot></slot>
         </div>
