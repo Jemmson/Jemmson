@@ -1,28 +1,29 @@
 <template>
   <div>
-      <!-- / end title -->
-      <search-bar>
-        <input type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
-      </search-bar>
+    <!-- / end title -->
+    <search-bar>
+      <input type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
+    </search-bar>
 
-      <!-- / end search bar -->
-      <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated" v-show="sTasks.length > 0">
-        <div class="flex flex-col" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
-          <!--<pre>{{ bidTask }}</pre>-->
-          <card v-if="showBid(bidTask)">
-            <div class="panel-body">
-              <div class="col-xs-12">
-                <h4>
-                  <label for="job-stats" class="label" :class="getLabelClass(bidTask.job_task.status)">{{ status(bidTask) }}</label>
-                </h4>
-                <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
-              </div>
-              <div class="col-xs-6">
-                <p>
-                  Start On:
-                  <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
-                </p>
-                <!-- <div v-if="showStripeToggle(bidTask.job_task)">
+    <!-- / end search bar -->
+    <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated" v-show="sTasks.length > 0">
+      <div class="flex flex-col" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id"
+        style="z-index:2;">
+        <!--<pre>{{ bidTask }}</pre>-->
+        <card v-if="showBid(bidTask)">
+          <div class="panel-body">
+            <div class="col-xs-12">
+              <h4>
+                <label for="job-stats" class="label" :class="getLabelClass(bidTask.job_task.status)">{{ status(bidTask) }}</label>
+              </h4>
+              <label for="job-name" class="job-name">{{ jobName(bidTask.job_task.task.name) }}</label>
+            </div>
+            <div class="col-xs-6">
+              <p>
+                Start On:
+                <label for="start-date">{{ prettyDate(bidTask.job_task.start_date) }}</label>
+              </p>
+              <!-- <div v-if="showStripeToggle(bidTask.job_task)">
                   <p>
                     Stripe Payment:
                   </P>
@@ -31,117 +32,109 @@
                     <span class="slider round"></span>
                   </label>
                 </div> -->
-              </div>
-              <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
-                <label for="details">Task Price:</label>
-                <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1"
-                       type="text"
-                       class="form-control bid-task-price"
-                       v-bind:id="'price-' + bidTask.id"
-                       v-model="bidTask.bid_price"
-                       @keyup="bidPrice('price-' + bidTask.id)"/>
-                <input v-else
-                       type="text"
-                       class="form-control bid-task-price"
-                       v-bind:id="'price-' + bidTask.id"
-                       v-model="bidTask.bid_price"
-                       @keyup="bidPrice('price-' + bidTask.id)"/>
-              </div>
-              <div class="col-xs-6" v-else>
-                <span class="right-label">
-                  Accepted Bid Price:
-                  <label>${{ bidTask.bid_price }}</label>
-                </span>
-              </div>
-              <!-- / end main info section -->
+            </div>
+            <div v-if="isBidOpen(bidTask)" class="form-group col-xs-6">
+              <label for="details">Task Price:</label>
+              <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1" type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id"
+                v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)" />
+              <input v-else type="text" class="form-control bid-task-price" v-bind:id="'price-' + bidTask.id" v-model="bidTask.bid_price"
+                @keyup="bidPrice('price-' + bidTask.id)" />
+            </div>
+            <div class="col-xs-6" v-else>
+              <span class="right-label">
+                Accepted Bid Price:
+                <label>${{ bidTask.bid_price }}</label>
+              </span>
+            </div>
+            <!-- / end main info section -->
 
-              <div class="col-xs-12">
-                <div class="divider2"></div>
-              </div>
+            <div class="col-xs-12">
+              <div class="divider2"></div>
+            </div>
 
-              <div class="col-xs-6 form-group">
-                <label>QTY: {{ bidTask.job_task.qty }}</label>
-              </div>
-              <div class="col-xs-6 form-group text-right">
-                <label>Total: {{ bidTask.bid_price }}</label>
-              </div>
-              <!-- / end qty section -->
+            <div class="col-xs-6 form-group">
+              <label>QTY: {{ bidTask.job_task.qty }}</label>
+            </div>
+            <div class="col-xs-6 form-group text-right">
+              <label>Total: {{ bidTask.bid_price }}</label>
+            </div>
+            <!-- / end qty section -->
 
-              <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
-                <div class="divider2"></div>
-              </div>
+            <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
+              <div class="divider2"></div>
+            </div>
 
-              <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
-                <label for="declined_message" class="label label-danger">Declined Reason</label>
-                <p>
-                  {{ bidTask.job_task.declined_message }}
-                </p>
-              </div>
-              <!-- / end declined message section -->
+            <div class="col-xs-12" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
+              <label for="declined_message" class="label label-danger">Declined Reason</label>
+              <p>
+                {{ bidTask.job_task.declined_message }}
+              </p>
+            </div>
+            <!-- / end declined message section -->
 
-              <div class="col-xs-12" v-if="showAddress(bidTask)">
-                <div class="divider2"></div>
-              </div>
-              <div class="col-xs-12" v-if="showAddress(bidTask)">
-                <p>
+            <div class="col-xs-12" v-if="showAddress(bidTask)">
+              <div class="divider2"></div>
+            </div>
+            <div class="col-xs-12" v-if="showAddress(bidTask)">
+              <p>
                 <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
                   <i class="fas fa-map-marker icon"></i>
                   {{ getAddress(bidTask) }}
                 </a>
-                </p>
-              </div>
+              </p>
+            </div>
 
+            <div class="col-xs-12">
+              <div class="divider2"></div>
+            </div>
+
+            <task-images :jobTask="bidTask.job_task" type="sub">
+            </task-images>
+
+            <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
+              <div class="divider2"></div>
+            </div>
+            <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
+              <p>
+                {{ bidTask.job_task.sub_message }}
+              </p>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
               <div class="col-xs-12">
-                <div class="divider2"></div>
-              </div>
-              
-              <task-images :jobTask="bidTask.job_task" type="sub">
-              </task-images>
-
-              <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
-                <div class="divider2"></div>
-              </div>
-              <div class="col-xs-12" v-if="bidTask.job_task.sub_message !== null">
-                <p>
-                  {{ bidTask.job_task.sub_message }}
-                </p>
-              </div>
-            </div>
-            <div class="panel-footer">
-              <div class="row">
-                <div class="col-xs-12">
-                  <span class="primary-action-btn">
-                    <div v-if="isBidOpen(bidTask)">
-                      <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
-                        <span v-if="disabled.submit">
-                          <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                        Submit
-                      </button>
-                    </div>
-                    <div v-if="showFinishedBtn(bidTask)">
-                      <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
-                        <span v-if="disabled.finished">
-                          <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                        Finished
-                      </button>
-                    </div>
-                  </span>
-                </div>
+                <span class="primary-action-btn">
+                  <div v-if="isBidOpen(bidTask)">
+                    <button class="btn btn-primary" @click.prevent="update" v-bind:id="bidTask.id" :disabled="disabled.submit">
+                      <span v-if="disabled.submit">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Submit
+                    </button>
+                  </div>
+                  <div v-if="showFinishedBtn(bidTask)">
+                    <button class="btn btn-success" @click="finished(bidTask)" :disabled="disabled.finished">
+                      <span v-if="disabled.finished">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Finished
+                    </button>
+                  </div>
+                </span>
               </div>
             </div>
-          </card>
-        </div>
-      </paginate>
-
-      <div class="card p-5 card-body justify-center">
-          <paginate-links for="sTasks" :limit="2" :show-step-links="true">
-          </paginate-links>
+          </div>
+        </card>
       </div>
-      <!-- / end tasks -->
-      <stripe :user='user'>
-      </stripe>
+    </paginate>
+
+    <div class="card p-5 card-body justify-center">
+      <paginate-links for="sTasks" :limit="2" :show-step-links="true">
+      </paginate-links>
+    </div>
+    <!-- / end tasks -->
+    <stripe :user='user'>
+    </stripe>
   </div>
 </template>
 
