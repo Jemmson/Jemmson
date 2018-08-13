@@ -7,15 +7,14 @@
             <!-- default content goes here -->
             <slot></slot>
         </div>
-        <div class="flex card-footer">
-            <slot name="card-footer"></slot>
+        <div class="flex p-4 border-t card-footer" v-if="footer !== undefined && footer">
+            <slot name="card-footer" class="justify-right content-right align-right items-right"></slot>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    props: ['header']
+    props: ['header', 'footer']
 }
 </script>
-
