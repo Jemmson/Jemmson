@@ -7,9 +7,9 @@
 
       <!-- / end search bar -->
       <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated" v-show="sTasks.length > 0">
-        <div class="col-sm-12 col-md-6" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
+        <div class="flex flex-col" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
           <!--<pre>{{ bidTask }}</pre>-->
-          <div class="card card-1" v-if="showBid(bidTask)">
+          <card v-if="showBid(bidTask)">
             <div class="panel-body">
               <div class="col-xs-12">
                 <h4>
@@ -131,20 +131,13 @@
                 </div>
               </div>
             </div>
-          </div>
+          </card>
         </div>
       </paginate>
-      <div class="col-md-12">
-        <div class="card card-1">
-          <div class="panel-body">
-            <center>
-              <h4>
-                <paginate-links for="sTasks" :limit="2" :show-step-links="true">
-                </paginate-links>
-              </h4>
-            </center>
-          </div>
-        </div>
+
+      <div class="card p-5 card-body justify-center">
+          <paginate-links for="sTasks" :limit="2" :show-step-links="true">
+          </paginate-links>
       </div>
       <!-- / end tasks -->
       <stripe :user='user'>
