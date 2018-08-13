@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="flex">
 
 
         <!--<div class="flex flex-col items-center">-->
