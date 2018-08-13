@@ -8,7 +8,7 @@
             <slot></slot>
         </div>
         <div class="flex p-4 border-t card-footer" v-if="footer !== undefined && footer">
-            <slot name="card-footer" class="justify-right content-right align-right items-right"></slot>
+            <slot name="card-footer"></slot>
         </div>
     </div>
 </template>
