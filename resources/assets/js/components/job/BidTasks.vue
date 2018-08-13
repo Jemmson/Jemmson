@@ -283,17 +283,9 @@
         </paginate>
 
 
-        <div class="col-md-12">
-            <div class="card card-1">
-                <div class="panel-body">
-                    <center>
-                        <h4>
-                            <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
-                            </paginate-links>
-                        </h4>
-                    </center>
-                </div>
-            </div>
+        <div class="card p-5 card-body justify-center">
+          <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
+          </paginate-links>
         </div>
         <sub-invite-modal v-if="isContractor" :jobTask="jTask">
         </sub-invite-modal>
