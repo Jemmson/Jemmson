@@ -382,12 +382,28 @@ describe ('Home.vue', () => {
     wrapper.setProps ({
       user: {
         name: 'Shawn',
+        usertype: 'contractor',
         contractor: {
           company_name: 'KPS Pools'
         },
       }
     });
     expect (wrapper.html ()).toContain ('Shawn');
+    expect (wrapper.html ()).toContain ('KPS Pools');
+  });
+
+  it ('should show stripe if they are contractor and stripe is not null', function () {
+    wrapper.setProps ({
+      user: {
+        name: 'Shawn',
+        usertype: 'contractor',
+        contractor: {
+          company_name: 'KPS Pools',
+          stripe_express: {}
+        },
+      }
+    });
+    expect (wrapper.html ()).toContain ('Stripe');
     expect (wrapper.html ()).toContain ('KPS Pools');
   });
 
