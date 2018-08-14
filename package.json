@@ -31,13 +31,14 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.24",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "expect": "^21.2.1",
     "jsdom": "^11.4.0",
     "jsdom-global": "^3.0.2",
     "laravel-mix-tailwind": "^0.1.0",
-    "mocha": "^4.0.1",
-    "mocha-webpack": "^1.0.1",
+    "mocha": "^4.1.0",
+    "mocha-webpack": "^1.1.0",
     "vue-test-utils": "^1.0.0-beta.6"
   }
 }

@@ -20,8 +20,8 @@
         <card class="mt-4">
 
             <div class="flex flex-col mb-4 border-b items-center">
-                <div class="text-sm text-grey upper">mini slogan</div>
-                <div class="mb-4 text-4xl font-black upper">main slogan</div>
+                <!--<div class="text-sm text-grey upper">mini slogan</div>-->
+                <!--<div class="mb-4 text-4xl font-black upper">main slogan</div>-->
             </div>
             <!-- / end slogan -->
 
@@ -40,6 +40,7 @@
                         <div class="help-text" v-if="bidData(bids, 'bid.initiated') === 1">
                             {{ bidData(bids, 'bid.initiated') }} has been Initiated
                         </div>
+
                         <div class="help-text" v-if="bidData(bids, 'bid.initiated') > 1">
                             {{ bidData(bids, 'bid.initiated') }} are Initiated
                         </div>
@@ -197,7 +198,8 @@
             </div>
             <!-- / end invoices -->
 
-            <div class="flex border-b mb-4 pb-4" v-if="user.contractor !== null && user.contractor.stripe_express !== null">
+            <div class="flex border-b mb-4 pb-4" v-if="user.contractor !== null &&
+                                                       user.contractor.stripe_express !== null">
                 <div class="flex flex-2">
                     <i class="fas fa-2x fa-money-bill-alt m-r-3 mt-1 text-grey"></i>
                 </div>
@@ -213,6 +215,11 @@
             </div>
             <!-- / end invoices -->
         </card>
+
+        <pre>
+            <!--{{ tasks }}-->
+        </pre>
+
     </div>
 </template>
 
@@ -282,6 +289,8 @@
         this.invoices = response.data;
         this.sInvoices = this.invoices;
       });
+      console.log(this.bids);
+      console.log(JSON.stringify(this.bids));
     }
   }
 </script>

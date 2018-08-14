@@ -4,10 +4,10 @@ import Home from '../../resources/assets/js/pages/Home.vue'
 
 describe ('Home.vue', () => {
   // let wrapper;
-  //
-  // beforeEach (() => {
-  //   wrapper = mount(Home);
-  // })
+
+  beforeEach (() => {
+    // wrapper = mount(Home);
+  })
 
   const wrapper = mount (Home, {
     propsData: {
@@ -17,28 +17,323 @@ describe ('Home.vue', () => {
           company_name: 'KPS Pools'
         }
       }
-    },
-    data () {
-      return {
-        bids: {
-          needsApproval: 6,
-          inProcess: 4,
-          waitingToBeFinished: 3,
-          finishedJobs: 2,
-        },
-        tasks: {
-          needsToBeBidOn: 10,
-          toBeFinished: 9,
-          watingOnCustomerPayment: 8,
-          paid: 7,
-        }
-      }
     }
   });
 
-  it ('needsApproval should render the correct markup', function () {
-    expect(wrapper.html()).toContain('<div class="-m-t-2 upper text-white text-5xl">home</div>');
+  it ('should show that 1 bid is initiated', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.initiated'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Initiated');
   });
+
+  it ('should show that 2 bids are initiated', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.initiated'},
+        {'status': 'bid.initiated'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 are Initiated');
+  });
+
+  it ('should show that 1 bid is in progress', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.in_progress'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('1 is in Progress');
+  });
+
+  it ('should show that 2 bids are in progress', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.in_progress'},
+        {'status': 'bid.in_progress'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 are in Progress');
+  });
+
+  it ('should show that 1 bid is sent', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.sent'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Sent');
+  });
+
+  it ('should show that 2 bids have been sent', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.sent'},
+        {'status': 'bid.sent'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Sent');
+  });
+
+  it ('should show that 1 bid is declined', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.declined'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Declined');
+  });
+
+  it ('should show that 2 bids have been declined', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'bid.declined'},
+        {'status': 'bid.declined'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Declined');
+  });
+
+  it ('should show that 1 bid is approved', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'job.approved'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Approved');
+  });
+
+  it ('should show that 2 bids have been approved', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'job.approved'},
+        {'status': 'job.approved'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 are Approved');
+  });
+
+  it ('should show that 1 bid is completed', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'job.completed'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Completed');
+  });
+
+  it ('should show that 2 bids have been completed', function () {
+    wrapper.setData ({
+      bids: [
+        {'status': 'job.completed'},
+        {'status': 'job.completed'}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 are Completed');
+  });
+
+  it ('should show that 1 task is completed', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.initiated'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Initiated');
+  });
+
+  it ('should show that 2 tasks have been completed', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.initiated'}},
+        {'job_task': {'status': 'bid_task.initiated'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 are Initiated');
+  });
+
+  it ('should show that 1 task has sent a bid', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.bid_sent'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Sent');
+  });
+
+  it ('should show that 2 tasks have sent a bid', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.bid_sent'}},
+        {'job_task': {'status': 'bid_task.bid_sent'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Sent');
+  });
+
+  it ('should show that 1 task has has been accepted', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.accepted'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Accepted');
+  });
+
+  it ('should show that 2 tasks have been accepted', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.accepted'}},
+        {'job_task': {'status': 'bid_task.accepted'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Accepted');
+  });
+
+  it ('should show that 1 task has has been finished by the sub', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.finished_by_sub'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Finished by the Sub');
+  });
+
+  it ('should show that 2 tasks have been finished by the sub', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.finished_by_sub'}},
+        {'job_task': {'status': 'bid_task.finished_by_sub'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Finished by the Sub');
+  });
+
+  it ('should show that 1 task has has been Approved by the General Contractor', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.approved_by_general'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Approved by the General Contractor');
+  });
+
+  it ('should show that 2 tasks have been Approved by the General Contractor', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.approved_by_general'}},
+        {'job_task': {'status': 'bid_task.approved_by_general'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Approved by the General Contractor');
+  });
+
+  it ('should show that 1 task has has been Finished by the General Contractor', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.finished_by_general'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Finished by the General Contractor');
+  });
+
+  it ('should show that 2 tasks have been Finished by the General Contractor', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.finished_by_general'}},
+        {'job_task': {'status': 'bid_task.finished_by_general'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Finished by the General Contractor');
+  });
+
+  it ('should show that 1 task has has been Approved by the Customer', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.approved_by_customer'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Approved by the Customer');
+  });
+
+  it ('should show that 2 tasks have been Approved by the Customer', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.approved_by_customer'}},
+        {'job_task': {'status': 'bid_task.approved_by_customer'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Approved by the Customer');
+  });
+
+  it ('should show that 1 customer has sent a payment ', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.customer_sent_payment'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has had the Customer Send Payment');
+  });
+
+  it ('should show that 1 task has has been Reopened', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.reopened'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Reopened');
+  });
+
+  it ('should show that 2 tasks have been Reopened', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.reopened'}},
+        {'job_task': {'status': 'bid_task.reopened'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Reopened');
+  });
+
+  it ('should show that 1 task has been Denied', function () {
+    wrapper.setData ({
+      tasks: [{
+        'job_task': {'status': 'bid_task.denied'}
+      }]
+    })
+    expect (wrapper.html ()).toContain ('1 has been Denied');
+  });
+
+  it ('should show that 2 tasks have been Denied', function () {
+    wrapper.setData ({
+      tasks: [
+        {'job_task': {'status': 'bid_task.denied'}},
+        {'job_task': {'status': 'bid_task.denied'}}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 have been Denied');
+  });
+
+  it ('should show that there is 1 invoice', function () {
+    wrapper.setData ({
+      invoices: [
+        {}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('1 invoice');
+  });
+
+
+  // it ('should show that 2 tasks have been Approved by the Customer', function () {
+  //   wrapper.setData ({
+  //     tasks: [
+  //       {'job_task': {'status': 'bid_task.approved_by_customer'}},
+  //       {'job_task': {'status': 'bid_task.approved_by_customer'}}
+  //     ]
+  //   })
+  //   expect (wrapper.html ()).toContain ('2 have been Approved by the Customer');
+  // });
+
 
   // it('Contractor not connected to Stripe rendering the correct markup', () => {
   // const wrapper = mount(Home, {
