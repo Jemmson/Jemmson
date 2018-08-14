@@ -15,8 +15,8 @@
                 <div class="modal-footer">
                     <span>
                         <slot name="button"></slot>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">{{ no }}</button>
-                        <button type="button" class="btn btn-success btn-model-yes" @click="$emit('modal', modalId)">{{ yes }}</button>
+                        <button type="button" class="btn btn-blue" data-dismiss="modal">{{ no }}</button>
+                        <button type="button" class="btn btn-green btn-model-yes" @click="$emit('modal', modalId)">{{ yes }}</button>
                     </span>
                 </div>
             </div>

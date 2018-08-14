@@ -2,7 +2,6 @@
     <div class="flex flex-col">
         <div class="flex flex-col items-center">
             <div class="upper text-white text-xs">{{ user.name }}</div>
-            <div class="-m-t-2 upper text-white text-5xl">home</div>
             <div class="home-icon
                         flex
                         justify-center
@@ -10,7 +9,7 @@
                         rounded-circle
                         m-t-4
                         bg-white">
-                <span class="text-6xl font-black text-center">J</span>
+                <span class="text-6xl text-blue-darker text-center">J</span>
             </div>
             <div v-if="(user.usertype === 'contractor') && user.contractor !== null">
                 <div class="text-white upper m-t-3 text-3xl">{{ user.contractor.company_name }}</div>

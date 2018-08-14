@@ -184,7 +184,7 @@
                                 drop down is selected
                                 any of the selected values change -->
                         <button v-if="(nameExistsInDB && !nameChanged) ||
-                                    (dropdownSelected && valueChanged)" class="btn btn-sm btn-primary"
+                                    (dropdownSelected && valueChanged)" class="btn btn-green"
                                 :disabled="checkErrors"
                                 @click.prevent="changeTask('Update')">Update and Add
                         </button>
@@ -193,7 +193,7 @@
                             drop down is selected and
                             any of the values have changed -->
                         <button v-if="(nameExistsInDB && !nameChanged) ||
-                                    (dropdownSelected && valueChanged)" class="btn btn-sm btn-primary"
+                                    (dropdownSelected && valueChanged)" class="btn btn-green"
                                 :disabled="checkErrors"
                                 @click.prevent="changeTask('Ignore')">Ignore and Add
                         </button>
@@ -202,7 +202,7 @@
                             drop down is selected
                             drop down name is changed -> gives option to create a new task based on an existing one -->
                         <button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"
-                                class="btn btn-sm btn-primary" :disabled="checkErrors"
+                                class="btn btn-green" :disabled="checkErrors"
                                 @click.prevent="changeTask('New')">
                             Create New and Add
                         </button>
@@ -211,7 +211,7 @@
                             drop down selected but no values have changed or
                             drop down not selected -> if drop down not selected then create a new standard task -->
                         <button v-if="(dropdownSelected && !valueChanged && !nameChanged)"
-                                class="btn btn-sm btn-primary" :disabled="checkErrors"
+                                class="btn btn-green" :disabled="checkErrors"
                                 @click.prevent="changeTask('Add')">
                             Add Task
                         </button>

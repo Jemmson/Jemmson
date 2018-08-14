@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <card>
+    <card footer="true">
       <!-- /show all bid information -->
       <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
       </bid-details>
