@@ -314,13 +314,81 @@ describe ('Home.vue', () => {
     expect (wrapper.html ()).toContain ('2 have been Denied');
   });
 
+  it ('should show that there are no invoices', function () {
+    wrapper.setData ({
+      invoices: []
+    })
+    expect (wrapper.html ()).toContain ('0 Invoices');
+  });
+
   it ('should show that there is 1 invoice', function () {
     wrapper.setData ({
       invoices: [
-        {}
+        {id: 1}
       ]
     })
-    expect (wrapper.html ()).toContain ('1 invoice');
+    expect (wrapper.html ()).toContain ('1 Invoice');
+  });
+
+  it ('should show that there are 2 invoices', function () {
+    wrapper.setData ({
+      invoices: [
+        {id: 1},
+        {id: 2}
+      ]
+    })
+    expect (wrapper.html ()).toContain ('2 Invoices');
+  });
+
+  it ('should show Bids and Invoices if the user is a customer', function () {
+    wrapper.setProps ({
+      user: {
+        usertype: 'customer',
+        contractor: null
+      }
+    });
+    wrapper.setData ({})
+    expect (wrapper.html ()).toContain ('Bids');
+    expect (wrapper.html ()).toContain ('Invoices');
+    expect (wrapper.html ()).not.toContain ('Tasks');
+    expect (wrapper.html ()).not.toContain ('Stripe');
+  });
+
+  it ('should show Bids, Invoices, Tasks, and Stripe if the user is a Contractor', function () {
+    wrapper.setProps ({
+      user: {
+        usertype: 'contractor',
+        contractor: ''
+      }
+    });
+    wrapper.setData ({})
+    expect (wrapper.html ()).toContain ('Bids');
+    expect (wrapper.html ()).toContain ('Invoices');
+    expect (wrapper.html ()).toContain ('Tasks');
+    expect (wrapper.html ()).toContain ('Stripe');
+  });
+
+  it ('should show customers name', function () {
+    wrapper.setProps ({
+      user: {
+        name: 'Shawn',
+        contractor: null,
+      }
+    });
+    expect (wrapper.html ()).toContain ('Shawn');
+  });
+
+  it ('should show contractors company name', function () {
+    wrapper.setProps ({
+      user: {
+        name: 'Shawn',
+        contractor: {
+          company_name: 'KPS Pools'
+        },
+      }
+    });
+    expect (wrapper.html ()).toContain ('Shawn');
+    expect (wrapper.html ()).toContain ('KPS Pools');
   });
 
 
