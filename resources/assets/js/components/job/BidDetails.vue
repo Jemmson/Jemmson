@@ -1,69 +1,71 @@
 <template>
     <!-- /all details of a bid -->
+    <div class="flex flex-col" v-if="bid.job_name !== undefined">
 
-    <div>
-        <div v-if="bid.job_name !== undefined">
-
-            <!-- JOB STATUS -->
-            <div for="task-status" class="status" :class="getLabelClass(bid.status)">
+        <!-- JOB STATUS -->
+        <div class="border-b pb-4 mb-6">
+            <div class="status" :class="getLabelClass(bid.status)">
                 {{ status }}
             </div>
+        </div>
 
-            <hr>
+        <div class="flex flex-col self-center mb-6">
+            <!-- <span class="label mb-2">JOB NAME</span> -->
+            <p class="text-xl font-extrabold uppercase">{{ bid.job_name }}</p>
+        </div>
 
-            <div class="flex justify-between">
-                <span>CUSTOMER NAME</span>
-                <span>JOB NAME</span>
-                <span>START DATE</span>
-            </div>
-
-            <div class="flex justify-between">
+        <div class="flex justify-between mb-6">
+            <div class="flex flex-col">
+                <span class="label mb-2">CUSTOMER NAME</span>
                 <span v-if="isCustomer">{{ customerName }}</span>
                 <span v-else>{{ customerName }}</span>
-                <span>{{ bid.job_name }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="label mb-2">START DATE</span>
                 <span>{{ agreedStartDate }}</span>
             </div>
+        </div>
 
-
-            <hr>
-            <div class="flex justify-between">
-                <span class="">JOB ADDRESS:</span>
-                <span class="">TOTAL JOB PRICE:</span>
-            </div>
-            <div class="flex justify-between">
-                <div>
-                    <a class="" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
-                       :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                        <address v-if="bid.location !== null">
-                            <br> {{ bid.location.address_line_1 }}
-                            <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                        </address>
-                    </a>
-                    <div v-else class="">
-                        No Address is Set Yet
-                    </div>
+        <div class="flex justify-between mb-6">
+            <div class="flex flex-col">
+                <span class="label">JOB ADDRESS:</span>
+                <a class="" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                    <address v-if="bid.location !== null">
+                        <br> {{ bid.location.address_line_1 }}
+                        <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+                    </address>
+                </a>
+                <div v-else class="">
+                    No Address is Set Yet
                 </div>
-                <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
             </div>
+            <!-- <div class="flex flex-col">
+                <span class="label mb-4">TOTAL PRICE:</span>
+                <span>${{ bid.bid_price }}</span>
+            </div> -->
+        </div>
 
-            <!-- Customer Notes -->
-            <button class="btn btn-sm btn-info" @click="customerInfo = !customerInfo">Customer Info</button>
-            <div v-show="customerInfo" class="flex space-between flex-col">
-                <p class="message">
-                    {{ bid.customer.customer.notes }}
-                </p>
-            </div>
+        <div class="flex justify-between mt-4">
+            <span class="label mb-4">TOTAL PRICE:</span>
+            <span class="font-bold">${{ bid.bid_price }}</span>
+        </div>
 
-            <!-- Declined Message -->
-            <div class="flex space-between flex-col"
-                 v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
-                <h4>
-                    <label class="status label label-warning red py-s">Declined Reason</label>
-                </h4>
-                <p class="message">
-                    {{ bid.declined_message}}
-                </p>
-            </div>
+        <!-- Customer Notes -->
+        <!-- <button class="btn btn-blue" @click="customerInfo = !customerInfo">Customer Info</button>
+        <div v-show="customerInfo" class="flex space-between flex-col">
+            <p class="message">
+                {{ bid.customer.customer.notes }}
+            </p>
+        </div> -->
+
+        <!-- Declined Message -->
+        <div class="flex space-between flex-col" v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
+            <h4>
+                <label class="status label label-warning red py-s">Declined Reason</label>
+            </h4>
+            <p class="message">
+                {{ bid.declined_message}}
+            </p>
         </div>
     </div>
 </template>
@@ -136,60 +138,10 @@
   }
 </script>
 
-<style scoped>
-
-    .flex {
-        display: flex;
-    }
-
-    .space-between {
-        justify-content: space-between;
-    }
-
-    .green {
-        background-color: rgba(0, 128, 0, 0.34);
-    }
-
-    .red {
-        background-color: rgba(255, 64, 47, 0.78);
-    }
-
-    .py-l {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-    }
-
-    .py-m {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-    }
-
-    .py-s {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-    }
-
-    .px-l {
-        padding-right: 3rem;
-        padding-left: 3rem;
-    }
-
-    .px-m {
-        padding-right: 2rem;
-        padding-left: 2rem;
-    }
-
-    .px-s {
-        padding-right: 1rem;
-        padding-left: 1rem;
-    }
-
-    .message {
-        font-size: 2.25rem;
-        font-weight: bold;
-    }
-
-    .flex-col {
-        flex-direction: column;
-    }
+<style lang="less" scoped>
+.status {
+    padding: 1rem;
+    padding-left: 6px;
+    padding-right: 6px;
+}
 </style>

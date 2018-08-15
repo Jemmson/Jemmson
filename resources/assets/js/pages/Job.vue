@@ -4,11 +4,11 @@
       <!-- /show all bid information -->
       <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
       </bid-details>
+
       <template slot="card-footer">
         <!-- /customer approve bid form -->
         <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
         </approve-bid>
-
         <!-- /buttons  -->
         <general-contractor-bid-actions :bid="bid" @openAddTask="openAddTask">
         </general-contractor-bid-actions>

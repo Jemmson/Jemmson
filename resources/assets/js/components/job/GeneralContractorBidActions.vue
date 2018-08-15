@@ -1,12 +1,9 @@
 <template>
   <!-- /contractor bid actions -->
-  <div>
-    <div class="text-white btn-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
+  <div class="flex w-full">
+    <div class="flex text-white btn-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
     </div>
-    <div v-if="showPreApprovedActions" class="">
-      <div class="btn btn-blue" v-if="bid.job_tasks.length <= 0">Please Add A Task
-      </div>
-      <div class="flex justify-between">
+    <div v-if="showPreApprovedActions" class="flex w-full justify-between">
         <button class="btn btn-red" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid">
           <span v-if="disabled.cancelBid">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -22,7 +19,6 @@
           </span>
           <span>Submit Bid</span>
         </button>
-      </div>
     </div>
     <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" :yes="mYes" :no="mNo">
     </modal>
@@ -135,8 +131,13 @@
   }
 </script>
 
-<style>
+<style lang="less" scoped> 
     .btn-contractor {
         margin: 1rem;
+    }
+    .btn {
+      padding-right: .5rem;
+      padding-left: .5rem;
+
     }
 </style>
