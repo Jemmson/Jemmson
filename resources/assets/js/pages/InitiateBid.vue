@@ -122,10 +122,10 @@
       },
       checkValidData () {
         // debugger
-        let phone = this.unformatNumber (this.form.phone);
+        let phoneLength = this.unformatNumber (this.form.phone);
         if ((this.getMobileValidResponse[1] === 'mobile' ||
           this.getMobileValidResponse[2] === 'mobile') &&
-          this.form.customerName !== '' && (phone === 10)
+          this.form.customerName !== '' && (phoneLength === 10)
         ) {
           return false;
         } else {
