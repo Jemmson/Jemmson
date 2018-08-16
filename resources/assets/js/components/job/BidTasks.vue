@@ -2,38 +2,25 @@
   <!-- /all tasks of a bid -->
   <div v-if="show">
     <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated" v-if="jobTasks.length > 0">
-      <div class="container">
+      <div class="">
 
         <!-- / status -->
         <card footer="true" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
-          <div for="task-status" class="status task-status mb-4" :class="getLabelClass(jobTask.status)">
+          <div for="task-status" class="status task-status mb-6" :class="getLabelClass(jobTask.status)">
             {{ status(jobTask.status) }}
           </div>
 
           <!-- task name-->
-          <div class="flex
-                                 justify-center
-                                 text-xl
-                                 font-bold
-                                 rounded
-                                 m-l-24
-                                 m-r-24
-                                 p-1
-                                 text-black mb-4" style="font-size: 20pt">
+          <div class="flex justify-center text-2xl font-bold text-black mb-6">
             {{ jobTask.task.name }}
           </div>
 
-          <h1 class="flex text-center justify-center" style="border-radius: 10px; width: 70%; font-size: 24pt; background-color: skyblue; color: black"
-            v-if="jobTask.deleted_at">
-            DELETED AT {{ jobTask.deleted_at }}
-          </h1>
-
           <!-- Task Prices -->
 
-          <div class="flex justify-around">
-            <div class="form-group m-l-4">
+          <div class="flex justify-between mb-4">
+            <div class="form-group">
               <div class="flex flex-col">
-                <span>Total Task Price</span>
+                <span class="label mb-2">Total Task Price</span>
                 <div>
                   <i class="fas fa-money-bill-alt icon"></i>
                   <span class="totalCost" v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
@@ -42,30 +29,29 @@
               <label v-if="isCustomer || !showTaskPriceInput()">{{taskCustFinalPrice(jobTask.cust_final_price)}}</label>
             </div>
             <!-- / end total price -->
-            <div class="form-group m-r-4" v-if="isContractor">
+            <div class="form-group" v-if="isContractor">
               <div class="flex flex-col">
-                <span>Total Task Sub Price</span>
+                <span class="label mb-2">Total Task Sub Price</span>
                 <div class="flex items-center">
                   <i class="fas fa-user icon"></i>
                   <span class="totalCost">{{taskCustFinalPrice(jobTask.sub_final_price)}}</span>
                 </div>
               </div>
-              <!-- <input type="tel" class="form-control form-control-text" v-if="showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.sub_final_price)"
-                                                          @blur="updateSubTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)"> -->
             </div>
           </div>
+          <!-- / end total task prices -->
 
-          <div class="flex flex-col m-l-2 m-r-2 m-b-10">
+          <div class="flex flex-col m-b-4">
             <div class="flex justify-around">
               <div class="flex flex-col">
-                <label>Quantity:</label>
+                <label class="label mb-2">Quantity:</label>
                 <input type="text" class="form-control" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
               </div>
               <div class="flex flex-col">
-                <label class="m-l-6">Price:</label>
+                <label class="label mb-2 m-l-6">Price:</label>
                 <div class="flex">
                   <span class="dollarSign m-l-6">$</span>
                   <input type="text" class="form-control" :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
@@ -77,34 +63,34 @@
           </div>
 
 
-          <div class="flex justify-around m-b-10">
-            <div>
+          <div class="flex justify-between m-b-10">
+            <div class="flex flex-col">
               <span v-if="location(jobTask, bid) === 'No Address Set Yet'">
                 <!--No Address Set Yet-->
                 <i class="fas fa-map-marker icon"></i>
                 {{ location(jobTask, bid) }}
               </span>
-              <div class="flex justify-around items-center" v-else-if="location(jobTask, bid) === 'Same as Job Location'">
-                <span>Change Task Location</span>
-                <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
+              <div class="flex flex-col" v-else-if="location(jobTask, bid) === 'Same as Job Location'">
+                <span class="label mb-2">Change Task Location</span>
+                <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask)">
                   <i class="fas fa-edit"></i>
                 </button>
               </div>
-              <div v-else class="flex justify-around items-center">
+              <div v-else class="flex flex-col">
                 <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, bid)">
                   <i class="fas fa-map-marker icon"></i>
                   {{ location(jobTask, bid) }}
                 </a>
-                <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
+                <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask)">
                   <i class="fas fa-edit"></i>
                 </button>
               </div>
             </div>
 
             <div class="flex items-center" v-if="isContractor">
-              <i class="fas fa-clock icon m-r-2"></i>
               <div class="flex flex-col">
-                <div style="font-size: 12pt;">Task Start Date</div>
+                <label class="label mb-2">Task Start Date</label>
+              <!-- <i class="fas fa-clock icon m-r-2"></i> -->
                 <input type="date" class="form-control form-control-date" style="" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                   @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                 <span :class="{ error: hasStartDateError }" v-show="hasStartDateError">{{ startDateErrorMessage }}
@@ -114,132 +100,124 @@
               <!--{{prettyDate(jobTask.start_date)}} </label>-->
             </div>
           </div>
+          <!-- / end inputs -->
 
-          <task-images :jobTask="jobTask" type="notsub">
+          <task-images class="mb-4" :jobTask="jobTask" type="notsub">
           </task-images>
 
           <div>
-            <div class="messageHeader">Messages
+            <div class="messageHeader mb-4">Messages
             </div>
 
             <div class="flex flex-col">
-              <div class="container">
-                <div class="flex flex-col items-center box">
-                  <span>Subcontractor</span>
-                  <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
-                    :disabled="disableMessages">{{ jobTask.sub_message }}</textarea>
+              <div class="flex flex-col box mb-3">
+                <span class="label mb-2">Subcontractor</span>
+                <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
+                  :disabled="disableMessages">{{ jobTask.sub_message }}</textarea>
 
-                  <!--<input-->
-                  <!--type="text"-->
-                  <!--class="form-control"-->
-                  <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
-                  <!--:value="jobTask.sub_message">-->
-                </div>
-                <div class="flex flex-col items-center box">
-                  <span>Customer</span>
-                  <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
-                    :disabled="disableMessages">{{ jobTask.customer_message }}</textarea>
-                </div>
-                <button class="btn btn-success btn-large m-t-3">Send</button>
+                <!--<input-->
+                <!--type="text"-->
+                <!--class="form-control"-->
+                <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
+                <!--:value="jobTask.sub_message">-->
+              </div>
+              <div class="flex flex-col box">
+                <span class="label mb-2">Customer</span>
+                <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
+                  :disabled="disableMessages">{{ jobTask.customer_message }}</textarea>
+              </div>
+              <button class="btn btn-green m-t-3 mb-4">Send</button>
+            </div>
+          </div>
+
+          <div v-if="showPanelActions(jobTask.status)" class="flex">
+            <transition-group name="slide-fade" v-if="isContractor">
+              <div :id="'task-divider-' + jobTask.id" :key="1"></div>
+              <div :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved &&  jobTask.bid_contractor_job_tasks.length > 0" :key="3">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Sub</th>
+                      <th>Price</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
+                      <td>{{ bid.contractor.name }}</td>
+                      <td>${{ bid.bid_price }}</td>
+                      <td>
+                        <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="btn-green" :disabled="disabled.accept">
+                          <span v-if="disabled.accept">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                          </span>
+                          Accept
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--&lt;!&ndash; /end col-md-6 &ndash;&gt;-->
+            </transition-group>
+          </div>
+
+          <template slot="card-footer">
+            <div class="flex w-full justify-between">
+              <div class="">
+                <button class="btn btn-red" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                  Deny
+                </button>
+
+                <button class="btn btn-red" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
+                  <span v-if="disabled.deleteTask">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                  </span>
+                  Delete
+                </button>
+              </div>
+
+              <div v-if="isContractor" class=" justify-between">
+                <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="btn btn-blue" @click.prevent="openTaskBids(jobTask.id)"
+                  v-if="isGeneral">
+                  Show Subs
+                </button>
+                <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
+                  Add A Sub
+                </button>
+              </div>
+
+              <div v-if="showFinishedBtn(jobTask) || showApproveBtn(jobTask)" class=" justify-between">
+                <button class="btn btn-green" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)" :disabled="disabled.finished">
+                  <span v-if="disabled.finished">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                  </span>
+                  Finished
+                </button>
+
+                <button class="btn btn-green" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
+                  <span v-if="disabled.approve">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                  </span>
+                  Approve
+                </button>
               </div>
             </div>
-          </div>
-
-          <div class="flex justify-around m-t-6 m-b-6">
-
-            <div v-if="isContractor">
-              <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
-                Add A Sub
-              </button>
-
-              <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="btn btn-blue" @click.prevent="openTaskBids(jobTask.id)"
-                v-if="isGeneral">
-                Display Subs
-              </button>
-
-            </div>
-
-            <button class="btn btn-red" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
-              Deny
-            </button>
-
-            <button class="btn btn-red" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
-              <span v-if="disabled.deleteTask">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-              </span>
-              Delete
-            </button>
-
-
-            <button class="btn btn-green" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)" :disabled="disabled.finished">
-              <span v-if="disabled.finished">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-              </span>
-              Finished
-            </button>
-
-            <button class="btn btn-green" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
-              <span v-if="disabled.approve">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-              </span>
-              Approve
-            </button>
-
-
-          </div>
-
-          <div>
-            <div v-if="showPanelActions(jobTask.status)">
-              <transition-group name="slide-fade" v-if="isContractor">
-
-                <div :id="'task-divider-' + jobTask.id" :key="1"></div>
-
-                <div :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved &&  jobTask.bid_contractor_job_tasks.length > 0" :key="3">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Sub</th>
-                        <th>Price</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
-                        <td>{{ bid.contractor.name }}</td>
-                        <td>${{ bid.bid_price }}</td>
-                        <td>
-                          <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="btn-green" :disabled="disabled.accept">
-                            <span v-if="disabled.accept">
-                              <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>
-                            Accept
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!--&lt;!&ndash; /end col-md-6 &ndash;&gt;-->
-              </transition-group>
-            </div>
-          </div>
+          </template>
 
           <!--<button class="btn btn-secondary" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">-->
           <!--&lt;!&ndash;<i class="fas fa-user-plus fa-2x"></i>&ndash;&gt;-->
           <!--Add Sub-->
           <!--</button>-->
-
-
         </card>
       </div>
-
     </paginate>
-
 
     <div class="card p-5 card-body justify-center">
       <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
       </paginate-links>
     </div>
+
     <sub-invite-modal v-if="isContractor" :jobTask="jTask">
     </sub-invite-modal>
     <deny-task-modal v-if="isContractor" :jobTask="jTask">
@@ -585,7 +563,7 @@
     }
 
     .box {
-        width: 95%;
+        width: 100%;
     }
 
     .messageHeader {

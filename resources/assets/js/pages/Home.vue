@@ -18,10 +18,10 @@
 
         <card class="mt-4">
 
-            <div class="flex flex-col mb-4 border-b items-center">
-                <!--<div class="text-sm text-grey upper">mini slogan</div>-->
-                <!--<div class="mb-4 text-4xl font-black upper">main slogan</div>-->
-            </div>
+            <!-- <div class="flex flex-col mb-4 border-b items-center">
+                <div class="text-sm text-grey upper">mini slogan</div>
+                <div class="mb-4 text-4xl font-black upper">main slogan</div>
+            </div> -->
             <!-- / end slogan -->
 
             <div class="flex border-b mb-4 pb-4">

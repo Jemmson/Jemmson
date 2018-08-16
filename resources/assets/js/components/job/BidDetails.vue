@@ -11,7 +11,7 @@
 
         <div class="flex flex-col self-center mb-6">
             <!-- <span class="label mb-2">JOB NAME</span> -->
-            <p class="text-xl font-extrabold uppercase">{{ bid.job_name }}</p>
+            <p class="text-2xl font-extrabold uppercase">{{ bid.job_name }}</p>
         </div>
 
         <div class="flex justify-between mb-6">

@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <div class="flex justify-around">
+        <div class="flex justify-between">
             <div class="" v-if="showTaskImage1(jobTask)">
                 <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
                     <img :src="jobTask.images[jobTask.images.length - 1].url" alt="">
@@ -31,23 +31,17 @@
         </div>
         <!-- / end task images preview -->
 
-        <div class="">
-            <!-- upload images -->
-            <div class="form-group">
-                <label class="col-md-6 control-label">&nbsp;</label>
-                <div class="col-md-6 text-right">
-                    <label type="button" :class="disabled.uploadTaskImageBtn ? 'btn btn-primary btn-upload disabled' : 'btn btn-primary btn-upload'">
-                        <span>Attach Images</span>
-                        <span v-show="disabled.uploadTaskImageBtn">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                        <span v-if="!disabled.uploadTaskImageBtn">
-                            <input :ref="'task_photo_' + jobTask.id" type="file" class="form-control" @change="uploadTaskImage(jobTask.id)">
-                        </span>
-                    </label>
-                </div>
-            </div>
-        </div>
+        <!-- upload images -->
+        <!-- <button type="button" 
+        :class="disabled.uploadTaskImageBtn ? 'btn btn-blue btn-upload disabled' : 'btn btn-blue btn-upload'">
+            <span>Attach Images</span>
+            <span v-show="disabled.uploadTaskImageBtn">
+                <i class="fa fa-btn fa-spinner fa-spin"></i>
+            </span>
+            <span v-if="!disabled.uploadTaskImageBtn"> -->
+                <input :ref="'task_photo_' + jobTask.id" class="mt-4 mb-4" :id="'task_photo_' + jobTask.id" type="file" @change="uploadTaskImage(jobTask.id)">
+            <!-- </span>
+        </button> -->
         <!-- / end upload task images-->
     </div>
 </template>
@@ -75,6 +69,11 @@
             }
         },
         methods: {
+            triggerFileInput (id) {
+                console.log('trigger file', id);
+                
+                $('#task_photo_' + id).click(); 
+            },
             openImage(imageId) {
                 console.log(imageId);
                 $('#image' + imageId).addClass('lightbox-open');
@@ -114,3 +113,11 @@
         }
     }
 </script>
+
+<style lang="less" scoped>
+.file {
+    position: fixed;
+    right: 100%;
+    bottom: 100%;
+}
+</style>
