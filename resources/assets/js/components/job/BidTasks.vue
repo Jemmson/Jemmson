@@ -63,34 +63,34 @@
           </div>
 
 
-          <div class="flex justify-around m-b-10">
-            <div>
+          <div class="flex justify-between m-b-10">
+            <div class="flex flex-col">
               <span v-if="location(jobTask, bid) === 'No Address Set Yet'">
                 <!--No Address Set Yet-->
                 <i class="fas fa-map-marker icon"></i>
                 {{ location(jobTask, bid) }}
               </span>
-              <div class="flex justify-around items-center" v-else-if="location(jobTask, bid) === 'Same as Job Location'">
-                <span>Change Task Location</span>
-                <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
+              <div class="flex flex-col" v-else-if="location(jobTask, bid) === 'Same as Job Location'">
+                <span class="label mb-2">Change Task Location</span>
+                <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask)">
                   <i class="fas fa-edit"></i>
                 </button>
               </div>
-              <div v-else class="flex justify-around items-center">
+              <div v-else class="flex flex-col">
                 <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, bid)">
                   <i class="fas fa-map-marker icon"></i>
                   {{ location(jobTask, bid) }}
                 </a>
-                <button class="btn btn-small pull-right" @click="openUpdateTaskLocation(jobTask)">
+                <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask)">
                   <i class="fas fa-edit"></i>
                 </button>
               </div>
             </div>
 
             <div class="flex items-center" v-if="isContractor">
-              <i class="fas fa-clock icon m-r-2"></i>
               <div class="flex flex-col">
-                <div style="font-size: 12pt;">Task Start Date</div>
+                <label class="label mb-2">Task Start Date</label>
+              <!-- <i class="fas fa-clock icon m-r-2"></i> -->
                 <input type="date" class="form-control form-control-date" style="" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                   @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                 <span :class="{ error: hasStartDateError }" v-show="hasStartDateError">{{ startDateErrorMessage }}
