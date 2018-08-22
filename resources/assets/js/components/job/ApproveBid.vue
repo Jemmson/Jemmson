@@ -1,13 +1,13 @@
 <template>
     <!-- /customer approve bid form -->
-    <form role="form">
-        <div class="form-group col-sm-12 col-md-6">
+    <form role="form" class="flex flex-col">
+        <div class="flex form-group">
             <label for="job_location_same_as_home">Job Location Same as Home Location</label>
-            <input type="checkbox" class="form-control" id="job_location_same_as_home"
+            <input type="checkbox" class="" id="job_location_same_as_home"
                    v-model="form.job_location_same_as_home">
         </div>
 
-        <div class="form-group col-sm-12 col-md-6" :class="{'has-error': form.errors.has('agreed_start_date')}">
+        <div class="flex form-group" :class="{'has-error': form.errors.has('agreed_start_date')}">
             <label for="start_date">Start Date</label>
             <input type="date" class="form-control" id="start_date" v-model="form.agreed_start_date">
             <span class="help-block" v-show="form.errors.has('agreed_start_date')">
@@ -16,9 +16,9 @@
         </div>
 
         <!-- /job location -->
-        <div v-show="!form.job_location_same_as_home">
+        <div v-show="!form.job_location_same_as_home" class="flex flex-col">
             <!-- Address Line 1 -->
-            <div class="form-group col-sm-12" :class="{'has-error': form.errors.has('address_line_1')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                 <label for="">Address Line 1</label>
                 <input type="text" class="form-control" name="address_line_1" id="route3" v-model="form.address_line_1"
                        autofocus>
@@ -28,13 +28,13 @@
             </div>
 
             <!-- Address Line 2 -->
-            <div class="form-group col-sm-12">
+            <div class="flex form-group">
                 <label for="">Address Line 2</label>
                 <input type="text" class="form-control" name="address_line_2" v-model="form.address_line_2">
             </div>
 
             <!-- City -->
-            <div class="form-group col-md-6" :class="{'has-error': form.errors.has('city')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('city')}">
                 <label class=" ">City</label>
                 <input type="text" class="form-control" name="city" v-model="form.city">
                 <span class="help-block" v-show="form.errors.has('city')">
@@ -43,7 +43,7 @@
             </div>
 
             <!-- State -->
-            <div class="form-group col-md-6" :class="{'has-error': form.errors.has('state')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('state')}">
                 <label for="">State</label>
                 <input type="text" class="form-control" name="state" v-model="form.state">
                 <span class="help-block" v-show="form.errors.has('state')">
@@ -52,7 +52,7 @@
             </div>
 
             <!-- Zip Code -->
-            <div class="form-group col-md-12" :class="{'has-error': form.errors.has('zip')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('zip')}">
                 <label for="">ZipCode</label>
                 <input type="text" class="form-control" name="zip" v-model="form.zip">
                 <span class="help-block" v-show="form.errors.has('zip')">
@@ -61,21 +61,21 @@
             </div>
         </div>
         <!-- / buttons -->
-        <div class="btn-group col-sm-12">
-            <button class="btn btn-primary" @click.prevent="openModal('approveBid')" :disabled="disabled.approve">
-                <span v-if="disabled.approve">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                Approve
-            </button>
-            <button class="btn btn-primary" @click.prevent="openDeclineForm">
+        <div class="flex justify-between">
+            <button class="btn btn-red" @click.prevent="openDeclineForm">
                 Decline
             </button>
-            <button class="btn btn-primary" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid">
+            <button class="btn btn-red" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Cancel
+            </button>
+            <button class="btn btn-green" @click.prevent="openModal('approveBid')" :disabled="disabled.approve">
+                <span v-if="disabled.approve">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                </span>
+                Approve
             </button>
         </div>
         <!-- / decline bid section -->
@@ -107,12 +107,12 @@
 
 <script>
   export default {
-    props: {
-      bid: Object,
+      props: {
+          bid: Object,
     },
     data () {
-      return {
-        taskIndex: 0,
+        return {
+            taskIndex: 0,
         form: new SparkForm ({
           id: this.bid.id,
           agreed_start_date: '',

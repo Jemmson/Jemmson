@@ -12,7 +12,7 @@
       <div id="card-errors" role="alert"></div>
     </div>
     <br>
-    <button class="btn btn-success" style="float: right;" :disabled="signup">
+    <button class="btn btn-green" style="float: right;" :disabled="signup">
         <span v-if="signup">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
         </span>
