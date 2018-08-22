@@ -25,7 +25,7 @@
                 <div class="modal-footer">
                     <span>
                         <slot name="button"></slot>
-                        <button type="submit" class="btn btn-success btn-model-yes" @click.prevent="submit">Submit</button>
+                        <button type="submit" class="btn btn-green btn-model-yes" @click.prevent="submit">Submit</button>
                     </span>
                 </div>
             </div>

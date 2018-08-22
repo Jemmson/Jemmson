@@ -1,6 +1,6 @@
 <template>
   <!-- /contractor bid actions -->
-  <div class="flex w-full">
+  <div class="flex ">
     <div class="flex text-white btn-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
     </div>
     <div v-if="showPreApprovedActions" class="flex w-full justify-between">
