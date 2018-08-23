@@ -1,11 +1,30 @@
-// import {mount} from 'vue-test-utils'
-// import expect from 'expect'
-// import axios from 'axios'
-// import Spark from '../../spark/resources/assets/js/spark-bootstrap'
+// import {
+//     mount,
+//     createLocalVue
+// } from 'vue-test-utils'
+// import VuePaginate from 'vue-paginate'
+
+
+// const localVue = createLocalVue()
+// localVue.use(VuePaginate)
+
+// // global.Bus = localVue;
+
 // import Jobs from '../../resources/assets/js/pages/Jobs.vue'
-//
+
+// const $on = {
+//     bidUpdated: () => {
+//         console.log('get bids');
+        
+//     }
+// }
+
 // describe('Jobs', () => {
 //   const wrapper = mount (Jobs, {
+//     localVue,
+//     mocks: {
+//         $on
+//     },
 //     propsData: {
 //       user: {
 //         usertype: 'contractor',
@@ -34,8 +53,8 @@
 //       }
 //     }
 //   });
-//
+
 //   it ('should ', function () {
-//
+
 //   });
 // })
