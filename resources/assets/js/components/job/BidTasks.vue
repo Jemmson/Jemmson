@@ -2,8 +2,6 @@
   <!-- /all tasks of a bid -->
   <div v-if="show">
     <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated" v-if="jobTasks.length > 0">
-      <div class="">
-
         <!-- / status -->
         <card footer="true" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
           <div for="task-status" class="status task-status mb-6" :class="getLabelClass(jobTask.status)">
@@ -17,8 +15,8 @@
 
           <!-- Task Prices -->
 
-          <div class="flex justify-between mb-4">
-            <div class="form-group">
+          <div class="flex mb-4">
+            <div class="flex-1 form-group">
               <div class="flex flex-col">
                 <span class="label mb-2">Total Task Price</span>
                 <div>
@@ -26,10 +24,9 @@
                   <span class="totalCost" v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
                 </div>
               </div>
-              <label v-if="isCustomer || !showTaskPriceInput()">{{taskCustFinalPrice(jobTask.cust_final_price)}}</label>
             </div>
             <!-- / end total price -->
-            <div class="form-group" v-if="isContractor">
+            <div class="flex-1 form-group" v-if="isContractor">
               <div class="flex flex-col">
                 <span class="label mb-2">Total Task Sub Price</span>
                 <div class="flex items-center">
@@ -41,30 +38,29 @@
           </div>
           <!-- / end total task prices -->
 
-          <div class="flex flex-col m-b-4">
-            <div class="flex justify-around">
-              <div class="flex flex-col">
-                <label class="label mb-2">Quantity:</label>
-                <input type="text" class="form-control" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
+          <div v-if="isContractor" class="flex flex-col m-b-4">
+            <div class="flex">
+              <div class="flex-1 flex-col pr-2">
+                <label class="label">Quantity:</label>
+                <input type="text" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
               </div>
-              <div class="flex flex-col">
-                <label class="label mb-2 m-l-6">Price:</label>
-                <div class="flex">
-                  <span class="dollarSign m-l-6">$</span>
-                  <input type="text" class="form-control" :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
+              <div class="flex-1 flex-col">
+                <label class="label">Price:</label>
+                  <input type="text" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
                     @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
-                </div>
               </div>
             </div>
-            <button class="btn btn-success btn-large m-t-3" style="width: 20%" v-show="jobTask.status !== 'bid_task.customer_sent_payment'">Update</button>
+            <div class="flex justify-end">
+              <button class="btn btn-green btn-large m-t-3" v-show="jobTask.status !== 'bid_task.customer_sent_payment'">Update</button>
+            </div>
           </div>
 
 
-          <div class="flex justify-between m-b-10">
-            <div class="flex flex-col">
+          <div class="flex mb-6">
+            <div class="flex-1 flex-col">
               <span v-if="location(jobTask, bid) === 'No Address Set Yet'">
                 <!--No Address Set Yet-->
                 <i class="fas fa-map-marker icon"></i>
@@ -87,10 +83,10 @@
               </div>
             </div>
 
-            <div class="flex items-center" v-if="isContractor">
+            <div class="flex-1" v-if="isContractor">
               <div class="flex flex-col">
                 <label class="label mb-2">Task Start Date</label>
-              <!-- <i class="fas fa-clock icon m-r-2"></i> -->
+                <!-- <i class="fas fa-clock icon m-r-2"></i> -->
                 <input type="date" class="form-control form-control-date" style="" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                   @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                 <span :class="{ error: hasStartDateError }" v-show="hasStartDateError">{{ startDateErrorMessage }}
@@ -106,8 +102,7 @@
           </task-images>
 
           <div>
-            <div class="messageHeader mb-4">Messages
-            </div>
+            <div class="messageHeader mb-4">Messages</div>
 
             <div class="flex flex-col">
               <div class="flex flex-col box mb-3">
@@ -130,36 +125,32 @@
             </div>
           </div>
 
-          <div v-if="showPanelActions(jobTask.status)" class="flex">
-            <transition-group name="slide-fade" v-if="isContractor">
-              <div :id="'task-divider-' + jobTask.id" :key="1"></div>
-              <div :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved &&  jobTask.bid_contractor_job_tasks.length > 0" :key="3">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Sub</th>
-                      <th>Price</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
-                      <td>{{ bid.contractor.name }}</td>
-                      <td>${{ bid.bid_price }}</td>
-                      <td>
-                        <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="btn-green" :disabled="disabled.accept">
-                          <span v-if="disabled.accept">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                          </span>
-                          Accept
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+          <div v-if="showSubsPanel" class="mt-4">
+            <div :id="'task-divider-' + jobTask.id" :key="1"></div>
+
+            <div :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0"
+              :key="3">
+              <div class="flex flex-col">
+                <div class="table-header">
+                  <div class="flex-1">Sub</div>
+                  <div class="flex-1">Bid</div>
+                  <div class="flex-1">Action</div>
+                </div>
+                <div class="flex pl-2 mb-2" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
+                  <div class="flex-1">{{ bid.contractor.name }}</div>
+                  <div class="flex-1">${{ bid.bid_price }}</div>
+                  <div class="flex-1">
+                    <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
+                      :disabled="disabled.accept">
+                      <span v-if="disabled.accept">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Accept
+                    </button>
+                  </div>
+                </div>
               </div>
-              <!--&lt;!&ndash; /end col-md-6 &ndash;&gt;-->
-            </transition-group>
+            </div>
           </div>
 
           <template slot="card-footer">
@@ -178,10 +169,11 @@
               </div>
 
               <div v-if="isContractor" class=" justify-between">
-                <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="btn btn-blue" @click.prevent="openTaskBids(jobTask.id)"
+                <!-- / not sure we need this show subs button -->
+                <!-- <button v-show="jobTask.bid_contractor_job_tasks.length > 0 && showSubsPanel" class="btn btn-blue" @click.prevent="openTaskBids(jobTask.id)"
                   v-if="isGeneral">
                   Show Subs
-                </button>
+                </button> -->
                 <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
                   Add A Sub
                 </button>
@@ -195,7 +187,8 @@
                   Finished
                 </button>
 
-                <button class="btn btn-green" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
+                <button class="btn btn-green" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)"
+                  :disabled="disabled.approve">
                   <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
@@ -210,7 +203,6 @@
           <!--Add Sub-->
           <!--</button>-->
         </card>
-      </div>
     </paginate>
 
     <div class="card p-5 card-body justify-center">
@@ -261,7 +253,7 @@
     },
     computed: {
       jobTasks () {
-        return User.getAllUnpaidTasks (this.bid.job_tasks);
+        return this.bid.job_tasks !== undefined ? this.bid.job_tasks : [];
       },
       show () {
         return this.jobTasks.length > 0;
@@ -277,6 +269,9 @@
       },
       isContractor () {
         return User.isContractor ();
+      },
+      showSubsPanel () {
+        return this.isContractor && this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed';
       },
       showSendSubInvite () {
         if (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status ===
@@ -585,5 +580,9 @@
       margin-top: -1.25rem;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
+    }
+
+    .pr-1 {
+      padding-right: .25rem;
     }
 </style>

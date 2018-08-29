@@ -3,7 +3,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "./dist/tailwind";
-// @import "./spark/spark";
+//@import "./spark/spark";
 @import "./screensizes/mobile";
 @import "./screensizes/small";
 @import "./screensizes/medium";
@@ -18,7 +18,7 @@
 @import "./welcome.less";
 @import "./notification";
 @import "../../../node_modules/@fortawesome/fontawesome-free/less/fontawesome";
-@import "./../../../vendor/laravel/spark/resources/assets/less/spark";
+//@import "./../../../vendor/laravel/spark/resources/assets/less/spark";
 
 
 .dollarSign {
@@ -68,6 +68,10 @@ body {
 
 .btn-red {
   .bg-red;
+}
+
+.btn-grey {
+  .bg-grey;
 }
 
 .btn-full {
@@ -165,6 +169,23 @@ body {
 
 .label {
   .help-text;
+}
+
+.table-header {
+  .flex; 
+  .mb-4;
+  .pt-4;
+  .pb-4;
+  .pl-2;
+  .bg-grey-light; 
+  .rounded-sm;
+}
+
+.card-h2 {
+  font-size: 12pt;
+  font-weight: bold;
+  font-family: Roboto, serif;
+  text-align: center;
 }
 
 

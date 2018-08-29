@@ -21216,6 +21216,9 @@ body {
 .btn-red {
   background-color: #e3342f;
 }
+.btn-grey {
+  background-color: #b8c2cc;
+}
 .btn-full {
   width: 100%;
   padding: 1rem;
@@ -21325,6 +21328,23 @@ body {
 .label {
   color: #b8c2cc;
   color: #B8C2CC;
+}
+.table-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: .5rem;
+  background-color: #dae1e7;
+  border-radius: .125rem;
+}
+.card-h2 {
+  font-size: 12pt;
+  font-weight: bold;
+  font-family: Roboto, serif;
+  text-align: center;
 }
 .card-1 {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);

@@ -25,14 +25,12 @@
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                  {{ addNewTaskForm.errors.get('taskName') }}
                                 </span>
-                                <div class="panel-footer" v-if="taskResults.length">
-                                    <ul class="list-group">
-                                        <button class="list-group-item" v-for="result in taskResults"
-                                                v-bind:key="result.id"
-                                                @click.prevent="fillTaskValues(result)">
-                                            {{ result.name }}
-                                        </button>
-                                    </ul>
+                                <div class="flex" v-if="taskResults.length">
+                                  <button class="btn btn-blue w-full mt-2 mb-2" v-for="result in taskResults"
+                                          v-bind:key="result.id"
+                                          @click.prevent="fillTaskValues(result)">
+                                      {{ result.name }}
+                                  </button>
                                 </div>
                             </div>
 

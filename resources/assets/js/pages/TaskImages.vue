@@ -1,13 +1,9 @@
 <template>
     <div class="flex flex-col">
-        <div class="flex">
-            <div class="card">
-                <div class="panel-body text-center">
-                    <h2>Task Images</h2>
-                    <label for="task-name" v-if="jobTask.task !== undefined">{{ jobTask.task.name }}</label>
-                </div>
-            </div>
-        </div>
+        <card>
+            <h2 class="self-center uppercase">Task Images</h2>
+            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name }}</label>
+        </card>
         <div class="flex flex-col card">
                 <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
                     <div class="image-ct">

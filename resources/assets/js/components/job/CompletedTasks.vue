@@ -4,62 +4,62 @@
             <template slot="card-header">
                 Payable Tasks
             </template>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Task Name</th>
-                            <th scope="col">QTY</th>
-                            <th scope="col">Task Price</th>
-                            <th scope="col" v-if="isContractor">Task Price (Sub Contractor)</th>
-                            <th scope="col" v-else>Exclude From Payment</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="jobTask in payableTasks" :key="jobTask.id">
-                            <td>{{ jobTask.task.name }}</td>
-                            <td>{{ jobTask.qty }}</td>
-                            <td v-if="isContractor">${{ jobTask.cust_final_price - jobTask.sub_final_price }}</td>
-                            <td v-else>${{ jobTask.cust_final_price }}</td>
-                            <td v-if="isContractor">${{ jobTask.sub_final_price }}</td>
-                            <td v-else>
-                                <input type="checkbox" name="exclude" :id="'exclude-' + jobTask.id" @click="addJobTaskToExcludedList(jobTask)">
-                            </td>
-                            <td v-if="showReopenBtn(jobTask)">
-                                <button class="btn bg-yellow" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
-                                    <span v-if="disabled.reopen">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                    </span>
-                                    Reopen
-                                </button>
-                            </td>
-                            <td v-else>
-                                <button class="btn bg-blue" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
-                                    Deny
-                                </button>
-                            </td>
-                        </tr>
 
-                        <tr v-if="isContractor">
-                            <td></td>
-                            <td></td>
-                            <td>Total: ${{ totalCustomerPrice }}</td>
-                            <td>Total: ${{ totalSubPrice }}</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - subtractFromTotal}}</label>
-                            </td>
-                            <td></td>
-                            <td v-if="isContractor">
-                                <label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="flex flex-col">
+                <div class="table-header">
+                    <div class="flex-1">Task Name</div>
+                    <div class="flex-1">Qty</div>
+                    <div class="flex-1">Qty Unit</div>
+                    <div class="flex-1">Total Task Price</div>
+                    <div class="flex-1" v-if="isContractor">Task Price (Sub Contractor)</div>
+                    <div class="flex-1" v-else>Exclude From Payment</div>
+                    <div class="flex-1"></div>
+                </div>
+                <div class="flex pl-2 mb-2" v-for="jobTask in payableTasks" :key="jobTask.id">
+                    <div class="flex-1">{{ jobTask.task.name }}</div>
+                    <div class="flex-1 pl-1">{{ jobTask.qty }}</div>
+                    <div class="flex-1 pl-1">${{ jobTask.unit_price }}</div>
+                    <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.cust_final_price - jobTask.sub_final_price }}</div>
+                    <div class="flex-1 pl-1" v-else>${{ jobTask.cust_final_price }}</div>
+                    <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
+                    <div class="flex-1 pl-1" v-else>
+                        <input type="checkbox" name="exclude" :id="'exclude-' + jobTask.id" @click="addJobTaskToExcludedList(jobTask)">
+                    </div>
+                    <div class="flex-1 pl-1" v-if="showReopenBtn(jobTask)">
+                        <button class="btn bg-yellow" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
+                            <span v-if="disabled.reopen">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>
+                            Reopen
+                        </button>
+                    </div>
+                    <div class="flex-1 pl-1" v-else>
+                        <button class="btn bg-blue" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                            Deny
+                        </button>
+                    </div>
+                </div>
+                <div class="flex pl-2 mb-2" v-if="isContractor">
+                    <div></div>
+                    <div></div>
+                    <div>Total: ${{ totalCustomerPrice }}</div>
+                    <div>Total: ${{ totalSubPrice }}</div>
+                    <div></div>
+                </div>
+                <div class="flex pl-2 mb-2 mt-4">
+                    <div class="flex-1"></div>
+                    <div class="flex-1"></div>
+                    <div class="flex-1">
+                    </div>
+                    <div class="flex-1">
+                        <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - subtractFromTotal}}</label>
+                    </div>
+                    <div class="flex-1" v-if="isContractor">
+                        <label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
+                    </div>
+                </div>
+            </div>
+
             <template slot="card-footer">
                 <div v-if="isCustomer" class="text-right">
                     <button class="btn bg-green" @click.prevent="paidWithCash()" :disabled="disabled.payCash">
