@@ -2,8 +2,6 @@
   <!-- /all tasks of a bid -->
   <div v-if="show">
     <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated" v-if="jobTasks.length > 0">
-      <div class="">
-
         <!-- / status -->
         <card footer="true" v-for="jobTask of paginated('jobTasks')" v-bind:key="jobTask.id" :id="'task-' + jobTask.id">
           <div for="task-status" class="status task-status mb-6" :class="getLabelClass(jobTask.status)">
@@ -43,21 +41,19 @@
           <div v-if="isContractor" class="flex flex-col m-b-4">
             <div class="flex">
               <div class="flex-1 flex-col pr-2">
-                <label class="label mb-2">Quantity:</label>
-                <input type="text" class="form-control" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
+                <label class="label">Quantity:</label>
+                <input type="text" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
               </div>
               <div class="flex-1 flex-col">
-                <label class="label mb-2">Price:</label>
-                <div class="flex">
-                  <input type="text" class="form-control " :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
+                <label class="label">Price:</label>
+                  <input type="text" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
                     @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
-                </div>
               </div>
             </div>
-            <div class="flex">
+            <div class="flex justify-end">
               <button class="btn btn-green btn-large m-t-3" v-show="jobTask.status !== 'bid_task.customer_sent_payment'">Update</button>
             </div>
           </div>
@@ -207,7 +203,6 @@
           <!--Add Sub-->
           <!--</button>-->
         </card>
-      </div>
     </paginate>
 
     <div class="card p-5 card-body justify-center">
@@ -258,7 +253,7 @@
     },
     computed: {
       jobTasks () {
-        return User.getAllUnpaidTasks (this.bid.job_tasks);
+        return this.bid.job_tasks !== undefined ? this.bid.job_tasks : [];
       },
       show () {
         return this.jobTasks.length > 0;
