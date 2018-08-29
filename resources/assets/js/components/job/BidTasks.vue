@@ -90,7 +90,7 @@
             <div class="flex items-center" v-if="isContractor">
               <div class="flex flex-col">
                 <label class="label mb-2">Task Start Date</label>
-              <!-- <i class="fas fa-clock icon m-r-2"></i> -->
+                <!-- <i class="fas fa-clock icon m-r-2"></i> -->
                 <input type="date" class="form-control form-control-date" style="" v-if="showTaskStartDate()" :value="prettyDate(jobTask.start_date)"
                   @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                 <span :class="{ error: hasStartDateError }" v-show="hasStartDateError">{{ startDateErrorMessage }}
@@ -130,36 +130,32 @@
             </div>
           </div>
 
-          <div v-if="showPanelActions(jobTask.status)" class="flex">
-            <transition-group name="slide-fade" v-if="isContractor">
-              <div :id="'task-divider-' + jobTask.id" :key="1"></div>
-              <div :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved &&  jobTask.bid_contractor_job_tasks.length > 0" :key="3">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Sub</th>
-                      <th>Price</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="table" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
-                      <td>{{ bid.contractor.name }}</td>
-                      <td>${{ bid.bid_price }}</td>
-                      <td>
-                        <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="btn-green" :disabled="disabled.accept">
-                          <span v-if="disabled.accept">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                          </span>
-                          Accept
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+          <div v-if="showSubsPanel" class="mt-4">
+            <div :id="'task-divider-' + jobTask.id" :key="1"></div>
+
+            <div :id="'task-subs-' + jobTask.id" v-if="isGeneral && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0"
+              :key="3">
+              <div class="flex flex-col">
+                <div class="table-header">
+                  <div class="flex-1">Sub</div>
+                  <div class="flex-1">Bid</div>
+                  <div class="flex-1">Action</div>
+                </div>
+                <div class="flex pl-2 mb-2" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
+                  <div class="flex-1">{{ bid.contractor.name }}</div>
+                  <div class="flex-1">${{ bid.bid_price }}</div>
+                  <div class="flex-1">
+                    <button v-if="showAcceptBtn(jobTask.status)" @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
+                      :disabled="disabled.accept">
+                      <span v-if="disabled.accept">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      Accept
+                    </button>
+                  </div>
+                </div>
               </div>
-              <!--&lt;!&ndash; /end col-md-6 &ndash;&gt;-->
-            </transition-group>
+            </div>
           </div>
 
           <template slot="card-footer">
@@ -178,10 +174,11 @@
               </div>
 
               <div v-if="isContractor" class=" justify-between">
-                <button v-show="jobTask.bid_contractor_job_tasks.length > 0" class="btn btn-blue" @click.prevent="openTaskBids(jobTask.id)"
+                <!-- / not sure we need this show subs button -->
+                <!-- <button v-show="jobTask.bid_contractor_job_tasks.length > 0 && showSubsPanel" class="btn btn-blue" @click.prevent="openTaskBids(jobTask.id)"
                   v-if="isGeneral">
                   Show Subs
-                </button>
+                </button> -->
                 <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask)" v-if="isGeneral && showSendSubInvite">
                   Add A Sub
                 </button>
@@ -195,7 +192,8 @@
                   Finished
                 </button>
 
-                <button class="btn btn-green" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
+                <button class="btn btn-green" v-if="showApproveBtn(jobTask)" @click="approveTaskHasBeenFinished(jobTask)"
+                  :disabled="disabled.approve">
                   <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
@@ -277,6 +275,9 @@
       },
       isContractor () {
         return User.isContractor ();
+      },
+      showSubsPanel () {
+        return this.isContractor && this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed';
       },
       showSendSubInvite () {
         if (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status ===
