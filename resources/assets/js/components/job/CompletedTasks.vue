@@ -6,7 +6,7 @@
             </template>
 
             <div class="flex flex-col">
-                <div class="flex mb-4 pt-4 pb-4 pl-2 bg-grey-light rounded-sm">
+                <div class="table-header">
                     <div class="flex-1">Task Name</div>
                     <div class="flex-1">Qty</div>
                     <div class="flex-1">Qty Unit</div>
