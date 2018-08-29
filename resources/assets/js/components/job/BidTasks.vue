@@ -17,8 +17,8 @@
 
           <!-- Task Prices -->
 
-          <div class="flex justify-between mb-4">
-            <div class="form-group">
+          <div class="flex mb-4">
+            <div class="flex-1 form-group">
               <div class="flex flex-col">
                 <span class="label mb-2">Total Task Price</span>
                 <div>
@@ -26,10 +26,9 @@
                   <span class="totalCost" v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
                 </div>
               </div>
-              <label v-if="isCustomer || !showTaskPriceInput()">{{taskCustFinalPrice(jobTask.cust_final_price)}}</label>
             </div>
             <!-- / end total price -->
-            <div class="form-group" v-if="isContractor">
+            <div class="flex-1 form-group" v-if="isContractor">
               <div class="flex flex-col">
                 <span class="label mb-2">Total Task Sub Price</span>
                 <div class="flex items-center">
@@ -41,30 +40,31 @@
           </div>
           <!-- / end total task prices -->
 
-          <div class="flex flex-col m-b-4">
-            <div class="flex justify-around">
-              <div class="flex flex-col">
+          <div v-if="isContractor" class="flex flex-col m-b-4">
+            <div class="flex">
+              <div class="flex-1 flex-col pr-2">
                 <label class="label mb-2">Quantity:</label>
                 <input type="text" class="form-control" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
               </div>
-              <div class="flex flex-col">
-                <label class="label mb-2 m-l-6">Price:</label>
+              <div class="flex-1 flex-col">
+                <label class="label mb-2">Price:</label>
                 <div class="flex">
-                  <span class="dollarSign m-l-6">$</span>
-                  <input type="text" class="form-control" :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
+                  <input type="text" class="form-control " :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
                     @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
                 </div>
               </div>
             </div>
-            <button class="btn btn-success btn-large m-t-3" style="width: 20%" v-show="jobTask.status !== 'bid_task.customer_sent_payment'">Update</button>
+            <div class="flex">
+              <button class="btn btn-green btn-large m-t-3" v-show="jobTask.status !== 'bid_task.customer_sent_payment'">Update</button>
+            </div>
           </div>
 
 
-          <div class="flex justify-between m-b-10">
-            <div class="flex flex-col">
+          <div class="flex mb-6">
+            <div class="flex-1 flex-col">
               <span v-if="location(jobTask, bid) === 'No Address Set Yet'">
                 <!--No Address Set Yet-->
                 <i class="fas fa-map-marker icon"></i>
@@ -87,7 +87,7 @@
               </div>
             </div>
 
-            <div class="flex items-center" v-if="isContractor">
+            <div class="flex-1" v-if="isContractor">
               <div class="flex flex-col">
                 <label class="label mb-2">Task Start Date</label>
                 <!-- <i class="fas fa-clock icon m-r-2"></i> -->
@@ -106,8 +106,7 @@
           </task-images>
 
           <div>
-            <div class="messageHeader mb-4">Messages
-            </div>
+            <div class="messageHeader mb-4">Messages</div>
 
             <div class="flex flex-col">
               <div class="flex flex-col box mb-3">
@@ -586,5 +585,9 @@
       margin-top: -1.25rem;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
+    }
+
+    .pr-1 {
+      padding-right: .25rem;
     }
 </style>
