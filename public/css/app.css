@@ -21216,6 +21216,9 @@ body {
 .btn-red {
   background-color: #e3342f;
 }
+.btn-grey {
+  background-color: #b8c2cc;
+}
 .btn-full {
   width: 100%;
   padding: 1rem;
