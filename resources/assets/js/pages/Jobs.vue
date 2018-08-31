@@ -5,7 +5,7 @@
       <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
     </search-bar>
     <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-      <div class="flex rounded mb-4 items-center" :class="getLabelClass(bid.status)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
+      <div class="flex rounded mb-4 items-center" :class="getLabelClass(bid)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
           <div class="flex-1 text-white">{{ status(bid) }}</div>
           <div class="flex-1 text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
           <div class="flex-1 text-white">{{ jobName(bid.job_name) }}</div>
@@ -52,14 +52,14 @@
           this.$refs.paginator.goToPage (1);
         }
       },
-      getLabelClass (status) {
-        return Format.statusLabel (status);
+      getLabelClass (bid) {
+        return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid));
       },
       jobName (name) {
-        return Format.jobName (name);
+        return Format.jobName(name);
       },
       status (bid) {
-        return User.status (bid.status, bid);
+        return User.status(bid.status, bid);
       },
       prettyDate (date) {
         if (date == null)
