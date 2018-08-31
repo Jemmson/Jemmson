@@ -102,14 +102,14 @@ export default class Format {
    * @param {String} status
    * @param {JobTask} jobTask
    */
-  static statusLabel (status, jobTask) {
+  static statusLabel(status, isCustomer, isGeneral, jobTask) {
 
     if (typeof jobTask !== 'undefined') {
       console.log (jobTask);
       // job_task status
-      if (User.isCustomer ()) {
+      if (isCustomer) {
         return this.customerLabel (status);
-      } else if (User.isGeneral (jobTask)) {
+      } else if (isGeneral) {
         return this.generalContractorLabel (status);
       } else {
         // subcontractor labels
@@ -119,7 +119,7 @@ export default class Format {
     } else {
       // is job status
 
-      if (User.isCustomer ()) {
+      if (isCustomer) {
         return this.customerLabel (status);
       } else {
         // contractor labels

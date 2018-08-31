@@ -1,7 +1,4 @@
-import Language from './Language'
-
 export default class User {
-
   async chargeCustomer () {
     // charge customer
     const {

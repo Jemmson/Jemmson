@@ -5,12 +5,12 @@
       <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
     </search-bar>
     <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-      <div class="flex rounded mb-4 items-center" :class="getLabelClass(bid.status)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
+      <section class="flex rounded mb-4 items-center" :class="getLabelClass(bid)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
           <div class="flex-1 text-white">{{ status(bid) }}</div>
           <div class="flex-1 text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
           <div class="flex-1 text-white">{{ jobName(bid.job_name) }}</div>
           <div class="flex-1 h-16 rounded-r bg-white">click to view</div>
-      </div>
+      </section>
     </paginate>
     <div class="card p-5 card-body justify-center">
         <paginate-links for="sBids" :limit="2" :show-step-links="true">
@@ -46,20 +46,20 @@
           if (this.searchTerm === '' || this.searchTerm.length <= 1) {
             return true;
           }
-          return bid.job_name.toLowerCase ().search (this.searchTerm.toLowerCase ()) > -1;
+          return bid.job_name.toLowerCase().search (this.searchTerm.toLowerCase()) > -1;
         });
         if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
           this.$refs.paginator.goToPage (1);
         }
       },
-      getLabelClass (status) {
-        return Format.statusLabel (status);
+      getLabelClass (bid) {
+        return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid));
       },
       jobName (name) {
-        return Format.jobName (name);
+        return Format.jobName(name);
       },
       status (bid) {
-        return User.status (bid.status, bid);
+        return User.status(bid.status, bid);
       },
       prettyDate (date) {
         if (date == null)

@@ -572,10 +572,6 @@
         padding-left: .5rem;
     }
 
-    .stripe-label {
-        /*margin-bottom: .5rem;*/
-    }
-
     .task-status {
       margin-top: -1.25rem;
       border-top-left-radius: 0;
