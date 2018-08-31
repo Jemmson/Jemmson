@@ -10,7 +10,9 @@ global.moment = require('moment');
 global.Promise = require('promise');
 global.Cookies = require('js-cookie');
 global.Vue = require('vue');
+global.expect = require('expect')
 global.Bus = new Vue();
+
 
 /*
  * Define Moment locales
