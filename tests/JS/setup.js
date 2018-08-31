@@ -12,23 +12,6 @@ global.Cookies = require('js-cookie');
 global.Vue = require('vue');
 global.Bus = new Vue();
 
-// import Format from './classes/Format';
-// import Language from './classes/Language';
-// import GeneralContractor from './classes/GeneralContractor';
-// import SubContractor from './classes/SubContractor';
-// import Customer from './classes/Customer';
-// import User from './classes/User';
-// import TaskUtil from './classes/TaskUtil';
-
-// global.Format = require('../../resources/assets/js/classes/Format');
-// global.Language = require('../../resources/assets/js/classes/Language');
-// global.GeneralContractor = require('../../resources/assets/js/classes/GeneralContractor');
-// global.SubContractor = require('../../resources/assets/js/classes/SubContractor');
-// global.Customer = require('../../resources/assets/js/classes/Customer');
-// global.User = require('../../resources/assets/js/classes/User');
-// global.TaskUtil = require('../../resources/assets/js/classes/TaskUtil');
-
-
 /*
  * Define Moment locales
  */
