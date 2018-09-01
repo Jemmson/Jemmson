@@ -56,9 +56,13 @@
 
 <script>
 
+  import Card from '../components/shared/Card'
   import {mapGetters, mapMutations, mapActions} from 'vuex'
 
   export default {
+    components: {
+      Card
+    },
     data () {
       return {
         query: '',

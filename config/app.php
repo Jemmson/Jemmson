@@ -211,6 +211,7 @@ return [
 //        Laravel\Dusk\DuskServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
         // Passwordless
