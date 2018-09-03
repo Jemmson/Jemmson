@@ -1,8 +1,4 @@
-import {
-  mount,
-  createLocalVue,
-  shallowMount
-} from '@vue/test-utils'
+import { mount, createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()
@@ -53,8 +49,13 @@ describe('InitiateBid', () => {
     })
   })
 
-  it('should display "mobile" when a mobile number is put in the text box', function () {
-    const wrapper = shallowMount (InitiateBid, {
+  it('should display "mobile" when a mobile number is put in the text box', async function () {
+
+    mocha.withMock('axios')
+
+    expect.assertions(1);
+
+    const wrapper = shallowMount(InitiateBid, {
       store,
       localVue,
       data () {
@@ -71,8 +72,14 @@ describe('InitiateBid', () => {
         }
       }
     })
-    const input = wrapper.find('#customerName')
-    input.setValue('mookie blaylock')
+    const input = wrapper.find('#phone')
+    input.setValue('4807034902')
+    const i = await input.trigger('blur')
+
+    expect(i).toBe('mobile')
+
+    // expect(wrapper.find('#mobileNetworktype').exists()).toBe(true)
+
   })
 
   it('should display "Landline" when a landline number is put in the text box and then the blur action occurs', function () {
@@ -84,23 +91,155 @@ describe('InitiateBid', () => {
   })
 
   it('the submit button should be disabled when only the phone field is filled out and the other fields are blank', function () {
+    const wrapper = shallowMount(InitiateBid, {
+      store,
+      localVue,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            phone: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+    const phone = wrapper.find('#phone')
+    const customername = wrapper.find('#customerName')
+    const jobname = wrapper.find('#jobName')
+    const submit = wrapper.find('#submit')
+    phone.setValue('4807034902')
+    customername.setValue('')
+    jobname.setValue('')
+    // phone.trigger('blur')
+
+    expect(wrapper.find("#submit").attributes().disabled).toBe('disabled')
+
 
   })
 
   it('the submit button should be disabled when only the job name field is filled out and the other fields are blank', function () {
+    const wrapper = shallowMount(InitiateBid, {
+      store,
+      localVue,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            phone: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+    const phone = wrapper.find('#phone')
+    const customername = wrapper.find('#customerName')
+    const jobname = wrapper.find('#jobName')
+    const submit = wrapper.find('#submit')
+    phone.setValue('')
+    customername.setValue('mookie blaylock')
+    jobname.setValue('')
+    // phone.trigger('blur')
 
+    expect(wrapper.find("#submit").attributes().disabled).toBe('disabled')
   })
 
   it('the submit button should be disabled when only the job name and phone field is filled out and the other fields are blank', function () {
+    const wrapper = shallowMount(InitiateBid, {
+      store,
+      localVue,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            phone: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+    const phone = wrapper.find('#phone')
+    const customername = wrapper.find('#customerName')
+    const jobname = wrapper.find('#jobName')
+    const submit = wrapper.find('#submit')
+    phone.setValue('4807034902')
+    customername.setValue('')
+    jobname.setValue('my job')
+    // phone.trigger('blur')
 
+    expect(wrapper.find("#submit").attributes().disabled).toBe('disabled')
   })
 
   it('the submit button should be disabled when only the job name and customer name field is filled out and the other fields are blank', function () {
+    const wrapper = shallowMount(InitiateBid, {
+      store,
+      localVue,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            phone: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+    const phone = wrapper.find('#phone')
+    const customername = wrapper.find('#customerName')
+    const jobname = wrapper.find('#jobName')
+    const submit = wrapper.find('#submit')
+    phone.setValue('')
+    customername.setValue('ajskdlsdakj')
+    jobname.setValue('my job')
+    // phone.trigger('blur')
 
+    expect(wrapper.find("#submit").attributes().disabled).toBe('disabled')
   })
 
   it('the submit button should not be disabled when the phone and customer name field is filled out and the other fields are blank', function () {
+    const wrapper = shallowMount(InitiateBid, {
+      store,
+      localVue,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            phone: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+    const phone = wrapper.find('#phone')
+    const customername = wrapper.find('#customerName')
+    const jobname = wrapper.find('#jobName')
+    const submit = wrapper.find('#submit')
+    phone.setValue('4807034902')
+    customername.setValue('ajskdlsdakj')
+    jobname.setValue('')
+    // phone.trigger('blur')
 
+    expect(wrapper.find("#submit").attributes().disabled).toBe(undefined)
   })
 
   it('should show error if phone number is bad and the submit button is clicked', function () {
