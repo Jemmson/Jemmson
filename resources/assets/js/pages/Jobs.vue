@@ -24,7 +24,7 @@
     props: {
       user: Object
     },
-    data () {
+    data() {
       return {
         bids: [],
         sBids: [],
@@ -35,62 +35,62 @@
       }
     },
     watch: {
-      '$route' (to, from) {
+      '$route'(to, from) {
         // get the bids
-        this.getBids ();
+        this.getBids();
       }
     },
     methods: {
-      search () {
-        this.sBids = this.bids.filter ((bid) => {
+      search() {
+        this.sBids = this.bids.filter((bid) => {
           if (this.searchTerm === '' || this.searchTerm.length <= 1) {
             return true;
           }
-          return bid.job_name.toLowerCase().search (this.searchTerm.toLowerCase()) > -1;
+          return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
         });
         if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
-          this.$refs.paginator.goToPage (1);
+          this.$refs.paginator.goToPage(1);
         }
       },
-      getLabelClass (bid) {
+      getLabelClass(bid) {
         return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid));
       },
-      jobName (name) {
+      jobName(name) {
         return Format.jobName(name);
       },
-      status (bid) {
+      status(bid) {
         return User.status(bid.status, bid);
       },
-      prettyDate (date) {
+      prettyDate(date) {
         if (date == null)
           return '';
         // return the date and ignore the time
-        date = date.split (' ');
+        date = date.split(' ');
         return date[0];
       },
-      goToBid (id) {
-        this.$router.push ('/bid/' + id);
+      goToBid(id) {
+        this.$router.push('/bid/' + id);
       },
-      getBids () {
-        console.log ('getBids');
-        axios.post ('/jobs').then ((response) => {
+      getBids() {
+        console.log('getBids');
+        axios.post('/jobs').then((response) => {
           if (Array.isArray(response.data)) {
             this.bids = response.data;
             this.sBids = this.bids;
           }
         });
       },
-      previewSubForTask (bidId, jobTaskId, subBidId) {
-        console.log (TaskUtil.previewSubForTask (this.bids, bidId, jobTaskId, subBidId));
+      previewSubForTask(bidId, jobTaskId, subBidId) {
+        console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId));
       }
     },
-    created () {
-      this.getBids ();
-      Bus.$on ('bidUpdated', (payload) => {
-        this.getBids ();
+    created() {
+      this.getBids();
+      Bus.$on('bidUpdated', (payload) => {
+        this.getBids();
       });
-      Bus.$on ('previewSubForTask', (payload) => {
-        this.previewSubForTask (payload[0], payload[1], payload[2]);
+      Bus.$on('previewSubForTask', (payload) => {
+        this.previewSubForTask(payload[0], payload[1], payload[2]);
       });
 
     },

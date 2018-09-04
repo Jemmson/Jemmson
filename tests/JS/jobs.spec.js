@@ -2,7 +2,8 @@ import {
     mount,
     shallowMount,
     createLocalVue
-} from 'vue-test-utils'
+}
+from '@vue/test-utils'
 import VuePaginate from 'vue-paginate'
 
 require('./bootstrap');
