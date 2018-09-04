@@ -40,6 +40,7 @@
     "laravel-mix-tailwind": "^0.1.0",
     "mocha": "^4.1.0",
     "mocha-webpack": "^1.1.0",
+    "vue-template-compiler": "^2.5.17",
     "vue-test-utils": "^1.0.0-beta.11"
   }
 }

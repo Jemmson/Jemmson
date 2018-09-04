@@ -17523,8 +17523,8 @@ a:active {
   padding: 1rem;
 }
 /*!
- * Font Awesome Free 5.2.0 by @fontawesome - https://fontawesome.com
- * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ * Font Awesome Free 5.3.1 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 .fa,
 .fas,
@@ -17726,6 +17726,9 @@ a:active {
 .fa-accusoft:before {
   content: "\f369";
 }
+.fa-ad:before {
+  content: "\f641";
+}
 .fa-address-book:before {
   content: "\f2b9";
 }
@@ -17761,6 +17764,9 @@ a:active {
 }
 .fa-align-right:before {
   content: "\f038";
+}
+.fa-alipay:before {
+  content: "\f642";
 }
 .fa-allergies:before {
   content: "\f461";
@@ -17821,6 +17827,9 @@ a:active {
 }
 .fa-angular:before {
   content: "\f420";
+}
+.fa-ankh:before {
+  content: "\f644";
 }
 .fa-app-store:before {
   content: "\f36f";
@@ -17999,6 +18008,9 @@ a:active {
 .fa-bezier-curve:before {
   content: "\f55b";
 }
+.fa-bible:before {
+  content: "\f647";
+}
 .fa-bicycle:before {
   content: "\f206";
 }
@@ -18130,6 +18142,9 @@ a:active {
 }
 .fa-bus-alt:before {
   content: "\f55e";
+}
+.fa-business-time:before {
+  content: "\f64a";
 }
 .fa-buysellads:before {
   content: "\f20d";
@@ -18344,6 +18359,9 @@ a:active {
 .fa-circle-notch:before {
   content: "\f1ce";
 }
+.fa-city:before {
+  content: "\f64f";
+}
 .fa-clipboard:before {
   content: "\f328";
 }
@@ -18416,6 +18434,9 @@ a:active {
 .fa-comment-alt:before {
   content: "\f27a";
 }
+.fa-comment-dollar:before {
+  content: "\f651";
+}
 .fa-comment-dots:before {
   content: "\f4ad";
 }
@@ -18424,6 +18445,9 @@ a:active {
 }
 .fa-comments:before {
   content: "\f086";
+}
+.fa-comments-dollar:before {
+  content: "\f653";
 }
 .fa-compact-disc:before {
   content: "\f51f";
@@ -18509,6 +18533,9 @@ a:active {
 .fa-crop-alt:before {
   content: "\f565";
 }
+.fa-cross:before {
+  content: "\f654";
+}
 .fa-crosshairs:before {
   content: "\f05b";
 }
@@ -18562,6 +18589,9 @@ a:active {
 }
 .fa-deviantart:before {
   content: "\f1bd";
+}
+.fa-dharmachakra:before {
+  content: "\f655";
 }
 .fa-diagnoses:before {
   content: "\f470";
@@ -18718,6 +18748,9 @@ a:active {
 }
 .fa-envelope-open:before {
   content: "\f2b6";
+}
+.fa-envelope-open-text:before {
+  content: "\f658";
 }
 .fa-envelope-square:before {
   content: "\f199";
@@ -18941,8 +18974,14 @@ a:active {
 .fa-folder:before {
   content: "\f07b";
 }
+.fa-folder-minus:before {
+  content: "\f65d";
+}
 .fa-folder-open:before {
   content: "\f07c";
+}
+.fa-folder-plus:before {
+  content: "\f65e";
 }
 .fa-font:before {
   content: "\f031";
@@ -19000,6 +19039,9 @@ a:active {
 }
 .fa-fulcrum:before {
   content: "\f50b";
+}
+.fa-funnel-dollar:before {
+  content: "\f662";
 }
 .fa-futbol:before {
   content: "\f1e3";
@@ -19121,6 +19163,9 @@ a:active {
 .fa-google-wallet:before {
   content: "\f1ee";
 }
+.fa-gopuram:before {
+  content: "\f664";
+}
 .fa-graduation-cap:before {
   content: "\f19d";
 }
@@ -19205,6 +19250,9 @@ a:active {
 .fa-hackerrank:before {
   content: "\f5f7";
 }
+.fa-hamsa:before {
+  content: "\f665";
+}
 .fa-hand-holding:before {
   content: "\f4bd";
 }
@@ -19258,6 +19306,9 @@ a:active {
 }
 .fa-hashtag:before {
   content: "\f292";
+}
+.fa-haykal:before {
+  content: "\f666";
 }
 .fa-hdd:before {
   content: "\f0a0";
@@ -19406,6 +19457,9 @@ a:active {
 .fa-java:before {
   content: "\f4e4";
 }
+.fa-jedi:before {
+  content: "\f669";
+}
 .fa-jedi-order:before {
   content: "\f50e";
 }
@@ -19421,6 +19475,9 @@ a:active {
 .fa-joomla:before {
   content: "\f1aa";
 }
+.fa-journal-whills:before {
+  content: "\f66a";
+}
 .fa-js:before {
   content: "\f3b8";
 }
@@ -19429,6 +19486,9 @@ a:active {
 }
 .fa-jsfiddle:before {
   content: "\f1cc";
+}
+.fa-kaaba:before {
+  content: "\f66b";
 }
 .fa-kaggle:before {
   content: "\f5fa";
@@ -19444,6 +19504,9 @@ a:active {
 }
 .fa-keycdn:before {
   content: "\f3ba";
+}
+.fa-khanda:before {
+  content: "\f66d";
 }
 .fa-kickstarter:before {
   content: "\f3bb";
@@ -19465,6 +19528,9 @@ a:active {
 }
 .fa-korvue:before {
   content: "\f42f";
+}
+.fa-landmark:before {
+  content: "\f66f";
 }
 .fa-language:before {
   content: "\f1ab";
@@ -19601,6 +19667,9 @@ a:active {
 .fa-magnet:before {
   content: "\f076";
 }
+.fa-mail-bulk:before {
+  content: "\f674";
+}
 .fa-mailchimp:before {
   content: "\f59e";
 }
@@ -19694,6 +19763,9 @@ a:active {
 .fa-memory:before {
   content: "\f538";
 }
+.fa-menorah:before {
+  content: "\f676";
+}
 .fa-mercury:before {
   content: "\f223";
 }
@@ -19775,6 +19847,9 @@ a:active {
 .fa-mortar-pestle:before {
   content: "\f5a7";
 }
+.fa-mosque:before {
+  content: "\f678";
+}
 .fa-motorcycle:before {
   content: "\f21c";
 }
@@ -19841,6 +19916,9 @@ a:active {
 .fa-old-republic:before {
   content: "\f510";
 }
+.fa-om:before {
+  content: "\f679";
+}
 .fa-opencart:before {
   content: "\f23d";
 }
@@ -19898,6 +19976,9 @@ a:active {
 .fa-passport:before {
   content: "\f5ab";
 }
+.fa-pastafarianism:before {
+  content: "\f67b";
+}
 .fa-paste:before {
   content: "\f0ea";
 }
@@ -19915,6 +19996,9 @@ a:active {
 }
 .fa-paypal:before {
   content: "\f1ed";
+}
+.fa-peace:before {
+  content: "\f67c";
 }
 .fa-pen:before {
   content: "\f304";
@@ -20000,6 +20084,9 @@ a:active {
 .fa-pinterest-square:before {
   content: "\f0d3";
 }
+.fa-place-of-worship:before {
+  content: "\f67f";
+}
 .fa-plane:before {
   content: "\f072";
 }
@@ -20033,6 +20120,12 @@ a:active {
 .fa-podcast:before {
   content: "\f2ce";
 }
+.fa-poll:before {
+  content: "\f681";
+}
+.fa-poll-h:before {
+  content: "\f682";
+}
 .fa-poo:before {
   content: "\f2fe";
 }
@@ -20047,6 +20140,12 @@ a:active {
 }
 .fa-power-off:before {
   content: "\f011";
+}
+.fa-pray:before {
+  content: "\f683";
+}
+.fa-praying-hands:before {
+  content: "\f684";
 }
 .fa-prescription:before {
   content: "\f5b1";
@@ -20104,6 +20203,9 @@ a:active {
 }
 .fa-quote-right:before {
   content: "\f10e";
+}
+.fa-quran:before {
+  content: "\f687";
 }
 .fa-r-project:before {
   content: "\f4f7";
@@ -20251,6 +20353,12 @@ a:active {
 }
 .fa-search:before {
   content: "\f002";
+}
+.fa-search-dollar:before {
+  content: "\f688";
+}
+.fa-search-location:before {
+  content: "\f689";
 }
 .fa-search-minus:before {
   content: "\f010";
@@ -20405,6 +20513,9 @@ a:active {
 .fa-snowflake:before {
   content: "\f2dc";
 }
+.fa-socks:before {
+  content: "\f696";
+}
 .fa-solar-panel:before {
   content: "\f5ba";
 }
@@ -20465,6 +20576,9 @@ a:active {
 .fa-square-full:before {
   content: "\f45c";
 }
+.fa-square-root-alt:before {
+  content: "\f698";
+}
 .fa-squarespace:before {
   content: "\f5be";
 }
@@ -20480,11 +20594,17 @@ a:active {
 .fa-star:before {
   content: "\f005";
 }
+.fa-star-and-crescent:before {
+  content: "\f699";
+}
 .fa-star-half:before {
   content: "\f089";
 }
 .fa-star-half-alt:before {
   content: "\f5c0";
+}
+.fa-star-of-david:before {
+  content: "\f69a";
 }
 .fa-star-of-life:before {
   content: "\f621";
@@ -20597,6 +20717,9 @@ a:active {
 .fa-swimming-pool:before {
   content: "\f5c5";
 }
+.fa-synagogue:before {
+  content: "\f69b";
+}
 .fa-sync:before {
   content: "\f021";
 }
@@ -20675,6 +20798,9 @@ a:active {
 .fa-th-list:before {
   content: "\f00b";
 }
+.fa-the-red-yeti:before {
+  content: "\f69d";
+}
 .fa-theater-masks:before {
   content: "\f630";
 }
@@ -20740,6 +20866,12 @@ a:active {
 }
 .fa-tooth:before {
   content: "\f5c9";
+}
+.fa-torah:before {
+  content: "\f6a0";
+}
+.fa-torii-gate:before {
+  content: "\f6a1";
 }
 .fa-trade-federation:before {
   content: "\f513";
@@ -20987,6 +21119,9 @@ a:active {
 .fa-video-slash:before {
   content: "\f4e2";
 }
+.fa-vihara:before {
+  content: "\f6a7";
+}
 .fa-vimeo:before {
   content: "\f40a";
 }
@@ -21139,6 +21274,9 @@ a:active {
 }
 .fa-yen-sign:before {
   content: "\f157";
+}
+.fa-yin-yang:before {
+  content: "\f6ad";
 }
 .fa-yoast:before {
   content: "\f2b1";
