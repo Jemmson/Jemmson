@@ -1,6 +1,5 @@
 import { mount, createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import flushPromises from 'flush-promises'
 import moxios from 'moxios'
 
 const localVue = createLocalVue()
@@ -278,7 +277,7 @@ describe('InitiateBid', () => {
   })
 
   it('should show error if phone number is bad and the submit button is clicked', function () {
-    const wrapper = shallowMount(InitiateBid, {
+    const wrapper = mount(InitiateBid, {
       store,
       localVue,
       data () {
@@ -298,9 +297,7 @@ describe('InitiateBid', () => {
 
     const name = wrapper.find('#customerName');
     name.setValue('long john silver');
-    expect(wrapper.find('#customerName')).toBe('long john silver');
-
-
+    expect(wrapper.vm.form.customerName).toBe('long john silver');
   })
 
   it('should send a contractor to the subscription page and not create a new bid if the sixth free bid trying to be sent', function () {
