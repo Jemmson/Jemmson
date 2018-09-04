@@ -3,8 +3,9 @@ import {
     shallowMount,
     createLocalVue
 }
-from '@vue/test-utils'
-import VuePaginate from 'vue-paginate'
+from '@vue/test-utils';
+import VuePaginate from 'vue-paginate';
+import sinon from 'sinon';
 
 require('./bootstrap');
 
@@ -19,11 +20,14 @@ const $on = {
     }
 }
 
+
 describe('Jobs', () => {
+    const search = sinon.stub();
     const wrapper = mount(Jobs, {
         localVue,
         mocks: {
-            $on
+            $on,
+            search
         },
         propsData: {
             user: {
@@ -117,10 +121,10 @@ describe('Jobs', () => {
         expect(wrapper.findAll('section')).toHaveLength(6);
     });
 
-    it('Search bar should change', () => {
+    it('Search bar should update with input', () => {
         const input = wrapper.find('input');
         input.setValue('Clear up Green Pool');
-        // input.trigger('keyup');
+        //input.trigger('keyup');
         expect(wrapper.vm.searchTerm).toBe('Clear up Green Pool');
         // expect(wrapper.findAll('section')).toHaveLength(1);
     });
