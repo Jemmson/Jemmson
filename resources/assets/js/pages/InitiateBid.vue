@@ -27,10 +27,10 @@
                 <input class="form-control" id="phone" @keyup="filterPhone" maxlength="10" name="phone" dusk="phone"
                        type="tel" @blur="validateMobileNumber($event.target.value)"
                        v-model="form.phone">
-                <div dusk="networkType" id="#mobileNetworktype" v-if="checkThatNumberIsMobile()" style="color: green">{{
-                    networkType.originalCarrier }}
+                <div dusk="networkType" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()" style="color: green">
+                    {{ networkType.originalCarrier }}
                 </div>
-                <div dusk="networkType" v-if="checkLandLineNumber()" style="color: red">{{ networkType.originalCarrier
+                <div dusk="networkType" v-show="checkLandLineNumber()" style="color: red">{{ networkType.originalCarrier
                     }}
                 </div>
                 <span class="help-block" v-show="form.errors.has('phone')">
@@ -96,13 +96,7 @@
     computed: {
       ...mapGetters([
         'getMobileValidResponse'
-      ]),
-      validResponse() {
-        this.networkType.success = this.getMobileValidResponse[0]
-        this.networkType.originalCarrier = this.getMobileValidResponse[1]
-        this.networkType.currentCarrier = this.getMobileValidResponse[2]
-        this.networkType.exists = this.getMobileValidResponse[3]
-      }
+      ])
     },
     methods: {
       ...mapMutations([
@@ -146,9 +140,17 @@
       validateMobileNumber(phone) {
         this.checkMobileNumber(phone)
       },
+      validResponse() {
+        this.networkType.success = this.getMobileValidResponse[0]
+        this.networkType.originalCarrier = this.getMobileValidResponse[1]
+        this.networkType.currentCarrier = this.getMobileValidResponse[2]
+        this.networkType.exists = this.getMobileValidResponse[3]
+      },
       checkThatNumberIsMobile() {
+        // debugger;
         if (this.getMobileValidResponse[1] === 'mobile' ||
           this.getMobileValidResponse[2] === 'mobile') {
+          this.validResponse()
           return true
         } else {
           return false
@@ -157,6 +159,7 @@
       checkLandLineNumber() {
         if (this.getMobileValidResponse[1] === 'landline' ||
           this.getMobileValidResponse[2] === 'landline') {
+          this.validResponse()
           return true
         } else {
           return false

@@ -1,5 +1,7 @@
 import { mount, createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
+import flushPromises from 'flush-promises'
+import moxios from 'moxios'
 
 const localVue = createLocalVue()
 
@@ -14,7 +16,11 @@ describe('InitiateBid', () => {
   let store
 
   beforeEach(() => {
-    actions = {}
+    moxios.install();
+
+    actions = {
+      checkMobileNumber: () => ''
+    }
     mutations = {
       setTheMobileResponse: () => 'hell',
     }
@@ -28,6 +34,10 @@ describe('InitiateBid', () => {
       mutations
     })
   })
+
+  afterEach(() => {
+    moxios.uninstall();
+  });
 
   it('should display The Phone field is required. if name is input but not phone number', function () {
     const wrapper = mount(InitiateBid, {
@@ -51,13 +61,24 @@ describe('InitiateBid', () => {
 
   it('should display "mobile" when a mobile number is put in the text box', async function () {
 
-    mocha.withMock('axios')
+    // mocha.withMock('axios')
 
-    expect.assertions(1);
+    // moxios.stubRequest('/api/user/validatePhoneNumber', {
+    //   status: 200,
+    //   response: [
+    //     'failure', 'landline', 'hkjsdas'
+    //   ]
+    // })
+
+    // axios.get('/say/hello').then(onFulfilled);
+
+    // expect.assertions(1);
 
     const wrapper = shallowMount(InitiateBid, {
       store,
       localVue,
+      actions,
+      getters,
       data () {
         return {
           query: '',
@@ -72,11 +93,25 @@ describe('InitiateBid', () => {
         }
       }
     })
-    const input = wrapper.find('#phone')
-    input.setValue('4807034902')
-    const i = await input.trigger('blur')
+    const i = wrapper.find('#phone')
+    i.setValue('4807034902')
 
-    expect(i).toBe('mobile')
+    // console.log('hello');
+    // console.log(i);
+    // console.log(wrapper.vm.$options);
+    // console.log(wrapper);
+
+    // input.trigger('blur')
+
+    // await flushPromises();
+
+    // expect(wrapper.vm.value).toBe('mobile')
+
+    // wrapper.vm.$nextTick(() => {
+    //   expect(wrapper.vm.value).toBe('mobile')
+    //   done()
+    // })
+
 
     // expect(wrapper.find('#mobileNetworktype').exists()).toBe(true)
 
@@ -243,6 +278,28 @@ describe('InitiateBid', () => {
   })
 
   it('should show error if phone number is bad and the submit button is clicked', function () {
+    const wrapper = shallowMount(InitiateBid, {
+      store,
+      localVue,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            phone: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+
+    const name = wrapper.find('#customerName');
+    name.setValue('long john silver');
+    expect(wrapper.find('#customerName')).toBe('long john silver');
+
 
   })
 
