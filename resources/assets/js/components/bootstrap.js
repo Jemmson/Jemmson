@@ -9,8 +9,6 @@
  | your components that you write while building your applications.
  */
 
-require('./../spark-components/bootstrap');
-
 // /bid components
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
