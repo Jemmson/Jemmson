@@ -9,12 +9,9 @@ global._ = require('underscore');
 global.moment = require('moment');
 global.Promise = require('promise');
 global.Cookies = require('js-cookie');
-global.Vue = require('vue');
-global.expect = require('expect')
-global.Bus = new Vue();
+global.expect = require('expect');
 
-
-/*
+/*//
  * Define Moment locales
  */
 global.moment.defineLocale('en-short', {

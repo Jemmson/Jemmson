@@ -5,11 +5,6 @@ import {
 }
 from '@vue/test-utils';
 import sinon from 'sinon';
-import VueRouter from 'vue-router'
-
-const localVue = createLocalVue();
-localVue.use(VueRouter);
-const router = new VueRouter();
 
 const $route = {
     path: '/#/bid/1',
@@ -31,41 +26,69 @@ import Job from '../../resources/assets/js/pages/Job.vue';
 describe('Job', () => {
     const wrapper = shallowMount(Job, {
         mocks: {
-            $route: {
-                path: '/#/bid/1',
-                query: {
-                    success: 1,
-                    error: 0
-                },
-                params: {
-                    id: 1
-                }
-            },
+            $route
         },
         stubs: [
             'bid-details',
             'approve-bid',
-            'general-contractor-bid-actions',
             'completed-tasks',
             'bid-tasks',
             'bid-add-task',
             'stripe',
             'card',
         ],
-        propsData: {
-            user: {
-                usertype: 'contractor',
-                contractor: {
-                    company_name: 'KPS Pools'
-                }
+        slots: {
+            'card-footer': ['<general-contractor-bid-actions />']
+        },  
+        methods: {
+            getBid(id) {
             }
+        },
+        propsData: {
+            user: global.User.user,
         }
     });
 
-    it('Should Render bid-details', () => {
+    wrapper.setData({
+        bid: {
+            id: 1,
+            status: 'bid.in_progress',
+            job_tasks: [{
+                id: 1,
+            }]
+        }
+    });
+
+    it('Should render the card component', () => {
+        expect(wrapper.find('card-stub').exists()).toBe(true);
+    });
+
+    it('Should render the bid-details component', () => {
         expect(wrapper.find('bid-details-stub').exists()).toBe(true);
     });
 
-    console.log(wrapper.vm.$route);//
-    
+    it('Should not render the approve-bid component - contractor', () => {
+        expect(wrapper.find('approve-bid-stub').exists()).toBe(false);
+    });
+
+    it('Should render the general-contractor-bid-actions component', () => {
+        expect(wrapper.find('general-contractor-bid-actions').exists()).toBe(true); // wtf
+    });
+
+    it('Should render the completed-tasks component', () => {
+        expect(wrapper.find('completed-tasks-stub').exists()).toBe(true);
+    });
+
+    it('Should render the bid-tasks component', () => {
+        expect(wrapper.find('bid-tasks-stub').exists()).toBe(true);
+    });
+
+    it('Should render the bid-add-task component', () => {
+        expect(wrapper.find('bid-add-task-stub').exists()).toBe(true);
+    });
+
+    it('Should render the stripe component', () => {
+        expect(wrapper.find('stripe-stub').exists()).toBe(true);
+    });
+
 });
