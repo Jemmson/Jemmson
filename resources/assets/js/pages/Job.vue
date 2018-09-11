@@ -176,13 +176,10 @@
       // set up init data
       this.bidForm.id = this.bid.id;
       this.bidForm.status = this.bid.status;
-
-      if (this.$route.query !== undefined) {
-        const success = this.$route.query.success;
-        Vue.toasted.success(success);
-        const error = this.$route.query.error;
-        Vue.toasted.error(error);
-      }
+      const success = this.$route.query.success;
+      Vue.toasted.success(success);
+      const error = this.$route.query.error;
+      Vue.toasted.error(error);
     },
   }
 </script>
