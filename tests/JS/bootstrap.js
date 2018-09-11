@@ -7,7 +7,14 @@ import SubContractor from '../../resources/assets/js/classes/SubContractor';
 import Customer from '../../resources/assets/js/classes/Customer';
 import TaskUtil from '../../resources/assets/js/classes/TaskUtil';
 
-global.User = new User({});
+
+global.User = new User({
+    id: 1,
+    usertype: 'contractor',
+    contractor: {
+        company_name: 'KPS Pools'
+    }
+});
 global.Format = Format;
 global.Language = Language;
 global.GeneralContractor = GeneralContractor;
@@ -21,13 +28,11 @@ global.TaskUtil = TaskUtil;
 // });
 Vue.toasted = {};
 Vue.toasted.success = () => {
-    console.log('success toast');
-    
 };
 
 Vue.toasted.error = () => {
-    console.log('error toast');
-
 };
 
 global.Vue = Vue;
+
+global.Bus = new Vue();

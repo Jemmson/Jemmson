@@ -31,31 +31,64 @@ describe('Job', () => {
         stubs: [
             'bid-details',
             'approve-bid',
-            'general-contractor-bid-actions',
             'completed-tasks',
             'bid-tasks',
             'bid-add-task',
             'stripe',
             'card',
         ],
+        slots: {
+            'card-footer': ['<general-contractor-bid-actions />']
+        },  
         methods: {
-            getBid (id) {
-                console.log('get bid ' + id);
-                
+            getBid(id) {
             }
         },
         propsData: {
-            user: {
-                usertype: 'contractor',
-                contractor: {
-                    company_name: 'KPS Pools'
-                }
-            }
+            user: global.User.user,
         }
     });
 
-    it('Should Render bid-details', () => {
+    wrapper.setData({
+        bid: {
+            id: 1,
+            status: 'bid.in_progress',
+            job_tasks: [{
+                id: 1,
+            }]
+        }
+    });
+
+    it('Should render the card component', () => {
+        expect(wrapper.find('card-stub').exists()).toBe(true);
+    });
+
+    it('Should render the bid-details component', () => {
         expect(wrapper.find('bid-details-stub').exists()).toBe(true);
+    });
+
+    it('Should not render the approve-bid component - contractor', () => {
+        expect(wrapper.find('approve-bid-stub').exists()).toBe(false);
+    });
+
+    it('Should render the general-contractor-bid-actions component', () => {
+        expect(wrapper.find('general-contractor-bid-actions').exists()).toBe(true); // wtf
+    });
+
+    it('Should render the completed-tasks component', () => {
+        expect(wrapper.find('completed-tasks-stub').exists()).toBe(true);
+    });
+
+    it('Should render the bid-tasks component', () => {
+        expect(wrapper.find('bid-tasks-stub').exists()).toBe(true);
+    });
+
+    it('Should render the bid-add-task component', () => {
+        expect(wrapper.find('bid-add-task-stub').exists()).toBe(true);
+    });
+
+    it('Should render the stripe component', () => {
+        expect(wrapper.find('stripe-stub').exists()).toBe(true);
     });
 
 });
