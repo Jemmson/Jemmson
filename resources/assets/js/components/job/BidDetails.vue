@@ -29,8 +29,8 @@
         <div class="flex justify-between mb-6">
             <div class="flex flex-col">
                 <span class="label">JOB ADDRESS:</span>
-                <a class="" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                    <address v-if="bid.location !== null">
+                <a target="_blank" v-if="showAddress" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                    <address>
                         <br> {{ bid.location.address_line_1 }}
                         <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
                     </address>
@@ -59,7 +59,7 @@
         </div> -->
 
         <!-- Declined Message -->
-        <div class="flex space-between flex-col" v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
+        <div class="flex space-between flex-col" v-if="showDeclinedMessage">
             <h4>
                 <label class="status label label-warning red py-s">Declined Reason</label>
             </h4>
@@ -113,6 +113,12 @@
       },
       status () {
         return User.status (this.bid.status, this.bid);
+      },
+      showDeclinedMessage () {
+          return !this.isCustomer && this.bid.declined_message !== null && this.bid.status === 'bid.declined';
+      },
+      showAddress () {
+          return this.bid.location_id !== undefined && this.bid.location_id !== null && this.bid.location !== null;
       }
     },
     methods: {
