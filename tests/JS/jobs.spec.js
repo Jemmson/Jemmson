@@ -25,6 +25,9 @@ describe('Jobs', () => {
     const search = sinon.stub();
     const wrapper = mount(Jobs, {
         localVue,
+        stubs: [
+            'search-bar'
+        ],
         mocks: {
             $on,
             search

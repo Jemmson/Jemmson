@@ -176,7 +176,6 @@
       // set up init data
       this.bidForm.id = this.bid.id;
       this.bidForm.status = this.bid.status;
-
       const success = this.$route.query.success;
       Vue.toasted.success(success);
       const error = this.$route.query.error;

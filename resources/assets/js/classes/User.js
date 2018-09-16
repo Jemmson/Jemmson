@@ -1,4 +1,8 @@
 export default class User {
+  constructor (user) {
+    this.user = user;
+  }
+
   async chargeCustomer () {
     // charge customer
     const {
@@ -248,11 +252,11 @@ export default class User {
     if (status === undefined) {
       return '';
     }
-    if (this.isContractor ()) {
+    if (this.isContractor()) {
       if (isSub !== undefined && isSub) {
         return status.sub;
       }
-      if (bid !== null && this.isGeneral (bid))
+      if (bid !== null && this.isGeneral(bid))
         return status.general;
     }
 
@@ -382,8 +386,4 @@ export default class User {
   //     Vue.toasted.error ('Error: ' + error.message);
   //   }
   // }
-
-  constructor (user) {
-    this.user = user;
-  }
 }

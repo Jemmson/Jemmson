@@ -79,6 +79,7 @@ window.Customer = new Customer (Spark.state.user);
 window.TaskUtil = new TaskUtil ();
 window.autocomplete = {};
 
+require('./spark-components/bootstrap');
 require ('./components/bootstrap');
 
 Spark.forms.register = {
