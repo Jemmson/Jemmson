@@ -6,7 +6,8 @@
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "test": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JS/setup.js tests/JS/**/*.spec.js",
-    "jswatch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js tests/JS/**/*.spec.js"
+    "jswatch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js tests/JS/**/*.spec.js",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.3.1",
@@ -32,6 +33,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@storybook/vue": "^3.4.10",
     "@vue/test-utils": "^1.0.0-beta.24",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "expect": "^21.2.1",
