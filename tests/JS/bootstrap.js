@@ -12,6 +12,8 @@ global.User = new User({
     id: 1,
     usertype: 'contractor',
     contractor: {
+        id: 1,
+        user_id: 1,
         company_name: 'KPS Pools'
     }
 });
