@@ -227,7 +227,6 @@
     data () {
       return {
         paginate: ['jobTasks'],
-        user: '',
         jTask: {},
         message: '',
 
@@ -262,13 +261,13 @@
         return this.jTask.status === 'bid_task.approved_by_customer';
       },
       isCustomer () {
-        return User.isCustomer ();
+        return User.isCustomer();
       },
       isGeneral () {
-        return User.isGeneral (this.bid);
+        return User.isGeneral(this.bid);
       },
       isContractor () {
-        return User.isContractor ();
+        return User.isContractor();
       },
       showSubsPanel () {
         return this.isContractor && this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed';
@@ -544,7 +543,6 @@
       }
     },
     mounted: function () {
-      this.user = Spark.state.user;
     }
   }
 </script>
