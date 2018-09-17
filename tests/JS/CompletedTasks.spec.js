@@ -7,7 +7,7 @@ require('./bootstrap');
 describe('Completed Tasks', () => {
     const reopenTask = sinon.spy();
     const wrapper = shallowMount(CompletedTasks, {
-        mocks: {
+        methods: {
             reopenTask
         },
         stubs: [
@@ -201,7 +201,7 @@ describe('Completed Tasks', () => {
     it('Should have fired the reopen fn when the reopen btn was clicked', () => {
         const reopenBtn = wrapper.find('button');
         reopenBtn.trigger('click');
-        expect(wrapper.vm.reopenTask.called).toBe(true);
+        expect(reopenTask.calledOnce).toBe(true);
     });
 
     it('Should be true', () => {
