@@ -24,7 +24,7 @@ describe('Bid Tasks', () => {
             bid: {
                 job_name: 'Pool Job',
                 agreed_start_date: '2018-08-01 10:58:37',
-                status: 'bid.initiated',
+                status: 'job.approved',
                 contractor_id: 1,
                 bid_price: 99.00,
                 declined_message: null,
@@ -204,4 +204,58 @@ describe('Bid Tasks', () => {
     it('Should render the text Job 2', () => {
         expect(wrapper.html()).toContain('Job 2');
     });
+
+    it('Should render the text $100', () => {
+        expect(wrapper.html()).toContain('$100');
+    });
+
+    it('Should render the Total Task Sub Price section - contractor', () => {
+        expect(wrapper.html()).toContain('Total Task Sub Price');
+    });
+
+    it('Should render the Quantity: section - contractor', () => {
+        expect(wrapper.html()).toContain('Quantity:');
+    });
+
+    it('The quantity input should be disabled - contractor', () => {
+        const qty = wrapper.find({
+            ref: 'quantity',
+        })
+        
+        expect(qty.attributes().disabled).toBe('disabled');
+    });
+
+    it('The price input should be disabled - contractor', () => {
+        const qty = wrapper.find({
+            ref: 'price',
+        })
+
+        expect(qty.attributes().disabled).toBe('disabled');
+    });
+
+    it('Should render the text Change Task Location', () => {
+        expect(wrapper.html()).toContain('Change Task Location');
+    });
+
+    it('Should render the text Task Start Date - contractor', () => {
+        expect(wrapper.html()).toContain('Task Start Date');
+    });
+
+    it('Should render 2 task-images component, one for each task', () => {
+        const taskImages = wrapper.findAll('task-images-stub');
+        expect(taskImages.length).toBe(2);
+    });
+
+    it('Messages should not be disabled', () => {
+        expect(wrapper.vm.disableMessages).toBe(false);
+    });
+
+    it('Should not render the subs panel', () => {
+        expect(wrapper.vm.showSubsPanel).toBe(false);
+    });
+
+    it('Should render footer slot', () => {
+        expect(false).toBe(true);
+    });
+
 });
