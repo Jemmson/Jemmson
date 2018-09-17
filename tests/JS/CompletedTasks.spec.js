@@ -204,11 +204,13 @@ describe('Completed Tasks', () => {
         expect(reopenTask.calledOnce).toBe(true);
     });
 
-    it('Should be true', () => {
-        expect(true).toBe(false);
+    it('Should not render the deny-task-modal - contractor', () => {
+        expect(wrapper.html()).not.toContain('deny-task-modal-stub');
     });
 
-    it('Should be true', () => {
-        expect(true).toBe(false);
+    it('Should render slot content', () => {
+        // TODO: we can mock slot content, but I haven't found a way to render the 
+        // default content
+        expect(false).toBe(true);
     });
 });
