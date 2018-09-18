@@ -19,8 +19,7 @@
                     </div>
                     <!--<form class="form" action="/login" method="post">-->
                     <form class="form form-horizontal" role="form" method="POST" action="/login">
-
-
+                        <input type="hidden" name="_token" :value="csrf">
                         <div class="flex flex-col">
 
                             <!-- E-Mail Address -->
@@ -35,24 +34,19 @@
                                    class="input"
                                    placeholder="Password"
                                    name="password">
-
                         </div>
-
 
                         <div class="flex flex-col form-submit-section">
                             <!-- Remember Me -->
-
                             <div class="checkbox align-checkbox flex">
                                 <input type="checkbox" class="checkbox-sizing mr-2" name="remember">
                                 <div>Remember Me</div>
                             </div>
-
                             <div class="flex form-submit form-item">
                                 <!-- Login Button -->
                                 <button name="login" type="submit" class="login-color btn btn-sm btn-primary">
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
-
                                 <a class="" href="https://localhost:9500/password/reset">Forgot Your
                                     Password?</a>
                             </div>
@@ -89,7 +83,11 @@
 
 <script>
   export default {
-    computed: {},
+    computed: {
+        csrf () {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
+    },
     methods: {
       route(value) {
         if (value === 'login') {

@@ -108,7 +108,7 @@
               <div class="flex flex-col box mb-3">
                 <span class="label mb-2">Subcontractor</span>
                 <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
-                  :disabled="disableMessages">{{ jobTask.sub_message }}</textarea>
+                  :disabled="disableMessages" :value="jobTask.sub_message"></textarea>
 
                 <!--<input-->
                 <!--type="text"-->
@@ -119,7 +119,7 @@
               <div class="flex flex-col box">
                 <span class="label mb-2">Customer</span>
                 <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
-                  :disabled="disableMessages">{{ jobTask.customer_message }}</textarea>
+                  :disabled="disableMessages" :value="jobTask.customer_message"></textarea>
               </div>
               <button class="btn btn-green m-t-3 mb-4">Send</button>
             </div>

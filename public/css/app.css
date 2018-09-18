@@ -17237,6 +17237,7 @@ input:checked + .slider:before {
   color: white !important;
 }
 .jemmson-footer {
+  background: linear-gradient(to right, #0a174b, #223dab) fixed;
   height: 49pt;
   overflow: hidden;
   position: fixed;
@@ -21141,6 +21142,7 @@ html {
   min-height: 100%;
 }
 body {
+  background: linear-gradient(to right, #0a174b, #223dab) fixed;
   font-family: 'Roboto', sans-serif;
   background-color: #eee;
 }
