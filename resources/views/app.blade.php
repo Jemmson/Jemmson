@@ -42,8 +42,8 @@
 
 <!-- Main Content -->
 <transition name="fade">
-    <router-view :user='user'></router-view>
-    {{--<router-view :user='user' class="container mx-auto p-4"></router-view>--}}
+    <!-- <router-view :user='user'></router-view> -->
+    <router-view :user='user' class="container mx-auto p-4"></router-view>
 </transition>
 
 
