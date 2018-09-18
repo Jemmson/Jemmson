@@ -56,12 +56,6 @@ export default {
             return false;
 
           return this.user.contractor.stripe_express === null;
-      },
-      showDashboardLoginBtn() {
-          if (this.user.contractor === null)
-            return false;
-
-          return this.user.contractor.stripe_express !== null;
       }
   },
   methods: {

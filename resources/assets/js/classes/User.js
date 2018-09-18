@@ -3,6 +3,10 @@ export default class User {
     this.user = user;
   }
 
+  setUser (user) {
+    this.user = user;
+  }
+
   async chargeCustomer () {
     // charge customer
     const {
@@ -127,7 +131,7 @@ export default class User {
   }
 
   hasStripeId () {
-    return this.user.stripe_id !== null && this.user.stripe_id !== undefined;
+    return this.user.stripe_id !== undefined && this.user.stripe_id !== null;
   }
 
   initAutocomplete (id) {
