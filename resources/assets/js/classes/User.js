@@ -168,11 +168,14 @@ export default class User {
 
   /**
    *
-   * @param {JobTask} bid
+   * @param {JobTask} bid //
    */
   isGeneral (bid) {
-    if (bid !== null)
+    if (bid !== null) {
       return bid.contractor_id === this.user.id;
+    }
+
+    return false;
   }
 
   isSignedUpWithStripe () {
@@ -194,7 +197,7 @@ export default class User {
       }
     }
     if (stripeNeeded && !this.stripeExpressConnected ()) {
-      Bus.$emit ('needsStripe');
+      Bus.$emit('needsStripe');
       return true;
     }
     return false;
@@ -206,7 +209,7 @@ export default class User {
   needsStripe () {
     if (!this.stripeExpressConnected ()) {
       console.log ('No Stripe Express');
-      Bus.$emit ('needsStripe');
+      Bus.$emit('needsStripe');
       return true;
     }
     return false;
@@ -248,18 +251,20 @@ export default class User {
   }
 
   status (status, bid, isSub) {
-    status = Language.lang ()[status];
+    status = Language.lang()[status];
+    
     if (status === undefined) {
       return '';
     }
+
     if (this.isContractor()) {
-      if (isSub !== undefined && isSub) {
+      if (isSub !== undefined && isSub)
         return status.sub;
-      }
-      if (bid !== null && this.isGeneral(bid))
+      
+      if (this.isGeneral(bid))
         return status.general;
     }
-
+    
     return status.customer;
   }
 

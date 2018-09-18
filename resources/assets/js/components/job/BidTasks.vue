@@ -42,14 +42,14 @@
             <div class="flex">
               <div class="flex-1 flex-col pr-2">
                 <label class="label">Quantity:</label>
-                <input type="text" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
+                <input type="text" ref="quantity" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
               </div>
               <div class="flex-1 flex-col">
                 <label class="label">Price:</label>
-                  <input type="text" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
+                  <input type="text" ref="price" class="form-control mt-2" :disabled="!showTaskPriceInput()" :value="taskCustFinalPrice(jobTask.unit_price)"
                     @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, bid.id, jobTask)">
               </div>
             </div>
@@ -227,7 +227,6 @@
     data () {
       return {
         paginate: ['jobTasks'],
-        user: '',
         jTask: {},
         message: '',
 
@@ -262,13 +261,13 @@
         return this.jTask.status === 'bid_task.approved_by_customer';
       },
       isCustomer () {
-        return User.isCustomer ();
+        return User.isCustomer();
       },
       isGeneral () {
-        return User.isGeneral (this.bid);
+        return User.isGeneral(this.bid);
       },
       isContractor () {
-        return User.isContractor ();
+        return User.isContractor();
       },
       showSubsPanel () {
         return this.isContractor && this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed';
@@ -454,9 +453,9 @@
       taskCustFinalPrice (price) {
 
         let a = price;
-        let b = a.toString ();
+        let b = a.toString();
 
-        if (b.indexOf ('.') === -1) {
+        if (b.indexOf('.') === -1) {
           price = '$' + price + '.00';
         } else {
           price = '$' + price;
@@ -544,7 +543,6 @@
       }
     },
     mounted: function () {
-      this.user = Spark.state.user;
     }
   }
 </script>
