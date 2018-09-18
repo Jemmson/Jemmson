@@ -3,14 +3,14 @@
         <div class="title"><h1 class="text-center">Jemsub</h1></div>
         <div class="section header-content">
             <div class="header-items">
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center header-content-left">
                     <div class="slogan text-center">Sub-Contract <br> With Ease</div>
                     <div class="sub-slogan text-center">Register or Login today to sub contract your work and get paid
                         without all
                         of the hassle
                     </div>
                 </div>
-                <div class="login-form place-form-items">
+                <div class="login-form place-form-items header-content-right">
                     <div class="flex flex-col">
                         <h3 class="form-title">
                             Simplify Subcontracting
@@ -278,26 +278,52 @@
     }
 
     @media (min-width: 576px) {
-        .container {
+        .header-items {
             max-width: 576px;
+        }
+
+        .header-items {
+            flex-direction: row;
+            align-items: center;
+            margin-top: auto;
+            height: 100%;
+            margin-bottom: auto;
+            justify-content: space-around;
         }
     }
 
     @media (min-width: 768px) {
-        .container {
+        .header-items {
             max-width: 768px;
         }
     }
 
     @media (min-width: 992px) {
-        .container {
+        .header-items {
             max-width: 992px;
+        }
+
+        .header-items {
+            width: 80%;
+        }
+
+        .header-content-left {
+            margin-right: 3rem;
+        }
+
+        .header-content-right {
+            margin-left: 1rem;
         }
     }
 
     @media (min-width: 1200px) {
-        .container {
+        .header-items {
             max-width: 1200px;
+        }
+
+        .header-content-right {
+            margin-left: 3rem;
+            margin-right: 8rem;
         }
     }
 
