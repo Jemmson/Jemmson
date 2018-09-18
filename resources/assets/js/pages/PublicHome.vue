@@ -4,6 +4,12 @@
         <div class="section header-content">
             <div class="header-items">
                 <div class="flex flex-col items-center header-content-left">
+                    <button name="login"
+                            @click="route('register')"
+                            style="margin-top: 1rem; margin-bottom: 1rem;"
+                            class="register-color btn btn-sm btn-warning">
+                        <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Register Now
+                    </button>
                     <div class="slogan text-center">Sub-Contract <br> With Ease</div>
                     <div class="sub-slogan text-center">Register or Login today to sub contract your work and get paid
                         without all
@@ -214,6 +220,10 @@
 
     .login-color {
         background-color: #3772EE;
+    }
+
+    .register-color {
+        background-color: red;
     }
 
     .sub-title {
