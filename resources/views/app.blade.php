@@ -8,7 +8,7 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name'))</title>
+    <title>Jemmson</title>
 
     <!-- Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
@@ -42,7 +42,8 @@
 
 <!-- Main Content -->
 <transition name="fade">
-    <router-view :user='user' class="container mx-auto p-4"></router-view>
+    <router-view :user='user'></router-view>
+    {{--<router-view :user='user' class="container mx-auto p-4"></router-view>--}}
 </transition>
 
 

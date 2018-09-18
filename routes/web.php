@@ -19,7 +19,10 @@ Route::get('/home', 'WebController@index');
 
 // login routes
 Route::get('login', 'Auth\LoginController@show');
-Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
+//Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
+Route::post('/loggedIn', function () {
+    dd('I am trying to login');
+});
 
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 

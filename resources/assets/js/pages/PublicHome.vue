@@ -1,6 +1,66 @@
 <template>
     <div class="wrapper">
         <div class="title"><h1 class="text-center">Jemsub</h1></div>
+        <div class="section header-content">
+            <div class="header-items">
+                <div class="flex flex-col items-center">
+                    <div class="slogan text-center">Sub-Contract <br> With Ease</div>
+                    <div class="sub-slogan text-center">Register or Login today to sub contract your work and get paid
+                        without all
+                        of the hassle
+                    </div>
+                </div>
+                <div class="login-form place-form-items">
+                    <div class="flex flex-col">
+                        <h3 class="form-title">
+                            Simplify Subcontracting
+                        </h3>
+                        <h4 class="sub-title text-center">Create Your Bid</h4>
+                    </div>
+                    <!--<form class="form" action="/login" method="post">-->
+                    <form class="form form-horizontal" role="form" method="POST" action="/login">
+
+
+                        <div class="flex flex-col">
+
+                            <!-- E-Mail Address -->
+                            <input type="text"
+                                   class="input"
+                                   name="username"
+                                   placeholder="Email Address / Phone"
+                                   autofocus>
+
+                            <!-- Password -->
+                            <input type="password"
+                                   class="input"
+                                   placeholder="Password"
+                                   name="password">
+
+                        </div>
+
+
+                        <div class="flex flex-col form-submit-section">
+                            <!-- Remember Me -->
+
+                            <div class="checkbox align-checkbox flex">
+                                <input type="checkbox" class="checkbox-sizing mr-2" name="remember">
+                                <div>Remember Me</div>
+                            </div>
+
+                            <div class="flex form-submit form-item">
+                                <!-- Login Button -->
+                                <button name="login" type="submit" class="login-color btn btn-sm btn-primary">
+                                    <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
+                                </button>
+
+                                <a class="" href="https://localhost:9500/password/reset">Forgot Your
+                                    Password?</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="section main">
             <h2>Subcontract Work</h2>
             <p>How often at a job do you run into work that you do not do or work you dont have time for?
@@ -31,7 +91,7 @@
   export default {
     computed: {},
     methods: {
-      route (value) {
+      route(value) {
         if (value === 'login') {
           window.location = '/login'
         } else if (value === 'register') {
@@ -43,6 +103,62 @@
 </script>
 
 <style scoped>
+
+    .header-items {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .slogan {
+        font-size: 54px;
+        color: #fff !important;
+        letter-spacing: -1.55px;
+        line-height: 1.18;
+        font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-style: normal;
+        font-variant-ligatures: normal;
+        font-variant-caps: normal;
+        font-variant-numeric: normal;
+        font-variant-east-asian: normal;
+    }
+
+    .form {
+        width: 100%;
+    }
+
+    .form-submit-section {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-submit {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .align-checkbox {
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        align-items: center;
+    }
+
+    .sub-slogan {
+        font-size: 20px;
+        color: #fff !important;
+        font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+        margin-bottom: 1rem;
+    }
+
+    .header-content {
+        background-color: #3772EE;
+    }
 
     .wrapper {
         display: flex;
@@ -71,6 +187,72 @@
         background-color: #378372;
     }
 
+    .place-items {
+        justify-content: space-around;
+        align-items: center;
+        width: 70%;
+        height: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .input {
+        height: 3rem;
+        border: thin black solid;
+        border-radius: 5px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        width: 90%;
+        font-size: 1.5rem;
+    }
+
+    .checkbox-sizing {
+        width: 15px;
+        height: 15px;
+    }
+
+    .login-color {
+        background-color: #3772EE;
+    }
+
+    .sub-title {
+        color: #0069ff;
+        display: inline-block;
+        font-size: 1.5rem;
+    }
+
+    .form-item {
+        width: 90%;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+
+    .form-title {
+        color: #031b4e;
+        font-size: 30px;
+        font-weight: 900;
+        letter-spacing: -.1px;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .place-form-items {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .login-form {
+        background-color: white;
+        height: auto;
+        width: 100%;
+        border-radius: 10px;
+    }
+
     h2 {
         color: rgb(255, 255, 255);
         padding: 3rem;
@@ -95,13 +277,27 @@
         /*width: 345px;*/
     }
 
-    @media (min-width: 300px) {
-
+    @media (min-width: 576px) {
+        .container {
+            max-width: 576px;
+        }
     }
 
-    @media (min-width: 1100px) {
-        h2 {
-            display: none;
+    @media (min-width: 768px) {
+        .container {
+            max-width: 768px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .container {
+            max-width: 992px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .container {
+            max-width: 1200px;
         }
     }
 
