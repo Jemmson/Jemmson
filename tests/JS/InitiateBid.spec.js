@@ -300,11 +300,31 @@ describe('InitiateBid', () => {
     expect(wrapper.vm.form.customerName).toBe('long john silver');
   })
 
-  it('should send a contractor to the subscription page and not create a new bid if the sixth free bid trying to be sent', function () {
+  it('should show an error if the same phone number is for a different customer and the submit button is sent', function() {
+    
+  })
+
+  it('should show an error if the customer name exists and the phone number is wrong and the submit button is pressed', function() {
+    
+  })
+
+  it('should only show name of customer in drop down that exists for this particular contractor', function() {
 
   })
 
-  it('should create a unique job name if bid is created and the job name is left blank', function () {
+  it('should not show the name of the customer ' +
+    'if the customer is not associated with that contractor once the form is submitted', function() {
 
   })
+
+  it('should send a contractor to the subscription page and not ' +
+    'create a new bid if the sixth free bid trying to be sent', function () {
+
+  })
+
+  it('should create a unique job name if bid is created and ' +
+    'the job name is left blank', function () {
+
+  })
+  
 })
