@@ -139,8 +139,4 @@ describe('Jobs', () => {
         // expect(wrapper.findAll('section')).toHaveLength(1);
     });
 
-    it('Should not render a job that has been completed', () => {
-        expect(wrapper.html()).not.toContain('Job Completed');
-    });
-
 });
