@@ -92,6 +92,13 @@ describe('Jobs', () => {
                     },
                     job_name: 'Fix Sink',
                     status: 'bid.sent'
+                }, {
+                    bid_price: 245,
+                    customer: {
+                        name: 'John Doe'
+                    },
+                    job_name: 'Fix Pool',
+                    status: 'job.completed'
                 }],
                 showBid: false,
                 bidIndex: 0,
@@ -116,7 +123,7 @@ describe('Jobs', () => {
 
     it('Clicking the next arrow should show the next list of jobs', () => {
         wrapper.find('.right-arrow > a').trigger('click');
-        expect(wrapper.findAll('section')).toHaveLength(1);
+        expect(wrapper.findAll('section')).toHaveLength(2);
     });
 
     it('Clicking the previous arrow should show the previous list of jobs', () => {
@@ -130,6 +137,10 @@ describe('Jobs', () => {
         //input.trigger('keyup');
         expect(wrapper.vm.searchTerm).toBe('Clear up Green Pool');
         // expect(wrapper.findAll('section')).toHaveLength(1);
+    });
+
+    it('Should not render a job that has been completed', () => {
+        expect(wrapper.html()).not.toContain('Job Completed');
     });
 
 });

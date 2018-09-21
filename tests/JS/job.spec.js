@@ -88,21 +88,4 @@ describe('Job', () => {
   it('Should render the stripe component', () => {
     expect(wrapper.find('stripe-stub').exists()).toBe(true)
   })
-
-  it('should show all jobs where new is in the job name when searched', function() {
-
-  })
-
-  it('should show all jobs were the customer name of shawn is searched', function() {
-
-  })
-
-  it('should show all jobs where the status is "bid in progress"', function() {
-
-  })
-
-  it('should show all jobs where the status is "bid initiated"', function() {
-
-  })
-
 })
