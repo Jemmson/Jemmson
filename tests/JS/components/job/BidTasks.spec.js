@@ -3,9 +3,9 @@ import {
     createLocalVue
 } from "@vue/test-utils";
 import VuePaginate from 'vue-paginate';
-import BidTasks from '../../resources/assets/js/components/job/BidTasks';
+import BidTasks from '../../../../resources/assets/js/components/job/BidTasks';
 
-require('./bootstrap');
+require('../../bootstrap');
 
 const localVue = createLocalVue();
 localVue.use(VuePaginate);

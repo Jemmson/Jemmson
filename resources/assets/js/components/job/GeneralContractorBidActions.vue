@@ -29,7 +29,6 @@
   export default {
     props: {
       bid: Object,
-      show: false,
     },
     data () {
       return {

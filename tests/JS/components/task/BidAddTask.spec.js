@@ -1,9 +1,9 @@
 import {
     shallowMount
 } from "@vue/test-utils";
-import BidAddTask from '../../resources/assets/js/components/task/BidAddTask';
+import BidAddTask from '../../../../resources/assets/js/components/task/BidAddTask';
 
-require('./bootstrap');
+require('../../bootstrap');
 
 describe('Completed Tasks', () => {
     const wrapper = shallowMount(BidAddTask, {
