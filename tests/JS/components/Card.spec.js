@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import Card from '../../resources/assets/js/components/shared/Card';
+import Card from '../../../resources/assets/js/components/shared/Card';
 
 describe('Card', () => {
 

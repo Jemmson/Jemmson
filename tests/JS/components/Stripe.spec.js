@@ -1,9 +1,9 @@
 import {
     shallowMount
 } from "@vue/test-utils";
-import Stripe from '../../resources/assets/js/components/stripe/Stripe';
+import Stripe from '../../../resources/assets/js/components/stripe/Stripe';
 
-require('./bootstrap');
+require('../bootstrap');
 
 describe('Completed Tasks', () => {
     

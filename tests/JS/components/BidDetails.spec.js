@@ -1,9 +1,9 @@
 import {
     shallowMount
 } from "@vue/test-utils";
-import BidDetails from '../../resources/assets/js/components/job/BidDetails';
+import BidDetails from '../../../resources/assets/js/components/job/BidDetails';
 
-require('./bootstrap');
+require('../bootstrap');
 
 describe('BidDetails', () => {
 
