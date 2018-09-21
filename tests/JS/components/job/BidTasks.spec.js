@@ -1,51 +1,44 @@
-import { shallowMount } from "@vue/test-utils";
-import CompletedTasks from '../../../resources/assets/js/components/job/CompletedTasks';
-import sinon from 'sinon';
+import {
+    mount,
+    createLocalVue
+} from "@vue/test-utils";
+import VuePaginate from 'vue-paginate';
+import BidTasks from '../../../../resources/assets/js/components/job/BidTasks';
 
-require('../bootstrap');
+require('../../bootstrap');
 
-describe('Completed Tasks', () => {
-    const reopenTask = sinon.spy();
-    const wrapper = shallowMount(CompletedTasks, {
-        methods: {
-            reopenTask
-        },
+const localVue = createLocalVue();
+localVue.use(VuePaginate);
+
+describe('Bid Tasks', () => {
+    const wrapper = mount(BidTasks, {
+        localVue,
         stubs: [
             'card',
-            'deny-task-modal'
+            'sub-invite-modal',
+            'deny-task-modal',
+            'update-task-location-modal',
+            'task-images'
         ],
         propsData: {
-            isCustomer: false,
-            customerName: 'Jane Doe',
             bid: {
                 job_name: 'Pool Job',
                 agreed_start_date: '2018-08-01 10:58:37',
-                status: 'bid.initiated',
+                status: 'job.approved',
                 contractor_id: 1,
                 bid_price: 99.00,
                 declined_message: null,
                 location: null,
-            }
-        }
-    });
-
-    it('Should not render itself', () => {
-        expect(wrapper.html()).toBe(undefined);
-    });
-
-    it('Should render itself', () => {
-        wrapper.setProps({
-            bid: {
                 job_tasks: [{
-                    "id": 1,
+                    "id": 2,
                     "job_id": 2,
                     "task_id": 2,
                     "bid_id": null,
                     "location_id": null,
-                    "contractor_id": 2,
-                    "status": "bid_task.approved_by_general",
+                    contractor_id: 1,
+                    "status": "bid_task.customer_sent_payment",
                     "cust_final_price": 100,
-                    "sub_final_price": 90,
+                    "sub_final_price": 29,
                     "start_when_accepted": 0,
                     "stripe": 0,
                     "start_date": "2018-08-29 10:47:59",
@@ -104,23 +97,45 @@ describe('Completed Tasks', () => {
                             "tax_rate": 0
                         }
                     }],
-                    "location": null
+                    "location": null,
+                    "images": [{
+                        "id": 1,
+                        "job_id": 2,
+                        "job_task_id": 2,
+                        "url": "http://127.0.0.1:8000/storage/tasks/KTIpqlJHtxRdZJggHy1OUAhWKjYaaItOkjLiDwqL.jpeg",
+                        "created_at": "2018-08-29 11:01:42",
+                        "updated_at": "2018-08-29 11:01:42"
+                    }, {
+                        "id": 2,
+                        "job_id": 2,
+                        "job_task_id": 2,
+                        "url": "http://127.0.0.1:8000/storage/tasks/9q82Lbk14tocjHPPz8oS7xyy30jRFgIIrjPsHZiA.jpeg",
+                        "created_at": "2018-08-29 11:01:48",
+                        "updated_at": "2018-08-29 11:01:48"
+                    }, {
+                        "id": 3,
+                        "job_id": 2,
+                        "job_task_id": 2,
+                        "url": "http://127.0.0.1:8000/storage/tasks/EcM95wNWPnaC6HiANopyJHsGB0wbWzugn9EWAsBG.jpeg",
+                        "created_at": "2018-08-29 11:01:54",
+                        "updated_at": "2018-08-29 11:01:54"
+                    }]
                 }, {
-                    "id": 2,
+                    "id": 3,
                     "job_id": 2,
                     "task_id": 2,
                     "bid_id": null,
                     "location_id": null,
-                    "contractor_id": 2,
+                    contractor_id: 1,
                     "status": "bid_task.finished_by_general",
                     "cust_final_price": 40,
-                    "sub_final_price": 20,
+                    "sub_final_price": 0,
                     "start_when_accepted": 0,
                     "stripe": 0,
                     "start_date": "2018-08-29 11:35:38",
                     "deleted_at": null,
                     "created_at": "2018-08-29 11:35:38",
-                    "updated_at": "2018-08-29 12:48:56",
+                    "updated_at": "2018-09-17 12:12:25",
                     "stripe_transfer_id": null,
                     "customer_message": "",
                     "sub_message": "",
@@ -144,73 +159,103 @@ describe('Completed Tasks', () => {
                         "customer_instructions": null
                     },
                     "bid_contractor_job_tasks": [],
-                    "location": null
+                    "location": null,
+                    "images": []
                 }]
             }
-        });
-        expect(wrapper.html()).not.toBe(undefined);
+        }
     });
 
-    it('Should not render exclude from payment - contractor', () => {
-        expect(wrapper.html()).not.toContain('Exclude From Payment');
+    it('Should render itself ', () => {
+        expect(wrapper.vm.show).toBe(true);
     });
 
-    it('Should have two payable jobs', () => {
-        expect(wrapper.vm.payableTasks.length).toBe(2);
+    it('User should be a contractor ', () => {
+        expect(wrapper.vm.isContractor).toBe(true);
     });
 
-    it('Should render Job 1', () => {
+    it('Should render 2 cards', () => {
+        const cards = wrapper.findAll('card-stub');
+        expect(cards.length).toBe(2);
+    });
+
+    it('Should have a status-grey class', () => {
+        const status = wrapper.findAll('.status-grey');
+        expect(status.length).toBe(1);
+    });
+
+    it('Should have a status-green class', () => {
+        const status = wrapper.findAll('.status-green');
+        expect(status.length).toBe(1);
+    });
+
+    it('Should render the text Customer Has Sent A Payment', () => {
+        expect(wrapper.html()).toContain('Customer Has Sent A Payment');
+    });
+
+    it('Should render the text Waiting On Customer Approval & Payment', () => {
+        expect(wrapper.html()).toContain('Waiting On Customer Approval &amp; Payment');
+    });
+
+    it('Should render the text Job 1', () => {
         expect(wrapper.html()).toContain('Job 1');
     });
 
-    it('Should render Job 2', () => {
+    it('Should render the text Job 2', () => {
         expect(wrapper.html()).toContain('Job 2');
     });
 
-    it('Should not render exclude payment option 1 - contractor', () => {
-        const exclude1 = wrapper.find('#exclude-1');
-        expect(exclude1.exists()).toBe(false);
+    it('Should render the text $100', () => {
+        expect(wrapper.html()).toContain('$100');
     });
 
-    it('Should not render exclude payment option 2 - contractor', () => {
-        const exclude2 = wrapper.find('#exclude-2');
-        expect(exclude2.exists()).toBe(false);
+    it('Should render the Total Task Sub Price section - contractor', () => {
+        expect(wrapper.html()).toContain('Total Task Sub Price');
     });
 
-    it('Should render reopen buttons - contractor', () => {
-        expect(wrapper.html()).toContain('Reopen');
+    it('Should render the Quantity: section - contractor', () => {
+        expect(wrapper.html()).toContain('Quantity:');
     });
 
-    it('Should not render deny buttons when tasks are finished - contractor', () => {
-        expect(wrapper.html()).not.toContain('Deny');
+    it('The quantity input should be disabled - contractor', () => {
+        const qty = wrapper.find({
+            ref: 'quantity',
+        })
+        
+        expect(qty.attributes().disabled).toBe('disabled');
     });
 
-    it('Should not render stripe cash button - contractor', () => {
-        expect(wrapper.html()).not.toContain('Paid With Cash');
+    it('The price input should be disabled - contractor', () => {
+        const qty = wrapper.find({
+            ref: 'price',
+        })
+
+        expect(qty.attributes().disabled).toBe('disabled');
     });
 
-    it('Should not render stripe button - contractor', () => {
-        expect(wrapper.html()).not.toContain('Pay With Stripe');
+    it('Should render the text Change Task Location', () => {
+        expect(wrapper.html()).toContain('Change Task Location');
     });
 
-    it('Should not render deny-task-modal - contractor', () => {
-        const denyModal = wrapper.find('deny-task-modal-stub');
-        expect(denyModal.exists()).toBe(false);
+    it('Should render the text Task Start Date - contractor', () => {
+        expect(wrapper.html()).toContain('Task Start Date');
     });
 
-    it('Should have fired the reopen fn when the reopen btn was clicked', () => {
-        const reopenBtn = wrapper.find('button');
-        reopenBtn.trigger('click');
-        expect(reopenTask.calledOnce).toBe(true);
+    it('Should render 2 task-images component, one for each task', () => {
+        const taskImages = wrapper.findAll('task-images-stub');
+        expect(taskImages.length).toBe(2);
     });
 
-    it('Should not render the deny-task-modal - contractor', () => {
-        expect(wrapper.html()).not.toContain('deny-task-modal-stub');
+    it('Messages should not be disabled', () => {
+        expect(wrapper.vm.disableMessages).toBe(false);
     });
 
-    it('Should render slot content', () => {
-        // TODO: we can mock slot content, but I haven't found a way to render the 
-        // default content
+    it('Should not render the subs panel', () => {
+        expect(wrapper.vm.showSubsPanel).toBe(false);
+    });
+
+    it('Should render footer slot', () => {
         expect(false).toBe(true);
     });
+
 });
