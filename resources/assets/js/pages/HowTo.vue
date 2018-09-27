@@ -11,6 +11,11 @@
         <h3 class="text-center text-white"></h3>
 
 
+        <h2 class="text-center text-white">I am a Contractor</h2>
+        <span class="number">1. </span><h3 class="text-center text-white">I Initiate A Bid</h3>
+
+
+
         <h3 class="text-center text-white">Add Task</h3>
 
 
@@ -108,6 +113,13 @@
 </script>
 
 <style scoped>
+
+    .number {
+        background-color: white;
+        padding: .75rem 1rem;
+        font-size: 12pt;
+        border-radius: 9999px;
+    }
 
     p {
         color: white;
