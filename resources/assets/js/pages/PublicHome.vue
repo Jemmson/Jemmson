@@ -10,7 +10,7 @@
                             class="register-color btn btn-sm btn-warning">
                         <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Register Now
                     </button>
-                    <div class="slogan text-center">Sub-Contract <br> With Ease</div>
+                    <div class="slogan text-center">Subbin' <br> Made Easy!</div>
                     <div class="sub-slogan text-center">Register or Login today to sub contract your work and get paid
                         without all
                         of the hassle
@@ -18,10 +18,12 @@
                 </div>
                 <div class="login-form place-form-items header-content-right">
                     <div class="flex flex-col">
-                        <h3 class="form-title">
-                            Simplify Subcontracting
-                        </h3>
-                        <h4 class="sub-title text-center">Create Your Bid</h4>
+
+                        <!--<h3 class="form-title">-->
+                            <!--Simplify Subcontracting-->
+                        <!--</h3>-->
+                        <!--<h4 class="sub-title text-center">Create Your Bid</h4>-->
+                        <h4 class="sub-title text-center">Login</h4>
                     </div>
                     <!--<form class="form" action="/login" method="post">-->
                     <form class="form form-horizontal" role="form" method="POST" action="/login">
@@ -62,7 +64,7 @@
             </div>
         </div>
         <div class="section main">
-            <h2>Subcontract Work</h2>
+            <h2 class="text-center">Subcontract Work</h2>
             <p>How often at a job do you run into work that you do not do or work you dont have time for?
                 How often do you simply lose income because you either call someone to handle the job for you or
                 just tell the customer to find someone else? Now with this app you can easily create a task and then
@@ -120,10 +122,12 @@
 
     .slogan {
         font-size: 54px;
-        color: #fff !important;
+        color: black !important;
+        /*color: #fff !important;*/
         letter-spacing: -1.55px;
         line-height: 1.18;
-        font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-family: Montserrat,Helvetica,Arial,sans-serif;
+        /*font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;*/
         font-style: normal;
         font-variant-ligatures: normal;
         font-variant-caps: normal;
@@ -154,14 +158,20 @@
     }
 
     .sub-slogan {
-        font-size: 20px;
-        color: #fff !important;
-        font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 12.96pt;
+        color: black !important;
+        /*color: #fff !important;*/
+        font-family: Montserrat,Helvetica,Arial,sans-serif;
+        /*font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;*/
         margin-bottom: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+        border-bottom: black thin solid;
     }
 
     .header-content {
-        background-color: #3772EE;
+        background-color: white;
+        /*background-color: #3772EE;*/
     }
 
     .wrapper {
@@ -171,12 +181,20 @@
     }
 
     .section {
-        height: 630px;
+        height: 700px;
         width: 100%;
     }
 
     .title {
-        background-color: white;
+        background-color: beige;
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        font-weight: bolder;
+        font-size: 15pt;
+        border-bottom: black solid thin;
     }
 
     .main {
@@ -200,6 +218,22 @@
         margin-right: auto;
     }
 
+    .main > h2 {
+        padding-left: 1rem;
+        padding-top: 2rem;
+        padding-right: 1rem;
+        width: 100%;
+        margin: 0rem;
+    }
+
+    div > h2 {
+        padding-left: 1rem;
+        padding-top: 2rem;
+        padding-right: 1rem;
+        width: 100%;
+        margin: 0rem;
+    }
+
     .input {
         height: 3rem;
         border: thin black solid;
@@ -210,7 +244,7 @@
         margin-bottom: 1rem;
         margin-top: 1rem;
         width: 90%;
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 
     .checkbox-sizing {
@@ -229,7 +263,7 @@
     .sub-title {
         color: #0069ff;
         display: inline-block;
-        font-size: 1.5rem;
+        font-size: 2.5rem;
     }
 
     .form-item {
@@ -243,7 +277,7 @@
         font-size: 30px;
         font-weight: 900;
         letter-spacing: -.1px;
-        margin-top: 2rem;
+        margin-top: 1rem;
         margin-bottom: 1rem;
         text-align: center;
     }
@@ -274,14 +308,15 @@
 
     p {
         color: rgb(255, 255, 255);
-        padding-left: 4rem;
-        padding-right: 4rem;
-        padding-top: 3rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1rem;
         font-family: "Open Sans", sans-serif;
         font-size: 18px;
         font-weight: 400;
+        text-align: justify;
         line-height: 27px;
-        margin-top: 15px;
+        margin-top: 0;
         /*width: 345px;*/
     }
 
