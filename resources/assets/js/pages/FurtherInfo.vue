@@ -52,8 +52,11 @@
                                    v-model="form.phone_number"
                                    @blur="validateMobileNumber($event.target.value)"
                                    @keyup="filterPhone">
-                            <div v-if="checkThatNumberIsMobile()" style="color: green">{{ this.getMobileValidResponse[1] }}</div>
-                            <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1] }}</div>
+                            <div v-if="checkThatNumberIsMobile()" style="color: green">{{ this.getMobileValidResponse[1]
+                                }}
+                            </div>
+                            <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1] }}
+                            </div>
                             <span class="help-block" v-show="form.errors.has('phone_number')">
                                     {{ form.errors.get('phone_number') }}
                             </span>
@@ -85,7 +88,8 @@
                     <div class="form-group" :class="{'has-error': form.errors.has('city')}">
                         <label class="col-md-3 control-label">City</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" name="city" id="administrative_area_level_1" v-model="form.city">
+                            <input type="text" class="form-control" name="city" id="administrative_area_level_1"
+                                   v-model="form.city">
                             <span class="help-block" v-show="form.errors.has('city')">
                                     {{ form.errors.get('city') }}
                                 </span>
@@ -118,7 +122,8 @@
                     <div class="form-group" v-if="!isContractor">
                         <label class="col-md-3 control-label">Contractor Instructions</label>
                         <div class="col-md-8">
-                                <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10" class="form-control"
+                                <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10"
+                                          class="form-control"
                                 ></textarea>
                         </div>
                     </div>
@@ -133,7 +138,8 @@
                                     <label class="col-md-3 control-label">Password</label>
 
                                     <div class="col-md-8">
-                                        <input class="form-control" type="password" name="password" v-model="form.password">
+                                        <input class="form-control" type="password" name="password"
+                                               v-model="form.password">
                                         <span class="help-block" v-show="form.errors.has('password')">
                                                 {{ form.errors.get('password') }}
                                             </span>
@@ -183,8 +189,8 @@
                             </div>
                         </div> -->
                         <!-- </div> -->
-                        <button type="submit" name="submit" class="btn btn-default btn-primary"
-                                style="margin-top: 1rem" @click.prevent="submitFurtherInfo()"
+                        <button type="submit" name="submit" class=""
+                                style="margin-top: 1rem; background-color: black" @click.prevent="submitFurtherInfo()"
                                 :disabled="checkValidData()">
                                 <span v-if="disabled.submit">
                                     <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -200,19 +206,19 @@
 
 <script>
 
-  import {mapGetters, mapMutations, mapActions} from 'vuex'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
     props: {
       user: Object
     },
-    data () {
+    data() {
       return {
         disabled: {
           submit: false,
           validData: true
         },
-        form: new SparkForm ({
+        form: new SparkForm({
           email: '',
           name: '',
           company_name: '',
@@ -233,153 +239,155 @@
       }
     },
     computed: {
-      ...mapGetters ([
+      ...mapGetters([
         'getMobileValidResponse'
       ]),
-      passwordUpdated () {
-        return this.user.password_updated;
+      passwordUpdated() {
+        return this.user.password_updated
       },
-      isContractor () {
-        return User.isContractor ();
+      isContractor() {
+        return User.isContractor()
       },
-      logoUrl () {
-        return this.user.logo_url;
+      logoUrl() {
+        return this.user.logo_url
       }
     },
     methods: {
-      ...mapMutations ([
+      ...mapMutations([
         'setMobileResponse'
       ]),
-      ...mapActions ([
+      ...mapActions([
         'checkMobileNumber',
       ]),
-      unformatNumber (number) {
-        let unformattedNumber = '';
+      unformatNumber(number) {
+        let unformattedNumber = ''
         for (let i = 0; i < number.length; i++) {
-          if (!isNaN (parseInt (number[i]))) {
-            unformattedNumber = unformattedNumber + number[i];
+          if (!isNaN(parseInt(number[i]))) {
+            unformattedNumber = unformattedNumber + number[i]
           }
         }
-        let numberLength = unformattedNumber.length;
+        let numberLength = unformattedNumber.length
         if (numberLength < 10) {
           if (this.getMobileValidResponse[1] !== '') {
-            this.$store.commit ('setTheMobileResponse', ['', '', '']);
+            this.$store.commit('setTheMobileResponse', ['', '', ''])
           }
         }
         // debugger;
-        return numberLength;
+        return numberLength
       },
-      checkValidData () {
+      checkValidData() {
         // debugger
-        let phone = this.unformatNumber (this.form.phone_number);
+        let phone = this.unformatNumber(this.form.phone_number)
         if ((this.getMobileValidResponse[1] === 'mobile' ||
           this.getMobileValidResponse[2] === 'mobile') &&
           this.form.customerName !== '' && (phone === 10)
         ) {
-          return false;
+          return false
         } else {
-          return true;
+          return true
         }
       },
-      validateMobileNumber (phone) {
-        this.checkMobileNumber (phone);
+      validateMobileNumber(phone) {
+        this.checkMobileNumber(phone)
       },
-      checkThatNumberIsMobile () {
+      checkThatNumberIsMobile() {
         if (this.getMobileValidResponse[1] === 'mobile' ||
           this.getMobileValidResponse[2] === 'mobile') {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
       },
-      checkLandLineNumber () {
+      checkLandLineNumber() {
         if (this.getMobileValidResponse[1] === 'landline' ||
           this.getMobileValidResponse[2] === 'landline') {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
       },
       updateFormLocation(location) {
-        this.form.address_line_1 = location.route;
-        this.form.city = location.locality;
-        this.form.state = location.administrative_area_level_1;
-        this.form.zip = location.postal_code;
+        this.form.address_line_1 = location.route
+        this.form.city = location.locality
+        this.form.state = location.administrative_area_level_1
+        this.form.zip = location.postal_code
       },
-      filterPhone () {
-        this.form.phone_number = Format.phone(this.form.phone_number);
+      filterPhone() {
+        this.form.phone_number = Format.phone(this.form.phone_number)
       },
-      confirmPassword () {
+      confirmPassword() {
         if (this.form.password !== this.form.password_confirmation) {
           this.form.errors.errors = {
             password_confirmation: ['Passwords need to match.']
-          };
-          this.passwordsMatch = false;
+          }
+          this.passwordsMatch = false
         } else {
-          this.form.errors.errors = {};
+          this.form.errors.errors = {}
         }
-        this.passwordsMatch = true;
+        this.passwordsMatch = true
       },
-      submitFurtherInfo () {
+      submitFurtherInfo() {
         // debugger
         if (!this.passwordsMatch) {
-          return;
+          return
         }
-        User.submitFurtherInfo (this.form, this.disabled);
+        User.submitFurtherInfo(this.form, this.disabled)
+      },
+      initAutocomplete() {
+        User.initAutocomplete('route')
       },
       /**
        * Update the user's profile photo.
        */
-      update (e) {
-        e.preventDefault ();
+      update(e) {
+        e.preventDefault()
 
-        var self = this;
+        var self = this
 
-        this.form.startProcessing ();
+        this.form.startProcessing()
 
         // We need to gather a fresh FormData instance with the profile photo appended to
         // the data so we can POST it up to the server. This will allow us to do async
         // uploads of the profile photos. We will update the user after this action.
-        axios.post ('/settings/logo', this.gatherFormData ())
-          .then (
+        axios.post('/settings/logo', this.gatherFormData())
+          .then(
             (data) => {
-              this.user.logo_url = data.data;
-              self.form.finishProcessing ();
+              this.user.logo_url = data.data
+              self.form.finishProcessing()
             },
             (error) => {
-              self.form.setErrors (error.response.data);
-              Vue.toasted.error ('Image needs to be 2MB or less');
+              self.form.setErrors(error.response.data)
+              Vue.toasted.error('Image needs to be 2MB or less')
             }
-          );
+          )
       },
-
 
       /**
        * Gather the form data for the photo upload.
        */
-      gatherFormData () {
-        const data = new FormData ();
+      gatherFormData() {
+        const data = new FormData()
 
-        data.append ('photo', this.$refs.photo.files[0]);
+        data.append('photo', this.$refs.photo.files[0])
 
-        return data;
+        return data
       }
     },
-    mounted () {
-      User.initAutocomplete('route');
-      this.form.phone_number = this.user.phone != null ? this.user.phone : '';
-      this.form.email = this.user.email != null ? this.user.email : '';
-      this.form.name = this.user.name != null ? this.user.name : '';
+    mounted() {
+      this.initAutocomplete();
+      this.form.phone_number = this.user.phone != null ? this.user.phone : ''
+      this.form.email = this.user.email != null ? this.user.email : ''
+      this.form.name = this.user.name != null ? this.user.name : ''
 
-      this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : '';
+      this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : ''
 
       if (this.user.phone != null) {
-        this.validateMobileNumber(this.user.phone);
+        this.validateMobileNumber(this.user.phone)
       }
 
       Bus.$on('updateFormLocation', (payload) => {
-        this.updateFormLocation(payload);
-      });
+        this.updateFormLocation(payload)
+      })
     }
   }
 </script>
