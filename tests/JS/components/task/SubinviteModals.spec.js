@@ -16,7 +16,18 @@ describe('Subinvite Modal', () => {
         }
     });
 
-    it('Should be true', () => {
-        expect(true).toBe(true);
+    it('Should render itself', () => {
+        expect(wrapper.exists()).toBe(true);
+    });
+
+    it('Should show errors when submitting an empty form', () => {
+        const submit = wrapper.find({
+            ref: 'submit',
+        });
+        submit.trigger('click');
+        const name = wrapper.find({
+            ref: 'name'
+        });
+        expect(name.isVisible()).toBe(true);
     });
 });
