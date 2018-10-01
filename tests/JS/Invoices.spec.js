@@ -3,102 +3,206 @@ import {
   shallowMount,
   createLocalVue
 }
-  from '@vue/test-utils'
-import sinon from 'sinon'
+from '@vue/test-utils';
+import VuePaginate from 'vue-paginate';
+import sinon from 'sinon';
 
-const $route = {
-  path: '/#/bid/1',
-  query: {
-    success: 1,
-    error: 0
-  },
-  params: {
-    id: 1
+require('./bootstrap');
+
+const localVue = createLocalVue();
+localVue.use(VuePaginate);
+
+import Invoices from '../../resources/assets/js/pages/Invoices.vue';
+
+const $on = {
+  bidUpdated: () => {
+    console.log('get bids');
   }
 }
 
-require('./bootstrap')
-
-import Invoices from '../../resources/assets/js/pages/Invoices.vue'
 
 describe('Invoices', () => {
-  const wrapper = shallowMount(Invoices, {
-    mocks: {
-      $route
-    },
+  const search = sinon.stub();
+  const wrapper = mount(Invoices, {
+    localVue,
     stubs: [
-      'bid-details',
-      'approve-bid',
-      'completed-tasks',
-      'bid-tasks',
-      'bid-add-task',
-      'stripe',
+      'search-bar',
       'card',
-      'general-contractor-bid-actions'
+      'router-link'
     ],
-    slots: {
-      'card-footer': ['<general-contractor-bid-actions />']
+    mocks: {
+      $on,
+      search
     },
-    methods: {
-      getBid(id) {
-        switch (id) {
-          case 1:
-            this.bid = {
-              id: 1,
-              status: 'bid.in_progress',
-              job_tasks: [{
-                id: 1,
-              }]
-            };
-            break;
-          case 2: 
-            Vue.toasted.error('Error');
-            break;
-          default:
-            break;
+    propsData: {
+      user: {
+        usertype: 'contractor',
+        contractor: {
+          company_name: 'KPS Pools'
         }
       }
     },
-    propsData: {
-      user: global.User.user,
+    data() {
+      return {
+        invoices: [
+        {
+          bid_price: 245,
+          customer: {
+            name: 'Laurel Ailie'
+          },
+          job_name: 'Clear up Green Pool',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'John Doe' //
+          },
+          job_name: 'Fix Pool',
+          status: 'job.completed'
+        }],
+        sInvoices: [
+        {
+          bid_price: 245,
+          customer: {
+            name: 'Laurel Ailie'
+          },
+          job_name: 'Clear up Green Pool',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'Jane Doe'
+          },
+          job_name: 'Fix Sink',
+          status: 'bid.sent'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'John Doe' //
+          },
+          job_name: 'Fix Pool',
+          status: 'job.completed'
+        }, {
+          bid_price: 245,
+          customer: {
+            name: 'John Doe' //
+          },
+          job_name: 'Fix Pool',
+          status: 'job.completed'
+        }
+        ],
+        searchTerm: '',
+        paginate: ['sInvoices']
+      }
     }
-  })
+  });
 
-  it('Should render the card component', () => {
-    expect(wrapper.find('card-stub').exists()).toBe(true)
-  })
+  it('Should contain the name Clear up Green Pool', () => {
+    expect(wrapper.text()).toContain('Clear up Green Pool');
+  });
 
-  it('Should render the bid-details component', () => {
-    expect(wrapper.find('bid-details-stub').exists()).toBe(true)
-  })
+  it('Should have rendered 8 invoices', () => {
+    expect(wrapper.findAll('card-stub')).toHaveLength(8);
+  });
 
-  it('Should not render the approve-bid component - contractor', () => {
-    expect(wrapper.find('approve-bid-stub').exists()).toBe(false)
-  })
-  
-  it('Should render the general-contractor-bid-actions component', () => {
-    expect(wrapper.find('general-contractor-bid-actions').exists()).toBe(false) // wtf
-  })
+  it('Should have 2 paginate links', () => {
+    expect(wrapper.html()).toContain('<a>1</a>');
+    expect(wrapper.html()).toContain('<a>2</a>');
+  });
 
-  it('Should render the completed-tasks component', () => {
-    expect(wrapper.find('completed-tasks-stub').exists()).toBe(true)
-  })
+  it('Clicking the next arrow should show the next list of invoices', () => {
+    wrapper.find('.right-arrow > a').trigger('click');
+    expect(wrapper.findAll('card-stub')).toHaveLength(1);
+  });
 
-  it('Should render the bid-tasks component', () => {
-    expect(wrapper.find('bid-tasks-stub').exists()).toBe(true)
-  })
+  it('Clicking the previous arrow should show the previous list of invoices', () => {
+    wrapper.find('.left-arrow > a').trigger('click');
+    expect(wrapper.findAll('card-stub')).toHaveLength(8);
+  });
 
-  it('Should render the bid-add-task component', () => {
-    expect(wrapper.find('bid-add-task-stub').exists()).toBe(true)
-  })
+  it('Search bar should update with input', () => {
+    const input = wrapper.find('input');
+    input.setValue('Clear up Green Pool');
+    // input.trigger('keyup');
+    expect(wrapper.vm.searchTerm).toBe('Clear up Green Pool');
+    // expect(wrapper.findAll('card-stub')).toHaveLength(1);
+  });
 
-  it('Should render the stripe component', () => {
-    expect(wrapper.find('stripe-stub').exists()).toBe(true)
-  })
-
-  it('Should not render the bid-tasks component', () => {
-    
-    expect(wrapper.find('bid-tasks-stub').exists()).toBe(false)
-  })
-  
-})
+});
