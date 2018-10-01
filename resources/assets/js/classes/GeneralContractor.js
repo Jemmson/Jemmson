@@ -1,7 +1,10 @@
 import Language from './Language';
 
 export default class GeneralContractor {
-
+  constructor() {
+    this.user = Spark.state.user;
+  }
+  
   acceptSubBidForTask (jobTask, bid, disabled) {
     console.log ('acceptSubBidForTask', jobTask);
     disabled.accept = true;
@@ -332,8 +335,4 @@ export default class GeneralContractor {
   //     Vue.toasted.error ('Error: ' + error.message);
   //   }
   // }
-
-  constructor () {
-    this.user = Spark.state.user;
-  }
 }
