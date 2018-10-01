@@ -7,7 +7,7 @@ import {
 import sinon from 'sinon'
 
 const $route = {
-  path: '/#/bid/1',
+  path: '/#/invoice/1',
   query: {
     success: 1,
     error: 0
@@ -27,78 +27,60 @@ describe('Invoice', () => {
       $route
     },
     stubs: [
-      'bid-details',
-      'approve-bid',
-      'completed-tasks',
-      'bid-tasks',
-      'bid-add-task',
-      'stripe',
       'card',
-      'general-contractor-bid-actions'
     ],
-    slots: {
-      'card-footer': ['<general-contractor-bid-actions />']
-    },
-    methods: {
-      getBid(id) {
-        switch (id) {
-          case 1:
-            this.bid = {
-              id: 1,
-              status: 'bid.in_progress',
-              job_tasks: [{
-                id: 1,
-              }]
-            };
-            break;
-          case 2: 
-            Vue.toasted.error('Error');
-            break;
-          default:
-            break;
-        }
-      }
-    },
     propsData: {
       user: global.User.user,
     }
-  })
+  });
 
-  it('Should render the card component', () => {
-    expect(wrapper.find('card-stub').exists()).toBe(true)
-  })
-
-  it('Should render the bid-details component', () => {
-    expect(wrapper.find('bid-details-stub').exists()).toBe(true)
-  })
-
-  it('Should not render the approve-bid component - contractor', () => {
-    expect(wrapper.find('approve-bid-stub').exists()).toBe(false)
-  })
+  it('Should render itself', () => {
+    expect(wrapper.isEmpty()).toBe(false);
+  });
   
-  it('Should render the general-contractor-bid-actions component', () => {
-    expect(wrapper.find('general-contractor-bid-actions').exists()).toBe(false) // wtf
-  })
+  it('Should not render invoice details', () => {
+    const invoiceDetails = wrapper.find({
+      ref: 'invoice-details'
+    })
+    expect(invoiceDetails.exists()).toBe(false);
+  });
 
-  it('Should render the completed-tasks component', () => {
-    expect(wrapper.find('completed-tasks-stub').exists()).toBe(true)
-  })
+  it('Should render invoice details', () => {
+    wrapper.setData({
+      invoice: {
+        location: null,
+        job_tasks: [{
+          task: {
+            name: "Clean Pool"
+          }
+        }],
+      }
+    });
+    const invoiceDetails = wrapper.find({
+      ref: 'invoice-details'
+    })
+    expect(invoiceDetails.exists()).toBe(true);
+  });
 
-  it('Should render the bid-tasks component', () => {
-    expect(wrapper.find('bid-tasks-stub').exists()).toBe(true)
-  })
+  it('Should render all contractor sections - contractor', () => {
+    expect(wrapper.vm.isContractor).toBe(true);
+  });
 
-  it('Should render the bid-add-task component', () => {
-    expect(wrapper.find('bid-add-task-stub').exists()).toBe(true)
-  })
+  it('Should not render any contractor sections - customer', () => {
+    global.User.setUser({
+      usertype: 'customer'
+    });
+    const wrapper = shallowMount(Invoice, {
+          mocks: {
+            $route
+          },
+          stubs: [
+            'card',
+          ],
+          propsData: {
+            user: global.User.user,
+          }});
+    expect(wrapper.vm.isContractor).toBe(false);
+  });
 
-  it('Should render the stripe component', () => {
-    expect(wrapper.find('stripe-stub').exists()).toBe(true)
-  })
-
-  it('Should not render the bid-tasks component', () => {
-    
-    expect(wrapper.find('bid-tasks-stub').exists()).toBe(false)
-  })
-  
-})
+});

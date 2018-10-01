@@ -11,6 +11,7 @@ import TaskUtil from '../../resources/assets/js/classes/TaskUtil';
 global.User = new User({
     id: 1,
     usertype: 'contractor',
+    name: 'John Doe',
     contractor: {
         id: 1,
         user_id: 1,
