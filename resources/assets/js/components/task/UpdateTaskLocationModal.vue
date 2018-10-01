@@ -104,11 +104,14 @@
                 this.form.id = this.jobTask.id;
                 this.form.location_id = this.jobTask.location_id;
                 User.updateTaskLocation(this.form, this.disabled);
+            },
+            initAutocomplete () {
+                User.initAutocomplete('route2');
             }
         },
         computed: {},
         mounted: function () {
-            User.initAutocomplete('route2');
+            initAutocomplete();
             this.form.address_line_1 = this.jobTask.address_line_1;
             this.form.address_line_2 = this.jobTask.address_line_2;
             this.form.city = this.jobTask.city;
