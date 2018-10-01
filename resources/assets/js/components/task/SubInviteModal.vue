@@ -45,7 +45,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit" :disabled="disabled.invite">
+                        <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit" :disabled="disabled.invite" ref="submit">
                             <span v-if="disabled.invite">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
