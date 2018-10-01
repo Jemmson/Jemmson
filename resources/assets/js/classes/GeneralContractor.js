@@ -1,6 +1,9 @@
 import Language from './Language';
 
 export default class GeneralContractor {
+  constructor() {
+    this.user = Spark.state.user;
+  }
 
   acceptSubBidForTask (jobTask, bid, disabled) {
     console.log ('acceptSubBidForTask', jobTask);
@@ -237,7 +240,6 @@ export default class GeneralContractor {
   }
 
   sendSubInviteToBidOnTask (jobTask, form, disabled) {
-    console.log ('sendSubInviteToBidOnTask', jobTask, form);
     disabled.invite = true;
     form.jobTaskId = jobTask.id;
     Spark.post ('/api/task/notify', form)
@@ -332,8 +334,4 @@ export default class GeneralContractor {
   //     Vue.toasted.error ('Error: ' + error.message);
   //   }
   // }
-
-  constructor () {
-    this.user = Spark.state.user;
-  }
 }

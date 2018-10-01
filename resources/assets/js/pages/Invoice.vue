@@ -3,7 +3,7 @@
         <card>
             <h1 class="self-center">Invoice Page</h1>
         </card>
-        <div v-if="invoice !== null">
+        <div v-if="invoice !== null" ref="invoice-details">
             <card>
                 <section class="flex flex-col">
                     <h3 for="company_name" v-if="isContractor" class="mb-4">{{ user.contractor.company_name }}</h3>
@@ -46,7 +46,7 @@
 
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-if="invoice.job_tasks.length > 0">
                         <tr v-for="task in invoice.job_tasks" :key="task.id">
                             <td>{{ task.task.name }}</td>
                             <td>{{ task.qty }}</td>
