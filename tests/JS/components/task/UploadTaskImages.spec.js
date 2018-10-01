@@ -7,9 +7,15 @@ require('../../bootstrap');
 
 describe('Upload Task Images', () => {
     const wrapper = shallowMount(UploadTaskImages, {
+        propsData: {
+            jobTask: {
+                images: []
+            },
+            type: ''
+        }
     });
 
-    it('Should be true', () => {
-        expect(true).toBe(false);
+    it('Should render itself', () => {
+        expect(wrapper.exists()).toBe(true);
     });
 });
