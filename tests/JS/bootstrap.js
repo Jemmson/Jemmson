@@ -21,7 +21,7 @@ global.User = new User({
 });
 global.Format = Format;
 global.Language = Language;
-global.GeneralContractor = GeneralContractor;
+global.GeneralContractor = new GeneralContractor;
 global.SubContractor = new SubContractor;
 global.Customer = Customer;
 global.TaskUtil = TaskUtil;
