@@ -27,8 +27,8 @@
         },
         data() {
             return {
-                invoices: {},
-                sInvoices: {},
+                invoices: [],
+                sInvoices: [],
                 searchTerm: '',
                 paginate: ['sInvoices']
             }

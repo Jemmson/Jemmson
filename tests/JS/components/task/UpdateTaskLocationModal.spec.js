@@ -7,6 +7,16 @@ require('../../bootstrap');
 
 describe('Update Task Location Modal', () => {
     const wrapper = shallowMount(UpdateTaskLocationModal, {
+        propsData: {
+            jobTask: {
+                location: null
+            }
+        },
+        methods: {
+            initAutocomplete () {
+                return;
+            }
+        }
     });
 
     it('Should be true', () => {

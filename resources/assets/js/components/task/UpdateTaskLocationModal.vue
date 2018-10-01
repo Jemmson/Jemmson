@@ -111,7 +111,7 @@
         },
         computed: {},
         mounted: function () {
-            initAutocomplete();
+            this.initAutocomplete();
             this.form.address_line_1 = this.jobTask.address_line_1;
             this.form.address_line_2 = this.jobTask.address_line_2;
             this.form.city = this.jobTask.city;
