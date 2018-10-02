@@ -42,7 +42,7 @@ describe('Subinvite Modal', () => {
     });
 
     it('Should render itself', () => {
-        expect(wrapper.exists()).toBe(true);
+        expect(wrapper.isEmpty()).toBe(false);
     });
 
     it('Should have tried to send a sub invite', () => {
