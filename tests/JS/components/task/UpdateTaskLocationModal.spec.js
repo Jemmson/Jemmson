@@ -19,7 +19,7 @@ describe('Update Task Location Modal', () => {
         }
     });
 
-    it('Should be true', () => {
-        expect(true).toBe(false);
+    it('Should render itself', () => {
+        expect(wrapper.exists()).toBe(true);
     });
 });
