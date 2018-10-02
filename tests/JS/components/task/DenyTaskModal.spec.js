@@ -23,7 +23,7 @@ describe('Deny Task Modal', () => {
     });
 
     it('Should render itself', () => {
-        expect(wrapper.exists()).toBe(true);
+        expect(wrapper.isEmpty()).toBe(false);
     });
 
     it('Should call denyTask when deny button is clicked', () => {

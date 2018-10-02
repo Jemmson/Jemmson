@@ -37,7 +37,7 @@ describe('Completed Tasks', () => {
     });
 
     it('Should render itself', () => {
-        expect(wrapper.isEmpty()).toBe(false);//
+        expect(wrapper.isEmpty()).toBe(false);
     });
 
     it('Should not show the address section by default', () => {
