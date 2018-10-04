@@ -4,7 +4,7 @@
     <div class="flex text-white btn-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
     </div>
     <div v-if="showPreApprovedActions" class="flex w-full justify-between">
-        <button class="btn btn-red" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid">
+        <button class="btn btn-red" @click.prevent="openModal('confirmJobCancellation')" :disabled="disabled.cancelBid" ref="cancelBtn">
           <span v-if="disabled.cancelBid">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
           </span>
@@ -13,7 +13,7 @@
         <button class="btn btn-blue" name="addTaskToBid" id="addTaskToBid" @click="openAddTask" v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">
           Add A Task
         </button>
-        <button class="btn btn-green" v-if="bid.job_tasks.length > 0" @click="openModal('notifyCustomerOfFinishedBid')" :disabled="bid.job_tasks.length <= 0 || disabled.submitBid">
+        <button class="btn btn-green" v-if="bid.job_tasks.length > 0" @click="openModal('notifyCustomerOfFinishedBid')" :disabled="bid.job_tasks.length <= 0 || disabled.submitBid" ref="submitBidBtn">
           <span v-if="disabled.submitBid">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
           </span>
@@ -52,7 +52,7 @@
         return this.bid.status === 'job.approved';
       },
       showPreApprovedActions () {
-        return this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed' && User.isGeneral (this.bid);
+        return this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed' && User.isGeneral(this.bid);
       }
     },
     methods: {

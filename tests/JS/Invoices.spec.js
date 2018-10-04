@@ -16,7 +16,6 @@ import Invoices from '../../resources/assets/js/pages/Invoices.vue';
 
 const $on = {
   bidUpdated: () => {
-    console.log('get bids');
   }
 }
 
