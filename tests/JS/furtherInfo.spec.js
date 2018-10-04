@@ -12,7 +12,7 @@ localVue.use(Vuex)
 
 require('./bootstrap')
 
-describe('Further Info', () => {
+describe('FurtherInfo', () => {
   const submitFurtherInfo = sinon.spy();
   let getters
   let store

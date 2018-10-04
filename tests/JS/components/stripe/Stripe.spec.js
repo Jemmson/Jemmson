@@ -5,7 +5,7 @@ import Stripe from '../../../../resources/assets/js/components/stripe/Stripe';
 
 require('../../bootstrap');
 
-describe('Completed Tasks', () => {
+describe('Stripe', () => {
     
     const wrapper = shallowMount(Stripe, {
         stubs: [

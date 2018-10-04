@@ -63,6 +63,20 @@ describe('Invoice', () => {
   });
 
   it('Should render all contractor sections - contractor', () => {
+    global.User.setUser({
+      usertype: 'contractor'
+    });
+    const wrapper = shallowMount(Invoice, {
+      mocks: {
+        $route
+      },
+      stubs: [
+        'card',
+      ],
+      propsData: {
+        user: global.User.user,
+      }
+    });
     expect(wrapper.vm.isContractor).toBe(true);
   });
 

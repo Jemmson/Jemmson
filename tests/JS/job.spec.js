@@ -95,10 +95,5 @@ describe('Job', () => {
   it('Should render the stripe component', () => {
     expect(wrapper.find('stripe-stub').exists()).toBe(true)
   })
-
-  it('Should not render the bid-tasks component', () => {
-    
-    expect(wrapper.find('bid-tasks-stub').exists()).toBe(false)
-  })
   
-})
+});

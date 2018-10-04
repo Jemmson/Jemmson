@@ -16,7 +16,6 @@ import Jobs from '../../resources/assets/js/pages/Jobs.vue';
 
 const $on = {
     bidUpdated: () => {
-        console.log('get bids');
     }
 }
 

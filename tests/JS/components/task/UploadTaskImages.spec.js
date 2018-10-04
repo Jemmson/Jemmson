@@ -5,7 +5,7 @@ import UploadTaskImages from '../../../../resources/assets/js/components/task/Up
 
 require('../../bootstrap');
 
-describe('Upload Task Images', () => {
+describe('UploadTaskImages', () => {
     const wrapper = shallowMount(UploadTaskImages, {
         propsData: {
             jobTask: {

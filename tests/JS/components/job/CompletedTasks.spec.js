@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 require('../../bootstrap');
 
-describe('Completed Tasks', () => {
+describe('CompletedTasks', () => {
     const reopenTask = sinon.spy();
     const wrapper = shallowMount(CompletedTasks, {
         methods: {

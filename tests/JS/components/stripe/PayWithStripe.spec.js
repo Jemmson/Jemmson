@@ -27,7 +27,7 @@ let Stripe = () => {
 
 global.Stripe = Stripe;
 
-describe('Completed Tasks', () => {
+describe('PayWithStripe', () => {
     const wrapper = shallowMount(PayWithStripe, {
         methods: {},
         stubs: [
@@ -38,6 +38,10 @@ describe('Completed Tasks', () => {
 
     it('Should render itself', () => {
         expect(wrapper.isEmpty()).toBe(false);
+    });
+
+    it('Should render the text Sign Up', () => {
+        expect(wrapper.html()).toContain("Sign Up");
     });
 
 });

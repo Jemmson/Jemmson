@@ -6,7 +6,7 @@ import SubinviteModal from '../../../../resources/assets/js/components/task/Subi
 
 require('../../bootstrap');
 
-describe('Subinvite Modal', () => {
+describe('SubinviteModal', () => {
     const sendSubInviteToBidOnTask = sinon.spy();
     const autoComplete = sinon.spy();
     const wrapper = shallowMount(SubinviteModal, {
