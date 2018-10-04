@@ -5,7 +5,7 @@ import CompletedTasks from '../../resources/assets/js/components/job/CompletedTa
 
 require('./bootstrap');
 
-describe('Completed Tasks', () => {
+describe('StartTest', () => {
     const wrapper = shallowMount(CompletedTasks, {
         propsData: {
             isCustomer: false,
