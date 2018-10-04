@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col">
+        <!-- <pre>{{job}}</pre> -->
         <div class="flex flex-col items-center">
             <div class="upper text-white text-xs">{{ user.name }}</div>
             <div class="home-icon
@@ -224,7 +225,7 @@
 
 <script>
 
-  // import axios from 'axios';
+  import {mapState} from 'vuex';
 
   export default {
     props: {
@@ -240,7 +241,9 @@
         sInvoices: 0,
       }
     },
-    computed: {},
+    computed: mapState({
+        job: state => state.job,
+    }),
     methods: {
       route (value) {
         if (value === 'express') {

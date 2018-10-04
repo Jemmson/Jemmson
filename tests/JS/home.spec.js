@@ -10,6 +10,11 @@ describe ('Home.vue', () => {
   })
 
   const wrapper = mount (Home, {
+    computed: {
+      job: {
+        
+      }
+    },
     propsData: {
       user: {
         usertype: 'contractor',
