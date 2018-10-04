@@ -6,7 +6,7 @@ import ApproveBid from '../../../../resources/assets/js/components/job/ApproveBi
 
 require('../../bootstrap');
 
-describe('Completed Tasks', () => {
+describe('ApproveBid', () => {
     const declineBid = sinon.spy();
     const openModal = sinon.spy();
     const wrapper = shallowMount(ApproveBid, {

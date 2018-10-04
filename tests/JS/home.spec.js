@@ -2,7 +2,7 @@ import {mount} from 'vue-test-utils'
 import expect from 'expect'
 import Home from '../../resources/assets/js/pages/Home.vue'
 
-describe ('Home.vue', () => {
+describe ('Home', () => {
   // let wrapper;
 
   beforeEach (() => {
@@ -12,7 +12,7 @@ describe ('Home.vue', () => {
   const wrapper = mount (Home, {
     computed: {
       job: {
-        
+
       }
     },
     propsData: {

@@ -10,7 +10,7 @@ require('../../bootstrap');
 const localVue = createLocalVue();
 localVue.use(VuePaginate);
 
-describe('Bid Tasks', () => {
+describe('BidTasks', () => {
     const wrapper = mount(BidTasks, {
         localVue,
         stubs: [

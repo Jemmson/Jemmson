@@ -5,7 +5,7 @@ import GeneralContractorBidActions from '../../../../resources/assets/js/compone
 
 require('../../bootstrap');
 
-describe('Completed Tasks', () => {
+describe('GeneralContractorBidActions', () => {
     const wrapper = shallowMount(GeneralContractorBidActions, {
         methods: {
         },
