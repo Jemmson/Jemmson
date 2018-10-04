@@ -7,7 +7,7 @@ import DenyTaskModal from '../../../../resources/assets/js/components/task/DenyT
 require('../../bootstrap');
 
 
-describe('Deny Task Modal', () => {
+describe('DenyTaskModal', () => {
     const denyTask = sinon.spy();
     const wrapper = shallowMount(DenyTaskModal, {
         propsData: {

@@ -5,7 +5,7 @@ import BidAddTask from '../../../../resources/assets/js/components/task/BidAddTa
 
 require('../../bootstrap');
 
-describe('Completed Tasks', () => {
+describe('BidAddTask', () => {
     const wrapper = shallowMount(BidAddTask, {
         propsData: {
             isCustomer: false,
@@ -22,7 +22,7 @@ describe('Completed Tasks', () => {
         }
     });
 
-    it('Should be true', () => {
-        expect(true).toBe(false);
+    it('Should render itself', () => {
+        expect(wrapper.isEmpty()).toBe(false);
     });
 });

@@ -6,7 +6,7 @@ import UpdateTaskLocationModal from '../../../../resources/assets/js/components/
 
 require('../../bootstrap');
 
-describe('Update Task Location Modal', () => {
+describe('UpdateTaskLocationModal', () => {
     const update = sinon.spy();
     const wrapper = shallowMount(UpdateTaskLocationModal, {
         propsData: {

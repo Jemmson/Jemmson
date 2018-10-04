@@ -27,7 +27,7 @@ let Stripe = () => {
 
 global.Stripe = Stripe;
 
-describe('Completed Tasks', () => {
+describe('PayWithStripe', () => {
     const wrapper = shallowMount(PayWithStripe, {
         methods: {},
         stubs: [
