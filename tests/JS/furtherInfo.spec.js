@@ -2,7 +2,7 @@ import {
   shallowMount, mount, createLocalVue
 } from '@vue/test-utils'
 import sinon from "sinon";
-import CompletedTasks from '../../resources/assets/js/pages/FurtherInfo'
+import FurtherInfo from '../../resources/assets/js/pages/FurtherInfo'
 import moxios from 'moxios'
 import Vuex from 'vuex'
 
@@ -32,7 +32,7 @@ describe('FurtherInfo', () => {
     mutations
   })
 
-  const wrapper = mount(CompletedTasks, {
+  const wrapper = mount(FurtherInfo, {
     store,
     localVue,
     data: () => {
@@ -52,10 +52,11 @@ describe('FurtherInfo', () => {
       user: {
         name: 'John',
         email: 'john@john.com',
-        contractor: null
+        contractor: null,
+        password_updated: false
       }
     }
-  })
+  });
 
   it('Should render itself', () => {
     expect(wrapper.isEmpty()).toBe(false);
@@ -94,6 +95,146 @@ describe('FurtherInfo', () => {
     const submit = wrapper.find('[type=submit]');
     submit.trigger('click');
     expect(submitFurtherInfo.calledOnce).toBe(true);
+  });
+
+  it('Should render customer heading - customer', () => {
+    User.setUser({
+      'name': 'jane',
+      'usertype': 'customer',
+      custoemr: null
+    })
+    const wrapper = shallowMount(FurtherInfo, {
+      store,
+      localVue,
+      data: () => {
+        return {}
+      },
+      methods: {
+        submitFurtherInfo,
+        checkValidData() {
+          return false;
+        },
+        initAutocomplete() {
+          return true;
+        }
+      },
+      propsData: {
+        user: {
+          name: 'John',
+          email: 'john@john.com',
+          contractor: null,
+        }
+      }
+    });
+    expect(wrapper.html()).toContain("Please Add Additional Information");
+  });
+
+  it('Should render contractor instuctions input - customer', () => {
+    User.setUser({
+      'name': 'jane',
+      'usertype': 'customer',
+      custoemr: null
+    })
+    const wrapper = shallowMount(FurtherInfo, {
+      store,
+      localVue,
+      data: () => {
+        return {}
+      },
+      methods: {
+        submitFurtherInfo,
+        checkValidData() {
+          return false;
+        },
+        initAutocomplete() {
+          return true;
+        }
+      },
+      propsData: {
+        user: {
+          name: 'John',
+          email: 'john@john.com',
+          contractor: null
+        }
+      }
+    });
+    const textArea = wrapper.find('#notes');
+    expect(textArea.exists()).toBe(true);
+  });
+
+  it('Should render password fields', () => {
+    const pass = wrapper.find({
+      ref: "password"
+    });
+    const cPass = wrapper.find({
+      ref: 'password_confirmation'
+    });
+    
+    expect(pass.exists()).toBe(true);
+    expect(cPass.exists()).toBe(true);
+
+  });
+
+
+  it('Should not render password fields', () => {
+    const wrapper = shallowMount(FurtherInfo, {
+      store,
+      localVue,
+      data: () => {
+        return {}
+      },
+      methods: {
+        submitFurtherInfo,
+        checkValidData() {
+          return false;
+        },
+        initAutocomplete() {
+          return true;
+        }
+      },
+      propsData: {
+        user: {
+          name: 'John',
+          email: 'john@john.com',
+          contractor: null,
+          password_updated: true
+        }
+      }
+    });
+    const pass = wrapper.find({
+      ref: "password"
+    });
+    const cPass = wrapper.find({
+      ref: 'password_confirmation'
+    });
+
+    expect(pass.exists()).toBe(false);
+    expect(cPass.exists()).toBe(false);
+
+  });
+
+  it('Should show errors when passwords dont match', () => {
+    const cPass = wrapper.find({
+      ref: 'password_confirmation'
+    });
+    cPass.setValue('hello');
+    
+    cPass.trigger('keyup');
+    expect(wrapper.html()).toContain("Passwords need to match.");
+  });
+
+  it('Should not show errors when passwords do match', () => {
+    const pass = wrapper.find({
+      ref: "password"
+    });
+    const cPass = wrapper.find({
+      ref: 'password_confirmation'
+    });
+    pass.setValue('hello');
+    cPass.setValue('hello');
+
+    cPass.trigger('keyup');
+    expect(wrapper.html()).not.toContain("Passwords need to match.");
   });
 
 });

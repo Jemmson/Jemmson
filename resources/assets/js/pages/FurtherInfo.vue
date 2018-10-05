@@ -138,7 +138,7 @@
                                     <label class="col-md-3 control-label">Password</label>
 
                                     <div class="col-md-8">
-                                        <input class="form-control" type="password" name="password"
+                                        <input class="form-control" type="password" name="password" ref="password"
                                                v-model="form.password">
                                         <span class="help-block" v-show="form.errors.has('password')">
                                                 {{ form.errors.get('password') }}
@@ -151,7 +151,7 @@
                                     <label class="col-md-3 control-label">Confirm Password</label>
 
                                     <div class="col-md-8">
-                                        <input class="form-control" type="password" name="password_confirmation"
+                                        <input class="form-control" type="password" name="password_confirmation" ref="password_confirmation"
                                                v-model="form.password_confirmation" @keyup="confirmPassword">
                                         <span class="help-block" v-show="form.errors.has('password_confirmation')">
                                                 {{ form.errors.get('password_confirmation') }}
