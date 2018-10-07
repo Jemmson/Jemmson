@@ -1,7 +1,10 @@
 <template>
     <div class="flex flex-col further-info-main text-center">
-        <div class="main-header p-4">
+        <div v-if="isContractor" class="main-header p-4 uppercase">
             Please register your company
+        </div>
+        <div v-if="!isContractor" class="main-header p-4 uppercase">
+            Please Add Additional Information
         </div>
         <div class="box border flex flex-col section">
             <div class="content">
@@ -390,76 +393,5 @@
 </script>
 
 <style scoped>
-    .further-info-main {
-        background-color: white;
-        padding: 0;
-    }
-
-    .main-header {
-        background-color: beige;
-        height: 100%;
-        width: 100%;
-        font-family: Montserrat, Helvetica, Arial;
-        font-size: 1.5rem;
-    }
-
-    .border {
-        border-color: rgb(230, 230, 230);
-        border-style: solid;
-        border-width: 1px;
-        border-radius: .25rem;
-    }
-
-    .box {
-        margin: .8rem;
-        border-radius: 3px;
-    }
-
-    .j-label {
-        color: #9e9e9e;
-        font-weight: bold;
-        font-size: .8rem;
-    }
-
-    .section {
-        text-align: left;
-    }
-
-    .content {
-        margin: 1.15rem;
-    }
-
-    .input {
-        padding: 1rem;
-        margin: .5rem 0 .5rem 0;
-        width: 100%;
-        color: rgba(0, 0, 0, 0.75);
-        font-size: .95rem;
-        font-family: inherit;
-    }
-
-    .input:focus {
-        border-color: red;
-    }
-
-    .input-section {
-        margin-top: .25rem;
-    }
-
-    .register {
-        width: 100%;
-        padding: .5rem 0 .5rem 0;
-        margin-top: 1rem;
-        border-width: .15rem;
-        border-color: rgba(0, 0, 255, 0.59);
-        color: rgba(0, 0, 255, 0.59);
-        font-weight: bold;
-    }
-
-    .register:focus {
-        box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11), 0 5px 15px 0 rgba(0, 0, 0, 0.08);
-        border-color: rgba(0, 0, 255, 1);
-        color: rgba(0, 0, 255, 1);
-    }
 
 </style>
