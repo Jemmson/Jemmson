@@ -13,6 +13,7 @@
 @import "./toggle.less";
 @import "./stripe/buttons.less";
 @import "./home.less";
+@import "./intro.less";
 @import "./nav.less";
 @import "./welcome.less";
 @import "./notification";
@@ -42,6 +43,14 @@ body {
   background: linear-gradient(to right, #0a174b, #223dab) fixed;
   font-family: 'Roboto', sans-serif;
   background-color: #eee;
+}
+
+@media (min-width: 768px) {
+  .jemmson-container {
+    .container;
+    .mx-auto;
+    .p-4;
+  }
 }
 
 .btn {
