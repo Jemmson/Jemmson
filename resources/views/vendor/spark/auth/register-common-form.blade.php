@@ -131,4 +131,7 @@
 
         </div>
     </div>
+
+    <jem-footer></jem-footer>
+
 </div>

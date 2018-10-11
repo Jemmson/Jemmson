@@ -45,7 +45,7 @@
                         <!-- Login Button -->
                         <div class="input-section">
                             <div>
-                                <button name="login" type="submit" class="register text-center border shadow uppercase">
+                                <button name="login" type="submit" class="register text-center border shadow uppercase" style="margin-bottom: .5rem;">
                                     <i class="fas m-r-xs fa-sign-in-alt" style="margin-right: .5rem;"></i>Login
                                 </button>
 
@@ -61,7 +61,14 @@
 
         </div>
     @else
-        <h1 class="text-center">You are already logged in</h1>
-    @endif
+        <div class="flex flex-col further-info-main text-center">
+            <div class="main-header p-4 uppercase">
+                You are already logged in
+            </div>
+            <div class="box border flex flex-col section" style="height: 70vh">
 
+            </div>
+        </div>
+    @endif
+    <jem-footer></jem-footer>
 @endsection

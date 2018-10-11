@@ -23,7 +23,7 @@ Vue.component('search-bar', require('./shared/SearchBar.vue'));
 Vue.component('modal', require('./shared/Modal.vue'));
 Vue.component('brand', require('./shared/Brand.vue'));
 Vue.component('feedback', require('./shared/Feedback.vue'));
-Vue.component('jem-footer', require('./shared/Footer.vue'));
+Vue.component('jem-footer', require('./shared/JemmsonFooter.vue'));
 
 
 // require('./Autocomplete.vue');

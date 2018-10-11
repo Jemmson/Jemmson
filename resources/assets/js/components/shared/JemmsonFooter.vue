@@ -1,10 +1,12 @@
 <template>
-    <div class="footer">Jemmson Inc. - Copyright © 2018</div>
+    <div class="flex flex-col footer items-center">
+        <div>Jemmson Inc. - Copyright © 2018</div>
+    </div>
 </template>
 
 <script>
   export default {
-    name: ''
+    name: 'JemmsonFooter'
   }
 </script>
 
@@ -19,7 +21,7 @@
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
-        height: 64px;
+        height: 9rem;
         line-height: 22.4px;
         margin-bottom: 0px;
         margin-left: 0px;
