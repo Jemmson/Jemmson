@@ -123,7 +123,7 @@
                     </span>
 
                         <span v-else>
-                        <i class="fa fa-btn fa-check-circle"></i>Register
+                        <i class="fa fa-btn fa-check-circle mr-2"></i>Register
                     </span>
                     </button>
                 </div>
