@@ -21152,6 +21152,7 @@ a:active {
 }
 html {
   font-size: inherit;
+  height: 100%;
 }
 .dollarSign {
   margin-right: 2px;
