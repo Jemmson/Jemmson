@@ -18,7 +18,7 @@
     "js-cookie": "^2.1.0",
     "json-schema": "^0.2.3",
     "laravel-echo": "^1.4.0",
-    "laravel-mix": "0.*",
+    "laravel-mix": "^2.1.14",
     "moment": "^2.22.2",
     "promise": "^7.1.1",
     "pusher-js": "^4.3.1",

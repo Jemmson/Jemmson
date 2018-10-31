@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col further-info-main text-center">
-        <div v-if="isContractor" class="main-header p-4 uppercase">
+        <div ref="furtherInfoHeading" v-if="isContractor" class="main-header p-4 uppercase">
             Please register your company
         </div>
         <div v-if="!isContractor" class="main-header p-4 uppercase">
