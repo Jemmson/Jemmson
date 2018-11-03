@@ -205,7 +205,7 @@
 
 <script>
 
-    import JemmsonFooter from '../components/shared/JemmsonFooter';
+  import JemmsonFooter from '../components/shared/JemmsonFooter'
 
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 

@@ -105,7 +105,7 @@
             <div class="messageHeader mb-4">Messages</div>
 
             <div class="flex flex-col">
-              <div class="flex flex-col box mb-3">
+              <div class="flex flex-col box mb-3" v-if="!isCustomer">
                 <span class="label mb-2">Subcontractor</span>
                 <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
                   :disabled="disableMessages" :value="jobTask.sub_message"></textarea>
@@ -116,11 +116,18 @@
                 <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
                 <!--:value="jobTask.sub_message">-->
               </div>
-              <div class="flex flex-col box">
-                <span class="label mb-2">Customer</span>
+              <div class="flex flex-col box" v-if="isContractor">
+                <span class="label mb-2">Notes for Customer</span>
                 <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
                   :disabled="disableMessages" :value="jobTask.customer_message"></textarea>
               </div>
+
+              <div class="flex flex-col box" v-if="isCustomer">
+                <span class="label mb-2">Notes from Contractor</span>
+                <textarea cols="0" rows="0" class="form-control"
+                          disabled :value="jobTask.customer_message"></textarea>
+              </div>
+
               <button class="btn btn-green m-t-3 mb-4">Send</button>
             </div>
           </div>
