@@ -33,7 +33,6 @@
         padding-top: 14px;
         text-align: center;
         text-rendering: auto;
-        width: 414px;
         -webkit-font-smoothing: antialiased;
         -webkit-margin-after: 0px;
         -webkit-margin-before: 0px;

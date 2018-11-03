@@ -199,17 +199,22 @@
                 </button>
             </div>
         </div>
-        <jem-footer></jem-footer>
+        <jemmson-footer></jemmson-footer>
     </div>
 </template>
 
 <script>
+
+    import JemmsonFooter from '../components/shared/JemmsonFooter';
 
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
     props: {
       user: Object
+    },
+    components: {
+      JemmsonFooter
     },
     data() {
       return {
