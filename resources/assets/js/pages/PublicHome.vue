@@ -7,7 +7,7 @@
                     <button name="login"
                             @click="route('register')"
                             style="margin-top: 1rem; margin-bottom: 1rem;"
-                            class="register-color btn btn-sm btn-warning">
+                            class="btn btn-sm btn-yellow">
                         <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Register Now
                     </button>
                     <div class="slogan text-center">Subbin' <br> Made Easy!</div>
@@ -52,7 +52,7 @@
                             </div>
                             <div class="flex form-submit form-item">
                                 <!-- Login Button -->
-                                <button name="login" type="submit" class="login-color btn btn-sm btn-primary">
+                                <button name="login" type="submit" class="btn btn-sm btn-blue">
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
                                 <a class="" href="https://localhost:9500/password/reset">Forgot Your

@@ -59,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <button @click="update" class="btn btn-sm btn-success" type="submit" :disabled="disabled.update">
+                        <button @click="update" class="btn btn-green" type="submit" :disabled="disabled.update">
                             <span v-if="disabled.update">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
