@@ -1,7 +1,7 @@
 <template>
 <div>
     <div id="feedback" style="position:fixed; bottom: 0; right: 0; margin-bottom: 7rem">
-        <button class="btn btn-default" @click="open">
+        <button class="btn btn-blue" @click="open">
             <i class="fas fa-comment fa-2x"></i>
         </button>
     </div>

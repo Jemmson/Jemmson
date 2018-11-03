@@ -13,7 +13,7 @@
         <button class="btn btn-blue" name="addTaskToBid" id="addTaskToBid" @click="openAddTask" v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">
           Add A Task
         </button>
-        <button class="btn btn-green" v-if="bid.job_tasks.length > 0" @click="openModal('notifyCustomerOfFinishedBid')" :disabled="bid.job_tasks.length <= 0 || disabled.submitBid" ref="submitBidBtn">
+        <button class="btn btn-green" v-if="bid.job_tasks.length > 0" @click="openModal('notifyCustomerOfFinishedBid')" :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid" ref="submitBidBtn">
           <span v-if="disabled.submitBid">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
           </span>
@@ -48,6 +48,9 @@
       }
     },
     computed: {
+      disableSubmitBid () {
+        return this.bid.status === "bid.sent";
+      },
       showJobCompletedBtn () {
         return this.bid.status === 'job.approved';
       },
