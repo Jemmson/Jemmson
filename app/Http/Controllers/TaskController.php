@@ -346,7 +346,7 @@ class TaskController extends Controller
             $user = $this->createNewUser($name, $email, $phone);
         } else if ($user->usertype === 'customer') {
             // return if the user is a customer
-            return response()->json(["message" => "Not a valid user.", "errors" => ["error" => "No valid user."]], 422);
+            return response()->json(["message" => "This person is a customer in the system and can not also be a contractor", "errors" => ["error" => "No valid user."]], 422);
         }
 
         $contractor = $user->contractor()->first();
