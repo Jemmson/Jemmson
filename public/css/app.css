@@ -21201,6 +21201,9 @@ body {
 .btn-green {
   background-color: #38c172;
 }
+.btn-green:disabled {
+  background-color: #b8c2cc;
+}
 .btn-blue {
   background-color: #3490dc;
 }
