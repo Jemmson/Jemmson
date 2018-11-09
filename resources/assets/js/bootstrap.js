@@ -89,7 +89,13 @@ window.Echo.private('App.User.' + Spark.state.user.id)
         Bus.$emit('bidUpdated');
         break;
       case "App\\Notifications\\NotifyCustomerOfUpdatedMessage":
+        console.log(Spark.state.user.id);
         Vue.toasted.info('Your Contractor Has Sent an Updated Message.');
+        Bus.$emit('bidUpdated');
+        break;
+      case "App\\Notifications\\NotifySubOfUpdatedMessage":
+        console.log(Spark.state.user.id);
+        Vue.toasted.info('sdlsdlkdslksdlksdlksdlksdlk');
         Bus.$emit('bidUpdated');
         break;
       default:

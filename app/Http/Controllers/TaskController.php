@@ -21,14 +21,13 @@ use App\Customer;
 use App\User;
 use App\BidContractorJobTask;
 use App\JobTask;
+use Illuminate\Support\Facades\Log;
 use App\TaskImage;
 use Illuminate\Http\Request;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
 use Illuminate\Support\Facades\DB;
-
-use Auth;
-use Log;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 
@@ -582,14 +581,48 @@ class TaskController extends Controller
         $job = Job::find($jobTask->job_id);
         $customer = Customer::find($job->customer_id);
 
+
 //        $jobTask = JobTask::find(12);
 //        $job = Job::find($jobTask->job_id);
 //        $user = Customer::select()->where("user_id", "=", $job->customer_id)->get()->first();
 
+
+        // are there subs for this task?
+
+        //has the job been accepted
+        // check if the contractor_id on the jobtask table equals the contractor_id of the jobs table
+
+
+
         if ($actor == 'sub') {
+            $b = new BidContractorJobTask();
+            $contractors = $b->select('contractor_id')->where('job_task_id', '=', $jobTask->job_id)->get();
+            Log::debug("actor: $actor");
+            Log::debug("contractors: $contractors");
             $jobTask->sub_message = $message;
-//            $customer->notify(new NotifySubOfUpdatedMessage($job, $customer));
+            Log::debug("job->contractor_id: $job->contractor_id");
+            Log::debug("jobTask->contractor_id: $jobTask->contractor_id");
+            Log::debug("jobTask->status: $jobTask->status");
+
+            // checks if the job has been accepted then it sends the notification to just that contractor
+            // if the job has not been accepted then the notification gets sent to all subs
+            // who have been triggered to bid on the job
+            if ($job->contractor_id != $jobTask->contractor_id && $jobTask->status == 'bid_task.accepted') {
+                Log::debug("A single contractor has been called");
+                Log::debug("jobTask->contractor_id: $jobTask->contractor_id");
+                $contractor = User::find($jobTask->contractor_id);
+                $contractor->notify(new NotifySubOfUpdatedMessage);
+            } else if (!empty($contractors)) {
+                Log::debug("multiple contractors are being called");
+                Log::debug("contractors: $contractors");
+                foreach ($contractors as $c) {
+                    Log::debug("jobTask->contractor_id: $jobTask->contractor_id");
+                    $contractor = User::find($c->contractor_id);
+                    $contractor->notify(new NotifySubOfUpdatedMessage);
+                }
+            }
         } else {
+            Log::debug("actor: $actor");
             $customer = User::find($job->customer_id);
             $jobTask->customer_message = $message;
             $customer->notify(new NotifyCustomerOfUpdatedMessage);

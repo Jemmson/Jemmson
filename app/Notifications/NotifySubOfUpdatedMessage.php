@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
+
 
 class NotifySubOfUpdatedMessage extends Notification
 {
@@ -46,6 +48,26 @@ class NotifySubOfUpdatedMessage extends Notification
                     ->line('Thank you for using our application!');
     }
 
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param  mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+        $text = 'Your Contractor Has Sent an Updated Message';
+        return (new NexmoMessage)
+            ->content($text);
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+        ]);
+    }
+
     /**
      * Get the array representation of the notification.
      *
@@ -59,10 +81,4 @@ class NotifySubOfUpdatedMessage extends Notification
         ];
     }
 
-    public function toBroadcast($notifiable)
-    {
-        return new BroadcastMessage([
-            'job' => $this->bid,
-        ]);
-    }
 }

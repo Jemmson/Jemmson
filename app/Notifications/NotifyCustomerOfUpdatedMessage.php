@@ -80,4 +80,5 @@ class NotifyCustomerOfUpdatedMessage extends Notification
             //
         ];
     }
+
 }
