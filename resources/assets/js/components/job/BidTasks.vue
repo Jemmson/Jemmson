@@ -107,19 +107,15 @@
             <div class="flex flex-col">
               <div class="flex flex-col mb-3" v-if="!isCustomer">
                 <span class="label mb-2">Notes for Subcontractor</span>
-                <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"
-                  :disabled="disableMessages" :value="jobTask.sub_message"></textarea>
-
-                <!--<input-->
-                <!--type="text"-->
-                <!--class="form-control"-->
-                <!--@blur="updateMessage($event.target.value, jobTask.id, jobTask.sub_message, 'sub')"-->
-                <!--:value="jobTask.sub_message">-->
+                <textarea cols="0" rows="0" class="form-control"
+                  :disabled="disableMessages" :value="jobTask.sub_message" :id="'message-sub-' + jobTask.id"></textarea>
+                <button class="btn btn-green m-t-3 mb-4" @click="updateMessage(jobTask.id, jobTask.sub_message, 'sub')">Send</button>
               </div>
               <div class="flex flex-col" v-if="isContractor">
                 <span class="label mb-2">Notes for Customer</span>
-                <textarea cols="0" rows="0" class="form-control" @blur="updateMessage($event.target.value, jobTask.id, jobTask.customer_message, 'customer')"
-                  :disabled="disableMessages" :value="jobTask.customer_message"></textarea>
+                <textarea cols="0" rows="0" class="form-control"
+                  :disabled="disableMessages" :value="jobTask.customer_message" :id="'message-customer-' + jobTask.id"></textarea>
+                <button class="btn btn-green m-t-3 mb-4" @click="updateMessage(jobTask.id, jobTask.customer_message, 'customer')">Send</button>
               </div>
 
               <div class="flex flex-col" v-if="isCustomer">
@@ -128,7 +124,6 @@
                           disabled :value="jobTask.customer_message"></textarea>
               </div>
 
-              <button class="btn btn-green m-t-3 mb-4">Send</button>
             </div>
           </div>
 
@@ -424,10 +419,13 @@
           this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
         }
       },
-      updateMessage (message, jobTaskId, currentMessage, actor) {
+      updateMessage (jobTaskId, currentMessage, actor) {
+
+        let message = document.getElementById("message-" + actor + "-" + jobTaskId);
+        message = message.value;
 
         if (message !== currentMessage) {
-          GeneralContractor.updateMessage (message, jobTaskId, actor);
+          GeneralContractor.updateMessage(message, jobTaskId, actor);
         }
 
       },
