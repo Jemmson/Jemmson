@@ -121,7 +121,7 @@ class Contractor extends Model
 
     public function location()
     {
-        return $this->hasOne(Location::class, 'user_id', 'user_id')->where('default', '=', 1);
+        return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
     public function updateLocation($request)
