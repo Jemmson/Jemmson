@@ -21,5 +21,7 @@ Vue.component('spark-update-contact-information', {
           this.form.state = this.user.customer.location.state;
           this.form.zip  = this.user.customer.location.zip;
         }
+
+        this.form.phone = this.user.phone;
     }
 });

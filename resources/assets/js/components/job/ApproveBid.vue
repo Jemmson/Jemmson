@@ -91,7 +91,7 @@
                     </span>
                 </div>
                 <div class="form-group col-md-12">
-                    <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid" ref="declineBid">
+                    <button class="btn btn-red" @click.prevent="declineBid" :disabled="disabled.declineBid" ref="declineBid">
                         <span v-if="disabled.declineBid">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
