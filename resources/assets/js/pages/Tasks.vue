@@ -54,12 +54,17 @@
           </div>
           <!-- / end qty section -->
 
-          <div v-if="showAddress(bidTask)" class="flex border-b mb-4">
-            <p>
+          <div class="flex border-b mb-4">
+          <!--<div v-if="bidTask.job_task.location.address_line_1" class="flex border-b mb-4">-->
+            <p v-if="getAddress(bidTask) !== 'Address Not Available'">
               <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
                 <i class="fas fa-map-marker icon"></i>
                 {{ getAddress(bidTask) }}
               </a>
+            </p>
+            <p v-else>
+              <i class="fas fa-map-marker icon"></i>
+              {{ getAddress(bidTask) }}
             </p>
           </div>
           <!-- / end address -->
@@ -185,14 +190,32 @@
          return status !== 'bid_task.initiated' && status !== 'bid_task.bid_sent' && status !== 'bid_task.finished_by_sub';
       },
       getAddress(bidTask) {
-            let location_id = 0;
-            if (bidTask.job_task.location_id !== null) {
-              location_id = bidTask.job_task.location_id;
-            } else {
-              location_id = bidTask.job_task.job.location_id;
-            }
-            Customer.getAddress(location_id, this.location)
-            return this.location.location
+        console.log(JSON.stringify(bidTask.job_task.location));
+
+        if (bidTask.job_task.location !== null) {
+          return bidTask.job_task.location.address_line_1+" "+
+            bidTask.job_task.location.address_line_2+" "+
+            bidTask.job_task.location.city+" "+
+            bidTask.job_task.location.state+" "+
+            bidTask.job_task.location.zip;
+        } else {
+          return 'Address Not Available';
+        }
+
+        // return bidTask.job_task.location.address_line_1+" "+
+
+
+
+
+          // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
+            // let location_id = 0;
+            // if (bidTask.job_task.location_id !== null) {
+            //   location_id = bidTask.job_task.location_id;
+            // } else {
+            //   location_id = bidTask.job_task.job.location_id;
+            // }
+            // Customer.getAddress(location_id, this.location)
+            // return this.location.location
       },
       showFinishedBtn(bid) {
         return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied';
