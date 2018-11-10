@@ -9,7 +9,7 @@
           </div>
 
           <!-- task name-->
-          <div class="flex justify-center text-2xl font-bold text-black mb-6">
+          <div class="uppercase flex justify-center text-2xl font-bold text-black mb-6">
             {{ jobTask.task.name }}
           </div>
 
