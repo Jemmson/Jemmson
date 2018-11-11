@@ -29,7 +29,8 @@
         <div class="flex justify-between mb-6">
             <div class="flex flex-col">
                 <span class="label">JOB ADDRESS:</span>
-                <a target="_blank" v-if="showAddress" :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                <a target="_blank" v-if="showAddress"
+                   :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
                     <address>
                         <br> {{ bid.location.address_line_1 }}
                         <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
@@ -44,6 +45,14 @@
                 <span>${{ bid.bid_price }}</span>
             </div> -->
         </div>
+
+        <div class="flex flex-col items-center">
+            <button class="btn btn-blue btn-width" name="showNotes" id="showNotes" @click="customerNotes = !customerNotes">
+                Customer Notes For Job
+            </button>
+            <div class="mt-3 notes-width" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+        </div>
+
 
         <div class="flex justify-between mt-4">
             <span class="label mb-4">TOTAL PRICE:</span>
@@ -71,7 +80,7 @@
 </template>
 
 <script>
-  import {mapGetters, mapMutations, mapActions} from 'vuex'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
     props: {
@@ -79,75 +88,93 @@
       isCustomer: Boolean,
       customerName: String
     },
-    data () {
+    data() {
       return {
         area: {
           area: ''
         },
+        customerNotes: false,
         areaError: '',
         locationExists: false,
         customerInfo: false
       }
     },
     computed: {
-      ...mapGetters ([
+      ...mapGetters([
         'getCustomerName'
       ]),
-      agreedStartDate () {
+      agreedStartDate() {
         if (this.bid.agreed_start_date !== null) {
-          let d = this.bid.agreed_start_date;
-          let date = d.split (' ');
-          let format_date = date[0].split ('-');
-          return format_date[1] + '/' + format_date[2] + '/' + format_date[0];
+          let d = this.bid.agreed_start_date
+          let date = d.split(' ')
+          let format_date = date[0].split('-')
+          return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
         }
       },
-      showBidPrice () {
-        if (User.isCustomer ()) {
-          const status = this.bid.status;
+      showBidPrice() {
+        if (User.isCustomer()) {
+          const status = this.bid.status
           if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
-            return true;
+            return true
           }
-          return false;
+          return false
         }
-        return true;
+        return true
       },
-      status () {
-        return User.status (this.bid.status, this.bid);
+      status() {
+        return User.status(this.bid.status, this.bid)
       },
-      showDeclinedMessage () {
-          return !this.isCustomer && this.bid.declined_message !== null && this.bid.status === 'bid.declined';
+      showDeclinedMessage() {
+        return !this.isCustomer && this.bid.declined_message !== null && this.bid.status === 'bid.declined'
       },
-      showAddress () {
-          return this.bid.location_id !== undefined && this.bid.location_id !== null && this.bid.location !== null;
+      showAddress() {
+        return this.bid.location_id !== undefined && this.bid.location_id !== null && this.bid.location !== null
       }
     },
     methods: {
-      getLabelClass (status) {
-        return Format.statusLabel (status);
+      getLabelClass(status) {
+        return Format.statusLabel(status)
       },
-      ...mapMutations ([
+      ...mapMutations([
         'setCustomerName'
       ]),
-      ...mapActions ([
+      ...mapActions([
         'actCustomerName'
       ]),
-      updateArea () {
+      updateArea() {
         // Customer.updateArea (this.area.area, this.bid.id);
       },
-      showArea () {
-        console.log ('user type: ' + User.isContractor ())
-        return this.area.area !== '' && User.isContractor ();
+      showArea() {
+        console.log('user type: ' + User.isContractor())
+        return this.area.area !== '' && User.isContractor()
       }
     },
-    mounted: function () {
+    mounted: function() {
     }
   }
 </script>
 
 <style lang="less" scoped>
-.status {
-    padding: 1rem;
-    padding-left: 6px;
-    padding-right: 6px;
-}
+    .status {
+        padding: 1rem;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .btn-width {
+        width: 100%
+    }
+
+    .notes-width {
+        width: 100%
+    }
+
+    @media (min-width: 762px) {
+        .btn-width {
+            width: 27%
+        }
+    }
+
+
+
 </style>

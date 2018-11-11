@@ -132,6 +132,6 @@
         </div>
     </div>
 
-    <jem-footer></jem-footer>
+    <jem-footer v-cloak></jem-footer>
 
 </div>
