@@ -13,7 +13,7 @@
                 <input name="customer" id="customerName" dusk="customerName" type="text" v-model="form.customerName"
                        v-on:keyup="autoComplete"
                        class="form-control" required>
-                <div class="customer-name-results" v-if="results.length">
+                <div class="customer-name-results mt-2" v-if="results.length">
                     <button class="customer-name-result" v-for="result in results" v-bind:key="result.id"
                             :name="result.phone" @click.prevent="fillFields(result)">
                         {{ result.name }}
@@ -27,10 +27,10 @@
                 <input class="form-control" id="phone" @keyup="filterPhone" maxlength="10" name="phone" dusk="phone"
                        type="tel" @blur="validateMobileNumber($event.target.value)"
                        v-model="form.phone">
-                <div dusk="networkType" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()" style="color: green">
+                <div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()" style="color: green">
                     {{ networkType.originalCarrier }}
                 </div>
-                <div dusk="networkType" v-show="checkLandLineNumber()" style="color: red">{{ networkType.originalCarrier
+                <div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{ networkType.originalCarrier
                     }}
                 </div>
                 <span class="help-block" v-show="form.errors.has('phone')">
