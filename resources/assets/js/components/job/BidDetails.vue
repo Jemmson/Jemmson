@@ -50,7 +50,12 @@
             <button class="btn btn-blue btn-width" name="showNotes" id="showNotes" @click="customerNotes = !customerNotes">
                 Customer Notes For Job
             </button>
-            <div class="mt-3 notes-width" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+            <div v-if="bid.customer.customer.notes !== ''">
+                <div class="mt-3 notes-width" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+            </div>
+            <div v-else>
+                <div class="mt-3 notes-width" v-show="customerNotes">The customer does not have any notes for this job</div>
+            </div>
         </div>
 
 
