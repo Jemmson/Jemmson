@@ -263,14 +263,14 @@ export default class Customer {
       const data = await axios.post('/customer/updateCustomerNotes',
         {
           customerNotesMessage: customerNotesMessage,
-          customer_id: customer_i
+          customer_id: customer_id
         }
       )
       User.emitChange('bidUpdated')
       Vue.toasted.success('Customer Note Has Been Updated')
     } catch (error) {
-      error = error.response.data
-      Vue.toasted.error(error.message)
+      // error = error.response.data
+      Vue.toasted.error(error)
     }
   }
 
