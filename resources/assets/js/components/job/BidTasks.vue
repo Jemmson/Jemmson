@@ -494,8 +494,7 @@
         return false;
       },
       showApproveBtn (jobTask) {
-        if (
-          this.isGeneral &&
+        if (this.isGeneral &&
           !User.isAssignedToMe (jobTask) &&
           (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
         ) {
