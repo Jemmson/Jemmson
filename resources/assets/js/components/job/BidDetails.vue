@@ -50,11 +50,51 @@
             <button class="btn btn-blue btn-width" name="showNotes" id="showNotes" @click="customerNotes = !customerNotes">
                 Customer Notes For Job
             </button>
-            <div v-if="bid.customer.customer.notes !== ''">
-                <div class="mt-3 notes-width" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+            <div v-if="!isCustomer">
+                <div v-if="bid.customer.customer.notes !== ''">
+                    <transition name="slide-fade">
+                        <div class="mt-3 notes-width" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+                    </transition>
+                </div>
+                <div v-else>
+                    <transition name="slide-fade">
+                        <div class="mt-3 notes-width" v-show="customerNotes">The customer does not have any notes for this job</div>
+                    </transition>
+                </div>
             </div>
-            <div v-else>
-                <div class="mt-3 notes-width" v-show="customerNotes">The customer does not have any notes for this job</div>
+            <div v-if="isCustomer">
+                <transition name="slide-fade">
+                    <div v-show="customerNotes">
+                        <div class="mt-4">
+                            <textarea
+                                    class="form-control"
+                                    :value="bid.customer.customer.notes"
+                                    name=""
+                                    id=""
+                                    cols="40"
+                                    rows="10"
+                                    @keyup="customerNotesMessage = $event.target.value"
+                            >
+
+                            </textarea>
+                            <!--<textarea type="text" class="form-control"-->
+                                   <!--name="message"-->
+                                   <!--:value="bid.customer.customer.notes"-->
+                                   <!--placeholder="Optional Message">-->
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-red"
+                                    @click.prevent="updateGeneralContractorNotes()"
+                                    :disabled="disableCustomerNotesButton"
+                                    ref="custNotesUpdate">
+                        <span v-if="disableCustomerNotesButton">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </transition>
             </div>
         </div>
 
@@ -98,6 +138,8 @@
         area: {
           area: ''
         },
+        customerNotesMessage: '',
+        disableCustomerNotesButton: false,
         customerNotes: false,
         areaError: '',
         locationExists: false,
@@ -146,6 +188,9 @@
       ...mapActions([
         'actCustomerName'
       ]),
+      updateGeneralContractorNotes () {
+        Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer_id);
+      },
       updateArea() {
         // Customer.updateArea (this.area.area, this.bid.id);
       },
