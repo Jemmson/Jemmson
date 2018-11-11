@@ -47,7 +47,8 @@
         </div>
 
         <div class="flex flex-col items-center">
-            <button class="btn btn-blue btn-width" name="showNotes" id="showNotes" @click="customerNotes = !customerNotes">
+            <button class="btn btn-blue btn-width" name="showNotes" id="showNotes"
+                    @click="customerNotes = !customerNotes">
                 Customer Notes For Job
             </button>
             <div v-if="!isCustomer">
@@ -58,7 +59,9 @@
                 </div>
                 <div v-else>
                     <transition name="slide-fade">
-                        <div class="mt-3 notes-width" v-show="customerNotes">The customer does not have any notes for this job</div>
+                        <div class="mt-3 notes-width" v-show="customerNotes">The customer does not have any notes for
+                            this job
+                        </div>
                     </transition>
                 </div>
             </div>
@@ -78,9 +81,9 @@
 
                             </textarea>
                             <!--<textarea type="text" class="form-control"-->
-                                   <!--name="message"-->
-                                   <!--:value="bid.customer.customer.notes"-->
-                                   <!--placeholder="Optional Message">-->
+                            <!--name="message"-->
+                            <!--:value="bid.customer.customer.notes"-->
+                            <!--placeholder="Optional Message">-->
                         </div>
                         <div class="mt-2">
                             <button class="btn btn-red"
@@ -188,8 +191,8 @@
       ...mapActions([
         'actCustomerName'
       ]),
-      updateGeneralContractorNotes () {
-        Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer_id);
+      updateGeneralContractorNotes() {
+        Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer_id)
       },
       updateArea() {
         // Customer.updateArea (this.area.area, this.bid.id);
@@ -224,7 +227,6 @@
             width: 27%
         }
     }
-
 
 
 </style>
