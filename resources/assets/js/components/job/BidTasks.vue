@@ -484,15 +484,21 @@
       //     User.isCustomer() && jobTask.stripe;
       // },
       showFinishedBtn (jobTask) {
-        if (this.isContractor && User.isAssignedToMe (jobTask) && (jobTask.status === 'bid_task.approved_by_customer' ||
-          jobTask.status === 'bid_task.reopened' || jobTask.status === 'bid_task.denied')) {
+        if (this.isContractor &&
+          User.isAssignedToMe (jobTask) && (jobTask.status === 'bid_task.approved_by_customer' ||
+          jobTask.status === 'bid_task.reopened' ||
+          jobTask.status === 'bid_task.denied'
+        )) {
           return true;
         }
         return false;
       },
       showApproveBtn (jobTask) {
-        if (this.isGeneral && !User.isAssignedToMe (jobTask) && (jobTask.status === 'bid_task.finished_by_sub' ||
-          jobTask.status === 'bid_task.reopened')) {
+        if (
+          this.isGeneral &&
+          !User.isAssignedToMe (jobTask) &&
+          (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
+        ) {
           return true;
         }
         return false;

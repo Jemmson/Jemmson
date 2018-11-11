@@ -227,7 +227,12 @@ class StripeController extends Controller
 
         // get all tasks that havent been paid for 
         $job = Job::find($request->id);
-        $jobTasks = $job->jobTasks()->where('status', 'bid_task.finished_by_general')->orWhere('status', 'bid_task.approved_by_general')->get();
+        $job->paid_with_cash_message = $request->cashMessage;
+        $job->save();
+        $jobTasks = $job->
+                        jobTasks()->
+                        where('status', 'bid_task.finished_by_general')->
+                        orWhere('status', 'bid_task.approved_by_general')->get();
 
         if (count($jobTasks) < 1) {
             return response()->json(['message' => 'No Tasks'], 422);
@@ -261,7 +266,7 @@ class StripeController extends Controller
         
         $job->setJobAsCompleted();
 
-        return response()->json(['message' => "Payment Succesful"], 200);
+        return response()->json(['message' => "Payment Successful"], 200);
     }
 
     /**

@@ -169,12 +169,15 @@ export default class Customer {
  * @param {obj} excluded 
  * @param {obj} disabled 
  */
-  async payAllPayableTasksWithCash(id, excluded, disabled) {
+  async payAllPayableTasksWithCash(id, excluded, disabled, cashMessage) {
     console.log('payAllPayableTasksWithCash', id);
     disabled.payCash = true;
-
     try {
-      const data = await axios.post('/stripe/customer/pay/tasks/cash', { id: id, excluded: excluded });
+      const data = await axios.post('/stripe/customer/pay/tasks/cash', {
+        id: id,
+        excluded: excluded,
+        cashMessage: cashMessage
+      });
       User.emitChange('bidUpdated');
       Vue.toasted.success('Paid For All Payable Tasks');
       disabled.payCash = false;
