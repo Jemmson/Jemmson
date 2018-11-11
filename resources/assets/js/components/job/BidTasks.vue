@@ -121,7 +121,7 @@
               <div class="flex flex-col" v-if="isCustomer">
                 <span class="label mb-2">Notes from Contractor</span>
                 <textarea cols="0" rows="0" class="form-control"
-                          disabled :value="jobTask.customer_message"></textarea>
+                          disabled :value="jobTask.customer_message" style="color: black;"></textarea>
               </div>
 
             </div>
