@@ -5,11 +5,11 @@
       <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
     </search-bar>
     <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-      <section class="flex rounded mb-4 items-center" :class="getLabelClass(bid)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
-          <div class="flex-1 text-white">{{ status(bid) }}</div>
-          <div class="flex-1 text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
-          <div class="flex-1 text-white">{{ jobName(bid.job_name) }}</div>
-          <div class="flex-1 h-16 rounded-r bg-white">click to view</div>
+      <section class="flex job-section rounded mb-4 justify-around items-center" :class="getLabelClass(bid)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
+          <div class="text-white">{{ status(bid) }}</div>
+          <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
+          <div class="text-white">{{ jobName(bid.job_name) }}</div>
+          <div class="bg-white bid-btn">click to view</div>
       </section>
     </paginate>
     <div class="card p-5 card-body justify-center">
@@ -98,6 +98,18 @@
 </script>
 
 <style lang="less" scoped>
+
+    .bid-btn {
+        height: 100%;
+        padding-top: 1.25rem;
+        padding-right: .5rem;
+        padding-left: .5rem;
+    }
+
+    .job-section {
+        height: 3.75rem;
+    }
+
     #bids-item {
       background-color: #2779BD;
     }
