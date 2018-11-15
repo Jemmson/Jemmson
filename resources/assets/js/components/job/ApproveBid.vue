@@ -62,20 +62,22 @@
         </div>
         <!-- / buttons -->
         <div class="flex justify-between">
-            <button class="btn btn-red" @click.prevent="openDeclineForm" ref="decline">
-                Decline
+            <button class="btn btn-green" @click.prevent="openModal('approveBid')" :disabled="disabled.approve"
+                    ref="approve">
+                <span v-if="disabled.approve">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                </span>
+                Approve
             </button>
-            <button class="btn btn-red" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid" ref="cancel">
+            <button class="btn btn-red" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid"
+                    ref="cancel">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Cancel
             </button>
-            <button class="btn btn-green" @click.prevent="openModal('approveBid')" :disabled="disabled.approve" ref="approve">
-                <span v-if="disabled.approve">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                Approve
+            <button class="btn btn-red" @click.prevent="openDeclineForm" ref="decline">
+                Decline
             </button>
         </div>
         <!-- / decline bid section -->
@@ -91,7 +93,8 @@
                     </span>
                 </div>
                 <div class="form-group col-md-12">
-                    <button class="btn btn-red" @click.prevent="declineBid" :disabled="disabled.declineBid" ref="declineBid">
+                    <button class="btn btn-red" @click.prevent="declineBid" :disabled="disabled.declineBid"
+                            ref="declineBid">
                         <span v-if="disabled.declineBid">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
@@ -107,13 +110,13 @@
 
 <script>
   export default {
-      props: {
-          bid: Object,
+    props: {
+      bid: Object,
     },
-    data () {
-        return {
-            taskIndex: 0,
-        form: new SparkForm ({
+    data() {
+      return {
+        taskIndex: 0,
+        form: new SparkForm({
           id: this.bid.id,
           agreed_start_date: '',
           end_date: '',
@@ -143,87 +146,87 @@
       }
     },
     methods: {
-      updateFormLocation (location) {
-        console.log (location);
+      updateFormLocation(location) {
+        console.log(location)
 
-        this.form.address_line_1 = location.route;
-        this.form.city = location.locality;
-        this.form.state = location.administrative_area_level_1;
-        this.form.zip = location.postal_code;
+        this.form.address_line_1 = location.route
+        this.form.city = location.locality
+        this.form.state = location.administrative_area_level_1
+        this.form.zip = location.postal_code
       },
-      openModal (forBtn) {
+      openModal(forBtn) {
         // update model header and body
         switch (forBtn) {
           case 'approveBid':
             this.updateModal('Confirm Approval',
               'You are about to approve this bid. Click approve bid to approve or back to cancel this action.',
-              'approveBid', 'approve bid', 'back');
-            this.modalCurrentlyOpenFor = 'approveBid';
-            break;
+              'approveBid', 'approve bid', 'back')
+            this.modalCurrentlyOpenFor = 'approveBid'
+            break
           case 'cancelBid':
             this.updateModal('Confirm Cancellation', 'You are about to cancel this job,' +
               ' Click delete job to cancel and delete the job or back to cancel this action.',
-              'cancelBid', 'Delete Job', 'back');
-            this.modalCurrentlyOpenFor = 'cancelBid';
-            break;
+              'cancelBid', 'Delete Job', 'back')
+            this.modalCurrentlyOpenFor = 'cancelBid'
+            break
         }
 
         // open model after content has been updated
-        $('#modal').modal();
+        $('#modal').modal()
       },
-      updateModal (header, body, id, yes, no) {
-        this.modalHeader = header;
-        this.modalBody = body;
-        this.modalId = id;
-        this.mYes = yes;
-        this.mNo = no;
+      updateModal(header, body, id, yes, no) {
+        this.modalHeader = header
+        this.modalBody = body
+        this.modalId = id
+        this.mYes = yes
+        this.mNo = no
       },
-      modalYes () {
+      modalYes() {
         switch (this.modalCurrentlyOpenFor) {
           case 'approveBid':
-            this.approve();
-            $('#modal').modal('hide');
-            break;
+            this.approve()
+            $('#modal').modal('hide')
+            break
           case 'cancelBid':
-            this.cancelBid();
-            $('#modal').modal('hide');
-            break;
+            this.cancelBid()
+            $('#modal').modal('hide')
+            break
         }
       },
-      openDeclineForm () {
-        this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
+      openDeclineForm() {
+        this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true
       },
-      approve (data) {
-        Customer.approveBid(this.form, this.disabled);
+      approve(data) {
+        Customer.approveBid(this.form, this.disabled)
       },
-      declineBid () {
-        Customer.declineBid(this.form, this.disabled);
+      declineBid() {
+        Customer.declineBid(this.form, this.disabled)
       },
-      cancelBid () {
-        Customer.cancelBid(this.bid, this.disabled);
+      cancelBid() {
+        Customer.cancelBid(this.bid, this.disabled)
       },
-      initAutocomplete () {
-        User.initAutocomplete('route3');
+      initAutocomplete() {
+        User.initAutocomplete('route3')
       }
     },
-    mounted () {
+    mounted() {
       Bus.$on('updateFormLocation', (payload) => {
-        this.updateFormLocation (payload);
-      });
+        this.updateFormLocation(payload)
+      })
 
-      let d = new Date ();
-      let month = d.getMonth() + 1;
-      let day = d.getDate();
+      let d = new Date()
+      let month = d.getMonth() + 1
+      let day = d.getDate()
 
       if (month < 10) {
-        month = '0' + month;
+        month = '0' + month
       }
 
       if (day < 10) {
-        day = '0' + day;
+        day = '0' + day
       }
 
-      this.form.agreed_start_date = d.getFullYear() + '-' + month + '-' + day;
+      this.form.agreed_start_date = d.getFullYear() + '-' + month + '-' + day
       // this.agreed_start_date = '2018-07-03';
     }
   }
