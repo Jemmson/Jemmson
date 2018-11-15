@@ -104,7 +104,13 @@
 
         <div class="flex justify-between mt-4">
             <span class="label mb-4">TOTAL PRICE:</span>
-            <span class="font-bold">${{ bid.bid_price }}</span>
+            <div v-if="!isCustomer">
+                <span class="font-bold">${{ bid.bid_price }}</span>
+            </div>
+            <div v-else>
+                <span v-if="bid.status !== 'bid.in_progress'"  class="font-bold">${{ bid.bid_price }}</span>
+                <span v-else class="font-bold"><i>PENDING</i></span>
+            </div>
         </div>
 
         <!-- Customer Notes -->
