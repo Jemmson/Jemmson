@@ -73,6 +73,7 @@
                 </div>
             </card>
         </div>
+        <feedback></feedback>
     </div>
 </template>
 

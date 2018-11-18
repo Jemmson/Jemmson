@@ -32,6 +32,7 @@
     <!-- / stripe testing delete after -->
     <stripe :user='user'>
     </stripe>
+    <feedback></feedback>
   </div>
 </template>
 

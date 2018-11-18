@@ -64,6 +64,7 @@
                 </div>
             </div>
         </div>
+        <feedback></feedback>
     </div>
 </template>
 

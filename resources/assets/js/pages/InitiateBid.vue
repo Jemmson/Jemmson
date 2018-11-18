@@ -58,6 +58,7 @@
                 </button>
             </div>
         </card>
+        <feedback></feedback>
     </div>
 </template>
 

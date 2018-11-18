@@ -50,7 +50,7 @@
 <!-- Application Level Modals -->
 {{-- 
     @if (Auth::check())
-    @include('spark::modals.notifications')
+    @include('spark::modals.notifications')x
     @include('spark::modals.support')
     @include('spark::modals.session-expired')
     <!-- <feedback>

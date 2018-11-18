@@ -114,6 +114,7 @@
     <!-- / end tasks -->
     <stripe :user='user'>
     </stripe>
+    <feedback></feedback>
   </div>
 </template>
 

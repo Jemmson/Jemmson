@@ -17,6 +17,7 @@
             <paginate-links for="sInvoices" :limit="2" :show-step-links="true">
             </paginate-links>
         </div>
+        <feedback></feedback>
     </div>
 </template>
 

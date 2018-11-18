@@ -16,6 +16,7 @@
         <paginate-links for="sBids" :limit="2" :show-step-links="true">
         </paginate-links>
     </div>
+      <feedback></feedback>
   </div>
 </template>
 

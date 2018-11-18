@@ -54,3 +54,9 @@
         }
     }
 </script>
+
+<style>
+    #feedback{
+        z-index: 1000;
+    }
+</style>

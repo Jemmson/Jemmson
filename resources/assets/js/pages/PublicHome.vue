@@ -86,6 +86,7 @@
                 The customer pays the invoice and then the money is automatically split between the contractor
                 and the sub.</p>
         </div>
+        <feedback></feedback>
     </div>
 </template>
 
