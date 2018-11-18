@@ -56,7 +56,7 @@
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
                                 <a class="" href="https://localhost:9500/password/reset">Forgot Your
-                                    Password?</a>
+                                    Password?</a>x
                             </div>
                         </div>
                     </form>
@@ -86,7 +86,6 @@
                 The customer pays the invoice and then the money is automatically split between the contractor
                 and the sub.</p>
         </div>
-        <feedback></feedback>
     </div>
 </template>
 
