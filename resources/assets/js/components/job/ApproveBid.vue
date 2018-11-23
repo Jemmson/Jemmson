@@ -1,13 +1,13 @@
 <template>
     <!-- /customer approve bid form -->
-    <form role="form">
-        <div class="form-group col-sm-12 col-md-6">
+    <form role="form" class="flex flex-col">
+        <div class="flex form-group">
             <label for="job_location_same_as_home">Job Location Same as Home Location</label>
-            <input type="checkbox" class="form-control" id="job_location_same_as_home"
+            <input type="checkbox" class="" id="job_location_same_as_home"
                    v-model="form.job_location_same_as_home">
         </div>
 
-        <div class="form-group col-sm-12 col-md-6" :class="{'has-error': form.errors.has('agreed_start_date')}">
+        <div class="flex form-group" :class="{'has-error': form.errors.has('agreed_start_date')}">
             <label for="start_date">Start Date</label>
             <input type="date" class="form-control" id="start_date" v-model="form.agreed_start_date">
             <span class="help-block" v-show="form.errors.has('agreed_start_date')">
@@ -16,9 +16,9 @@
         </div>
 
         <!-- /job location -->
-        <div v-show="!form.job_location_same_as_home">
+        <div v-show="!form.job_location_same_as_home" class="flex flex-col" ref="address-section">
             <!-- Address Line 1 -->
-            <div class="form-group col-sm-12" :class="{'has-error': form.errors.has('address_line_1')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                 <label for="">Address Line 1</label>
                 <input type="text" class="form-control" name="address_line_1" id="route3" v-model="form.address_line_1"
                        autofocus>
@@ -28,13 +28,13 @@
             </div>
 
             <!-- Address Line 2 -->
-            <div class="form-group col-sm-12">
+            <div class="flex form-group">
                 <label for="">Address Line 2</label>
                 <input type="text" class="form-control" name="address_line_2" v-model="form.address_line_2">
             </div>
 
             <!-- City -->
-            <div class="form-group col-md-6" :class="{'has-error': form.errors.has('city')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('city')}">
                 <label class=" ">City</label>
                 <input type="text" class="form-control" name="city" v-model="form.city">
                 <span class="help-block" v-show="form.errors.has('city')">
@@ -43,7 +43,7 @@
             </div>
 
             <!-- State -->
-            <div class="form-group col-md-6" :class="{'has-error': form.errors.has('state')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('state')}">
                 <label for="">State</label>
                 <input type="text" class="form-control" name="state" v-model="form.state">
                 <span class="help-block" v-show="form.errors.has('state')">
@@ -52,7 +52,7 @@
             </div>
 
             <!-- Zip Code -->
-            <div class="form-group col-md-12" :class="{'has-error': form.errors.has('zip')}">
+            <div class="flex form-group" :class="{'has-error': form.errors.has('zip')}">
                 <label for="">ZipCode</label>
                 <input type="text" class="form-control" name="zip" v-model="form.zip">
                 <span class="help-block" v-show="form.errors.has('zip')">
@@ -61,26 +61,28 @@
             </div>
         </div>
         <!-- / buttons -->
-        <div class="btn-group col-sm-12">
-            <button class="btn btn-primary" @click.prevent="openModal('approveBid')" :disabled="disabled.approve">
+        <div class="flex justify-between">
+            <button class="btn btn-green" @click.prevent="openModal('approveBid')" :disabled="disabled.approve"
+                    ref="approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Approve
             </button>
-            <button class="btn btn-primary" @click.prevent="openDeclineForm">
-                Decline
-            </button>
-            <button class="btn btn-primary" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid">
+            <button class="btn btn-red" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid"
+                    ref="cancel">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Cancel
             </button>
+            <button class="btn btn-red" @click.prevent="openDeclineForm" ref="decline">
+                Decline
+            </button>
         </div>
         <!-- / decline bid section -->
         <transition name="slide-fade">
-            <div v-if="showDeclineForm">
+            <div v-if="showDeclineForm" ref="decline-form">
                 <!-- deny message -->
                 <div class="form-group col-md-12" :class="{'has-error': form.errors.has('message')}">
                     <label for="">Message</label>
@@ -91,7 +93,8 @@
                     </span>
                 </div>
                 <div class="form-group col-md-12">
-                    <button class="btn btn-danger" @click.prevent="declineBid" :disabled="disabled.declineBid">
+                    <button class="btn btn-red" @click.prevent="declineBid" :disabled="disabled.declineBid"
+                            ref="declineBid">
                         <span v-if="disabled.declineBid">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
@@ -110,10 +113,10 @@
     props: {
       bid: Object,
     },
-    data () {
+    data() {
       return {
         taskIndex: 0,
-        form: new SparkForm ({
+        form: new SparkForm({
           id: this.bid.id,
           agreed_start_date: '',
           end_date: '',
@@ -139,89 +142,91 @@
           cancelBid: false
         },
         showDeclineForm: false,
-        modalBody: Language.lang ().modal.reviewBidConfirmationModal
+        modalBody: Language.lang().modal.reviewBidConfirmationModal
       }
     },
     methods: {
-      updateFormLocation (location) {
-        console.log (location);
+      updateFormLocation(location) {
+        console.log(location)
 
-        this.form.address_line_1 = location.route;
-        this.form.city = location.locality;
-        this.form.state = location.administrative_area_level_1;
-        this.form.zip = location.postal_code;
+        this.form.address_line_1 = location.route
+        this.form.city = location.locality
+        this.form.state = location.administrative_area_level_1
+        this.form.zip = location.postal_code
       },
-      openModal (forBtn) {
+      openModal(forBtn) {
         // update model header and body
         switch (forBtn) {
           case 'approveBid':
-            this.updateModal ('Confirm Approval',
+            this.updateModal('Confirm Approval',
               'You are about to approve this bid. Click approve bid to approve or back to cancel this action.',
-              'approveBid', 'approve bid', 'back');
-            this.modalCurrentlyOpenFor = 'approveBid';
-            break;
+              'approveBid', 'approve bid', 'back')
+            this.modalCurrentlyOpenFor = 'approveBid'
+            break
           case 'cancelBid':
-            this.updateModal ('Confirm Cancellation', 'You are about to cancel this job,' +
+            this.updateModal('Confirm Cancellation', 'You are about to cancel this job,' +
               ' Click delete job to cancel and delete the job or back to cancel this action.',
-              'cancelBid', 'Delete Job', 'back');
-            this.modalCurrentlyOpenFor = 'cancelBid';
-            break;
+              'cancelBid', 'Delete Job', 'back')
+            this.modalCurrentlyOpenFor = 'cancelBid'
+            break
         }
 
         // open model after content has been updated
-        $ ('#modal').modal ();
+        $('#modal').modal()
       },
-      updateModal (header, body, id, yes, no) {
-        this.modalHeader = header;
-        this.modalBody = body;
-        this.modalId = id;
-        this.mYes = yes;
-        this.mNo = no;
+      updateModal(header, body, id, yes, no) {
+        this.modalHeader = header
+        this.modalBody = body
+        this.modalId = id
+        this.mYes = yes
+        this.mNo = no
       },
-      modalYes () {
+      modalYes() {
         switch (this.modalCurrentlyOpenFor) {
           case 'approveBid':
-            this.approve ();
-            $ ('#modal').modal ('hide');
-            break;
+            this.approve()
+            $('#modal').modal('hide')
+            break
           case 'cancelBid':
-            this.cancelBid ();
-            $ ('#modal').modal ('hide');
-            break;
+            this.cancelBid()
+            $('#modal').modal('hide')
+            break
         }
       },
-      openDeclineForm () {
-        this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
+      openDeclineForm() {
+        this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true
       },
-      approve (data) {
-        Customer.approveBid (this.form, this.disabled);
+      approve(data) {
+        Customer.approveBid(this.form, this.disabled)
       },
-      declineBid () {
-        Customer.declineBid (this.form, this.disabled);
+      declineBid() {
+        Customer.declineBid(this.form, this.disabled)
       },
-      cancelBid () {
-        Customer.cancelBid (this.bid, this.disabled);
+      cancelBid() {
+        Customer.cancelBid(this.bid, this.disabled)
+      },
+      initAutocomplete() {
+        User.initAutocomplete('route3')
       }
     },
-    mounted () {
-      User.initAutocomplete ('route3');
-      Bus.$on ('updateFormLocation', (payload) => {
-        this.updateFormLocation (payload);
-      });
+    mounted() {
+      Bus.$on('updateFormLocation', (payload) => {
+        this.updateFormLocation(payload)
+      })
 
-      let d = new Date ();
-      let month = d.getMonth () + 1;
-      let day = d.getDate ();
+      let d = new Date()
+      let month = d.getMonth() + 1
+      let day = d.getDate()
 
       if (month < 10) {
-        month = '0' + month;
+        month = '0' + month
       }
 
       if (day < 10) {
-        day = '0' + day;
+        day = '0' + day
       }
 
-      this.form.agreed_start_date = d.getFullYear () + '-' + month + '-' + day;
+      this.form.agreed_start_date = d.getFullYear() + '-' + month + '-' + day
       // this.agreed_start_date = '2018-07-03';
     }
   }

@@ -13,6 +13,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\User;
+use App\JobTask;
+use App\Job;
+
 
 Route::group([
     'middleware' => 'auth:api'
@@ -34,13 +38,13 @@ Route::group([
 });
 
 // TODO: need to lock these routes down
-// based on user and the resources they 
+// based on user and the resources they
 // try to edit
 
 Route::get('/search', function (Request $request) {
     $query = $request->query('query');
     $users = \App\User::whereHas('contractor', function ($q) use ($query) {
-        $q->where('company_name', 'like', '%'.$query.'%');
+        $q->where('company_name', 'like', '%' . $query . '%');
     })->orWhere('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'customer')->with('contractor')->get();
     return $users;
 });
@@ -56,8 +60,8 @@ Route::post('/search/task', function (Request $request) {
     $jobId = $request->jobId;
     $job = \App\Job::find($jobId);
     $tasks = DB::select("select * from tasks where id not in 
-                (SELECT jt.task_id from tasks t join job_task jt on jt.task_id = t.id and t.job_id=".$jobId." and deleted_at = null) 
-                and contractor_id = ".$job->contractor_id." and name like '%".$request->taskname."%'");
+                (SELECT jt.task_id from tasks t join job_task jt on jt.task_id = t.id and deleted_at = null) 
+                and contractor_id = " . $job->contractor_id . " and name like '%" . $request->taskname . "%'");
     return $tasks;
 });
 
@@ -78,33 +82,59 @@ Route::post('/task/declineJob', 'JobController@declineJob');
 Route::post('/task/finishedBidNotification', 'JobController@finishedBidNotification');
 
 
-
 // Tasks
 Route::resource('task', 'TaskController');
 Route::put('bid/task/{id}', 'TaskController@updateBidContractorJobTask');
 Route::post('/task/notify', 'TaskController@notify');
 Route::post('/task/notifyAcceptedBid', 'TaskController@notifyAcceptedBid');
 Route::post('/task/updateTaskName', 'TaskController@updateTaskName');
+Route::post('/task/updateTaskQuantity', 'TaskController@updateTaskQuantity');
+Route::post('/task/updateMessage', 'TaskController@updateMessage');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
 Route::post('/task/addTask', 'TaskController@addTask');
+Route::post('/task/updateTaskStartDate', function (Request $request) {
+
+    $jt = JobTask::find($request->jobTaskId);
+    $jt->updateTaskStartDate($request->date);
+    $earliestDate = JobTask::findEarliestStartDate($jt->job_id);
+    $job = Job::find($jt->job_id);
+    $job->updateJobAgreedStartDate($earliestDate);
+
+});
+
+//Route::post('/task/updateJobStartDate', function (Request $request) {
+//
+//    $job = Job::find($jt->jobId);
+//    $job->updateJobAgreedStartDate(date);
+//
+//});
+
 Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 Route::post('/task/togglestripe', 'TaskController@toggleStripe');
 Route::post('/task/checkStripeForJob', 'TaskController@checkStripeForJob');
 
+
+Route::post('/user/validatePhoneNumber', function (Request $request) {
+//    dd($request->num);
+    $user = User::select()->where("phone", "=", $request->num)->get()->first();
+    if (empty($user)) {
+        return User::validatePhoneNumber($request->num);
+    } else {
+        return ['success', 'mobile', 'mobile', 'alreadyExists'];
+    }
+});
+
 Route::post('/job/updateArea', 'JobController@updateArea');
 Route::post('/job/getArea', 'JobController@getArea');
 
 Route::post('/customer/getAddress', 'CustomerController@getAddress');
 
-// stripe controller 
+// stripe controller
 Route::post('/stripe/task/cash', 'StripeController@taskPaidWithCash');
 
 Route::post('feedback', 'HomeController@feedback');
 Route::post('location', 'TaskController@updateTaskLocation');
-
-
-

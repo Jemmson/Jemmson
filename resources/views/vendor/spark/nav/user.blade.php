@@ -90,7 +90,7 @@
 
         </div>
 
-        <div v-if="user">
+        <div v-if="user && this.$route.fullPath !== '/furtherInfo'">
             @if (Auth::user()->usertype === 'contractor')
                 @include('spark::nav.contractor-left')
             @endif

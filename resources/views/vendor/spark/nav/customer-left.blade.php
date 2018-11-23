@@ -8,10 +8,11 @@
         </a>
     </div>
     <div class="flex-1 ">
-        <a class="text-white" href="/settings">
-            <i class="fas fa-cog">
+        <a class="text-white" href="/#/bids">
+            <i class="fas fa-briefcase">
             </i>
-            <br> Settings</a>
+            <br> Bids
+        </a>
     </div>
     <div class="flex-1 ">
         <a class="text-white" href="/#/invoices">
@@ -21,10 +22,9 @@
         </a>
     </div>
     <div class="flex-1 ">
-        <a class="text-white" href="/#/bids">
-            <i class="fas fa-briefcase">
+        <a class="text-white" href="/settings">
+            <i class="fas fa-cog">
             </i>
-            <br> Bids
-        </a>
+            <br> Settings</a>
     </div>
 </div>

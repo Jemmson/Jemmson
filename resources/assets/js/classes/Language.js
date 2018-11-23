@@ -103,11 +103,31 @@ export default class Language {
       },
       // general contractor accepted the subs bid
       bid_task: {
+        start_date: {
+          sub: '',
+          general: 'Start Date Has Been Updated',
+          customer: ''
+        },
         price_updated: {
           sub: '',
           general: 'Task Price Successfully Updated',
           customer: ''
+        },
+        quantity_updated: {
+          sub: '',
+          general: 'Task Quantity Successfully Updated',
+          customer: ''
+        },
+        message_updated: {
+          sub: '',
+          general: 'Your Message has been Successfully Updated',
+          customer: ''
         }
+      },
+      phone: {
+        success: 'This is a valid mobile number',
+        failure: 'This is not a valid mobile number',
+        error: 'Please check the number. There was an unkown error'
       },
       modal: {
         reviewBidConfirmationModal: 'The bid may have changed since you last saw it, please review the bid if you have not done so.'

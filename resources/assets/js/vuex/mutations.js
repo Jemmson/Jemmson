@@ -5,3 +5,13 @@
 export const setCustomerName = (state, payload) => {
   state.customer.name = payload.name
 }
+
+export const setMobileResponse = (state, payload) => {
+  // debugger;
+  state.mobile.response = payload;
+}
+
+export const setTheMobileResponse = (state, payload) => {
+  // debugger;
+  state.mobile.response = payload;
+}

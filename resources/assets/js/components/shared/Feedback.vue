@@ -1,7 +1,7 @@
 <template>
 <div>
     <div id="feedback" style="position:fixed; bottom: 0; right: 0; margin-bottom: 7rem">
-        <button class="btn btn-default" @click="open">
+        <button class="btn btn-blue" @click="open">
             <i class="fas fa-comment fa-2x"></i>
         </button>
     </div>
@@ -25,7 +25,7 @@
                 <div class="modal-footer">
                     <span>
                         <slot name="button"></slot>
-                        <button type="submit" class="btn btn-success btn-model-yes" @click.prevent="submit">Submit</button>
+                        <button type="submit" class="btn btn-green btn-model-yes" @click.prevent="submit">Submit</button>
                     </span>
                 </div>
             </div>
@@ -54,3 +54,9 @@
         }
     }
 </script>
+
+<style>
+    #feedback{
+        z-index: 1000;
+    }
+</style>

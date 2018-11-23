@@ -37,12 +37,6 @@ class Job extends Model
         'job_name'
     ];
 
-//
-//    public function time()
-//    {
-//        return $this->hasMany(Time::class);
-//    }
-
     public function customer()
     {
         return $this->belongsTo(User::class)->with('customer');
@@ -150,6 +144,11 @@ class Job extends Model
         }
     }
 
+    public function updateStartDate($date)
+    {
+
+    }
+
     /**
      * Set job as completed if all child task are paid for
      *
@@ -164,9 +163,20 @@ class Job extends Model
         $this->status = __('job.completed');
 
         try {
-            $this->save();    
+            $this->save();
         } catch(\Exception $e) {
             Log::error('Update Job' . $e->getMessage());
+        }
+    }
+
+    public function updateJobAgreedStartDate($date)
+    {
+        $this->agreed_start_date = $date;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Job Start Date was unsuccessful: ' . $e->getMessage());
         }
     }
 
@@ -250,36 +260,39 @@ class Job extends Model
         }
     }
 
-    public function addPrice($amount)
+    public function changeJobStatus($job, $message)
     {
-        $this->bid_price += $amount;
+        $this->status = $message;
 
         try {
             $this->save();
-        } catch(\Exception $e) {
-            Log::error('Adding Price To Job: ' . $e->getMessage());
-            return false;
+        } catch (\Exception $e) {
+            Log::error('Add Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't update job status message.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
         }
-        return true;
     }
 
-    public function subtractPrice($amount)
+    public function jobTotal()
     {
-        Log::debug('existing amount ' . $this->bid_price);
-        Log::debug('amount: ' . $amount);
-        $this->bid_price -= (int) $amount;
-        if ($this->bid_price < 0) {
-            $this->bid_price = 0;
-        }
+        // for each task that is related to the job -> SUM(qty * cust_final_price)
+        $jt = $this->jobTasks()->where("deleted_at", "=", NULL)->get();
+
+        $bid_price = 0;
+
+        foreach ($jt as $j){$bid_price = $bid_price + ($j->qty * $j->unit_price);}
+
+        $this->bid_price = $bid_price;
 
         try {
             $this->save();
-            Log::debug('Saved subtract job ' .  $this);
         } catch(\Exception $e) {
-            Log::error('Subtracting Price To Job: ' . $e->getMessage());
+            Log::error('Job total could not be updated: ' . $e->getMessage());
             return false;
         }
         return true;
+
     }
 
     /**

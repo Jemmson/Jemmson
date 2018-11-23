@@ -14,6 +14,10 @@ export const store = new Vuex.Store({
   state: {
     customer: {
       name: ''
+    },
+    mobile: {
+      number: '',
+      response: ''
     }
   },
   actions: actions,

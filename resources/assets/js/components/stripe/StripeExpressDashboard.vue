@@ -1,5 +1,5 @@
 <template>
-  <button v-if="showDashboardLoginBtn" type="button" class="btn btn-primary" @click="login" :disabled="busy">
+  <button v-if="showDashboardLoginBtn" type="button" class="btn btn-blue" @click="login" :disabled="busy">
     <span v-if="busy">
       <i class="fa fa-btn fa-spinner fa-spin"></i>
     </span>

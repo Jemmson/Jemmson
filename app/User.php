@@ -4,6 +4,10 @@ namespace App;
 
 use Laravel\Spark\User as SparkUser;
 use Illuminate\Notifications\Notifiable;
+use Nexmo\Laravel\Facade\Nexmo;
+use Illuminate\Notifications\Messages\NexmoMessage;
+use GuzzleHttp\Client;
+
 
 class User extends SparkUser
 {
@@ -91,7 +95,7 @@ class User extends SparkUser
         try {
             $this->save();
         } catch (\Excpetion $e) {
-            Log::error('Saving Stripe Id: ' . $e-getMessage());
+            Log::error('Saving Stripe Id: ' . $e - getMessage());
             return false;
         }
 
@@ -224,6 +228,33 @@ class User extends SparkUser
         } catch (\Exception $e) {
             Log::error('Model User: ' . $e->getMessage());
         }
+    }
+
+    static public function validatePhoneNumber($number)
+    {
+
+        $number = '1'.$number;
+        $client = new Client();
+
+        $res = $client->request('POST', 'https://api.nexmo.com/ni/advanced/json', [
+            'json' => [
+                'api_key' => env('NEXMO_KEY'),
+                'api_secret' => env('NEXMO_SECRET'),
+                'number' => $number,
+            ]
+        ]);
+
+
+        $response = json_decode($res->getBody());
+
+
+        if ($response->current_carrier->network_type == 'landline' ||
+            $response->original_carrier->network_type == 'landline') {
+            return ['failure', $response->original_carrier->network_type, $response->current_carrier->network_type];
+        } else {
+            return ['success', $response->original_carrier->network_type, $response->current_carrier->network_type];
+        }
+
     }
 
     public function isCustomer()

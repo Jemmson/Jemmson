@@ -1,67 +1,140 @@
 <template>
     <!-- /all details of a bid -->
+    <div class="flex flex-col" v-if="bid.job_name !== undefined">
 
-    <div>
-        <div v-if="bid.job_name !== undefined">
-
-            <!-- JOB STATUS -->
-            <div for="task-status" class="status green py-s" :class="getLabelClass(bid.status)">
+        <!-- JOB STATUS -->
+        <div class="border-b pb-4 mb-6">
+            <div class="status" :class="getLabelClass(bid.status)">
                 {{ status }}
             </div>
+        </div>
 
-            <hr>
+        <div class="flex flex-col self-center mb-6">
+            <!-- <span class="label mb-2">JOB NAME</span> -->
+            <p class="text-2xl font-extrabold uppercase">{{ bid.job_name }}</p>
+        </div>
 
-            <div class="flex justify-between">
-                <span>CUSTOMER NAME</span>
-                <span>JOB NAME</span>
-                <span>START DATE</span>
-            </div>
-
-            <div class="flex justify-between">
-                <span v-if="isCustomer">{{ bid.job_name }}</span>
+        <div class="flex justify-between mb-6">
+            <div class="flex flex-col">
+                <span class="label mb-2">CUSTOMER NAME</span>
+                <span v-if="isCustomer">{{ customerName }}</span>
                 <span v-else>{{ customerName }}</span>
-                <span>{{ bid.job_name }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="label mb-2">START DATE</span>
                 <span>{{ agreedStartDate }}</span>
             </div>
+        </div>
 
-
-            <hr>
-            <div class="flex justify-between">
-                <span class="">JOB ADDRESS:</span>
-                <span class="">TOTAL JOB PRICE:</span>
-            </div>
-            <div class="flex justify-between">
-                <div>
-                    <a class="" target="_blank" v-if="bid.location_id !== undefined && bid.location_id !== null"
-                       :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                        <address v-if="bid.location !== null">
-                            <br> {{ bid.location.address_line_1 }}
-                            <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                        </address>
-                    </a>
-                    <div v-else class="">
-                        No Address is Set Yet
-                    </div>
+        <div class="flex justify-between mb-6">
+            <div class="flex flex-col">
+                <span class="label">JOB ADDRESS:</span>
+                <a target="_blank" v-if="showAddress"
+                   :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                    <address>
+                        <br> {{ bid.location.address_line_1 }}
+                        <br> {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+                    </address>
+                </a>
+                <div v-else class="">
+                    No Address is Set Yet
                 </div>
-                <span class="title-value text-center  job-status-value">${{ bid.bid_price }}</span>
             </div>
+            <!-- <div class="flex flex-col">
+                <span class="label mb-4">TOTAL PRICE:</span>
+                <span>${{ bid.bid_price }}</span>
+            </div> -->
+        </div>
 
-            <!-- Declined Message -->
-            <div class="flex space-between flex-col"
-                 v-if="!isCustomer && bid.declined_message !== null && bid.status === 'bid.declined'">
-                <h4>
-                    <label class="status label label-warning red py-s">Declined Reason</label>
-                </h4>
-                <p class="message">
-                    {{ bid.declined_message}}
-                </p>
+        <div class="flex flex-col items-center">
+            <button class="btn btn-blue btn-width" name="showNotes" id="showNotes"
+                    @click="customerNotes = !customerNotes">
+                Customer Notes For Job
+            </button>
+            <div v-if="!isCustomer">
+                <div v-if="bid.customer.customer.notes !== ''">
+                    <transition name="slide-fade">
+                        <div class="mt-3 notes-width" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+                    </transition>
+                </div>
+                <div v-else>
+                    <transition name="slide-fade">
+                        <div class="mt-3 notes-width" v-show="customerNotes">The customer does not have any notes for
+                            this job
+                        </div>
+                    </transition>
+                </div>
             </div>
+            <div v-if="isCustomer">
+                <transition name="slide-fade">
+                    <div v-show="customerNotes">
+                        <div class="mt-4">
+                            <textarea
+                                    class="form-control"
+                                    :value="bid.customer.customer.notes"
+                                    name=""
+                                    id=""
+                                    cols="40"
+                                    rows="10"
+                                    @keyup="customerNotesMessage = $event.target.value"
+                            >
+
+                            </textarea>
+                            <!--<textarea type="text" class="form-control"-->
+                            <!--name="message"-->
+                            <!--:value="bid.customer.customer.notes"-->
+                            <!--placeholder="Optional Message">-->
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-red"
+                                    @click.prevent="updateGeneralContractorNotes()"
+                                    :disabled="disableCustomerNotesButton"
+                                    ref="custNotesUpdate">
+                        <span v-if="disableCustomerNotesButton">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                        </span>
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </transition>
+            </div>
+        </div>
+
+
+        <div class="flex justify-between mt-4">
+            <span class="label mb-4">TOTAL PRICE:</span>
+            <div v-if="!isCustomer">
+                <span class="font-bold">${{ bid.bid_price }}</span>
+            </div>
+            <div v-else>
+                <span v-if="bid.status !== 'bid.in_progress'"  class="font-bold">${{ bid.bid_price }}</span>
+                <span v-else class="font-bold"><i>PENDING</i></span>
+            </div>
+        </div>
+
+        <!-- Customer Notes -->
+        <!-- <button class="btn btn-blue" @click="customerInfo = !customerInfo">Customer Info</button>
+        <div v-show="customerInfo" class="flex space-between flex-col">
+            <p class="message">
+                {{ bid.customer.customer.notes }}
+            </p>
+        </div> -->
+
+        <!-- Declined Message -->
+        <div class="flex space-between flex-col" v-if="showDeclinedMessage">
+            <h4>
+                <label class="status label label-warning red py-s">Declined Reason</label>
+            </h4>
+            <p class="message">
+                {{ bid.declined_message}}
+            </p>
         </div>
     </div>
 </template>
 
 <script>
-  import {mapGetters, mapMutations, mapActions} from 'vuex'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
     props: {
@@ -69,125 +142,97 @@
       isCustomer: Boolean,
       customerName: String
     },
-    data () {
+    data() {
       return {
         area: {
           area: ''
         },
+        customerNotesMessage: '',
+        disableCustomerNotesButton: false,
+        customerNotes: false,
         areaError: '',
         locationExists: false,
+        customerInfo: false
       }
     },
     computed: {
-      ...mapGetters ([
+      ...mapGetters([
         'getCustomerName'
       ]),
-      agreedStartDate () {
+      agreedStartDate() {
         if (this.bid.agreed_start_date !== null) {
-          let d = this.bid.agreed_start_date;
-          let date = d.split (' ');
-          let format_date = date[0].split ('-');
-          return format_date[1] + '/' + format_date[2] + '/' + format_date[0];
+          let d = this.bid.agreed_start_date
+          let date = d.split(' ')
+          let format_date = date[0].split('-')
+          return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
         }
       },
-      showBidPrice () {
-        if (User.isCustomer ()) {
-          const status = this.bid.status;
+      showBidPrice() {
+        if (User.isCustomer()) {
+          const status = this.bid.status
           if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
-            return true;
+            return true
           }
-          return false;
+          return false
         }
-        return true;
+        return true
       },
-      status () {
-        return User.status (this.bid.status, this.bid);
+      status() {
+        return User.status(this.bid.status, this.bid)
+      },
+      showDeclinedMessage() {
+        return !this.isCustomer && this.bid.declined_message !== null && this.bid.status === 'bid.declined'
+      },
+      showAddress() {
+        return this.bid.location_id !== undefined && this.bid.location_id !== null && this.bid.location !== null
       }
     },
     methods: {
-      getLabelClass (status) {
-        return Format.statusLabel (status);
+      getLabelClass(status) {
+        return Format.statusLabel(status)
       },
-      ...mapMutations ([
+      ...mapMutations([
         'setCustomerName'
       ]),
-      ...mapActions ([
+      ...mapActions([
         'actCustomerName'
       ]),
-      updateArea () {
+      updateGeneralContractorNotes() {
+        Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer_id)
+      },
+      updateArea() {
         // Customer.updateArea (this.area.area, this.bid.id);
       },
-      showArea () {
-        console.log ('user type: ' + User.isContractor ())
-        return this.area.area !== '' && User.isContractor ();
+      showArea() {
+        console.log('user type: ' + User.isContractor())
+        return this.area.area !== '' && User.isContractor()
       }
     },
-    mounted: function () {
+    mounted: function() {
     }
   }
 </script>
 
-<style scoped>
-
-    .flex {
-        display: flex;
-    }
-
-    .space-between {
-        justify-content: space-between;
-    }
-
-    .green {
-        background-color: rgba(0, 128, 0, 0.34);
-    }
-
-    .red {
-        background-color: rgba(255, 64, 47, 0.78);
-    }
-
-    .py-l {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-    }
-
-    .py-m {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-    }
-
-    .py-s {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-    }
-
-    .px-l {
-        padding-right: 3rem;
-        padding-left: 3rem;
-    }
-
-    .px-m {
-        padding-right: 2rem;
-        padding-left: 2rem;
-    }
-
-    .px-s {
-        padding-right: 1rem;
-        padding-left: 1rem;
-    }
-
+<style lang="less" scoped>
     .status {
-        display: flex;
-        justify-content: center;
-        border-radius: 10px;
-        font-size: 2rem;
+        padding: 1rem;
+        padding-left: 6px;
+        padding-right: 6px;
     }
 
-    .message {
-        font-size: 2.25rem;
-        font-weight: bold;
+    .btn-width {
+        width: 100%
     }
 
-    .flex-col {
-        flex-direction: column;
+    .notes-width {
+        width: 100%
     }
+
+    @media (min-width: 762px) {
+        .btn-width {
+            width: 27%
+        }
+    }
+
+
 </style>

@@ -1,36 +1,27 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-1">
-                    <div class="panel-body text-center">
-                        <h2>Task Images</h2>
-                        <label for="task-name" v-if="jobTask.task !== undefined">{{ jobTask.task.name }}</label>
+    <div class="flex flex-col">
+        <card>
+            <h2 class="self-center uppercase">Task Images</h2>
+            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name }}</label>
+        </card>
+        <div class="flex flex-col card">
+                <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
+                    <div class="image-ct">
+                        <a class="lightbox" @click.prevent="openImage(image.id)">
+                            <img :src="image.url" alt="">
+                        </a>
+                        <button class="btn btn-red image-btn pull-right mr-2" :id="'image-' + image.id" @click="deleteImage(image.id, index)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     </div>
+                    <!-- lightbox container hidden with CSS -->
+                    <a class="lightbox-target" :id="'image' + image.id">
+                        <img :src="image.url" class="" :id="'image-img' + image.id">
+                        <a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>
+                    </a>
                 </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card card-1">
-                    <div class="panel-body">
-                        <div class="col-xs-12 col-sm-4" v-for="(image, index) of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
-                                <div class="image-ct">
-                                <a class="lightbox" @click.prevent="openImage(image.id)">
-                                <img :src="image.url" alt="">
-                                </a>
-                                <button class="btn btn-danger image-btn" :id="'image-' + image.id" @click="deleteImage(image.id, index)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                </div>
-                            <!-- lightbox container hidden with CSS -->
-                            <a class="lightbox-target" :id="'image' + image.id">
-                                <img :src="image.url" class="" :id="'image-img' + image.id">
-                                <a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+        <feedback></feedback>
     </div>
 </template>
 

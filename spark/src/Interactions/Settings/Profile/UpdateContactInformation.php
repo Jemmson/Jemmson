@@ -27,6 +27,7 @@ class UpdateContactInformation implements Contract
         $user->forceFill([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone' => $data['phone']
         ])->save();
 
         event(new ContactInformationUpdated($user));

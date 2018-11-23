@@ -1,39 +1,23 @@
 <template>
-    <!-- /all bids shown in a list as a customer should see it -->
-    <div>
-        <div class="container card card-1">
-            <h1 class="text-center">Open Bids</h1>
-        </div>
-
-        <div class="container card card-1 search">
-            <label for="job-search">Search Jobs</label>
-            <input type="text" id="job-search" class="form-control" placeholder="Search" v-model="searchTerm"
-                   @keyup="search">
-        </div>
-
-        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-            <!--<div class="flex" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;">-->
-            <!---->
-            <!--</div>-->
-            <!---->
-
-
-            <div class="" v-for="bid in paginated('sBids')" v-bind:key="bid.id"
-                 style="z-index: 2;" @click="goToBid(bid.id)">
-                <div class="container justify-between justify-around card card-1 p-2">
-                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow text-center">{{ status(bid) }}</span>
-                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</span>
-                    <span :class="getLabelClass(bid.status)" class="text-white flex-grow">{{ jobName(bid.job_name) }}</span>
-                </div>
-            </div>
-        </paginate>
-        <div class="container card card-1">
-            <h4>
-                <paginate-links for="sBids" :limit="2" :show-step-links="true">
-                </paginate-links>
-            </h4>
-        </div>
+  <!-- /all bids shown in a list as a customer should see it -->
+  <div class="flex flex-col">
+    <search-bar>
+      <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
+    </search-bar>
+    <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
+      <section class="flex job-section rounded mb-4 justify-around items-center" :class="getLabelClass(bid)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
+          <div class="text-white">{{ status(bid) }}</div>
+          <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
+          <div class="text-white">{{ jobName(bid.job_name) }}</div>
+          <div class="bg-white bid-btn">click to view</div>
+      </section>
+    </paginate>
+    <div class="card p-5 card-body justify-center">
+        <paginate-links for="sBids" :limit="2" :show-step-links="true">
+        </paginate-links>
     </div>
+      <feedback></feedback>
+  </div>
 </template>
 
 <script>
@@ -41,7 +25,7 @@
     props: {
       user: Object
     },
-    data () {
+    data() {
       return {
         bids: [],
         sBids: [],
@@ -52,67 +36,84 @@
       }
     },
     watch: {
-      '$route' (to, from) {
+      '$route'(to, from) {
         // get the bids
-        this.getBids ();
+        this.getBids();
       }
     },
     methods: {
-      search () {
-        this.sBids = this.bids.filter ((bid) => {
+      search() {
+        this.sBids = this.bids.filter((bid) => {
           if (this.searchTerm === '' || this.searchTerm.length <= 1) {
             return true;
           }
-          return bid.job_name.toLowerCase ().search (this.searchTerm.toLowerCase ()) > -1;
+          return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
         });
         if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
-          this.$refs.paginator.goToPage (1);
+          this.$refs.paginator.goToPage(1);
         }
       },
-      getLabelClass (status) {
-        return Format.statusLabel (status);
+      getLabelClass(bid) {
+        return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid));
       },
-      jobName (name) {
-        return Format.jobName (name);
+      jobName(name) {
+        return Format.jobName(name);
       },
-      status (bid) {
-        return User.status (bid.status, bid);
+      status(bid) {
+        return User.status(bid.status, bid);
       },
-      prettyDate (date) {
+      prettyDate(date) {
         if (date == null)
           return '';
         // return the date and ignore the time
-        date = date.split (' ');
+        date = date.split(' ');
         return date[0];
       },
-      goToBid (id) {
-        this.$router.push ('/bid/' + id);
+      goToBid(id) {
+        this.$router.push('/bid/' + id);
       },
-      getBids () {
-        console.log ('getBids');
-        axios.post ('/jobs').then ((response) => {
-          this.bids = response.data;
-          this.sBids = this.bids;
+      getBids() {
+        console.log('getBids');
+        axios.post('/jobs').then((response) => {
+          if (Array.isArray(response.data)) {
+            this.bids = response.data;
+            this.sBids = this.bids;
+          }
         });
       },
-      previewSubForTask (bidId, jobTaskId, subBidId) {
-        console.log (TaskUtil.previewSubForTask (this.bids, bidId, jobTaskId, subBidId));
+      previewSubForTask(bidId, jobTaskId, subBidId) {
+        console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId));
       }
     },
-    created () {
-      this.getBids ();
-      Bus.$on ('bidUpdated', (payload) => {
-        this.getBids ();
+    created() {
+      this.getBids();
+      Bus.$on('bidUpdated', (payload) => {
+        this.getBids();
       });
-      Bus.$on ('previewSubForTask', (payload) => {
-        this.previewSubForTask (payload[0], payload[1], payload[2]);
+      Bus.$on('previewSubForTask', (payload) => {
+        this.previewSubForTask(payload[0], payload[1], payload[2]);
       });
 
     },
   }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+
+    .bid-btn {
+        height: 100%;
+        padding-top: 1.25rem;
+        padding-right: .5rem;
+        padding-left: .5rem;
+    }
+
+    .job-section {
+        height: 3.75rem;
+    }
+
+    #bids-item {
+      background-color: #2779BD;
+    }
     .customer {
         display: flex;
         justify-content: center;

@@ -8,10 +8,16 @@
         </a>
     </div>
     <div class="flex-1 ">
-        <a class="text-white" href="/#/invoices">
-            <i class="fas fa-file-alt">
+        <a class="text-white" href="/#/initiate-bid">
+            <i class="fas fa-plus-circle">
             </i>
-            <br> Invoices
+            <br> Initiate Bid</a>
+    </div>
+    <div class="flex-1 ">
+        <a class="text-white" href="/#/bids">
+            <i class="fas fa-briefcase">
+            </i>
+            <br> Bids
         </a>
     </div>
     <div class="flex-1 ">
@@ -22,16 +28,10 @@
         </a>
     </div>
     <div class="flex-1 ">
-        <a class="text-white" href="/#/bids">
-            <i class="fas fa-briefcase">
+        <a class="text-white" href="/#/invoices">
+            <i class="fas fa-file-alt">
             </i>
-            <br> Bids
+            <br> Invoices
         </a>
-    </div>
-    <div class="flex-1 ">
-        <a class="text-white" href="/#/initiate-bid">
-            <i class="fas fa-plus-circle">
-            </i>
-            <br> Initiate Bid</a>
     </div>
 </div>

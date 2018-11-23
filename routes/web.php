@@ -79,3 +79,4 @@ Route::get('/login/{type}/{job_id}/{token}', 'PasswordlessController@JobBid');
 Route::get('/login/{type}/task/{task_id}/{token}', 'PasswordlessController@taskBid');
 
 Route::post('/bid/customer/getName', 'CustomerController@getName');
+Route::post('/customer/updateCustomerNotes', 'CustomerController@updateCustomerNotes');

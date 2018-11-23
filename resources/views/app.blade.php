@@ -8,7 +8,7 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name'))</title>
+    <title>Jemmson</title>
 
     <!-- Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
@@ -34,26 +34,29 @@
 <body class="with-navbar">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
-@if (Auth::check())
-    @include('spark::nav.user')
-@else
-    @include('spark::nav.guest')
-@endif
+        @if (Auth::check())
+        @include('spark::nav.user')
+        @else
+        @include('spark::nav.guest')
+        @endif
 
 <!-- Main Content -->
 <transition name="fade">
-    <router-view :user='user'></router-view>
+    <!-- <router-view :user='user'></router-view> -->
+    <router-view :user='user' class="jemmson-container"></router-view>
 </transition>
 
 
 <!-- Application Level Modals -->
+{{-- 
     @if (Auth::check())
-        @include('spark::modals.notifications')
-        @include('spark::modals.support')
-        @include('spark::modals.session-expired')
-        <feedback>
-        </feedback>
-    @endif
+    @include('spark::modals.notifications')x
+    @include('spark::modals.support')
+    @include('spark::modals.session-expired')
+    <!-- <feedback>
+        </feedback> -->
+        @endif
+        --}}
 </div>
 
 <!-- JavaScript -->

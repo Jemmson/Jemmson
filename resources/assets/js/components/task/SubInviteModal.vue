@@ -14,7 +14,7 @@
                         <form role="form">
                                 <div class="form-group">
                                     <label for="contractorName">Company Name *</label>
-                                    <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')">Please Enter A Name</span>
+                                    <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')" ref="name">Please Enter A Name</span>
                                     <input type="text" class="form-control" id="contractorName" name="contractorName" placeholder="Name" v-model="initiateBidForSubForm.name"
                                         v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" autofocus required v-on:keyup="autoComplete">
                                     <div class="panel-footer" v-if="aResults.length">
@@ -45,7 +45,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <button @click="sendSubInviteToBidOnTask" class="btn btn-sm btn-success" type="submit" :disabled="disabled.invite">
+                        <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit" :disabled="disabled.invite" ref="submit">
                             <span v-if="disabled.invite">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>

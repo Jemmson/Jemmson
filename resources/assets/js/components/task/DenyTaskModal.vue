@@ -21,7 +21,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <button class="btn btn-danger" @click.prevent="denyTask" :disabled="disabled.deny">
+                        <button class="btn btn-red" @click.prevent="denyTask" :disabled="disabled.deny" ref="denyTaskBtn">
                                         <span v-if="disabled.deny">
                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>

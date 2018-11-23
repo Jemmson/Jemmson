@@ -90,7 +90,7 @@ class BidInitiated extends Notification implements ShouldQueue
             ' has initated a bid ' .
             '- Job Name: ' .
             $this->job->job_name .
-            ' The link below will expire in one hour.' .
+            ' The link below will expire in one week.' .
             ' Login Link: ' .
             url('/login/' .
                 'customer/' .

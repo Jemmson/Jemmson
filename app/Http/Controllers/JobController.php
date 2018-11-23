@@ -180,7 +180,6 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-
         $job->load(
             [
                 'jobTasks.task',
@@ -193,6 +192,7 @@ class JobController extends Controller
                 }
             ]
         );
+
         return $job;
     }
 

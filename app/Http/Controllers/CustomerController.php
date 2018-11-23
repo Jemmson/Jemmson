@@ -25,6 +25,26 @@ class CustomerController extends Controller
         //
     }
 
+
+    public function updateCustomerNotes(Request $request)
+    {
+        $customer = Customer::where('user_id', '=', $request->customer_id)->get()->first();
+        $customer->notes = $request->customerNotesMessage;
+
+        try {
+            $customer->save();
+            return response()->json([
+                'success' => 'success'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e
+            ], 422);
+
+        }
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

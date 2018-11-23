@@ -4,11 +4,17 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Notifications\Notifiable;
+use Nexmo\Laravel\Facade\Nexmo;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Log;
+use Zend\Diactoros\Request;
 
 class Task extends Model
 {
+
+    use Notifiable;
+
     protected $fillable = [
         'name',
         'standard_task_id',
@@ -17,8 +23,32 @@ class Task extends Model
         'average_cust_price',
         'proposed_sub_price',
         'average_sub_price',
+        'qtyUnit',
+        'sub_instructions',
+        'customer_instructions',
         'job_id'
     ];
+
+    public function createTask($request)
+    {
+        $this->name = strtolower($request->taskName);
+        $this->contractor_id = $request->contractorId;
+        $this->proposed_cust_price = $request->taskPrice;
+        $this->proposed_sub_price = $request->subTaskPrice;
+        $this->qtyUnit = $request->qtyUnit;
+        $this->sub_instructions = $request->sub_message;
+        $this->customer_instructions = $request->customer_message;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Add Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't add/update task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
+    }
+
     //
 //    public function time()
 //    {
@@ -76,6 +106,27 @@ class Task extends Model
             $jobTask->save();
         } catch (\Excpetion $e) {
             Log::error('Update Job Task: ' . $e->getMessage());
+        }
+    }
+
+    public function updateTask($request = [], $options = null)
+    {
+        // standard task column = new column value
+        $this->name = $request->taskName;
+        $this->contractor_id = $request->contractorId;
+        $this->proposed_cust_price = $request->taskPrice;
+        $this->proposed_sub_price = $request->subTaskPrice;
+        $this->qtyUnit = $request->qtyUnit;
+        $this->sub_instructions = $request->sub_message;
+        $this->customer_instructions = $request->customer_message;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Update Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't update task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
         }
     }
 

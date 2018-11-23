@@ -144,19 +144,19 @@
 
 <!-- Basic Profile -->
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default card card-1 margin-correction">
-            <div class="panel-heading">
-                <span v-if="paidPlans.length > 0">
-                    Profile
-                </span>
+    {{--<div class="col-md-8 col-md-offset-2">--}}
+        {{--<div class="panel panel-default card card-1 margin-correction">--}}
+            {{--<div class="panel-heading">--}}
+                {{--<span v-if="paidPlans.length > 0">--}}
+                    {{--Profile--}}
+                {{--</span>--}}
 
-                <span v-else>
-                    Register
-                </span>
-            </div>
+                {{--<span v-else>--}}
+                    {{--Register--}}
+                {{--</span>--}}
+            {{--</div>--}}
 
-            <div class="panel-body">
+            {{--<div class="panel-body">--}}
                 <!-- Generic Error Message -->
                 <div class="alert alert-danger" v-if="registerForm.errors.has('form')">
                     @{{ registerForm.errors.get('form') }}
@@ -169,7 +169,7 @@
 
                 <!-- Registration Form -->
                 @include('spark::auth.register-common-form')
-            </div>
-        </div>
-    </div>
-</div>
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+{{--</div>--}}

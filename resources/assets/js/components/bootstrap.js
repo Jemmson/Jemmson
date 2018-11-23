@@ -9,8 +9,6 @@
  | your components that you write while building your applications.
  */
 
-require('./../spark-components/bootstrap');
-
 // /bid components
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
@@ -19,10 +17,13 @@ Vue.component('completed-tasks', require('./job/CompletedTasks.vue'));
 
 
 // Shared Components
+Vue.component('card', require('./shared/Card.vue'));
+Vue.component('search-bar', require('./shared/SearchBar.vue'));
+
 Vue.component('modal', require('./shared/Modal.vue'));
 Vue.component('brand', require('./shared/Brand.vue'));
 Vue.component('feedback', require('./shared/Feedback.vue'));
-Vue.component('jem-footer', require('./shared/Footer.vue'));
+Vue.component('jem-footer', require('./shared/JemmsonFooter.vue'));
 
 
 // require('./Autocomplete.vue');

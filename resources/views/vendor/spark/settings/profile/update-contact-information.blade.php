@@ -35,6 +35,19 @@
                     </div>
                 </div>
 
+                <!-- E-Mail Address -->
+                <div class="form-group" :class="{'has-error': form.errors.has('email')}">
+                    <label class="col-md-4 control-label">Phone Number</label>
+
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="phone" v-model="form.phone">
+
+                        <span class="help-block" v-show="form.errors.has('phone')">
+                            @{{ form.errors.get('phone') }}
+                        </span>
+                    </div>
+                </div>
+
                 <!-- Address Line 1 -->
                 <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                     <label class="col-md-3 control-label">Address Line 1</label>
