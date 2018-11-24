@@ -14,6 +14,7 @@
  */
 
 import Echo from 'laravel-echo'
+// import { apiHost } from 'config'
 
 window.Pusher = require ('pusher-js');
 
@@ -226,7 +227,6 @@ var app = new Vue ({
   router,
   store
 });
-
 
 require ('./bootstrap');
 

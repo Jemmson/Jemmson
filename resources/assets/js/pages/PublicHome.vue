@@ -55,8 +55,8 @@
                                 <button name="login" type="submit" class="btn btn-sm btn-blue">
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
-                                <a class="" href="https://localhost:9500/password/reset">Forgot Your
-                                    Password?</a>x
+                                <a class="" :href="currentWindow + '/password/reset'">Forgot Your
+                                    Password?</a>
                             </div>
                         </div>
                     </form>
@@ -94,6 +94,11 @@
     computed: {
         csrf () {
             return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
+    },
+    data () {
+        return {
+            currentWindow: window.location.origin
         }
     },
     methods: {
