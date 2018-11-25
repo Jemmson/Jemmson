@@ -160,7 +160,8 @@
             this.$router.push('/bids');
           }
           // error = error.response.data;
-          Vue.toasted.error(error.message);
+          // Vue.toasted.error(error.message);
+          Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.');
         }
       }
     },

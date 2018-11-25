@@ -180,7 +180,10 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        if (Auth::user()->id == $job->contractor_id) {
+        if (
+            Auth::user()->id == $job->contractor_id ||
+            Auth::user()->id == $job->customer_id
+            ) {
             $job->load(
                 [
                     'jobTasks.task',
