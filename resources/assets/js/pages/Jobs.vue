@@ -5,7 +5,12 @@
       <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
     </search-bar>
     <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-      <section class="flex job-section rounded mb-4 justify-around items-center" :class="getLabelClass(bid)" v-for="bid in paginated('sBids')" v-bind:key="bid.id" style="z-index: 2;" @click="goToBid(bid.id)">
+      <section class="flex job-section rounded mb-4 justify-around items-center" 
+              :class="getLabelClass(bid)"
+              v-for="bid in paginated('sBids')" 
+              v-bind:key="bid.id" 
+              style="z-index: 2;" 
+              @click="goToBid(bid.id)">
           <div class="text-white">{{ status(bid) }}</div>
           <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
           <div class="text-white">{{ jobName(bid.job_name) }}</div>

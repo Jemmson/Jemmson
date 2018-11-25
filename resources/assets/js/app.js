@@ -178,21 +178,27 @@ router.beforeEach ((to, from, next) => {
   if (to.path === '/furtherInfo') {
     let customer = Spark.state.user.customer;
     let contractor = Spark.state.user.contractor;
-    if ((customer !== null && customer.location_id !== null) || (contractor !== null && contractor.location_id !== null)) {
+    if ((customer !== null && customer.location_id !== null) || 
+        (contractor !== null && contractor.location_id !== null)) {
       console.log ('wtf');
       next ('/home');
     }
   }
-  if (to.path !== '/furtherInfo' && to.path !== '/#' && to.path !== '/' && from.path !== '/furtherInfo') {
+  if (to.path !== '/furtherInfo' && 
+      to.path !== '/#' && 
+      to.path !== '/' && 
+      from.path !== '/furtherInfo') {
     
-    if (Spark.state.user === undefined || Spark.state.user === null) {
+    if (Spark.state.user === undefined || 
+        Spark.state.user === null) {
       location.href = '/login';
     }
 
     let customer = Spark.state.user.customer;
     let contractor = Spark.state.user.contractor;
 
-    if ((customer !== null && customer.location_id === null) || (contractor !== null && contractor.location_id === null)) {
+    if ((customer !== null && customer.location_id === null) || 
+        (contractor !== null && contractor.location_id === null)) {
       console.log ('to further info');
       next ('/furtherInfo');
     } else {

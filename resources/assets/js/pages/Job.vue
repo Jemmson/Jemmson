@@ -146,11 +146,20 @@
         try {
           const {
             data
+          // } = await axios.get('/job/' + id);
           } = await axios.get('/job/' + id);
           // debugger
           this.bid = data;
         } catch (error) {
-          error = error.response.data;
+          console.log(error);
+          // debugger;  
+          if (
+            error.message === 'Not Authorized to access this resource/api' ||
+            error.response.status === 403
+          ) {
+            this.$router.push('/bids');
+          }
+          // error = error.response.data;
           Vue.toasted.error(error.message);
         }
       }
