@@ -56,6 +56,7 @@ import TaskUtil from './classes/TaskUtil';
 
 
 import Home from './pages/Home';
+import Feedback from './pages/Feedback';
 import PublicHome from './pages/PublicHome';
 import Jobs from './pages/Jobs';
 import Job from './pages/Job';
@@ -93,6 +94,10 @@ const routes = [
   {
     path: '/bids',
     component: Jobs
+  },
+  {
+    path: '/feedback',
+    component: Feedback
   },
   {
     path: '/benefits',
