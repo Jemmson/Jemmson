@@ -24,7 +24,7 @@
                         <!-- <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i> -->
                         <i class="icon fas fa-bell bell"></i>
                         <br>
-                        Alerts
+                        <span style="color: white;">Alerts</span>
                     </button>
                 </div>
             </a>
