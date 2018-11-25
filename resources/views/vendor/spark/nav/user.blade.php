@@ -9,14 +9,22 @@
 
     <div>
         <div v-if="user" class="flex jemmson-navbar text-center">
-            <div class="flex-1">
+            @if (Auth::user()->email == 'jemmsoninc@gmail.com')
+                <div class="flex-1">
+                    <!-- Feedback -->
+                    <a href="/feedback">
+                        <i class="fa fa-fw fa-btn fa-sign-out"></i>Feedback
+                    </a>
+                </div>
+            @endif
+            <div class="flex-1">        
                 <a @click="showNotifications" class="has-activity-indicator">
                 <div class="navbar-icon">
                     <button>
                         <!-- <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i> -->
                         <i class="icon fas fa-bell bell"></i>
                         <br>
-                        Alerts
+                        <span style="color: white;">Alerts</span>
                     </button>
                 </div>
             </a>

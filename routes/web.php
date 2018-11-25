@@ -23,6 +23,8 @@ Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
 
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 
+    Route::get('/feedback', 'FeedbackController@show');
+
     Route::post('/initiate-bid', 'InitiateBidController@send');
     
     // TaskController

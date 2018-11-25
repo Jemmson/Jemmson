@@ -180,20 +180,29 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        $job->load(
-            [
-                'jobTasks.task',
-                'jobTasks.bidContractorJobTasks.contractor',
-                'location',
-                'jobTasks.location',
-                'jobTasks.images',
-                'customer' => function ($query) {
-                    $query->select('id', 'name');
-                }
-            ]
-        );
-
-        return $job;
+        if (
+            Auth::user()->id == $job->contractor_id ||
+            Auth::user()->id == $job->customer_id
+            ) {
+            $job->load(
+                [
+                    'jobTasks.task',
+                    'jobTasks.bidContractorJobTasks.contractor',
+                    'location',
+                    'jobTasks.location',
+                    'jobTasks.images',
+                    'customer' => function ($query) {
+                        $query->select('id', 'name');
+                    }
+                ]
+            );
+    
+            return $job;
+        } else {
+            return response()->json([
+                'message' => 'Not Authorized to access this resource/api'
+            ], 403);
+        }
     }
 
     /**

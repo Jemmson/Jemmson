@@ -61,6 +61,9 @@
 
         </div>
     @else
+    <script>
+        window.location = window.location.origin + '#/home/'
+    </script>
         <div class="flex flex-col further-info-main text-center">
             <div class="main-header p-4 uppercase">
                 You are already logged in

@@ -46,60 +46,76 @@
             </div> -->
         </div>
 
-        <div class="flex flex-col items-center">
-            <button class="btn btn-blue btn-width" name="showNotes" id="showNotes"
-                    @click="customerNotes = !customerNotes">
-                Customer Notes For Job
-            </button>
-            <div v-if="!isCustomer">
-                <div v-if="bid.customer.customer.notes !== ''">
-                    <transition name="slide-fade">
-                        <div class="mt-3 notes-width" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
-                    </transition>
+        
+                <div class="flex justify-around">
+                     <button class="btn btn-blue btn-width mr-6" name="showNotes" id="showNotes"
+                        @click="customerNotes = !customerNotes">
+                        Customer Notes For Job
+                    </button>
+                    <button v-show="bid.paid_with_cash_message !== ''" class="btn btn-blue btn-width ml-6" name="showPaidWithCashNotes" id="showPaidWithCashNotes"
+                        @click="showPaidWithCashNotes = !showPaidWithCashNotes">
+                        Paid With Cash Instructions
+                    </button>
                 </div>
-                <div v-else>
-                    <transition name="slide-fade">
-                        <div class="mt-3 notes-width" v-show="customerNotes">The customer does not have any notes for
-                            this job
-                        </div>
-                    </transition>
-                </div>
-            </div>
-            <div v-if="isCustomer">
-                <transition name="slide-fade">
-                    <div v-show="customerNotes">
-                        <div class="mt-4">
-                            <textarea
-                                    class="form-control"
-                                    :value="bid.customer.customer.notes"
-                                    name=""
-                                    id=""
-                                    cols="40"
-                                    rows="10"
-                                    @keyup="customerNotesMessage = $event.target.value"
-                            >
 
-                            </textarea>
-                            <!--<textarea type="text" class="form-control"-->
-                            <!--name="message"-->
-                            <!--:value="bid.customer.customer.notes"-->
-                            <!--placeholder="Optional Message">-->
+                <div class="wrapper">
+                    <div>
+                        <div v-show="!isCustomer" class="">
+                            <div v-if="bid.customer.customer.notes !== ''" class="" style="">
+                                <transition name="slide-fade">
+                                    <div class="mt-3 mr-6" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+                                </transition>
+                            </div>
+                            <div v-else>
+                                <transition name="slide-fade">
+                                    <div class="mt-3" v-show="customerNotes">The customer does not have any notes for
+                                        this job
+                                    </div>
+                                </transition>
+                            </div>
                         </div>
-                        <div class="mt-2">
-                            <button class="btn btn-red"
-                                    @click.prevent="updateGeneralContractorNotes()"
-                                    :disabled="disableCustomerNotesButton"
-                                    ref="custNotesUpdate">
-                        <span v-if="disableCustomerNotesButton">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                                Submit
-                            </button>
+                        <div v-show="isCustomer" class="">
+                            <transition name="slide-fade">
+                                <div v-show="customerNotes">
+                                    <div class="mt-4">
+                                        <textarea
+                                                class="form-control"
+                                                :value="bid.customer.customer.notes"
+                                                name=""
+                                                id=""
+                                                cols="40"
+                                                rows="10"
+                                                @keyup="customerNotesMessage = $event.target.value"
+                                        >
+
+                                        </textarea>
+                                        <!--<textarea type="text" class="form-control"-->
+                                        <!--name="message"-->
+                                        <!--:value="bid.customer.customer.notes"-->
+                                        <!--placeholder="Optional Message">-->
+                                    </div>
+                                    <div class="mt-2">
+                                        <button class="btn btn-red"
+                                                @click.prevent="updateGeneralContractorNotes()"
+                                                :disabled="disableCustomerNotesButton"
+                                                ref="custNotesUpdate">
+                                    <span v-if="disableCustomerNotesButton">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                    </span>
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </transition>
                         </div>
                     </div>
-                </transition>
-            </div>
-        </div>
+                    <div v-show="bid.paid_with_cash_message !== ''" class="">
+                        <transition name="slide-fade">
+                            <div class="mt-3 ml-6" v-show="showPaidWithCashNotes">{{ bid.paid_with_cash_message }}</div>
+                        </transition>
+                    </div>
+                </div>
+
 
 
         <div class="flex justify-between mt-4">
@@ -108,7 +124,7 @@
                 <span class="font-bold">${{ bid.bid_price }}</span>
             </div>
             <div v-else>
-                <span v-if="bid.status !== 'bid.in_progress'"  class="font-bold">${{ bid.bid_price }}</span>
+                <span v-if="bid.status !== 'bid.in_progress' && bid.status !== 'bid.initiated' "  class="font-bold">${{ bid.bid_price }}</span>
                 <span v-else class="font-bold"><i>PENDING</i></span>
             </div>
         </div>
@@ -134,105 +150,121 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
-  export default {
-    props: {
-      bid: Object,
-      isCustomer: Boolean,
-      customerName: String
-    },
-    data() {
-      return {
-        area: {
-          area: ''
-        },
-        customerNotesMessage: '',
-        disableCustomerNotesButton: false,
-        customerNotes: false,
-        areaError: '',
-        locationExists: false,
-        customerInfo: false
+export default {
+  props: {
+    bid: Object,
+    isCustomer: Boolean,
+    customerName: String
+  },
+  data() {
+    return {
+      area: {
+        area: ""
+      },
+      customerNotesMessage: "",
+      showPaidWithCashNotes: false,
+      disableCustomerNotesButton: false,
+      customerNotes: false,
+      areaError: "",
+      locationExists: false,
+      customerInfo: false
+    };
+  },
+  computed: {
+    ...mapGetters(["getCustomerName"]),
+    agreedStartDate() {
+      if (this.bid.agreed_start_date !== null) {
+        let d = this.bid.agreed_start_date;
+        let date = d.split(" ");
+        let format_date = date[0].split("-");
+        return format_date[1] + "/" + format_date[2] + "/" + format_date[0];
       }
     },
-    computed: {
-      ...mapGetters([
-        'getCustomerName'
-      ]),
-      agreedStartDate() {
-        if (this.bid.agreed_start_date !== null) {
-          let d = this.bid.agreed_start_date
-          let date = d.split(' ')
-          let format_date = date[0].split('-')
-          return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
+    showBidPrice() {
+      if (User.isCustomer()) {
+        const status = this.bid.status;
+        if (status !== "bid.initiated" && status !== "bid.in_progress") {
+          return true;
         }
-      },
-      showBidPrice() {
-        if (User.isCustomer()) {
-          const status = this.bid.status
-          if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
-            return true
-          }
-          return false
-        }
-        return true
-      },
-      status() {
-        return User.status(this.bid.status, this.bid)
-      },
-      showDeclinedMessage() {
-        return !this.isCustomer && this.bid.declined_message !== null && this.bid.status === 'bid.declined'
-      },
-      showAddress() {
-        return this.bid.location_id !== undefined && this.bid.location_id !== null && this.bid.location !== null
+        return false;
       }
+      return true;
     },
-    methods: {
-      getLabelClass(status) {
-        return Format.statusLabel(status)
-      },
-      ...mapMutations([
-        'setCustomerName'
-      ]),
-      ...mapActions([
-        'actCustomerName'
-      ]),
-      updateGeneralContractorNotes() {
-        Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer_id)
-      },
-      updateArea() {
-        // Customer.updateArea (this.area.area, this.bid.id);
-      },
-      showArea() {
-        console.log('user type: ' + User.isContractor())
-        return this.area.area !== '' && User.isContractor()
-      }
+    status() {
+      return User.status(this.bid.status, this.bid);
     },
-    mounted: function() {
+    showDeclinedMessage() {
+      return (
+        !this.isCustomer &&
+        this.bid.declined_message !== null &&
+        this.bid.status === "bid.declined"
+      );
+    },
+    showAddress() {
+      return (
+        this.bid.location_id !== undefined &&
+        this.bid.location_id !== null &&
+        this.bid.location !== null
+      );
     }
-  }
+  },
+  methods: {
+    getLabelClass(status) {
+      return Format.statusLabel(status);
+    },
+    ...mapMutations(["setCustomerName"]),
+    ...mapActions(["actCustomerName"]),
+    updateGeneralContractorNotes() {
+      Customer.updateNotesForJob(
+        this.customerNotesMessage,
+        this.bid.customer_id
+      );
+    },
+    updateArea() {
+      // Customer.updateArea (this.area.area, this.bid.id);
+    },
+    showArea() {
+      console.log("user type: " + User.isContractor());
+      return this.area.area !== "" && User.isContractor();
+    }
+  },
+  mounted: function() {}
+};
 </script>
 
 <style lang="less" scoped>
-    .status {
-        padding: 1rem;
-        padding-left: 6px;
-        padding-right: 6px;
-    }
 
-    .btn-width {
-        width: 100%
-    }
+.wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
 
-    .notes-width {
-        width: 100%
-    }
+.w-100 {
+    width: 100%;
+}
 
-    @media (min-width: 762px) {
-        .btn-width {
-            width: 27%
-        }
-    }
+// .btn-width {
+//     width: 15rem;
+// }
+.status {
+  padding: 1rem;
+  padding-left: 6px;
+  padding-right: 6px;
+}
 
+.btn-width {
+  width: 100%;
+}
 
+.notes-width {
+  max-width: 75%;
+}
+
+@media (min-width: 762px) {
+  .btn-width {
+    width: 27%;
+  }
+}
 </style>
