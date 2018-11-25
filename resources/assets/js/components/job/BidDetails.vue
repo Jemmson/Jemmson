@@ -124,7 +124,7 @@
                 <span class="font-bold">${{ bid.bid_price }}</span>
             </div>
             <div v-else>
-                <span v-if="bid.status !== 'bid.in_progress'"  class="font-bold">${{ bid.bid_price }}</span>
+                <span v-if="bid.status !== 'bid.in_progress' && bid.status !== 'bid.initiated' "  class="font-bold">${{ bid.bid_price }}</span>
                 <span v-else class="font-bold"><i>PENDING</i></span>
             </div>
         </div>
