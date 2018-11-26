@@ -34,8 +34,8 @@
                                     </span>
                                 </div>
                                 <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
-                                    <label for="email">Email *</label>
-                                    <input type="email" class="form-control" id="email" name="email" required v-model="initiateBidForSubForm.email">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" v-model="initiateBidForSubForm.email">
                                     <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
                                         {{ initiateBidForSubForm.errors.get('email') }}
                                     </span>
