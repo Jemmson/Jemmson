@@ -12,7 +12,7 @@
             @if (Auth::user()->email == 'jemmsoninc@gmail.com')
                 <div class="flex-1">
                     <!-- Feedback -->
-                    <a href="/feedback">
+                    <a href="/#/feedback">
                         <i class="fa fa-fw fa-btn fa-sign-out"></i>Feedback
                     </a>
                 </div>
