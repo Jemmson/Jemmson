@@ -77,15 +77,15 @@
                 Cancel
             </button>
             <button class="btn btn-red" @click.prevent="openDeclineForm" ref="decline">
-                Decline
+                Change Bid
             </button>
         </div>
         <!-- / decline bid section -->
         <transition name="slide-fade">
-            <div v-if="showDeclineForm" ref="decline-form">
+            <div v-if="showDeclineForm" ref="decline-form" class="top">
                 <!-- deny message -->
                 <div class="form-group col-md-12" :class="{'has-error': form.errors.has('message')}">
-                    <label for="">Message</label>
+                    <div class="text-center title" for="">Please input what you would like to change</div>
                     <input type="text" class="form-control" name="message" v-model="form.message"
                            placeholder="Optional Message">
                     <span class="help-block" v-show="form.errors.has('message')">
@@ -98,7 +98,7 @@
                         <span v-if="disabled.declineBid">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
-                        Decline Bid
+                        Change Bid
                     </button>
                 </div>
             </div>
@@ -109,131 +109,153 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      bid: Object,
+export default {
+  props: {
+    bid: Object
+  },
+  data() {
+    return {
+      taskIndex: 0,
+      form: new SparkForm({
+        id: this.bid.id,
+        agreed_start_date: "",
+        end_date: "",
+        area: "",
+        status: this.bid.status,
+        job_location_same_as_home: true,
+        address_line_1: "",
+        address_line_2: "",
+        city: "",
+        state: "",
+        zip: "",
+        message: ""
+      }),
+      modalCurrentlyOpenFor: "",
+      modalHeader: "",
+      modalBody: "",
+      modalId: "",
+      mYes: "yes",
+      mNo: "no",
+      disabled: {
+        approve: false,
+        declineBid: false,
+        cancelBid: false
+      },
+      showDeclineForm: false,
+      modalBody: Language.lang().modal.reviewBidConfirmationModal
+    };
+  },
+  methods: {
+    updateFormLocation(location) {
+      console.log(location);
+
+      this.form.address_line_1 = location.route;
+      this.form.city = location.locality;
+      this.form.state = location.administrative_area_level_1;
+      this.form.zip = location.postal_code;
     },
-    data() {
-      return {
-        taskIndex: 0,
-        form: new SparkForm({
-          id: this.bid.id,
-          agreed_start_date: '',
-          end_date: '',
-          area: '',
-          status: this.bid.status,
-          job_location_same_as_home: true,
-          address_line_1: '',
-          address_line_2: '',
-          city: '',
-          state: '',
-          zip: '',
-          message: '',
-        }),
-        modalCurrentlyOpenFor: '',
-        modalHeader: '',
-        modalBody: '',
-        modalId: '',
-        mYes: 'yes',
-        mNo: 'no',
-        disabled: {
-          approve: false,
-          declineBid: false,
-          cancelBid: false
-        },
-        showDeclineForm: false,
-        modalBody: Language.lang().modal.reviewBidConfirmationModal
+    openModal(forBtn) {
+      // update model header and body
+      switch (forBtn) {
+        case "approveBid":
+          this.updateModal(
+            "Confirm Approval",
+            "You are about to approve this bid. Click approve bid to approve or back to cancel this action.",
+            "approveBid",
+            "approve bid",
+            "back"
+          );
+          this.modalCurrentlyOpenFor = "approveBid";
+          break;
+        case "cancelBid":
+          this.updateModal(
+            "Confirm Cancellation",
+            "You are about to cancel this job," +
+              " Click delete job to cancel and delete the job or back to cancel this action.",
+            "cancelBid",
+            "Delete Job",
+            "back"
+          );
+          this.modalCurrentlyOpenFor = "cancelBid";
+          break;
       }
+
+      // open model after content has been updated
+      $("#modal").modal();
     },
-    methods: {
-      updateFormLocation(location) {
-        console.log(location)
-
-        this.form.address_line_1 = location.route
-        this.form.city = location.locality
-        this.form.state = location.administrative_area_level_1
-        this.form.zip = location.postal_code
-      },
-      openModal(forBtn) {
-        // update model header and body
-        switch (forBtn) {
-          case 'approveBid':
-            this.updateModal('Confirm Approval',
-              'You are about to approve this bid. Click approve bid to approve or back to cancel this action.',
-              'approveBid', 'approve bid', 'back')
-            this.modalCurrentlyOpenFor = 'approveBid'
-            break
-          case 'cancelBid':
-            this.updateModal('Confirm Cancellation', 'You are about to cancel this job,' +
-              ' Click delete job to cancel and delete the job or back to cancel this action.',
-              'cancelBid', 'Delete Job', 'back')
-            this.modalCurrentlyOpenFor = 'cancelBid'
-            break
-        }
-
-        // open model after content has been updated
-        $('#modal').modal()
-      },
-      updateModal(header, body, id, yes, no) {
-        this.modalHeader = header
-        this.modalBody = body
-        this.modalId = id
-        this.mYes = yes
-        this.mNo = no
-      },
-      modalYes() {
-        switch (this.modalCurrentlyOpenFor) {
-          case 'approveBid':
-            this.approve()
-            $('#modal').modal('hide')
-            break
-          case 'cancelBid':
-            this.cancelBid()
-            $('#modal').modal('hide')
-            break
-        }
-      },
-      openDeclineForm() {
-        this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true
-      },
-      approve(data) {
-        Customer.approveBid(this.form, this.disabled)
-      },
-      declineBid() {
-        Customer.declineBid(this.form, this.disabled)
-      },
-      cancelBid() {
-        Customer.cancelBid(this.bid, this.disabled)
-      },
-      initAutocomplete() {
-        User.initAutocomplete('route3')
+    updateModal(header, body, id, yes, no) {
+      this.modalHeader = header;
+      this.modalBody = body;
+      this.modalId = id;
+      this.mYes = yes;
+      this.mNo = no;
+    },
+    modalYes() {
+      switch (this.modalCurrentlyOpenFor) {
+        case "approveBid":
+          this.approve();
+          $("#modal").modal("hide");
+          break;
+        case "cancelBid":
+          this.cancelBid();
+          $("#modal").modal("hide");
+          break;
       }
     },
-    mounted() {
-      Bus.$on('updateFormLocation', (payload) => {
-        this.updateFormLocation(payload)
-      })
-
-      let d = new Date()
-      let month = d.getMonth() + 1
-      let day = d.getDate()
-
-      if (month < 10) {
-        month = '0' + month
-      }
-
-      if (day < 10) {
-        day = '0' + day
-      }
-
-      this.form.agreed_start_date = d.getFullYear() + '-' + month + '-' + day
-      // this.agreed_start_date = '2018-07-03';
+    openDeclineForm() {
+      this.showDeclineForm
+        ? (this.showDeclineForm = false)
+        : (this.showDeclineForm = true);
+    },
+    approve(data) {
+      Customer.approveBid(this.form, this.disabled);
+    },
+    declineBid() {
+      Customer.declineBid(this.form, this.disabled);
+    },
+    cancelBid() {
+      Customer.cancelBid(this.bid, this.disabled);
+    },
+    initAutocomplete() {
+      User.initAutocomplete("route3");
     }
+  },
+  mounted() {
+    Bus.$on("updateFormLocation", payload => {
+      this.updateFormLocation(payload);
+    });
+
+    let d = new Date();
+    let month = d.getMonth() + 1;
+    let day = d.getDate();
+
+    if (month < 10) {
+      month = "0" + month;
+    }
+
+    if (day < 10) {
+      day = "0" + day;
+    }
+
+    this.form.agreed_start_date = d.getFullYear() + "-" + month + "-" + day;
+    // this.agreed_start_date = '2018-07-03';
   }
+};
 </script>
 
 <style scoped>
-    .btn-group {
-        margin-bottom: 16px;
-    }
+.btn-group {
+  margin-bottom: 16px;
+}
+
+.top {
+  margin-top: 1.5rem;
+  border: black thin solid;
+  border-radius: 5px;
+  padding: .75rem .5rem 0rem .5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+}
 </style>
