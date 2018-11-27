@@ -48,7 +48,14 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['jobTask.job', 'jobTask.task'])->get();
+        $bidTasks = Auth::user()->
+                    contractor()->
+                    first()->
+                    bidContractorJobTasks()->
+                    with([
+                        'jobTask.job', 
+                        'jobTask.task'
+                    ])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -60,7 +67,14 @@ class TaskController extends Controller
     public function bidTasks()
     {
         if (Auth::user()->usertype == 'contractor') {
-            $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->with(['jobTask.job', 'jobTask.task', 'jobTask.images', 'jobTask.location'])->get();
+            $bidTasks = Auth::user()->
+            contractor()->first()->
+            bidContractorJobTasks()->with([
+                'jobTask.job',
+                'jobTask.task', 
+                'jobTask.images', 
+                'jobTask.location'
+                ])->get();
             return response()->json($bidTasks, 200);
         }
     }
@@ -329,7 +343,7 @@ class TaskController extends Controller
 
         $this->validate($request, [
             'phone' => 'required|string|min:10|max:14',
-            'email' => 'required|email',
+            // 'email' => 'required|email',
         ]);
 
         //
