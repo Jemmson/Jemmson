@@ -136,6 +136,10 @@
                                 <!--</span>-->
 
                             </div>
+                            <!-- <div class="flex flex-col ml-2 items-center">
+                              <label>Start Date <br> To Be Determined</label>
+                              <input type="checkbox" :checked="checked">
+                            </div> -->
                         </div>
 
                         <div class="flex flex-col m-t-4">
@@ -252,6 +256,7 @@
           startDateErrorMessage: '',
           hasStartDateError: false
         }),
+        checked: 'checked',
         result: {
           resultReturned: false,
           taskName: '',
