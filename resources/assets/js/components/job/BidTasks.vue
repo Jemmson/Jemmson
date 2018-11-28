@@ -114,30 +114,22 @@
 
                     <div class="flex flex-col">
                         <div class="flex flex-col mb-3" v-if="!isCustomer">
-                            <span class="label mb-2">Notes for Subcontractor</span>
-                            <textarea cols="0" rows="0" class="form-control"
-                                      :disabled="disableMessages" :value="jobTask.sub_message"
-                                      :id="'message-sub-' + jobTask.id"></textarea>
-                            <button class="btn btn-green m-t-3 mb-4"
-                                    @click="updateMessage(jobTask.id, jobTask.sub_message, 'sub')">
-                                <span v-if="sendSubMessage">Send Message</span>
-                                <span v-else="sendSubMessage" class="mr-2">Message Sent
-                                    <i class="fas fa-check-circle"></i>
-                                </span>
-                            </button>
+                            <message
+                              label="Notes for Subcontractor"
+                              :jobId="jobTask.id"
+                              :server-message="jobTask.sub_message"
+                              actor='sub'
+                              :disable-messages="disableMessages"
+                            ></message>
                         </div>
                         <div class="flex flex-col" v-if="isContractor">
-                            <span class="label mb-2">Notes for Customer</span>
-                            <textarea cols="0" rows="0" class="form-control"
-                                      :disabled="disableMessages" :value="jobTask.customer_message"
-                                      :id="'message-customer-' + jobTask.id"></textarea>
-                            <button class="btn btn-green m-t-3 mb-4"
-                                    @click="updateMessage(jobTask.id, jobTask.customer_message, 'customer')">
-                                <span v-if="sendCustomerMessage">Send Message</span>
-                                <span v-else="sendCustomerMessage" class="mr-2">Message Sent
-                                     <i class="fas fa-check-circle"></i>
-                                </span>
-                            </button>
+                            <message
+                              label="Notes For Customer"
+                              :jobId="jobTask.id"
+                              :server-message="jobTask.customer_message"
+                              actor='customer'
+                              :disable-messages="disableMessages"
+                            ></message>
                         </div>
 
                         <div class="flex flex-col" v-if="isCustomer">
@@ -250,7 +242,11 @@
 </template>
 
 <script>
+  import Message from './Message.vue';
   export default {
+    components: {
+      Message
+    },
     props: {
       bid: Object
     },
@@ -267,7 +263,7 @@
         hasStartDateError: false,
         startDateChanged: false,
         startDateError: false,
-
+        customerMessage: '',
         disabled: {
           showDenyForm: false,
           pay: false,
