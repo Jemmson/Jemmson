@@ -7,10 +7,13 @@
                     id="message">
             </textarea>
         <button class="btn btn-green m-t-3 mb-4"
-                @click="updateMessage()">
-            <span v-if="sendMessage">Send Message</span>
-            <span v-else class="mr-2">Message Sent
-                    <i class="fas fa-check-circle"></i>
+                @click="updateMessage()"
+                :disabled="!shouldSendMessage"
+                >
+            <span v-if="shouldSendMessage">Send Message</span>
+            <span v-else-if="messageIsSent" class="mr-2">Message Sent</span>
+            <span v-else-if="messageIsBeingSent" class="mr-2">Sending Message
+              <i class="fa fa-btn fa-spinner fa-spin"></i>
             </span>
         </button>
     </div>   
@@ -22,13 +25,27 @@ export default {
   data() {
     return {
       sendMessage: true,
+      sendingMessage: true,
+      messageSent: true,
       theServerMessage: "",
+      messageIsBeingSent: false,
       priorMessage: ""
     };
   },
   computed: {
-    currentMessage() {
-      this.theServerMessage = this.serverMessage;
+    shouldSendMessage() {
+      if (this.serverMessage !== this.theServerMessage && !this.messageIsBeingSent) {
+        return true;
+      } else {
+        return false
+      }
+    },
+    messageIsSent() {
+      if (this.serverMessage === this.theServerMessage && !this.messageIsBeingSent) {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   mounted() {
@@ -36,14 +53,14 @@ export default {
   },
   methods: {
     async updateMessage() {
-      if (this.serverMessage !== this.theServerMessage) {
-        this.sendMessage = false;
+      if (this.shouldSendMessage) {
+        this.messageIsBeingSent = true;
         await GeneralContractor.updateMessage(
           this.theServerMessage,
           this.jobId,
           this.actor
         );
-        this.sendMessage = true;
+        this.messageIsBeingSent = false;
       }
     }
   },
