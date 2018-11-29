@@ -83,7 +83,7 @@ if (Spark.state.user !== null) {
           break;
         case "App\\Notifications\\JobCanceled":
           Vue.toasted.info('A Job Was Canceled!');
-          Bus.$emit('bidUpdated');
+          Bus.$emit('jobCanceled');
           break;
         case "App\\Notifications\\UploadedTaskImage":
           Vue.toasted.info('An Image Was Uploaded.');
