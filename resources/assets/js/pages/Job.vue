@@ -183,6 +183,11 @@
         $('#stripe-modal').modal();
       });
     },
+    beforeDestroy () {
+      // ensures no old listeners are left in the bus from old components
+      Bus.$off('bidUpdated')
+      Bus.$off('taskAdded')
+    },
     mounted: function () {
       // set up init data
       this.bidForm.id = this.bid.id;
