@@ -95,6 +95,9 @@
       Bus.$on('bidUpdated', (payload) => {
         this.getBids();
       });
+      Bus.$on('jobCanceled', (payload) => {
+        this.getBids();
+      });
       Bus.$on('previewSubForTask', (payload) => {
         this.previewSubForTask(payload[0], payload[1], payload[2]);
       });
