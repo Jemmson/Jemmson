@@ -14,7 +14,7 @@ class PaidWithCashMessage extends Migration
     public function up()
     {
         Schema::table('jobs', function($table) {
-            $table->string('paid_with_cash_message');
+            $table->string('paid_with_cash_message')->nullable();
         });
     }
 

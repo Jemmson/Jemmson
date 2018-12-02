@@ -1,0 +1,78 @@
+<template>
+    <div>
+        <span class="label mb-2">{{ label }}</span>
+            <textarea cols="0" rows="0" class="form-control"
+                    :disabled="disableMessages" 
+                    v-model="theServerMessage"
+                    id="message">
+            </textarea>
+        <button class="btn btn-green m-t-3 mb-4"
+                @click="updateMessage()"
+                :disabled="!shouldSendMessage"
+                >
+            <span v-if="shouldSendMessage">Send Message</span>
+            <span v-else-if="messageIsSent" class="mr-2">Message Sent</span>
+            <span v-else-if="messageIsBeingSent" class="mr-2">Sending Message
+              <i class="fa fa-btn fa-spinner fa-spin"></i>
+            </span>
+        </button>
+    </div>   
+</template>
+
+<script>
+export default {
+  name: "",
+  data() {
+    return {
+      sendMessage: true,
+      sendingMessage: true,
+      messageSent: true,
+      theServerMessage: "",
+      messageIsBeingSent: false,
+      priorMessage: ""
+    };
+  },
+  computed: {
+    shouldSendMessage() {
+      if (this.serverMessage !== this.theServerMessage && !this.messageIsBeingSent) {
+        return true;
+      } else {
+        return false
+      }
+    },
+    messageIsSent() {
+      if (this.serverMessage === this.theServerMessage && !this.messageIsBeingSent) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  mounted() {
+    this.theServerMessage = this.serverMessage;
+  },
+  methods: {
+    async updateMessage() {
+      if (this.shouldSendMessage) {
+        this.messageIsBeingSent = true;
+        await GeneralContractor.updateMessage(
+          this.theServerMessage,
+          this.jobId,
+          this.actor
+        );
+        this.messageIsBeingSent = false;
+      }
+    }
+  },
+  props: {
+    jobId: Number,
+    label: String,
+    serverMessage: String,
+    actor: String,
+    disableMessages: Boolean
+  }
+};
+</script>
+
+<style scoped>
+</style>
