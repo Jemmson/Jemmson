@@ -1,6 +1,6 @@
 <template>
-    <!-- Modal -->
-    <div class="modal fade" style="margin-top:7rem;" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+       <!-- Modal -->
+     <div class="modal fade" style="margin-top:7rem;" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -21,17 +21,17 @@
                 </div>
             </div>
         </div>
-    </div>
+     </div>
 </template>
 
 <script>
-    export default {
-        props: {
-            modalId: String,
-            header: String,
-            body: String,
-            no: String,
-            yes: String
-        }
-    }
+export default {
+  props: {
+    modalId: String,
+    header: String,
+    body: String,
+    no: String,
+    yes: String
+  }
+};
 </script>
