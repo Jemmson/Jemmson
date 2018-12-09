@@ -83,7 +83,7 @@
         @click="customerNotes = !customerNotes"
       >Customer Notes For Job</button>
       <button
-        v-show="bid.paid_with_cash_message !== ''"
+        v-show="bid.paid_with_cash_message !== '' && bid.paid_with_cash_message !== null"
         class="btn btn-blue btn-width ml-6"
         name="showPaidWithCashNotes"
         id="showPaidWithCashNotes"
@@ -94,7 +94,7 @@
     <div class="wrapper">
       <div>
         <div v-show="!isCustomer" class>
-          <div v-if="bid.customer.customer.notes !== ''" class style>
+          <div v-if="bid.customer.customer.notes !== '' && bid.customer.customer.notes !== null" class style>
             <transition name="slide-fade">
               <div class="mt-3 mr-6" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
             </transition>
@@ -143,7 +143,7 @@
           </transition>
         </div>
       </div>
-      <div v-show="bid.paid_with_cash_message !== ''" class>
+      <div v-show="bid.paid_with_cash_message !== '' && bid.paid_with_cash_message !== null" class>
         <transition name="slide-fade">
           <div class="mt-3 ml-6" v-show="showPaidWithCashNotes">{{ bid.paid_with_cash_message }}</div>
         </transition>
@@ -202,22 +202,26 @@ export default {
         area: ""
       },
       statuses: [
-          {
-              type: 'Bid Initiated',
-              description: 'Contractor has sent a bid but has not added a task to the job'
-          },
-          {
-              type: 'Job Declined Please Review',
-              description: 'Customer has not approved the bid and is asking for a change to be made'
-          },
-          {
-              type: 'Bid In Progress',
-              description: 'Contractor has added tasks to the bid but has not yet submitted it to the customer'
-          },
-          {
-              type: 'Waiting on Customer Approval',
-              description: 'Contractor has submitted the finished bid and is now waiting for the customer to approve it'
-          }
+        {
+          type: "Bid Initiated",
+          description:
+            "Contractor has sent a bid but has not added a task to the job"
+        },
+        {
+          type: "Job Declined Please Review",
+          description:
+            "Customer has not approved the bid and is asking for a change to be made"
+        },
+        {
+          type: "Bid In Progress",
+          description:
+            "Contractor has added tasks to the bid but has not yet submitted it to the customer"
+        },
+        {
+          type: "Waiting on Customer Approval",
+          description:
+            "Contractor has submitted the finished bid and is now waiting for the customer to approve it"
+        }
         //   ,
         //   {
         //       type: '',
