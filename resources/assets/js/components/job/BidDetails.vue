@@ -5,11 +5,11 @@
     <div class="border-b pb-4 mb-6">
       <div class="status" :class="getLabelClass(bid.status)">
         {{ status }}
-        <info title="Statuses">
+        <info v-show="!isCustomer" title="Statuses">
           <div slot="tldr">
             <div class="flex flex-col">
               <ol>
-                <li v-for="status in statuses" :key="status">
+                <li v-for="status in statuses" :key="status.type">
                   <div class="flex justify-between">
                     <div class="mr-2">
                       <strong>{{ status.type }}</strong>
@@ -221,6 +221,16 @@ export default {
           type: "Waiting on Customer Approval",
           description:
             "Contractor has submitted the finished bid and is now waiting for the customer to approve it"
+        },
+        {
+          type: "In Progress",
+          description:
+            "The job is in progress and it is waiting for the contrator sub to finish the job"
+        },
+        {
+          type: "Job Completed",
+          description:
+            "The Customer has paid for the job and the job is completed"
         }
         //   ,
         //   {
