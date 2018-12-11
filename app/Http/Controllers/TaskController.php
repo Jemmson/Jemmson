@@ -200,6 +200,7 @@ class TaskController extends Controller
         }
 
         $bidContractorJobTask->bid_price = $request->bid_price;
+        $bidContractorJobTask->status = 'sent';
         $jobTask = $bidContractorJobTask->jobTask()->first();
 
         // doesn't work since no default 'id' found

@@ -157,7 +157,8 @@
                                 <div class="flex-1">{{ bid.contractor.name }}</div>
                                 <div class="flex-1">${{ bid.bid_price }}</div>
                                 <div class="flex-1">
-                                    <button v-if="showAcceptBtn(jobTask.status)"
+                                    <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
+                                    <button v-if="bid.updated_at !== null && bid.status === 'sent'"
                                             @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
                                             :disabled="disabled.accept">
                       <span v-if="disabled.accept">
