@@ -158,14 +158,16 @@
                                 <div class="flex-1">${{ bid.bid_price }}</div>
                                 <div class="flex-1">
                                     <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
-                                    <button v-if="bid.updated_at !== null && bid.status === 'sent'"
+                                    <button v-if="!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid)"
                                             @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
                                             :disabled="disabled.accept">
-                      <span v-if="disabled.accept">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                      </span>
+                                            <span v-if="disabled.accept">
+                                              <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                            </span>
                                         Accept
                                     </button>
+                                    <div v-else-if="checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1"><h5>Bid Has Been Accepted</h5></div>
+                                    <div v-else-if="!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)"><h5>Pending</h5></div>
                                 </div>
                             </div>
                         </div>
@@ -328,6 +330,22 @@
       }
     },
     methods: {
+      checkIfBidHasBeenAccepted(jobTask) {
+        let accepted = false;
+        for(let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
+          if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
+            accepted = true;
+          }
+        }
+        return accepted;
+      },
+      checkIfBidHasBeenSent(bid){
+        if (bid.updated_at !== null && bid.status === 'sent') {
+           return true;
+         } else {
+           return false;
+         }
+      },
       showSubMessage(msg) {
         return (msg != null &&
           msg != '' &&

@@ -423,6 +423,24 @@ class TaskController extends Controller
             return response()->json(["message" => "Couldn't accept bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
         }
 
+        // change statuses on bidContractorJobTask. need to change the statuses for each contractor that has this jobtaskid
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id","=",$jobTaskId)->get();
+
+        
+        $allContractorsForJobTask->map(function($contractor) use ($bidId) {
+            $c = BidContractorJobTask::find($contractor->id);
+            if($contractor->id === $bidId){
+                $c->accepted = true;
+            } else{
+                $c->accepted = false;
+            }
+            $c->save();
+        });
+
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id","=",$jobTaskId)->get();
+
+        dd($allContractorsForJobTask);
+
         // set the sub price in the job task table
         $job = Job::find($jobId);
         $jobTask = JobTask::find($jobTaskId);
