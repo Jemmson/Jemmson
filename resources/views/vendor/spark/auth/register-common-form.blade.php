@@ -69,7 +69,11 @@
 
             <!-- Password -->
             <div class="input-section" :class="{'has-error': registerForm.errors.has('password')}">
-                <label class="j-label">Password</label>
+                <div class="flex justify-between">
+                    <label class="j-label">Password</label>
+                    <div style="color:red;"
+                        >Must Be at least 6 alphanumeric characters</div>
+                </div>
 
                 <div>
                     <input type="password" class="border input" name="password" v-model="registerForm.password">
