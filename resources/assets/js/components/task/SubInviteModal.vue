@@ -14,20 +14,68 @@
                         <form role="form">
                                 <div class="form-group">
                                     <label for="contractorName">Company Name *</label>
-                                    <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')" ref="name">Please Enter A Name</span>
-                                    <input type="text" class="form-control" id="contractorName" name="contractorName" placeholder="Name" v-model="initiateBidForSubForm.name"
-                                        v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" autofocus required v-on:keyup="autoComplete">
-                                    <div class="panel-footer" v-if="aResults.length">
+                                    <span class="validationError" 
+                                          v-show="initiateBidForSubForm.errors.has('name')" 
+                                          ref="name">Please Enter A Name
+                                    </span>
+                                    <input 
+                                       type="text"
+                                       class="form-control"
+                                       id="contractorName" 
+                                       name="contractorName" 
+                                       v-model="name"
+                                       placeholder="Name"
+                                       v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" 
+                                       autofocus 
+                                       required 
+                                       v-on:keyup="autoComplete"
+                                    >
+                                     <div 
+                                        class="panel-footer" 
+                                        v-if="aResults.length">
                                         <ul class="list-group">
-                                            <button class="list-group-item" v-for="result in aResults" v-bind:key="result.id" :name="result.phone" @click.prevent="fillFields(result)">
+                                            <button
+                                                class="list-group-item" 
+                                                v-for="result in aResults" 
+                                                v-bind:key="result.id" 
+                                                :name="result.phone" 
+                                                @click.prevent="fillFields(result)"
+                                            >
+                                                {{ result.name }} - {{ result.contractor.company_name }}
+                                            </button>
+                                        </ul>        
+                                    </div>
+                                    <!-- <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="contractorName" 
+                                        name="contractorName" 
+                                        placeholder="Name" 
+                                        v-model="initiateBidForSubForm.name"
+                                        v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" 
+                                        autofocus 
+                                        required 
+                                        v-on:keyup="autoComplete">
+                                    <div 
+                                        class="panel-footer" 
+                                        v-if="aResults.length">
+                                        <ul class="list-group">
+                                            <button 
+                                                class="list-group-item" 
+                                                v-for="result in aResults" 
+                                                v-bind:key="result.id" 
+                                                :name="result.phone" 
+                                                @click.prevent="fillFields(result)">
                                                 {{ result.name }} - {{ result.contractor.company_name }}
                                             </button>
                                         </ul>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
                                     <label for="phone">Phone *</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" maxlength="10" required v-model="initiateBidForSubForm.phone"
+                                    <input type="tel" 
+                                           placeholder="Phone Number"
+                                           class="form-control" id="phone" name="phone" maxlength="10" required v-model="initiateBidForSubForm.phone"
                                         @keyup="filterPhone">
                                     <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
                                         {{ initiateBidForSubForm.errors.get('phone') }}
@@ -35,7 +83,9 @@
                                 </div>
                                 <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" v-model="initiateBidForSubForm.email">
+                                    <input type="email" 
+                                           placeholder="Email"
+                                           class="form-control" id="email" name="email" v-model="initiateBidForSubForm.email">
                                     <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
                                         {{ initiateBidForSubForm.errors.get('email') }}
                                     </span>
@@ -71,6 +121,7 @@
                     phone: '',
                     counter: 0,
                 }),
+                name: '',
                 user: '',
                 results: [],
                 disabled: {
@@ -94,7 +145,10 @@
             },
             autoComplete() {
                 this.results = [];
-                let query = this.initiateBidForSubForm.name;
+                let query = this.name;
+                // let query = this.initiateBidForSubForm.name;
+                // let query = this.initiateBidForSubForm.name;
+                console.log("checking for names");
                 if (query.length > 2) {
                     axios.get('/api/search', {
                         params: {
@@ -109,19 +163,26 @@
         },
         computed: {
             aResults() {
+                // if (this.results.length > 0) {
+                //     return this.results.filter((sub) => {
+                //         for (let bid of this.jobTask.bid_contractor_job_tasks) {
+                //             // if invited to bid do not show in dropdown list
+                //             if (bid.contractor_id === sub.id) {
+                //                 return false;
+                //             }
+                //         }
+                //         // do not show self in dropdown list
+                //         return sub.id !== this.user.id;
+                //     });
+                // }
+                // return [];
                 if (this.results.length > 0) {
-                    return this.results.filter((sub) => {
-                        for (let bid of this.jobTask.bid_contractor_job_tasks) {
-                            // if invited to bid do not show in dropdown list
-                            if (bid.contractor_id === sub.id) {
-                                return false;
-                            }
-                        }
-                        // do not show self in dropdown list
-                        return sub.id !== this.user.id;
-                    });
+                    // return this.results.filter((sub) => {
+                    // }
+                    return this.results;
+                } else {
+                    return [];
                 }
-                return [];
             },
             isGeneralContractor() {
                 // General contractor is the one who created the bid

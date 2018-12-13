@@ -10,7 +10,12 @@
             <div class="form-group">
                 <label for="customerName">Customer Name *</label>
 
-                <input name="customer" id="customerName" dusk="customerName" type="text" v-model="form.customerName"
+                <input name="customer" 
+                       id="customerName" 
+                       dusk="customerName"
+                       data-dependency="phone"
+                       type="text" 
+                       v-model="form.customerName"
                        v-on:keyup="autoComplete"
                        class="form-control" required>
                 <div class="customer-name-results mt-2" v-if="results.length">
@@ -31,6 +36,7 @@
                        :class="{'formatError': phoneFormatError}" 
                        id="phone" @keyup="filterPhone" 
                        maxlength="10" 
+                       data-dependency="jobName"
                        name="phone" 
                        dusk="phone"
                        type="tel" @blur="validateMobileNumber($event.target.value)"
