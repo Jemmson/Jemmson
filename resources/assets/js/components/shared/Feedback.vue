@@ -49,7 +49,11 @@
                 $('#feedback-modal').modal();
             },
             submit() {
-                User.submitFeedback(this.comment, this.disabled);
+                let theComment = this.comment;
+                this.comment = '';
+                // debugger;
+                User.submitFeedback(theComment, this.disabled);
+                // this.comment = '';
             }
         }
     }
