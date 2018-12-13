@@ -232,6 +232,7 @@
             </div>
 
         </div>
+        <feedback></feedback>
     </div>
 </template>
 

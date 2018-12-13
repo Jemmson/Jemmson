@@ -19,6 +19,7 @@
             </table>
         <!-- <pre>{{ feedback }}</pre> -->
         <!-- <pre>{{ comments }}</pre> -->
+        <feedback></feedback>
     </div>
 </template>
 
