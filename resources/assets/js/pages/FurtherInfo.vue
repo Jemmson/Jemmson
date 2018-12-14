@@ -270,7 +270,7 @@
             unformattedNumber = unformattedNumber + number[i]
           }
         }
-        let numberLength = unformattedNumber.length
+        let numberLength = unformattedNumber.length;
         if (numberLength < 10) {
           if (this.getMobileValidResponse[1] !== '') {
             this.$store.commit('setTheMobileResponse', ['', '', ''])
