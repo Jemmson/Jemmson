@@ -18,8 +18,8 @@
                        v-model="form.customerName"
                        v-on:keyup="autoComplete"
                        class="form-control" required>
-                <div class="customer-name-results mt-2" v-if="results.length">
-                    <button class="customer-name-result" v-for="result in results" v-bind:key="result.id"
+                <div class="flex flex-col" v-if="results.length">
+                    <button class="flex-1 m-2 btn-format" v-for="result in results" v-bind:key="result.id"
                             :name="result.phone" @click.prevent="fillFields(result)">
                         {{ result.name }}
                     </button>
@@ -221,5 +221,11 @@ export default {
   }
   .formatErrorLabel {
     color: red;
+  }
+
+  .btn-format {
+      background-color: beige;
+      border-bottom: solid thin black;
+      padding: .5rem;
   }
 </style>

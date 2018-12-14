@@ -33,17 +33,17 @@
                                      <div 
                                         class="panel-footer" 
                                         v-if="aResults.length">
-                                        <ul class="list-group">
+                                        <div class="flex flex-col">
                                             <button
-                                                class="list-group-item" 
-                                                v-for="result in aResults" 
-                                                v-bind:key="result.id" 
-                                                :name="result.phone" 
-                                                @click.prevent="fillFields(result)"
+                                                    class="flex-1 m-2 btn-format"
+                                                    v-for="result in aResults"
+                                                    v-bind:key="result.id"
+                                                    :name="result.phone"
+                                                    @click.prevent="fillFields(result)"
                                             >
                                                 {{ result.name }} - {{ result.contractor.company_name }}
                                             </button>
-                                        </ul>        
+                                        </div>
                                     </div>
                                     <!-- <input 
                                         type="text" 
@@ -199,5 +199,11 @@
     .styled {
         margin-top: 10rem;
         margin-bottom: 10rem;
+    }
+
+    .btn-format {
+        background-color: beige;
+        border-bottom: solid thin black;
+        padding: .5rem;
     }
 </style>
