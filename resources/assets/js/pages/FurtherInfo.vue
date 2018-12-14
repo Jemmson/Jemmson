@@ -335,6 +335,9 @@
         if (!this.passwordsMatch) {
           return
         }
+
+        this.form.email = this.form.email.trim();
+
         User.submitFurtherInfo(this.form, this.disabled)
       },
       initAutocomplete() {

@@ -67,6 +67,7 @@ class HomeController extends Controller
             ]
         );
 
+        
 
         $user_id = Auth::user()->id;
         $phone = SanatizeService::phone($request->phone_number);
@@ -138,7 +139,7 @@ class HomeController extends Controller
         }
 
         $user = Auth::user();
-        $user->email = $request->email;
+        $user->email = trim($request->email);
         $user->name = $request->name;
         $user->phone = $phone;
 
