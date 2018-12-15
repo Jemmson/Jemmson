@@ -3,15 +3,16 @@
   <div class="flex flex-col" v-if="bid.job_name !== undefined">
     <!-- JOB STATUS -->
     <div class="border-b pb-4 mb-6">
-      <div class="status" :class="getLabelClass(bid.status)">
-        {{ status }}
-        <info
-                buttons="false"
-                class="spacing"
-                v-show="!isCustomer"
-                title="Statuses">
-          <div slot="tldr">
-            <div class="flex flex-col">
+        <div class="status flex justify-between" :class="getLabelClass(bid.status)">
+          <div></div>
+          <div>{{ status }}</div>
+          <div><info
+                  buttons="false"
+                  class="spacing"
+                  v-show="!isCustomer"
+                  title="Statuses">
+            <div slot="tldr">
+              <div class="flex flex-col">
                 <div v-for="status in statuses" :key="status.type">
                   <div class="flex justify-between">
                     <div class="mr-2">
@@ -20,21 +21,21 @@
                     </div>
                   </div>
                 </div>
+              </div>
             </div>
-          </div>
 
-          <div slot="full">
-            <p>As a contractor the job goes through various statuses. The first status is:</p>
-            <div class="text-center">
-              <strong>Initiated</strong>
+            <div slot="full">
+              <p>As a contractor the job goes through various statuses. The first status is:</p>
+              <div class="text-center">
+                <strong>Initiated</strong>
+              </div>
+              <p>
+                This status refers to a job that has just been initiated but there have been no tasks
+                assigned to the bid.
+              </p>
             </div>
-            <p>
-              This status refers to a job that has just been initiated but there have been no tasks
-              assigned to the bid.
-            </p>
-          </div>
-        </info>
-      </div>
+          </info></div>
+        </div>
     </div>
 
     <div class="flex flex-col self-center mb-6">
@@ -103,7 +104,7 @@
           </div>
           <div v-else>
             <transition name="slide-fade">
-              <div class="mt-3" v-show="customerNotes">
+              <div class="mt-3 no-notes" v-show="customerNotes">
                 The customer does not have any notes for
                 this job
               </div>
@@ -329,7 +330,10 @@ export default {
 
 <style lang="less" scoped>
 
-
+  .no-notes {
+    text-align: center;
+    margin-right: -9rem;
+  }
 
   .status-header {
     font-size: 1rem;
@@ -370,9 +374,11 @@ export default {
 //     width: 15rem;
 // }
 .status {
-  padding: 1rem;
-  padding-left: 6px;
-  padding-right: 6px;
+  /*padding: 1rem;*/
+  /*padding-left: 6px;*/
+  /*padding-right: 6px;*/
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .btn-width {
