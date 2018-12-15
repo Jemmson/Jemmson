@@ -5,19 +5,21 @@
     <div class="border-b pb-4 mb-6">
       <div class="status" :class="getLabelClass(bid.status)">
         {{ status }}
-        <info v-show="!isCustomer" title="Statuses">
+        <info
+                buttons="false"
+                class="spacing"
+                v-show="!isCustomer"
+                title="Statuses">
           <div slot="tldr">
             <div class="flex flex-col">
-              <ol>
-                <li v-for="status in statuses" :key="status.type">
+                <div v-for="status in statuses" :key="status.type">
                   <div class="flex justify-between">
                     <div class="mr-2">
-                      <strong>{{ status.type }}</strong>
-                      <div>{{ status.description }}</div>
+                      <strong class="status-header">{{ status.type }}:</strong>
+                      <div class="description">{{ status.description }}</div>
                     </div>
                   </div>
-                </li>
-              </ol>
+                </div>
             </div>
           </div>
 
@@ -326,6 +328,35 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+
+
+  .status-header {
+    font-size: 1rem;
+    margin-left: -1rem;
+    margin-right: -2rem;
+    text-align: start;
+    margin-bottom: .15rem;
+    padding: .25rem;
+    margin-top: .15rem;
+  }
+
+  .description {
+    font-size: .9rem;
+    margin-left: -1rem;
+    margin-right: -2rem;
+    text-align: start;
+    margin-bottom: .15rem;
+    /*background-color: beige;*/
+    padding: .25rem;
+    margin-top: .15rem;
+    border-radius: 5px;
+  }
+
+  /*.spacing {*/
+    /*margin-bottom: 10rem;*/
+  /*}*/
+
 .wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;

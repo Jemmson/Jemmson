@@ -3,7 +3,9 @@
     <div @click="showModal = true">
       <i class="fa fa-question-circle bid-status-info bid-status-shadow" aria-hidden="true"></i>
     </div>
-    <info-modal v-if="showModal" v-on:close="closeit()"
+    <info-modal
+            :buttons="buttons"
+            class="spacing" v-if="showModal" v-on:close="closeit()"
       :title="title"
     >
       <div slot="tldr" class="body">
@@ -34,7 +36,8 @@ export default {
   },
   computed: {},
   props: {
-    title: String
+    title: String,
+    buttons: String
   },
   methods: {
     displayInfoModal() {
@@ -51,6 +54,12 @@ export default {
 </script>
 
 <style scoped>
+
+  /*.spacing {*/
+    /*margin-top: 3rem;*/
+    /*margin-bottom: 500rem;*/
+  /*}*/
+
 /* .bid-status-info {
      border: white thin solid;
  } */

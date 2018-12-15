@@ -32,7 +32,7 @@
 
         @if (Auth::user()->onTrial())
             <!-- Trial Reminder -->
-                <a href="/settings#/subscription" class="flex-1">
+                <a href="/settings#/subscription" class="flex-1 text-white">
                     <i class="fa fa-fw fa-btn fa-shopping-bag"></i>
                     <br>
                     Subscribe
@@ -41,7 +41,8 @@
 
         @if (Spark::usesTeams() && Auth::user()->currentTeamOnTrial())
             <!-- Team Trial Reminder -->
-            <span><a href="/settings/{{ str_plural(Spark::teamString()) }}/{{ Auth::user()->currentTeam()->id }}#/subscription">
+            <span>
+                <a href="/settings/{{ str_plural(Spark::teamString()) }}/{{ Auth::user()->currentTeam()->id }}#/subscription">
                 <i class="fa fa-fw fa-btn fa-shopping-bag"></i>Subscribe
             </a></span>
         @endif

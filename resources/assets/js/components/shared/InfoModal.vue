@@ -1,13 +1,17 @@
 <template>
-  <transition name="modal">
+  <transition name="modal" class="spacing">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <div class="flex justify-between">
-              <button class="btn btn-color" @click="showBody('tldr')">TLDR</button>
-              <h3>{{ title }}</h3>
-              <button class="btn btn-color" @click="showBody('full')">FULL</button>
+            <div class="flex flex-col justify-between">
+                <h3 class="text-center mb-1" id="header-spacing">{{ title }}</h3>
+                <div v-show="buttons === 'true'">
+                    <div class="flex">
+                        <button class="flex-1 mr-1 btn btn-color" @click="showBody('tldr')">OVERVIEW</button>
+                        <button class="flex-1 ml-1 btn btn-color" @click="showBody('full')">DETAILS</button>
+                    </div>
+                </div>
             </div>
           </div>
 
@@ -61,12 +65,22 @@ export default {
   },
   props: {
     show: Boolean,
-    title: String
+    title: String,
+    buttons: String
   }
 };
 </script>
 
 <style scoped>
+
+    #header-spacing {
+        margin-top: -1rem;
+    }
+
+    .spacing {
+        margin-bottom: 10rem;
+    }
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -106,7 +120,7 @@ export default {
 }
 
 .modal-body {
-  margin: 20px 0;
+  margin: 0rem;
 }
 
 .modal-default-button {
