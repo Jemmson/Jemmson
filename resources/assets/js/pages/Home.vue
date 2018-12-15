@@ -110,7 +110,7 @@
                 </div>
             </div>
 
-            <div class="border m-4 shadow-md">
+            <div class="border m-4 shadow-md" v-if="user.contractor !== null && user.contractor.stripe_express !== null">
                 <div @click="route('/express')" class="border-b pb-4">
                     <div class="status text-center bg-grey shadow-md ml-1 mr-1">
                         <span>stripe</span>
