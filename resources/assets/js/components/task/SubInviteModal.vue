@@ -145,7 +145,6 @@
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled)
       },
       fillFields(result) {
-        debugger;
         this.initiateBidForSubForm.email = result.email
         this.initiateBidForSubForm.phone = result.phone
         this.initiateBidForSubForm.name = result.name

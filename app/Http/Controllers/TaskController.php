@@ -811,6 +811,12 @@ class TaskController extends Controller
         }
 
         $job = Job::find($request->jobId);
+
+        if ($job->location_id != null) {
+            $jobTask->location_id = $job->location_id;
+            $jobTask->save();
+        }
+
         $job->changeJobStatus($job, __('bid.in_progress'));
         $job->jobTotal();
         $earliestDate = JobTask::findEarliestStartDate($request->jobId);
@@ -878,6 +884,7 @@ class TaskController extends Controller
 //        } else {
 //            $jobTask->sub_sets_own_price_for_job = 1;
 //        }
+
 
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;
