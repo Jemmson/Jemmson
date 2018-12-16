@@ -19,27 +19,27 @@
                 <div class="statuses mb-1">
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>INITIATED</div>
-                        <div>{{ bidData(bids, 'bid.initiated') }}</div>
+                        <div>{{ bidData('bid.initiated') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>IN PROGRESS</div>
-                        <div>{{ bidData(bids, 'bid.in_progress') }}</div>
+                        <div>{{ bidData('bid.in_progress') }}</div>
                     </div>
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>SENT</div>
-                        <div>{{ bidData(bids, 'bid.sent') }}</div>
+                        <div>{{ bidData('bid.sent') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>DECLINED</div>
-                        <div>{{ bidData(bids, 'bid.declined') }}</div>
+                        <div>{{ bidData('bid.declined') }}</div>
                     </div>
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>APPROVED</div>
-                        <div>{{ bidData(bids, 'bid.approved') }}</div>
+                        <div>{{ bidData('bid.approved') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>COMPLETED</div>
-                        <div>{{ bidData(bids, 'bid.completed') }}</div>
+                        <div>{{ bidData('bid.completed') }}</div>
                     </div>
                 </div>
             </div>
@@ -54,43 +54,43 @@
                 <div class="statuses mb-1">
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>INITIATED</div>
-                        <div>{{ taskData(bids, 'bid_task.initiated') }}</div>
+                        <div>{{ taskData('bid_task.initiated') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>SENT</div>
-                        <div>{{ taskData(bids, 'bid_task.bid_sent') }}</div>
+                        <div>{{ taskData('bid_task.bid_sent') }}</div>
                     </div>
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>ACCEPTED</div>
-                        <div>{{ taskData(bids, 'bid_task.accepted') }}</div>
+                        <div>{{ taskData('bid_task.accepted') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>FINISHED BY SUB</div>
-                        <div>{{ taskData(bids, 'bid_task.finished_by_sub') }}</div>
+                        <div>{{ taskData('bid_task.finished_by_sub') }}</div>
                     </div>
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>APPROVED</div>
-                        <div>{{ taskData(bids, 'bid_task.approved_by_general') }}</div>
+                        <div>{{ taskData('bid_task.approved_by_general') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>FINISHED BY GENERAL</div>
-                        <div>{{ taskData(bids, 'bid_task.finished_by_general') }}</div>
+                        <div>{{ taskData('bid_task.finished_by_general') }}</div>
                     </div>
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>APPROVED BY CUSTOMER</div>
-                        <div>{{ taskData(bids, 'bid_task.approved_by_customer') }}</div>
+                        <div>{{ taskData('bid_task.approved_by_customer') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>PAYMENT SENT</div>
-                        <div>{{ taskData(bids, 'bid_task.customer_sent_payment') }}</div>
+                        <div>{{ taskData('bid_task.customer_sent_payment') }}</div>
                     </div>
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>REOPENED</div>
-                        <div>{{ taskData(bids, 'bid_task.reopened') }}</div>
+                        <div>{{ taskData('bid_task.reopened') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>DENIED</div>
-                        <div>{{ taskData(bids, 'bid_task.denied') }}</div>
+                        <div>{{ taskData('bid_task.denied') }}</div>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,8 @@
                 </div>
             </div>
 
-            <div class="border m-4 shadow-md" v-if="user.contractor !== null && user.contractor.stripe_express !== null">
+            <div class="border m-4 shadow-md"
+                 v-if="user.contractor !== null && user.contractor.stripe_express !== null">
                 <div @click="route('/express')" class="border-b pb-4">
                     <div class="status text-center bg-grey shadow-md ml-1 mr-1">
                         <span>stripe</span>
@@ -125,8 +126,8 @@
 
 <script>
 
-  import { mapState } from 'vuex';
-  import Feedback from '../components/shared/Feedback';
+  import { mapState } from 'vuex'
+  import Feedback from '../components/shared/Feedback'
 
   export default {
     props: {
@@ -145,9 +146,11 @@
         sInvoices: 0,
       }
     },
-    computed: mapState({
-      job: state => state.job,
-    }),
+    computed: {
+      ...mapState({
+        job: state => state.job,
+      })
+    },
     methods: {
       route(value) {
         if (value === 'express') {
@@ -159,24 +162,24 @@
           this.$router.push(value)
         }
       },
-      bidData(bids, message) {
+      bidData(message) {
         let count = 0
-        for (let i = 0; i < bids.length; i++) {
-          if (bids[i].status === message) {
+        for (let i = 0; i < this.bids.length; i++) {
+          if (this.bids[i].status === message) {
             count++
           }
         }
         return count
       },
-      taskData(tasks, message) {
+      taskData(message) {
         let count = 0
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].job_task.status === message) {
+        for (let i = 0; i < this.tasks.length; i++) {
+          if (this.tasks[i].job_task.status === message) {
             count++
           }
         }
         return count
-      },
+      }
     },
     mounted: function() {
       console.log('getBids')
