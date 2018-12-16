@@ -1,30 +1,33 @@
 <template>
     <!-- /contractor bid actions -->
-    <div class="flex ">
-        <div class="flex text-white btn-red rounded-lg p-3" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME TASKS HAVE
-            SUB PRICES HIGHER THAN CONTRACTOR PRICE
-        </div>
-        <div v-if="showPreApprovedActions" class="flex w-full justify-between">
-            <button class="btn btn-red" @click.prevent="openModal('confirmJobCancellation')"
-                    :disabled="disabled.cancelBid" ref="cancelBtn">
-          <span v-if="disabled.cancelBid">
-            <i class="fa fa-btn fa-spinner fa-spin"></i>
-          </span>
-                Cancel Job
-            </button>
-            <button class="btn btn-blue" name="addTaskToBid" id="addTaskToBid" @click="openAddTask"
-                    v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">
-                Add A Task
-            </button>
-            <button class="btn btn-green" v-if="bid.job_tasks.length > 0"
-                    @click="openModal('notifyCustomerOfFinishedBid')"
-                    :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"
-                    ref="submitBidBtn">
-          <span v-if="disabled.submitBid">
-            <i class="fa fa-btn fa-spinner fa-spin"></i>
-          </span>
-                <span>Submit Bid</span>
-            </button>
+    <div>
+        <div class="flex flex-col w-full">
+            <div class="text-white btn-red rounded p-3 mt-2 mb-2 text-center" style="font-weight: 700" v-show="subTaskWarning">PLEASE CHECK TASKS. SOME
+                TASKS HAVE
+                SUB PRICES HIGHER THAN CONTRACTOR PRICE
+            </div>
+            <div v-if="showPreApprovedActions" class="flex w-full justify-around">
+                <button class="btn btn-red flex-1" @click.prevent="openModal('confirmJobCancellation')"
+                        :disabled="disabled.cancelBid" ref="cancelBtn">
+                      <span v-if="disabled.cancelBid">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                        Cancel Job
+                </button>
+                <button class="btn btn-blue flex-1 mr-6 ml-6" name="addTaskToBid" id="addTaskToBid" @click="openAddTask"
+                        v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">
+                    Add A Task
+                </button>
+                <button class="btn btn-green flex-1" v-if="bid.job_tasks.length > 0"
+                        @click="openModal('notifyCustomerOfFinishedBid')"
+                        :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"
+                        ref="submitBidBtn">
+                      <span v-if="disabled.submitBid">
+                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                      </span>
+                      <span>Submit Bid</span>
+                </button>
+            </div>
         </div>
         <modal :header="modalHeader" :body="modalBody" :modalId="modalId" @modal="modalYes()" :yes="mYes" :no="mNo">
         </modal>
