@@ -16,7 +16,7 @@
                 <div v-for="status in statuses" :key="status.type">
                   <div class="flex justify-between">
                     <div class="mr-2">
-                      <strong class="status-header">{{ status.type }}:</strong>
+                      <strong class="status-header uppercase">{{ status.type }}:</strong>
                       <div class="description">{{ status.description }}</div>
                     </div>
                   </div>
@@ -211,7 +211,7 @@ export default {
             "Contractor has sent a bid but has not added a task to the job"
         },
         {
-          type: "Job Declined Please Review",
+          type: "BID CHANGE REQUESTED - PLEASE REVIEW",
           description:
             "Customer has not approved the bid and is asking for a change to be made"
         },
