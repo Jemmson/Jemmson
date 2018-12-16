@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
+use App\Notifications\NotifySubOfBidNotAcceptedBid;
 use App\Notifications\NotifyContractorOfAcceptedBid;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\TaskFinished;
@@ -443,12 +444,19 @@ class TaskController extends Controller
             $c->save();
         });
 
+        // set the sub price in the job task table
+//        $job = Job::find($jobId);
+        $jobTask = JobTask::find($jobTaskId);
+        $task = $jobTask->task()->first();
+
         $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
 
-        $allContractorsForJobTask->map(function ($con) use ($bidId) {
+        $allContractorsForJobTask->map(function ($con) use ($bidId, $contractorId, $task) {
             if ($con->id != $bidId) {
                 $con->accepted = 0;
                 $con->save();
+                $user = User::find($con->contractor_id);
+                $user->notify(new NotifySubOfBidNotAcceptedBid($task, $user));
             } else {
                 $con->accepted = 1;
                 $con->save();
@@ -456,11 +464,6 @@ class TaskController extends Controller
         });
 
 //        dd($allContractorsForJobTask);
-
-        // set the sub price in the job task table
-        $job = Job::find($jobId);
-        $jobTask = JobTask::find($jobTaskId);
-        $task = $jobTask->task()->first();
 
         $jobTask->sub_final_price = $price;
         $jobTask->contractor_id = $contractorId;
