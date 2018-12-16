@@ -27,9 +27,8 @@
 
 <script>
 
-  // import Paginate from 'vue-paginate'
-  import SearchBar from '../components/shared/SearchBar';
-  import Feedback from '../components/shared/Feedback';
+  import SearchBar from '../components/shared/SearchBar'
+  import Feedback from '../components/shared/Feedback'
 
   export default {
     props: {

@@ -248,7 +248,6 @@
 
 <script>
   import Message from './Message.vue'
-  import Paginate from 'vue-paginate'
   import SubInviteModal from '../task/SubInviteModal'
   import DenyTaskModal from '../task/DenyTaskModal'
   import UpdateTaskLocationModal from '../task/UpdateTaskLocationModal'
@@ -257,7 +256,6 @@
     components: {
       Message,
       SubInviteModal,
-      Paginate,
       DenyTaskModal,
       UpdateTaskLocationModal
     },
