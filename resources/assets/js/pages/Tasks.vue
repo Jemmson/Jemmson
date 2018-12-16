@@ -123,6 +123,8 @@
   import SearchBar from '../components/shared/SearchBar';
   import Feedback from '../components/shared/Feedback';
   import Stripe from '../components/stripe/Stripe';
+  import Card from '../components/shared/Card';
+  import TaskImages from '../pages/TaskImages'
 
   export default {
     props: {
@@ -131,7 +133,9 @@
     components: {
       SearchBar,
       Feedback,
-      Stripe
+      Stripe,
+      TaskImages,
+      Card
     },
     data() {
       return {

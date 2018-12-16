@@ -250,6 +250,8 @@
   import Message from './Message.vue'
   import SubInviteModal from '../task/SubInviteModal'
   import DenyTaskModal from '../task/DenyTaskModal'
+  import TaskImages from '../../pages/TaskImages'
+  import Card from '../shared/Card'
   import UpdateTaskLocationModal from '../task/UpdateTaskLocationModal'
 
   export default {
@@ -257,7 +259,9 @@
       Message,
       SubInviteModal,
       DenyTaskModal,
-      UpdateTaskLocationModal
+      TaskImages,
+      UpdateTaskLocationModal,
+      Card
     },
     props: {
       bid: Object
