@@ -116,9 +116,15 @@ class TaskController extends Controller
      * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
-    public function getJobTask(JobTask $jobTask)
+    public function getJobTask($jobTaskId)
     {
-        Log::debug($jobTask);
+//        Log::debug($jobTask);
+//        dd($jobTask);
+
+        Log::debug("Job Task Id: $jobTaskId" );
+
+        $jobTask = JobTask::find($jobTaskId);
+
         return $jobTask->load(['images', 'task']);
     }
 
