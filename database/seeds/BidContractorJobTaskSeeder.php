@@ -14,24 +14,26 @@ class BidContractorJobTaskSeeder extends Seeder
      */
     public function run()
     {
-        //
-        $faker = Faker\Factory::create();
-
-        DB::table('bid_contractor_job_task')->insert(
-                        [
-                            'contractor_id' => 2,
-                            'job_task_id' => 1,
-                            'bid_price' => rand(1, 100),
-                        ]
-                    );
-
-        DB::table('bid_contractor_job_task')->insert(
-                        [
-                            'contractor_id' => 3,
-                            'job_task_id' => 1,
-                            'bid_price' => rand(1, 100),
-                        ]
-                    );
+//        //
+//        $faker = Faker\Factory::create();
+//
+//        DB::table('bid_contractor_job_task')->insert(
+//                        [
+//                            'contractor_id' => 2,
+//                            'job_task_id' => 1,
+//                            'status' => 'sent',
+//                            'bid_price' => rand(1, 100),
+//                        ]
+//                    );
+//
+//        DB::table('bid_contractor_job_task')->insert(
+//                        [
+//                            'contractor_id' => 3,
+//                            'job_task_id' => 1,
+//                            'status' => 'sent',
+//                            'bid_price' => rand(1, 100),
+//                        ]
+//                    );
 
 //         for ($i = 1; $i < 5; $i++) {
 //             for ($k = 1; $k < 10; $k++) {

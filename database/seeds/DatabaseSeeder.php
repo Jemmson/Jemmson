@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UsersTableSeeder::class);
         $this->call(LocationSeeder::class);
-        $this->call(JobSeeder::class);
-        $this->call(TaskSeeder::class);
-        $this->call(JobTaskSeeder::class);
+//        $this->call(JobSeeder::class);
+//        $this->call(TaskSeeder::class);
+//        $this->call(JobTaskSeeder::class);
 //        $this->call(ContractorJobTask::class);
-        $this->call(BidContractorJobTaskSeeder::class);
+//        $this->call(BidContractorJobTaskSeeder::class);
         
     }
 }

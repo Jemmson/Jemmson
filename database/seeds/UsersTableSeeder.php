@@ -87,7 +87,7 @@ class UsersTableSeeder extends Seeder
             'company_logo_name' => $faker->word,
             'sms_method_of_contact' => '1',
             'phone_method_of_contact' => '1',
-            'company_name' => $faker->word,
+            'company_name' => "Jemmson",
             'location_id' => 1
         ];
 
@@ -122,7 +122,7 @@ class UsersTableSeeder extends Seeder
             'company_logo_name' => $faker->word,
             'sms_method_of_contact' => '1',
             'phone_method_of_contact' => '1',
-            'company_name' => $faker->word,
+            'company_name' => "Sew Fun",
             'location_id' => 2
         ];
 
@@ -157,7 +157,7 @@ class UsersTableSeeder extends Seeder
             'company_logo_name' => $faker->word,
             'sms_method_of_contact' => '1',
             'phone_method_of_contact' => '1',
-            'company_name' => $faker->word,
+            'company_name' => "KPS Pools",
             'location_id' => 3
         ];
 

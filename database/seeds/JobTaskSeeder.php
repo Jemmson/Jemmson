@@ -26,6 +26,7 @@ class JobTaskSeeder extends Seeder
         $task = new JobTask();
         $task->task_id = 1;
         $task->job_id = 1;
+        $task->location_id = 4;
         $task->contractor_id = 1;
         $task->cust_final_price = 100;
         $task->sub_final_price = rand(10, 50);

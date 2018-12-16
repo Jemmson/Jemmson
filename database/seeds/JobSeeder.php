@@ -15,22 +15,22 @@ class JobSeeder extends Seeder
     {
         //
 
-        $k = 0;
-        $faker = Faker\Factory::create();
-
-        $data = [
-            'status' => "bid.in_progress",
-            'customer_id' => 4,
-            'contractor_id' => 1,
-            'completed_bid_date' => $faker->dateTime,
-            'bid_price' => 100,
-            'agreed_start_date' => $faker->dateTime,
-            'agreed_end_date' => $faker->dateTime,
-            'actual_end_date' => $faker->dateTime,
-            'job_name' => 'Pool',
-            'location_id' => 1
-        ];
-        Job::create($data);
+//        $k = 0;
+//        $faker = Faker\Factory::create();
+//
+//        $data = [
+//            'status' => "bid.in_progress",
+//            'customer_id' => 4,
+//            'contractor_id' => 1,
+//            'completed_bid_date' => $faker->dateTime,
+//            'bid_price' => 100,
+//            'agreed_start_date' => $faker->dateTime,
+//            'agreed_end_date' => $faker->dateTime,
+//            'actual_end_date' => $faker->dateTime,
+//            'job_name' => 'Pool',
+//            'location_id' => 1
+//        ];
+//        Job::create($data);
 
 //        $data = [
 //            'status' => "bid.in_progress",

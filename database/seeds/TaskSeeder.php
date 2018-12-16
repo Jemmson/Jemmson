@@ -14,28 +14,28 @@ class TaskSeeder extends Seeder
     public function run()
     {
         //
-        $faker = Faker\Factory::create();
-        $data = [
-                    'name' => 'Fix Water Filter',
-                    'standard_task_id' => rand(1, 4),
-                    'contractor_id' => 1,
-                    'proposed_cust_price' => rand(1, 100),
-                    'average_cust_price' => rand(1, 100),
-                    'proposed_sub_price' => rand(1, 100),
-                    'average_sub_price' => rand(1, 100),
-        ];
-        Task::create($data);
-
-        $data = [
-                    'name' => 'Fix Toilet',
-                    'standard_task_id' => rand(1, 4),
-                    'contractor_id' => 1,
-                    'proposed_cust_price' => rand(1, 100),
-                    'average_cust_price' => rand(1, 100),
-                    'proposed_sub_price' => rand(1, 100),
-                    'average_sub_price' => rand(1, 100),
-        ];
-        Task::create($data);
+//        $faker = Faker\Factory::create();
+//        $data = [
+//                    'name' => 'Fix Water Filter',
+//                    'standard_task_id' => rand(1, 4),
+//                    'contractor_id' => 1,
+//                    'proposed_cust_price' => rand(1, 100),
+//                    'average_cust_price' => rand(1, 100),
+//                    'proposed_sub_price' => rand(1, 100),
+//                    'average_sub_price' => rand(1, 100),
+//        ];
+//        Task::create($data);
+//
+//        $data = [
+//                    'name' => 'Fix Toilet',
+//                    'standard_task_id' => rand(1, 4),
+//                    'contractor_id' => 1,
+//                    'proposed_cust_price' => rand(1, 100),
+//                    'average_cust_price' => rand(1, 100),
+//                    'proposed_sub_price' => rand(1, 100),
+//                    'average_sub_price' => rand(1, 100),
+//        ];
+//        Task::create($data);
         // for ($i = 1; $i < 5; $i++) {
         //     for ($j = 1; $j < 10; $j++) {
         //         $contractor = Contractor::find($i);
