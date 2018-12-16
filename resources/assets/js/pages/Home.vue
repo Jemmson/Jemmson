@@ -125,11 +125,15 @@
 
 <script>
 
-  import { mapState } from 'vuex'
+  import { mapState } from 'vuex';
+  import Feedback from '../components/shared/Feedback';
 
   export default {
     props: {
       user: Object
+    },
+    components: {
+      Feedback
     },
     data() {
       return {

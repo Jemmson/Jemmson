@@ -104,9 +104,17 @@
 </template>
 
 <script>
+
+  import Card from '../shared/Card';
+  import DenyTaskModal from '../task/DenyTaskModal';
+
   export default {
     props: {
       bid: Object
+    },
+    components: {
+      Card,
+      DenyTaskModal
     },
     data() {
       return {

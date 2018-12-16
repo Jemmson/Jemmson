@@ -78,11 +78,13 @@
 
 <script>
 import Card from "../components/shared/Card";
+import Feedback from '../components/shared/Feedback';
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
-    Card
+    Card,
+    Feedback
   },
   data() {
     return {

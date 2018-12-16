@@ -37,9 +37,31 @@
 </template>
 
 <script>
+
+  import Feedback from '../components/shared/Feedback';
+  import Card from '../components/shared/Card';
+  import BidDetails from '../components/job/BidDetails';
+  import ApproveBid from '../components/job/ApproveBid';
+  import GeneralContractorBidActions from '../components/job/GeneralContractorBidActions';
+  import CompletedTasks from '../components/job/CompletedTasks';
+  import BidTasks from '../components/job/BidTasks';
+  import Stripe from '../components/stripe/Stripe';
+  import BidAddTask from '../components/task/BidAddTask';
+
   export default {
     props: {
       user: Object,
+    },
+    components: {
+      Card,
+      Feedback,
+      BidDetails,
+      ApproveBid,
+      GeneralContractorBidActions,
+      CompletedTasks,
+      BidTasks,
+      BidAddTask,
+      Stripe
     },
     data() {
       return {

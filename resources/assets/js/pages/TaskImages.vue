@@ -2,93 +2,103 @@
     <div class="flex flex-col">
         <card>
             <h2 class="self-center uppercase">Task Images</h2>
-            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name }}</label>
+            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name
+                }}</label>
         </card>
         <div class="flex flex-col card">
-                <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id" v-show="jobTask !== undefined && jobTask !== null">
-                    <div class="image-ct">
-                        <a class="lightbox" @click.prevent="openImage(image.id)">
-                            <img :src="image.url" alt="">
-                        </a>
-                        <button class="btn btn-red image-btn pull-right mr-2" :id="'image-' + image.id" @click="deleteImage(image.id, index)">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                    <!-- lightbox container hidden with CSS -->
-                    <a class="lightbox-target" :id="'image' + image.id">
-                        <img :src="image.url" class="" :id="'image-img' + image.id">
-                        <a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>
+            <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id"
+                 v-show="jobTask !== undefined && jobTask !== null">
+                <div class="image-ct">
+                    <a class="lightbox" @click.prevent="openImage(image.id)">
+                        <img :src="image.url" alt="">
                     </a>
+                    <button class="btn btn-red image-btn pull-right mr-2" :id="'image-' + image.id"
+                            @click="deleteImage(image.id, index)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
+                <!-- lightbox container hidden with CSS -->
+                <a class="lightbox-target" :id="'image' + image.id">
+                    <img :src="image.url" class="" :id="'image-img' + image.id">
+                    <a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>
+                </a>
+            </div>
         </div>
         <feedback></feedback>
     </div>
 </template>
 
 <script>
-    export default {
-        props: {
-            user: Object,
-        },
-        data() {
-            return {
-                jobTask: {},
-                jobTaskId: this.$route.params.id
-            }
-        },
-        watch: {
-            '$route' (to, from) {
-                // get the bid
-                this.getJobTask(this.jobTaskId);
-            }
-        },
-        computed: {},
-        methods: {
-            openImage(imageId) {
-                console.log(imageId);
-                $('#image' + imageId).addClass('lightbox-open');
-                $('#image-img' + imageId).addClass('lightbox-open-image');
-                $('#image-close' + imageId).addClass('lightbox-open-close');
+  import Card from '../components/shared/Card'
+  import Feedback from '../components/shared/Feedback'
 
-            },
-            closeImage(imageId) {
-                console.log(imageId);
-                $('#image' + imageId).removeClass('lightbox-open');
-                $('#image-img' + imageId).removeClass('lightbox-open-image');
-                $('#image-close' + imageId).removeClass('lightbox-open-close');
+  export default {
+    props: {
+      user: Object,
+    },
+    components: {
+      Card,
+      Feedback
+    },
+    data() {
+      return {
+        jobTask: {},
+        jobTaskId: this.$route.params.id
+      }
+    },
+    watch: {
+      '$route'(to, from) {
+        // get the bid
+        this.getJobTask(this.jobTaskId)
+      }
+    },
+    computed: {},
+    methods: {
+      openImage(imageId) {
+        console.log(imageId)
+        $('#image' + imageId).addClass('lightbox-open')
+        $('#image-img' + imageId).addClass('lightbox-open-image')
+        $('#image-close' + imageId).addClass('lightbox-open-close')
 
-            },
-            async deleteImage(imageId, index) {
-                console.log(index);
-                
-                document.getElementById('image-' + imageId).disabled = true;
-                try {
-                    const data = await axios.delete('/task/image/' + imageId, {imageId: imageId});
-                    this.getJobTask(this.jobTaskId);
-                    document.getElementById('image-' + imageId).disabled = false;
-                } catch (error) {
-                    Vue.toasted.error(error.message);
-                    document.getElementById('image-' + imageId).disabled = false;
+      },
+      closeImage(imageId) {
+        console.log(imageId)
+        $('#image' + imageId).removeClass('lightbox-open')
+        $('#image-img' + imageId).removeClass('lightbox-open-image')
+        $('#image-close' + imageId).removeClass('lightbox-open-close')
 
-                }
-            },
-            async getJobTask(id) {
-                try {
-                    const {
-                        data
-                    } = await axios.get('/jobtask/' + id);
-                    this.jobTask = data;
-                } catch (error) {
-                    error = error.response.data;
-                    Vue.toasted.error(error.message);
-                }
-            }
-        },
-        created: function () {
+      },
+      async deleteImage(imageId, index) {
+        console.log(index)
 
-            // get the bid
-            this.getJobTask(this.jobTaskId);
-        },
-        mounted: function () {},
-    }
+        document.getElementById('image-' + imageId).disabled = true
+        try {
+          const data = await axios.delete('/task/image/' + imageId, {imageId: imageId})
+          this.getJobTask(this.jobTaskId)
+          document.getElementById('image-' + imageId).disabled = false
+        } catch (error) {
+          Vue.toasted.error(error.message)
+          document.getElementById('image-' + imageId).disabled = false
+
+        }
+      },
+      async getJobTask(id) {
+        try {
+          const {
+            data
+          } = await axios.get('/jobtask/' + id)
+          this.jobTask = data
+        } catch (error) {
+          error = error.response.data
+          Vue.toasted.error(error.message)
+        }
+      }
+    },
+    created: function() {
+
+      // get the bid
+      this.getJobTask(this.jobTaskId)
+    },
+    mounted: function() {},
+  }
 </script>

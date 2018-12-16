@@ -119,9 +119,19 @@
 </template>
 
 <script>
+
+  import SearchBar from '../components/shared/SearchBar';
+  import Feedback from '../components/shared/Feedback';
+  import Stripe from '../components/stripe/Stripe';
+
   export default {
     props: {
       user: Object
+    },
+    components: {
+      SearchBar,
+      Feedback,
+      Stripe
     },
     data() {
       return {

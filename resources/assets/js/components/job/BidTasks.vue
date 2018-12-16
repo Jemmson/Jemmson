@@ -115,20 +115,20 @@
                     <div class="flex flex-col">
                         <div class="flex flex-col mb-3" v-if="!isCustomer">
                             <message
-                              label="Notes for Subcontractor"
-                              :jobId="jobTask.id"
-                              :server-message="jobTask.sub_message"
-                              actor='sub'
-                              :disable-messages="disableMessages"
+                                    label="Notes for Subcontractor"
+                                    :jobId="jobTask.id"
+                                    :server-message="jobTask.sub_message"
+                                    actor='sub'
+                                    :disable-messages="disableMessages"
                             ></message>
                         </div>
                         <div class="flex flex-col" v-if="isContractor">
                             <message
-                              label="Notes For Customer"
-                              :jobId="jobTask.id"
-                              :server-message="jobTask.customer_message"
-                              actor='customer'
-                              :disable-messages="disableMessages"
+                                    label="Notes For Customer"
+                                    :jobId="jobTask.id"
+                                    :server-message="jobTask.customer_message"
+                                    actor='customer'
+                                    :disable-messages="disableMessages"
                             ></message>
                         </div>
 
@@ -166,8 +166,10 @@
                                             </span>
                                         Accept
                                     </button>
-                                    <div v-else-if="checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1"><h5>Bid Has Been Accepted</h5></div>
-                                    <div v-else-if="!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)"><h5>Pending</h5></div>
+                                    <div v-else-if="checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1"><h5>Bid
+                                        Has Been Accepted</h5></div>
+                                    <div v-else-if="!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                        <h5>Pending</h5></div>
                                 </div>
                             </div>
                         </div>
@@ -245,10 +247,19 @@
 </template>
 
 <script>
-  import Message from './Message.vue';
+  import Message from './Message.vue'
+  import Paginate from 'vue-paginate'
+  import SubInviteModal from '../task/SubInviteModal'
+  import DenyTaskModal from '../task/DenyTaskModal'
+  import UpdateTaskLocationModal from '../task/UpdateTaskLocationModal'
+
   export default {
     components: {
-      Message
+      Message,
+      SubInviteModal,
+      Paginate,
+      DenyTaskModal,
+      UpdateTaskLocationModal
     },
     props: {
       bid: Object
@@ -331,20 +342,20 @@
     },
     methods: {
       checkIfBidHasBeenAccepted(jobTask) {
-        let accepted = false;
-        for(let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
+        let accepted = false
+        for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
           if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
-            accepted = true;
+            accepted = true
           }
         }
-        return accepted;
+        return accepted
       },
-      checkIfBidHasBeenSent(bid){
+      checkIfBidHasBeenSent(bid) {
         if (bid.updated_at !== null && bid.status === 'sent') {
-           return true;
-         } else {
-           return false;
-         }
+          return true
+        } else {
+          return false
+        }
       },
       showSubMessage(msg) {
         return (msg != null &&
@@ -473,15 +484,15 @@
         }
 
         if (actor === 'sub') {
-          this.sendSubMessage = false;
+          this.sendSubMessage = false
           setTimeout(function() {
-            this.sendSubMessage = true;
-          }.bind(this), 2000);
+            this.sendSubMessage = true
+          }.bind(this), 2000)
         } else {
-          this.sendCustomerMessage = false;
+          this.sendCustomerMessage = false
           setTimeout(function() {
-            this.sendCustomerMessage = true;
-          }.bind(this), 2000);
+            this.sendCustomerMessage = true
+          }.bind(this), 2000)
         }
       },
       updateCustomerTaskQuantity(quantity, taskId, currentQuantityValue) {
