@@ -27,8 +27,8 @@ class BidContractorJobTaskSeeder extends Seeder
 
         DB::table('bid_contractor_job_task')->insert(
                         [
-                            'contractor_id' => 1,
-                            'job_task_id' => 2,
+                            'contractor_id' => 3,
+                            'job_task_id' => 1,
                             'bid_price' => rand(1, 100),
                         ]
                     );

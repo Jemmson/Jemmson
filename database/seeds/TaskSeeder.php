@@ -29,7 +29,7 @@ class TaskSeeder extends Seeder
         $data = [
                     'name' => 'Fix Toilet',
                     'standard_task_id' => rand(1, 4),
-                    'contractor_id' => 2,
+                    'contractor_id' => 1,
                     'proposed_cust_price' => rand(1, 100),
                     'average_cust_price' => rand(1, 100),
                     'proposed_sub_price' => rand(1, 100),
