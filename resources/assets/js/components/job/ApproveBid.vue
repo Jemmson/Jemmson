@@ -109,9 +109,15 @@
 </template>
 
 <script>
+
+    import Modal from '../shared/Modal';
+
 export default {
   props: {
     bid: Object
+  },
+  components: {
+    Modal
   },
   data() {
     return {
