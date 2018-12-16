@@ -49,13 +49,13 @@ class TaskController extends Controller
     public function bidContractorJobTasks()
     {
         $bidTasks = Auth::user()->
-                    contractor()->
-                    first()->
-                    bidContractorJobTasks()->
-                    with([
-                        'jobTask.job', 
-                        'jobTask.task'
-                    ])->get();
+        contractor()->
+        first()->
+        bidContractorJobTasks()->
+        with([
+            'jobTask.job',
+            'jobTask.task'
+        ])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -71,10 +71,10 @@ class TaskController extends Controller
             contractor()->first()->
             bidContractorJobTasks()->with([
                 'jobTask.job',
-                'jobTask.task', 
-                'jobTask.images', 
+                'jobTask.task',
+                'jobTask.images',
                 'jobTask.location'
-                ])->get();
+            ])->get();
             return response()->json($bidTasks, 200);
         }
     }
@@ -121,7 +121,7 @@ class TaskController extends Controller
 //        Log::debug($jobTask);
 //        dd($jobTask);
 
-        Log::debug("Job Task Id: $jobTaskId" );
+        Log::debug("Job Task Id: $jobTaskId");
 
         $jobTask = JobTask::find($jobTaskId);
 
@@ -430,22 +430,32 @@ class TaskController extends Controller
         }
 
         // change statuses on bidContractorJobTask. need to change the statuses for each contractor that has this jobtaskid
-        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id","=",$jobTaskId)->get();
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
 
-        
-        $allContractorsForJobTask->map(function($contractor) use ($bidId) {
+
+        $allContractorsForJobTask->map(function ($contractor) use ($bidId) {
             $c = BidContractorJobTask::find($contractor->id);
-            if($contractor->id === $bidId){
+            if ($contractor->id === $bidId) {
                 $c->accepted = true;
-            } else{
+            } else {
                 $c->accepted = false;
             }
             $c->save();
         });
 
-        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id","=",$jobTaskId)->get();
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
 
-        dd($allContractorsForJobTask);
+        $allContractorsForJobTask->map(function ($con) use ($bidId) {
+            if ($con->id != $bidId) {
+                $con->accepted = 0;
+                $con->save();
+            } else {
+                $con->accepted = 1;
+                $con->save();
+            }
+        });
+
+//        dd($allContractorsForJobTask);
 
         // set the sub price in the job task table
         $job = Job::find($jobId);
@@ -632,7 +642,6 @@ class TaskController extends Controller
 
         //has the job been accepted
         // check if the contractor_id on the jobtask table equals the contractor_id of the jobs table
-
 
 
         if ($actor == 'sub') {
