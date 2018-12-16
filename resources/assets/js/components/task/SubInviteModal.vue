@@ -141,8 +141,8 @@
         this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
       },
       sendSubInviteToBidOnTask() {
-        this.initiateBidForSubForm.name = this.name
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled)
+        this.companyName = ''
       },
       fillFields(result) {
         this.initiateBidForSubForm.email = result.email
