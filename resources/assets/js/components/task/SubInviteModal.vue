@@ -26,7 +26,7 @@
                                     class="form-control"
                                     id="contractorName"
                                     name="contractorName"
-                                    v-model="name"
+                                    v-model="companyName"
                                     placeholder="Name"
                                     v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}"
                                     autofocus
@@ -127,7 +127,7 @@
           counter: 0,
           name: ''
         }),
-        name: '',
+        companyName: '',
         user: '',
         results: [],
         disabled: {
@@ -145,14 +145,16 @@
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled)
       },
       fillFields(result) {
+        debugger;
         this.initiateBidForSubForm.email = result.email
         this.initiateBidForSubForm.phone = result.phone
         this.initiateBidForSubForm.name = result.name
+        this.companyName = result.contractor.company_name
         this.results = ''
       },
       autoComplete() {
         this.results = []
-        let query = this.name
+        let query = this.companyName
         // let query = this.initiateBidForSubForm.name;
         // let query = this.initiateBidForSubForm.name;
         console.log('checking for names')
