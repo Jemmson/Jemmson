@@ -207,20 +207,21 @@
                         <div v-if="showFinishedBtn(jobTask) || showApproveBtn(jobTask)" class=" justify-between">
                             <button class="btn btn-green" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                                     :disabled="disabled.finished">
-                  <span v-if="disabled.finished">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
+                              <span v-if="disabled.finished">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                              </span>
                                 Finished
                             </button>
 
                             <button class="btn btn-green" v-if="showApproveBtn(jobTask)"
                                     @click="approveTaskHasBeenFinished(jobTask)"
                                     :disabled="disabled.approve">
-                  <span v-if="disabled.approve">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
+                              <span v-if="disabled.approve">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                              </span>
                                 Approve
                             </button>
+
                         </div>
                     </div>
                 </template>
