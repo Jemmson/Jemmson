@@ -8,62 +8,51 @@
         inline-template>
 
     <div>
-        <div v-if="user" class="flex jemmson-navbar text-center">
+        <div v-if="user" class="flex items-center jemmson-navbar text-center">
             @if (Auth::user()->email == 'jemmsoninc@gmail.com')
-                <div class="flex-1">
                     <!-- Feedback -->
-                    <a href="/#/feedback">
-                        <i class="fa fa-fw fa-btn fa-sign-out"></i>Feedback
-                    </a>
-                </div>
-            @endif
-            <div class="flex-1">        
-                <a @click="showNotifications" class="has-activity-indicator">
-                <div class="navbar-icon">
-                    <button>
-                        <!-- <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i> -->
-                        <i class="icon fas fa-bell bell"></i>
+                    <a href="/#/feedback" class="flex-1 text-white">
+                        <i class="fa fa-fw fa-btn fa-sign-out"></i>
                         <br>
-                        <span style="color: white;">Alerts</span>
-                    </button>
-                </div>
-            </a>
-            </div>
+                        Feedback
+                    </a>           
+             @endif
+                <a @click="showNotifications" class="has-activity-indicator flex-1 text-white">
+                    <!-- <i class="activity-indicator" v-if="hasUnreadNotifications || hasUnreadAnnouncements"></i> -->
+                    <i class="icon fas fa-bell bell"></i>
+                    <br>
+                    Alerts
+                </a>
 
-            <div class="flex-1" v-if="user.usertype === 'contractor'">
-                <a href="/settings">
+                <a href="/settings" class="flex-1 text-white" v-if="user.usertype === 'contractor'">
                     <i class="fas fa-fw fa-btn fa-cog"></i>
                     <br>
                     Settings
                 </a>
-            </div>
 
         @if (Auth::user()->onTrial())
             <!-- Trial Reminder -->
-            <div class="flex-1">
-                <a href="/settings#/subscription">
+                <a href="/settings#/subscription" class="flex-1 text-white">
                     <i class="fa fa-fw fa-btn fa-shopping-bag"></i>
                     <br>
                     Subscribe
                 </a>
-            </div>
         @endif
 
         @if (Spark::usesTeams() && Auth::user()->currentTeamOnTrial())
             <!-- Team Trial Reminder -->
-            <span><a href="/settings/{{ str_plural(Spark::teamString()) }}/{{ Auth::user()->currentTeam()->id }}#/subscription">
+            <span>
+                <a href="/settings/{{ str_plural(Spark::teamString()) }}/{{ Auth::user()->currentTeam()->id }}#/subscription">
                 <i class="fa fa-fw fa-btn fa-shopping-bag"></i>Subscribe
             </a></span>
         @endif
 
 
-            <div class="flex-1">
-                <a href="/logout">
-                    <i class="fas fa-fw fa-btn fa-sign-out-alt"></i>
-                    <br>
-                    Logout
-                </a>
-            </div>
+        <a href="/logout" class="text-white flex-1">
+            <i class="fas fa-fw fa-btn fa-sign-out-alt"></i>
+            <br>
+            Logout
+        </a>
 
         @if (session('spark:impersonator'))
             <!--<li class="dropdown-header">Impersonation</li> -->

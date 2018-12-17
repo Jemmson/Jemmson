@@ -1,34 +1,42 @@
 <template>
-  <!-- /all bids shown in a list as a customer should see it -->
-  <div class="flex flex-col">
-    <search-bar>
-      <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
-    </search-bar>
-    <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-      <section class="flex job-section rounded mb-4 justify-around items-center" 
-              :class="getLabelClass(bid)"
-              v-for="bid in paginated('sBids')" 
-              v-bind:key="bid.id" 
-              style="z-index: 2;" 
-              @click="goToBid(bid.id)">
-          <div class="text-white">{{ status(bid) }}</div>
-          <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
-          <div class="text-white">{{ jobName(bid.job_name) }}</div>
-          <div class="bg-white bid-btn">click to view</div>
-      </section>
-    </paginate>
-    <div class="card p-5 card-body justify-center">
-        <paginate-links for="sBids" :limit="2" :show-step-links="true">
-        </paginate-links>
+    <!-- /all bids shown in a list as a customer should see it -->
+    <div class="flex flex-col">
+        <search-bar>
+            <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
+        </search-bar>
+        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
+            <section class="flex job-section rounded mb-4 justify-around items-center"
+                     :class="getLabelClass(bid)"
+                     v-for="bid in paginated('sBids')"
+                     v-bind:key="bid.id"
+                     style="z-index: 2;"
+                     @click="goToBid(bid.id)">
+                <div class="text-white">{{ status(bid) }}</div>
+                <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
+                <div class="text-white">{{ jobName(bid.job_name) }}</div>
+                <div class="bg-white bid-btn">click to view</div>
+            </section>
+        </paginate>
+        <div class="card p-5 card-body justify-center">
+            <paginate-links for="sBids" :limit="2" :show-step-links="true">
+            </paginate-links>
+        </div>
+        <feedback></feedback>
     </div>
-      <feedback></feedback>
-  </div>
 </template>
 
 <script>
+
+  import SearchBar from '../components/shared/SearchBar'
+  import Feedback from '../components/shared/Feedback'
+
   export default {
     props: {
       user: Object
+    },
+    components: {
+      SearchBar,
+      Feedback
     },
     data() {
       return {
@@ -43,64 +51,64 @@
     watch: {
       '$route'(to, from) {
         // get the bids
-        this.getBids();
+        this.getBids()
       }
     },
     methods: {
       search() {
         this.sBids = this.bids.filter((bid) => {
           if (this.searchTerm === '' || this.searchTerm.length <= 1) {
-            return true;
+            return true
           }
-          return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1;
-        });
+          return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+        })
         if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
-          this.$refs.paginator.goToPage(1);
+          this.$refs.paginator.goToPage(1)
         }
       },
       getLabelClass(bid) {
-        return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid));
+        return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid))
       },
       jobName(name) {
-        return Format.jobName(name);
+        return Format.jobName(name)
       },
       status(bid) {
-        return User.status(bid.status, bid);
+        return User.status(bid.status, bid)
       },
       prettyDate(date) {
         if (date == null)
-          return '';
+          return ''
         // return the date and ignore the time
-        date = date.split(' ');
-        return date[0];
+        date = date.split(' ')
+        return date[0]
       },
       goToBid(id) {
-        this.$router.push('/bid/' + id);
+        this.$router.push('/bid/' + id)
       },
       getBids() {
-        console.log('getBids');
+        console.log('getBids')
         axios.post('/jobs').then((response) => {
           if (Array.isArray(response.data)) {
-            this.bids = response.data;
-            this.sBids = this.bids;
+            this.bids = response.data
+            this.sBids = this.bids
           }
-        });
+        })
       },
       previewSubForTask(bidId, jobTaskId, subBidId) {
-        console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId));
+        console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
       }
     },
     created() {
-      this.getBids();
+      this.getBids()
       Bus.$on('bidUpdated', (payload) => {
-        this.getBids();
-      });
+        this.getBids()
+      })
       Bus.$on('jobCanceled', (payload) => {
-        this.getBids();
-      });
+        this.getBids()
+      })
       Bus.$on('previewSubForTask', (payload) => {
-        this.previewSubForTask(payload[0], payload[1], payload[2]);
-      });
+        this.previewSubForTask(payload[0], payload[1], payload[2])
+      })
 
     },
   }
@@ -120,8 +128,9 @@
     }
 
     #bids-item {
-      background-color: #2779BD;
+        background-color: #2779BD;
     }
+
     .customer {
         display: flex;
         justify-content: center;

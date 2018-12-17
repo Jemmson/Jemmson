@@ -59,7 +59,9 @@
                             <div class="invoice-item">{{ task.qty }}</div>
                             <div class="invoice-item">${{ task.cust_final_price }}</div>
                             <div class="invoice-item" v-if="isContractor">${{ task.sub_final_price }}</div>
-                            <div class="invoice-item" v-if="isContractor">${{ task.cust_final_price - task.sub_final_price }}</div>
+                            <div class="invoice-item" v-if="isContractor">${{ task.cust_final_price -
+                                task.sub_final_price }}
+                            </div>
                         </div>
                         <div class="divider-line mt-2 mb-2"></div>
                         <div class="flex justify-between">
@@ -67,7 +69,8 @@
                             <div class="invoice-item"></div>
                             <div class="invoice-item">${{ totalCustomerPrice }}</div>
                             <div class="invoice-item" v-if="isContractor">${{ totalSubPrice }}</div>
-                            <div class="invoice-item" v-if="isContractor">${{ totalCustomerPrice + totalSubPrice }}</div>
+                            <div class="invoice-item" v-if="isContractor">${{ totalCustomerPrice + totalSubPrice }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -78,9 +81,16 @@
 </template>
 
 <script>
+  import Feedback from '../components/shared/Feedback';
+  import Card from '../components/shared/Card';
+
   export default {
     props: {
       user: Object,
+    },
+    components: {
+      Card,
+      Feedback
     },
     data() {
       return {
@@ -135,7 +145,7 @@
         border-bottom: thick solid black;
     }
 
-    @media(min-width: 792px) {
+    @media (min-width: 792px) {
         .invoice-item {
             width: 110px;
         }

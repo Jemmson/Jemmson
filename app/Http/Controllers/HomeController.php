@@ -57,7 +57,7 @@ class HomeController extends Controller
         $this->validate(
             $request,
             [
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email',
                 'name' => 'required|string',
                 'phone_number' => 'required|min:10|max:14',
                 'address_line_1' => 'required|min:2',
@@ -67,6 +67,7 @@ class HomeController extends Controller
             ]
         );
 
+        
 
         $user_id = Auth::user()->id;
         $phone = SanatizeService::phone($request->phone_number);
@@ -138,8 +139,13 @@ class HomeController extends Controller
         }
 
         $user = Auth::user();
-        $user->email = $request->email;
+        $user->email = trim($request->email);
         $user->name = $request->name;
+        $splitName = explode(" ", $request->name);
+        if (count($splitName) > 1) {
+            $user->first_name = $splitName[0];
+            $user->last_name = $splitName[1];
+        }
         $user->phone = $phone;
 
         $user->save();

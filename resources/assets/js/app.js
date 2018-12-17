@@ -71,7 +71,6 @@ import Benefits from './pages/Benefits';
 import Demo from './pages/Demo';
 import HowTo from './pages/HowTo';
 
-
 window.Format = Format;
 window.Language = Language;
 window.User = new User (Spark.state.user);

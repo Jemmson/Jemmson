@@ -10,11 +10,16 @@
             <div class="form-group">
                 <label for="customerName">Customer Name *</label>
 
-                <input name="customer" id="customerName" dusk="customerName" type="text" v-model="form.customerName"
+                <input name="customer" 
+                       id="customerName" 
+                       dusk="customerName"
+                       data-dependency="phone"
+                       type="text" 
+                       v-model="form.customerName"
                        v-on:keyup="autoComplete"
                        class="form-control" required>
-                <div class="customer-name-results mt-2" v-if="results.length">
-                    <button class="customer-name-result" v-for="result in results" v-bind:key="result.id"
+                <div class="flex flex-col" v-if="results.length">
+                    <button class="flex-1 m-2 btn-format" v-for="result in results" v-bind:key="result.id"
                             :name="result.phone" @click.prevent="fillFields(result)">
                         {{ result.name }}
                     </button>
@@ -31,6 +36,7 @@
                        :class="{'formatError': phoneFormatError}" 
                        id="phone" @keyup="filterPhone" 
                        maxlength="10" 
+                       data-dependency="jobName"
                        name="phone" 
                        dusk="phone"
                        type="tel" @blur="validateMobileNumber($event.target.value)"
@@ -72,11 +78,13 @@
 
 <script>
 import Card from "../components/shared/Card";
+import Feedback from '../components/shared/Feedback';
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
-    Card
+    Card,
+    Feedback
   },
   data() {
     return {
@@ -215,5 +223,11 @@ export default {
   }
   .formatErrorLabel {
     color: red;
+  }
+
+  .btn-format {
+      background-color: beige;
+      border-bottom: solid thin black;
+      padding: .5rem;
   }
 </style>

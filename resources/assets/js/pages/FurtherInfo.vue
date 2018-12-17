@@ -270,7 +270,7 @@
             unformattedNumber = unformattedNumber + number[i]
           }
         }
-        let numberLength = unformattedNumber.length
+        let numberLength = unformattedNumber.length;
         if (numberLength < 10) {
           if (this.getMobileValidResponse[1] !== '') {
             this.$store.commit('setTheMobileResponse', ['', '', ''])
@@ -335,6 +335,9 @@
         if (!this.passwordsMatch) {
           return
         }
+
+        this.form.email = this.form.email.trim();
+
         User.submitFurtherInfo(this.form, this.disabled)
       },
       initAutocomplete() {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
+use App\Notifications\NotifySubOfBidNotAcceptedBid;
 use App\Notifications\NotifyContractorOfAcceptedBid;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\TaskFinished;
@@ -49,13 +50,13 @@ class TaskController extends Controller
     public function bidContractorJobTasks()
     {
         $bidTasks = Auth::user()->
-                    contractor()->
-                    first()->
-                    bidContractorJobTasks()->
-                    with([
-                        'jobTask.job', 
-                        'jobTask.task'
-                    ])->get();
+        contractor()->
+        first()->
+        bidContractorJobTasks()->
+        with([
+            'jobTask.job',
+            'jobTask.task'
+        ])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -71,10 +72,10 @@ class TaskController extends Controller
             contractor()->first()->
             bidContractorJobTasks()->with([
                 'jobTask.job',
-                'jobTask.task', 
-                'jobTask.images', 
+                'jobTask.task',
+                'jobTask.images',
                 'jobTask.location'
-                ])->get();
+            ])->get();
             return response()->json($bidTasks, 200);
         }
     }
@@ -116,9 +117,15 @@ class TaskController extends Controller
      * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
-    public function getJobTask(JobTask $jobTask)
+    public function getJobTask($jobTaskId)
     {
-        Log::debug($jobTask);
+//        Log::debug($jobTask);
+//        dd($jobTask);
+
+        Log::debug("Job Task Id: $jobTaskId");
+
+        $jobTask = JobTask::find($jobTaskId);
+
         return $jobTask->load(['images', 'task']);
     }
 
@@ -423,10 +430,40 @@ class TaskController extends Controller
             return response()->json(["message" => "Couldn't accept bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
         }
 
+        // change statuses on bidContractorJobTask. need to change the statuses for each contractor that has this jobtaskid
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
+
+
+        $allContractorsForJobTask->map(function ($contractor) use ($bidId) {
+            $c = BidContractorJobTask::find($contractor->id);
+            if ($contractor->id === $bidId) {
+                $c->accepted = true;
+            } else {
+                $c->accepted = false;
+            }
+            $c->save();
+        });
+
         // set the sub price in the job task table
-        $job = Job::find($jobId);
+//        $job = Job::find($jobId);
         $jobTask = JobTask::find($jobTaskId);
         $task = $jobTask->task()->first();
+
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
+
+        $allContractorsForJobTask->map(function ($con) use ($bidId, $contractorId, $task) {
+            if ($con->id != $bidId) {
+                $con->accepted = 0;
+                $con->save();
+                $user = User::find($con->contractor_id);
+                $user->notify(new NotifySubOfBidNotAcceptedBid($task, $user));
+            } else {
+                $con->accepted = 1;
+                $con->save();
+            }
+        });
+
+//        dd($allContractorsForJobTask);
 
         $jobTask->sub_final_price = $price;
         $jobTask->contractor_id = $contractorId;
@@ -610,7 +647,6 @@ class TaskController extends Controller
         // check if the contractor_id on the jobtask table equals the contractor_id of the jobs table
 
 
-
         if ($actor == 'sub') {
             $b = new BidContractorJobTask();
             $contractors = $b->select('contractor_id')->where('job_task_id', '=', $jobTask->job_id)->get();
@@ -787,6 +823,12 @@ class TaskController extends Controller
         }
 
         $job = Job::find($request->jobId);
+
+        if ($job->location_id != null) {
+            $jobTask->location_id = $job->location_id;
+            $jobTask->save();
+        }
+
         $job->changeJobStatus($job, __('bid.in_progress'));
         $job->jobTotal();
         $earliestDate = JobTask::findEarliestStartDate($request->jobId);
@@ -854,6 +896,7 @@ class TaskController extends Controller
 //        } else {
 //            $jobTask->sub_sets_own_price_for_job = 1;
 //        }
+
 
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;

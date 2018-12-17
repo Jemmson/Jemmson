@@ -3,36 +3,39 @@
   <div class="flex flex-col" v-if="bid.job_name !== undefined">
     <!-- JOB STATUS -->
     <div class="border-b pb-4 mb-6">
-      <div class="status" :class="getLabelClass(bid.status)">
-        {{ status }}
-        <info v-show="!isCustomer" title="Statuses">
-          <div slot="tldr">
-            <div class="flex flex-col">
-              <ol>
-                <li v-for="status in statuses" :key="status.type">
+        <div class="status flex justify-between" :class="getLabelClass(bid.status)">
+          <div></div>
+          <div>{{ status }}</div>
+          <div><info
+                  buttons="false"
+                  class="spacing"
+                  v-show="!isCustomer"
+                  title="Statuses">
+            <div slot="tldr">
+              <div class="flex flex-col">
+                <div v-for="status in statuses" :key="status.type">
                   <div class="flex justify-between">
                     <div class="mr-2">
-                      <strong>{{ status.type }}</strong>
-                      <div>{{ status.description }}</div>
+                      <strong class="status-header uppercase">{{ status.type }}:</strong>
+                      <div class="description">{{ status.description }}</div>
                     </div>
                   </div>
-                </li>
-              </ol>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div slot="full">
-            <p>As a contractor the job goes through various statuses. The first status is:</p>
-            <div class="text-center">
-              <strong>Initiated</strong>
+            <div slot="full">
+              <p>As a contractor the job goes through various statuses. The first status is:</p>
+              <div class="text-center">
+                <strong>Initiated</strong>
+              </div>
+              <p>
+                This status refers to a job that has just been initiated but there have been no tasks
+                assigned to the bid.
+              </p>
             </div>
-            <p>
-              This status refers to a job that has just been initiated but there have been no tasks
-              assigned to the bid.
-            </p>
-          </div>
-        </info>
-      </div>
+          </info></div>
+        </div>
     </div>
 
     <div class="flex flex-col self-center mb-6">
@@ -101,7 +104,7 @@
           </div>
           <div v-else>
             <transition name="slide-fade">
-              <div class="mt-3" v-show="customerNotes">
+              <div class="mt-3 no-notes" v-show="customerNotes">
                 The customer does not have any notes for
                 this job
               </div>
@@ -208,7 +211,7 @@ export default {
             "Contractor has sent a bid but has not added a task to the job"
         },
         {
-          type: "Job Declined Please Review",
+          type: "BID CHANGE REQUESTED - PLEASE REVIEW",
           description:
             "Customer has not approved the bid and is asking for a change to be made"
         },
@@ -326,6 +329,38 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+  .no-notes {
+    text-align: center;
+    margin-right: -9rem;
+  }
+
+  .status-header {
+    font-size: 1rem;
+    margin-left: -1rem;
+    margin-right: -2rem;
+    text-align: start;
+    margin-bottom: .15rem;
+    padding: .25rem;
+    margin-top: .15rem;
+  }
+
+  .description {
+    font-size: .9rem;
+    margin-left: -1rem;
+    margin-right: -2rem;
+    text-align: start;
+    margin-bottom: .15rem;
+    /*background-color: beige;*/
+    padding: .25rem;
+    margin-top: .15rem;
+    border-radius: 5px;
+  }
+
+  /*.spacing {*/
+    /*margin-bottom: 10rem;*/
+  /*}*/
+
 .wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -339,9 +374,11 @@ export default {
 //     width: 15rem;
 // }
 .status {
-  padding: 1rem;
-  padding-left: 6px;
-  padding-right: 6px;
+  /*padding: 1rem;*/
+  /*padding-left: 6px;*/
+  /*padding-right: 6px;*/
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .btn-width {

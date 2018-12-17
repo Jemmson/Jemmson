@@ -80,7 +80,7 @@
 
                             <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
-                                <label for="qtyUnit">Quanity Description</label>
+                                <label for="qtyUnit">Quantity Description</label>
                                 <input type="text" class="form-control" min="1" id="qtyUnit"
                                        placeholder="ex. ft, sq. ft, etc."
                                        name="qtyUnit" v-model="addNewTaskForm.qtyUnit" @blur="validateInput()"

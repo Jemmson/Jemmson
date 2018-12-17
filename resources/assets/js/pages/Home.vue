@@ -2,246 +2,139 @@
     <div>
         <div class="intro">
             <div class="intro-header">
-                <div class="slogan intro-main-slogan">Welcome {{ user.name }}</div>
+                <div class="slogan intro-main-slogan flex flex-col items-center justify-center">
+                    <div>Welcome</div>
+                    <div>{{ user.name }}</div>
+                </div>
                 <div class="slogan intro-sub-slogan">Please review and navigate below</div>
             </div>
         </div>
         <div class="flex flex-col home-content">
-            <div class="border m-4">
-                <h4 class="text-center bid-header">Bids</h4>
-                <div class="flex flex-wrap justify-between">
-                    <div class="border home-box" @click="route('/bids')">
-                        <div class="home-text" v-if="bidData(bids, 'bid.initiated') === 0">
-                            No Initiated Bids
-                        </div>
-
-                        <div class="home-text" v-if="bidData(bids, 'bid.initiated') === 1">
-                            {{ bidData(bids, 'bid.initiated') }} has been Initiated
-                        </div>
-
-                        <div class="home-text" v-if="bidData(bids, 'bid.initiated') > 1">
-                            {{ bidData(bids, 'bid.initiated') }} are Initiated
-                        </div>
+            <div class="border m-4 shadow-md">
+                <div @click="route('/bids')" class="border-b pb-4">
+                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
+                        <span>Bids</span>
                     </div>
-                    <div class="border home-box" @click="route('/bids')">
-                        <div class="home-text" v-if="bidData(bids, 'bid.in_progress') === 0">
-                            No Bids Are In Progress
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'bid.in_progress') === 1">
-                            {{ bidData(bids, 'bid.in_progress') }} is in Progress
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'bid.in_progress') > 1">
-                            {{ bidData(bids, 'bid.in_progress') }} are in Progress
-                        </div>
+                </div>
+                <div class="statuses mb-1">
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>INITIATED</div>
+                        <div>{{ bidData('bid.initiated') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/bids')">
-                        <div class="home-text" v-if="bidData(bids, 'bid.sent') === 0">
-                            No Bids Have Been Sent
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'bid.sent') === 1">
-                            {{ bidData(bids, 'bid.sent') }} has been Sent
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'bid.sent') > 1">
-                            {{ bidData(bids, 'bid.sent') }} have been Sent
-                        </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>IN PROGRESS</div>
+                        <div>{{ bidData('bid.in_progress') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/bids')">
-                        <div class="home-text" v-if="bidData(bids, 'bid.declined') === 0">
-                            No Bids Have Been Declined
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'bid.declined') === 1">
-                            {{ bidData(bids, 'bid.declined') }} has been Declined
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'bid.declined') > 1">
-                            {{ bidData(bids, 'bid.declined') }} have been Declined
-                        </div>
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>SENT</div>
+                        <div>{{ bidData('bid.sent') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/bids')">
-                        <div class="home-text" v-if="bidData(bids, 'bid.approved') === 0">
-                            No Bids Have Been Approved
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'job.approved') === 1">
-                            {{ bidData(bids, 'job.approved') }} has been Approved
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'job.approved') > 1">
-                            {{ bidData(bids, 'job.approved') }} are Approved
-                        </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>DECLINED</div>
+                        <div>{{ bidData('bid.declined') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/bids')">
-                        <div class="home-text" v-if="bidData(bids, 'bid.completed') === 0">
-                            No Bids Have Been Completed
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'job.completed') === 1">
-                            {{ bidData(bids, 'job.completed') }} has been Completed
-                        </div>
-                        <div class="home-text" v-if="bidData(bids, 'job.completed') > 1">
-                            {{ bidData(bids, 'job.completed') }} are Completed
-                        </div>
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>APPROVED</div>
+                        <div>{{ bidData('bid.approved') }}</div>
+                    </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>COMPLETED</div>
+                        <div>{{ bidData('bid.completed') }}</div>
                     </div>
                 </div>
             </div>
 
 
-            <div class="border m-4" v-if="user.usertype === 'contractor'">
-                <h4 class="text-center bid-header">Tasks</h4>
-                <div class="flex flex-wrap justify-between">
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="tasks.length === 0">No Current Tasks</div>
-                        <div class="home-text" v-else-if="tasks.length === 1">1 Task</div>
-                        <div class="home-text" v-else>{{ tasks.length }} Tasks</div>
+            <div class="border m-4 shadow-md" v-if="user.usertype === 'contractor'">
+                <div @click="route('/tasks')" class="border-b pb-4">
+                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
+                        <span>TASKS</span>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.initiated') === 0">
-                            No Tasks have been Initiated
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.initiated') === 1">
-                            {{ taskData(tasks, 'bid_task.initiated') }} has been Initiated
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.initiated') > 1">
-                            {{ taskData(tasks, 'bid_task.initiated') }} are Initiated
-                        </div>
+                </div>
+                <div class="statuses mb-1">
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>INITIATED</div>
+                        <div>{{ taskData('bid_task.initiated') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.bid_sent') === 0">
-                            No Tasks have been Sent
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.bid_sent') === 1">
-                            {{ taskData(tasks, 'bid_task.bid_sent') }} has been Sent
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.bid_sent') > 1">
-                            {{ taskData(tasks, 'bid_task.bid_sent') }} have been Sent
-                        </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>SENT</div>
+                        <div>{{ taskData('bid_task.bid_sent') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.accepted') === 0">
-                            No Tasks have been accepted
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.accepted') === 1">
-                            {{ taskData(tasks, 'bid_task.accepted') }} has been Accepted
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.accepted') > 1">
-                            {{ taskData(tasks, 'bid_task.accepted') }} have been Accepted
-                        </div>
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>ACCEPTED</div>
+                        <div>{{ taskData('bid_task.accepted') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.finished_by_sub') === 0">
-                            No Tasks have been finished by the Sub
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.finished_by_sub') === 1">
-                            {{ taskData(tasks, 'bid_task.finished_by_sub') }} has been Finished by the Sub
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.finished_by_sub') > 1">
-                            {{ taskData(tasks, 'bid_task.finished_by_sub') }} have been Finished by the Sub
-                        </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>FINISHED BY SUB</div>
+                        <div>{{ taskData('bid_task.finished_by_sub') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.approved_by_general') === 0">
-                            No Tasks have been approved by the general
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.approved_by_general') === 1">
-                            {{ taskData(tasks, 'bid_task.approved_by_general') }} has been Approved by the General Contractor
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.approved_by_general') > 1">
-                            {{ taskData(tasks, 'bid_task.approved_by_general') }} have been Approved by the General Contractor
-                        </div>
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>APPROVED</div>
+                        <div>{{ taskData('bid_task.approved_by_general') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.finished_by_general') === 0">
-                            No Tasks have been finished by the general
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.finished_by_general') === 1">
-                            {{ taskData(tasks, 'bid_task.finished_by_general') }} has been Finished by the General Contractor
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.finished_by_general') > 1">
-                            {{ taskData(tasks, 'bid_task.finished_by_general') }} have been Finished by the General Contractor
-                        </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>FINISHED BY GENERAL</div>
+                        <div>{{ taskData('bid_task.finished_by_general') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.approved_by_customer') === 0">
-                            No Tasks have been approved by the customer
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.approved_by_customer') === 1">
-                            {{ taskData(tasks, 'bid_task.approved_by_customer') }} has been Approved by the Customer
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.approved_by_customer') > 1">
-                            {{ taskData(tasks, 'bid_task.approved_by_customer') }} have been Approved by the Customer
-                        </div>
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>APPROVED BY CUSTOMER</div>
+                        <div>{{ taskData('bid_task.approved_by_customer') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 0">
-                            No customers have sent payment
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 1">
-                            {{ taskData(tasks, 'bid_task.customer_sent_payment') }} has had the Customer Send Payment
-                        </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>PAYMENT SENT</div>
+                        <div>{{ taskData('bid_task.customer_sent_payment') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 0">
-                            No customers have sent payment
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.customer_sent_payment') === 1">
-                            {{ taskData(tasks, 'bid_task.customer_sent_payment') }} has had the Customer Send Payment
-                        </div>
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>REOPENED</div>
+                        <div>{{ taskData('bid_task.reopened') }}</div>
                     </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.reopened') === 0">
-                            No tasks have been reopened
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.reopened') === 1">
-                            {{ taskData(tasks, 'bid_task.reopened') }} has been Reopened
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.reopened') > 1">
-                            {{ taskData(tasks, 'bid_task.reopened') }} have been Reopened
-                        </div>
-                    </div>
-                    <div class="border home-box" @click="route('/tasks')">
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.denied') === 0">
-                            No tasks have been denied
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.denied') === 1">
-                            {{ taskData(tasks, 'bid_task.denied') }} has been Denied
-                        </div>
-                        <div class="home-text" v-if="taskData(tasks, 'bid_task.denied') > 1">
-                            {{ taskData(tasks, 'bid_task.denied') }} have been Denied
-                        </div>
+                    <div class="current-status bg-brown-lightest pt-1 pb-1">
+                        <div>DENIED</div>
+                        <div>{{ taskData('bid_task.denied') }}</div>
                     </div>
                 </div>
             </div>
 
 
-            <div class="border m-4">
-                <h4 class="text-center bid-header">Invoices</h4>
-                <div class="flex flex-wrap justify-between">
-                    <div class="border home-box" @click="route('/invoices')">
-                        <div class="home-text" v-if="invoices.length === 0">0 Invoices</div>
-                        <div class="home-text" v-else-if="invoices.length === 1">1 Invoice</div>
-                        <div class="home-text" v-else>{{ invoices.length }} Invoices</div>
+            <div class="border m-4 shadow-md">
+                <div @click="route('/invoices')" class="border-b pb-4">
+                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
+                        <span>Invoices</span>
+                    </div>
+                </div>
+                <div class="statuses mb-1">
+                    <div class="current-status bg-blue-lightest pt-1 pb-1">
+                        <div>FINISHED</div>
+                        <div>{{ invoices.length }}</div>
                     </div>
                 </div>
             </div>
 
-            <!--<div class="border m-4" v-if="user.contractor !== null &&-->
-                                                       <!--user.contractor.stripe_express !== null">-->
-            <div class="border m-4" v-if="user.contractor !== null && user.contractor.stripe_express !== null">
-                <h4 class="text-center bid-header">Stripe</h4>
-                <div class="flex flex-wrap justify-between">
-                    <div class="border home-box" @click="route('express')">
-                        <div class="home-text">Stripe</div>
+            <div class="border m-4 shadow-md"
+                 v-if="user.contractor !== null && user.contractor.stripe_express !== null">
+                <div @click="route('/express')" class="border-b pb-4">
+                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
+                        <span>stripe</span>
                     </div>
                 </div>
             </div>
 
         </div>
+        <feedback></feedback>
     </div>
 </template>
 
 <script>
 
   import { mapState } from 'vuex'
+  import Feedback from '../components/shared/Feedback'
 
   export default {
     props: {
       user: Object
+    },
+    components: {
+      Feedback
     },
     data() {
       return {
@@ -253,9 +146,11 @@
         sInvoices: 0,
       }
     },
-    computed: mapState({
-      job: state => state.job,
-    }),
+    computed: {
+      ...mapState({
+        job: state => state.job,
+      })
+    },
     methods: {
       route(value) {
         if (value === 'express') {
@@ -267,24 +162,24 @@
           this.$router.push(value)
         }
       },
-      bidData(bids, message) {
+      bidData(message) {
         let count = 0
-        for (let i = 0; i < bids.length; i++) {
-          if (bids[i].status === message) {
+        for (let i = 0; i < this.bids.length; i++) {
+          if (this.bids[i].status === message) {
             count++
           }
         }
         return count
       },
-      taskData(tasks, message) {
+      taskData(message) {
         let count = 0
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].job_task.status === message) {
+        for (let i = 0; i < this.tasks.length; i++) {
+          if (this.tasks[i].job_task.status === message) {
             count++
           }
         }
         return count
-      },
+      }
     },
     mounted: function() {
       console.log('getBids')
@@ -311,8 +206,26 @@
 
 <style>
 
+    .border-b {
+        margin: .5rem .25rem 0rem .25rem;
+    }
+
+    .current-status {
+        display: grid;
+        grid-template-columns: 70% 1fr;
+        padding-left: 2.5rem;
+    }
+
+    .statuses {
+        display: flex;
+        flex-direction: column;
+        /*margin-left: .5rem;*/
+        /*align-items: center;*/
+        justify-content: flex-start;
+    }
+
     .home-content {
-        height: 100%;
+        min-height: 100vh;
         background-color: white;
     }
 
@@ -325,8 +238,8 @@
 
     .home-box {
         display: flex;
-        align-items: center;
-        width: 43%;
+        /*align-items: center;*/
+        width: 40%;
         height: 10rem;
         margin: .8rem;
         border-radius: 3px;
@@ -339,13 +252,14 @@
 
     .home-text {
         color: black;
-        text-align: center;
-        vertical-align: middle;
+        /*text-align: center;*/
+        /*vertical-align: middle;*/
         height: 100%;
         width: 100%;
-        margin-right: .5rem;
-        margin-left: .5rem;
-        margin-top: 1rem;
+        /*margin-right: .5rem;*/
+        /*margin-left: .5rem;*/
+        margin-top: .15rem;
+        margin-bottom: .15rem;
     }
 
     .home-icon {

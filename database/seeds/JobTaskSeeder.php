@@ -26,6 +26,7 @@ class JobTaskSeeder extends Seeder
         $task = new JobTask();
         $task->task_id = 1;
         $task->job_id = 1;
+        $task->location_id = 4;
         $task->contractor_id = 1;
         $task->cust_final_price = 100;
         $task->sub_final_price = rand(10, 50);
@@ -33,19 +34,19 @@ class JobTaskSeeder extends Seeder
         $task->status = __('bid_task.bid_sent');
         $task->save();
 
-        $job = Job::find(2);
-        $job->status = __('bid.in_progress');
-        $job->save();
-
-        $task = new JobTask();
-        $task->task_id = 2;
-        $task->job_id = 2;
-        $task->contractor_id = 2;
-        $task->cust_final_price = 100;
-        $task->sub_final_price = rand(20, 50);
-        $task->start_date = Carbon::now();
-        $task->status = __('bid_task.bid_sent');
-        $task->save();
+//        $job = Job::find(2);
+//        $job->status = __('bid.in_progress');
+//        $job->save();
+//
+//        $task = new JobTask();
+//        $task->task_id = 2;
+//        $task->job_id = 2;
+//        $task->contractor_id = 2;
+//        $task->cust_final_price = 100;
+//        $task->sub_final_price = rand(20, 50);
+//        $task->start_date = Carbon::now();
+//        $task->status = __('bid_task.bid_sent');
+//        $task->save();
 
 
 
