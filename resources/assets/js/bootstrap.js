@@ -100,7 +100,7 @@ if (Spark.state.user !== null) {
           break;
         case "App\\Notifications\\NotifySubOfUpdatedMessage":
           console.log(Spark.state.user.id);
-          Vue.toasted.info('sdlsdlkdslksdlksdlksdlksdlk');
+          Vue.toasted.info('Your Message has been successfully sent to the subs');
           Bus.$emit('bidUpdated');
           break;
         default:
