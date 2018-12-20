@@ -1,120 +1,156 @@
 <template>
-    <div>
-        <!-- / end title -->
-        <search-bar>
-            <input type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
-        </search-bar>
-
-        <!-- / end search bar -->
-        <paginate ref="paginator" name="sTasks" :list="sTasks" :per="4" class="paginated" v-show="sTasks.length > 0">
-            <div class="flex flex-col" v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id"
-                 :id="'task_' + bidTask.task_id"
-                 style="z-index:2;">
-                <!--<pre>{{ bidTask }}</pre>-->
-                <card v-if="showBid(bidTask)" header="true" footer="true">
-                    <template slot="card-header">
-                        <label for="job-stats" class="status" :class="getLabelClass(bidTask.job_task.status)">{{
-                            status(bidTask) }}</label>
-                    </template>
-
-                    <label for="job-name" class="text-3xl font-semibold uppercase text-center mb-4">{{
-                        jobName(bidTask.job_task.task.name) }}</label>
-                    <!-- / end task name -->
-
-                    <div class="flex border-b mb-4 pb-4">
-                        <div class="flex-1 flex-col">
-              <span class="label">
-                Start On:
-              </span>
-                            <label class="font-normal mt-2">{{ prettyDate(bidTask.job_task.start_date) }}</label>
-                        </div>
-
-                        <div v-if="isBidOpen(bidTask)" class="flex-1 flex-col">
-                            <label for="details" class="label">Task Price:</label>
-                            <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1" type="text"
-                                   class="form-control mt-2 w-4/5" v-bind:id="'price-' + bidTask.id"
-                                   v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
-                            <input v-else type="text" class="form-control mt-2 w-4/5" v-bind:id="'price-' + bidTask.id"
-                                   v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"
-                            />
-                        </div>
-                        <div v-else class="flex-1 flex-col">
-              <span class="label">
-                Accepted Bid Price:
-              </span>
-                            <label class="mt-2">${{ bidTask.bid_price }}</label>
-                        </div>
-                    </div>
-                    <!-- / end date and price -->
-
-                    <div class="flex border-b mb-4">
-                        <div class="flex-1 form-group">
-                            <label class="label">QTY: </label>
-                            {{ bidTask.job_task.qty }}
-                        </div>
-                        <div class="flex-1 form-group text-right">
-                            <label class="label">Total: </label>
-                            ${{ bidTask.bid_price }}
-                        </div>
-                    </div>
-                    <!-- / end qty section -->
-
-                    <div class="flex border-b mb-4">
-                        <!--<div v-if="bidTask.job_task.location.address_line_1" class="flex border-b mb-4">-->
-                        <p v-if="getAddress(bidTask) !== 'Address Not Available'">
-                            <a target="_blank"
-                               :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
-                                <i class="fas fa-map-marker icon"></i>
-                                {{ getAddress(bidTask) }}
-                            </a>
-                        </p>
-                        <p v-else>
-                            <i class="fas fa-map-marker icon"></i>
-                            {{ getAddress(bidTask) }}
-                        </p>
-                    </div>
-                    <!-- / end address -->
-
-                    <div v-if="showDeclinedMsg(bidTask.job_task.declined_message)" class="flex border-b mb-4">
-                        <label for="declined_message" class="label label-danger">Declined Reason</label>
-                        <p>
-                            {{ bidTask.job_task.declined_message }}
-                        </p>
-                    </div>
-                    <!-- / end declined message section -->
-
-                    <div v-if="bidTask.job_task.sub_message !== null && bidTask.job_task.sub_message != ''"
-                         class="flex border-b mb-4">
-                        <p>
-                            {{ bidTask.job_task.sub_message }}
-                        </p>
-                    </div>
-                    <!-- / end sub message -->
-
-                    <task-images :jobTask="bidTask.job_task" type="sub">
-                    </task-images>
-
-                    <template slot="card-footer">
-                        <div class="flex w-full flex-row-reverse">
-                            <button v-if="isBidOpen(bidTask)" class="btn btn-green" @click.prevent="update"
-                                    v-bind:id="bidTask.id" :disabled="disabled.submit">
-                <span v-if="disabled.submit">
-                  <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                                Submit
-                            </button>
-                            <button v-if="showFinishedBtn(bidTask)" class="btn btn-green" @click="finished(bidTask)"
-                                    :disabled="disabled.finished">
-                <span v-if="disabled.finished">
-                  <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
-                                Finished
-                            </button>
-                        </div>
-                    </template>
-                </card>
+    <div class="main flex flex-col justify-between">
+        <div>
+            <div class="search-bar shadow-md">
+                <search-bar>
+                    <input type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
+                </search-bar>
             </div>
-        </paginate>
+
+            <paginate ref="paginator"
+                      name="sTasks"
+                      :list="sTasks"
+                      :per="8"
+                      class="paginated"
+                      v-show="sTasks.length > 0">
+                <div class=""
+                     v-for="(bidTask, index) in paginated('sTasks')"
+                     v-bind:key="bidTask.id"
+                     :id="'task_' + bidTask.task_id"
+                     style="z-index:2;">
+                    <div class="task shadow-md flex flex-col" v-if="showBid(bidTask)">
+
+                        <div class="task-box shadow-md">
+                            <div class="flex items-start">
+                                <label class="job-status mr-3"
+                                       :class="getLabelClass(bidTask.job_task.status)">
+                                    {{ status(bidTask) }}</label>
+                                <label class="text-size w-full mt-2 ml-3 uppercase text-center">
+                                    {{ jobName(bidTask.job_task.task.name) }}</label>
+                            </div>
+
+                            <div class="flex mt-1">
+                                <button class="btn btn-sm btn-primary flex-1 mr-3" @click="showTheTask(index, 'show')">
+                                    Show
+                                </button>
+                                <button class="btn btn-sm btn-primary flex-1 ml-3" @click="showTheTask(index, 'hide')">
+                                    Hide
+                                </button>
+                            </div>
+                        </div>
+
+                        <div :id="'showTask' + index" style="display:none;">
+                            <div class="w-full mt-6 shadow-md">
+
+                                <div class="wrapper">
+                                    <div>Start On:</div>
+                                    <label class="font-normal">{{ prettyDate(bidTask.job_task.start_date) }}</label>
+                                </div>
+
+                                <!--<div v-if="isBidOpen(bidTask)" class="flex-1 flex-col">-->
+
+
+                                <div class="wrapper" v-if="isBidOpen(bidTask)">
+
+                                    <label for="details" class="w-full">Task Price:</label>
+
+
+                                    <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1" type="text"
+                                           class="form-control form-control-input" v-bind:id="'price-' + bidTask.id"
+                                           v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
+                                    <input v-else type="text" class="form-control form-control-input"
+                                           v-bind:id="'price-' + bidTask.id"
+                                           v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
+                                </div>
+                                <div v-else class="wrapper">
+                                    <label class="margin-adjust">
+                                        Accepted Bid Price:
+                                    </label>
+                                    <label class="margin-adjust">${{ bidTask.bid_price }}</label>
+                                </div>
+
+                                <hr class="hr">
+
+                                <div class="wrapper">
+
+                                    <label class="">QTY: </label>
+                                    <label>{{ bidTask.job_task.qty }}</label>
+
+                                    <label class="mt-1">Total: </label>
+                                    <label class="mt-1"> ${{ bidTask.bid_price }}</label>
+                                </div>
+
+                                <hr class="hr">
+
+                                <div class="address-adjust">
+                                    <p v-if="getAddress(bidTask) !== 'Address Not Available'">
+                                        <a target="_blank"
+                                           :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
+                                            <i class="fas fa-map-marker icon"></i>
+                                            {{ getAddress(bidTask) }}
+                                        </a>
+                                    </p>
+                                    <p v-else>
+                                        <i class="fas fa-map-marker icon"></i>
+                                        {{ getAddress(bidTask) }}
+                                    </p>
+                                </div>
+
+                                <hr class="hr" v-if="showDeclinedMsg(bidTask.job_task.declined_message)">
+
+                                <!--<div class="flex border-b mb-4 p-2">-->
+                                <div v-if="showDeclinedMsg(bidTask.job_task.declined_message)" class="wrapper">
+                                    <label class="">Declined Reason</label>
+                                    <p>
+                                        {{ bidTask.job_task.declined_message }}
+                                    </p>
+                                </div>
+
+                                <hr class="hr">
+
+                                <div v-if="bidTask.job_task.sub_message !== null && bidTask.job_task.sub_message != ''"
+                                     class="wrapper">
+                                    <label>Sub Instructions</label>
+                                    <p>
+                                        {{ bidTask.job_task.sub_message }}
+                                    </p>
+                                </div>
+
+                                <hr class="hr">
+
+                                <task-images class="images" :jobTask="bidTask.job_task" type="sub">
+                                </task-images>
+
+                                <hr class="hr" v-if="isBidOpen(bidTask) || showFinishedBtn(bidTask)">
+
+                                <div class="flex w-full flex-row-reverse pr-6 pt-6 pb-6">
+                                    <button v-if="isBidOpen(bidTask)" class="btn btn-green" @click.prevent="update"
+                                            v-bind:id="bidTask.id" :disabled="disabled.submit">
+                                        <span v-if="disabled.submit">
+                                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                        </span>
+                                        Submit
+                                    </button>
+                                    <button v-if="showFinishedBtn(bidTask)" class="btn btn-green"
+                                            @click="finished(bidTask)"
+                                            :disabled="disabled.finished">
+                                        <span v-if="disabled.finished">
+                                          <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                        </span>
+                                        Finished
+                                    </button>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </paginate>
+
+        </div>
 
         <div class="card p-5 card-body justify-center">
             <paginate-links for="sTasks" :limit="2" :show-step-links="true">
@@ -124,8 +160,11 @@
         <stripe :user='user'>
         </stripe>
         <feedback></feedback>
+
+
     </div>
 </template>
+
 
 <script>
 
@@ -148,6 +187,7 @@
     },
     data() {
       return {
+        showTasks: {},
         paginate: ['sTasks'],
         address: '',
         location: {
@@ -169,6 +209,20 @@
       }
     },
     methods: {
+      showTheTask(index, action) {
+
+        if (action === 'show') {
+          let a = window.document.getElementById('showTask' + index);
+          a.setAttribute('style', '')
+                    // return true
+        } else {
+          let a = window.document.getElementById('showTask' + index);
+          a.setAttribute('style', 'display:none;')
+        }
+
+        // for (let i = 0; i < this.tasks.length; i++) {
+        // }
+      },
       showDeclinedMsg(msg) {
         return msg !== null && msg !== ''
       },
@@ -313,6 +367,20 @@
 
     },
     mounted() {
+
+      console.log(this.tasks)
+
+      let i = -1
+
+      // this.showTasks = this.tasks.map(function(task) {
+      //   i++
+      //   return this.showTasks[i]
+      // }, i)
+
+      for (let j = 0; j < this.tasks.length; j++) {
+        this.showTasks[j] = false
+      }
+
       const taskId = User.getParameterByName('taskId')
       if (taskId !== null && taskId !== '') {
         $('#task_' + taskId).addClass('info')
@@ -327,3 +395,82 @@
     }
   }
 </script>
+
+<style scoped>
+
+    .images {
+        margin: 1rem;
+    }
+
+    .address-adjust {
+        padding: .5rem;
+    }
+
+    .hr {
+        border: black solid thin;
+    }
+
+    .wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /*margin-top: 1rem;*/
+        /*padding: .75rem;*/
+        padding: 1rem 1rem 1rem 1rem;
+        /*grid-row-gap: 1rem;*/
+    }
+
+    .margin-adjust {
+        margin-top: -1.5rem;
+    }
+
+    .form-control-input {
+        /*width: 40%;*/
+    }
+
+    .text-size {
+        font-size: 14pt;
+    }
+
+    .task-box {
+        border: white thin solid;
+        border-radius: 5px;
+        margin: .1rem;
+        padding: .75rem;
+    }
+
+    .task {
+        width: 100%;
+        padding: .25rem .25rem .25rem .25rem;
+        /*border: black thin solid;*/
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: #3045a2;
+    }
+
+    .main {
+        background-color: white;
+        height: 200vh;
+        padding: .25rem;
+    }
+
+    .search-bar {
+        /*width: 100%;*/
+        /*background-color: white;*/
+        /*padding: .25rem .25rem 0rem .25rem;*/
+        /*border: black thin solid;*/
+    }
+
+    .job-status {
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 14pt;
+        margin-right: 1.75rem;
+        /*margin: 1rem 1rem 1rem 1rem;*/
+        padding: .5rem 1rem .5rem 1rem;
+        border-radius: 5px;
+    }
+
+</style>
