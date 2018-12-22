@@ -38,13 +38,15 @@
 <script>
 
   import SignupWithStripe from './SignupWithStripe'
+  import ConnectWithStripe from './ConnectWithStripe'
 
   export default {
     props: {
       user: Object
     },
     components: {
-      SignupWithStripe
+      SignupWithStripe,
+      ConnectWithStripe
     },
     computed: {
       header() {

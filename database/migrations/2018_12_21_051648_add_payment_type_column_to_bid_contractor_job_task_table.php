@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFirstNameLastNameToTheUsersTable extends Migration
+class AddPaymentTypeColumnToBidContractorJobTaskTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class AddFirstNameLastNameToTheUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('bid_contractor_job_task', function (Blueprint $table) {
             //
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
+            $table->string('payment_type')->nullable();
         });
     }
 
@@ -27,10 +26,9 @@ class AddFirstNameLastNameToTheUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('bid_contractor_job_task', function (Blueprint $table) {
             //
-            $table->dropColumn('first_name');
-            $table->dropColumn('last_name');
+            $table->dropColumn('payment_type');
         });
     }
 }

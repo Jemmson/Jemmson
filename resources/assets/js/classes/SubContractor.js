@@ -49,7 +49,10 @@ export default class SubContractor {
         let general = false;
         disabled.finished = true;
 
-        if (User.needsStripe()) {
+        console.log(bid.payment_type)
+
+        if (bid.payment_type === 'stripe' &&
+            User.needsStripe()) {
             disabled.finished = false;
             return false;
         }

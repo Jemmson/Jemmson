@@ -50,24 +50,13 @@
                     <label class="margin-adjust">${{ bidTask.bid_price }}</label>
                 </div>
 
-                <h4 class="text-center m-2">How do you prefer to be paid?</h4>
+                <h4 class="text-center m-2">How do you prefer to be paid for this task?</h4>
                 <div class="flex justify-around">
-                    <div>
-                        <label>Stripe</label>
-                        <input type="radio" name="paymentOption" v-model="paymentOption" value="stripe">
-                    </div>
-                    <div>
-                        <label>Cash</label>
-                        <input type="radio" name="paymentOption" v-model="paymentOption" value="cash">
-                    </div>
-                    <div>
-                        <label>Other</label>
-                        <input type="radio" name="paymentOption" v-model="paymentOption" value="other">
-                    </div>
+                    <button class="btn btn-md blue flex-1" :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('stripe')">Stripe</button>
+                    <button class="btn btn-md blue flex-1 mr-6 ml-6" :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('cash')">Cash</button>
+                    <button class="btn btn-md blue flex-1" :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('other')">other</button>
                 </div>
-
                 <hr class="hr">
-
                 <div class="wrapper">
 
                     <label class="">QTY: </label>
@@ -151,30 +140,14 @@
     components: {
       TaskImages
     },
+    computed: {},
+    mounted () {
+      this.paymentType = this.bidTask.payment_type;
+    },
     data() {
       return {
-        paymentOption: 'cash',
+        paymentType: 'cash',
         showTheTask: false,
-        update(e) {
-          let id = e.target.id
-          let bid_price = $('#price-' + id).val()
-          this.disabled.submit = true
-          console.log(id, bid_price)
-          axios.put('/api/bid/task/' + id, {
-            id: id,
-            bid_price: bid_price
-          }).then((response) => {
-            // TODO: security review
-            console.log(response)
-            Vue.toasted.success('Bid Sent.')
-            User.emitChange('bidUpdated')
-            this.disabled.submit = false
-          }).catch((error) => {
-            console.log(error.response, '#error-' + id)
-            Vue.toasted.error(error.response.data.message)
-            this.disabled.submit = false
-          })
-        },
         disabled: {
           submit: false,
           finished: false
@@ -185,6 +158,32 @@
       bidTask: Object
     },
     methods: {
+      update(e) {
+        let id = e.target.id
+        // debugger;
+        let bid_price = $('#price-' + id).val()
+        let po = this.paymentType
+        this.disabled.submit = true
+        console.log(id, bid_price)
+        axios.put('/api/bid/task/' + id, {
+          id: id,
+          bid_price: bid_price,
+          paymentType: po
+        }).then((response) => {
+          // TODO: security review
+          console.log(response)
+          Vue.toasted.success('Bid Sent.')
+          User.emitChange('bidUpdated')
+          this.disabled.submit = false
+        }).catch((error) => {
+          console.log(error.response, '#error-' + id)
+          Vue.toasted.error(error.response.data.message)
+          this.disabled.submit = false
+        })
+      },
+      setPaymentType (value) {
+        this.paymentType = value;
+      },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
         if (bid.job_task === null) {
@@ -264,6 +263,18 @@
 </script>
 
 <style scoped>
+
+    .blue {
+        /*background-color: #1c3d5a;*/
+    }
+
+    .btn-active {
+        background-color: orangered;
+    }
+
+    .btn-inactive {
+        background-color: #1c3d5a;
+    }
 
     .images {
         margin: 1rem;
