@@ -2,14 +2,14 @@ import {
     shallowMount
 } from "@vue/test-utils";
 import sinon from 'sinon';
-import SubinviteModal from '../../../../resources/assets/js/components/task/SubinviteModal';
+import SubInviteModal from '../../../../resources/assets/js/components/task/SubInviteModal';
 
 require('../../bootstrap');
 
-describe('SubinviteModal', () => {
+describe('SubInviteModal', () => {
     const sendSubInviteToBidOnTask = sinon.spy();
     const autoComplete = sinon.spy();
-    const wrapper = shallowMount(SubinviteModal, {
+    const wrapper = shallowMount(SubInviteModal, {
         methods: {
             sendSubInviteToBidOnTask,
             autoComplete

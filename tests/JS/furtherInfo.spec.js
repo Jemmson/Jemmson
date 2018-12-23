@@ -61,7 +61,7 @@ describe('FurtherInfo', () => {
     expect(wrapper.isEmpty()).toBe(false)
   })
 
-  it.only('should render the correct phone number format', function() {
+  it('should render the correct phone number format', function() {
     let numLength = wrapper.vm.unformatNumber('123) 123 2345');
     console.log(numLength);
     expect(numLength).toBe(10);
