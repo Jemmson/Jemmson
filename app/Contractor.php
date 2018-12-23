@@ -7,14 +7,16 @@ use Illuminate\Support\Facades\DB;
 
 class Contractor extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'company_name',
-        'company_logo_name',
-        'email_method_of_contact',
-        'sms_method_of_contact',
-        'phone_method_of_contact',
-    ];
+//    protected $fillable = [
+//        'user_id',
+//        'company_name',
+//        'company_logo_name',
+//        'email_method_of_contact',
+//        'sms_method_of_contact',
+//        'phone_method_of_contact',
+//    ];
+
+    protected $guarded = [];
 
     //
     public function user()

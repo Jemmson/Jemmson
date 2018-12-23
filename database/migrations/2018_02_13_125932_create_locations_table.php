@@ -26,7 +26,6 @@ class CreateLocationsTable extends Migration
 
             $table->timestamps();
         });
-        DB::select("ALTER TABLE users COMMENT = 'This is just to test how to alter comments'");
     }
 
     /**

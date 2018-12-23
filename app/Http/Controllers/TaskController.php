@@ -49,10 +49,7 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->
-        contractor()->
-        first()->
-        bidContractorJobTasks()->
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->
         with([
             'jobTask.job',
             'jobTask.task'
