@@ -50,11 +50,17 @@
                     <label class="margin-adjust">${{ bidTask.bid_price }}</label>
                 </div>
 
-                <h4 class="text-center m-2">How do you prefer to be paid for this task?</h4>
-                <div class="flex justify-around">
-                    <button class="btn btn-md blue flex-1" :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('stripe')">Stripe</button>
-                    <button class="btn btn-md blue flex-1 mr-6 ml-6" :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('cash')">Cash</button>
-                    <button class="btn btn-md blue flex-1" :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('other')">other</button>
+                <div v-if="bidTask.accepted === 1" class="wrapper">
+                    <div class="margin-adjust">Selected Payment Method:</div>
+                    <div class="margin-adjust uppercase">{{ bidTask.payment_type }}</div>
+                </div>
+                <div v-else>
+                    <h4 class="text-center m-2">How do you prefer to be paid for this task?</h4>
+                    <div class="flex justify-around">
+                        <button class="btn btn-md blue flex-1" :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('stripe')">Stripe</button>
+                        <button class="btn btn-md blue flex-1 mr-6 ml-6" :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('cash')">Cash</button>
+                        <button class="btn btn-md blue flex-1" :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'" @click="setPaymentType('other')">other</button>
+                    </div>
                 </div>
                 <hr class="hr">
                 <div class="wrapper">
