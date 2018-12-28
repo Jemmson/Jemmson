@@ -126,7 +126,6 @@
                             </div>
                         </transition>
                     </div>
-
                     <transition name="slide-fade">
                         <div class="mt-3 ml-6" v-show="showPaidWithCashNotes">{{ bid.paid_with_cash_message }}</div>
                     </transition>
@@ -146,43 +145,38 @@
                         </transition>
                     </div>
                 </div>
+            </div>
 
-                <div v-show="isCustomer" class>
-                    <transition name="slide-fade">
-                        <div v-show="customerNotes">
-                            <div class="mt-4">
-                <textarea
-                        class="form-control"
-                        :value="bid.customer.customer.notes"
-                        name
-                        id
-                        cols="40"
-                        rows="10"
-                        @keyup="customerNotesMessage = $event.target.value"
-                ></textarea>
-                                <!--<textarea type="text" class="form-control"-->
-                                <!--name="message"-->
-                                <!--:value="bid.customer.customer.notes"-->
-                                <!--placeholder="Optional Message">-->
-                            </div>
-                            <div class="mt-2">
-                                <button
-                                        class="btn btn-red"
-                                        @click.prevent="updateGeneralContractorNotes()"
-                                        :disabled="disableCustomerNotesButton"
-                                        ref="custNotesUpdate"
-                                >
+            <div v-show="isCustomer" class>
+                <transition name="slide-fade">
+                    <div v-show="customerNotes">
+                        <div class="mt-4">
+                            <textarea
+                                    class="form-control"
+                                    :value="bid.customer.customer.notes"
+                                    name
+                                    id
+                                    cols="40"
+                                    rows="10"
+                                    @keyup="customerNotesMessage = $event.target.value"
+                            ></textarea>
+                        </div>
+                        <div class="mt-2">
+                            <button
+                                    class="btn btn-red"
+                                    @click.prevent="updateGeneralContractorNotes()"
+                                    :disabled="disableCustomerNotesButton"
+                                    ref="custNotesUpdate"
+                            >
                   <span v-if="disableCustomerNotesButton">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
-                                    Submit
-                                </button>
-                            </div>
+                                Submit
+                            </button>
                         </div>
-                    </transition>
-                </div>
+                    </div>
+                </transition>
             </div>
-
         </div>
 
 
@@ -195,7 +189,7 @@
         <span
                 v-if="bid.status !== 'bid.in_progress' && bid.status !== 'bid.initiated' "
                 class="font-bold"
-        >${{ bid.bid_price }}</span>
+                 >${{ bid.bid_price }}</span>
                 <span v-else class="font-bold">
           <i>PENDING</i>
         </span>
