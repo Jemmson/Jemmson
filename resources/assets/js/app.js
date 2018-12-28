@@ -53,8 +53,6 @@ import SubContractor from './classes/SubContractor';
 import Customer from './classes/Customer';
 import User from './classes/User';
 import TaskUtil from './classes/TaskUtil';
-
-
 import Home from './pages/Home';
 import Feedback from './pages/Feedback';
 import PublicHome from './pages/PublicHome';
@@ -70,6 +68,7 @@ import TaskImages from './pages/TaskImages';
 import Benefits from './pages/Benefits';
 import Demo from './pages/Demo';
 import HowTo from './pages/HowTo';
+// import BidTask from './components/job/BidTask';
 
 window.Format = Format;
 window.Language = Language;

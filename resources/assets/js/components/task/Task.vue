@@ -32,10 +32,7 @@
 
 
                 <div class="wrapper" v-if="isBidOpen(bidTask)">
-
                     <label class="w-full">Task Price:</label>
-
-
                     <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1" type="text"
                            class="form-control form-control-input" v-bind:id="'price-' + bidTask.id"
                            v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
