@@ -239,9 +239,10 @@ export default class GeneralContractor {
     });
   }
 
-  sendSubInviteToBidOnTask (jobTask, form, disabled) {
+  sendSubInviteToBidOnTask (jobTask, form, disabled, jobTaskId) {
     disabled.invite = true;
-    form.jobTaskId = jobTask.id;
+    // debugger;
+    form.jobTaskId = jobTaskId;
     Spark.post ('/api/task/notify', form)
       .then ((response) => {
         console.log (response);

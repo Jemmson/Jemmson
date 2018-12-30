@@ -101,7 +101,7 @@
                     </div>
                     <div class="flex flex-col" v-else-if="location(jobTask, bid) === 'Same as Job Location'">
                         <span class="label mb-2">Change Task Location</span>
-                        <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask)">
+                        <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -111,7 +111,7 @@
                             <i class="fas fa-map-marker icon"></i>
                             {{ location(jobTask, bid) }}
                         </a>
-                        <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask)">
+                        <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -217,8 +217,9 @@
                                             </span>
                                     Accept
                                 </button>
-                                <div v-else-if="checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1"><h5>Bid
-                                    Has Been Accepted</h5></div>
+                                <div v-else-if="checkIfBidHasBeenAccepted(jobTask)">
+                                    <h5>Bid Has Been Accepted</h5>
+                                </div>
                                 <div v-else-if="!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
                                     <h5>Pending</h5></div>
                             </div>
@@ -227,13 +228,14 @@
                 </div>
             </div>
         </div>
+
+
         <div class="box shadow-md" v-show="showDetails &&
-                                            (showDenyBtn(jobTask) ||
-                                            showDeleteBtn(jobTask) ||
-                                            (isGeneral && showSendSubInvite) ||
+                                            (showDenyBtn(jobTask) || showDeleteBtn(jobTask) ||
+                                            (isGeneral && showSendSubInvite && !checkIfBidHasBeenAccepted(jobTask)) ||
                                             (showFinishedBtn(jobTask) || showApproveBtn(jobTask)))">
             <div class="flex w-full justify-between">
-                <button class="btn btn-red" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                <button class="btn btn-red" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask.id)">
                     Deny
                 </button>
 
@@ -251,8 +253,8 @@
                       v-if="isGeneral">
                       Show Subs
                     </button> -->
-                    <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask)"
-                            v-if="isGeneral() && showSendSubInvite">
+                    <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask.id)"
+                            v-if="isGeneral() && showSendSubInvite && !checkIfBidHasBeenAccepted(jobTask)">
                         Add A Sub
                     </button>
                 </div>
@@ -279,11 +281,24 @@
             </div>
         </div>
 
-        <sub-invite-modal v-if="isContractor()" :jobTask="jobTask">
+        <sub-invite-modal
+                v-if="isContractor() && !checkIfBidHasBeenAccepted(jobTask)"
+                :job-task="jobTask"
+                :job-task-task="jobTask.task"
+                :job-task-name="jobTask.task.name"
+                :id="jobTask.id"
+        >
         </sub-invite-modal>
-        <deny-task-modal v-if="isContractor()" :jobTask="jobTask">
+        <deny-task-modal
+                v-if="isContractor()"
+                :job-task="jobTask"
+                :id="jobTask.id"
+        >
         </deny-task-modal>
-        <update-task-location-modal :jobTask="jobTask">
+        <update-task-location-modal
+                :job-task="jobTask"
+                :id="jobTask.id"
+        >
         </update-task-location-modal>
 
     </div>
@@ -308,6 +323,7 @@
     },
     data() {
       return {
+        currentJobTask: {},
         showDetails: false,
         start_date: '',
         start_when_accepted: true,
@@ -598,14 +614,16 @@
           this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
         }
       },
-      openUpdateTaskLocation() {
-        $('#update-task-location-modal').modal()
+      openUpdateTaskLocation(jobTaskId) {
+        $('#update-task-location-modal_'+jobTaskId).modal()
       },
-      openDenyTaskForm() {
-        $('#deny-task-modal').modal()
+      openDenyTaskForm(jobTaskId) {
+        $('#deny-task-modal_'+jobTaskId).modal()
       },
-      openSubInvite() {
-        $('#sub-invite-modal').modal()
+      openSubInvite(jobTaskId) {
+        // debugger;
+        // this.currentJobTask = jobTask;
+        $('#sub-invite-modal_'+ jobTaskId).modal()
       },
       location(jobTask, bid) {
         // debugger;

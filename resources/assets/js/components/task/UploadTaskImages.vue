@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <div class="self-center mb-4 card-h2">Images</div>
+        <h3 class="self-center mb-4 card-h2">Images</h3>
         <div class="flex justify-between">
             <div class="" v-if="showTaskImage1(jobTask)">
                 <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">

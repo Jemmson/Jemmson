@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="sub-invite-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
+    <div class="modal fade" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content styled">
@@ -9,8 +9,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
-                        jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}</h4>
-                    <h4 v-else>Sent Invite - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }} -
+                        taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h4>
+                    <h4 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }} -
                         would you like to invite another sub to bid on this task?</h4>
                 </div>
                 <div class="modal-body">
@@ -117,6 +117,9 @@
   export default {
     props: {
       jobTask: Object,
+      jobTaskTask: Object,
+      jobTaskName: String,
+      id: Number
     },
     data() {
       return {
@@ -141,7 +144,8 @@
         this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
       },
       sendSubInviteToBidOnTask() {
-        GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled)
+        // debugger;
+        GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
         this.companyName = ''
       },
       fillFields(result) {
@@ -170,6 +174,14 @@
       }
     },
     computed: {
+      taskForSubInvite () {
+        // debugger;
+        return this.jobTaskTask;
+      },
+      jobTaskNameForSubInvite () {
+        // debugger;
+        return this.jobTaskName;
+      },
       aResults() {
         // if (this.results.length > 0) {
         //     return this.results.filter((sub) => {
