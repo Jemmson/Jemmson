@@ -78,37 +78,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Task $task
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Task $task)
-    {
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Task $task
@@ -770,23 +739,16 @@ class TaskController extends Controller
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
-            //            'sub_sets_own_price_for_job' => 'required',
             'start_date' => 'required_if:start_when_accepted,false|date|after:yesterday',
             'qty' => 'numeric',
             'qtyUnit' => 'nullable|string'
         ]);
-
-//        dd($request);
 
         if (!$this->isPriceGtE($request->taskPrice, $request->subTaskPrice)) {
             return response()->json([
                 "message" => "Unit price for customer needs to be greater than or equal to Unit Price for Sub",
                 "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
         }
-
-        Log::debug($request);
-
-        $jobTask = "";
 
         if ($request->updateTask && !$request->createNew) {
             // find the existing task and update the standard task table
