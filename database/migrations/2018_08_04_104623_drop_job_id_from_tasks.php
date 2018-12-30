@@ -14,8 +14,8 @@ class DropJobIdFromTasks extends Migration
     public function up()
     {
         Schema::table('tasks', function (Blueprint $table) {
-            $table->dropForeign(['job_id']);
-            $table->dropColumn('job_id');
+//            $table->dropForeign(['job_id']);
+//            $table->dropColumn('job_id');
         });
     }
 
@@ -27,8 +27,8 @@ class DropJobIdFromTasks extends Migration
     public function down()
     {
         Schema::table('tasks', function (Blueprint $table) {
-            $table->integer('job_id')->unsigned();
-            $table->foreign('job_id')->references('id')->on('jobs');
+//            $table->integer('job_id')->unsigned();
+//            $table->foreign('job_id')->references('id')->on('jobs');
         });
     }
 }
