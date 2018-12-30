@@ -25,8 +25,7 @@ class Task extends Model
         'average_sub_price',
         'qtyUnit',
         'sub_instructions',
-        'customer_instructions',
-        'job_id'
+        'customer_instructions'
     ];
 
     public function createTask($request)
