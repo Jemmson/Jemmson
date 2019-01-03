@@ -732,35 +732,22 @@ class TaskController extends Controller
     public function addTask(Request $request)
     {
 
-        // error handling
+        Task::validate_new_task_input($request);
 
-        $this->validate($request, [
-            'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
-            'taskPrice' => 'required|numeric',
-            'subTaskPrice' => 'required|numeric',
-            'start_when_accepted' => 'required',
-            'start_date' => 'required_if:start_when_accepted,false|date|after:yesterday',
-            'qty' => 'numeric',
-            'qtyUnit' => 'nullable|string'
-        ]);
+        $taskInput = Task::create_task_input_array($request);
 
-        if (!$this->isPriceGtE($request->taskPrice, $request->subTaskPrice)) {
+        if ($taskInput['taskPrice'] <= $taskInput['subTaskPrice']) {
             return response()->json([
                 "message" => "Unit price for customer needs to be greater than or equal to Unit Price for Sub",
                 "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
         }
 
         if ($request->updateTask && !$request->createNew) {
-            // find the existing task and update the standard task table
-            // add task to job task table
             $task = Task::find($request->taskId);
             $task->updateTask($request);
-
-            Log::debug('updateTask is true; CreateNew is false');
-
             $jobTask = new JobTask;
             $jobTask->createJobTask($request, $request->taskId);
-
+//            $task->update_existing_standard_task_add_to_jobTask_table($request);
         } else if (!$request->updateTask && !$request->createNew) {
             // find the existing task but dont update the standard task table
             $jobTask = new JobTask;
@@ -982,16 +969,5 @@ class TaskController extends Controller
         if ($job->contractor_id !== $jobTask->contractor_id) {
             $jobTask->contractor()->first()->notify(new TaskImageDeleted());
         }
-    }
-
-    /**
-     *
-     * @param Float $priceToCheck
-     * @param Float $price
-     * @return boolean
-     */
-    private function isPriceGtE(Float $priceToCheck, Float $price)
-    {
-        return $priceToCheck >= $price;
     }
 }

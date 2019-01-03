@@ -8,7 +8,10 @@ use Illuminate\Notifications\Notifiable;
 use Nexmo\Laravel\Facade\Nexmo;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Log;
-use Zend\Diactoros\Request;
+//use Zend\Diactoros\Request;
+use Illuminate\Http\Request;
+//use Carbon\Carbon;
+//\Illuminate\Support\Carbon::
 
 class Task extends Model
 {
@@ -48,21 +51,42 @@ class Task extends Model
         }
     }
 
-    //
-//    public function time()
-//    {
-//        return $this->hasMany(Time::class);
+    public static function validate_new_task_input(Request $request)
+    {
+        $request->validate([
+            'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
+            'taskPrice' => 'required|numeric',
+            'subTaskPrice' => 'required|numeric',
+            'start_when_accepted' => 'required',
+            'start_date' => 'required_if:start_when_accepted,false|date|after:yesterday',
+            'qty' => 'numeric',
+            'qtyUnit' => 'nullable|string'
+        ]);
+    }
+
+//    public function update_existing_standard_task_add_to_jobTask_table(Request $request) {
+//        // find the existing task and update the standard task table
+//        // add task to job task table
+//        $this->updateTask($request);
+//        $jobTask = new JobTask;
+//        $jobTask->createJobTask($request, $request->taskId);
 //    }
-//
-//    public function standard_task()
-//    {
-//        return $this->belongsTo(StandardTask::class);
-//    }
-//
-//    public function contractors()
-//    {
-//        return $this->belongsToMany(Contractor::class);
-//    }
+
+
+    public static function create_task_input_array(Request $request)
+    {
+        return [
+            'taskName' => $request->taskName,
+            'taskPrice' => $request->taskPrice,
+            'subTaskPrice' => $request->subTaskPrice,
+            'start_when_accepted' => $request->start_when_accepted,
+            'start_date' => $request->start_date,
+            'qty' => $request->qty,
+            'qtyUnit' => $request->qtyUnit,
+            'updateTask' => $request->updateTask,
+            'createNew' => $request->createNew
+        ];
+    }
 
     public function Jobs()
     {
