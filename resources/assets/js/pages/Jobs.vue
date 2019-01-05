@@ -1,22 +1,28 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
-    <div class="flex flex-col">
-        <search-bar>
-            <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
-        </search-bar>
-        <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-            <section class="flex job-section rounded mb-4 justify-around items-center"
-                     :class="getLabelClass(bid)"
-                     v-for="bid in paginated('sBids')"
-                     v-bind:key="bid.id"
-                     style="z-index: 2;"
-                     @click="goToBid(bid.id)">
-                <div class="text-white">{{ status(bid) }}</div>
-                <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
-                <div class="text-white">{{ jobName(bid.job_name) }}</div>
-                <div class="bg-white bid-btn">click to view</div>
-            </section>
-        </paginate>
+    <div class="flex flex-col v-height justify-between">
+        <div>
+            <search-bar>
+                <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
+            </search-bar>
+            <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
+                <section class="flex job-section rounded mb-4 justify-around items-center"
+                         :class="getLabelClass(bid)"
+                         v-for="bid in paginated('sBids')"
+                         v-bind:key="bid.id"
+                         style="z-index: 2;"
+                         @click="goToBid(bid.id)">
+                    <div class="flex flex-col w-full">
+                        <div class="text-white text-center mb-1">{{ status(bid) }}</div>
+                        <div class="flex justify-around">
+                            <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
+                            <div class="text-white">{{ jobName(bid.job_name) }}</div>
+                        </div>
+                    </div>
+                    <div class="bg-white bid-btn">click to view</div>
+                </section>
+            </paginate>
+        </div>
         <div class="card p-5 card-body justify-center">
             <paginate-links for="sBids" :limit="2" :show-step-links="true">
             </paginate-links>
@@ -115,6 +121,10 @@
 </script>
 
 <style lang="less" scoped>
+
+    .v-height {
+        height: 125vh;
+    }
 
     .bid-btn {
         height: 100%;
