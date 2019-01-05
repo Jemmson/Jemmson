@@ -18,15 +18,15 @@
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                                 <label for="taskName">Task Description *</label>
 
-                                <input type="text" class="form-control" id="taskName" name="taskName" autofocus
+                                <input type="text" class="form-control mb-1" id="taskName" name="taskName" autofocus
                                        autocomplete="false"
                                        v-model="addNewTaskForm.taskName" @keyup="getExistingTask($event.target.value)">
 
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                  {{ addNewTaskForm.errors.get('taskName') }}
                                 </span>
-                                <div class="flex" v-if="taskResults.length">
-                                  <button class="btn btn-blue w-full mt-2 mb-2" v-for="result in taskResults"
+                                <div class="flex flex-col" v-if="taskResults.length">
+                                  <button class="btn btn-blue w-full mb-1" v-for="result in taskResults"
                                           v-bind:key="result.id"
                                           @click.prevent="fillTaskValues(result)">
                                       {{ result.name }}

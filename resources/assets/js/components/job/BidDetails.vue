@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col self-center mb-6">
+        <div class="flex flex-col self-center mb-6 mt-3">
             <!-- <span class="label mb-2">JOB NAME</span> -->
             <p class="text-2xl font-extrabold uppercase">{{ bid.job_name }}</p>
         </div>
