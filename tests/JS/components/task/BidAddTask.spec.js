@@ -25,4 +25,54 @@ describe('BidAddTask', () => {
     it('Should render itself', () => {
         expect(wrapper.isEmpty()).toBe(false);
     });
+
+    it('should show drop down of tasks once the substring has two letters of a task in the database', function() {
+
+    })
+
+    it('should show update and add task and dont update and add task if the name matches the name  ' +
+      'of a task in the database that is associated ot the contractor', function() {
+
+    })
+
+    it('should not show names in the drop down if the substring matches the name of a task of ' +
+      'another contractors task', function() {
+
+    })
+
+    it('should not show names in the drop down if the user does a on blur and the substring does' +
+      ' match names in the db of the contractor\'s tasks', function() {
+
+    })
+
+    it('should show names in the drop down if the substring matches names in the database ' +
+      'for the contractors tasks and the user does a on focus for the task description textbox', function() {
+
+    })
+
+    it('should not show the contractors tasks if the task has already been added to the job', function() {
+
+    })
+
+    it('should nameExistsInDB flag should be true after a drop down is selected', function() {
+
+    })
+
+    it('should nameExistsInDB flag should be true if name is typed in the task description and the user ' +
+      'does an on blur', function() {
+
+    })
+
+    it('should trigger the fillTaskValues method if a drop down item is selected', function() {
+
+    })
+
+    it('should not show drop down box if any other item is put in focus', function() {
+        
+    })
+
+    it('should show drop down box if task description loses focus and nut no other item in the vue component is selected', function() {
+        
+    })
+
 });

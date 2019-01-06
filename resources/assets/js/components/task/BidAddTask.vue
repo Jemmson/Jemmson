@@ -12,28 +12,38 @@
                 </div>
                 <div class="modal-body">
                     <form role="form" class="wrapper">
-                        <h1 class="text-center error-lg" v-show="errors.general.errorExists">{{ errors.general.message }}</h1>
+                        <h1 class="text-center error-lg" v-show="errors.general.errorExists">{{ errors.general.message
+                            }}</h1>
                         <div class="flex m-t-2">
+
+
+                            <!--Task Name-->
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                                 <label for="taskName">Task Description *</label>
 
                                 <input type="text" class="form-control mb-1" id="taskName" name="taskName" autofocus
-                                       autocomplete="false"
-                                       v-model="addNewTaskForm.taskName" @keyup="getExistingTask($event.target.value)">
+                                       v-model="addNewTaskForm.taskName"
+                                       autocomplete="off"
+                                       @blur="checkIfNameExistsInDB($event.target.value, false)"
+                                       @focus="checkIfNameExistsInDB($event.target.value, true)"
+                                       @keyup="getExistingTask($event.target.value)">
 
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                                  {{ addNewTaskForm.errors.get('taskName') }}
                                 </span>
-                                <div class="flex flex-col" v-if="taskResults.length">
-                                  <button class="btn btn-blue w-full mb-1" v-for="result in taskResults"
-                                          v-bind:key="result.id"
-                                          @click.prevent="fillTaskValues(result)">
-                                      {{ result.name }}
-                                  </button>
+                                <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
+                                    <button class="btn btn-blue w-full mb-1" v-for="result in taskResults"
+                                            v-bind:key="result.id"
+                                            @click.prevent="fillTaskValues(result)">
+                                        {{ result.name }}
+                                    </button>
                                 </div>
                             </div>
 
+
+
+                            <!--Task Price-->
                             <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                                 <label for="custTaskPrice">Price</label>
@@ -45,6 +55,7 @@
                                            autocomplete="text"
                                            v-model="addNewTaskForm.taskPrice"
                                            @keyup="checkIfPriceChanged($event.target.value)"
+                                           @focus="hideTaskResults"
                                            @blur="verifyInputIsANumber($event.target.value, 'price')"
                                     >
                                 </div>
@@ -57,7 +68,12 @@
                             </div>
                         </div>
 
+
+
                         <div class="flex m-t-2">
+
+
+                            <!--Quantity-->
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('qty')}">
                                 <label for="qty">Quantity</label>
@@ -67,6 +83,7 @@
                                        id="qty"
                                        name="qty"
                                        required
+                                       @focus="hideTaskResults"
                                        @blur="verifyInputIsANumber($event.target.value, 'quantity')"
                                        v-model="addNewTaskForm.qty"
                                 >
@@ -78,12 +95,17 @@
                                 </span>
                             </div>
 
+
+                            <!--Quantity Unit-->
                             <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
                                 <label for="qtyUnit">Quantity Description</label>
                                 <input type="text" class="form-control" min="1" id="qtyUnit"
                                        placeholder="ex. ft, sq. ft, etc."
-                                       name="qtyUnit" v-model="addNewTaskForm.qtyUnit" @blur="validateInput()"
+                                       name="qtyUnit"
+                                       v-model="addNewTaskForm.qtyUnit"
+                                       @blur="validateInput()"
+                                       @focus="hideTaskResults"
                                        @keyup="checkIfQuantityUnitHasChanged($event.target.value)"
                                 >
                                 <span :class="{ error: addNewTaskForm.hasQtyUnitError }"
@@ -96,6 +118,8 @@
                         </div>
 
                         <div class="flex m-t-2">
+
+                            <!--Sub Task Price-->
                             <div class="flex-1 m-r-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
                                 <label for="subTaskPrice">Subcontractor Price</label>
@@ -105,6 +129,7 @@
                                            autocomplete="text"
                                            class="form-control" id="subTaskPrice" name="subTaskPrice"
                                            v-model="addNewTaskForm.subTaskPrice"
+                                           @focus="hideTaskResults"
                                            @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
                                            @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')"
                                     >
@@ -117,22 +142,27 @@
                             </span>
                             </div>
 
+                            <!--Start Date-->
                             <div class="flex-1"
                                  :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
                                 <label for="start_date">Start Date</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" required
+                                <input type="date" class="form-control"
+                                       id="start_date"
+                                       name="start_date"
+                                       required
+                                       @focus="hideTaskResults"
                                        v-model="addNewTaskForm.start_date"
                                        @blur="checkDateIsTodayorLater($event.target.value)"
                                 >
                                 <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
                                 <!--{{ addNewTaskForm.errors.get('start_date') }}-->
-                            <!--</span>-->
+                                <!--</span>-->
 
                                 <span :class="{ error: addNewTaskForm.hasStartDateError }"
                                       v-show="addNewTaskForm.hasStartDateError">{{ addNewTaskForm.startDateErrorMessage }}
                                 </span>
                                 <!--<span class="help-block" v-show="addNewTaskForm.errors.has('startDate')">-->
-                                    <!--{{ addNewTaskForm.errors.get('startDate') }}-->
+                                <!--{{ addNewTaskForm.errors.get('startDate') }}-->
                                 <!--</span>-->
 
                             </div>
@@ -143,11 +173,16 @@
                         </div>
 
                         <div class="flex flex-col m-t-4">
+
+                            <!--Customer Message-->
                             <div class="form-group customer-notes"
                                  :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
                                 <label for="customer_message">Customer Instructions</label>
-                                <textarea class="form-control" id="customer_message" name="customer_message"
+                                <textarea class="form-control"
+                                          id="customer_message"
+                                          name="customer_message"
                                           v-model="addNewTaskForm.customer_message"
+                                          @focus="hideTaskResults"
                                           @keyup="checkIfCustomerMessageHasChanged($event.target.value)"
                                 >
                                 </textarea>
@@ -156,11 +191,15 @@
                                 </span>
                             </div>
 
+                            <!--Sub Message-->
                             <div class="form-group sub-notes"
                                  :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
                                 <label for="sub_message">Subcontractor Instructions</label>
-                                <textarea class="form-control" id="sub_message" name="sub_message"
+                                <textarea class="form-control"
+                                          id="sub_message"
+                                          name="sub_message"
                                           v-model="addNewTaskForm.sub_message"
+                                          @focus="hideTaskResults"
                                           @keyup="checkIfSubMessageHasChanged($event.target.value)"
                                 >
                                 </textarea>
@@ -179,44 +218,41 @@
                     <!--Add Task-->
                     <!--</button>-->
                     <!--</div>-->
-                    <label for="taskResultsChange"></label>
+                    <!--<label for="taskResultsChange"></label>-->
                     <div id="taskResultsChange" class="flex justify-around">
 
-                        <!-- show if
-                                drop down is selected
-                                any of the selected values change -->
-                        <button v-if="(nameExistsInDB && !nameChanged) ||
-                                    (dropdownSelected && valueChanged)" class="btn btn-green"
-                                :disabled="checkErrors"
-                                @click.prevent="changeTask('Update')">Update and Add
-                        </button>
-
-                        <!-- show if
-                            drop down is selected and
-                            any of the values have changed -->
-                        <button v-if="(nameExistsInDB && !nameChanged) ||
-                                    (dropdownSelected && valueChanged)" class="btn btn-green"
-                                :disabled="checkErrors"
-                                @click.prevent="changeTask('Ignore')">Ignore and Add
-                        </button>
-
-                        <!-- show if
-                            drop down is selected
-                            drop down name is changed -> gives option to create a new task based on an existing one -->
-                        <button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"
-                                class="btn btn-green" :disabled="checkErrors"
-                                @click.prevent="changeTask('New')">
-                            Create New and Add
-                        </button>
-
-                        <!-- show if
-                            drop down selected but no values have changed or
-                            drop down not selected -> if drop down not selected then create a new standard task -->
-                        <button v-if="(dropdownSelected && !valueChanged && !nameChanged)"
+                        <!-- Name in task name is different than a task name in the database-->
+                        <button v-if="!nameExistsInDB"
                                 class="btn btn-green" :disabled="checkErrors"
                                 @click.prevent="changeTask('Add')">
                             Add Task
                         </button>
+
+                        <!--Name is the same as one in the database-->
+                        <button v-if="nameExistsInDB" class="btn btn-green"
+                                :disabled="checkErrors"
+                                @click.prevent="changeTask('Update')">Update and Add Task
+                        </button>
+
+                        <button v-if="nameExistsInDB" class="btn btn-green"
+                                :disabled="checkErrors"
+                                @click.prevent="changeTask('Ignore')">Dont Update and Add Task
+                        </button>
+
+
+                        <!--&lt;!&ndash; show if-->
+                        <!--drop down is selected and-->
+                        <!--any of the values have changed &ndash;&gt;-->
+
+
+                        <!--&lt;!&ndash; show if-->
+                        <!--drop down is selected-->
+                        <!--drop down name is changed -> gives option to create a new task based on an existing one &ndash;&gt;-->
+                        <!--<button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"-->
+                        <!--class="btn btn-green" :disabled="checkErrors"-->
+                        <!--@click.prevent="changeTask('New')">-->
+                        <!--Create New and Add-->
+                        <!--</button>-->
                     </div>
                 </div>
             </div>
@@ -230,9 +266,9 @@
       bid: Object,
       show: Boolean
     },
-    data () {
+    data() {
       return {
-        addNewTaskForm: new SparkForm ({
+        addNewTaskForm: new SparkForm({
           taskId: -1,  // if -1 then the task did not come from the drop down
           taskExists: '',
           createNew: false,
@@ -280,13 +316,16 @@
             message: 'must be a number'
           }
         },
-        dropdownSelected: false,
         dropDownSelectedNameIsDifferent: false,
-        valueChanged: false,
         taskResultsChange: false,
         taskResults: [],
+
+        valueChanged: false,
+        dropdownSelected: false,
         nameExistsInDB: false,
         nameChanged: false,
+        showTaskResults: false,
+
         priceChanged: false,
         quantityChanged: false,
         quantityUnitChanged: false,
@@ -299,30 +338,30 @@
       }
     },
     computed: {
-      newTask () {
-        return this.addNewTaskForm.taskName !== this.result.taskName;
+      newTask() {
+        return this.addNewTaskForm.taskName !== this.result.taskName
       },
-      checkErrors () {
-        return this.addNewTaskForm.hasQtyUnitError || this.addNewTaskForm.hasStartDateError;
+      checkErrors() {
+        return this.addNewTaskForm.hasQtyUnitError || this.addNewTaskForm.hasStartDateError
       }
     },
     methods: {
-      checkDateIsTodayorLater (date) {
-        let dateArray = GeneralContractor.checkDateIsTodayorLater(date, 'today');
-        this.addNewTaskForm.startDateErrorMessage = dateArray[0];
-        this.addNewTaskForm.hasStartDateError = dateArray[1];
+      checkDateIsTodayorLater(date) {
+        let dateArray = GeneralContractor.checkDateIsTodayorLater(date, 'today')
+        this.addNewTaskForm.startDateErrorMessage = dateArray[0]
+        this.addNewTaskForm.hasStartDateError = dateArray[1]
       },
-      validateInput () {
-        if (this.addNewTaskForm.qtyUnit !== '' && !isNaN (this.addNewTaskForm.qtyUnit)) {
-          this.addNewTaskForm.qtyUnitErrorMessage = 'numbers not allowed';
-          this.addNewTaskForm.hasQtyUnitError = true;
+      validateInput() {
+        if (this.addNewTaskForm.qtyUnit !== '' && !isNaN(this.addNewTaskForm.qtyUnit)) {
+          this.addNewTaskForm.qtyUnitErrorMessage = 'numbers not allowed'
+          this.addNewTaskForm.hasQtyUnitError = true
         } else {
-          this.addNewTaskForm.qtyUnitErrorMessage = '';
-          this.addNewTaskForm.hasQtyUnitError = false;
+          this.addNewTaskForm.qtyUnitErrorMessage = ''
+          this.addNewTaskForm.hasQtyUnitError = false
         }
       },
-      verifyInputIsANumber (input, target){
-        if (input !== '' && isNaN (input)) {
+      verifyInputIsANumber(input, target) {
+        if (input !== '' && isNaN(input)) {
           if (target === 'price') {
             this.errors.notANumber.price = true
           } else if (target === 'quantity') {
@@ -340,66 +379,66 @@
           }
         }
       },
-      strippedTaskPrice (taskPrice) {
-        if (taskPrice.charAt (0) === '$') {
-          return parseInt (taskPrice.substr (1));
+      strippedTaskPrice(taskPrice) {
+        if (taskPrice.charAt(0) === '$') {
+          return parseInt(taskPrice.substr(1))
         } else {
-          return parseInt (taskPrice);
+          return parseInt(taskPrice)
         }
       },
-      checkIfPriceChanged (value) {
+      checkIfPriceChanged(value) {
         if (this.dropdownSelected) {
-          value = parseInt (value);
+          value = parseInt(value)
           if (this.result.standardCustomerTaskPrice !== value) {
-            this.priceChanged = true;
+            this.priceChanged = true
           } else {
-            this.priceChanged = false;
+            this.priceChanged = false
           }
-          this.checkIfValuesChanged ();
+          this.checkIfValuesChanged()
         }
       },
-      checkIfQuantityUnitHasChanged (value) {
+      checkIfQuantityUnitHasChanged(value) {
         if (this.dropdownSelected) {
           if (this.result.quantityUnit !== value) {
-            this.quantityUnitChanged = true;
+            this.quantityUnitChanged = true
           } else {
-            this.quantityUnitChanged = false;
+            this.quantityUnitChanged = false
           }
-          this.checkIfValuesChanged ();
+          this.checkIfValuesChanged()
         }
       },
-      checkIfSubTaskPriceHasChanged (value) {
+      checkIfSubTaskPriceHasChanged(value) {
         if (this.dropdownSelected) {
-          value = parseInt (value);
+          value = parseInt(value)
           if (this.result.standardSubTaskPrice !== value) {
-            this.subTaskPriceChanged = true;
+            this.subTaskPriceChanged = true
           } else {
-            this.subTaskPriceChanged = false;
+            this.subTaskPriceChanged = false
           }
-          this.checkIfValuesChanged ();
+          this.checkIfValuesChanged()
         }
       },
-      checkIfCustomerMessageHasChanged (value) {
+      checkIfCustomerMessageHasChanged(value) {
         if (this.dropdownSelected) {
           if (this.result.customer_instructions !== value) {
-            this.customerMessageChanged = true;
+            this.customerMessageChanged = true
           } else {
-            this.customerMessageChanged = false;
+            this.customerMessageChanged = false
           }
-          this.checkIfValuesChanged ();
+          this.checkIfValuesChanged()
         }
       },
-      checkIfSubMessageHasChanged (value) {
+      checkIfSubMessageHasChanged(value) {
         if (this.dropdownSelected) {
           if (this.result.sub_instructions !== value) {
-            this.subMessageChanged = true;
+            this.subMessageChanged = true
           } else {
-            this.subMessageChanged = false;
+            this.subMessageChanged = false
           }
-          this.checkIfValuesChanged ();
+          this.checkIfValuesChanged()
         }
       },
-      checkIfValuesChanged () {
+      checkIfValuesChanged() {
         if (this.dropdownSelected) {
           if (
             !this.nameChanged &&
@@ -411,160 +450,173 @@
             !this.customerMessageChanged &&
             !this.subMessageChanged
           ) {
-            this.valueChanged = false;
+            this.valueChanged = false
           } else {
-            this.valueChanged = true;
+            this.valueChanged = true
           }
         }
       },
-      getExistingTask (message) {
-        this.taskResults = [];
-        this.submitted = false;
-        if (this.addNewTaskForm.taskName.length > 1) {
-          axios.post ('/api/search/task', {
-            taskname: this.addNewTaskForm.taskName,
-            jobId: this.bid.id
-          }).then (response => {
-            console.log (response.data)
-            this.taskResults = response.data
-            // debugger
-            for (let i = 0; i < this.taskResults.length; i++) {
-              if (this.taskResults[i].name === message) {
-                this.nameExistsInDB = true;
-                this.fillTaskValues(this.taskResults[i]);
-              } else {
-                this.nameExistsInDB = false;
-                // this.clearTaskResults('notName');
-              }
-            }
-            this.checkIfValuesChanged ();
-          })
+      checkIfNameExistsInDB(taskName) {
+        for (let i = 0; i < this.taskResults.length; i++) {
+          if (this.taskResults[i].name === taskName) {
+            this.nameExistsInDB = true
+          } else {
+            this.nameExistsInDB = false
+          }
         }
 
-        // if (this.dropdownSelected && (message !== this.result.taskName)) {
-        //   this.nameChanged = true;
-        // } else {
-        //   this.nameChanged = false;
-        // }
+        this.showTaskResults = true;
 
       },
-      fillTaskValues (result) {  // this method fills values of the form when a drop down item is selected  x
-        console.log (result)
-        this.dropdownSelected = true;
-        this.taskExists = true;
-        this.result.resultReturned = true;
+      getExistingTask(message) {
+        this.taskResults = []
+        this.submitted = false
+        if (this.addNewTaskForm.taskName.length > 1) {
+          axios.post('/api/search/task', {
+            taskname: this.addNewTaskForm.taskName,
+            jobId: this.bid.id
+          }).then(response => {
+            console.log(response.data)
+            if (response.data.length > 0) {
+              this.taskResults = response.data
+              this.showTaskResults = true
+              // console.log(JSON.stringify(response.data));
+            } else {
+              // if there are no results returned then the task results array should be empty and
+              // the name does not exist in the database
+              this.taskResults = []
+              this.nameExistsInDB = false
+            }
+          })
+        } else {
+          // if the task description box is empty then obviously the name does not exist in the database
+          this.nameExistsInDB = false
+        }
 
-        this.addNewTaskForm.taskId = result.id;
+      },
+      hideTaskResults () {
+        this.showTaskResults = false;
+      },
+      fillTaskValues(result) {  // this method fills values of the form when a drop down item is selected  x
+        console.log(result)
+        // since the user selected a drop down option then the name automatically exists in the database
+        this.nameExistsInDB = true
+
+        this.dropdownSelected = true
+        this.taskExists = true
+        this.result.resultReturned = true
+
+        this.addNewTaskForm.taskId = result.id
 
         // Task Name
-        this.addNewTaskForm.taskName = result.name;
-        this.result.taskName = result.name;
+        this.addNewTaskForm.taskName = result.name
+        this.result.taskName = result.name
 
         // Task Price
         if (result.proposed_cust_price === null) {
-          this.addNewTaskForm.taskPrice = 0;
-          this.result.standardCustomerTaskPrice = 0;
+          this.addNewTaskForm.taskPrice = 0
+          this.result.standardCustomerTaskPrice = 0
         } else {
-          this.addNewTaskForm.taskPrice = result.proposed_cust_price;
-          this.result.standardCustomerTaskPrice = result.proposed_cust_price;
+          this.addNewTaskForm.taskPrice = result.proposed_cust_price
+          this.result.standardCustomerTaskPrice = result.proposed_cust_price
         }
 
-        this.addNewTaskForm.qty = 1;
-        this.result.quantity = 1;
+        this.addNewTaskForm.qty = 1
+        this.result.quantity = 1
 
         // Quantity Unit
         if (result.qtyUnit !== null) {
-          this.addNewTaskForm.qtyUnit = result.qtyUnit;
-          this.result.quantityUnit = result.qtyUnit;
+          this.addNewTaskForm.qtyUnit = result.qtyUnit
+          this.result.quantityUnit = result.qtyUnit
         } else {
-          this.addNewTaskForm.qtyUnit = '';
-          this.result.quantityUnit = '';
+          this.addNewTaskForm.qtyUnit = ''
+          this.result.quantityUnit = ''
         }
 
         // Sub price
         if (result.proposed_sub_price === null) {
-          this.addNewTaskForm.subTaskPrice = 0;
-          this.result.standardSubTaskPrice = 0;
+          this.addNewTaskForm.subTaskPrice = 0
+          this.result.standardSubTaskPrice = 0
         } else {
-          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price;
-          this.result.standardSubTaskPrice = result.proposed_sub_price;
+          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
+          this.result.standardSubTaskPrice = result.proposed_sub_price
         }
 
         // Sub Instructions
         if (result.sub_instructions === null) {
-          this.addNewTaskForm.sub_message = '';
-          this.result.sub_instructions = '';
+          this.addNewTaskForm.sub_message = ''
+          this.result.sub_instructions = ''
         } else {
-          this.addNewTaskForm.sub_message = result.sub_instructions;
-          this.result.sub_instructions = result.sub_instructions;
+          this.addNewTaskForm.sub_message = result.sub_instructions
+          this.result.sub_instructions = result.sub_instructions
         }
 
         // Sub price
         if (result.customer_instructions === null) {
-          this.addNewTaskForm.customer_message = '';
-          this.result.customer_instructions = '';
+          this.addNewTaskForm.customer_message = ''
+          this.result.customer_instructions = ''
         } else {
-          this.addNewTaskForm.customer_message = result.customer_instructions;
-          this.result.customer_instructions = result.customer_instructions;
+          this.addNewTaskForm.customer_message = result.customer_instructions
+          this.result.customer_instructions = result.customer_instructions
         }
-        this.priceChange = false;
-        this.messageChange = false;
-        this.taskResults = [];
+        this.priceChange = false
+        this.messageChange = false
+        this.taskResults = []
       },
-      clearTaskResults () {
-        this.taskResults = [];
-        this.addNewTaskForm.taskId = -1;  // if -1 then the task did not come from the drop down
-        this.addNewTaskForm.taskExists = '';
-        this.addNewTaskForm.jobId = this.bid.id;
-        this.addNewTaskForm.subTaskPrice = 0.0;
-        this.addNewTaskForm.taskPrice = 0.0;
-        this.addNewTaskForm.taskName = '';
-        this.addNewTaskForm.contractorId = '';
-        this.addNewTaskForm.area = this.bid.city;
-        this.addNewTaskForm.start_date = '';
-        this.addNewTaskForm.start_when_accepted = true;
-        this.addNewTaskForm.useStripe = false;
-        this.addNewTaskForm.sub_message = '';
-        this.addNewTaskForm.customer_message = '';
-        this.addNewTaskForm.qty = 1;
-        this.addNewTaskForm.qtyUnit = '';
-        this.addNewTaskForm.updateTask = false;
-        this.addNewTaskForm.qtyUnitErrorMessage = '';
-        this.addNewTaskForm.hasQtyUnitError = false;
-        this.result.resultReturned = false;
-        this.result.standardCustomerTaskPrice = 0.0;
-        this.result.sub_instructions = '';
-        this.result.customer_instructions = '';
-        this.result.taskName = '';
-        this.result.standardSubTaskPrice = 0.0;
-        this.taskResultsChange = false;
-        this.taskResults = [];
-        this.valueChanged = false;
-        this.dropdownSelected = false;
-        this.nameExistsInDB = false;
-        this.submitted = true;
-        this.addNewTaskForm.hasQtyUnitError = false;
-        this.addNewTaskForm.hasStartDateError = false;
-        this.errors.notANumber.price = false;
-        this.errors.notANumber.quantity = false;
-        this.errors.notANumber.subTaskPrice = false;
-        this.errors.general.errorExists = false;
+      clearTaskResults() {
+        this.taskResults = []
+        this.addNewTaskForm.taskId = -1  // if -1 then the task did not come from the drop down
+        this.addNewTaskForm.taskExists = ''
+        this.addNewTaskForm.jobId = this.bid.id
+        this.addNewTaskForm.subTaskPrice = 0.0
+        this.addNewTaskForm.taskPrice = 0.0
+        this.addNewTaskForm.taskName = ''
+        this.addNewTaskForm.contractorId = ''
+        this.addNewTaskForm.area = this.bid.city
+        this.addNewTaskForm.start_date = ''
+        this.addNewTaskForm.start_when_accepted = true
+        this.addNewTaskForm.useStripe = false
+        this.addNewTaskForm.sub_message = ''
+        this.addNewTaskForm.customer_message = ''
+        this.addNewTaskForm.qty = 1
+        this.addNewTaskForm.qtyUnit = ''
+        this.addNewTaskForm.updateTask = false
+        this.addNewTaskForm.qtyUnitErrorMessage = ''
+        this.addNewTaskForm.hasQtyUnitError = false
+        this.result.resultReturned = false
+        this.result.standardCustomerTaskPrice = 0.0
+        this.result.sub_instructions = ''
+        this.result.customer_instructions = ''
+        this.result.taskName = ''
+        this.result.standardSubTaskPrice = 0.0
+        this.taskResultsChange = false
+        this.taskResults = []
+        this.valueChanged = false
+        this.dropdownSelected = false
+        this.nameExistsInDB = false
+        this.submitted = true
+        this.addNewTaskForm.hasQtyUnitError = false
+        this.addNewTaskForm.hasStartDateError = false
+        this.errors.notANumber.price = false
+        this.errors.notANumber.quantity = false
+        this.errors.notANumber.subTaskPrice = false
+        this.errors.general.errorExists = false
 
       },
-      changeTask (message) {
+      changeTask(message) {
         if (message === 'Update') {
-          this.addNewTaskForm.updateTask = true;
-          this.addNewTaskForm.createNew = false;
+          this.addNewTaskForm.updateTask = true
+          this.addNewTaskForm.createNew = false
         } else if (message === 'Ignore') {
-          this.addNewTaskForm.updateTask = false;
-          this.addNewTaskForm.createNew = false;
+          this.addNewTaskForm.updateTask = false
+          this.addNewTaskForm.createNew = false
         } else if (message === 'New' || message === 'Add') {
-          this.addNewTaskForm.updateTask = false;
-          this.addNewTaskForm.createNew = true;
+          this.addNewTaskForm.updateTask = false
+          this.addNewTaskForm.createNew = true
         }
-        this.addNewTaskToBid ();
+        this.addNewTaskToBid()
       },
-      checkForExistingTaskChanges () {
+      checkForExistingTaskChanges() {
         if (this.result.resultReturned && (
           this.result.standardCustomerTaskPrice !== this.addNewTaskForm.taskPrice ||
           this.result.standardSubTaskPrice !== this.addNewTaskForm.subTaskPrice ||
@@ -572,13 +624,13 @@
           this.result.customer_instructions !== this.addNewTaskForm.customer_message ||
           this.result.taskName !== this.addNewTaskForm.taskName
         )) {
-          this.taskResultsChange = true;
+          this.taskResultsChange = true
         } else {
-          this.addNewTaskToBid ();
+          this.addNewTaskToBid()
         }
       },
-      addNewTaskToBid () {
-        if (this.addNewTaskForm.subTaskPrice === ''){
+      addNewTaskToBid() {
+        if (this.addNewTaskForm.subTaskPrice === '') {
           this.addNewTaskForm.subTaskPrice = 0.0
         }
         if (
@@ -588,19 +640,19 @@
           !this.errors.notANumber.quantity &&
           !this.errors.notANumber.subTaskPrice
         ) {
-          GeneralContractor.addNewTaskToBid (this.bid, this.addNewTaskForm);
+          GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
           // console.log (newTask);
           // debugger;
-          this.clearTaskResults ();
+          this.clearTaskResults()
         } else {
-          this.errors.general.errorExists = true;
+          this.errors.general.errorExists = true
         }
       },
-      toggleStripePaymentOption () {
+      toggleStripePaymentOption() {
         this.addNewTaskForm.useStripe = !this.addNewTaskForm.useStripe
       },
     },
-    mounted: function () {
+    mounted: function() {
     }
   }
 </script>
