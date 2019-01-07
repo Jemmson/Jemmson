@@ -35,7 +35,8 @@
                     <label class="space">Quantity: </label>
                     <label class="space">{{ bidTask.job_task.qty }}</label>
                     <label class="space">Contractor Suggested Price: </label>
-                    <label class="space"> ${{ bidTask.bid_price }}</label>
+                    <label class="space" v-if="bidTask.job_task.sub_final_price !== 0"> ${{ bidTask.job_task.sub_final_price }}</label>
+                    <label class="space" v-else>$ 0</label>
 
 
                     <label v-if="isBidOpen(bidTask)" class="w-full space">Task Price:</label>
