@@ -82,21 +82,128 @@
 
         <div>
             <div v-if="bid.paid_with_cash_message !== '' && bid.paid_with_cash_message !== null"
-                 class="flex justify-around">
+                 class="flex flex-col">
                 <button
-                        class="btn btn-blue btn-width mr-6"
+                        class="btn btn-blue btn-width mb-1"
                         name="showNotes"
                         id="showNotes"
                         @click="customerNotes = !customerNotes"
                 >Customer Notes For Job
                 </button>
+                <div v-if="!isCustomer">
+
+                    <div v-if="bid.customer.customer.notes !== '' && bid.customer.customer.notes !== null" class style>
+                        <transition name="slide-fade">
+                            <div class="mt-2 mb-2" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+                        </transition>
+                    </div>
+                    <div v-else>
+                        <transition name="slide-fade">
+                            <div class="mt-2 mb-2" v-show="customerNotes">
+                                The customer does not have any notes for
+                                this job
+                            </div>
+                        </transition>
+                    </div>
+                </div>
+
+                <div v-show="isCustomer" class>
+                    <transition name="slide-fade">
+                        <div v-show="customerNotes">
+                            <div class="mt-4">
+                            <textarea
+                                    class="form-control"
+                                    :value="bid.customer.customer.notes"
+                                    name
+                                    id
+                                    cols="40"
+                                    rows="10"
+                                    @keyup="customerNotesMessage = $event.target.value"
+                            ></textarea>
+                            </div>
+                            <div class="mt-2">
+                                <button
+                                        class="btn btn-red"
+                                        @click.prevent="updateGeneralContractorNotes()"
+                                        :disabled="disableCustomerNotesButton"
+                                        ref="custNotesUpdate"
+                                >
+                  <span v-if="disableCustomerNotesButton">
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                  </span>
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+
+
                 <button
-                        class="btn btn-blue btn-width ml-6"
+                        class="btn btn-blue btn-width mt-1"
                         name="showPaidWithCashNotes"
                         id="showPaidWithCashNotes"
                         @click="showPaidWithCashNotes = !showPaidWithCashNotes"
                 >Paid With Cash Instructions
                 </button>
+
+                <div v-show="isCustomer" class>
+                    <transition name="slide-fade">
+                        <div v-show="customerNotes">
+                            <div class="mt-4">
+                            <textarea
+                                    class="form-control"
+                                    :value="bid.customer.customer.notes"
+                                    name
+                                    id
+                                    cols="40"
+                                    rows="10"
+                                    @keyup="customerNotesMessage = $event.target.value"
+                            ></textarea>
+                            </div>
+                            <div class="mt-2">
+                                <button
+                                        class="btn btn-red"
+                                        @click.prevent="updateGeneralContractorNotes()"
+                                        :disabled="disableCustomerNotesButton"
+                                        ref="custNotesUpdate"
+                                >
+                                  <span v-if="disableCustomerNotesButton">
+                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                  </span>
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+
+
+                <div v-if="!isCustomer" class>
+                    <div v-if="bid.paid_with_cash_message !== '' && bid.paid_with_cash_message !== null">
+
+                        <transition name="slide-fade">
+                            <div class="mt-3 ml-6" v-show="showPaidWithCashNotes">{{ bid.paid_with_cash_message }}</div>
+                        </transition>
+                    </div>
+                    <div v-else>
+                        <div v-if="bid.customer.customer.notes !== '' && bid.customer.customer.notes !== null" class
+                             style>
+                            <transition name="slide-fade">
+                                <div class="mt-3" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
+                            </transition>
+                        </div>
+                        <div v-else>
+                            <transition name="slide-fade">
+                                <div class="mt-3 no-notes" v-show="customerNotes">
+                                    The customer does not have any notes for
+                                    this job
+                                </div>
+                            </transition>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div v-else class="flex justify-around">
                 <button
@@ -109,75 +216,80 @@
             </div>
         </div>
 
-        <div>
+        <!--<div>-->
 
-            <div v-if="!isCustomer">
-                <div v-if="bid.paid_with_cash_message !== '' && bid.paid_with_cash_message !== null">
-                    <div v-if="bid.customer.customer.notes !== '' && bid.customer.customer.notes !== null" class style>
-                        <transition name="slide-fade">
-                            <div class="mt-3 mr-6" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
-                        </transition>
-                    </div>
-                    <div v-else>
-                        <transition name="slide-fade">
-                            <div class="mt-3 mr-6 no-notes" v-show="customerNotes">
-                                The customer does not have any notes for
-                                this job
-                            </div>
-                        </transition>
-                    </div>
-                    <transition name="slide-fade">
-                        <div class="mt-3 ml-6" v-show="showPaidWithCashNotes">{{ bid.paid_with_cash_message }}</div>
-                    </transition>
-                </div>
-                <div v-else>
-                    <div v-if="bid.customer.customer.notes !== '' && bid.customer.customer.notes !== null" class style>
-                        <transition name="slide-fade">
-                            <div class="mt-3" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>
-                        </transition>
-                    </div>
-                    <div v-else>
-                        <transition name="slide-fade">
-                            <div class="mt-3 no-notes" v-show="customerNotes">
-                                The customer does not have any notes for
-                                this job
-                            </div>
-                        </transition>
-                    </div>
-                </div>
-            </div>
+            <!--<div v-if="!isCustomer">-->
 
-            <div v-show="isCustomer" class>
-                <transition name="slide-fade">
-                    <div v-show="customerNotes">
-                        <div class="mt-4">
-                            <textarea
-                                    class="form-control"
-                                    :value="bid.customer.customer.notes"
-                                    name
-                                    id
-                                    cols="40"
-                                    rows="10"
-                                    @keyup="customerNotesMessage = $event.target.value"
-                            ></textarea>
-                        </div>
-                        <div class="mt-2">
-                            <button
-                                    class="btn btn-red"
-                                    @click.prevent="updateGeneralContractorNotes()"
-                                    :disabled="disableCustomerNotesButton"
-                                    ref="custNotesUpdate"
-                            >
-                  <span v-if="disableCustomerNotesButton">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                </transition>
-            </div>
-        </div>
+                <!--<div v-if="bid.customer.customer.notes !== '' && bid.customer.customer.notes !== null" class style>-->
+                    <!--<transition name="slide-fade">-->
+                        <!--<div class="mt-3 mr-6" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>-->
+                    <!--</transition>-->
+                <!--</div>-->
+                <!--<div v-else>-->
+                    <!--<transition name="slide-fade">-->
+                        <!--<div class="mt-3 mr-6 no-notes" v-show="customerNotes">-->
+                            <!--The customer does not have any notes for-->
+                            <!--this job-->
+                        <!--</div>-->
+                    <!--</transition>-->
+                <!--</div>-->
+
+
+                <!--<div v-if="bid.paid_with_cash_message !== '' && bid.paid_with_cash_message !== null">-->
+
+                    <!--<transition name="slide-fade">-->
+                        <!--<div class="mt-3 ml-6" v-show="showPaidWithCashNotes">{{ bid.paid_with_cash_message }}</div>-->
+                    <!--</transition>-->
+                <!--</div>-->
+                <!--<div v-else>-->
+                    <!--<div v-if="bid.customer.customer.notes !== '' && bid.customer.customer.notes !== null" class style>-->
+                        <!--<transition name="slide-fade">-->
+                            <!--<div class="mt-3" v-show="customerNotes">{{ bid.customer.customer.notes }}</div>-->
+                        <!--</transition>-->
+                    <!--</div>-->
+                    <!--<div v-else>-->
+                        <!--<transition name="slide-fade">-->
+                            <!--<div class="mt-3 no-notes" v-show="customerNotes">-->
+                                <!--The customer does not have any notes for-->
+                                <!--this job-->
+                            <!--</div>-->
+                        <!--</transition>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div v-show="isCustomer" class>-->
+                <!--<transition name="slide-fade">-->
+                    <!--<div v-show="customerNotes">-->
+                        <!--<div class="mt-4">-->
+                            <!--<textarea-->
+                                    <!--class="form-control"-->
+                                    <!--:value="bid.customer.customer.notes"-->
+                                    <!--name-->
+                                    <!--id-->
+                                    <!--cols="40"-->
+                                    <!--rows="10"-->
+                                    <!--@keyup="customerNotesMessage = $event.target.value"-->
+                            <!--&gt;</textarea>-->
+                        <!--</div>-->
+                        <!--<div class="mt-2">-->
+                            <!--<button-->
+                                    <!--class="btn btn-red"-->
+                                    <!--@click.prevent="updateGeneralContractorNotes()"-->
+                                    <!--:disabled="disableCustomerNotesButton"-->
+                                    <!--ref="custNotesUpdate"-->
+                            <!--&gt;-->
+                  <!--<span v-if="disableCustomerNotesButton">-->
+                    <!--<i class="fa fa-btn fa-spinner fa-spin"></i>-->
+                  <!--</span>-->
+                                <!--Submit-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</transition>-->
+            <!--</div>-->
+
+        <!--</div>-->
 
 
         <div class="flex justify-between mt-4">
@@ -189,13 +301,13 @@
         <span
                 v-if="bid.status !== 'bid.in_progress' && bid.status !== 'bid.initiated' "
                 class="font-bold"
-                 >${{ bid.bid_price }}</span>
+        >${{ bid.bid_price }}</span>
                 <span v-else class="font-bold">
           <i>PENDING</i>
         </span>
             </div>
         </div>
-        
+
         <!-- Declined Message -->
         <div class="flex space-between flex-col" v-if="showDeclinedMessage">
             <h4>
