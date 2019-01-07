@@ -22,7 +22,11 @@
                                  :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                                 <label for="taskName">Task Description *</label>
 
-                                <input type="text" class="form-control mb-1" id="taskName" name="taskName" autofocus
+                                <input type="text"
+                                       class="form-control mb-1"
+                                       id="taskName"
+                                       name="taskName"
+                                       autofocus
                                        v-model="addNewTaskForm.taskName"
                                        autocomplete="off"
                                        @blur="checkIfNameExistsInDB($event.target.value)"

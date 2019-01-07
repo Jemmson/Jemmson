@@ -26,6 +26,7 @@
                                     class="form-control"
                                     id="contractorName"
                                     name="contractorName"
+                                    autocomplete="off"
                                     v-model="companyName"
                                     placeholder="Name"
                                     v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}"
