@@ -62,9 +62,12 @@
             </div>
 
             <div class="box shadow-md">
+                <h3 class="text-center mb-2">Payment Method</h3>
                 <div v-if="bidTask.accepted === 1" class="wrapper">
                     <div class="">Selected Payment Method:</div>
                     <div class=" uppercase">{{ bidTask.payment_type }}</div>
+                    <div v-if="bidTask.payment_type === 'cash'" class="">Payment Instructions</div>
+                    <div v-if="bidTask.payment_type === 'cash'">{{ bidTask.job_task.job.paid_with_cash_message }}</div>
                 </div>
                 <div v-else>
                     <h3 class="text-center m-2">How do you prefer to be paid for this task?</h3>
