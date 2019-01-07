@@ -72,6 +72,40 @@ describe('BidAddTask', () => {
     })
 
     it('should show drop down box if task description loses focus and nut no other item in the vue component is selected', function() {
+
+    })
+
+    it('should disable all inputs if task name is typed into the task description box and it matches the ' +
+      'the name of an existing contractor task. there should be an error that is displayed saying ' +
+      '`This Task Has Already Been Added`', function() {
+
+    })
+
+    it('should show add button and no drop downs when the job task does not exist in the database and the task is not ' +
+      'apart of the job', function() {
+        /*
+        * Given
+        * no tasks are apart of the job
+        * the added task does not exist in the database
+        * */
+
+
+
+        /*
+        * Action
+        * type in name of task
+        * onblur
+        * */
+
+
+        /*
+        * Result
+        * there are no drop downs with the tasks name
+        * add task button is shown
+        * */
+    })
+
+    it('should ', function() {
         
     })
 

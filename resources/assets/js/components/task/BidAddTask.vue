@@ -9,13 +9,13 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title">Add A New Task</h4>
+                    <h1 class="error-lg" v-show="taskExistsInJob">This Task Has Already Been Added</h1>
                 </div>
                 <div class="modal-body">
                     <form role="form" class="wrapper">
                         <h1 class="text-center error-lg" v-show="errors.general.errorExists">{{ errors.general.message
                             }}</h1>
                         <div class="flex m-t-2">
-
 
                             <!--Task Name-->
                             <div class="flex-1 m-r-4"
@@ -25,8 +25,8 @@
                                 <input type="text" class="form-control mb-1" id="taskName" name="taskName" autofocus
                                        v-model="addNewTaskForm.taskName"
                                        autocomplete="off"
-                                       @blur="checkIfNameExistsInDB($event.target.value, false)"
-                                       @focus="checkIfNameExistsInDB($event.target.value, true)"
+                                       @blur="checkIfNameExistsInDB($event.target.value)"
+                                       @focus="checkIfNameExistsInDB($event.target.value)"
                                        @keyup="getExistingTask($event.target.value)">
 
                                 <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
@@ -53,6 +53,7 @@
                                            id="custTaskPrice"
                                            name="taskPrice"
                                            autocomplete="text"
+                                           :disabled="taskExistsInJob"
                                            v-model="addNewTaskForm.taskPrice"
                                            @keyup="checkIfPriceChanged($event.target.value)"
                                            @focus="hideTaskResults"
@@ -83,6 +84,7 @@
                                        id="qty"
                                        name="qty"
                                        required
+                                       :disabled="taskExistsInJob"
                                        @focus="hideTaskResults"
                                        @blur="verifyInputIsANumber($event.target.value, 'quantity')"
                                        v-model="addNewTaskForm.qty"
@@ -104,6 +106,7 @@
                                        placeholder="ex. ft, sq. ft, etc."
                                        name="qtyUnit"
                                        v-model="addNewTaskForm.qtyUnit"
+                                       :disabled="taskExistsInJob"
                                        @blur="validateInput()"
                                        @focus="hideTaskResults"
                                        @keyup="checkIfQuantityUnitHasChanged($event.target.value)"
@@ -130,6 +133,7 @@
                                            class="form-control" id="subTaskPrice" name="subTaskPrice"
                                            v-model="addNewTaskForm.subTaskPrice"
                                            @focus="hideTaskResults"
+                                           :disabled="taskExistsInJob"
                                            @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
                                            @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')"
                                     >
@@ -150,6 +154,7 @@
                                        id="start_date"
                                        name="start_date"
                                        required
+                                       :disabled="taskExistsInJob"
                                        @focus="hideTaskResults"
                                        v-model="addNewTaskForm.start_date"
                                        @blur="checkDateIsTodayorLater($event.target.value)"
@@ -181,6 +186,7 @@
                                 <textarea class="form-control"
                                           id="customer_message"
                                           name="customer_message"
+                                          :disabled="taskExistsInJob"
                                           v-model="addNewTaskForm.customer_message"
                                           @focus="hideTaskResults"
                                           @keyup="checkIfCustomerMessageHasChanged($event.target.value)"
@@ -198,6 +204,7 @@
                                 <textarea class="form-control"
                                           id="sub_message"
                                           name="sub_message"
+                                          :disabled="taskExistsInJob"
                                           v-model="addNewTaskForm.sub_message"
                                           @focus="hideTaskResults"
                                           @keyup="checkIfSubMessageHasChanged($event.target.value)"
@@ -219,10 +226,10 @@
                     <!--</button>-->
                     <!--</div>-->
                     <!--<label for="taskResultsChange"></label>-->
-                    <div id="taskResultsChange" class="flex justify-around">
+                    <div id="taskResultsChange" class="flex justify-around" v-show="this.addNewTaskForm.taskName !== ''">
 
                         <!-- Name in task name is different than a task name in the database-->
-                        <button v-if="!nameExistsInDB"
+                        <button v-if="!nameExistsInDB && !taskExistsInJob"
                                 class="btn btn-green" :disabled="checkErrors"
                                 @click.prevent="changeTask('Add')">
                             Add Task
@@ -325,6 +332,8 @@
         nameExistsInDB: false,
         nameChanged: false,
         showTaskResults: false,
+        taskExistsInJob: false,
+        currentTasks: [],
 
         priceChanged: false,
         quantityChanged: false,
@@ -450,18 +459,34 @@
             !this.customerMessageChanged &&
             !this.subMessageChanged
           ) {
-            this.valueChanged = false
+            this.valueChanged = false;
           } else {
-            this.valueChanged = true
+            this.valueChanged = true;
           }
         }
       },
       checkIfNameExistsInDB(taskName) {
-        for (let i = 0; i < this.taskResults.length; i++) {
-          if (this.taskResults[i].name === taskName) {
-            this.nameExistsInDB = true
-          } else {
-            this.nameExistsInDB = false
+
+        // need to check if the task that is being typed is in the job already
+        // if it is in the job then disable all inputs and show the error
+        this.taskExistsInJob = false;
+        for (let i = 0; i < this.bid.job_tasks.length; i++) {
+          if (this.bid.job_tasks[i].task.name === taskName) {
+            this.taskExistsInJob = true;
+          }
+        }
+
+
+        // check if the name is in the database already so that I can show the
+        // correct buttons on the footer of the modal window
+        this.nameExistsInDB = false;
+        // debugger;
+        for (let i = 0; i < this.currentTasks.length; i++) {
+          if (
+            this.currentTasks[i].name === taskName ||
+            this.currentTasks[i].name === this.addNewTaskForm.taskName
+          ) {
+            this.nameExistsInDB = true;
           }
         }
 
@@ -470,15 +495,42 @@
       },
       getExistingTask(message) {
         this.taskResults = []
-        this.submitted = false
+        this.submitted = false;
+
+        this.checkIfNameExistsInDB(this.addNewTaskForm.taskName);
+
+
         if (this.addNewTaskForm.taskName.length > 1) {
           axios.post('/api/search/task', {
             taskname: this.addNewTaskForm.taskName,
             jobId: this.bid.id
           }).then(response => {
+            // debugger;
             console.log(response.data)
             if (response.data.length > 0) {
-              this.taskResults = response.data
+
+              console.log(JSON.stringify(this.bid.job_tasks));
+              
+              console.log(JSON.stringify(response.data));
+
+              let filteredResults = [];
+              let add = true;
+              for (let i = 0; i < response.data.length; i++) {
+                add = true
+                for (let j = 0; j < this.bid.job_tasks.length; j++) {
+                  if (response.data[i].id === this.bid.job_tasks[j].task_id) {
+                    add = false
+                  }
+                }
+                if (add) {
+                  filteredResults[filteredResults.length] = response.data[i]
+                }
+              }
+
+              this.currentTasks = filteredResults;
+              this.taskResults = filteredResults;
+
+              // this.taskResults = response.data;
               this.showTaskResults = true
               // console.log(JSON.stringify(response.data));
             } else {
