@@ -104,21 +104,21 @@
                     <div class="w-1/3 mr-2" :class="{'has-error': form.errors.has('state')}">
                         <label class="j-label">State</label>
 
-                            <select v-model="form.state" class="form-control form-control-lg">
-                                <option v-for="state in states" :value="state">{{ state }}</option>
-                            </select>
-                            <!--<input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
-                            <!--<span class="help-block" v-show="form.errors.has('state')">-->
-                            <!--{{ form.errors.get('state') }}-->
-                            <!--</span>-->
+                        <select v-model="form.state" class="form-control form-control-lg">
+                            <option v-for="state in states" :value="state">{{ state }}</option>
+                        </select>
+                        <!--<input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
+                        <!--<span class="help-block" v-show="form.errors.has('state')">-->
+                        <!--{{ form.errors.get('state') }}-->
+                        <!--</span>-->
                     </div>
 
                     <!-- Zip Code -->
                     <div class="input-section w-full ml-2" :class="{'has-error': form.errors.has('zip')}">
                         <label class="j-label">ZipCode</label>
 
-                            <input type="text" class="border input" name="zip" id="postal_code" v-model="form.zip">
-                            <span class="help-block" v-show="form.errors.has('zip')">
+                        <input type="text" class="border input" name="zip" id="postal_code" v-model="form.zip">
+                        <span class="help-block" v-show="form.errors.has('zip')">
                                     {{ form.errors.get('zip') }}
                                 </span>
                     </div>
@@ -356,7 +356,9 @@
         }
       },
       validateMobileNumber(phone) {
-        this.checkMobileNumber(phone)
+        if (phone !== '') {
+          this.checkMobileNumber(phone)
+        }
       },
       checkThatNumberIsMobile() {
         if (this.getMobileValidResponse[1] === 'mobile' ||
