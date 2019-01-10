@@ -72,7 +72,8 @@
                 <div class="flex justify-between">
                     <label class="j-label">Password</label>
                     <div style="color:red;"
-                        >Must Be at least 6 alphanumeric characters</div>
+                    >Must Be at least 6 alphanumeric characters
+                    </div>
                 </div>
 
                 <div>
@@ -133,9 +134,10 @@
                 </div>
             </div>
 
+            <div style="height: 10rem; width: 100%">
+
+            </div>
+
         </div>
     </div>
-
-    <jem-footer v-cloak></jem-footer>
-
 </div>

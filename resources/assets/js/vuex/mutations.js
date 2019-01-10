@@ -15,3 +15,13 @@ export const setTheMobileResponse = (state, payload) => {
   // debugger;
   state.mobile.response = payload;
 }
+
+export const loadFeatures = (state, payload) => {
+
+  for (let i = 0; i < payload.length; i++) {
+    if(payload[i].name === 'quickbooks'){
+      state.features.quickbooks = payload[i].on;
+    }
+  }
+
+}

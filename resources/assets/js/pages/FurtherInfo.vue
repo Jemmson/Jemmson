@@ -98,23 +98,27 @@
                     </div>
                 </div>
 
-                <!-- State -->
-                <div class="input-section" :class="{'has-error': form.errors.has('state')}">
-                    <label class="j-label">State</label>
-                    <div class="col-md-8">
-                        <input type="text" class="border input" name="state" id="locality" v-model="form.state">
-                        <span class="help-block" v-show="form.errors.has('state')">
-                                    {{ form.errors.get('state') }}
-                                </span>
-                    </div>
-                </div>
+                <div class="flex items-center">
 
-                <!-- Zip Code -->
-                <div class="input-section" :class="{'has-error': form.errors.has('zip')}">
-                    <label class="j-label">ZipCode</label>
-                    <div class="col-md-8">
-                        <input type="text" class="border input" name="zip" id="postal_code" v-model="form.zip">
-                        <span class="help-block" v-show="form.errors.has('zip')">
+                    <!-- State -->
+                    <div class="w-1/3 mr-2" :class="{'has-error': form.errors.has('state')}">
+                        <label class="j-label">State</label>
+
+                            <select v-model="form.state" class="form-control form-control-lg">
+                                <option v-for="state in states" :value="state">{{ state }}</option>
+                            </select>
+                            <!--<input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
+                            <!--<span class="help-block" v-show="form.errors.has('state')">-->
+                            <!--{{ form.errors.get('state') }}-->
+                            <!--</span>-->
+                    </div>
+
+                    <!-- Zip Code -->
+                    <div class="input-section w-full ml-2" :class="{'has-error': form.errors.has('zip')}">
+                        <label class="j-label">ZipCode</label>
+
+                            <input type="text" class="border input" name="zip" id="postal_code" v-model="form.zip">
+                            <span class="help-block" v-show="form.errors.has('zip')">
                                     {{ form.errors.get('zip') }}
                                 </span>
                     </div>
@@ -207,7 +211,7 @@
 
   import JemmsonFooter from '../components/shared/JemmsonFooter'
 
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import { mapGetters, mapMutations, mapActions, mapState } from 'vuex'
 
   export default {
     props: {
@@ -240,12 +244,72 @@
           sms_text: false,
         }),
         passwordsMatch: true,
+        states: [
+          'AS',
+          'AL',
+          'AK',
+          'AZ',
+          'AR',
+          'CA',
+          'CO',
+          'CT',
+          'DE',
+          'DC',
+          'FL',
+          'GA',
+          'HI',
+          'ID',
+          'IL',
+          'IN',
+          'IA',
+          'FM',
+          'GU',
+          'KS',
+          'KY',
+          'LA',
+          'MH',
+          'ME',
+          'MD',
+          'MP',
+          'MA',
+          'MI',
+          'MN',
+          'MS',
+          'MO',
+          'MT',
+          'NE',
+          'NV',
+          'NC',
+          'ND',
+          'OH',
+          'OK',
+          'OR',
+          'PW',
+          'PA',
+          'PR',
+          'RI',
+          'SC',
+          'SD',
+          'TN',
+          'TX',
+          'UT',
+          'VT',
+          'VI',
+          'VA',
+          'WA',
+          'WV',
+          'WI',
+          'WY'
+        ]
       }
     },
     computed: {
       ...mapGetters([
         'getMobileValidResponse'
       ]),
+      ...mapState({
+        quickbooks: state => state.features.quickbooks,
+      }),
       passwordUpdated() {
         return this.user.password_updated
       },
@@ -270,7 +334,7 @@
             unformattedNumber = unformattedNumber + number[i]
           }
         }
-        let numberLength = unformattedNumber.length;
+        let numberLength = unformattedNumber.length
         if (numberLength < 10) {
           if (this.getMobileValidResponse[1] !== '') {
             this.$store.commit('setTheMobileResponse', ['', '', ''])
@@ -336,7 +400,7 @@
           return
         }
 
-        this.form.email = this.form.email.trim();
+        this.form.email = this.form.email.trim()
 
         User.submitFurtherInfo(this.form, this.disabled)
       },
