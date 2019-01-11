@@ -18,7 +18,7 @@
                                autofocus required>
                         <span class="help-block" v-show="form.errors.has('email')">
                                     {{ form.errors.get('email') }}
-                                </span>
+                        </span>
                     </div>
                 </div>
 
@@ -122,6 +122,20 @@
                                     {{ form.errors.get('zip') }}
                                 </span>
                     </div>
+                </div>
+
+                <div v-if="isContractor && quickbooks" class="flex flex-col">
+                    <button class="btn btn-default btn-primary w-full qb"
+                            @click="showQuickbooksData = !showQuickbooksData">
+                            Click if you are you using Quickbooks?
+                    </button>
+                    <input
+                            v-show="showQuickbooksData"
+                            type="text"
+                            class="form-control"
+                            placeholder="Company ID"
+                            v-model="form.qbCompanyId"
+                    >
                 </div>
 
                 <!-- Notes -->
@@ -239,10 +253,12 @@
           notes: '',
           password: '',
           password_confirmation: '',
+          qbCompanyId: '',
           email_contact: true,
           phone_contact: false,
           sms_text: false,
         }),
+        showQuickbooksData: false,
         passwordsMatch: true,
         states: [
           'AS',
@@ -466,5 +482,10 @@
 </script>
 
 <style scoped>
+
+    .qb {
+        background-color: green;
+        margin-bottom: .5rem;
+    }
 
 </style>

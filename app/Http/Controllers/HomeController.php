@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contractor;
 use App\Customer;
+use App\Quickbook;
 use App\User;
 use App\Feedback;
 
@@ -115,6 +116,13 @@ class HomeController extends Controller
             $updateUserLocationID = User::find($user_id);
             $updateUserLocationID->location_id = $contractor->location_id;
             $updateUserLocationID->save();
+
+            if (!empty($request->qbCompanyId)) {
+                Quickbook::firstOrCreate([
+                    'company_id' => $request->qbCompanyId,
+                    'user_id' => $user_id
+                ]);
+            }
 
         } else if (Auth::user()->usertype == 'customer') {
 
