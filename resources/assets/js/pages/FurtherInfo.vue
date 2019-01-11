@@ -102,8 +102,8 @@
 
                     <!-- State -->
                     <div class="w-1/3 mr-2" :class="{'has-error': form.errors.has('state')}">
-                        <label class="j-label">State</label>
-
+                        <label class="j-label" style="font-size: 1rem">State</label>
+                        <div style="height: .75rem"></div>
                         <select v-model="form.state" class="form-control form-control-lg">
                             <option v-for="state in states" :value="state">{{ state }}</option>
                         </select>
