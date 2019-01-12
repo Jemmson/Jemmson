@@ -14,7 +14,7 @@ class AddStatusColumnToBidContractorJobTask extends Migration
     public function up()
     {
         Schema::table('bid_contractor_job_task', function (Blueprint $table) {
-            $table->string('status')->nullable();
+            $table->string('status')->default('bid_task.initiated');
         });
     }
 
