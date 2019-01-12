@@ -1,5 +1,16 @@
 <template>
     <div>
+
+        <pre>{{getAuthURL}}</pre>
+
+        <!--<pre>{{ companyInfo }}</pre>-->
+
+        <a :href="quickbooks.auth_url" class="form-control btn-green btn-lg">QuickBooks</a>
+
+        <button @click="getCompanyInfo()" class="form-control btn-green btn-lg">GetCompanyInfo</button>
+
+        <pre>{{ quickbooks.companyInfo }}</pre>
+
         <div class="intro">
             <div class="intro-header">
                 <div class="slogan intro-main-slogan flex flex-col items-center justify-center">
@@ -118,7 +129,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <feedback></feedback>
     </div>
@@ -144,14 +154,29 @@
         sBids: 0,
         sTasks: 0,
         sInvoices: 0,
+        quickbooks: {
+          auth_url: '',
+          companyInfo: ''
+        }
       }
     },
     computed: {
       ...mapState({
         job: state => state.job,
-      })
+        quickBooks: state => state.features.quickbooks,
+      }),
+      getAuthURL() {
+        axios.get('/quickbooks/getAuthUrl').then(function(response) {
+          this.quickbooks.auth_url = response.data
+        }.bind(this))
+      }
     },
     methods: {
+      getCompanyInfo () {
+        axios.get('/quickbooks/getCompanyInfo').then(function(response) {
+          this.quickbooks.companyInfo = response.data
+        }.bind(this))
+      },
       route(value) {
         if (value === 'express') {
           axios.post('/stripe/express/dashboard').then((response) => {
@@ -209,6 +234,11 @@
       })
       console.log(this.bids)
       console.log(JSON.stringify(this.bids))
+      // if(this.quickBooks) {
+      //     axios.get('/quickbooks/companyinfo').then(function(response) {
+      //       this.quickbooks.auth_url = response.data
+      //     })
+      // }
     }
   }
 </script>

@@ -8,6 +8,7 @@ use App\Customer;
 use App\Quickbook;
 use App\User;
 use App\Feedback;
+use QuickBooksOnline\API\DataService\DataService;
 
 use Illuminate\Support\Facades\Auth;
 use Log;
@@ -67,8 +68,6 @@ class HomeController extends Controller
                 'zip' => 'required|min:2',
             ]
         );
-
-        
 
         $user_id = Auth::user()->id;
         $phone = SanatizeService::phone($request->phone_number);

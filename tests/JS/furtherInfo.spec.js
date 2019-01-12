@@ -27,7 +27,11 @@ describe('FurtherInfo', () => {
     setTheMobileResponse: () => 'hell',
   }
   store = new Vuex.Store({
-    state: {},
+    state: {
+      features: {
+        quickbooks: 1
+      }
+    },
     getters,
     mutations
   })

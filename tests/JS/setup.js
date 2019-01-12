@@ -1,5 +1,7 @@
 require('jsdom-global')()
 
+console.log('setting up vue-test-utils');
+
 /*
  * Load various JavaScript modules that assist Spark.
  */
@@ -288,3 +290,5 @@ global.axios.interceptors.response.use(function (response) {
 
     return Promise.reject(error);
 });
+
+console.log('setting up vue-test-utils');

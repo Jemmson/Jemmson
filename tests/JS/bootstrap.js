@@ -8,6 +8,8 @@ import Customer from '../../resources/assets/js/classes/Customer';
 import TaskUtil from '../../resources/assets/js/classes/TaskUtil';
 
 
+// console.log('importing our dependencies');
+
 global.User = new User({
     id: 1,
     usertype: 'contractor',
