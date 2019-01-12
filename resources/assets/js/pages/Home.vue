@@ -54,11 +54,11 @@
                 <div class="statuses mb-1">
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>INITIATED</div>
-                        <div>{{ taskData('bid_task.initiated') }}</div>
+                        <div>{{ bidTaskData('bid_task.initiated') }}</div>
                     </div>
                     <div class="current-status bg-brown-lightest pt-1 pb-1">
                         <div>SENT</div>
-                        <div>{{ taskData('bid_task.bid_sent') }}</div>
+                        <div>{{ bidTaskData('bid_task.bid_sent') }}</div>
                     </div>
                     <div class="current-status bg-blue-lightest pt-1 pb-1">
                         <div>ACCEPTED</div>
@@ -166,6 +166,15 @@
         let count = 0
         for (let i = 0; i < this.bids.length; i++) {
           if (this.bids[i].status === message) {
+            count++
+          }
+        }
+        return count
+      },
+      bidTaskData(message) {
+        let count = 0
+        for (let i = 0; i < this.tasks.length; i++) {
+          if (this.tasks[i].status === message) {
             count++
           }
         }

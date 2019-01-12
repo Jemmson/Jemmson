@@ -251,6 +251,12 @@ export default class User {
   }
 
   status(status, bid, isSub) {
+    // debugger;
+
+    if (status === null) {
+      status = 'bid_task.initiated';
+    }
+
     status = Language.lang()[status]
 
     if (status === undefined) {

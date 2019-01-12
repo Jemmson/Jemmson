@@ -164,11 +164,11 @@
                                            ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid)) ||
                                             (checkIfBidHasBeenAccepted(jobTask)) ||
                                             (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)))">
-        <!--<div class="box shadow-md">-->
+            <!--<div class="box shadow-md">-->
             <!--<pre>{{ showDetails }} -> the show hide button was selected </pre>-->
             <!--<pre>{{ showSubsPanel }}-> show the sub panel if the user is a contractor and-->
-                                    <!--the job is not approved and-->
-                                    <!--the job has not been completed</pre>-->
+            <!--the job is not approved and-->
+            <!--the job has not been completed</pre>-->
             <!--<pre>{{ isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0 }} the user is a general && the task is not approved && subs have been added</pre>-->
             <!--<pre>{{ !checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid) }} the bid has not been accepted && the bid has not been sent by the sub</pre>-->
             <!--<pre>{{ checkIfBidHasBeenAccepted(jobTask) }} the bid has been accepted</pre>-->
@@ -184,12 +184,12 @@
             <!--<pre>{{ !checkIfBidHasBeenSent(bid) }} -> checks if the contractor has sent the bid</pre>-->
             <!--<pre>{{ isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0 }}</pre>-->
             <!--<pre>{{ showDetails &&-->
-                                           <!--showSubsPanel &&-->
-                                           <!--(isGeneral() && !taskApproved) &&-->
-                                           <!--((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid)) ||-->
-                                            <!--(checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1) ||-->
-                                            <!--(!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)))-->
-                <!--}} -> total value of all settings</pre>-->
+            <!--showSubsPanel &&-->
+            <!--(isGeneral() && !taskApproved) &&-->
+            <!--((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid)) ||-->
+            <!--(checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1) ||-->
+            <!--(!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)))-->
+            <!--}} -> total value of all settings</pre>-->
             <div v-if="showSubsPanel" class="mt-4">
                 <div :id="'task-divider-' + jobTask.id" :key="1"></div>
 
@@ -209,7 +209,7 @@
                             <div class="flex-1">${{ bid.bid_price }}</div>
                             <div class="flex-1">
                                 <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
-                                <button v-if="!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid)"
+                                <button v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
                                         @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
                                         :disabled="disabled.accept">
                                             <span v-if="disabled.accept">
@@ -217,10 +217,10 @@
                                             </span>
                                     Accept
                                 </button>
-                                <div v-else-if="checkIfBidHasBeenAccepted(jobTask)">
+                                <div v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
                                     <h5>Bid Has Been Accepted</h5>
                                 </div>
-                                <div v-else-if="!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                <div v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
                                     <h5>Pending</h5></div>
                             </div>
                         </div>
@@ -230,10 +230,19 @@
         </div>
 
 
-        <div class="box shadow-md" v-show="showDetails &&
-                                            (showDenyBtn(jobTask) || showDeleteBtn(jobTask) ||
-                                            (isGeneral && showSendSubInvite && !checkIfBidHasBeenAccepted(jobTask)) ||
-                                            (showFinishedBtn(jobTask) || showApproveBtn(jobTask)))">
+        <!--I want to show details if
+        1. the user is a customer and they have the status of 'bid_task.finished_by_general' or 'bid_task.approved_by_general'
+
+
+        -->
+        <!--<div class="box shadow-md" v-show="showDetails &&-->
+        <!--(showDenyBtn(jobTask) || showDeleteBtn(jobTask) ||-->
+        <!--(isGeneral && showSendSubInvite && !checkIfBidHasBeenAccepted(jobTask)) ||-->
+        <!--(showFinishedBtn(jobTask) || showApproveBtn(jobTask)))">-->
+
+
+        <div class="box shadow-md" v-show="showDetails">
+            <h4 class="text-center">Action Buttons</h4>
             <div class="flex w-full justify-between">
                 <button class="btn btn-red" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask.id)">
                     Deny
@@ -254,7 +263,7 @@
                       Show Subs
                     </button> -->
                     <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask.id)"
-                            v-if="isGeneral() && showSendSubInvite && !checkIfBidHasBeenAccepted(jobTask)">
+                            v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
                         Add A Sub
                     </button>
                 </div>
@@ -282,7 +291,7 @@
         </div>
 
         <sub-invite-modal
-                v-if="isContractor() && !checkIfBidHasBeenAccepted(jobTask)"
+                v-if="isContractor() && !checkIfAnyBidHasBeenAccepted(jobTask)"
                 :job-task="jobTask"
                 :job-task-task="jobTask.task"
                 :job-task-name="jobTask.task.name"
@@ -400,8 +409,19 @@
       }
     },
     methods: {
+      checkIfAnyBidHasBeenAccepted(jobTask) {
+        if (jobTask.bid_contractor_job_tasks.length > 0) {
+          for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
+            if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
+              return true
+            }
+          }
+        } else {
+          return false
+        }
+      },
       checkIfBidHasBeenSent(bid) {
-        if (bid.updated_at !== null && bid.status === 'sent') {
+        if (bid.updated_at !== null && bid.status === 'bid_task.bid_sent') {
           return true
         } else {
           return false
@@ -571,16 +591,33 @@
       approveTaskHasBeenFinished(jobTask) {
         GeneralContractor.approveTaskHasBeenFinished(jobTask, this.disabled)
       },
-      checkIfBidHasBeenAccepted(jobTask) {
-        if (jobTask.bid_contractor_job_tasks.length > 0) {
-          for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
-            if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
-              return true
-            }
-          }
-        } else {
-          return false
+      checkIfBidHasBeenAccepted(jobTask, bid) {
+        // debugger;
+        if (bid) {
+          return bid.accepted === 1
         }
+        // try {
+        //   if (bid.accepted === 1) {
+        //     console.log(JSON.stringify(bid));
+        //     return true
+        //   } else {
+        //     console.log(JSON.stringify(bid));
+        //     return false
+        //   }
+        // } catch (e) {
+        //   debugger;
+        //   console.log(e)
+        // }
+
+        // if (jobTask.bid_contractor_job_tasks.length > 0) {
+        //   for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
+        //     if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
+        //       return true
+        //     }
+        //   }
+        // } else {
+        //   return false
+        // }
       },
       isGeneral() {
         return this.user.isGeneral(this.bid)
@@ -615,15 +652,15 @@
         }
       },
       openUpdateTaskLocation(jobTaskId) {
-        $('#update-task-location-modal_'+jobTaskId).modal()
+        $('#update-task-location-modal_' + jobTaskId).modal()
       },
       openDenyTaskForm(jobTaskId) {
-        $('#deny-task-modal_'+jobTaskId).modal()
+        $('#deny-task-modal_' + jobTaskId).modal()
       },
       openSubInvite(jobTaskId) {
         // debugger;
         // this.currentJobTask = jobTask;
-        $('#sub-invite-modal_'+ jobTaskId).modal()
+        $('#sub-invite-modal_' + jobTaskId).modal()
       },
       location(jobTask, bid) {
         // debugger;

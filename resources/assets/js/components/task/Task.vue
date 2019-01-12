@@ -3,8 +3,12 @@
 
         <div class="task-box shadow-md">
             <div class="flex flex-col">
-                <label class="job-status"
-                       :class="getLabelClass(bidTask.job_task.status)">
+                <!--<label class="job-status"-->
+                       <!--:class="getLabelClass(bidTask.job_task.status)">-->
+
+                    <label class="job-status"
+                       :class="getLabelClass(bidTask.status)">
+
                     {{ status(bidTask) }}</label>
                 <label class="text-size w-full uppercase text-center mt-2 mb-2">
                     {{ jobName(bidTask.job_task.task.name) }}</label>
@@ -216,7 +220,7 @@
         return Format.statusLabel(status)
       },
       status(bid_task) {
-        return User.status(bid_task.job_task.status, bid_task.job_task, true)
+        return User.status(bid_task.status, bid_task.job_task, true)
       },
       jobName(name) {
         return Format.jobName(name)

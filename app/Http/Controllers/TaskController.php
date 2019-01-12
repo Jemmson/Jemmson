@@ -173,7 +173,7 @@ class TaskController extends Controller
         }
 
         $bidContractorJobTask->bid_price = $request->bid_price;
-        $bidContractorJobTask->status = 'sent';
+        $bidContractorJobTask->status = 'bid_task.bid_sent';
         $bidContractorJobTask->payment_type = $request->paymentType;
         $jobTask = $bidContractorJobTask->jobTask()->first();
 
