@@ -1,4 +1,6 @@
-import {mount} from 'vue-test-utils'
+import {
+  mount
+} from '@vue/test-utils'
 import expect from 'expect'
 import Home from '../../resources/assets/js/pages/Home.vue'
 
