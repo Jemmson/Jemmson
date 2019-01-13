@@ -174,6 +174,10 @@ export default class User {
     return false
   }
 
+  isSub(bid, usertype) {
+    return bid !== null && (usertype === 'contractor' && bid.contractor_id !== this.user.id)
+  }
+
   isSignedUpWithStripe() {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
   }
@@ -250,7 +254,7 @@ export default class User {
     this.user = user
   }
 
-  status(status, bid, isSub) {
+  status(status, bid) {
     // debugger;
 
     if (status === null) {
@@ -264,7 +268,7 @@ export default class User {
     }
 
     if (this.isContractor()) {
-      if (isSub !== undefined && isSub)
+      if (this.isSub(bid, Spark.state.user.usertype) !== undefined && this.isSub(bid, Spark.state.user.usertype))
         return status.sub
 
       if (this.isGeneral(bid))

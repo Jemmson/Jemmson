@@ -34,7 +34,7 @@ describe('Invoice', () => {
     }
   });
 
-  it.only('Should render itself', () => {
+  it('Should render itself', () => {
     expect(wrapper.isEmpty()).toBe(false);
   });
   

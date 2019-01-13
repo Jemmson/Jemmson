@@ -373,7 +373,7 @@
         return this.jobTasks.length > 0
       },
       isCustomer() {
-        return this.user.isCustomer()
+        return User.isCustomer()
       },
       // isContractor() {
       //   return this.user.isContractor()
@@ -479,18 +479,15 @@
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled)
       },
       showStripeToggle(jobTask) {
-        return this.user.isAssignedToMe(jobTask) && (this.bid.status === 'bid.initiated' || this.bid.status ===
+        return User.isAssignedToMe(jobTask) && (this.bid.status === 'bid.initiated' || this.bid.status ===
           'bid.in_progress')
       },
       updateMessage(jobTaskId, currentMessage, actor) {
-
         let message = document.getElementById('message-' + actor + '-' + jobTaskId)
         message = message.value
-
         if (message !== currentMessage) {
           GeneralContractor.updateMessage(message, jobTaskId, actor)
         }
-
         if (actor === 'sub') {
           this.sendSubMessage = false
           setTimeout(function() {
@@ -511,24 +508,9 @@
         return (status === 'bid_task.finished_by_sub' || status === 'bid_task.reopened')
         // return (status === 'bid_task.finished_by_sub' || this.bid.status === 'bid.declined');
       },
-      // showReopenBtn(jobTask) {
-      //   if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
-      //       'bid_task.approved_by_general')) {
-      //     return true;
-      //   }
-      //   return false;
-      // },
-      // showPayCashForTaskBtn(jobTask) {
-      //   return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
-      //     this.user.isCustomer();
-      // },
-      // showPayForTaskBtn(jobTask) {
-      //   return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
-      //     this.user.isCustomer() && jobTask.stripe;
-      // },
       showFinishedBtn(jobTask) {
         if (this.isContractor() &&
-          this.user.isAssignedToMe(jobTask) && (jobTask.status === 'bid_task.approved_by_customer' ||
+          User.isAssignedToMe(jobTask) && (jobTask.status === 'bid_task.approved_by_customer' ||
             jobTask.status === 'bid_task.reopened' ||
             jobTask.status === 'bid_task.denied'
           )) {
@@ -538,7 +520,7 @@
       },
       showApproveBtn(jobTask) {
         if (this.isGeneral() &&
-          !this.user.isAssignedToMe(jobTask) &&
+          !User.isAssignedToMe(jobTask) &&
           (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
         ) {
           return true
@@ -569,7 +551,7 @@
         if (jobTask.bid_id === null) {
           return 0
         } else {
-          return this.user.findTaskBid(jobTask.bid_id, jobTask.bid_contractor_job_tasks)[0].bid_price
+          return User.findTaskBid(jobTask.bid_id, jobTask.bid_contractor_job_tasks)[0].bid_price
         }
       },
       toggleStripePaymentOption(jobTask) {
@@ -620,7 +602,7 @@
         // }
       },
       isGeneral() {
-        return this.user.isGeneral(this.bid)
+        return User.isGeneral(this.bid)
       },
       prettyDate(date) {
         if (date == null)
@@ -686,20 +668,7 @@
         }
       },
       isContractor() {
-        return this.user.isContractor()
-      },
-      taskCustFinalPrice(price) {
-
-        let a = price
-        let b = a.toString()
-
-        if (b.indexOf('.') === -1) {
-          price = '$' + price + '.00'
-        } else {
-          price = '$' + price
-        }
-
-        return price
+        return User.isContractor()
       },
       showTheJobTaskDetails(value) {
         if (value === 'show') {
@@ -709,14 +678,16 @@
         }
       },
       status(status) {
-        return this.user.status(status, this.bid)
+        return User.status(status, this.bid)
       },
       getLabelClass(status) {
         return Format.statusLabel(status)
       },
       showTaskPriceInput() {
-        return this.isGeneral() && (this.bid.status === 'bid.in_progress' || this.bid.status === 'bid.initiated' || this.bid
-          .status === 'bid.declined')
+        return this.isGeneral() &&
+            (this.bid.status === 'bid.in_progress' ||
+              this.bid.status === 'bid.initiated' ||
+              this.bid.status === 'bid.declined')
       },
       updateCustomerTaskQuantity(quantity, taskId, currentQuantityValue) {
 
@@ -729,10 +700,9 @@
       },
       taskCustFinalPrice(price) {
 
-        let a = price
-        let b = a.toString()
+        let priceString = price.toString()
 
-        if (b.indexOf('.') === -1) {
+        if (priceString.indexOf('.') === -1) {
           price = '$' + price + '.00'
         } else {
           price = '$' + price

@@ -170,10 +170,6 @@ describe('BidTasks', () => {
         expect(wrapper.vm.show).toBe(true);
     });
 
-    it('User should be a contractor ', () => {
-        expect(wrapper.vm.isContractor).toBe(true);
-    });
-
     it('Should render 2 cards', () => {
         const cards = wrapper.findAll('card-stub');
         expect(cards.length).toBe(2);
@@ -217,22 +213,6 @@ describe('BidTasks', () => {
         expect(wrapper.html()).toContain('Quantity:');
     });
 
-    it('The quantity input should be disabled - contractor', () => {
-        const qty = wrapper.find({
-            ref: 'quantity',
-        })
-        
-        expect(qty.attributes().disabled).toBe('disabled');
-    });
-
-    it('The price input should be disabled - contractor', () => {
-        const qty = wrapper.find({
-            ref: 'price',
-        })
-
-        expect(qty.attributes().disabled).toBe('disabled');
-    });
-
     it('Should render the text Change Task Location', () => {
         expect(wrapper.html()).toContain('Change Task Location');
     });
@@ -244,18 +224,6 @@ describe('BidTasks', () => {
     it('Should render 2 task-images component, one for each task', () => {
         const taskImages = wrapper.findAll('task-images-stub');
         expect(taskImages.length).toBe(2);
-    });
-
-    it('Messages should not be disabled', () => {
-        expect(wrapper.vm.disableMessages).toBe(false);
-    });
-
-    it('Should not render the subs panel', () => {
-        expect(wrapper.vm.showSubsPanel).toBe(false);
-    });
-
-    it('Should render footer slot', () => {
-        expect(false).toBe(true);
     });
 
 });

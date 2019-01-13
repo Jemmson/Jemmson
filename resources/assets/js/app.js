@@ -233,6 +233,9 @@ var app = new Vue({
   mixins: [require('spark')],
   router,
   store,
+  data: {
+    user: window.User
+  },
   mounted() {
     axios.get('loadFeatures').then((response) => {
       console.log(JSON.stringify(response.data))

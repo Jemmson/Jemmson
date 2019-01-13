@@ -1,7 +1,8 @@
 {
-  "/js/app.js": "/js/app.98d9c3e0baa277d94990.js",
+  "/js/app.js": "/js/app.dda4fb810e2d8a168c47.js",
   "/css/app.css": "/css/app.f68808ce50b2f14cb4d73e3c59d23da5.css",
   "/js/sweetalert.min.js": "/js/sweetalert.min.js?id=0068f44b0aa1b83fa767",
   "/css/sweetalert.css": "/css/sweetalert.css?id=196c08c89f0c8a9b688a",
-  "/mix.js": "/mix.1157e0ba4bb9e372f705.js"
+  "/mix.js": "/mix.1157e0ba4bb9e372f705.js",
+  "/bundle.js": "/bundle.js"
 }
