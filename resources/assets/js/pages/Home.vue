@@ -1,15 +1,17 @@
 <template>
     <div>
 
-        <pre>{{getAuthURL}}</pre>
+        <div v-show="quickBooks">
+            <pre>{{getAuthURL}}</pre>
 
-        <!--<pre>{{ companyInfo }}</pre>-->
+            <!--<pre>{{ companyInfo }}</pre>-->
 
-        <a :href="quickbooks.auth_url" class="form-control btn-green btn-lg">QuickBooks</a>
+            <a :href="quickbooks.auth_url" class="form-control btn-green btn-lg">QuickBooks</a>
 
-        <button @click="getCompanyInfo()" class="form-control btn-green btn-lg">GetCompanyInfo</button>
+            <button @click="getCompanyInfo()" class="form-control btn-green btn-lg">GetCompanyInfo</button>
 
-        <pre>{{ quickbooks.companyInfo }}</pre>
+            <pre>{{ quickbooks.companyInfo }}</pre>
+        </div>
 
         <div class="intro">
             <div class="intro-header">
