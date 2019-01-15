@@ -71,7 +71,7 @@ describe('BidTask', () => {
     expect(wrapper.vm.isContractor()).toBe(true)
   })
 
-  it.only('User should not be a customer ', () => {
+  it('User should not be a customer ', () => {
 
     //Given
     // let user = JSON.parse('{"id":1,"location_id":1,"name":"Shawn Pike","email":"jemmsoninc@gmail.com","usertype":"contractor","password_updated":1,"photo_url":"https://www.gravatar.com/avatar/b79a143c3fc9e45c8f1344369273cb0c.jpg?s=200&d=mm","logo_url":null,"uses_two_factor_auth":false,"phone":"4806226441","two_factor_reset_code":null,"current_team_id":null,"stripe_id":null,"current_billing_plan":null,"billing_state":null,"trial_ends_at":null,"last_read_announcements_at":null,"created_at":"2019-01-12 04:46:02","updated_at":"2019-01-12 04:46:02","first_name":null,"last_name":null,"subscriptions":[],"contractor":{"id":1,"user_id":1,"location_id":1,"free_jobs":3,"company_name":"Jemmson","company_logo_name":"voluptas","email_method_of_contact":1,"sms_method_of_contact":1,"phone_method_of_contact":1,"created_at":"2019-01-12 04:46:02","updated_at":"2019-01-13 06:07:38","stripe_express":{"id":1,"contractor_id":1,"access_token":"sk_test_vewQOBeHnMCFtgEjOLQmXrdD","refresh_token":"rt_CMkeB75bV4BbR9v06ioFogUHLzoUSUkAhTyqwqV76CPlz0gi","stripe_user_id":"acct_1By18sB4l1AzsWS0","created_at":"2019-01-12 04:46:02","updated_at":"2019-01-12 04:46:02"},"location":{"id":1,"user_id":1,"default":0,"address_line_1":"102 Hope Divide","address_line_2":null,"city":"East Jennieville","state":"Missouri","zip":"43535-3735","area":null,"created_at":"2019-01-12 04:46:02","updated_at":"2019-01-12 04:46:02"}},"customer":null,"tax_rate":0}');
