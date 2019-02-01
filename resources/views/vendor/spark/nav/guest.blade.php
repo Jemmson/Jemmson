@@ -13,7 +13,6 @@
     </a>
 </div>
 
-
 <div class="flex items-center jemmson-footer text-center">
     <a class="text-white flex-1" href="/#/check_accounting">
         <i class="fas fa-user-plus"></i><br>

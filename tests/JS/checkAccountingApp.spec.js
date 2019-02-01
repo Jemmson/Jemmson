@@ -108,6 +108,12 @@ describe ('CheckAccountingApp', () => {
 
   })
 
+  it('should route to the register page if "dont use" is clicked', function() {
+
+  })
+
+
+
   // it('should ', function() {
   //
   // })

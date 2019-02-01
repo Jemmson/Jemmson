@@ -12,18 +12,18 @@
             </div>
         </div>
         <div v-show="isContractor">
-            <h1 class="text-center uppercase">Do Use Accounting Software?</h1>
+            <h1 class="text-center uppercase">Do You Use Accounting Software?</h1>
             <div class="flex">
                 <a
                         :href="quickbooks.auth_url"
                         class="btn btn-default bg-color-red btn-primary w-full qb uppercase"
                         ref="quickbooks"
                 >QuickBooks</a>
-                <button class="btn default w-full m-2 bg-color-blue"
-                        ref="xero">Xero
-                </button>
+                <!--<button class="btn default w-full m-2 bg-color-blue"-->
+                        <!--ref="xero">Xero-->
+                <!--</button>-->
                 <button class="btn default w-full m-2 bg-color-green"
-                        ref="dont_use">Dont Use
+                        ref="dont_use" @click="goToRegistration()">Dont Use
                 </button>
             </div>
         </div>
@@ -53,7 +53,7 @@
               if (response.data[i].on === 1) {
                 this.$router.push('check_accounting')
               } else {
-                window.location = '/register'
+                window.location = '/register';
               }
             }
           }
@@ -69,6 +69,9 @@
       }),
     },
     methods: {
+      goToRegistration(){
+        window.location = '/register';
+      },
       getAuthURL() {
         // only get authUrl once
         if (this.quickbooks.auth_url === '') {
