@@ -27,6 +27,10 @@ Route::get('/loadFeatures', function () {
     }
 });
 
+Route::get('/quickbooks/getAuthUrl/{state}', 'QuickbooksController@getAuthUrl');
+Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
+Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCompanyInfo');
+
 
 // login routes
 Route::get('login', 'Auth\LoginController@show');
@@ -36,8 +40,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
 
     Route::get('/feedback', 'FeedbackController@show');
 
-    Route::get('/quickbooks/getAuthUrl', 'QuickbooksController@getAuthUrl');
-    Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
+//    Route::get('/quickbooks/getAuthUrl', 'QuickbooksController@getAuthUrl');
+//    Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
     Route::get('/quickbooks/getCompanyInfo', 'QuickbooksController@getCompanyInfo');
 
 
@@ -80,6 +84,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/', 'HomeController@create');
     Route::get(
         '/furtherInfo', function () {
+
+//        dd('further Info');
+
         return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
     }
     )->middleware('block.further.info');

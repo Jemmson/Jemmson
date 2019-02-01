@@ -10,6 +10,7 @@
             <div class="content">
                 <input type="hidden" name="street_number" id="street_number">
                 <input type="hidden" name="country" id="country">
+
                 <!-- email -->
                 <div class="input-section" :class="{'has-error': form.errors.has('email')}">
                     <label class="j-label">Update Login Email:</label>
@@ -107,10 +108,6 @@
                         <select v-model="form.state" class="form-control form-control-lg">
                             <option v-for="state in states" :value="state">{{ state }}</option>
                         </select>
-                        <!--<input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
-                        <!--<span class="help-block" v-show="form.errors.has('state')">-->
-                        <!--{{ form.errors.get('state') }}-->
-                        <!--</span>-->
                     </div>
 
                     <!-- Zip Code -->
@@ -122,20 +119,6 @@
                                     {{ form.errors.get('zip') }}
                                 </span>
                     </div>
-                </div>
-
-                <div v-if="isContractor && quickbooks" class="flex flex-col">
-                    <button class="btn btn-default btn-primary w-full qb"
-                            @click="showQuickbooksData = !showQuickbooksData">
-                            Click if you are you using Quickbooks?
-                    </button>
-                    <input
-                            v-show="showQuickbooksData"
-                            type="text"
-                            class="form-control"
-                            placeholder="Company ID"
-                            v-model="form.qbCompanyId"
-                    >
                 </div>
 
                 <!-- Notes -->
@@ -182,31 +165,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- upload company logo -->
-                <!-- Photo Preview-->
-                <!-- <div v-if="isContractor"> -->
-                <!-- <div class="input-section">
-                    <label class="col-md-4 j-label">&nbsp;</label>
-
-                    <div class="col-md-6">
-                        <img :src="logoUrl">
-                    </div>
-                </div> -->
-
-                <!-- Update Button -->
-                <!-- <div class="input-section">
-                    <label class="col-md-4 j-label">&nbsp;</label>
-
-                    <div class="col-md-6">
-                        <label type="button" class="btn btn-primary btn-upload" :disabled="form.busy">
-                            <span>Select New Logo</span>
-
-                            <input ref="photo" type="file" class="border input" name="photo"
-                                   @change="update">
-                        </label>
-                    </div>
-                </div> -->
-                <!-- </div> -->
                 <button type="submit" name="submit" class="register text-center border shadow uppercase"
                         @click.prevent="submitFurtherInfo()"
                         :disabled="checkValidData()">
@@ -225,7 +183,7 @@
 
   import JemmsonFooter from '../components/shared/JemmsonFooter'
 
-  import { mapGetters, mapMutations, mapActions, mapState } from 'vuex'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
     props: {
@@ -260,7 +218,7 @@
         }),
         showQuickbooksData: false,
         passwordsMatch: true,
-        states: [
+        states:  [
           'AS',
           'AL',
           'AK',
@@ -323,9 +281,6 @@
       ...mapGetters([
         'getMobileValidResponse'
       ]),
-      ...mapState({
-        quickbooks: state => state.features.quickbooks,
-      }),
       passwordUpdated() {
         return this.user.password_updated
       },
@@ -460,7 +415,7 @@
         data.append('photo', this.$refs.photo.files[0])
 
         return data
-      }
+      },
     },
     mounted() {
       this.initAutocomplete()
@@ -473,7 +428,6 @@
       if (this.user.phone != null) {
         this.validateMobileNumber(this.user.phone)
       }
-
       Bus.$on('updateFormLocation', (payload) => {
         this.updateFormLocation(payload)
       })

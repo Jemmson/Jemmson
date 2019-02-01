@@ -83,7 +83,7 @@ describe('ApproveBid', () => {
         expect(openModal.calledOnce).toBe(true);
     });
 
-    it('Should have tried to open the approve modal', () => {
+    it.only('Should have tried to open the approve modal', () => {
         const approve = wrapper.find({
             ref: 'approve'
         });

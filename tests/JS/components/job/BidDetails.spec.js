@@ -112,7 +112,7 @@ describe('BidDetails', () => {
   //# Customer Notes Button
   //#######################################
 
-  it.only('as a customer I should see the customer notes button', function() {
+  it('as a customer I should see the customer notes button', function() {
     wrapper.setProps({
       isCustomer: true
     })
@@ -123,7 +123,7 @@ describe('BidDetails', () => {
 
   })
 
-  it.only('as a contractor I should not see the customer notes button', function() {
+  it('as a contractor I should not see the customer notes button', function() {
     wrapper.setProps({
       isCustomer: false
     })
@@ -139,7 +139,7 @@ describe('BidDetails', () => {
   //# Customer Notes Text Area
   //#######################################
 
-  it.only('customerNotes data field should turn from false to true customer Notes button click', function() {
+  it('customerNotes data field should turn from false to true customer Notes button click', function() {
     wrapper.setData({
       customerNotes: false
     })
@@ -158,7 +158,7 @@ describe('BidDetails', () => {
     expect(wrapper.vm.customerNotes).toBe(true)
   })
 
-  it.only('as a customer when I click on the customer notes button then I should see the customer notes textarea', function() {
+  it('as a customer when I click on the customer notes button then I should see the customer notes textarea', function() {
 
     wrapper.setData({
       customerNotes: false
@@ -180,7 +180,7 @@ describe('BidDetails', () => {
 
   })
 
-  it.only('as a customer when I click the submit button then the updateGeneralContractorNotes method should be called', function() {
+  it('as a customer when I click the submit button then the updateGeneralContractorNotes method should be called', function() {
 
     const updateGeneralContractorNotes = sinon.spy()
 
@@ -207,7 +207,7 @@ describe('BidDetails', () => {
   })
 
 
-  it.only ('as a contractor I should not see both customer message and the default message', () => {
+  it ('as a contractor I should not see both customer message and the default message', () => {
     wrapper.setProps({
       isCustomer: false
     })
@@ -228,7 +228,7 @@ describe('BidDetails', () => {
 
   });
 
-  it.only('as a contractor I should be able to see the Customer Notes for Job - Contractor button ', function() {
+  it('as a contractor I should be able to see the Customer Notes for Job - Contractor button ', function() {
     wrapper.setProps({
       isCustomer: false
     })
@@ -236,7 +236,7 @@ describe('BidDetails', () => {
     expect(wrapper.find({ref: 'notesForCustomerButton_contractor'}).isVisible()).toBe(true)
   })
 
-  it.only('as a contractor I should not be able to see the Customer Notes for Job - Customer button ', function() {
+  it('as a contractor I should not be able to see the Customer Notes for Job - Customer button ', function() {
     wrapper.setProps({
       isCustomer: false
     })
@@ -244,7 +244,7 @@ describe('BidDetails', () => {
     expect(wrapper.find({ref: 'notesForCustomerButton_customer'}).isVisible()).toBe(false)
   })
 
-  it.only('as a contractor I should not be able to see the customer notes text area', function() {
+  it('as a contractor I should not be able to see the customer notes text area', function() {
     wrapper.setProps({
       isCustomer: false
     })
@@ -253,7 +253,7 @@ describe('BidDetails', () => {
 
   })
 
-  it.only('as a contractor I should not be able to see the customer notes text area button', function() {
+  it('as a contractor I should not be able to see the customer notes text area button', function() {
     wrapper.setProps({
       isCustomer: false
     })
@@ -262,7 +262,7 @@ describe('BidDetails', () => {
 
   })
 
-  it.only('as a contractor I should not be able to see the customer notes information', function() {
+  it('as a contractor I should not be able to see the customer notes information', function() {
     wrapper.setProps({
       isCustomer: false
     })
@@ -274,7 +274,7 @@ describe('BidDetails', () => {
     expect(wrapper.find({ref: 'customerNotesTextArea'}).isVisible()).toBe(false)
   })
 
-  it.only('as a contractor I should be able to see the customer notes information when the notesForCustomerButton_contractor is clicked and the customer has notes', function() {
+  it('as a contractor I should be able to see the customer notes information when the notesForCustomerButton_contractor is clicked and the customer has notes', function() {
     wrapper.setProps({
       isCustomer: false,
       bid: {
@@ -303,7 +303,7 @@ describe('BidDetails', () => {
 
 
   //
-  // it.only('as a contractor with the status as - bid.initiated - the screen should show - bid in progress', () => {
+  // it('as a contractor with the status as - bid.initiated - the screen should show - bid in progress', () => {
   //
   //   const getLabelClass = sinon.spy()
   //
@@ -326,7 +326,7 @@ describe('BidDetails', () => {
   //
   // })
   //
-  // it.only('as a contractor I should be able to see the paid with cash button if the customer paid with cash', () => {
+  // it('as a contractor I should be able to see the paid with cash button if the customer paid with cash', () => {
   //   wrapper.setProps({
   //     isCustomer: false,
   //     bid: {
@@ -458,7 +458,7 @@ describe('BidDetails', () => {
   // })
 
   // TODO: figure out why set value is not working on the textarea the below test does not work with out it
-  // it.only('as a customer when I click on the customer notes button then I should see the customer notes data', function() {
+  // it('as a customer when I click on the customer notes button then I should see the customer notes data', function() {
   //
   //   wrapper.setData({
   //     customerNotes: false,

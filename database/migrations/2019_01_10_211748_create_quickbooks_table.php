@@ -16,10 +16,12 @@ class CreateQuickbooksTable extends Migration
         Schema::create('quickbooks', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('user_id');
-            $table->string('access_token')->nullable();
-            $table->string('code')->nullable();
             $table->string('company_id')->nullable();
             $table->string('state')->nullable();
+            $table->string('code')->nullable();
+            $table->text('access_token')->nullable();
+            $table->text('refresh_token')->nullable();
+            $table->text('access_token_object')->nullable();
             $table->timestamps();
         });
     }

@@ -18,6 +18,13 @@ class Quickbook extends Model
         'user_id',
     ];
 
+    protected $auth_mode;
+    protected $client_id;
+    protected $client_secret;
+    protected $redirect_uri;
+    protected $scope;
+    protected $state;
+    protected $base_url;
     protected $credentials = [];
 
     public function addCredentials($newCredentials)
@@ -27,102 +34,70 @@ class Quickbook extends Model
         foreach($nd as $k => $c){
             $creds->put($k, $c);
         }
-
         $this->credentials = $creds->toArray();
     }
 
     public function getCredentials()
     {
-        return $this->credentials;
+        return [
+            'auth_mode' => $this->auth_mode,
+            'ClientID' => $this->client_id,
+            'ClientSecret' => $this->client_secret,
+            'RedirectURI' =>  $this->redirect_uri,
+            'scope' =>  $this->scope,
+            'baseUrl' => env('AUTHORIZATION_REQUEST_URL'),
+            'state' => $this->state
+        ];
     }
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        $this->credentials = [
+        $this->auth_mode = env('OAUTH_MODE');
+        $this->client_id = env('CLIENT_ID');
+        $this->client_secret = env('CLIENT_SECRET');
+        $this->redirect_uri = env('OAUTH_REDIRECT_URI');
+        $this->scope = env('OAUTH_SCOPE');
+        $this->base_url = env('AUTHORIZATION_REQUEST_URL');
+    }
+
+    public function setState($state)
+    {
+        $this->state = json_encode($state);
+    }
+
+    public function getCredsWithState()
+    {
+        return [
+            'auth_mode' => $this->auth_mode,
+            'ClientID' => $this->client_id,
+            'ClientSecret' => $this->client_secret,
+            'RedirectURI' =>  $this->redirect_uri,
+            'scope' =>  $this->scope,
+            'baseUrl' =>  $this->base_url,
+            'state' => $this->state
+        ];
+    }
+
+    public function getAuthCredentials()
+    {
+        return $this->credentials = [
             'auth_mode' => 'oauth2',
             'ClientID' => env('CLIENT_ID'),
             'ClientSecret' => env('CLIENT_SECRET'),
             'RedirectURI' => env('OAUTH_REDIRECT_URI'),
             'scope' => env('OAUTH_SCOPE'),
-            'baseUrl' => env('AUTHORIZATION_REQUEST_URL')
+            'baseUrl' => env('AUTHORIZATION_URL_REQUEST_URL')
         ];
-
-//        $dataService = DataService::Configure(array(
-//
-//        ));
-
-//        $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
-//        $authUrl = $OAuth2LoginHelper->getAuthorizationCodeURL();
-//
-//        //set the access token using the auth object
-////                if (isset($_SESSION['sessionAccessToken'])) {
-//
-////                    $accessToken = $_SESSION['sessionAccessToken'];
-//        $accessTokenJson = array('token_type' => 'bearer',
-//            'access_token' => $accessToken->getAccessToken(),
-//            'refresh_token' => $accessToken->getRefreshToken(),
-//            'x_refresh_token_expires_in' => $accessToken->getRefreshTokenExpiresAt(),
-//            'expires_in' => $accessToken->getAccessTokenExpiresAt()
-//        );
-//        $dataService->updateOAuth2Token($accessToken);
-//        $oauthLoginHelper = $dataService -> getOAuth2LoginHelper();
-//        $CompanyInfo = $dataService->getCompanyInfo();
-////                }
-
     }
 
     public function getCompanyInfo()
     {
 
         $dataService = DataService::Configure($this->credentials);
-
-//        dd($dataService);
-
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
         $authUrl = $OAuth2LoginHelper->getAuthorizationCodeURL();
-
-//        echo gettype($authUrl);
-
         echo $authUrl;
-
-//        return ['auth_url' => $authUrl];
-
-//        dd($authUrl);
-
-//        $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
-//        $accessToken = $dataService->updateOAuth2Token($refreshedAccessTokenObj);
-
-
-//        dd($accessToken);
-//
-//        $accessTokenJson = array('token_type' => 'bearer',
-//            'access_token' => $accessToken->getAccessToken(),
-//            'refresh_token' => $accessToken->getRefreshToken(),
-//            'x_refresh_token_expires_in' => $accessToken->getRefreshTokenExpiresAt(),
-//            'expires_in' => $accessToken->getAccessTokenExpiresAt()
-//        );
-//        $dataService->updateOAuth2Token($accessToken);
-//        $oauthLoginHelper = $dataService -> getOAuth2LoginHelper();
-//        $CompanyInfo = $dataService->getCompanyInfo();
-//    }
-
-
-//        $client = new GuzzleHttp\Client();
-//        $res = $client->request('GET', 'https://api.github.com/user',
-//            $this->credentials
-//        );
-//        echo $res->getStatusCode(); // "200"
-//        echo $res->getHeader('content-type'); // 'application/json; charset=utf8'
-//        echo $res->getBody(); // {"type":"User"...'
-//
-//        // Send an asynchronous request.
-//        $request = new \GuzzleHttp\Psr7\Request('GET', 'http://httpbin.org');
-//        $promise = $client->sendAsync($request)->then(function ($response) {
-//            echo 'I completed! ' . $response->getBody();
-//        });
-//        $promise->wait();
-//    }
     }
 }

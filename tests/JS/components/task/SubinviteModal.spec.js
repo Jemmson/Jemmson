@@ -54,7 +54,7 @@ describe('SubInviteModal', () => {
         expect(sendSubInviteToBidOnTask.calledOnce).toBe(true);
     });
 
-    it('Should have tried to get existing subcontractors with the name in the name field', () => {
+    it.only('Should have tried to get existing subcontractors with the name in the name field', () => {
         const submit = wrapper.find("#contractorName");
         submit.trigger('keyup');
 

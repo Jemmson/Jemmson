@@ -2,7 +2,6 @@
     <div class="main-header p-4 uppercase">
         Please enter your credentials
     </div>
-
     <div class="box border flex flex-col section">
         <div class="content">
 
@@ -33,15 +32,12 @@
             </div>
 
             <hr>
-
             <div class="flex flex-col">
 
                 <h5 class="uppercase text-center j-label mb-4">who are you?</h5>
-
                 <div class="flex justify-around">
                     <div class="input-section" :class="{'has-error': registerForm.errors.has('usertype')}">
                         <label class="j-label">Contractor</label>
-
                         <div>
                             <input type="radio" id="usertypeContractor" name="usertypeContractor" value="contractor"
                                    v-model="registerForm.usertype">
@@ -141,3 +137,13 @@
         </div>
     </div>
 </div>
+
+<script>
+  function goToCheckAccounting() {
+    // have to check quickbooks is turned on
+    // have to check if this page has been loaded from the check_accounting page
+    // these buttons should only load this page was routed to directly and not from the check accounting page
+    // these buttons have to display that they were clicked
+    // these buttons need to load with the registerForm
+  }
+</script>
