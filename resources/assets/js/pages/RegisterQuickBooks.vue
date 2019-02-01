@@ -78,7 +78,6 @@
                 <button class="flex-1 btn bg-blue w-full ml-2" @click="save()">Save</button>
             </div>
             <div class="content" v-show="!sections.editGeneralInfo">
-                readonly
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="ml-2">Company Name</div>
                     <div class="mr-2">{{ companyInfo.message.CompanyName }}</div>
@@ -109,7 +108,6 @@
                 </div>
             </div>
             <div class="content" v-show="sections.editGeneralInfo">
-                editable
                 <div class="input-section">
                     <label class="j-label">Company Name</label>
                     <div>
@@ -126,7 +124,7 @@
                     </div>
                 </div>
 
-                <div v-if="companyInfo.message.CompanyAddr.Line2" class="input-section">
+                <div class="input-section">
                     <label class="j-label">Address Line 2</label>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
