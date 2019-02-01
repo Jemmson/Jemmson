@@ -186,7 +186,7 @@
                             <!--Customer Message-->
                             <div class="form-group customer-notes"
                                  :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
-                                <label for="customer_message">Customer Instructions</label>
+                                <label for="customer_message">Instructions For The Customer</label>
                                 <textarea class="form-control"
                                           id="customer_message"
                                           name="customer_message"
