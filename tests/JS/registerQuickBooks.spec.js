@@ -37,4 +37,12 @@ describe('RegisterQuickBooks', () => {
 
   })
 
+  it('should show the edit button for each of the sections pulled back from the quickbooks get company info', function() {
+
+  })
+
+  it('should show the cancel and the save button for each section if the edit button is clicked', function() {
+
+  })
+
 })
