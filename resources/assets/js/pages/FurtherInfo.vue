@@ -165,6 +165,7 @@
                         </div>
                     </div>
                 </div>
+
                 <button type="submit" name="submit" class="register text-center border shadow uppercase"
                         @click.prevent="submitFurtherInfo()"
                         :disabled="checkValidData()">
@@ -173,6 +174,9 @@
                                 </span>
                     Register
                 </button>
+
+
+
             </div>
         </div>
         <jemmson-footer></jemmson-footer>
@@ -211,12 +215,10 @@
           notes: '',
           password: '',
           password_confirmation: '',
-          qbCompanyId: '',
           email_contact: true,
           phone_contact: false,
           sms_text: false,
         }),
-        showQuickbooksData: false,
         passwordsMatch: true,
         states:  [
           'AS',
