@@ -64,12 +64,72 @@ describe('RegisterQuickBooks', () => {
 
   })
 
+  it('should only send updated to quickbooks only if the data was actually updated otherwise it should be skipped', function() {
+
+  })
+
+  it('should not update the qbCompanyInfoWasUpdated field if the cancel button was clicked. the value should be the original value ', function() {
+
+    wrapper.setData({
+      qbCompanyInfoWasUpdated: false
+    });
+
+    let cancel_btn = wrapper.find({
+      ref: 'cancel_btn'
+    })
+
+    cancel_btn.trigger('click');
+
+    expect(wrapper.qbCompanyInfoWasUpdated).toBe(false);
+
+    wrapper.setData({
+      qbCompanyInfoWasUpdated: true
+    });
+
+    cancel_btn.trigger('click');
+
+    expect(wrapper.qbCompanyInfoWasUpdated).toBe(true);
+
+  })
+
+  it('should update the qbCompanyInfoWasUpdated field to true if the save button was clicked', function() {
+
+    wrapper.setData({
+      qbCompanyInfoWasUpdated: false
+    });
+
+    let save_btn = wrapper.find({
+      ref: 'save_btn'
+    })
+
+    save_btn.trigger('click');
+
+    expect(wrapper.qbCompanyInfoWasUpdated).toBe(true);
+
+  })
+
+  it('should revert to the qbCompanyInfoWasUpdated value to false if the reset button is clicked', function() {
+
+    wrapper.setData({
+      qbCompanyInfoWasUpdated: true
+    });
+
+    reset_btn.trigger('click');
+
+    expect(wrapper.qbCompanyInfoWasUpdated).toBe(false);
+
+  })
+
+  it('should have the original value for qbCompanyInfoWasUpdated be false when the page is loaded', function() {
+    // visually verified
+  })
+
   it('should update quickbooks data when the register button is clicked', function() {
 
   })
 
-  it('should highlight any mandatory fields that may have not been filled out with quickbooks', function() {
-
+  it('should highlight the phone mandatory field if it is not returned in the quickbooks data', function() {
+    // visually verified
   })
 
   it('should hide any read-only fields that are apart of the registration if they were not filled out on the quickbooks setup', function() {
@@ -88,4 +148,22 @@ describe('RegisterQuickBooks', () => {
     
   })
 
+  it('should not submit if the passwords do not match', function() {
+    
+  })
+
+  it('should not submit if the accept terms button is not checked', function() {
+    
+  })
+
+  it('should not submit if the phone number is not valid', function() {
+
+  })
+
 })
+
+describe('RegisterQuickBooks_register_button', () => {
+  let wrapper
+  const getCompanyInfo = sinon.spy()
+
+});
