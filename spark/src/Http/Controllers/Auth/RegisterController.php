@@ -64,4 +64,23 @@ class RegisterController extends Controller
             'redirect' => '/#/furtherInfo'
         ]);
     }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  RegisterRequest $request
+     * @return Response
+     */
+//    public function register(RegisterRequest $request)
+//    {
+//        Auth::login($user = Spark::interact(
+//            Register::class, [$request]
+//        ));
+//
+//        event(new UserRegistered($user));
+//
+//        return response()->json([
+//            'redirect' => '/#/furtherInfo'
+//        ]);
+//    }
 }

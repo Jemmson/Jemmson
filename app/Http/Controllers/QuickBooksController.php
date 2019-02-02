@@ -87,7 +87,7 @@ class QuickBooksController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'no company infoe'
+                'message' => 'no company info'
             ], 200);
         }
     }

@@ -82,13 +82,17 @@
             <div class="content" v-show="!sections.editGeneralInfo">
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2">Company Name</div><span class="j-label ml-2 star">*</span>
+                        <div class="ml-2"
+                             :class="companyInfo.message.CompanyName ? '' : 'empty-field-name'"
+                        >Company Name</div><span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyName }}</div>
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2">Address Line 1</div><span class="j-label ml-2 star">*</span>
+                        <div class="ml-2"
+                             :class="companyInfo.message.CompanyAddr.Line1 ? '' : 'empty-field-name'"
+                        >Address Line 1</div><span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.Line1 }}</div>
                 </div>
@@ -98,31 +102,41 @@
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2">City</div><span class="j-label ml-2 star">*</span>
+                        <div class="ml-2"
+                             :class="companyInfo.message.CompanyAddr.City ? '' : 'empty-field-name'"
+                        >City</div><span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.City }}</div>
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2">State</div><span class="j-label ml-2 star">*</span>
+                        <div class="ml-2"
+                             :class="companyInfo.message.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field-name'"
+                        >State</div><span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.CountrySubDivisionCode }}</div>
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2">PostalCode</div><span class="j-label ml-2 star">*</span>
+                        <div class="ml-2"
+                             :class="companyInfo.message.CompanyAddr.PostalCode ? '' : 'empty-field-name'"
+                        >PostalCode</div><span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.PostalCode }}</div>
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2">Mobile Phone Number</div><span class="j-label ml-2 star">*</span>
+                        <div class="ml-2"
+                             :class="companyInfo.message.CompanyAddr.PrimaryPhone ? '' : 'empty-field-name'"
+                        >Mobile Phone Number</div><span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.PrimaryPhone }}</div>
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2">Email Address</div><span class="j-label ml-2 star">*</span>
+                        <div class="ml-2"
+                             :class="companyInfo.message.Email.Address ? '' : 'empty-field-name'"
+                        >Email Address</div><span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.Email.Address }}</div>
                 </div>
@@ -132,6 +146,7 @@
                     <label class="j-label">Company Name</label>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
+                               :class="companyInfoTemporary.CompanyName ? '' : 'empty-field'"
                                v-model="companyInfoTemporary.CompanyName">
                     </div>
                 </div>
@@ -140,6 +155,7 @@
                     <label class="j-label">Address Line 1</label>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
+                               :class="companyInfoTemporary.CompanyAddr.Line1 ? '' : 'empty-field'"
                                v-model="companyInfoTemporary.CompanyAddr.Line1">
                     </div>
                 </div>
@@ -156,6 +172,7 @@
                     <label class="j-label">City</label>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
+                               :class="companyInfoTemporary.CompanyAddr.City ? '' : 'empty-field'"
                                v-model="companyInfoTemporary.CompanyAddr.City">
                     </div>
                 </div>
@@ -164,6 +181,7 @@
                     <label class="j-label">State</label>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
+                               :class="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field'"
                                v-model="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode">
                     </div>
                 </div>
@@ -173,6 +191,7 @@
                     <label class="j-label">Zip Code</label>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
+                               :class="companyInfoTemporary.CompanyAddr.PostalCode ? '' : 'empty-field'"
                                v-model="companyInfoTemporary.CompanyAddr.PostalCode">
                     </div>
                 </div>
@@ -212,7 +231,10 @@
                                 type="email"
                                 class="border input"
                                 name="email"
-                                v-model="companyInfo.message.Email.Address">
+
+                                :class="companyInfoTemporary.Email.Address ? '' : 'empty-field'"
+
+                                v-model="companyInfoTemporary.Email.Address">
                         <!--<span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                     </div>
                 </div>
@@ -673,7 +695,8 @@
         this.companyInfoTemporary.CompanyAddr.CountrySubDivisionCode = this.companyInfo.message.CompanyAddr.CountrySubDivisionCode
         this.companyInfoTemporary.PrimaryPhone = this.companyInfo.message.PrimaryPhone
         this.companyInfoTemporary.Email.Address = this.companyInfo.message.Email.Address
-      }
+      },
+
     }
   }
 </script>
@@ -682,6 +705,10 @@
 
     .empty-field {
         border: thin red solid
+    }
+
+    .empty-field-name {
+        color: red;
     }
 
     .star {
