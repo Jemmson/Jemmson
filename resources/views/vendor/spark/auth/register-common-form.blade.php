@@ -2,7 +2,6 @@
     <div class="main-header p-4 uppercase">
         Please enter your credentials
     </div>
-
     <div class="box border flex flex-col section">
         <div class="content">
 
@@ -33,15 +32,12 @@
             </div>
 
             <hr>
-
             <div class="flex flex-col">
 
                 <h5 class="uppercase text-center j-label mb-4">who are you?</h5>
-
                 <div class="flex justify-around">
                     <div class="input-section" :class="{'has-error': registerForm.errors.has('usertype')}">
                         <label class="j-label">Contractor</label>
-
                         <div>
                             <input type="radio" id="usertypeContractor" name="usertypeContractor" value="contractor"
                                    v-model="registerForm.usertype">
@@ -69,7 +65,12 @@
 
             <!-- Password -->
             <div class="input-section" :class="{'has-error': registerForm.errors.has('password')}">
-                <label class="j-label">Password</label>
+                <div class="flex justify-between">
+                    <label class="j-label">Password</label>
+                    <div style="color:red;"
+                    >Must Be at least 6 alphanumeric characters
+                    </div>
+                </div>
 
                 <div>
                     <input type="password" class="border input" name="password" v-model="registerForm.password">
@@ -129,9 +130,20 @@
                 </div>
             </div>
 
+            <div style="height: 10rem; width: 100%">
+
+            </div>
+
         </div>
     </div>
-
-    <jem-footer v-cloak></jem-footer>
-
 </div>
+
+<script>
+  function goToCheckAccounting() {
+    // have to check quickbooks is turned on
+    // have to check if this page has been loaded from the check_accounting page
+    // these buttons should only load this page was routed to directly and not from the check accounting page
+    // these buttons have to display that they were clicked
+    // these buttons need to load with the registerForm
+  }
+</script>

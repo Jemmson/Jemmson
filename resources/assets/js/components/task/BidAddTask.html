@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+    <h1 class="text-center">How it works</h1>
+    <p>This templates purpose is to add a task to the job. It is a modal window that
+    will display the basic information needed to add a task to the job. A task is a
+    piece of work to be performed by the contractor or the sub contractor.
+    </p>
+    <h3>Types of tasks to be added</h3>
+    <ol>
+        <li>If the name of the task already exists in the task table and is associated to the contractor that
+        is creating the task then the task should simply be updated and not add new task to the task table</li>
+        <li>If the name of the task already exists in the task table and is associated to the contractor that
+                    is creating the task and the contractor changes any of the details then there should be an option
+                    to update the existing or leave the task the same</li>
+        <li>If the task name is different than a task name in the task table for that contractor then
+        add a new task</li>
+    </ol>
+    <h3>Task Description</h3>
+    <p>this is the only text box that is required to add a task.
+    <ul>
+    <li>the drop down menu should disappear</li>
+    <ol>
+        <li>on blur</li>
+        <li>when a drop down selection is selected</li>
+    </ol>
+    <li>drop down should reappear</li>
+    <ol>
+        <li>on key press and the substring of a name exists in the db</li>
+        <li>on focus and the substring has already pulled back results from the db. it will not
+        repopulate if the string exactly matches the already pulled back results</li>
+</ol>
+    </ul>
+
+    on blur</p>
+
+   <h4>Adding a task</h4>
+    <h5>Scenario 1</h5>
+    <ol>
+    <li><h5>Given</h5></li>
+    <li>no tasks have been added to the job</li>
+    <li>add first task</li>
+    <li>task does not exist in database</li>
+</ol>
+</body>
+</html>

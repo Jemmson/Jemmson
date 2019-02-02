@@ -233,26 +233,28 @@ class User extends SparkUser
     static public function validatePhoneNumber($number)
     {
 
-        $number = '1'.$number;
-        $client = new Client();
+        if(!empty($number)){
+            $number = '1'.$number;
+            $client = new Client();
 
-        $res = $client->request('POST', 'https://api.nexmo.com/ni/advanced/json', [
-            'json' => [
-                'api_key' => env('NEXMO_KEY'),
-                'api_secret' => env('NEXMO_SECRET'),
-                'number' => $number,
-            ]
-        ]);
-
-
-        $response = json_decode($res->getBody());
+            $res = $client->request('POST', 'https://api.nexmo.com/ni/advanced/json', [
+                'json' => [
+                    'api_key' => env('NEXMO_KEY'),
+                    'api_secret' => env('NEXMO_SECRET'),
+                    'number' => $number,
+                ]
+            ]);
 
 
-        if ($response->current_carrier->network_type == 'landline' ||
-            $response->original_carrier->network_type == 'landline') {
-            return ['failure', $response->original_carrier->network_type, $response->current_carrier->network_type];
-        } else {
-            return ['success', $response->original_carrier->network_type, $response->current_carrier->network_type];
+            $response = json_decode($res->getBody());
+
+
+            if ($response->current_carrier->network_type == 'landline' ||
+                $response->original_carrier->network_type == 'landline') {
+                return ['failure', $response->original_carrier->network_type, $response->current_carrier->network_type];
+            } else {
+                return ['success', $response->original_carrier->network_type, $response->current_carrier->network_type];
+            }
         }
 
     }

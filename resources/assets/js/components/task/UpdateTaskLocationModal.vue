@@ -1,6 +1,7 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="update-task-location-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal" aria-hidden="false">
+    <div class="modal fade" :id="'update-task-location-modal_'+id" tabindex="-1" role="dialog"
+         aria-labelledby="stripe-modal" aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content styled">
                 <div class="modal-header">
@@ -16,7 +17,8 @@
                         <!-- Address Line 1 -->
                         <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                             <label class="control-label">Address Line 1</label>
-                            <input type="text" class="form-control" name="address_line_1" id="route2" v-model="form.address_line_1">
+                            <input type="text" class="form-control" name="address_line_1" id="route2"
+                                   v-model="form.address_line_1">
                             <span class="help-block" v-show="form.errors.has('address_line_1')">
                                 {{ form.errors.get('address_line_1') }}
                             </span>
@@ -31,7 +33,8 @@
                         <!-- City -->
                         <div class="form-group" :class="{'has-error': form.errors.has('city')}">
                             <label class="control-label">City</label>
-                            <input type="text" class="form-control" name="city" id="administrative_area_level_1" v-model="form.city">
+                            <input type="text" class="form-control" name="city" id="administrative_area_level_1"
+                                   v-model="form.city">
                             <span class="help-block" v-show="form.errors.has('city')">
                                 {{ form.errors.get('city') }}
                             </span>
@@ -73,55 +76,56 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            jobTask: Object,
-        },
-        data() {
-            return {
-                form: new SparkForm({
-                    address_line_1: '',
-                    address_line_2: '',
-                    city: '',
-                    state: '',
-                    zip: '',
-                    id: '',
-                    location_id: ''
-                }),
-                disabled: {
-                    update: false
-                }
-            }
-        },
-        methods: {
-            updateFormLocation(location) {
-                this.form.address_line_1 = location.route;
-                this.form.city = location.locality;
-                this.form.state = location.administrative_area_level_1;
-                this.form.zip = location.postal_code;
-            },
-            update() {
-                this.form.id = this.jobTask.id;
-                this.form.location_id = this.jobTask.location_id;
-                User.updateTaskLocation(this.form, this.disabled);
-            },
-            initAutocomplete () {
-                User.initAutocomplete('route2');
-            }
-        },
-        computed: {},
-        mounted: function () {
-            this.initAutocomplete();
-            this.form.address_line_1 = this.jobTask.address_line_1;
-            this.form.address_line_2 = this.jobTask.address_line_2;
-            this.form.city = this.jobTask.city;
-            this.form.state = this.jobTask.state;
-            this.form.zip = this.jobTask.zip;
-            Bus.$on('updateFormLocation', (payload) => {
-                this.updateFormLocation(payload);
-            });
+  export default {
+    props: {
+      jobTask: Object,
+      id: Number
+    },
+    data() {
+      return {
+        form: new SparkForm({
+          address_line_1: '',
+          address_line_2: '',
+          city: '',
+          state: '',
+          zip: '',
+          id: '',
+          location_id: ''
+        }),
+        disabled: {
+          update: false
         }
+      }
+    },
+    methods: {
+      updateFormLocation(location) {
+        this.form.address_line_1 = location.route
+        this.form.city = location.locality
+        this.form.state = location.administrative_area_level_1
+        this.form.zip = location.postal_code
+      },
+      update() {
+        this.form.id = this.jobTask.id
+        this.form.location_id = this.jobTask.location_id
+        User.updateTaskLocation(this.form, this.disabled)
+      },
+      initAutocomplete() {
+        User.initAutocomplete('route2')
+      }
+    },
+    computed: {},
+    mounted: function() {
+      this.initAutocomplete()
+      this.form.address_line_1 = this.jobTask.address_line_1
+      this.form.address_line_2 = this.jobTask.address_line_2
+      this.form.city = this.jobTask.city
+      this.form.state = this.jobTask.state
+      this.form.zip = this.jobTask.zip
+      Bus.$on('updateFormLocation', (payload) => {
+        this.updateFormLocation(payload)
+      })
     }
+  }
 </script>
 
 <style scoped>

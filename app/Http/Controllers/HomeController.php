@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contractor;
 use App\Customer;
+use App\Quickbook;
 use App\User;
 use App\Feedback;
+use QuickBooksOnline\API\DataService\DataService;
 
 use Illuminate\Support\Facades\Auth;
 use Log;
@@ -67,7 +69,6 @@ class HomeController extends Controller
             ]
         );
 
-
         $user_id = Auth::user()->id;
         $phone = SanatizeService::phone($request->phone_number);
 
@@ -115,6 +116,13 @@ class HomeController extends Controller
             $updateUserLocationID->location_id = $contractor->location_id;
             $updateUserLocationID->save();
 
+            if (!empty($request->qbCompanyId)) {
+                Quickbook::firstOrCreate([
+                    'company_id' => $request->qbCompanyId,
+                    'user_id' => $user_id
+                ]);
+            }
+
         } else if (Auth::user()->usertype == 'customer') {
 
             // TODO: if email method of contact is selected then there must be an email address
@@ -138,8 +146,13 @@ class HomeController extends Controller
         }
 
         $user = Auth::user();
-        $user->email = $request->email;
+        $user->email = trim($request->email);
         $user->name = $request->name;
+        $splitName = explode(" ", $request->name);
+        if (count($splitName) > 1) {
+            $user->first_name = $splitName[0];
+            $user->last_name = $splitName[1];
+        }
         $user->phone = $phone;
 
         $user->save();

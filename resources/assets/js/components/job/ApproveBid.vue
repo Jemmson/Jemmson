@@ -61,22 +61,22 @@
             </div>
         </div>
         <!-- / buttons -->
-        <div class="flex justify-between">
-            <button class="btn btn-green" @click.prevent="openModal('approveBid')" :disabled="disabled.approve"
+        <div class="flex w-full justify-between">
+            <button class="btn btn-green flex-1" @click.prevent="openModal('approveBid')" :disabled="disabled.approve"
                     ref="approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Approve
             </button>
-            <button class="btn btn-red" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid"
+            <button class="btn btn-red flex-1 mr-6 ml-6" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid"
                     ref="cancel">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Cancel
             </button>
-            <button class="btn btn-red" @click.prevent="openDeclineForm" ref="decline">
+            <button class="btn btn-red flex-1" @click.prevent="openDeclineForm" ref="decline">
                 Change Bid
             </button>
         </div>
@@ -109,9 +109,15 @@
 </template>
 
 <script>
+
+    import Modal from '../shared/Modal';
+
 export default {
   props: {
     bid: Object
+  },
+  components: {
+    Modal
   },
   data() {
     return {

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\User;
 use App\JobTask;
 use App\Job;
+use App\Task;
 
 
 Route::group([
@@ -56,12 +57,11 @@ Route::get('/customer/search', function (Request $request) {
 });
 
 Route::post('/search/task', function (Request $request) {
-    $taskName = $request->taskname;
     $jobId = $request->jobId;
     $job = \App\Job::find($jobId);
-    $tasks = DB::select("select * from tasks where id not in 
-                (SELECT jt.task_id from tasks t join job_task jt on jt.task_id = t.id and deleted_at = null) 
-                and contractor_id = " . $job->contractor_id . " and name like '%" . $request->taskname . "%'");
+    $tasks = Task::select()->
+        where('contractor_id', '=', $job->contractor_id)->
+        where('name', 'like', $request->taskname.'%')->get();
     return $tasks;
 });
 

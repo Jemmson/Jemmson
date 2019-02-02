@@ -30,12 +30,12 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @return Response
      */
     public function showRegistrationForm(Request $request)
     {
-        if (Spark::promotion() && ! $request->has('coupon')) {
+        if (Spark::promotion() && !$request->has('coupon')) {
             // If the application is running a site-wide promotion, we will redirect the user
             // to a register URL that contains the promotional coupon ID, which will force
             // all new registrations to use this coupon when creating the subscriptions.
@@ -43,14 +43,13 @@ class RegisterController extends Controller
                 'coupon' => Spark::promotion()
             ]));
         }
-
         return view('spark::auth.register');
     }
 
     /**
      * Handle a registration request for the application.
      *
-     * @param  RegisterRequest  $request
+     * @param  RegisterRequest $request
      * @return Response
      */
     public function register(RegisterRequest $request)
@@ -62,8 +61,26 @@ class RegisterController extends Controller
         event(new UserRegistered($user));
 
         return response()->json([
-//            'redirect' => $this->redirectPath()
             'redirect' => '/#/furtherInfo'
         ]);
     }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  RegisterRequest $request
+     * @return Response
+     */
+//    public function register(RegisterRequest $request)
+//    {
+//        Auth::login($user = Spark::interact(
+//            Register::class, [$request]
+//        ));
+//
+//        event(new UserRegistered($user));
+//
+//        return response()->json([
+//            'redirect' => '/#/furtherInfo'
+//        ]);
+//    }
 }

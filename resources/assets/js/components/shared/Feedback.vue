@@ -49,7 +49,9 @@
                 $('#feedback-modal').modal();
             },
             submit() {
-                User.submitFeedback(this.comment, this.disabled);
+                let theComment = this.comment;
+                this.comment = '';
+                User.submitFeedback(theComment, this.disabled);
             }
         }
     }

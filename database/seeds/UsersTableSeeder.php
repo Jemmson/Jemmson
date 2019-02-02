@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
         //     $data = [
         //         'name' => $faker->name,
         //         'email' => $faker->unique()->safeEmail,
-        //         'password' => bcrypt('secret'),
+        //         'password' => bcrypt('asdasd'),
         //         'remember_token' => str_random(10),
         //         'usertype' => 'contractor'
         //     ];
@@ -47,7 +47,7 @@ class UsersTableSeeder extends Seeder
         //     $data = [
         //         'name' => $faker->name,
         //         'email' => $faker->unique()->safeEmail,
-        //         'password' => bcrypt('secret'),
+        //         'password' => bcrypt('asdasd'),
         //         'remember_token' => str_random(10),
         //         'usertype' => 'customer'
         //     ];
@@ -70,108 +70,158 @@ class UsersTableSeeder extends Seeder
         //     Customer::create($customerData);
         // }
 
-            $data = [
-                'name' => 'Shawn Pike',
-                'email' => "shawn@example.com",
-                'password' => bcrypt('secret'),
-                'remember_token' => str_random(10),
-                'phone' => '4901112222',
-                'usertype' => 'contractor'
-            ];
-            $user = User::create($data);
+        $data = [
+            'name' => 'Shawn Pike',
+            'email' => "jemmsoninc@gmail.com",
+            'password' => bcrypt('asdasd'),
+            'remember_token' => str_random(10),
+            'phone' => '4806226441',
+            'usertype' => 'contractor',
+            'location_id' => 1
+        ];
+        $user = User::create($data);
 
-            $contractorData = [
-                'user_id' => $user->id,
-                'email_method_of_contact' => '1',
-                'company_logo_name' => $faker->word,
-                'sms_method_of_contact' => '1',
-                'phone_method_of_contact' => '1',
-                'company_name' => $faker->word,
-                'location_id' => 1
-            ];
+        $contractorData = [
+            'user_id' => $user->id,
+            'email_method_of_contact' => '1',
+            'company_logo_name' => $faker->word,
+            'sms_method_of_contact' => '1',
+            'phone_method_of_contact' => '1',
+            'company_name' => "Jemmson",
+            'location_id' => 1
+        ];
 
-            Contractor::create($contractorData);
+        Contractor::create($contractorData);
 
-            $stripe = [
-                'contractor_id' => 1,
-                'access_token' => 'sk_test_vewQOBeHnMCFtgEjOLQmXrdD',
-                'refresh_token' => 'rt_CMkeB75bV4BbR9v06ioFogUHLzoUSUkAhTyqwqV76CPlz0gi',
-                'stripe_user_id' => 'acct_1By18sB4l1AzsWS0',
-            ];
+        $stripe = [
+            'contractor_id' => 1,
+            'access_token' => 'sk_test_vewQOBeHnMCFtgEjOLQmXrdD',
+            'refresh_token' => 'rt_CMkeB75bV4BbR9v06ioFogUHLzoUSUkAhTyqwqV76CPlz0gi',
+            'stripe_user_id' => 'acct_1By18sB4l1AzsWS0',
+        ];
 
-            StripeExpress::create($stripe);
+        StripeExpress::create($stripe);
 
-            $data = [
-                'name' => 'Daven Escobar',
-                'email' => "daven@example.com",
-                'password' => bcrypt('secret'),
-                'remember_token' => str_random(10),
-                'phone' => '4901113333',
-                'usertype' => 'contractor'
-            ];
-            $user = User::create($data);
 
-            $contractorData = [
-                'user_id' => $user->id,
-                'email_method_of_contact' => '1',
-                'company_logo_name' => $faker->word,
-                'sms_method_of_contact' => '1',
-                'phone_method_of_contact' => '1',
-                'company_name' => $faker->word,
-                'location_id' => 2
-            ];
+        //--------------------------------------------------------------
 
-            Contractor::create($contractorData);
+        $data = [
+            'name' => 'Susan Franchuk',
+            'email' => "sfranchuk@cox.net",
+            'password' => bcrypt('asdasd'),
+            'remember_token' => str_random(10),
+            'phone' => '6024326933',
+            'usertype' => 'contractor',
+            'location_id' => 2
+        ];
+        $user = User::create($data);
 
-            $stripe = [
-                'contractor_id' => 2,
-                'access_token' => 'sk_test_2DL5LXhimtvvVfbhZNOaEYOG',
-                'refresh_token' => 'rt_CMkY01KB2aW0XM0Q2XCKw8fNbH8kI3y1EnqfJ2mQ8LzfbbgC',
-                'stripe_user_id' => 'acct_1By13dFOSJzZ3wkC',
-            ];
+        $contractorData = [
+            'user_id' => $user->id,
+            'email_method_of_contact' => '1',
+            'company_logo_name' => $faker->word,
+            'sms_method_of_contact' => '1',
+            'phone_method_of_contact' => '1',
+            'company_name' => "Sew Fun",
+            'location_id' => 2
+        ];
 
-            StripeExpress::create($stripe);
+        Contractor::create($contractorData);
 
-            $data = [
-                'name' => "John Doe",
-                'email' => "john@example.com",
-                'password' => bcrypt('secret'),
-                'remember_token' => str_random(10),
-                'phone' => '4901114444',
-                'usertype' => 'customer'
-            ];
-            $user = User::create($data);
+        $stripe = [
+            'contractor_id' => 2,
+            'access_token' => 'sk_test_vewQOBeHnMCFtgEjOLQmXrdD',
+            'refresh_token' => 'rt_CMkeB75bV4BbR9v06ioFogUHLzoUSUkAhTyqwqV76CPlz0gi',
+            'stripe_user_id' => 'acct_1By18sB4l1AzsWS0',
+        ];
 
-            $customerData = [
-                'user_id' => $user->id,
-                'email_method_of_contact' => '1',
-                'notes' => $faker->paragraph,
-                'phone_method_of_contact' => '1',
-                'sms_method_of_contact' => '1',
-                'location_id' => '1'
-            ];
+        StripeExpress::create($stripe);
 
-            Customer::create($customerData);
 
-            $data = [
-                'name' => "Jane Doe",
-                'email' => "jane@example.com",
-                'password' => bcrypt('secret'),
-                'remember_token' => str_random(10),
-                'phone' => '4901115555',
-                'usertype' => 'customer'
-            ];
-            $user = User::create($data);
+        //--------------------------------------------------------------
 
-            $customerData = [
-                'user_id' => $user->id,
-                'email_method_of_contact' => '1',
-                'notes' => $faker->paragraph,
-                'phone_method_of_contact' => '1',
-                'sms_method_of_contact' => '1',
-                'location_id' => '2'
-            ];
+        $data = [
+            'name' => 'Shawn Pike',
+            'email' => "pike.shawn@gmail.com",
+            'password' => bcrypt('asdasd'),
+            'remember_token' => str_random(10),
+            'phone' => '4807034902',
+            'usertype' => 'contractor',
+            'location_id' => 3
+        ];
+        $user = User::create($data);
 
-            Customer::create($customerData);
+        $contractorData = [
+            'user_id' => $user->id,
+            'email_method_of_contact' => '1',
+            'company_logo_name' => $faker->word,
+            'sms_method_of_contact' => '1',
+            'phone_method_of_contact' => '1',
+            'company_name' => "KPS Pools",
+            'location_id' => 3
+        ];
+
+        Contractor::create($contractorData);
+
+        $stripe = [
+            'contractor_id' => 3,
+            'access_token' => 'sk_test_2DL5LXhimtvvVfbhZNOaEYOG',
+            'refresh_token' => 'rt_CMkY01KB2aW0XM0Q2XCKw8fNbH8kI3y1EnqfJ2mQ8LzfbbgC',
+            'stripe_user_id' => 'acct_1By13dFOSJzZ3wkC',
+        ];
+
+        StripeExpress::create($stripe);
+
+
+        //--------------------------------------------------------------
+
+        $data = [
+            'name' => "Kristen Battafarano",
+            'email' => "kbattafarano@gmail.com",
+            'password' => bcrypt('asdasd'),
+            'remember_token' => str_random(10),
+            'phone' => '6023508801',
+            'usertype' => 'customer',
+            'location_id' => 4
+        ];
+        $user = User::create($data);
+
+        $customerData = [
+            'user_id' => $user->id,
+            'email_method_of_contact' => '1',
+            'notes' => $faker->paragraph,
+            'phone_method_of_contact' => '1',
+            'sms_method_of_contact' => '1',
+            'location_id' => 4
+        ];
+
+        Customer::create($customerData);
+
+
+
+        //--------------------------------------------------------------
+
+
+        $data = [
+            'name' => "Jane Doe",
+            'email' => "jane@example.com",
+            'password' => bcrypt('asdasd'),
+            'remember_token' => str_random(10),
+            'phone' => '4901115555',
+            'usertype' => 'customer',
+            'location_id' => 5
+        ];
+        $user = User::create($data);
+
+        $customerData = [
+            'user_id' => $user->id,
+            'email_method_of_contact' => '1',
+            'notes' => $faker->paragraph,
+            'phone_method_of_contact' => '1',
+            'sms_method_of_contact' => '1',
+            'location_id' => 5
+        ];
+
+        Customer::create($customerData);
     }
 }

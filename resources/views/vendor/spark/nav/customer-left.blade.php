@@ -1,30 +1,22 @@
 <!-- Left Side Of Navbar -->
-<div class="flex jemmson-footer text-center">
-    <div class="flex-1 ">
-        <a class="text-white" href="/#/home">
+<div class="flex items-center jemmson-footer text-center">
+        <a class="text-white flex-1" href="/#/home">
             <i class="fas fa-home">
             </i>
             <br> Home
         </a>
-    </div>
-    <div class="flex-1 ">
-        <a class="text-white" href="/#/bids">
+        <a class="text-white flex-1" href="/#/bids">
             <i class="fas fa-briefcase">
             </i>
             <br> Bids
         </a>
-    </div>
-    <div class="flex-1 ">
-        <a class="text-white" href="/#/invoices">
+         <a class="text-white flex-1" href="/#/invoices">
             <i class="fas fa-file-alt">
             </i>
             <br> Invoices
         </a>
-    </div>
-    <div class="flex-1 ">
-        <a class="text-white" href="/settings">
+        <a class="text-white flex-1" href="/settings">
             <i class="fas fa-cog">
             </i>
             <br> Settings</a>
-    </div>
 </div>

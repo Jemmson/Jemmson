@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
+use App\Notifications\NotifySubOfBidNotAcceptedBid;
 use App\Notifications\NotifyContractorOfAcceptedBid;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\TaskFinished;
@@ -48,14 +49,11 @@ class TaskController extends Controller
 
     public function bidContractorJobTasks()
     {
-        $bidTasks = Auth::user()->
-                    contractor()->
-                    first()->
-                    bidContractorJobTasks()->
-                    with([
-                        'jobTask.job', 
-                        'jobTask.task'
-                    ])->get();
+        $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->
+        with([
+            'jobTask.job',
+            'jobTask.task'
+        ])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
@@ -71,54 +69,29 @@ class TaskController extends Controller
             contractor()->first()->
             bidContractorJobTasks()->with([
                 'jobTask.job',
-                'jobTask.task', 
-                'jobTask.images', 
+                'jobTask.task',
+                'jobTask.images',
                 'jobTask.location'
-                ])->get();
+            ])->get();
             return response()->json($bidTasks, 200);
         }
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  \App\Task $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function getJobTask($jobTaskId)
     {
-    }
+//        Log::debug($jobTask);
+//        dd($jobTask);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Task $task
-     * @return \Illuminate\Http\Response
-     */
-    public function getJobTask(JobTask $jobTask)
-    {
-        Log::debug($jobTask);
+        Log::debug("Job Task Id: $jobTaskId");
+
+        $jobTask = JobTask::find($jobTaskId);
+
         return $jobTask->load(['images', 'task']);
     }
 
@@ -200,6 +173,8 @@ class TaskController extends Controller
         }
 
         $bidContractorJobTask->bid_price = $request->bid_price;
+        $bidContractorJobTask->status = 'bid_task.bid_sent';
+        $bidContractorJobTask->payment_type = $request->paymentType;
         $jobTask = $bidContractorJobTask->jobTask()->first();
 
         // doesn't work since no default 'id' found
@@ -422,10 +397,40 @@ class TaskController extends Controller
             return response()->json(["message" => "Couldn't accept bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
         }
 
+        // change statuses on bidContractorJobTask. need to change the statuses for each contractor that has this jobtaskid
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
+
+
+        $allContractorsForJobTask->map(function ($contractor) use ($bidId) {
+            $c = BidContractorJobTask::find($contractor->id);
+            if ($contractor->id === $bidId) {
+                $c->accepted = true;
+            } else {
+                $c->accepted = false;
+            }
+            $c->save();
+        });
+
         // set the sub price in the job task table
-        $job = Job::find($jobId);
+//        $job = Job::find($jobId);
         $jobTask = JobTask::find($jobTaskId);
         $task = $jobTask->task()->first();
+
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
+
+        $allContractorsForJobTask->map(function ($con) use ($bidId, $contractorId, $task) {
+            if ($con->id != $bidId) {
+                $con->accepted = 0;
+                $con->save();
+                $user = User::find($con->contractor_id);
+                $user->notify(new NotifySubOfBidNotAcceptedBid($task, $user));
+            } else {
+                $con->accepted = 1;
+                $con->save();
+            }
+        });
+
+//        dd($allContractorsForJobTask);
 
         $jobTask->sub_final_price = $price;
         $jobTask->contractor_id = $contractorId;
@@ -609,7 +614,6 @@ class TaskController extends Controller
         // check if the contractor_id on the jobtask table equals the contractor_id of the jobs table
 
 
-
         if ($actor == 'sub') {
             $b = new BidContractorJobTask();
             $contractors = $b->select('contractor_id')->where('job_task_id', '=', $jobTask->job_id)->get();
@@ -728,42 +732,22 @@ class TaskController extends Controller
     public function addTask(Request $request)
     {
 
-        // error handling
+        Task::validate_new_task_input($request);
 
-        $this->validate($request, [
-            'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
-            'taskPrice' => 'required|numeric',
-            'subTaskPrice' => 'required|numeric',
-            'start_when_accepted' => 'required',
-            //            'sub_sets_own_price_for_job' => 'required',
-            'start_date' => 'required_if:start_when_accepted,false|date|after:yesterday',
-            'qty' => 'numeric',
-            'qtyUnit' => 'nullable|string'
-        ]);
+        $taskInput = Task::create_task_input_array($request);
 
-//        dd($request);
-
-        if (!$this->isPriceGtE($request->taskPrice, $request->subTaskPrice)) {
+        if ($taskInput['taskPrice'] <= $taskInput['subTaskPrice']) {
             return response()->json([
                 "message" => "Unit price for customer needs to be greater than or equal to Unit Price for Sub",
                 "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
         }
 
-        Log::debug($request);
-
-        $jobTask = "";
-
         if ($request->updateTask && !$request->createNew) {
-            // find the existing task and update the standard task table
-            // add task to job task table
             $task = Task::find($request->taskId);
             $task->updateTask($request);
-
-            Log::debug('updateTask is true; CreateNew is false');
-
             $jobTask = new JobTask;
             $jobTask->createJobTask($request, $request->taskId);
-
+//            $task->update_existing_standard_task_add_to_jobTask_table($request);
         } else if (!$request->updateTask && !$request->createNew) {
             // find the existing task but dont update the standard task table
             $jobTask = new JobTask;
@@ -786,6 +770,12 @@ class TaskController extends Controller
         }
 
         $job = Job::find($request->jobId);
+
+        if ($job->location_id != null) {
+            $jobTask->location_id = $job->location_id;
+            $jobTask->save();
+        }
+
         $job->changeJobStatus($job, __('bid.in_progress'));
         $job->jobTotal();
         $earliestDate = JobTask::findEarliestStartDate($request->jobId);
@@ -853,6 +843,7 @@ class TaskController extends Controller
 //        } else {
 //            $jobTask->sub_sets_own_price_for_job = 1;
 //        }
+
 
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;
@@ -978,16 +969,5 @@ class TaskController extends Controller
         if ($job->contractor_id !== $jobTask->contractor_id) {
             $jobTask->contractor()->first()->notify(new TaskImageDeleted());
         }
-    }
-
-    /**
-     *
-     * @param Float $priceToCheck
-     * @param Float $price
-     * @return boolean
-     */
-    private function isPriceGtE(Float $priceToCheck, Float $price)
-    {
-        return $priceToCheck >= $price;
     }
 }

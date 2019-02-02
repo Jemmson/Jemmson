@@ -9,3 +9,7 @@ export const getCustomerName = state => {
 export const getMobileValidResponse = state => {
   return state.mobile.response;
 }
+
+export const getQuickBooksState = state => {
+  return state.features.quickbooks;
+}

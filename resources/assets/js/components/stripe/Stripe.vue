@@ -1,15 +1,17 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal" aria-hidden="false" style="z-index: 1000000000;">
+    <div class="modal fade" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
+         aria-hidden="false" style="z-index: 1000000000;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">{{ header }}</h4>
                 </div>
                 <div class="modal-body">
                     <div v-if="showStripeExpress">
-                        Before you can continue you will need to connect with Stripe Express. 
+                        Before you can continue you will need to connect with Stripe Express.
                         This is allows you to get paid with a credit or debit card easily.
                     </div>
                     <div v-if="isCustomer && notSignedUp">
@@ -34,31 +36,38 @@
 </template>
 
 <script>
-export default {
+
+  import SignupWithStripe from './SignupWithStripe'
+  import ConnectWithStripe from './ConnectWithStripe'
+
+  export default {
     props: {
-        user: Object
+      user: Object
     },
-  computed: {
+    components: {
+      SignupWithStripe,
+      ConnectWithStripe
+    },
+    computed: {
       header() {
-          return 'Stripe';
+        return 'Stripe'
       },
       notSignedUp() {
-          return !User.hasStripeId();
+        return !User.hasStripeId()
       },
       isContractor() {
-          return User.isContractor();
+        return User.isContractor()
       },
       isCustomer() {
-          return User.isCustomer();
+        return User.isCustomer()
       },
       showStripeExpress() {
-          if (this.user.contractor === null)
-            return false;
+        if (this.user.contractor === null)
+          return false
 
-          return this.user.contractor.stripe_express === null;
+        return this.user.contractor.stripe_express === null
       }
-  },
-  methods: {
+    },
+    methods: {}
   }
-}
 </script>
