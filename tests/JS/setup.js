@@ -277,18 +277,25 @@ global.axios.defaults.headers.common = {
 global.axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
-    switch (error.response.status) {
-        case 401:
-            global.axios.get('/logout');
-            $('#modal-session-expired').modal('show');
-            break;
 
-        case 402:
-            global.location = '/settings#/subscription';
-            break;
+    if (error.response !== undefined) {
+        switch (error.response.status) {
+            case 401:
+                global.axios.get('/logout');
+                $('#modal-session-expired').modal('show');
+                break;
+
+            case 402:
+                global.location = '/settings#/subscription';
+                break;
+        }
+
+        return Promise.reject(error);
+    } else {
+        return error
     }
 
-    return Promise.reject(error);
+
 });
 
 console.log('setting up vue-test-utils');

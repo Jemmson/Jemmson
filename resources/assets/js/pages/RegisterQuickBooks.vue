@@ -41,23 +41,42 @@
                             <label class="j-label">Password</label><span class="j-label ml-2 star">*</span>
                         </div>
                         <div style="color:red;"
-                        >Must Be at least 6 alphanumeric characters
+                             ref="password_error"
+                             v-show="errors.password.pw_length < 7"
+                        >
+                            Must Be at least 6 alphanumeric characters
                         </div>
                     </div>
 
                     <div>
-                        <input type="password" class="border input" name="password" v-model="form.password">
-
+                        <input type="password"
+                               class="border input"
+                               name="password"
+                               ref="password"
+                               @keyup="passwordLength"
+                               v-model="form.password">
                         <!--<span class="help-block" v-show="registerForm.errors.has('password')"></span>-->
                     </div>
                 </div>
 
                 <!-- Password Confirmation -->
+                <!--<div class="input-section">-->
                 <div class="input-section">
-                    <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('password_confirmation')}">-->
-                    <label class="j-label">Confirm Password</label><span class="j-label ml-2 star">*</span>
+                    <div class="flex justify-between">
+                        <div>
+                            <label class="j-label">Confirm Password</label><span class="j-label ml-2 star">*</span>
+                        </div>
+                        <div v-if="!errors.password.match">
+                            <span class="has-error-name text-center">
+                                {{ errors.password.message }}
+                            </span>
+                        </div>
+                    </div>
                     <div>
-                        <input type="password" class="border input" name="password_confirmation"
+                        <input type="password"
+                               :class="{'has-error': !errors.password.match}"
+                               class="border input"
+                               name="password_confirmation"
                                v-model="form.password_confirmation" @keyup="confirmPassword">
 
                         <!--<span class="help-block" v-show="registerForm.errors.has('password_confirmation')"></span>-->
@@ -71,20 +90,35 @@
             <h4 class="text-center mt-2">General Info</h4>
             <div class="flex justify-around items-center m-2" v-show="!sections.editGeneralInfo">
                 <div class="flex-1 w-full"></div>
-                <button class="flex-1 w-full btn bg-blue" @click="sections.editGeneralInfo = true">Edit</button>
+                <button class="flex-1 w-full btn bg-blue"
+                        ref="edit_btn"
+                        @click="sections.editGeneralInfo = true">Edit
+                </button>
                 <div class="flex-1 w-full"></div>
             </div>
             <div class="flex justify-around items-center m-2" v-show="sections.editGeneralInfo">
-                <button class="w-full flex-1 btn bg-blue mr-2" @click="cancel()">Cancel</button>
-                <button class="w-full flex-1 btn bg-blue mr-2" @click="reset()">Reset</button>
-                <button class="flex-1 btn bg-blue w-full ml-2" @click="save()">Save</button>
+                <button class="w-full flex-1 btn bg-blue mr-2"
+                        id="cancel_btn"
+                        ref="cancel_btn"
+                        @click="cancel()">Cancel
+                </button>
+                <button class="w-full flex-1 btn bg-blue mr-2"
+                        ref="reset_btn"
+                        @click="reset()">Reset
+                </button>
+                <button class="flex-1 btn bg-blue w-full ml-2"
+                        ref="save_btn"
+                        @click="save()">Save
+                </button>
             </div>
             <div class="content" v-show="!sections.editGeneralInfo">
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyName ? '' : 'empty-field-name'"
-                        >Company Name</div><span class="j-label ml-2 star">*</span>
+                        >Company Name
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyName }}</div>
                 </div>
@@ -92,7 +126,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.Line1 ? '' : 'empty-field-name'"
-                        >Address Line 1</div><span class="j-label ml-2 star">*</span>
+                        >Address Line 1
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.Line1 }}</div>
                 </div>
@@ -104,7 +140,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.City ? '' : 'empty-field-name'"
-                        >City</div><span class="j-label ml-2 star">*</span>
+                        >City
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.City }}</div>
                 </div>
@@ -112,7 +150,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field-name'"
-                        >State</div><span class="j-label ml-2 star">*</span>
+                        >State
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.CountrySubDivisionCode }}</div>
                 </div>
@@ -120,7 +160,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.PostalCode ? '' : 'empty-field-name'"
-                        >PostalCode</div><span class="j-label ml-2 star">*</span>
+                        >PostalCode
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.PostalCode }}</div>
                 </div>
@@ -128,7 +170,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.PrimaryPhone ? '' : 'empty-field-name'"
-                        >Mobile Phone Number</div><span class="j-label ml-2 star">*</span>
+                        >Mobile Phone Number
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.PrimaryPhone }}</div>
                 </div>
@@ -136,14 +180,16 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.Email.Address ? '' : 'empty-field-name'"
-                        >Email Address</div><span class="j-label ml-2 star">*</span>
+                        >Email Address
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.Email.Address }}</div>
                 </div>
             </div>
             <div class="content" v-show="sections.editGeneralInfo">
                 <div class="input-section">
-                    <label class="j-label">Company Name</label>
+                    <label class="j-label">Company Name</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyName ? '' : 'empty-field'"
@@ -152,7 +198,7 @@
                 </div>
 
                 <div class="input-section">
-                    <label class="j-label">Address Line 1</label>
+                    <label class="j-label">Address Line 1</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.Line1 ? '' : 'empty-field'"
@@ -169,7 +215,7 @@
                 </div>
 
                 <div class="input-section">
-                    <label class="j-label">City</label>
+                    <label class="j-label">City</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.City ? '' : 'empty-field'"
@@ -178,7 +224,7 @@
                 </div>
 
                 <div class="input-section">
-                    <label class="j-label">State</label>
+                    <label class="j-label">State</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field'"
@@ -188,7 +234,7 @@
 
 
                 <div class="input-section">
-                    <label class="j-label">Zip Code</label>
+                    <label class="j-label">Zip Code</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.PostalCode ? '' : 'empty-field'"
@@ -224,7 +270,7 @@
                 <!-- E-Mail Address -->
                 <div class="input-section">
                     <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('email')}">-->
-                    <label class="j-label">E-Mail Address</label>
+                    <label class="j-label">E-Mail Address</label><span class="j-label ml-2 star">*</span>
 
                     <div>
                         <input
@@ -471,9 +517,15 @@
           email_contact: true,
           phone_contact: false,
           sms_text: false,
-          errors: {},
           qbCompanyInfo: {}
         }),
+        errors: {
+          password: {
+            match: true,
+            message: '',
+            pw_length: 0
+          }
+        },
         qbCompanyInfoWasUpdated: false,
         companyInfoTemporary: {
           CompanyName: '',
@@ -520,34 +572,7 @@
       ])
     },
     mounted: function() {
-      axios.get('/quickbooks/getCachedCompanyInfo')
-        .then(function(response) {
-          console.log('no error')
-          // debugger
-          this.companyInfo = response.data
-
-          this.companyInfoTemporary.CompanyName = response.data.message.CompanyName
-          this.companyInfoTemporary.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
-          this.companyInfoTemporary.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
-          this.companyInfoTemporary.CompanyAddr.City = response.data.message.CompanyAddr.City
-          this.companyInfoTemporary.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
-          this.companyInfoTemporary.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
-          this.companyInfoTemporary.PrimaryPhone = response.data.message.PrimaryPhone
-          this.companyInfoTemporary.Email.Address = response.data.message.Email.Address
-
-          this.companyInfoOriginal.CompanyName = response.data.message.CompanyName
-          this.companyInfoOriginal.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
-          this.companyInfoOriginal.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
-          this.companyInfoOriginal.CompanyAddr.City = response.data.message.CompanyAddr.City
-          this.companyInfoOriginal.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
-          this.companyInfoOriginal.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
-          this.companyInfoOriginal.PrimaryPhone = response.data.message.PrimaryPhone
-          this.companyInfoOriginal.Email.Address = response.data.message.Email.Address
-
-        }.bind(this))
-        .catch(function(error) {
-          console.log(error)
-        })
+      this.getTheCompanyInfo()
     },
     methods: {
       ...mapMutations([
@@ -556,7 +581,48 @@
       ...mapActions([
         'checkMobileNumber',
       ]),
-      confirmPassword() {},
+      getTheCompanyInfo() {
+        axios.get('/quickbooks/getCachedCompanyInfo')
+          .then(function(response) {
+            console.log('no error')
+            // debugger
+            this.companyInfo = response.data
+
+            this.companyInfoTemporary.CompanyName = response.data.message.CompanyName
+            this.companyInfoTemporary.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
+            this.companyInfoTemporary.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
+            this.companyInfoTemporary.CompanyAddr.City = response.data.message.CompanyAddr.City
+            this.companyInfoTemporary.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
+            this.companyInfoTemporary.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
+            this.companyInfoTemporary.PrimaryPhone = response.data.message.PrimaryPhone
+            this.companyInfoTemporary.Email.Address = response.data.message.Email.Address
+
+            this.companyInfoOriginal.CompanyName = response.data.message.CompanyName
+            this.companyInfoOriginal.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
+            this.companyInfoOriginal.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
+            this.companyInfoOriginal.CompanyAddr.City = response.data.message.CompanyAddr.City
+            this.companyInfoOriginal.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
+            this.companyInfoOriginal.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
+            this.companyInfoOriginal.PrimaryPhone = response.data.message.PrimaryPhone
+            this.companyInfoOriginal.Email.Address = response.data.message.Email.Address
+
+          }.bind(this))
+          .catch(function(error) {
+            console.log(error)
+          })
+      },
+      confirmPassword() {
+        if (this.form.password !== this.form.password_confirmation) {
+          this.errors.password.message = 'Passwords need to match.'
+          this.errors.password.match = false
+        } else {
+          this.form.errors.errors = {}
+          this.errors.password.match = true
+        }
+      },
+      passwordLength() {
+        this.errors.password.pw_length = this.form.password.length
+      },
       register() {
         if (this.checkValidData()) {
           if (this.checkIfQBCompanyInfoWasUpdated()) {
@@ -589,6 +655,13 @@
       },
       checkValidData() {
         // debugger
+
+        let valid = true
+
+        if (!this.companyNameIsValid()) {
+          return false
+        }
+
         let phone = this.unformatNumber(this.form.phone_number)
         if ((this.getMobileValidResponse[1] === 'mobile' ||
           this.getMobileValidResponse[2] === 'mobile') &&
@@ -696,7 +769,9 @@
         this.companyInfoTemporary.PrimaryPhone = this.companyInfo.message.PrimaryPhone
         this.companyInfoTemporary.Email.Address = this.companyInfo.message.Email.Address
       },
+      companyNameIsValid() {
 
+      }
     }
   }
 </script>
@@ -705,6 +780,14 @@
 
     .empty-field {
         border: thin red solid
+    }
+
+    .has-error {
+        border: thin red solid
+    }
+
+    .has-error-name {
+        color: red;
     }
 
     .empty-field-name {
