@@ -310,7 +310,7 @@ export default class User {
         axios.post('/api/feedback', {
           user_id: user_id,
           page_url: page_url,
-          comment: comment,
+          comment: comment
         })
       Vue.toasted.success('Feedback Submitted, Thank You!')
       disabled.submit = false
@@ -322,12 +322,15 @@ export default class User {
     }
   }
 
-  async submitFurtherInfo(form, disabled) {
+  async submitFurtherInfo(form, disabled, updateAccountingCompanyInfoAPI = false) {
     disabled.submit = true
     form.phone_number = Format.numbersOnly(form.phone_number)
     try {
       const data = await
-        Spark.post('/home', form)
+        Spark.post('/home', {
+          form: form,
+          updateAccountingCompanyInfoAPI: updateAccountingCompanyInfoAPI
+        })
       Vue.toasted.success('info updated')
       Bus.$emit('updateUser')
       disabled.submit = false

@@ -42,7 +42,7 @@
                         </div>
                         <div style="color:red;"
                              ref="password_error"
-                             v-show="errors.password.pw_length < 7"
+                             v-show="errors.password.pw_length < 6"
                         >
                             Must Be at least 6 alphanumeric characters
                         </div>
@@ -169,7 +169,8 @@
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
                         <div class="ml-2"
-                             :class="companyInfo.message.CompanyAddr.PrimaryPhone ? '' : 'empty-field-name'"
+                             ref="primaryPhone"
+                             :class="companyInfo.message.PrimaryPhone ? '' : 'empty-field-name'"
                         >Mobile Phone Number
                         </div>
                         <span class="j-label ml-2 star">*</span>
@@ -231,7 +232,6 @@
                                v-model="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode">
                     </div>
                 </div>
-
 
                 <div class="input-section">
                     <label class="j-label">Zip Code</label><span class="j-label ml-2 star">*</span>
@@ -553,6 +553,7 @@
             Address: ''
           }
         },
+        phoneNumberLength: null,
         registerForm: {
           busy: false,
           email: '',
@@ -625,16 +626,20 @@
       },
       register() {
         if (this.checkValidData()) {
+          let updateQBData = false;
           if (this.checkIfQBCompanyInfoWasUpdated()) {
             this.addCompanyInfoToFormObject()
+            updateQBData = true;
           } else {
             this.sendEmptyQBCompanyInfoObject()
           }
           this.updateFormDataWithQBData()
           this.registerForm.busy = false
 
-          User.submitFurtherInfo(this.form, this.registerForm)
+          User.submitFurtherInfo(this.form, this.registerForm, updateQBData)
           this.registerForm.busy = false
+        } else {
+          alert('data not valid');
         }
       },
       unformatNumber(number) {
@@ -646,31 +651,57 @@
         }
         let numberLength = unformattedNumber.length
         if (numberLength < 10) {
-          if (this.getMobileValidResponse[1] !== '') {
-            this.$store.commit('setTheMobileResponse', ['', '', ''])
-          }
+          this.emptyPhoneNumberInStore();
         }
         // debugger;
+        this.phoneNumberLength = numberLength;
         return numberLength
+      },
+      emptyPhoneNumberInStore() {
+        if (this.getMobileValidResponse[1] !== '') {
+          this.$store.commit('setTheMobileResponse', ['', '', '']);
+        }
       },
       checkValidData() {
         // debugger
 
-        let valid = true
+        let valid = true;
 
-        if (!this.companyNameIsValid()) {
-          return false
-        }
-
+        // phone number
+            // does it have the right format
+            // is it the right number of digits
+            // is it a mobile number
         let phone = this.unformatNumber(this.form.phone_number)
-        if ((this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile') &&
-          this.form.name !== '' && (phone === 10)
+        if (
+            (this.getMobileValidResponse[1] !== 'mobile' ||
+             this.getMobileValidResponse[2] !== 'mobile') ||
+             phone !== 10
         ) {
-          return false
-        } else {
-          return true
+          valid = false;
         }
+
+        // company name
+            // does it have a length
+        if (
+          this.form.email === '' ||
+          this.form.name === '' ||
+          this.form.company_name === '' ||
+          this.form.address_line_1 === '' ||
+          this.form.city === '' ||
+          this.form.state === '' ||
+          this.form.zip === '' ||
+          this.form.password === '' ||
+          this.form.password_confirmation === ''
+        ) {
+          valid = false;
+        }
+
+        if (this.form.password !== this.form.password_confirmation) {
+          valid = false;
+        }
+
+        return valid;
+
       },
       validateMobileNumber(phone) {
         if (phone !== '') {
@@ -708,7 +739,11 @@
         this.form.email = this.companyInfo.message.Email.Address
         this.form.company_name = this.companyInfo.message.CompanyName
         this.form.address_line_1 = this.companyInfo.message.CompanyAddr.Line1
-        this.form.address_line_2 = this.companyInfo.message.CompanyAddr.Line2
+        if (this.companyInfo.message.CompanyAddr.Line2) {
+          this.form.address_line_2 = this.companyInfo.message.CompanyAddr.Line2;
+        } else {
+          this.form.address_line_2 = null;
+        }
         this.form.city = this.companyInfo.message.CompanyAddr.City
         this.form.state = this.companyInfo.message.CompanyAddr.CountrySubDivisionCode
         this.form.zip = this.companyInfo.message.CompanyAddr.PostalCode

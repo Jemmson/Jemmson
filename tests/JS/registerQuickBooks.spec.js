@@ -9,14 +9,6 @@ localVue.use(Vuex)
 
 console.log('RegisterQuickBooks.spec')
 
-// describe ('CheckAccountingApp', () => {
-//   it('should say hello', function() {
-//     let wrapper = mount(Home);
-//     console.log(wrapper);
-//     console.log('Hello')
-//   })
-// });
-
 describe('RegisterQuickBooks', () => {
   let wrapper
   let actions
@@ -25,16 +17,17 @@ describe('RegisterQuickBooks', () => {
   let store
   const getCompanyInfo = sinon.spy()
   const getTheCompanyInfo = sinon.spy()
+  const setTheMobileResponse = sinon.spy()
 
   beforeEach(() => {
     actions = {
       checkMobileNumber: () => ''
     }
     mutations = {
-      setMobileResponse: () => ''
+      setMobileResponse: () => '',
+      setTheMobileResponse: () => ''
     }
     getters = {
-      // getMobileValidResponse: () => ''
       getMobileValidResponse: () => ['phone', 'mobile', 'land', 'virtual'],
     }
     store = new Vuex.Store({
@@ -78,7 +71,6 @@ describe('RegisterQuickBooks', () => {
   it.only('should show the cancel, reset button, and the save button for each section if the edit button is clicked', function() {
     // visually verified
 
-
     wrapper.setData({
       qbCompanyInfoWasUpdated: false,
       sections: {
@@ -90,11 +82,11 @@ describe('RegisterQuickBooks', () => {
       ref: 'edit_btn'
     })
 
-    edit_btn.trigger('click');
+    edit_btn.trigger('click')
 
-    expect(wrapper.find({ref: 'cancel_btn'}).isVisible()).toBe(true);
-    expect(wrapper.find({ref: 'reset_btn'}).isVisible()).toBe(true);
-    expect(wrapper.find({ref: 'save_btn'}).isVisible()).toBe(true);
+    expect(wrapper.find({ref: 'cancel_btn'}).isVisible()).toBe(true)
+    expect(wrapper.find({ref: 'reset_btn'}).isVisible()).toBe(true)
+    expect(wrapper.find({ref: 'save_btn'}).isVisible()).toBe(true)
 
   })
 
@@ -113,8 +105,9 @@ describe('RegisterQuickBooks', () => {
 
   })
 
-  it('should only send updated to quickbooks only if the data was actually updated otherwise it should be skipped', function() {
-
+  it('should only send updated to quickbooks only if the data was ' +
+    'actually updated otherwise it should be skipped', function() {
+    //visually verified
   })
 
   it.only('should not update the qbCompanyInfoWasUpdated field if the cancel button was clicked. the value should be the original value ', function() {
@@ -123,7 +116,7 @@ describe('RegisterQuickBooks', () => {
       qbCompanyInfoWasUpdated: false,
       sections: {
         editGeneralInfo: true
-        }
+      }
     })
 
     let cancel_btn = wrapper.find({
@@ -195,16 +188,19 @@ describe('RegisterQuickBooks', () => {
     // visually verified
   })
 
-  it('should hide any read-only fields that are apart of the registration if they were not filled out on the quickbooks setup', function() {
+  it('should hide any read-only fields that are apart of the registration ' +
+    'if they were not filled out on the quickbooks setup', function() {
 
   })
 
-  it('should show all editable fields even if they were not mandatory in this app or quickbooks and they are empty in the get company info response', function() {
-
+  it('should show all editable fields even if they were not mandatory in this ' +
+    'app or quickbooks and they are empty in the get company info response', function() {
+    //visually verified
   })
 
-  it('should have all blank values that are not mandatory and are related to the quickbooks api be changed to null before it the request is sent to update the API', function() {
-
+  it('should have all blank values that are not mandatory and are related to the ' +
+    'quickbooks api be changed to null before it the request is sent to update the API', function() {
+    // manually verified
   })
 
   it('should have page specific documentation on how this page works', function() {
@@ -212,18 +208,89 @@ describe('RegisterQuickBooks', () => {
   })
 
   it('should not submit if the passwords do not match', function() {
-
+    //visually verified
   })
 
   it('should not submit if the accept terms button is not checked', function() {
 
   })
 
-  it('should not submit if the phone number is not valid', function() {
+  //#########################
+  //#PHONE
+  //#########################
+
+  it.only('the phone number should have 10 digits when it is unformatted', function() {
+    wrapper.setData({
+      form: {
+        phone_number: '(123) 456-7890'
+      }
+    })
+
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(10);
 
   })
 
-  it('should check the PrimaryNumber field that is returned by quickbooks and show an error if that primary number is not a mobile number', function() {
+  it.only('the phone number should have 9 digits when it is unformatted', function() {
+    wrapper.setData({
+      form: {
+        phone_number: '(123) 456-789'
+      }
+    })
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9);
+  })
+
+  it.only('the phoneNumberLength number field should be updated with the correct value when the ' +
+    'unformatNumber methods is called  ', function() {
+
+    wrapper.setData({
+      form: {
+        phone_number: '(123) 456-789'
+      }
+    })
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9);
+    expect(wrapper.vm.phoneNumberLength).toBe(9);
+
+
+  })
+
+  it('should not submit if the phone number is not valid', function() {
+    //visually verified
+  })
+
+  it.only('should check the PrimaryNumber field that is returned by quickbooks ' +
+    'and show an error if that primary number is not a mobile number', function() {
+    //visually verified
+  })
+
+  it.only('should check that if the PrimaryNumber field that is returned by quickbooks ' +
+    'is null then the class empty-field-name will be present', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: null
+        }
+      }
+    })
+
+    let primaryPhone = wrapper.find({ref: 'primaryPhone'})
+
+    expect(primaryPhone.attributes().class).toBe('ml-2 empty-field-name')
+
+  })
+
+  it.only('should check that if the PrimaryNumber field that is returned by quickbooks ' +
+    'is not null then the class empty-field-name will not be present', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: '1231231234'
+        }
+      }
+    })
+
+    let primaryPhone = wrapper.find({ref: 'primaryPhone'})
+
+    expect(primaryPhone.attributes().class).toBe('ml-2')
 
   })
 
@@ -231,7 +298,7 @@ describe('RegisterQuickBooks', () => {
     wrapper.setData({
       errors: {
         password: {
-          pw_length: 2
+          pw_length: 6
         }
       }
     })
