@@ -307,6 +307,9 @@
                 </div>
 
 
+                <!--<pre>{{ registerForm.terms }}</pre>-->
+
+
                 <!--TODO check if checkValidData can be used-->
                 <!--<button type="submit" name="submit" class="register text-center border shadow uppercase"-->
                 <!--@click.prevent="submitFurtherInfo()"-->
@@ -697,6 +700,10 @@
         }
 
         if (this.form.password !== this.form.password_confirmation) {
+          valid = false;
+        }
+
+        if (!this.registerForm.terms) {
           valid = false;
         }
 
