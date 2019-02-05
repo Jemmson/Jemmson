@@ -7,6 +7,25 @@
         <h3 class="text-center m-4">{{ companyInfo.message.CompanyName }}</h3>
         <div class="box border flex flex-col section">
             <div class="content">
+
+
+                <h2 class="text-center text-red uppercase" v-show="inputNotValid">Please Check That All Mandatory Fields
+                    Are Setup Correctly</h2>
+
+                <div class="flex flex-col m-4">
+                    <h5 class="text-center text-red uppercase" v-show="errors.email">email address missing or has
+                        incorrect format</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.name">The name field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.phone">The phone field is not correct</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.password.error">The password field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.company_name">The company name field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.address_line_1">The address line 1 field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.city">The city field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.state">The state field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.zip">The zip field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.terms">please accept the terms of agreement</h5>
+                </div>
+
                 <!-- Name -->
                 <div class="input-section">
                     <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('name')}">-->
@@ -277,11 +296,10 @@
                                 type="email"
                                 class="border input"
                                 name="email"
-
+                                @blur="validateEmail()"
                                 :class="companyInfoTemporary.Email.Address ? '' : 'empty-field'"
-
                                 v-model="companyInfoTemporary.Email.Address">
-                        <!--<span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
+                        <span class="help-block uppercase" v-show="!validateEmail()">Your Email Does Not have the correct format</span>
                     </div>
                 </div>
 
@@ -297,7 +315,7 @@
                     <div class="col-md-6 col-md-offset-4">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="terms" v-model="registerForm.terms">
+                                <input type="checkbox" name="terms" v-model="form.terms">
                                 I Accept The <a href="/terms" target="_blank">Terms Of Service</a>
                             </label>
 
@@ -339,8 +357,7 @@
             </div>
         </div>
 
-
-        <pre>{{ companyInfo }}</pre>
+        <!--<pre>{{ companyInfo }}</pre>-->
 
     </div>
 
@@ -514,6 +531,7 @@
           city: '',
           state: '',
           zip: '',
+          terms: false,
           notes: '',
           password: '',
           password_confirmation: '',
@@ -526,8 +544,18 @@
           password: {
             match: true,
             message: '',
-            pw_length: 0
-          }
+            pw_length: 0,
+            error:false
+          },
+          email: false,
+          name: false,
+          company_name: false,
+          phone: false,
+          address_line_1: false,
+          city: false,
+          state: false,
+          zip: false,
+          terms: false
         },
         qbCompanyInfoWasUpdated: false,
         companyInfoTemporary: {
@@ -567,7 +595,8 @@
         },
         sections: {
           editGeneralInfo: false
-        }
+        },
+        inputNotValid: false
       }
     },
     computed: {
@@ -628,21 +657,22 @@
         this.errors.password.pw_length = this.form.password.length
       },
       register() {
+        this.inputNotValid = false;
+        this.updateFormDataWithQBData();
         if (this.checkValidData()) {
-          let updateQBData = false;
+          let updateQBData = false
           if (this.checkIfQBCompanyInfoWasUpdated()) {
             this.addCompanyInfoToFormObject()
-            updateQBData = true;
+            updateQBData = true
           } else {
             this.sendEmptyQBCompanyInfoObject()
           }
-          this.updateFormDataWithQBData()
           this.registerForm.busy = false
 
           User.submitFurtherInfo(this.form, this.registerForm, updateQBData)
           this.registerForm.busy = false
         } else {
-          alert('data not valid');
+          this.inputNotValid = true
         }
       },
       unformatNumber(number) {
@@ -654,66 +684,119 @@
         }
         let numberLength = unformattedNumber.length
         if (numberLength < 10) {
-          this.emptyPhoneNumberInStore();
+          this.emptyPhoneNumberInStore()
         }
         // debugger;
-        this.phoneNumberLength = numberLength;
+        this.phoneNumberLength = numberLength
         return numberLength
       },
       emptyPhoneNumberInStore() {
         if (this.getMobileValidResponse[1] !== '') {
-          this.$store.commit('setTheMobileResponse', ['', '', '']);
+          this.$store.commit('setTheMobileResponse', ['', '', ''])
         }
       },
       checkValidData() {
-        // debugger
 
-        let valid = true;
+        let valid = true
 
         // phone number
-            // does it have the right format
-            // is it the right number of digits
-            // is it a mobile number
+        // does it have the right format
+        // is it the right number of digits
+        // is it a mobile number
         let phone = this.unformatNumber(this.form.phone_number)
         if (
-            (this.getMobileValidResponse[1] !== 'mobile' ||
-             this.getMobileValidResponse[2] !== 'mobile') ||
-             phone !== 10
+          (this.getMobileValidResponse[1] !== 'mobile' ||
+            this.getMobileValidResponse[2] !== 'mobile') ||
+          phone !== 10
         ) {
+          valid = false
+          this.errors.phone = true;
+        } else {
+          this.errors.phone = false;
+        }
+
+        if (this.form.email === '' || !this.validateEmail()) {
+          this.errors.email = true;
           valid = false;
+        } else {
+          this.errors.email = false;
+        }
+
+        if (this.form.name === '') {
+          this.errors.name = true;
+          valid = false;
+        } else {
+          this.errors.name = false;
+        }
+
+        if (this.form.company_name === '') {
+          this.errors.company_name = true;
+          valid = false;
+        } else {
+          this.errors.company_name = false;
+        }
+
+        if (this.form.address_line_1 === '') {
+          this.errors.address_line_1 = true;
+          valid = false;
+        } else {
+          this.errors.address_line_1 = false;
+        }
+
+        if (this.form.city === '') {
+          this.errors.city = true;
+          valid = false;
+        } else {
+          this.errors.city = false;
+        }
+
+
+        if (this.form.state === '') {
+          this.errors.state = true;
+          valid = false;
+        } else {
+          this.errors.state = false;
+        }
+
+
+        if (this.form.zip === '') {
+          this.errors.zip = true;
+          valid = false;
+        } else {
+          this.errors.zip = false;
+        }
+
+        if (this.form.terms === '') {
+          this.errors.terms = true;
+          valid = false;
+        } else {
+          this.errors.terms = false;
         }
 
         // company name
-            // does it have a length
+        // does it have a length
+
         if (
-          this.form.email === '' ||
-          this.form.name === '' ||
-          this.form.company_name === '' ||
-          this.form.address_line_1 === '' ||
-          this.form.city === '' ||
-          this.form.state === '' ||
-          this.form.zip === '' ||
-          this.form.password === '' ||
-          this.form.password_confirmation === ''
+          (this.form.password !== this.form.password_confirmation) ||
+          ( this.form.password === '' || this.form.password_confirmation === '')
         ) {
-          valid = false;
+          valid = false
+          this.errors.password.error = true
+        } else {
+          this.errors.password.error = false
         }
 
-        if (this.form.password !== this.form.password_confirmation) {
-          valid = false;
-        }
-
-        if (!this.registerForm.terms) {
-          valid = false;
-        }
-
-        return valid;
+        return valid
 
       },
       validateMobileNumber(phone) {
         if (phone !== '') {
           this.checkMobileNumber(phone)
         }
+      },
+      validateEmail() {
+        var re = /^(?:[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/
+        return re.test(this.companyInfoTemporary.Email.Address)
       },
       checkThatNumberIsMobile() {
         if (this.getMobileValidResponse[1] === 'mobile' ||
@@ -747,9 +830,9 @@
         this.form.company_name = this.companyInfo.message.CompanyName
         this.form.address_line_1 = this.companyInfo.message.CompanyAddr.Line1
         if (this.companyInfo.message.CompanyAddr.Line2) {
-          this.form.address_line_2 = this.companyInfo.message.CompanyAddr.Line2;
+          this.form.address_line_2 = this.companyInfo.message.CompanyAddr.Line2
         } else {
-          this.form.address_line_2 = null;
+          this.form.address_line_2 = null
         }
         this.form.city = this.companyInfo.message.CompanyAddr.City
         this.form.state = this.companyInfo.message.CompanyAddr.CountrySubDivisionCode

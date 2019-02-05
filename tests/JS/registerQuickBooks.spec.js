@@ -212,7 +212,7 @@ describe('RegisterQuickBooks', () => {
   })
 
   it('should not submit if the accept terms button is not checked', function() {
-
+    //visually verified
   })
 
   //#########################
