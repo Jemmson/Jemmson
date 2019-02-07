@@ -328,8 +328,28 @@ export default class User {
     try {
       const data = await
         Spark.post('/home', {
-          form: form,
-          updateAccountingCompanyInfoAPI: updateAccountingCompanyInfoAPI
+          form: form
+        })
+      Vue.toasted.success('info updated')
+      Bus.$emit('updateUser')
+      disabled.submit = false
+      location.href = data
+    } catch (error) {
+      console.log(error)
+      form.errors.errors = error.errors
+      Vue.toasted.error(error.message)
+      disabled.submit = false
+    }
+  }
+
+  async registerUser(form, disabled, updateAccountingCompanyInfoAPI = false) {
+    disabled.submit = true
+    form.phone_number = Format.numbersOnly(form.phone_number)
+    try {
+      const data = await
+        Spark.post('/registerUser', {
+          form: form
+          // updateAccountingCompanyInfoAPI: updateAccountingCompanyInfoAPI
         })
       Vue.toasted.success('info updated')
       Bus.$emit('updateUser')

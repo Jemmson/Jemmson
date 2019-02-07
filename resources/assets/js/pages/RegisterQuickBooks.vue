@@ -16,14 +16,19 @@
                     <h5 class="text-center text-red uppercase" v-show="errors.email">email address missing or has
                         incorrect format</h5>
                     <h5 class="text-center text-red uppercase" v-show="errors.name">The name field is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.phone">The phone field is not correct</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.password.error">The password field is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.company_name">The company name field is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.address_line_1">The address line 1 field is missing</h5>
+                    <h5 class="text-center text-red uppercase" ref="phoneError" v-show="errors.phone">The phone field is
+                        not correct</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.password.error">The password field is
+                        missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.company_name">The company name field is
+                        missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.address_line_1">The address line 1 field
+                        is missing</h5>
                     <h5 class="text-center text-red uppercase" v-show="errors.city">The city field is missing</h5>
                     <h5 class="text-center text-red uppercase" v-show="errors.state">The state field is missing</h5>
                     <h5 class="text-center text-red uppercase" v-show="errors.zip">The zip field is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.terms">please accept the terms of agreement</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.terms">please accept the terms of
+                        agreement</h5>
                 </div>
 
                 <!-- Name -->
@@ -344,6 +349,7 @@
                         <button id="register" name=register
                                 class="register text-center border shadow uppercase"
                                 @click.prevent="register"
+                                ref="register"
                                 :disabled="registerForm.busy">
                     <span v-if="registerForm.busy">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
@@ -545,7 +551,7 @@
             match: true,
             message: '',
             pw_length: 0,
-            error:false
+            error: false
           },
           email: false,
           name: false,
@@ -657,8 +663,8 @@
         this.errors.password.pw_length = this.form.password.length
       },
       register() {
-        this.inputNotValid = false;
-        this.updateFormDataWithQBData();
+        this.inputNotValid = false
+        this.updateFormDataWithQBData()
         if (this.checkValidData()) {
           let updateQBData = false
           if (this.checkIfQBCompanyInfoWasUpdated()) {
@@ -669,7 +675,7 @@
           }
           this.registerForm.busy = false
 
-          User.submitFurtherInfo(this.form, this.registerForm, updateQBData)
+          User.registerUser(this.form, this.registerForm, updateQBData)
           this.registerForm.busy = false
         } else {
           this.inputNotValid = true
@@ -703,74 +709,94 @@
         // does it have the right format
         // is it the right number of digits
         // is it a mobile number
+
         let phone = this.unformatNumber(this.form.phone_number)
-        if (
-          (this.getMobileValidResponse[1] !== 'mobile' ||
-            this.getMobileValidResponse[2] !== 'mobile') ||
-          phone !== 10
-        ) {
-          valid = false
-          this.errors.phone = true;
+
+        if (phone === 10) {
+          if (
+            this.getMobileValidResponse[1] === '' ||
+            this.getMobileValidResponse[2] === ''
+          ) {
+            this.validateMobileNumber(phone)
+          }
+          if (
+            this.getMobileValidResponse[1] !== 'mobile' ||
+            this.getMobileValidResponse[2] !== 'mobile') {
+            valid = false
+            this.errors.phone = true
+          } else {
+            this.errors.phone = false
+          }
         } else {
-          this.errors.phone = false;
+          valid = false
+          this.errors.phone = true
         }
 
+        // if (
+        //   (this.getMobileValidResponse[1] !== 'mobile' ||
+        //     this.getMobileValidResponse[2] !== 'mobile') ||
+        //   phone !== 10
+        // ) {
+        //   valid = false
+        //   this.errors.phone = true
+        // } else {
+        //   this.errors.phone = false
+        // }
+
         if (this.form.email === '' || !this.validateEmail()) {
-          this.errors.email = true;
-          valid = false;
+          this.errors.email = true
+          valid = false
         } else {
-          this.errors.email = false;
+          this.errors.email = false
         }
 
         if (this.form.name === '') {
-          this.errors.name = true;
-          valid = false;
+          this.errors.name = true
+          valid = false
         } else {
-          this.errors.name = false;
+          this.errors.name = false
         }
 
         if (this.form.company_name === '') {
-          this.errors.company_name = true;
-          valid = false;
+          this.errors.company_name = true
+          valid = false
         } else {
-          this.errors.company_name = false;
+          this.errors.company_name = false
         }
 
         if (this.form.address_line_1 === '') {
-          this.errors.address_line_1 = true;
-          valid = false;
+          this.errors.address_line_1 = true
+          valid = false
         } else {
-          this.errors.address_line_1 = false;
+          this.errors.address_line_1 = false
         }
 
         if (this.form.city === '') {
-          this.errors.city = true;
-          valid = false;
+          this.errors.city = true
+          valid = false
         } else {
-          this.errors.city = false;
+          this.errors.city = false
         }
-
 
         if (this.form.state === '') {
-          this.errors.state = true;
-          valid = false;
+          this.errors.state = true
+          valid = false
         } else {
-          this.errors.state = false;
+          this.errors.state = false
         }
 
-
         if (this.form.zip === '') {
-          this.errors.zip = true;
-          valid = false;
+          this.errors.zip = true
+          valid = false
         } else {
-          this.errors.zip = false;
+          this.errors.zip = false
         }
 
         if (this.form.terms === '') {
-          this.errors.terms = true;
-          valid = false;
+          this.errors.terms = true
+          valid = false
         } else {
-          this.errors.terms = false;
+          this.errors.terms = false
         }
 
         // company name
@@ -778,7 +804,7 @@
 
         if (
           (this.form.password !== this.form.password_confirmation) ||
-          ( this.form.password === '' || this.form.password_confirmation === '')
+          (this.form.password === '' || this.form.password_confirmation === '')
         ) {
           valid = false
           this.errors.password.error = true

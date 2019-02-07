@@ -31,7 +31,6 @@ Route::get('/quickbooks/getAuthUrl/{state}', 'QuickbooksController@getAuthUrl');
 Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
 Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCompanyInfo');
 
-
 // login routes
 Route::get('login', 'Auth\LoginController@show');
 Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
@@ -79,6 +78,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::delete('/stripe/customer/card', 'StripeController@deleteCard');
 }
 );
+
+
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/home', 'HomeController@create');
     Route::post('/', 'HomeController@create');

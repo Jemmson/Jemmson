@@ -215,6 +215,74 @@ describe('RegisterQuickBooks', () => {
     //visually verified
   })
 
+  it.only('if there is an error because there is an empty field then if this error is rectified and register is hit again' +
+    ' then the form should go through', function() {
+
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          Email: {
+            Address: 'noreply@quickbooks.com',
+          },
+          CompanyAddr: {
+            Line1: '123 Sierra Way',
+            Line2: '',
+            City: 'San Pablo',
+            CountrySubDivisionCode: '',
+            PostalCode: 'CA',
+            Zip: '87999'
+          },
+          CompanyName: 'Sandbox Company_US_1',
+          PrimaryPhone: ''
+        }
+      },
+      form: new SparkForm({
+        email: '',
+        name: 'sdssdds',
+        company_name: '',
+        phone_number: '',
+        address_line_1: '',
+        address_line_2: '',
+        city: '',
+        state: '',
+        zip: '',
+        terms: false,
+        notes: '',
+        password: 'asdasd',
+        password_confirmation: 'asdasd',
+        email_contact: true,
+        phone_contact: false,
+        sms_text: false
+      })
+    })
+
+    let btn = wrapper.find({
+      ref: 'register'
+    });
+
+    btn.trigger('click');
+
+    expect(wrapper.find({ref: 'phoneError'}).isVisible()).toBe(true);
+
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: '4807034902'
+        }
+      }
+    });
+
+    btn.trigger('click');
+
+    expect(wrapper.find({ref: 'phoneError'}).isVisible()).toBe(false);
+
+  })
+
+  it('if a mobile number was input and then that number is deleted and the field is empty then the mobile flag should be removed ' +
+    'from the bottom of the test file', function() {
+
+  })
+
   //#########################
   //#PHONE
   //#########################
@@ -226,7 +294,7 @@ describe('RegisterQuickBooks', () => {
       }
     })
 
-    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(10);
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(10)
 
   })
 
@@ -236,7 +304,7 @@ describe('RegisterQuickBooks', () => {
         phone_number: '(123) 456-789'
       }
     })
-    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9);
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9)
   })
 
   it.only('the phoneNumberLength number field should be updated with the correct value when the ' +
@@ -247,9 +315,8 @@ describe('RegisterQuickBooks', () => {
         phone_number: '(123) 456-789'
       }
     })
-    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9);
-    expect(wrapper.vm.phoneNumberLength).toBe(9);
-
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9)
+    expect(wrapper.vm.phoneNumberLength).toBe(9)
 
   })
 
@@ -298,7 +365,7 @@ describe('RegisterQuickBooks', () => {
     wrapper.setData({
       errors: {
         password: {
-          pw_length: 6
+          pw_length: 5
         }
       }
     })
@@ -308,6 +375,22 @@ describe('RegisterQuickBooks', () => {
     })
 
     expect(pw_error.isVisible()).toBe(true)
+  })
+
+  it.only('should have the password length error show if the length of the password is equal to 6', function() {
+    wrapper.setData({
+      errors: {
+        password: {
+          pw_length: 6
+        }
+      }
+    })
+
+    let pw_error = wrapper.find({
+      ref: 'password_error'
+    })
+
+    expect(pw_error.isVisible()).toBe(false)
   })
 
   it.only('should have the password length error not show if the length of the password is greater than 6', function() {
