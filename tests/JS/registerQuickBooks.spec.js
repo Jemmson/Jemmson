@@ -198,6 +198,14 @@ describe('RegisterQuickBooks', () => {
     //visually verified
   })
 
+  it('should have a pop up if you do not save the edit section', function() {
+
+  })
+
+  it('should have an error pop up if there are capital letters in the email address', function() {
+    
+  })
+
   it('should have all blank values that are not mandatory and are related to the ' +
     'quickbooks api be changed to null before it the request is sent to update the API', function() {
     // manually verified

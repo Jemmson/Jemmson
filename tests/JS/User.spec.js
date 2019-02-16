@@ -9,7 +9,7 @@ describe('User', () => {
   })
 
   it('should return success when contractor info is sent to be registered', function() {
-    
+
   })
 
 })

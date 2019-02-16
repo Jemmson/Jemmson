@@ -1,3 +1,4 @@
+import { router } from '../app.js'
 export default class User {
   async chargeCustomer() {
     // charge customer
@@ -248,9 +249,11 @@ export default class User {
         updateAccountingCompanyInfoAPI: updateAccountingCompanyInfoAPI
       })
       Vue.toasted.success('info updated')
-      Bus.$emit('updateUser')
       // debugger;
-      location.href = data
+      console.log(JSON.stringify(data.data));
+      router.push(data.data);
+      Bus.$emit('updateUser')
+      // location.href = data
     } catch (error) {
       console.log(error)
       form.errors.errors = error.errors
