@@ -138,7 +138,7 @@ module.exports = {
                 .then(response => {
                     this.user = response.data;
                     console.log(JSON.stringify(this.user));
-                    debugger;
+                    // debugger;
                     Spark.state.user = this.user;
                     window.User.user = this.user;
                     window.GeneralContractor.user = this.user;
