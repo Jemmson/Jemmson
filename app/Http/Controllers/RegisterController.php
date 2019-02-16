@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Quickbook;
 use App\Http\Controllers\QuickBooksController;
 use Laravel\Spark\User;
+use App\Location;
 
 class RegisterController extends Controller
 {
@@ -64,24 +65,51 @@ class RegisterController extends Controller
         $user->phone = $request['form']['phone_number'];
 //        $user->first_name = '';
 //        $user->last_name = '';
-        $user->save();
+
+        try {
+            $user->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
 
 
         $contractor = new Contractor();
         $contractor->user_id = $user->id;
         $contractor->company_name = $request['form']['company_name'];
-        $contractor->save();
+
+        $location = new Location();
+        $location->user_id = $user->id;
+        $location->default = true;
+        $location->address_line_1 = $request['form']['address_line_1'];
+        $location->address_line_2 = $request['form']['address_line_2'];
+        $location->city = $request->$request['form']['city'];
+        $location->area = $request->$request['form']['city'];
+        $location->state = $request->$request['form']['state'];
+        $location->zip = $request->$request['form']['zip'];
+
+        try {
+            $location->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
+
+
+        try {
+            $contractor->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
 
 //        log::debug(Auth::login(user));
 
-        Auth::logout();
+//        Auth::logout();
 
         Auth::loginUsingId($user->id);
 
         if (empty(session('prevDestination'))) {
-            Log::info("going to /#/home");
+            Log::info("going to /home");
             Log::info("************Create Method - Home Controller - End****************");
-            return response()->json('/#/home', 200);
+            return response()->json('/home', 200);
         } else {
             $link = session()->pull('prevDestination');
             Log::info("going to previous destination");

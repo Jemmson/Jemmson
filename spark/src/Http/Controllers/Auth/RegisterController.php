@@ -65,20 +65,30 @@ class RegisterController extends Controller
         $user->phone = $request['form']['phone_number'];
 //        $user->first_name = '';
 //        $user->last_name = '';
-        $user->save();
+        try {
+            $user->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
 
 
         $contractor = new Contractor();
         $contractor->user_id = $user->id;
         $contractor->company_name = $request['form']['company_name'];
-        $contractor->save();
+
+        try {
+            $contractor->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
 
         Auth::login($user);
 
         if (empty(session('prevDestination'))) {
             Log::info("going to /#/home");
             Log::info("************Create Method - Home Controller - End****************");
-            return response()->json('/#/home', 200);
+            return response()->json('/home', 200);
+//            return response()->json('/#/home', 200);
         } else {
             $link = session()->pull('prevDestination');
             Log::info("going to previous destination");
