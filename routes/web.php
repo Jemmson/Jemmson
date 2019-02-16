@@ -27,10 +27,12 @@ Route::get('/loadFeatures', function () {
     }
 });
 
+Route::get('/welcome', 'WelcomeController@show');
+
 Route::get('/quickbooks/getAuthUrl/{state}', 'QuickbooksController@getAuthUrl');
 Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
 Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCompanyInfo');
-
+ Route::post('/register/contractor', 'RegisterController@registerContractor');
 
 // login routes
 Route::get('login', 'Auth\LoginController@show');
@@ -79,6 +81,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::delete('/stripe/customer/card', 'StripeController@deleteCard');
 }
 );
+
+
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/home', 'HomeController@create');
     Route::post('/', 'HomeController@create');

@@ -38,6 +38,10 @@ class QuickBooksController extends Controller
         return $address;
     }
 
+    public function updateCompanyInfo()
+    {
+//        functionality does not yet exist
+    }
 
     public function processCodeAndGetCompany($code, $company_id)
     {

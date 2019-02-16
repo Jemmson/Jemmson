@@ -178,6 +178,8 @@ $router->group(['middleware' => 'web'], function ($router) {
     // Registration...
     $router->get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     $router->post('/register', 'Auth\RegisterController@register');
+    $router->post('/registerUser', 'Auth\RegisterController@registerUser');
+
 
     // Password Reset...
     $router->get('/password/reset/{token?}', 'Auth\PasswordController@showResetForm')->name('password.reset');

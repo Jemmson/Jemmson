@@ -7,6 +7,30 @@
         <h3 class="text-center m-4">{{ companyInfo.message.CompanyName }}</h3>
         <div class="box border flex flex-col section">
             <div class="content">
+
+
+                <h2 class="text-center text-red uppercase" v-show="inputNotValid">Please Check That All Mandatory Fields
+                    Are Setup Correctly</h2>
+
+                <div class="flex flex-col m-4">
+                    <h5 class="text-center text-red uppercase" v-show="errors.email">email address missing or has
+                        incorrect format</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.name">The name field is missing</h5>
+                    <h5 class="text-center text-red uppercase" ref="phoneError" v-show="errors.phone">The phone field is
+                        not correct</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.password.error">The password field is
+                        missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.company_name">The company name field is
+                        missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.address_line_1">The address line 1 field
+                        is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.city">The city field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.state">The state field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.zip">The zip field is missing</h5>
+                    <h5 class="text-center text-red uppercase" v-show="errors.terms">please accept the terms of
+                        agreement</h5>
+                </div>
+
                 <!-- Name -->
                 <div class="input-section">
                     <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('name')}">-->
@@ -41,23 +65,42 @@
                             <label class="j-label">Password</label><span class="j-label ml-2 star">*</span>
                         </div>
                         <div style="color:red;"
-                        >Must Be at least 6 alphanumeric characters
+                             ref="password_error"
+                             v-show="errors.password.pw_length < 6"
+                        >
+                            Must Be at least 6 alphanumeric characters
                         </div>
                     </div>
 
                     <div>
-                        <input type="password" class="border input" name="password" v-model="form.password">
-
+                        <input type="password"
+                               class="border input"
+                               name="password"
+                               ref="password"
+                               @keyup="passwordLength"
+                               v-model="form.password">
                         <!--<span class="help-block" v-show="registerForm.errors.has('password')"></span>-->
                     </div>
                 </div>
 
                 <!-- Password Confirmation -->
+                <!--<div class="input-section">-->
                 <div class="input-section">
-                    <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('password_confirmation')}">-->
-                    <label class="j-label">Confirm Password</label><span class="j-label ml-2 star">*</span>
+                    <div class="flex justify-between">
+                        <div>
+                            <label class="j-label">Confirm Password</label><span class="j-label ml-2 star">*</span>
+                        </div>
+                        <div v-if="!errors.password.match">
+                            <span class="has-error-name text-center">
+                                {{ errors.password.message }}
+                            </span>
+                        </div>
+                    </div>
                     <div>
-                        <input type="password" class="border input" name="password_confirmation"
+                        <input type="password"
+                               :class="{'has-error': !errors.password.match}"
+                               class="border input"
+                               name="password_confirmation"
                                v-model="form.password_confirmation" @keyup="confirmPassword">
 
                         <!--<span class="help-block" v-show="registerForm.errors.has('password_confirmation')"></span>-->
@@ -71,20 +114,35 @@
             <h4 class="text-center mt-2">General Info</h4>
             <div class="flex justify-around items-center m-2" v-show="!sections.editGeneralInfo">
                 <div class="flex-1 w-full"></div>
-                <button class="flex-1 w-full btn bg-blue" @click="sections.editGeneralInfo = true">Edit</button>
+                <button class="flex-1 w-full btn bg-blue"
+                        ref="edit_btn"
+                        @click="sections.editGeneralInfo = true">Edit
+                </button>
                 <div class="flex-1 w-full"></div>
             </div>
             <div class="flex justify-around items-center m-2" v-show="sections.editGeneralInfo">
-                <button class="w-full flex-1 btn bg-blue mr-2" @click="cancel()">Cancel</button>
-                <button class="w-full flex-1 btn bg-blue mr-2" @click="reset()">Reset</button>
-                <button class="flex-1 btn bg-blue w-full ml-2" @click="save()">Save</button>
+                <button class="w-full flex-1 btn bg-blue mr-2"
+                        id="cancel_btn"
+                        ref="cancel_btn"
+                        @click="cancel()">Cancel
+                </button>
+                <button class="w-full flex-1 btn bg-blue mr-2"
+                        ref="reset_btn"
+                        @click="reset()">Reset
+                </button>
+                <button class="flex-1 btn bg-blue w-full ml-2"
+                        ref="save_btn"
+                        @click="save()">Save
+                </button>
             </div>
             <div class="content" v-show="!sections.editGeneralInfo">
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyName ? '' : 'empty-field-name'"
-                        >Company Name</div><span class="j-label ml-2 star">*</span>
+                        >Company Name
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyName }}</div>
                 </div>
@@ -92,7 +150,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.Line1 ? '' : 'empty-field-name'"
-                        >Address Line 1</div><span class="j-label ml-2 star">*</span>
+                        >Address Line 1
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.Line1 }}</div>
                 </div>
@@ -104,7 +164,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.City ? '' : 'empty-field-name'"
-                        >City</div><span class="j-label ml-2 star">*</span>
+                        >City
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.City }}</div>
                 </div>
@@ -112,7 +174,9 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field-name'"
-                        >State</div><span class="j-label ml-2 star">*</span>
+                        >State
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.CountrySubDivisionCode }}</div>
                 </div>
@@ -120,15 +184,20 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.PostalCode ? '' : 'empty-field-name'"
-                        >PostalCode</div><span class="j-label ml-2 star">*</span>
+                        >PostalCode
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.CompanyAddr.PostalCode }}</div>
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
                         <div class="ml-2"
-                             :class="companyInfo.message.CompanyAddr.PrimaryPhone ? '' : 'empty-field-name'"
-                        >Mobile Phone Number</div><span class="j-label ml-2 star">*</span>
+                             ref="primaryPhone"
+                             :class="companyInfo.message.PrimaryPhone ? '' : 'empty-field-name'"
+                        >Mobile Phone Number
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.PrimaryPhone }}</div>
                 </div>
@@ -136,14 +205,16 @@
                     <div class="flex">
                         <div class="ml-2"
                              :class="companyInfo.message.Email.Address ? '' : 'empty-field-name'"
-                        >Email Address</div><span class="j-label ml-2 star">*</span>
+                        >Email Address
+                        </div>
+                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.Email.Address }}</div>
                 </div>
             </div>
             <div class="content" v-show="sections.editGeneralInfo">
                 <div class="input-section">
-                    <label class="j-label">Company Name</label>
+                    <label class="j-label">Company Name</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyName ? '' : 'empty-field'"
@@ -152,7 +223,7 @@
                 </div>
 
                 <div class="input-section">
-                    <label class="j-label">Address Line 1</label>
+                    <label class="j-label">Address Line 1</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.Line1 ? '' : 'empty-field'"
@@ -169,7 +240,7 @@
                 </div>
 
                 <div class="input-section">
-                    <label class="j-label">City</label>
+                    <label class="j-label">City</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.City ? '' : 'empty-field'"
@@ -178,7 +249,7 @@
                 </div>
 
                 <div class="input-section">
-                    <label class="j-label">State</label>
+                    <label class="j-label">State</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field'"
@@ -186,9 +257,8 @@
                     </div>
                 </div>
 
-
                 <div class="input-section">
-                    <label class="j-label">Zip Code</label>
+                    <label class="j-label">Zip Code</label><span class="j-label ml-2 star">*</span>
                     <div>
                         <input type="text" class="border input" name="password_confirmation"
                                :class="companyInfoTemporary.CompanyAddr.PostalCode ? '' : 'empty-field'"
@@ -215,27 +285,26 @@
                         <div v-else-if="checkIfNumberIsVirtual()" style="color: red">
                             {{ this.getMobileValidResponse[1] }}
                         </div>
-                        <span class="help-block" v-show="form.errors.has('phone_number')">
-                                    {{ form.errors.get('phone_number') }}
-                        </span>
+                        <!--<span class="help-block" v-show="form.errors('phone_number')">-->
+                                    <!--{{ form.errors.get('phone_number') }}-->
+                        <!--</span>-->
                     </div>
                 </div>
 
                 <!-- E-Mail Address -->
                 <div class="input-section">
                     <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('email')}">-->
-                    <label class="j-label">E-Mail Address</label>
+                    <label class="j-label">E-Mail Address</label><span class="j-label ml-2 star">*</span>
 
                     <div>
                         <input
                                 type="email"
                                 class="border input"
                                 name="email"
-
+                                @blur="validateEmail()"
                                 :class="companyInfoTemporary.Email.Address ? '' : 'empty-field'"
-
                                 v-model="companyInfoTemporary.Email.Address">
-                        <!--<span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
+                        <span class="help-block uppercase" v-show="!validateEmail()">Your Email Does Not have the correct format</span>
                     </div>
                 </div>
 
@@ -251,7 +320,7 @@
                     <div class="col-md-6 col-md-offset-4">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="terms" v-model="registerForm.terms">
+                                <input type="checkbox" name="terms" v-model="form.terms">
                                 I Accept The <a href="/terms" target="_blank">Terms Of Service</a>
                             </label>
 
@@ -259,6 +328,9 @@
                         </div>
                     </div>
                 </div>
+
+
+                <!--<pre>{{ registerForm.terms }}</pre>-->
 
 
                 <!--TODO check if checkValidData can be used-->
@@ -271,12 +343,12 @@
                 <!--Register-->
                 <!--</button>-->
 
-
                 <div class="input-section">
                     <div class="col-md-6 col-md-offset-4">
                         <button id="register" name=register
                                 class="register text-center border shadow uppercase"
                                 @click.prevent="register"
+                                ref="register"
                                 :disabled="registerForm.busy">
                     <span v-if="registerForm.busy">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
@@ -290,8 +362,7 @@
             </div>
         </div>
 
-
-        <pre>{{ companyInfo }}</pre>
+        <!--<pre>{{ companyInfo }}</pre>-->
 
     </div>
 
@@ -455,7 +526,7 @@
             sparse: null
           }
         },
-        form: new SparkForm({
+        form: {
           email: '',
           name: '',
           company_name: '',
@@ -465,15 +536,35 @@
           city: '',
           state: '',
           zip: '',
+          terms: false,
           notes: '',
           password: '',
           password_confirmation: '',
           email_contact: true,
           phone_contact: false,
           sms_text: false,
-          errors: {},
-          qbCompanyInfo: {}
-        }),
+          qbCompanyInfo: {},
+          errors: {
+            errors: {}
+          }
+        },
+        errors: {
+          password: {
+            match: true,
+            message: '',
+            pw_length: 0,
+            error: false
+          },
+          email: false,
+          name: false,
+          company_name: false,
+          phone: false,
+          address_line_1: false,
+          city: false,
+          state: false,
+          zip: false,
+          terms: false
+        },
         qbCompanyInfoWasUpdated: false,
         companyInfoTemporary: {
           CompanyName: '',
@@ -501,6 +592,7 @@
             Address: ''
           }
         },
+        phoneNumberLength: null,
         registerForm: {
           busy: false,
           email: '',
@@ -511,7 +603,8 @@
         },
         sections: {
           editGeneralInfo: false
-        }
+        },
+        inputNotValid: false
       }
     },
     computed: {
@@ -520,34 +613,7 @@
       ])
     },
     mounted: function() {
-      axios.get('/quickbooks/getCachedCompanyInfo')
-        .then(function(response) {
-          console.log('no error')
-          // debugger
-          this.companyInfo = response.data
-
-          this.companyInfoTemporary.CompanyName = response.data.message.CompanyName
-          this.companyInfoTemporary.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
-          this.companyInfoTemporary.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
-          this.companyInfoTemporary.CompanyAddr.City = response.data.message.CompanyAddr.City
-          this.companyInfoTemporary.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
-          this.companyInfoTemporary.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
-          this.companyInfoTemporary.PrimaryPhone = response.data.message.PrimaryPhone
-          this.companyInfoTemporary.Email.Address = response.data.message.Email.Address
-
-          this.companyInfoOriginal.CompanyName = response.data.message.CompanyName
-          this.companyInfoOriginal.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
-          this.companyInfoOriginal.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
-          this.companyInfoOriginal.CompanyAddr.City = response.data.message.CompanyAddr.City
-          this.companyInfoOriginal.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
-          this.companyInfoOriginal.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
-          this.companyInfoOriginal.PrimaryPhone = response.data.message.PrimaryPhone
-          this.companyInfoOriginal.Email.Address = response.data.message.Email.Address
-
-        }.bind(this))
-        .catch(function(error) {
-          console.log(error)
-        })
+      this.getTheCompanyInfo()
     },
     methods: {
       ...mapMutations([
@@ -556,19 +622,66 @@
       ...mapActions([
         'checkMobileNumber',
       ]),
-      confirmPassword() {},
+      getTheCompanyInfo() {
+        axios.get('/quickbooks/getCachedCompanyInfo')
+          .then(function(response) {
+            console.log('no error')
+            // debugger
+            this.companyInfo = response.data
+
+            this.companyInfoTemporary.CompanyName = response.data.message.CompanyName
+            this.companyInfoTemporary.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
+            this.companyInfoTemporary.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
+            this.companyInfoTemporary.CompanyAddr.City = response.data.message.CompanyAddr.City
+            this.companyInfoTemporary.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
+            this.companyInfoTemporary.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
+            this.companyInfoTemporary.PrimaryPhone = response.data.message.PrimaryPhone
+            this.companyInfoTemporary.Email.Address = response.data.message.Email.Address
+
+            this.companyInfoOriginal.CompanyName = response.data.message.CompanyName
+            this.companyInfoOriginal.CompanyAddr.Line1 = response.data.message.CompanyAddr.Line1
+            this.companyInfoOriginal.CompanyAddr.Line2 = response.data.message.CompanyAddr.Line2
+            this.companyInfoOriginal.CompanyAddr.City = response.data.message.CompanyAddr.City
+            this.companyInfoOriginal.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
+            this.companyInfoOriginal.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
+            this.companyInfoOriginal.PrimaryPhone = response.data.message.PrimaryPhone
+            this.companyInfoOriginal.Email.Address = response.data.message.Email.Address
+
+          }.bind(this))
+          .catch(function(error) {
+            console.log(error)
+          })
+      },
+      confirmPassword() {
+        if (this.form.password !== this.form.password_confirmation) {
+          this.errors.password.message = 'Passwords need to match.'
+          this.errors.password.match = false
+        } else {
+          this.form.errors.errors = {}
+          this.errors.password.match = true
+          this.errors.password.message = ''
+        }
+      },
+      passwordLength() {
+        this.errors.password.pw_length = this.form.password.length
+      },
       register() {
+        this.inputNotValid = false
+        this.updateFormDataWithQBData()
         if (this.checkValidData()) {
+          let updateQBData = false
           if (this.checkIfQBCompanyInfoWasUpdated()) {
             this.addCompanyInfoToFormObject()
+            updateQBData = true
           } else {
             this.sendEmptyQBCompanyInfoObject()
           }
-          this.updateFormDataWithQBData()
           this.registerForm.busy = false
 
-          User.submitFurtherInfo(this.form, this.registerForm)
+          User.registerContractor(this.form, updateQBData)
           this.registerForm.busy = false
+        } else {
+          this.inputNotValid = true
         }
       },
       unformatNumber(number) {
@@ -580,29 +693,139 @@
         }
         let numberLength = unformattedNumber.length
         if (numberLength < 10) {
-          if (this.getMobileValidResponse[1] !== '') {
-            this.$store.commit('setTheMobileResponse', ['', '', ''])
-          }
+          this.emptyPhoneNumberInStore()
         }
         // debugger;
+        this.phoneNumberLength = numberLength
         return numberLength
       },
-      checkValidData() {
-        // debugger
-        let phone = this.unformatNumber(this.form.phone_number)
-        if ((this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile') &&
-          this.form.name !== '' && (phone === 10)
-        ) {
-          return false
-        } else {
-          return true
+      emptyPhoneNumberInStore() {
+        if (this.getMobileValidResponse[1] !== '') {
+          this.$store.commit('setTheMobileResponse', ['', '', ''])
         }
+      },
+      checkValidData() {
+
+        let valid = true
+
+        // phone number
+        // does it have the right format
+        // is it the right number of digits
+        // is it a mobile number
+
+        let phone = this.unformatNumber(this.form.phone_number)
+
+        if (phone === 10) {
+          if (
+            this.getMobileValidResponse[1] === '' ||
+            this.getMobileValidResponse[2] === ''
+          ) {
+            this.validateMobileNumber(phone)
+          }
+          if (
+            this.getMobileValidResponse[1] !== 'mobile' ||
+            this.getMobileValidResponse[2] !== 'mobile') {
+            valid = false
+            this.errors.phone = true
+          } else {
+            this.errors.phone = false
+          }
+        } else {
+          valid = false
+          this.errors.phone = true
+        }
+
+        // if (
+        //   (this.getMobileValidResponse[1] !== 'mobile' ||
+        //     this.getMobileValidResponse[2] !== 'mobile') ||
+        //   phone !== 10
+        // ) {
+        //   valid = false
+        //   this.errors.phone = true
+        // } else {
+        //   this.errors.phone = false
+        // }
+
+        if (this.form.email === '' || !this.validateEmail()) {
+          this.errors.email = true
+          valid = false
+        } else {
+          this.errors.email = false
+        }
+
+        if (this.form.name === '') {
+          this.errors.name = true
+          valid = false
+        } else {
+          this.errors.name = false
+        }
+
+        if (this.form.company_name === '') {
+          this.errors.company_name = true
+          valid = false
+        } else {
+          this.errors.company_name = false
+        }
+
+        if (this.form.address_line_1 === '') {
+          this.errors.address_line_1 = true
+          valid = false
+        } else {
+          this.errors.address_line_1 = false
+        }
+
+        if (this.form.city === '') {
+          this.errors.city = true
+          valid = false
+        } else {
+          this.errors.city = false
+        }
+
+        if (this.form.state === '') {
+          this.errors.state = true
+          valid = false
+        } else {
+          this.errors.state = false
+        }
+
+        if (this.form.zip === '') {
+          this.errors.zip = true
+          valid = false
+        } else {
+          this.errors.zip = false
+        }
+
+        if (this.form.terms === '') {
+          this.errors.terms = true
+          valid = false
+        } else {
+          this.errors.terms = false
+        }
+
+        // company name
+        // does it have a length
+
+        if (
+          (this.form.password !== this.form.password_confirmation) ||
+          (this.form.password === '' || this.form.password_confirmation === '')
+        ) {
+          valid = false
+          this.errors.password.error = true
+        } else {
+          this.errors.password.error = false
+        }
+
+        return valid
+
       },
       validateMobileNumber(phone) {
         if (phone !== '') {
           this.checkMobileNumber(phone)
         }
+      },
+      validateEmail() {
+        var re = /^(?:[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/
+        return re.test(this.companyInfoTemporary.Email.Address)
       },
       checkThatNumberIsMobile() {
         if (this.getMobileValidResponse[1] === 'mobile' ||
@@ -635,7 +858,11 @@
         this.form.email = this.companyInfo.message.Email.Address
         this.form.company_name = this.companyInfo.message.CompanyName
         this.form.address_line_1 = this.companyInfo.message.CompanyAddr.Line1
-        this.form.address_line_2 = this.companyInfo.message.CompanyAddr.Line2
+        if (this.companyInfo.message.CompanyAddr.Line2) {
+          this.form.address_line_2 = this.companyInfo.message.CompanyAddr.Line2
+        } else {
+          this.form.address_line_2 = null
+        }
         this.form.city = this.companyInfo.message.CompanyAddr.City
         this.form.state = this.companyInfo.message.CompanyAddr.CountrySubDivisionCode
         this.form.zip = this.companyInfo.message.CompanyAddr.PostalCode
@@ -696,7 +923,9 @@
         this.companyInfoTemporary.PrimaryPhone = this.companyInfo.message.PrimaryPhone
         this.companyInfoTemporary.Email.Address = this.companyInfo.message.Email.Address
       },
+      companyNameIsValid() {
 
+      }
     }
   }
 </script>
@@ -705,6 +934,14 @@
 
     .empty-field {
         border: thin red solid
+    }
+
+    .has-error {
+        border: thin red solid
+    }
+
+    .has-error-name {
+        color: red;
     }
 
     .empty-field-name {

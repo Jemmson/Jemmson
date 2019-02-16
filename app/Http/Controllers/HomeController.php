@@ -56,6 +56,8 @@ class HomeController extends Controller
 
         Log::info("************Create Method - Home Controller - Begin****************");
 
+        dd($request);
+
         $this->validate(
             $request,
             [

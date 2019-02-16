@@ -126,6 +126,10 @@ export default class User {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
   }
 
+  hello() {
+    return 'world'
+  }
+
   initAutocomplete(id) {
     // Create the autocomplete object, restricting the search to geographical
     // location types.
@@ -174,12 +178,12 @@ export default class User {
     return false
   }
 
-  isSub(bid, usertype) {
-    return bid !== null && (usertype === 'contractor' && bid.contractor_id !== this.user.id)
-  }
-
   isSignedUpWithStripe() {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
+  }
+
+  isSub(bid, usertype) {
+    return bid !== null && (usertype === 'contractor' && bid.contractor_id !== this.user.id)
   }
 
   /**
@@ -231,6 +235,29 @@ export default class User {
     }
   }
 
+  async registerContractor(form, updateAccountingCompanyInfoAPI = false) {
+    form.phone_number = Format.numbersOnly(form.phone_number)
+
+    // this is always false becuase the update company feature is not yet available
+    updateAccountingCompanyInfoAPI = false
+
+    try {
+
+      const data = await axios.post('/register/contractor', {
+        form: form,
+        updateAccountingCompanyInfoAPI: updateAccountingCompanyInfoAPI
+      })
+      Vue.toasted.success('info updated')
+      Bus.$emit('updateUser')
+      // debugger;
+      location.href = data
+    } catch (error) {
+      console.log(error)
+      form.errors.errors = error.errors
+      Vue.toasted.error(error.message)
+    }
+  }
+
   async saveCustomer(token) {
     if (!token) {
       return false
@@ -258,7 +285,7 @@ export default class User {
     // debugger;
 
     if (status === null) {
-      status = 'bid_task.initiated';
+      status = 'bid_task.initiated'
     }
 
     status = Language.lang()[status]
@@ -310,7 +337,7 @@ export default class User {
         axios.post('/api/feedback', {
           user_id: user_id,
           page_url: page_url,
-          comment: comment,
+          comment: comment
         })
       Vue.toasted.success('Feedback Submitted, Thank You!')
       disabled.submit = false
@@ -322,12 +349,17 @@ export default class User {
     }
   }
 
-  async submitFurtherInfo(form, disabled) {
+  // /stripe functions
+  // /NOTICE: not used just incase we need them later as functions need to fix the error
+
+  async submitFurtherInfo(form, disabled, updateAccountingCompanyInfoAPI = false) {
     disabled.submit = true
     form.phone_number = Format.numbersOnly(form.phone_number)
     try {
       const data = await
-        Spark.post('/home', form)
+        Spark.post('/home', {
+          form: form
+        })
       Vue.toasted.success('info updated')
       Bus.$emit('updateUser')
       disabled.submit = false
@@ -339,9 +371,6 @@ export default class User {
       disabled.submit = false
     }
   }
-
-  // /stripe functions
-  // /NOTICE: not used just incase we need them later as functions need to fix the error
 
   unformatNumber(number) {
     let unformattedNumber = ''
@@ -381,10 +410,6 @@ export default class User {
     }
   }
 
-  constructor(user) {
-    this.user = user
-  }
-
   // async validateMobileNumber (number) {
   //   let unformattedNumber = this.unformatNumber (number);
   //   try {
@@ -405,4 +430,8 @@ export default class User {
   //     Vue.toasted.error ('Error: ' + error.message);
   //   }
   // }
+
+  constructor(user) {
+    this.user = user
+  }
 }
