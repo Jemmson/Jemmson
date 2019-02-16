@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Spark\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use App\Contractor;
 use Laravel\Spark\Spark;
@@ -18,7 +18,6 @@ use Laravel\Spark\User;
 
 class RegisterController extends Controller
 {
-    use RedirectsUsers;
 
     /**
      * Create a new authentication controller instance.
@@ -29,7 +28,7 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
 
-        $this->redirectTo = Spark::afterLoginRedirect();
+//        $this->redirectTo = Spark::afterLoginRedirect();
     }
 
     /**
@@ -52,7 +51,7 @@ class RegisterController extends Controller
     }
 
 
-    public function registerUser(Request $request)
+    public function registerContractor(Request $request)
     {
 
         Log::info("************Create Method - Home Controller - Begin****************");
@@ -73,7 +72,11 @@ class RegisterController extends Controller
         $contractor->company_name = $request['form']['company_name'];
         $contractor->save();
 
-        Auth::login($user);
+//        log::debug(Auth::login(user));
+
+        Auth::logout();
+
+        Auth::loginUsingId($user->id);
 
         if (empty(session('prevDestination'))) {
             Log::info("going to /#/home");
@@ -88,43 +91,4 @@ class RegisterController extends Controller
 
     }
 
-
-
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param  RegisterRequest $request
-     * @return Response
-     */
-    public function register(RegisterRequest $request)
-    {
-        Auth::login($user = Spark::interact(
-            Register::class, [$request]
-        ));
-
-        event(new UserRegistered($user));
-
-        return response()->json([
-            'redirect' => '/#/furtherInfo'
-        ]);
-    }
-
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param  RegisterRequest $request
-     * @return Response
-     */
-//    public function register(RegisterRequest $request)
-//    {
-//        Auth::login($user = Spark::interact(
-//            Register::class, [$request]
-//        ));
-//
-//        event(new UserRegistered($user));
-//
-//        return response()->json([
-//            'redirect' => '/#/furtherInfo'
-//        ]);
-//    }
 }

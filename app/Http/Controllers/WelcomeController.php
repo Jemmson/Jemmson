@@ -13,6 +13,7 @@ class WelcomeController extends Controller
      */
     public function show()
     {
+//        dd('hello controller');
         return view('welcome');
     }
 }

@@ -27,9 +27,12 @@ Route::get('/loadFeatures', function () {
     }
 });
 
+Route::get('/welcome', 'WelcomeController@show');
+
 Route::get('/quickbooks/getAuthUrl/{state}', 'QuickbooksController@getAuthUrl');
 Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
 Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCompanyInfo');
+ Route::post('/register/contractor', 'RegisterController@registerContractor');
 
 // login routes
 Route::get('login', 'Auth\LoginController@show');

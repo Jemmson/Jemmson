@@ -285,9 +285,9 @@
                         <div v-else-if="checkIfNumberIsVirtual()" style="color: red">
                             {{ this.getMobileValidResponse[1] }}
                         </div>
-                        <span class="help-block" v-show="form.errors.has('phone_number')">
-                                    {{ form.errors.get('phone_number') }}
-                        </span>
+                        <!--<span class="help-block" v-show="form.errors('phone_number')">-->
+                                    <!--{{ form.errors.get('phone_number') }}-->
+                        <!--</span>-->
                     </div>
                 </div>
 
@@ -342,7 +342,6 @@
                 <!--</span>-->
                 <!--Register-->
                 <!--</button>-->
-
 
                 <div class="input-section">
                     <div class="col-md-6 col-md-offset-4">
@@ -527,7 +526,7 @@
             sparse: null
           }
         },
-        form: new SparkForm({
+        form: {
           email: '',
           name: '',
           company_name: '',
@@ -544,8 +543,11 @@
           email_contact: true,
           phone_contact: false,
           sms_text: false,
-          qbCompanyInfo: {}
-        }),
+          qbCompanyInfo: {},
+          errors: {
+            errors: {}
+          }
+        },
         errors: {
           password: {
             match: true,
@@ -657,6 +659,7 @@
         } else {
           this.form.errors.errors = {}
           this.errors.password.match = true
+          this.errors.password.message = ''
         }
       },
       passwordLength() {
@@ -675,7 +678,7 @@
           }
           this.registerForm.busy = false
 
-          User.registerUser(this.form, this.registerForm, updateQBData)
+          User.registerContractor(this.form, updateQBData)
           this.registerForm.busy = false
         } else {
           this.inputNotValid = true

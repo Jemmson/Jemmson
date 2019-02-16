@@ -236,7 +236,7 @@ describe('RegisterQuickBooks', () => {
           PrimaryPhone: ''
         }
       },
-      form: new SparkForm({
+      form: {
         email: '',
         name: 'sdssdds',
         company_name: '',
@@ -252,8 +252,11 @@ describe('RegisterQuickBooks', () => {
         password_confirmation: 'asdasd',
         email_contact: true,
         phone_contact: false,
-        sms_text: false
-      })
+        sms_text: false,
+        errors: {
+          errors: {}
+        }
+      }
     })
 
     let btn = wrapper.find({
@@ -324,9 +327,90 @@ describe('RegisterQuickBooks', () => {
     //visually verified
   })
 
-  it.only('should check the PrimaryNumber field that is returned by quickbooks ' +
+  it('should check the PrimaryNumber field that is returned by quickbooks ' +
     'and show an error if that primary number is not a mobile number', function() {
     //visually verified
+  })
+
+  it('should prompt to save an entered text if the edit button is hit. the register button should not ' +
+    'work', function() {
+
+  })
+
+  it('should check that the email that was entered does not already exist in the database', function() {
+    // use an ajax call
+  })
+
+  it('should check that the email is not already in the database at load time and then throw an error if it already exists', function() {
+
+  })
+
+  it('should check that the email is not in the database at blur if the user makes a change to the email and then throw ' +
+    'an error if it is', function() {
+
+  })
+
+  it('should check that the phone that was entered does not already exist in the database', function() {
+    // use an ajax call
+  })
+
+  it('should check that the phone is not already in the database at load time and then throw an error if it already exists', function() {
+
+  })
+
+  it('should check that the phone is not in the database at blur if the user makes a change to the email and then throw ' +
+    'an error if it is', function() {
+
+  })
+
+  it('should not allow the register button to be clickable if the email already exists in the database', function() {
+
+  })
+
+  it('should not allow the register button to be clickable if the phone number already exists in the database', function() {
+
+  })
+
+  it('should have an asterisk that says that the company information does not sync with quickbooks due to a quickbooks ' +
+    'limitation', function() {
+
+  })
+
+  it('company name must not be empty', function() {
+
+  })
+
+  it('should have a first name and last name fields', function() {
+
+  })
+
+  it('first name field can not be blank', function() {
+
+  })
+
+  it('last name field can not be blank', function() {
+
+  })
+
+  it('register button should be disabled if first name is blank', function() {
+
+  })
+
+  it('register button should be disabled if last name is blank', function() {
+
+  })
+
+  it('if on blur the number is formatted then on the delete key it should unformat the number so that regular entry ' +
+    'can continue', function() {
+
+  })
+
+  it('should redirect if the user is alread logged in', function() {
+
+  })
+
+  it('should go to top of page where the errors are shown if the register buttons are clicked and errors are thrown', function() {
+
   })
 
   it.only('should check that if the PrimaryNumber field that is returned by quickbooks ' +
