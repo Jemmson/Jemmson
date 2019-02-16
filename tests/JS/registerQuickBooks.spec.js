@@ -350,7 +350,7 @@ describe('RegisterQuickBooks', () => {
   })
 
   it('should check that the email is not already in the database at load time and then throw an error if it already exists', function() {
-
+    
   })
 
   it('should check that the email is not in the database at blur if the user makes a change to the email and then throw ' +

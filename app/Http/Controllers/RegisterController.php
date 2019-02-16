@@ -55,6 +55,10 @@ class RegisterController extends Controller
     public function registerContractor(Request $request)
     {
 
+        $this->validate($request, [
+            'form.email' => 'required|email|unique:users,email',
+        ]);
+
         Log::info("************Create Method - Home Controller - Begin****************");
 
         $user = new User();
