@@ -72,11 +72,6 @@ class RegisterController extends Controller
             Log::debug($error->getMessage());
         }
 
-
-        $contractor = new Contractor();
-        $contractor->user_id = $user->id;
-        $contractor->company_name = $request['form']['company_name'];
-
         $location = new Location();
         $location->user_id = $user->id;
         $location->default = true;
@@ -93,6 +88,19 @@ class RegisterController extends Controller
             Log::debug($error->getMessage());
         }
 
+
+        $user->location_id = $location->id;
+
+        try {
+            $user->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
+
+        $contractor = new Contractor();
+        $contractor->user_id = $user->id;
+        $contractor->company_name = $request['form']['company_name'];
+        $contractor->location_id = $location->id;
 
         try {
             $contractor->save();
