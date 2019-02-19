@@ -255,9 +255,15 @@ export default class User {
       Bus.$emit('updateUser')
       // location.href = data
     } catch (error) {
-      console.log(error)
+      let data = error.response.data;
+      let message = '';
+
+      if (data.errors['form.email'] !== undefined && data.errors['form.email'] !== null) {
+        message += data.errors['form.email'][0];
+      }
+      
       form.errors.errors = error.errors
-      Vue.toasted.error(error.message)
+      Vue.toasted.error(message);
     }
   }
 
