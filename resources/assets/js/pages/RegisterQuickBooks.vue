@@ -16,7 +16,7 @@
                     <h5 class="text-center text-red uppercase" v-show="errors.email">email address missing or has
                         incorrect format</h5>
                     <h5 class="text-center text-red uppercase" v-show="errors.name">The name field is missing</h5>
-                    <h5 class="text-center text-red uppercase" ref="phoneError" v-show="errors.phone">The phone field is
+                    <h5 class="text-center text-red uppercase" ref="phoneError" v-if="errors.phone">The phone field is
                         not correct</h5>
                     <h5 class="text-center text-red uppercase" v-show="errors.password.error">The password field is
                         missing</h5>
@@ -663,21 +663,177 @@
         }
       },
       passwordLength() {
-        this.errors.password.pw_length = this.form.password.length
+        if (this.form.password !== null) {
+          this.errors.password.pw_length = this.form.password.length
+        }
+      },
+      checkPasswords() {
+        if (
+          (this.form.password !== this.form.password_confirmation) ||
+          (this.form.password === '' || this.form.password_confirmation === '')
+        ) {
+          this.errors.password.error = true;
+          return false;
+        } else {
+          this.errors.password.error = false;
+          return true;
+        }
+      },
+      checkValidPhoneNumber() {
+        let phone = this.unformatNumber(this.form.phone_number);
+
+        if (phone === 10) {
+          if (
+            this.getMobileValidResponse[1] === '' || this.getMobileValidResponse[2] === ''
+          ) {
+            this.validateMobileNumber(phone);
+          }
+          if (
+            this.getMobileValidResponse[1] !== 'mobile' || this.getMobileValidResponse[2] !== 'mobile'
+          ) {
+            this.errors.phone = true;
+            return false;
+          } else {
+            this.errors.phone = false;
+            return true;
+          }
+        } else {
+          this.errors.phone = true;
+          return false;
+        }
+      },
+      checkValidEmail () {
+        if (this.form.email === '' || !this.validateEmail()) {
+          this.errors.email = true;
+          return false;
+        } else {
+          this.errors.email = false;
+          return true;
+        }
+      },
+      checkName () {
+        if (this.form.name === '') {
+          this.errors.name = true;
+          return false;
+        } else {
+          this.errors.name = false;
+          return true;
+        }
+      },
+      checkCompanyName () {
+        if (this.form.company_name === '') {
+          this.errors.company_name = true;
+          return false;
+        } else {
+          this.errors.company_name = false;
+          return true;
+        }
+      },
+      checkCompanyAddressLine1 () {
+        if (this.form.address_line_1 === '') {
+          this.errors.address_line_1 = true
+          return false;
+        } else {
+          this.errors.address_line_1 = false
+          return true;
+        }
+      },
+      checkCompanyAddressCity () {
+        if (this.form.city === '') {
+          this.errors.city = true;
+          return false;
+        } else {
+          this.errors.city = false;
+          return true;
+        }
+      },
+      checkCompanyAddressState () {
+        if (this.form.state === '') {
+          this.errors.state = true;
+          return false;
+        } else {
+          this.errors.state = false;
+          return true;
+        }
+      },
+      checkCompanyAddressZip () {
+        if (this.form.zip === '') {
+          this.errors.zip = true;
+          return false;
+        } else {
+          this.errors.zip = false;
+          return true;
+        }
+      },
+      checkTerms (){
+        if (this.form.terms === '') {
+          this.errors.terms = true
+          return false;
+        } else {
+          this.errors.terms = false
+          return true;
+        }
       },
       register() {
-        this.inputNotValid = false
-        this.updateFormDataWithQBData()
-        if (this.checkValidData()) {
-          let updateQBData = false
-          if (this.checkIfQBCompanyInfoWasUpdated()) {
-            this.addCompanyInfoToFormObject()
-            updateQBData = true
-          } else {
-            this.sendEmptyQBCompanyInfoObject()
-          }
-          this.registerForm.busy = false
 
+        // check that all form elements have been updated
+        this.updateFormDataWithQBData()
+
+
+        // is all the input valid?
+        let submit = true;
+
+        if (!this.checkPasswords()) {
+          submit = false;
+        }
+
+        if (!this.checkValidPhoneNumber()) {
+          submit = false;
+        }
+
+        if (!this.checkValidEmail()) {
+          submit = false;
+        }
+
+        if (!this.checkName()) {
+          submit = false;
+        }
+
+        if (!this.checkCompanyName()) {
+          submit = false;
+        }
+
+        if (!this.checkCompanyAddressLine1()) {
+          submit = false;
+        }
+        if (!this.checkCompanyAddressCity()) {
+          submit = false;
+        }
+
+        if (!this.checkCompanyAddressState()) {
+          submit = false;
+        }
+
+        if (!this.checkCompanyAddressZip()) {
+          submit = false;
+        }
+
+        if (!this.checkTerms()) {
+          submit = false;
+        }
+        this.inputNotValid = false;
+        if (submit) {
+
+          // this is meant to trigger an update request object to quickbooks
+          // this feature does not seem available to the php sdk so is not implemented
+          let updateQBData = false
+          // if (this.checkIfQBCompanyInfoWasUpdated()) {
+          //   this.addCompanyInfoToFormObject()
+          //   updateQBData = true
+          // } else {
+          //   this.sendEmptyQBCompanyInfoObject()
+          // }
+          this.registerForm.busy = false
           User.registerContractor(this.form, updateQBData)
           this.registerForm.busy = false
         } else {
@@ -685,19 +841,22 @@
         }
       },
       unformatNumber(number) {
-        let unformattedNumber = ''
-        for (let i = 0; i < number.length; i++) {
-          if (!isNaN(parseInt(number[i]))) {
-            unformattedNumber = unformattedNumber + number[i]
-          }
-        }
-        let numberLength = unformattedNumber.length
-        if (numberLength < 10) {
-          this.emptyPhoneNumberInStore()
-        }
-        // debugger;
-        this.phoneNumberLength = numberLength
-        return numberLength
+       if (number !== null) {
+         let unformattedNumber = '';
+         for (let i = 0; i < number.length; i++) {
+           if (!isNaN(parseInt(number[i]))) {
+             unformattedNumber = unformattedNumber + number[i];
+           }
+         }
+         let numberLength = unformattedNumber.length;
+         if (numberLength < 10) {
+           this.emptyPhoneNumberInStore();
+         }
+         // debugger;
+         this.phoneNumberLength = numberLength;
+         console.log(numberLength);
+         return numberLength;
+       }
       },
       emptyPhoneNumberInStore() {
         if (this.getMobileValidResponse[1] !== '') {
@@ -713,27 +872,27 @@
         // is it the right number of digits
         // is it a mobile number
 
-        let phone = this.unformatNumber(this.form.phone_number)
-
-        if (phone === 10) {
-          if (
-            this.getMobileValidResponse[1] === '' ||
-            this.getMobileValidResponse[2] === ''
-          ) {
-            this.validateMobileNumber(phone)
-          }
-          if (
-            this.getMobileValidResponse[1] !== 'mobile' ||
-            this.getMobileValidResponse[2] !== 'mobile') {
-            valid = false
-            this.errors.phone = true
-          } else {
-            this.errors.phone = false
-          }
-        } else {
-          valid = false
-          this.errors.phone = true
-        }
+        // let phone = this.unformatNumber(this.form.phone_number)
+        //
+        // if (phone === 10) {
+        //   if (
+        //     this.getMobileValidResponse[1] === '' ||
+        //     this.getMobileValidResponse[2] === ''
+        //   ) {
+        //     this.validateMobileNumber(phone)
+        //   }
+        //   if (
+        //     this.getMobileValidResponse[1] !== 'mobile' ||
+        //     this.getMobileValidResponse[2] !== 'mobile') {
+        //     valid = false
+        //     this.errors.phone = true
+        //   } else {
+        //     this.errors.phone = false
+        //   }
+        // } else {
+        //   valid = false
+        //   this.errors.phone = true
+        // }
 
         // if (
         //   (this.getMobileValidResponse[1] !== 'mobile' ||
@@ -746,74 +905,74 @@
         //   this.errors.phone = false
         // }
 
-        if (this.form.email === '' || !this.validateEmail()) {
-          this.errors.email = true
-          valid = false
-        } else {
-          this.errors.email = false
-        }
+        // if (this.form.email === '' || !this.validateEmail()) {
+        //   this.errors.email = true
+        //   valid = false
+        // } else {
+        //   this.errors.email = false
+        // }
 
-        if (this.form.name === '') {
-          this.errors.name = true
-          valid = false
-        } else {
-          this.errors.name = false
-        }
+        // if (this.form.name === '') {
+        //   this.errors.name = true
+        //   valid = false
+        // } else {
+        //   this.errors.name = false
+        // }
 
-        if (this.form.company_name === '') {
-          this.errors.company_name = true
-          valid = false
-        } else {
-          this.errors.company_name = false
-        }
+        // if (this.form.company_name === '') {
+        //   this.errors.company_name = true
+        //   valid = false
+        // } else {
+        //   this.errors.company_name = false
+        // }
 
-        if (this.form.address_line_1 === '') {
-          this.errors.address_line_1 = true
-          valid = false
-        } else {
-          this.errors.address_line_1 = false
-        }
+        // if (this.form.address_line_1 === '') {
+        //   this.errors.address_line_1 = true
+        //   valid = false
+        // } else {
+        //   this.errors.address_line_1 = false
+        // }
+        //
+        // if (this.form.city === '') {
+        //   this.errors.city = true
+        //   valid = false
+        // } else {
+        //   this.errors.city = false
+        // }
+        //
+        // if (this.form.state === '') {
+        //   this.errors.state = true
+        //   valid = false
+        // } else {
+        //   this.errors.state = false
+        // }
+        //
+        // if (this.form.zip === '') {
+        //   this.errors.zip = true
+        //   valid = false
+        // } else {
+        //   this.errors.zip = false
+        // }
 
-        if (this.form.city === '') {
-          this.errors.city = true
-          valid = false
-        } else {
-          this.errors.city = false
-        }
-
-        if (this.form.state === '') {
-          this.errors.state = true
-          valid = false
-        } else {
-          this.errors.state = false
-        }
-
-        if (this.form.zip === '') {
-          this.errors.zip = true
-          valid = false
-        } else {
-          this.errors.zip = false
-        }
-
-        if (this.form.terms === '') {
-          this.errors.terms = true
-          valid = false
-        } else {
-          this.errors.terms = false
-        }
+        // if (this.form.terms === '') {
+        //   this.errors.terms = true
+        //   valid = false
+        // } else {
+        //   this.errors.terms = false
+        // }
 
         // company name
         // does it have a length
 
-        if (
-          (this.form.password !== this.form.password_confirmation) ||
-          (this.form.password === '' || this.form.password_confirmation === '')
-        ) {
-          valid = false
-          this.errors.password.error = true
-        } else {
-          this.errors.password.error = false
-        }
+        // if (
+        //   (this.form.password !== this.form.password_confirmation) ||
+        //   (this.form.password === '' || this.form.password_confirmation === '')
+        // ) {
+        //   valid = false
+        //   this.errors.password.error = true
+        // } else {
+        //   this.errors.password.error = false
+        // }
 
         return valid
 
@@ -910,8 +1069,11 @@
         this.companyInfo.message.CompanyAddr.PostalCode = this.companyInfoTemporary.CompanyAddr.PostalCode
         this.companyInfo.message.PrimaryPhone = this.companyInfoTemporary.PrimaryPhone
         this.companyInfo.message.Email.Address = this.companyInfoTemporary.Email.Address
-
         this.qbCompanyInfoWasUpdated = true
+
+        this.updateFormDataWithQBData();
+        this.checkValidPhoneNumber();
+
       },
       cancel() {
         this.sections.editGeneralInfo = false
