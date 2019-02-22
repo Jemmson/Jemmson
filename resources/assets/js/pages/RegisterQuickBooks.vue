@@ -8,6 +8,7 @@
         <div class="box border flex flex-col section">
             <div class="content">
 
+                <vue-element-loading :active="loading" :is-full-screen="true"/>
 
                 <h2 class="text-center text-red uppercase" v-show="inputNotValid">Please Check That All Mandatory Fields
                     Are Setup Correctly</h2>
@@ -269,12 +270,17 @@
 
                 <div class="input-section">
                     <!--<div class="input-section" :class="{'has-error': form.errors.has('phone_number')}">-->
-                    <label class="j-label">Mobile Phone Number</label><span class="j-label ml-2 star">*</span>
+                    <div class="flex justify-between">
+                        <label class="j-label">Mobile Phone Number</label><span class="j-label ml-2 star">*</span>
+                        <div v-if="errors.phone" class="text-center text-red uppercase">Phone Number must be 10 digits</div>
+                        <div></div>
+                    </div>
                     <div class="">
                         <input type="tel" class="border input" name="phone_number" maxlength="10"
                                v-model="companyInfoTemporary.PrimaryPhone"
                                @blur="validateMobileNumber($event.target.value)"
                                :class="companyInfoTemporary.PrimaryPhone ? '' : 'empty-field'"
+                               v-on:keyup.delete="makePhoneNumberIntoDigits($event.target.value)"
                                @keyup="filterPhone">
                         <div v-if="checkThatNumberIsMobile()" style="color: green">
                             {{ this.getMobileValidResponse[1] }}
@@ -371,11 +377,17 @@
 <script>
 
   import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import VueElementLoading from 'vue-element-loading'
 
   export default {
     name: 'RegisterQuickBooks',
+    components: {
+      VueElementLoading
+    },
     data() {
       return {
+        loading: false,
+        unformattedNumber: '',
         companyInfo: {
           message: {
             CompanyName: null,
@@ -622,6 +634,10 @@
       ...mapActions([
         'checkMobileNumber',
       ]),
+      makePhoneNumberIntoDigits(value) {
+        this.unformatNumber(value);
+        this.companyInfoTemporary.PrimaryPhone = this.unformattedNumber;
+      },
       getTheCompanyInfo() {
         axios.get('/quickbooks/getCachedCompanyInfo')
           .then(function(response) {
@@ -776,6 +792,8 @@
       },
       register() {
 
+        this.loading = true;
+
         // check if the data is in edit mode and then save it if it is
         if (this.sections.editGeneralInfo) {
           this.save()
@@ -852,6 +870,7 @@
              unformattedNumber = unformattedNumber + number[i];
            }
          }
+         this.unformattedNumber = unformattedNumber;
          let numberLength = unformattedNumber.length;
          if (numberLength < 10) {
            this.emptyPhoneNumberInStore();
@@ -982,8 +1001,15 @@
 
       },
       validateMobileNumber(phone) {
-        if (phone !== '') {
-          this.checkMobileNumber(phone)
+        if (this.unformatNumber(phone) === 10) {
+          this.errors.phone = false;
+          this.setMobileResponse(["", "", ""]);
+          this.loading = true;
+          if (phone !== '') {
+            this.checkMobileNumber(phone);
+          }
+        } else {
+          this.errors.phone = true;
         }
       },
       validateEmail() {
@@ -993,6 +1019,7 @@
       checkThatNumberIsMobile() {
         if (this.getMobileValidResponse[1] === 'mobile' ||
           this.getMobileValidResponse[2] === 'mobile') {
+          this.loading = false;
           return true
         } else {
           return false
@@ -1001,6 +1028,7 @@
       checkLandLineNumber() {
         if (this.getMobileValidResponse[1] === 'landline' ||
           this.getMobileValidResponse[2] === 'landline') {
+          this.loading = false;
           return true
         } else {
           return false
@@ -1009,6 +1037,7 @@
       checkIfNumberIsVirtual() {
         if (this.getMobileValidResponse[1] === 'virtual' ||
           this.getMobileValidResponse[2] === 'virtual') {
+          this.loading = false;
           return true
         } else {
           return false
