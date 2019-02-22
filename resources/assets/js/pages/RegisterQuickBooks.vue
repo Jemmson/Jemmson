@@ -776,9 +776,13 @@
       },
       register() {
 
+        // check if the data is in edit mode and then save it if it is
+        if (this.sections.editGeneralInfo) {
+          this.save()
+        }
+
         // check that all form elements have been updated
         this.updateFormDataWithQBData()
-
 
         // is all the input valid?
         let submit = true;

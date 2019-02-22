@@ -1,6 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import expect from 'expect'
 import sinon from 'sinon'
+import moxios from 'moxios'
 import Vuex from 'vuex'
 import RegisterQuickBooks from '../../resources/assets/js/pages/RegisterQuickBooks'
 
@@ -22,6 +23,7 @@ describe('RegisterQuickBooks', () => {
   const checkValidPhoneNumberStub = sinon.stub()
 
   beforeEach(() => {
+    moxios.install()
     actions = {
       checkMobileNumber: () => ''
     }
@@ -55,8 +57,20 @@ describe('RegisterQuickBooks', () => {
 
   })
 
+  afterEach(function () {
+    // import and pass your custom axios instance to this method
+    moxios.uninstall()
+  })
+
   it.skip('should show the json company information on mount', function() {
     // visually verified
+    let getTheCompanyInfoStub = sinon.stub;
+
+    wrapper.setMethods({
+      getTheCompanyInfo: getTheCompanyInfoStub
+    })
+
+    expect(getTheCompanyInfoStub.calledOnce).toBe(true);
 
   })
 
@@ -200,7 +214,22 @@ describe('RegisterQuickBooks', () => {
     //visually verified
   })
 
-  it.skip('should have a pop up if you do not save the edit section', function() {
+  it('should auto save if the data is in edit mode and the register button is clicked', function() {
+    wrapper.setData({
+        sections: {
+          editGeneralInfo: false
+        }
+    })
+
+    let btn = wrapper.find({ ref: 'edit_btn' });
+    btn.trigger('click');
+
+    expect(wrapper.vm.sections.editGeneralInfo).toBe(true);
+
+    let reg_btn = wrapper.find({ ref: 'register' });
+    reg_btn.trigger('click');
+
+    expect(wrapper.vm.sections.editGeneralInfo).toBe(false);
 
   })
 
