@@ -1,6 +1,6 @@
 import expect from 'expect'
 import User from '../../resources/assets/js/classes/User'
-import { router } from '../app.js'
+// import { router } from '../app.js'
 
 describe('User', () => {
 
@@ -57,6 +57,4 @@ describe('User', () => {
   })
 
 
-})
-
-})
+});

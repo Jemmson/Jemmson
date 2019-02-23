@@ -193,12 +193,18 @@
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
-                        <div class="ml-2"
-                             ref="primaryPhone"
-                             :class="companyInfo.message.PrimaryPhone ? '' : 'empty-field-name'"
-                        >Mobile Phone Number
+                        <div class="flex">
+                            <div class="ml-2"
+                                 ref="primaryPhone"
+                                 :class="(companyInfo.message.PrimaryPhone || !errors.phone) ? '' : 'empty-field-name'"
+                            >Mobile Phone Number
+                            </div>
+                            <span
+                                    class="j-label ml-2 star"
+                                    ref="savedPhoneLabelStar"
+                                    :class="(companyInfo.message.PrimaryPhone || !errors.phone) ? '' : 'empty-field-name'"
+                            >*</span>
                         </div>
-                        <span class="j-label ml-2 star">*</span>
                     </div>
                     <div class="mr-2">{{ companyInfo.message.PrimaryPhone }}</div>
                 </div>
@@ -271,12 +277,25 @@
                 <div class="input-section">
                     <!--<div class="input-section" :class="{'has-error': form.errors.has('phone_number')}">-->
                     <div class="flex justify-between">
-                        <label class="j-label">Mobile Phone Number</label><span class="j-label ml-2 star">*</span>
+                        <div class="flex">
+                            <label
+                                    class="j-label"
+                                    ref="editedPhoneLabel"
+                                    :class="(companyInfo.message.PrimaryPhone || errors.phone) ? '' : 'empty-field-name'"
+                            >Mobile Phone Number</label>
+                            <span
+                                    class="j-label ml-2 star"
+                                    ref="editedPhoneLabelStar"
+                                    :class="(companyInfo.message.PrimaryPhone || errors.phone) ? '' : 'empty-field-name'"
+                            >*</span>
+                        </div>
                         <div v-if="errors.phone" class="text-center text-red uppercase">Phone Number must be 10 digits</div>
                         <div></div>
                     </div>
                     <div class="">
-                        <input type="tel" class="border input" name="phone_number" maxlength="10"
+                        <input type="tel" class="border input"
+                               ref="phone_number_input"
+                               name="phone_number" maxlength="10"
                                v-model="companyInfoTemporary.PrimaryPhone"
                                @blur="validateMobileNumber($event.target.value)"
                                :class="companyInfoTemporary.PrimaryPhone ? '' : 'empty-field'"
@@ -634,6 +653,9 @@
       ...mapActions([
         'checkMobileNumber',
       ]),
+      checkPhoneErrorsForClass () {
+
+      },
       makePhoneNumberIntoDigits(value) {
         this.unformatNumber(value);
         this.companyInfoTemporary.PrimaryPhone = this.unformattedNumber;
@@ -792,8 +814,6 @@
       },
       register() {
 
-        this.loading = true;
-
         // check if the data is in edit mode and then save it if it is
         if (this.sections.editGeneralInfo) {
           this.save()
@@ -855,7 +875,9 @@
           // } else {
           //   this.sendEmptyQBCompanyInfoObject()
           // }
-          this.registerForm.busy = false
+          this.registerForm.busy = false;
+          debugger;
+          this.loading = true;
           User.registerContractor(this.form, updateQBData)
           this.registerForm.busy = false
         } else {
