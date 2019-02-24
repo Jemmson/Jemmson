@@ -18,9 +18,6 @@ describe('RegisterQuickBooks', () => {
   let store
   const getCompanyInfo = sinon.spy()
   const getTheCompanyInfo = sinon.spy()
-  const setTheMobileResponse = sinon.spy()
-  const saveStub = sinon.stub()
-  const checkValidPhoneNumberStub = sinon.stub()
 
   beforeEach(() => {
     moxios.install()
@@ -81,48 +78,6 @@ describe('RegisterQuickBooks', () => {
 
   it.skip('should show the edit button for each of the sections pulled back from the quickbooks get company info', function() {
     // visually verified
-
-  })
-
-  it('should show loading icon when the phone field is blurred', function() {
-    let validateMobileNumberStub = sinon.stub();
-    wrapper.setData({
-        loading: false
-    })
-
-    wrapper.setMethods({
-      validateMobileNumber: validateMobileNumberStub
-    })
-
-    let phone_number_input = wrapper.find({ ref: 'phone_number_input' });
-    phone_number_input.setValue('(480) 703-4433');
-    phone_number_input.trigger('blur');
-
-    expect(validateMobileNumberStub.called).toBe(true);
-
-  })
-
-  it('should show empty-field-name class if the compnayInfo.message.PrimaryPhone is missing', function() {
-    wrapper.setData({
-      companyInfo: {
-        message: {
-          PrimaryPhone: null
-        }
-      }
-    })
-
-    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2 empty-field-name');
-
-  })
-
-  it('should show empty-field-name class if errors.phone is missing', function() {
-    wrapper.setData({
-      errors: {
-        phone: true
-      }
-    })
-
-    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2 empty-field-name');
 
   })
 
@@ -352,55 +307,6 @@ describe('RegisterQuickBooks', () => {
 
   })
 
-  it('when I hit save the errors in the top should cancel out if the saved data checks out', function() {
-    // trigger a phone error
-    wrapper.setData({
-        form: {
-          phone_number: '(480) 703-49'
-        }
-    })
-
-    let reg = wrapper.find({ ref: 'register' });
-    reg.trigger('click');
-
-
-    // verify the error has popped up
-    expect(wrapper.find({ ref: 'phoneError' }).exists()).toBe(true);
-
-    // hit save
-    let edit_btn = wrapper.find({ ref: 'edit_btn' });
-    edit_btn.trigger('click');
-
-    wrapper.setData({
-      companyInfoTemporary: {
-        PrimaryPhone: '(480) 703-4902'
-      }
-    })
-
-    wrapper.setMethods({
-      save: saveStub,
-      checkValidPhoneNumber: checkValidPhoneNumberStub
-    });
-
-    let save_btn = wrapper.find({ ref: 'save_btn' });
-    save_btn.trigger('click');
-    expect(saveStub.called).toBe(true);
-    // expect(checkValidPhoneNumberStub.called).toBe(true);
-
-    // verify the phone number is valid again
-    expect(wrapper.find({ ref: 'phoneError' }).exists()).toBe(false);
-    
-    // if valid then remove the error
-    
-    // verify the error has been removed
-    
-    
-  })
-
-  it.skip('should not submit if the phone number is not valid', function() {
-    // harder need to check the getters in the store
-  })
-
   it.skip('should not submit if the accept terms button is not checked', function() {
     //visually verified
   })
@@ -480,127 +386,7 @@ describe('RegisterQuickBooks', () => {
   //#PHONE
   //#########################
 
-  it('the phone number should have 10 digits when it is unformatted', function() {
-    wrapper.setData({
-      form: {
-        phone_number: '(123) 456-7890'
-      }
-    })
 
-    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(10)
-
-  })
-
-  it('the phone number should have 9 digits when it is unformatted', function() {
-    wrapper.setData({
-      form: {
-        phone_number: '(123) 456-789'
-      }
-    })
-    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9)
-  })
-
-  it('the phoneNumberLength number field should be updated with the correct value when the ' +
-    'unformatNumber methods is called  ', function() {
-
-    wrapper.setData({
-      form: {
-        phone_number: '(123) 456-789'
-      }
-    })
-    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9)
-    expect(wrapper.vm.phoneNumberLength).toBe(9)
-
-  })
-
-  it.only('should show a phone error if there is a phone number but there is an error', function() {
-    wrapper.setData({
-      companyInfo: {
-        message: {
-          PrimaryPhone: '12341234'
-        }
-      },
-      errors: {
-        phone: true
-      }
-    })
-
-    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('j-label empty-field-name');
-    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
-
-    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label empty-field-name');
-    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
-
-  })
-
-  it.only('should show a phone error if the primary phone error is empty and there is a phone error', function() {
-    wrapper.setData({
-      companyInfo: {
-        message: {
-          PrimaryPhone: ''
-        }
-      },
-      errors: {
-        phone: true
-      }
-    });
-
-    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('j-label empty-field-name');
-    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
-
-    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label empty-field-name');
-    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
-
-  })
-
-  it.only('should show not show a phone error if the primary phone number is not empty and the phone errors are false', function() {
-    wrapper.setData({
-      companyInfo: {
-        message: {
-          PrimaryPhone: '12341234'
-        }
-      },
-      errors: {
-        phone: false
-      }
-    });
-
-    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('j-label');
-    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star');
-
-    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label');
-    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star');
-
-  })
-
-  it.only('should show a phone error if there is no primary phone number and the errors are false', function() {
-    wrapper.setData({
-      companyInfo: {
-        message: {
-          PrimaryPhone: ''
-        }
-      },
-      errors: {
-        phone: false
-      }
-    });
-
-    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('j-label empty-field-name');
-    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
-
-    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label empty-field-name');
-    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
-
-  })
-
-  it.skip('should not submit if the phone number is not valid', function() {
-    //visually verified
-  })
-
-  it.skip('should check the PrimaryNumber field that is returned by quickbooks ' +
-    'and show an error if that primary number is not a mobile number', function() {
-    //visually verified
-  })
 
   it.skip('should prompt to save an entered text if the edit button is hit. the register button should not ' +
     'work', function() {
@@ -683,38 +469,6 @@ describe('RegisterQuickBooks', () => {
 
   })
 
-  it('should check that if the PrimaryNumber field that is returned by quickbooks ' +
-    'is null then the class empty-field-name will be present', function() {
-    wrapper.setData({
-      companyInfo: {
-        message: {
-          PrimaryPhone: null
-        }
-      }
-    })
-
-    let primaryPhone = wrapper.find({ref: 'primaryPhone'})
-
-    expect(primaryPhone.attributes().class).toBe('ml-2 empty-field-name')
-
-  })
-
-  it('should check that if the PrimaryNumber field that is returned by quickbooks ' +
-    'is not null then the class empty-field-name will not be present', function() {
-    wrapper.setData({
-      companyInfo: {
-        message: {
-          PrimaryPhone: '1231231234'
-        }
-      }
-    })
-
-    let primaryPhone = wrapper.find({ref: 'primaryPhone'})
-
-    expect(primaryPhone.attributes().class).toBe('ml-2')
-
-  })
-
   it('should have the password length error show if the length of the password is less than 6', function() {
     wrapper.setData({
       errors: {
@@ -765,8 +519,300 @@ describe('RegisterQuickBooks', () => {
 
 })
 
-// describe('RegisterQuickBooks_register_button', () => {
-//   let wrapper
-//   const getCompanyInfo = sinon.spy()
-//
-// })
+describe('RegisterQuickBooks_phone_field', () => {
+  let wrapper
+  let actions
+  let getters
+  let mutations
+  let store
+  const getCompanyInfo = sinon.spy()
+  const getTheCompanyInfo = sinon.spy()
+  const setTheMobileResponse = sinon.spy()
+  const saveStub = sinon.stub()
+  const checkValidPhoneNumberStub = sinon.stub()
+
+  beforeEach(() => {
+    moxios.install()
+    actions = {
+      checkMobileNumber: () => ''
+    }
+    mutations = {
+      setMobileResponse: () => '',
+      setTheMobileResponse: () => ''
+    }
+    getters = {
+      getMobileValidResponse: () => ['phone', 'mobile', 'land', 'virtual'],
+    }
+    store = new Vuex.Store({
+      state: {},
+      actions,
+      getters,
+      mutations
+    })
+
+    wrapper = mount(RegisterQuickBooks, {
+      store,
+      localVue,
+      methods: {
+        getCompanyInfo,
+        getTheCompanyInfo
+      },
+      data() {
+        return {
+          companyInfo: {}
+        }
+      }
+    })
+
+  })
+
+  afterEach(function () {
+    // import and pass your custom axios instance to this method
+    moxios.uninstall()
+  })
+
+  it('should show loading icon when the phone field is blurred', function() {
+    let validateMobileNumberStub = sinon.stub();
+    wrapper.setData({
+      loading: false
+    })
+
+    wrapper.setMethods({
+      validateMobileNumber: validateMobileNumberStub
+    })
+
+    let phone_number_input = wrapper.find({ ref: 'phone_number_input' });
+    phone_number_input.setValue('(480) 703-4433');
+    phone_number_input.trigger('blur');
+
+    expect(validateMobileNumberStub.called).toBe(true);
+
+  })
+
+  it('should show empty-field-name class if the companyInfo.message.PrimaryPhone is missing', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: null
+        }
+      }
+    })
+
+    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2 empty-field-name');
+
+  })
+
+  it('should show empty-field-name class if errors.phone is missing', function() {
+    wrapper.setData({
+      errors: {
+        phone: true
+      }
+    })
+
+    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2 empty-field-name');
+
+  })
+
+  it.skip('when I hit save the errors in the top should cancel out if the saved data checks out', function() {
+    // trigger a phone error
+    wrapper.setData({
+      form: {
+        phone_number: '(480) 703-49'
+      }
+    })
+
+    let reg = wrapper.find({ ref: 'register' });
+    reg.trigger('click');
+
+
+    // verify the error has popped up
+    expect(wrapper.find({ ref: 'phoneError' }).exists()).toBe(true);
+
+    // hit save
+    let edit_btn = wrapper.find({ ref: 'edit_btn' });
+    edit_btn.trigger('click');
+
+    wrapper.setData({
+      companyInfoTemporary: {
+        PrimaryPhone: '(480) 703-4902'
+      }
+    })
+
+    wrapper.setMethods({
+      save: saveStub,
+      checkValidPhoneNumber: checkValidPhoneNumberStub
+    });
+
+    let save_btn = wrapper.find({ ref: 'save_btn' });
+    save_btn.trigger('click');
+    expect(saveStub.called).toBe(true);
+    // expect(checkValidPhoneNumberStub.called).toBe(true);
+
+    // verify the phone number is valid again
+    expect(wrapper.find({ ref: 'phoneError' }).exists()).toBe(false);
+
+    // if valid then remove the error
+
+    // verify the error has been removed
+
+
+  })
+
+  it('should not submit if the phone number is not valid', function() {
+    // harder need to check the getters in the store
+  })
+
+  it('the phone number should have 10 digits when it is unformatted', function() {
+    wrapper.setData({
+      form: {
+        phone_number: '(123) 456-7890'
+      }
+    })
+
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(10)
+
+  })
+
+  it('the phone number should have 9 digits when it is unformatted', function() {
+    wrapper.setData({
+      form: {
+        phone_number: '(123) 456-789'
+      }
+    })
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9)
+  })
+
+  it('the phoneNumberLength number field should be updated with the correct value when the ' +
+    'unformatNumber methods is called  ', function() {
+
+    wrapper.setData({
+      form: {
+        phone_number: '(123) 456-789'
+      }
+    })
+    expect(wrapper.vm.unformatNumber(wrapper.vm.form.phone_number)).toBe(9)
+    expect(wrapper.vm.phoneNumberLength).toBe(9)
+
+  })
+
+  it('should show a phone error if there is an error in the phone number - errors.phone', function() {
+    wrapper.setData({
+      errors: {
+        phone: true
+      }
+    })
+
+    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2 empty-field-name');
+    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
+    expect(wrapper.find({ ref: 'primaryPhoneFromQB' }).attributes('class')).toBe('mr-2 empty-field-name');
+
+    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label empty-field-name');
+    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
+
+  })
+
+  it('should show a phone error if the primary phone error is empty and there is a phone error', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: ''
+        }
+      },
+      errors: {
+        phone: true
+      }
+    });
+
+    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2 empty-field-name');
+    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
+    expect(wrapper.find({ ref: 'primaryPhoneFromQB' }).attributes('class')).toBe('mr-2 empty-field-name');
+
+
+    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label empty-field-name');
+    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
+
+  })
+
+  it('should show not show a phone error if the primary phone number is not empty and the phone errors are false', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: '12341234'
+        }
+      },
+      errors: {
+        phone: false
+      }
+    });
+
+    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2');
+    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star');
+
+    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label');
+    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star');
+
+  })
+
+  it('should show a phone error if there is no primary phone number and the errors are false', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: ''
+        }
+      },
+      errors: {
+        phone: false
+      }
+    });
+
+    expect(wrapper.find({ ref: 'primaryPhone' }).attributes('class')).toBe('ml-2 empty-field-name');
+    expect(wrapper.find({ ref: 'savedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
+    expect(wrapper.find({ ref: 'primaryPhoneFromQB' }).attributes('class')).toBe('mr-2 empty-field-name');
+
+    expect(wrapper.find({ ref: 'editedPhoneLabel' }).attributes('class')).toBe('j-label empty-field-name');
+    expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
+
+  })
+
+  it('should not submit if the phone number is not valid', function() {
+    //visually verified
+  })
+
+  it('should check the PrimaryNumber field that is returned by quickbooks ' +
+    'and show an error if that primary number is not a mobile number', function() {
+    //visually verified
+  })
+
+  it('should check that if the PrimaryNumber field that is returned by quickbooks ' +
+    'is null then the class empty-field-name will be present', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: null
+        }
+      }
+    })
+
+    let primaryPhone = wrapper.find({ref: 'primaryPhone'})
+
+    expect(primaryPhone.attributes().class).toBe('ml-2 empty-field-name')
+
+  })
+
+  it('should check that if the PrimaryNumber field that is returned by quickbooks ' +
+    'is not null then the class empty-field-name will not be present', function() {
+    wrapper.setData({
+      companyInfo: {
+        message: {
+          PrimaryPhone: '1231231234'
+        }
+      }
+    })
+
+    let primaryPhone = wrapper.find({ref: 'primaryPhone'})
+
+    expect(primaryPhone.attributes().class).toBe('ml-2')
+
+  })
+
+})

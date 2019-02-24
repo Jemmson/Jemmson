@@ -196,17 +196,19 @@
                         <div class="flex">
                             <div class="ml-2"
                                  ref="primaryPhone"
-                                 :class="(companyInfo.message.PrimaryPhone || !errors.phone) ? '' : 'empty-field-name'"
+                                 :class="checkPhoneErrorsForClass"
                             >Mobile Phone Number
                             </div>
                             <span
                                     class="j-label ml-2 star"
                                     ref="savedPhoneLabelStar"
-                                    :class="(companyInfo.message.PrimaryPhone || !errors.phone) ? '' : 'empty-field-name'"
+                                    :class="checkPhoneErrorsForClass"
                             >*</span>
                         </div>
                     </div>
-                    <div class="mr-2">{{ companyInfo.message.PrimaryPhone }}</div>
+                    <div ref="primaryPhoneFromQB"
+                         :class="checkPhoneErrorsForClass"
+                         class="mr-2">{{ companyInfo.message.PrimaryPhone }}</div>
                 </div>
                 <div class="flex mt-2 mb-2 justify-between">
                     <div class="flex">
@@ -281,15 +283,16 @@
                             <label
                                     class="j-label"
                                     ref="editedPhoneLabel"
-                                    :class="(companyInfo.message.PrimaryPhone || errors.phone) ? '' : 'empty-field-name'"
+                                    :class="checkPhoneErrorsForClass"
                             >Mobile Phone Number</label>
                             <span
                                     class="j-label ml-2 star"
                                     ref="editedPhoneLabelStar"
-                                    :class="(companyInfo.message.PrimaryPhone || errors.phone) ? '' : 'empty-field-name'"
+                                    :class="checkPhoneErrorsForClass"
                             >*</span>
                         </div>
-                        <div v-if="errors.phone" class="text-center text-red uppercase">Phone Number must be 10 digits</div>
+                        <div v-if="errors.phone" class="text-center text-red uppercase">Phone Number must be 10 digits
+                        </div>
                         <div></div>
                     </div>
                     <div class="">
@@ -311,7 +314,7 @@
                             {{ this.getMobileValidResponse[1] }}
                         </div>
                         <!--<span class="help-block" v-show="form.errors('phone_number')">-->
-                                    <!--{{ form.errors.get('phone_number') }}-->
+                        <!--{{ form.errors.get('phone_number') }}-->
                         <!--</span>-->
                     </div>
                 </div>
@@ -641,7 +644,20 @@
     computed: {
       ...mapGetters([
         'getMobileValidResponse'
-      ])
+      ]),
+      checkPhoneErrorsForClass() {
+        return {
+          'empty-field-name':
+            this.companyInfo.message.PrimaryPhone === null || this.companyInfo.message.PrimaryPhone === '' || this.errors.phone === true
+        }
+        // this.companyInfo.message.PrimaryPhone !== '' && !this.errors.phone;
+      },
+      classObject: function() {
+        return {
+          active: this.isActive && !this.error,
+          'text-danger': this.error && this.error.type === 'fatal'
+        }
+      }
     },
     mounted: function() {
       this.getTheCompanyInfo()
@@ -653,12 +669,9 @@
       ...mapActions([
         'checkMobileNumber',
       ]),
-      checkPhoneErrorsForClass () {
-
-      },
       makePhoneNumberIntoDigits(value) {
-        this.unformatNumber(value);
-        this.companyInfoTemporary.PrimaryPhone = this.unformattedNumber;
+        this.unformatNumber(value)
+        this.companyInfoTemporary.PrimaryPhone = this.unformattedNumber
       },
       getTheCompanyInfo() {
         axios.get('/quickbooks/getCachedCompanyInfo')
@@ -718,98 +731,98 @@
         }
       },
       checkValidPhoneNumber() {
-        let phone = this.unformatNumber(this.form.phone_number);
+        let phone = this.unformatNumber(this.form.phone_number)
 
         if (phone === 10) {
           if (
             this.getMobileValidResponse[1] === '' || this.getMobileValidResponse[2] === ''
           ) {
-            this.validateMobileNumber(phone);
+            this.validateMobileNumber(phone)
           }
           if (
             this.getMobileValidResponse[1] !== 'mobile' || this.getMobileValidResponse[2] !== 'mobile'
           ) {
             this.errors.phone = true;
-            return false;
+            return false
           } else {
             this.errors.phone = false;
-            return true;
+            return true
           }
         } else {
-          this.errors.phone = true;
-          return false;
+          this.errors.phone = true
+          return false
         }
       },
-      checkValidEmail () {
+      checkValidEmail() {
         if (this.form.email === '' || !this.validateEmail()) {
-          this.errors.email = true;
-          return false;
+          this.errors.email = true
+          return false
         } else {
-          this.errors.email = false;
-          return true;
+          this.errors.email = false
+          return true
         }
       },
-      checkName () {
+      checkName() {
         if (this.form.name === '') {
-          this.errors.name = true;
-          return false;
+          this.errors.name = true
+          return false
         } else {
-          this.errors.name = false;
-          return true;
+          this.errors.name = false
+          return true
         }
       },
-      checkCompanyName () {
+      checkCompanyName() {
         if (this.form.company_name === '') {
-          this.errors.company_name = true;
-          return false;
+          this.errors.company_name = true
+          return false
         } else {
-          this.errors.company_name = false;
-          return true;
+          this.errors.company_name = false
+          return true
         }
       },
-      checkCompanyAddressLine1 () {
+      checkCompanyAddressLine1() {
         if (this.form.address_line_1 === '') {
           this.errors.address_line_1 = true
-          return false;
+          return false
         } else {
           this.errors.address_line_1 = false
-          return true;
+          return true
         }
       },
-      checkCompanyAddressCity () {
+      checkCompanyAddressCity() {
         if (this.form.city === '') {
-          this.errors.city = true;
-          return false;
+          this.errors.city = true
+          return false
         } else {
-          this.errors.city = false;
-          return true;
+          this.errors.city = false
+          return true
         }
       },
-      checkCompanyAddressState () {
+      checkCompanyAddressState() {
         if (this.form.state === '') {
-          this.errors.state = true;
-          return false;
+          this.errors.state = true
+          return false
         } else {
-          this.errors.state = false;
-          return true;
+          this.errors.state = false
+          return true
         }
       },
-      checkCompanyAddressZip () {
+      checkCompanyAddressZip() {
         if (this.form.zip === '') {
-          this.errors.zip = true;
-          return false;
+          this.errors.zip = true
+          return false
         } else {
-          this.errors.zip = false;
-          return true;
+          this.errors.zip = false
+          return true
         }
       },
-      checkTerms (){
+      checkTerms() {
         if (this.form.terms === '') {
           this.errors.terms = true
-          return false;
+          return false
         } else {
           this.errors.terms = false
-          return true;
+          return true
         }
       },
       register() {
@@ -823,47 +836,47 @@
         this.updateFormDataWithQBData()
 
         // is all the input valid?
-        let submit = true;
+        let submit = true
 
         if (!this.checkPasswords()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkValidPhoneNumber()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkValidEmail()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkName()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkCompanyName()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkCompanyAddressLine1()) {
-          submit = false;
+          submit = false
         }
         if (!this.checkCompanyAddressCity()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkCompanyAddressState()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkCompanyAddressZip()) {
-          submit = false;
+          submit = false
         }
 
         if (!this.checkTerms()) {
-          submit = false;
+          submit = false
         }
-        this.inputNotValid = false;
+        this.inputNotValid = false
         if (submit) {
 
           // this is meant to trigger an update request object to quickbooks
@@ -875,9 +888,9 @@
           // } else {
           //   this.sendEmptyQBCompanyInfoObject()
           // }
-          this.registerForm.busy = false;
-          debugger;
-          this.loading = true;
+          this.registerForm.busy = false
+          // debugger;
+          this.loading = true
           User.registerContractor(this.form, updateQBData)
           this.registerForm.busy = false
         } else {
@@ -885,23 +898,24 @@
         }
       },
       unformatNumber(number) {
-       if (number !== null) {
-         let unformattedNumber = '';
-         for (let i = 0; i < number.length; i++) {
-           if (!isNaN(parseInt(number[i]))) {
-             unformattedNumber = unformattedNumber + number[i];
-           }
-         }
-         this.unformattedNumber = unformattedNumber;
-         let numberLength = unformattedNumber.length;
-         if (numberLength < 10) {
-           this.emptyPhoneNumberInStore();
-         }
-         // debugger;
-         this.phoneNumberLength = numberLength;
-         console.log(numberLength);
-         return numberLength;
-       }
+        console.log(number)
+        if (number !== undefined && number !== '' && number !== null) {
+          let unformattedNumber = ''
+          for (let i = 0; i < number.length; i++) {
+            if (!isNaN(parseInt(number[i]))) {
+              unformattedNumber = unformattedNumber + number[i]
+            }
+          }
+          this.unformattedNumber = unformattedNumber
+          let numberLength = unformattedNumber.length
+          if (numberLength < 10) {
+            this.emptyPhoneNumberInStore()
+          }
+          // debugger;
+          this.phoneNumberLength = numberLength
+          console.log(numberLength)
+          return numberLength
+        }
       },
       emptyPhoneNumberInStore() {
         if (this.getMobileValidResponse[1] !== '') {
@@ -1024,14 +1038,14 @@
       },
       validateMobileNumber(phone) {
         if (this.unformatNumber(phone) === 10) {
-          this.errors.phone = false;
-          this.setMobileResponse(["", "", ""]);
-          this.loading = true;
+          this.errors.phone = false
+          this.setMobileResponse(['', '', ''])
+          this.loading = true
           if (phone !== '') {
-            this.checkMobileNumber(phone);
+            this.checkMobileNumber(phone)
           }
         } else {
-          this.errors.phone = true;
+          this.errors.phone = true
         }
       },
       validateEmail() {
@@ -1041,7 +1055,7 @@
       checkThatNumberIsMobile() {
         if (this.getMobileValidResponse[1] === 'mobile' ||
           this.getMobileValidResponse[2] === 'mobile') {
-          this.loading = false;
+          this.loading = false
           return true
         } else {
           return false
@@ -1050,7 +1064,7 @@
       checkLandLineNumber() {
         if (this.getMobileValidResponse[1] === 'landline' ||
           this.getMobileValidResponse[2] === 'landline') {
-          this.loading = false;
+          this.loading = false
           return true
         } else {
           return false
@@ -1059,7 +1073,7 @@
       checkIfNumberIsVirtual() {
         if (this.getMobileValidResponse[1] === 'virtual' ||
           this.getMobileValidResponse[2] === 'virtual') {
-          this.loading = false;
+          this.loading = false
           return true
         } else {
           return false
@@ -1126,8 +1140,8 @@
         this.companyInfo.message.Email.Address = this.companyInfoTemporary.Email.Address
         this.qbCompanyInfoWasUpdated = true
 
-        this.updateFormDataWithQBData();
-        this.checkValidPhoneNumber();
+        this.updateFormDataWithQBData()
+        this.checkValidPhoneNumber()
 
       },
       cancel() {
