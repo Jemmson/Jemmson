@@ -58,6 +58,20 @@ class User extends SparkUser
         'uses_two_factor_auth' => 'boolean',
     ];
 
+    protected $userData = [];
+
+//    public function __construct($userData, array $attributes = [])
+//    {
+//        parent::__construct($attributes);
+//        $this->userData = $userData;
+//    }
+//
+//    public function add()
+//    {
+//        $this->fill($this->userData);
+//        $this->save();
+//    }
+
     public function customer()
     {
         return $this->hasOne(Customer::class);
@@ -233,8 +247,8 @@ class User extends SparkUser
     static public function validatePhoneNumber($number)
     {
 
-        if(!empty($number)){
-            $number = '1'.$number;
+        if (!empty($number)) {
+            $number = '1' . $number;
             $client = new Client();
 
             $res = $client->request('POST', 'https://api.nexmo.com/ni/advanced/json', [

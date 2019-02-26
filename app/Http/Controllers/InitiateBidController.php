@@ -54,13 +54,6 @@ class InitiateBidController extends Controller
         // 10. notify the customer that the job was created through email and text
         // 11. redirect to all bids
 
-
-        // send a passwordless link if the email is not in the system
-        // this link will then redirect them to the bid page
-
-//        Bugsnag::notifyException(new RuntimeException("Test error"));
-
-
         $this->validate($request, [
 //            'email' => 'required|email',
             'phone' => 'required|min:10|max:14',
@@ -68,22 +61,18 @@ class InitiateBidController extends Controller
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
 
-//        dd('initiating a bid');
 
         $contractor = Auth::user()->contractor()->first();
 
-        Log::info("contractor: $contractor");
-        Log::info("contractor->hasMoreFreeJobs: " . $contractor->hasMoreFreeJobs());
-        Log::info("contractor->isSubscribed(): " . $contractor->isSubscribed());
-
-
-        if (!$contractor->hasMoreFreeJobs() && !$contractor->isSubscribed()) {
+        if (!$contractor->canCreateNewJob()) {
             return response()->json(
                 [
                     'message' => 'No more free Jobs left.',
                     'errors' => ['no_free_jobs' => 'No more free Jobs left']
                 ], 422);
         }
+
+
 
         $customerName = $request->customerName;
         Log::info("customerName: $customerName");

@@ -710,7 +710,7 @@ describe('RegisterQuickBooks_phone_field', () => {
     expect(wrapper.find({ ref: 'editedPhoneLabelStar' }).attributes('class')).toBe('j-label ml-2 star empty-field-name');
 
   })
-
+11
   it('should show a phone error if the primary phone error is empty and there is a phone error', function() {
     wrapper.setData({
       companyInfo: {

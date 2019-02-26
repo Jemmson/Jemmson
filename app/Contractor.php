@@ -19,10 +19,6 @@ class Contractor extends Model
     protected $guarded = [];
 
     //
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'id');
-    }
 
     public function jobs()
     {
@@ -54,6 +50,30 @@ class Contractor extends Model
         return $this->user()->first()->current_billing_plan !== null; // means the contractor has subscribed
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id');
+    }
+
+    public function canCreateNewJob()
+    {
+        // check if the contractor is apart of the monthly plan
+        // true - then return true
+        // false - check if there are any free jobs
+        // true - return true
+        // false - return false
+
+        if ($this->isSubscribed()) {
+            return true;
+        } else if ($this->hasMoreFreeJobs()) {
+            return true;
+        } else {
+            return false;
+
+        }
+//        return $this->hasMoreFreeJobs() || $this->isSubscribed();
+    }
+
     public function subtractFreeJob()
     {
         if ($this->free_jobs <= 0) {
@@ -83,7 +103,8 @@ class Contractor extends Model
 
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'contractor_id', 'user_id')->withPivot('base_price')
+        return $this
+            ->belongsToMany(Task::class, 'contractor_id', 'user_id')->withPivot('base_price')
             ->withTimestamps();
     }
 
@@ -121,11 +142,6 @@ class Contractor extends Model
         }
     }
 
-    public function location()
-    {
-        return $this->hasOne(Location::class, 'id', 'location_id');
-    }
-
     public function updateLocation($request)
     {
 
@@ -159,6 +175,11 @@ class Contractor extends Model
 
 
 
+    }
+
+    public function location()
+    {
+        return $this->hasOne(Location::class, 'id', 'location_id');
     }
 }
 

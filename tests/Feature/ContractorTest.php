@@ -11,67 +11,89 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Contractor;
+use App\User;
 use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 
 class ContractorTest extends TestCase
 {
 
-//    use DatabaseMigrations;
+    use DatabaseMigrations;
 
-//    /**
-//     * A basic test example.
-//     *
-//     * @test
-//     */
-//    public function contractor_can_initiate_a_bid()
-//    {
-//
-//        //Given
-//        $faker = Factory::create();
-//        $contractor = Contractor::make([
-//            'user_id' => 7,
-//            'company_name' => $faker->name,
-//            'company_logo_name' => $faker->name,
-//            'email_method_of_contact' => '1',
-//            'sms_method_of_contact' => '1',
-//            'phone_method_of_contact' => '1',
-//        ]);
-//
-//
-//        //Action
-//
-//
-//
-//        //Assert
-//
-//
-////        $t = new TaskController();
-////        $request = new Request([
-////            'taskName' => $faker->name,
-////            'taskPrice' =>  $faker->numberBetween(100, 200),
-////            'subTaskPrice' => $faker->numberBetween(100, 200),
-////            'start_when_accepted' => $faker->dateTime,
-////            //            'sub_sets_own_price_for_job' => 'required',
-////            'start_date' => $faker->dateTime,
-////            'qty' => $faker->numberBetween(100, 200),
-////            'qtyUnit' => $faker->numberBetween(100, 200)
-////        ]);
-////        $t->addTask($request);
-//
-//
-//
-////        $contractor = factory(\App\Contractor::class)->create();
-////        $location = factory(\App\Location::class)
-////            ->create(['user_id' => $contractor->user_id]);
-////        $contractor->location_id = $location->id;
-////        $contractor->save();
-////        $user = \App\User::find($contractor->user_id);
-////        $user->location_id = $location->id;
-////        $user->save();
-////
-////        $this->get('/');
-////        $this->click('login');
-//////        $this->see('manage');
-//    }
+    /**  @test */
+    function sustract_one_free_job_from_a_contractor_if_the_contractor_has_a_postive_number_of_free_jobs_left() {
+
+        // add a contractor to the site
+        $contractor = factory(Contractor::class)->create();
+
+        // check the number of jobs the contractor has in the site
+        $this->assertEquals($contractor->numberOfJobsLeft(), 5);
+
+        // initiate a bid and then check that there is one less free job in the database
+        $contractor->subtractFreeJob();
+
+        $this->assertEquals(4, $contractor->numberOfJobsLeft());
+
+    }
+
+    /**  @test */
+    function do_not_sustract_one_free_job_from_a_contractor_if_the_contractor_does_not_have_a_postive_number_of_free_jobs_left() {
+
+        // add a contractor to the site
+        $contractor = factory(Contractor::class)->create([
+            'free_jobs' => 0
+        ]);
+
+        // check the number of jobs the contractor has in the site
+        $this->assertEquals(0, $contractor->numberOfJobsLeft());
+
+        // initiate a bid and then check that there is one less free job in the database
+        $contractor->subtractFreeJob();
+
+        $this->assertEquals(0, $contractor->numberOfJobsLeft());
+
+    }
+    
+    /**  @test */
+    function throw_error_if_contractor_tries_to_initiate_a_bid_but_is_not_subscribed_and_has_no_free_jobs() {
+
+        $user = factory(User::class)->create([
+            'current_billing_plan' => null
+        ]);
+        $contractor = factory(Contractor::class)->create([
+            'user_id' => $user->id,
+            'free_jobs' => 0
+        ]);
+
+        $this->assertEquals(false, $contractor->canCreateNewJob());
+    }
+
+    /**  @test */
+    function a_contractor_can_create_a_new_job_if_he_is_not_subscribed_but_has_free_jobs_left() {
+
+        $user = factory(User::class)->create([
+            'current_billing_plan' => null
+        ]);
+        $contractor = factory(Contractor::class)->create([
+            'user_id' => $user->id,
+            'free_jobs' => 1
+        ]);
+
+        $this->assertEquals(true, $contractor->canCreateNewJob());
+    }
+
+    /**  @test */
+    function a_contractor_can_create_a_new_job_if_he_is_subscribed_but_has_no_free_jobs_left() {
+
+        $user = factory(User::class)->create([
+            'current_billing_plan' => 'basic_monthly'
+        ]);
+        $contractor = factory(Contractor::class)->create([
+            'user_id' => $user->id,
+            'free_jobs' => 0
+        ]);
+
+        $this->assertEquals(true, $contractor->canCreateNewJob());
+    }
 }
+
