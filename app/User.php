@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notifiable;
 use Nexmo\Laravel\Facade\Nexmo;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
+use Doctrine\DBAL\Driver\PDOException;
 
 
 class User extends SparkUser
@@ -92,6 +94,23 @@ class User extends SparkUser
         return $this->belongsTo(Element::class);
     }
 
+    public function checkIfUserExistsElseCreateUser($data)
+    {
+        $this->fill($data);
+        try {
+            $this->save();
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Creating A New User ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public static function checkIfUserExistsByPhoneNumber($phone)
+    {
+        return User::select()->where('phone', '=', $phone)->get()->first();
+    }
+
     /**
      * Save customer Stripe id
      *
@@ -108,8 +127,8 @@ class User extends SparkUser
 
         try {
             $this->save();
-        } catch (\Excpetion $e) {
-            Log::error('Saving Stripe Id: ' . $e - getMessage());
+        } catch (\Exception $e) {
+            Log::error('Saving Stripe Id: ' . $e->getMessage());
             return false;
         }
 

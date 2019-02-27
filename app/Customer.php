@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use mysql_xdevapi\Exception;
+use App\Services\RandomPasswordService;
 
 class Customer extends Model
 {
@@ -88,7 +90,52 @@ class Customer extends Model
             Log::error('Saving Location: ' . $e->getMessage());
         }
 
+    }
 
+    /**
+     * This function creates a new user
+     *
+     * @param string $email the email address of the customer
+     * @param string $phone the phone number of the customer
+     *
+     * @return $this|\Illuminate\Database\Eloquent\Model
+     */
+    public static function createNewCustomer($phone, $customerName)
+    {
+
+        if (empty($phone) || $phone === '') {
+            $phone = null;
+        }
+
+        $pass = RandomPasswordService::randomPassword();
+
+        $customer = null;
+
+
+        try {
+            $customer = User::create(
+                [
+                    'name' => $customerName,
+//                    'email' => $email,
+                    'phone' => $phone,
+                    'usertype' => 'customer',
+                    'password_updated' => false,
+                    'password' => bcrypt($pass),
+                ]
+            );
+        } catch (\Illuminate\Database\QueryException $exception) {
+            Log::error($exception);
+            return ["message" => $exception->getMessage(), "code" => $exception->getCode()];
+        }
+
+
+        $cust = Customer::create(
+            [
+                'user_id' => $customer->id
+            ]
+        );
+
+        return $customer;
 
     }
 

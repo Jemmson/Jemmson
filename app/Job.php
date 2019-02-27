@@ -102,6 +102,50 @@ class Job extends Model
         return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
+    public function jobName($jobName = '')
+    {
+        if (empty($jobName)) {
+            // what if there are no Jobs?
+            if (empty(Job::all()->last()->id)) {
+                $nextJob = 1;
+            } else {
+                $nextJob = Job::all()->last()->id + 1;
+            }
+            $jobName = "{$nextJob}";
+        }
+        return $jobName;
+    }
+
+    public function createBid($customer_id, $job_name, $contractor_id)
+    {
+
+
+        // not the best way but autoincrementing the id number
+        // TODO: find a better way but this works for now
+        $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
+
+        if ($jobId == []) {
+            $this->id = 1;
+        } else {
+            $this->id = $jobId[0]->id + 1;
+        }
+        $this->contractor_id = $contractor_id; // actually the user id and not the contractor Id
+//        $this->contractor_id = Auth::user()->id; // actually the user id and not the contractor Id
+        $this->customer_id = $customer_id;       // also the user Id and not the customer Id
+        $this->job_name = $job_name;
+        $this->status = __("status.bid.initiated");
+        if (User::find($customer_id)->customer()->first() !== null) {
+            $this->location_id = User::find($customer_id)->customer()->first()->location_id;
+        }
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::critical('Failed to create a bid: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     /**
      * Accept the job
      *
@@ -164,7 +208,7 @@ class Job extends Model
 
         try {
             $this->save();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Update Job' . $e->getMessage());
         }
     }
@@ -189,12 +233,11 @@ class Job extends Model
     {
 //        dd($this->location);
         $location = $this->location()->first();
-        if (!empty($location)){
+        if (!empty($location)) {
             return $location->area;
         }
         return response()->json(["message" => "Could Not Save Get the Area"], 404);
     }
-
 
 
     // TODO: Refactor for best practice
@@ -281,13 +324,15 @@ class Job extends Model
 
         $bid_price = 0;
 
-        foreach ($jt as $j){$bid_price = $bid_price + ($j->qty * $j->unit_price);}
+        foreach ($jt as $j) {
+            $bid_price = $bid_price + ($j->qty * $j->unit_price);
+        }
 
         $this->bid_price = $bid_price;
 
         try {
             $this->save();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Job total could not be updated: ' . $e->getMessage());
             return false;
         }
@@ -377,7 +422,7 @@ class Job extends Model
     private function allJobTasksResolved()
     {
         $totalTasks = count(DB::table('job_task')->where('job_id', $this->id)->where('deleted_at', null)->get());
-        $totalTasksResolved = count(DB::table('job_task')->where('job_id', $this->id)->where('status','bid_task.customer_sent_payment')->get());
+        $totalTasksResolved = count(DB::table('job_task')->where('job_id', $this->id)->where('status', 'bid_task.customer_sent_payment')->get());
         return $totalTasks === $totalTasksResolved;
     }
 

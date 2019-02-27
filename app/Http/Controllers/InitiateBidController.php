@@ -13,7 +13,6 @@ use App\Job;
 use App\Customer;
 use App\Mail\PasswordlessBidPageLogin;
 use Illuminate\Support\Facades\DB;
-use App\Services\RandomPasswordService;
 use App\Notifications\BidInitiated;
 use App\Services\SanatizeService;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -41,26 +40,12 @@ class InitiateBidController extends Controller
      */
     public function send(Request $request)
     {
-        //Things this method should do
-        // 1. validate the input - done
-        // 2. Get the Contractor that initiated the bid - done
-        // 3. Check if there are any more free bids and whether the contractor is subscribed or not
-        // 4. If subscribed or has more bids then continue
-        // 5. Check if the customer exists in the database and return back to the application if the customer exists
-        // 6. If the customer does not exist then create the customer
-        // 7. create a jobName if one was not provided
-        // 8. if Job could not be created then redirect back
-        // 9. if job was created then subtract a job from the contractor or leave at zero if no more free jobs
-        // 10. notify the customer that the job was created through email and text
-        // 11. redirect to all bids
 
         $this->validate($request, [
-//            'email' => 'required|email',
             'phone' => 'required|min:10|max:14',
             'customerName' => 'required',
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
-
 
         $contractor = Auth::user()->contractor()->first();
 
@@ -72,61 +57,28 @@ class InitiateBidController extends Controller
                 ], 422);
         }
 
-
-
         $customerName = $request->customerName;
-        Log::info("customerName: $customerName");
         $phone = SanatizeService::phone($request->phone);
-        Log::info("phone: $phone");
-        $jobName = $request->jobName;
+        $customer = User::checkIfUserExistsByPhoneNumber($phone);
 
-        // find customer
-        $customerExists = $this->customerExistsInTheDatabase($phone, $customerName);
-
-        if ($customerExists['error']) {
-            Log::info("customerExists Error: " . $customerExists['error']);
-            if ($customerExists['errorText'] == 'Create a new customer') {
-                Log::info(
-                    "customerExists ErrorText: " . $customerExists['errorText']
-                );
-                $customer = $this->createNewCustomer($phone, $customerName);
-                if ($customer == null) {
-                    return response()->json(
-                        [
-                            'message' =>
-                                'Customer could not be created. ' .
-                                'Please try initiating the bid again'
-                        ], 422);
-                }
-            } else {
-                Log::info("customerExists ErrorText: " .
-                    $customerExists['errorText']);
-                return response()->json([
-                    'message' =>
-                        "<span class='notification-error-response'>A customer already exists with this phone number but has".
-                         " this name - '" . $customerExists['name'] .
-                        "'. <br>Please correct either the phone number or the name".
-                        " and then please resubmit the bid.<span>",
-                    "customerName" => $customerExists['name']
-                ], 422);
-            }
-        } else {
-            Log::info("customerExists Customer: " . $customerExists['customer']);
-            $customer = $customerExists['customer'];
+        if (empty($customer)) {
+            $customer = Customer::createNewCustomer($phone, $customerName);
         }
 
-        Log::info("Check if job currently exists: ======================");
         // create a job name if one does not exist
-        if (empty($jobName)) {
-            $jobName = $this->jobName($customer);
-        }
-
+        $job = new Job();
+        $jobName = $job->jobName($request->jobName);
 
         // create a bid
-        $job = $this->createBid($customer->id, $jobName);
-        Log::info("job: $job");
+        $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
+
+        if (!$job) {
+            return redirect()->back()->with(
+                'error',
+                'Job could not be created. Please try initiating the bid again'
+            );
+        }
         $job_id = $job->id;
-        Log::info("job_id: $job_id");
 
         // with error
         if ($job_id == null) {
@@ -137,8 +89,7 @@ class InitiateBidController extends Controller
             );
         }
 
-
-        Log::info("Subtracting a Free Job:" . $contractor->subtractFreeJob());
+        $contractor->subtractFreeJob();
 
         $customer->notify(new BidInitiated($job, $customer));
 
@@ -146,161 +97,5 @@ class InitiateBidController extends Controller
 
         return "Bid was created";
 
-    }
-
-    /**
-     * Creating a unique name for the job based upon the customers name
-     *
-     * @param User $user the user the job is based upon
-     *
-     * @return string
-     */
-    public function jobName($customer)
-    {
-        // what if there are no Jobs?
-        if (empty(Job::all()->last()->id)) {
-            $nextJob = 1;
-        } else {
-            $nextJob = Job::all()->last()->id + 1;
-        }
-
-        $jobName = "{$nextJob}";
-        Log::info("jobName: $jobName");
-
-        return $jobName;
-    }
-
-
-    /**
-     * This function creates a new user
-     *
-     * @param string $email the email address of the customer
-     * @param string $phone the phone number of the customer
-     *
-     * @return $this|\Illuminate\Database\Eloquent\Model
-     */
-    public function createNewCustomer($phone, $customerName)
-    {
-
-        if (empty($phone) || $phone === '') {
-            $phone = null;
-        }
-
-        $pass = RandomPasswordService::randomPassword();
-
-        $customer = null;
-
-
-        try {
-            $customer = User::create(
-                [
-                    'name' => $customerName,
-//                    'email' => $email,
-                    'phone' => $phone,
-                    'usertype' => 'customer',
-                    'password_updated' => false,
-                    'password' => bcrypt($pass),
-                ]
-            );
-        } catch (\Illuminate\Database\QueryException $exception) {
-            Log::error($exception);
-            return ["message" => $exception->getMessage(), "code" => $exception->getCode()];
-        }
-
-
-        $cust = Customer::create(
-            [
-                'user_id' => $customer->id
-            ]
-        );
-
-        return $customer;
-
-    }
-
-    /**
-     * Checking if the customer exists in the database
-     *
-     * @param string $email the email of the customer
-     * @param string $phone the phone number of the customer
-     *
-     * @return bool|\Illuminate\Database\Eloquent\Model|null|static
-     */
-    public function customerExistsInTheDatabase($phone, $customerName)
-    {
-        // checking to see if a user exists that has an email or phone number that
-        // is already in the database
-        $customer = User::where('phone', $phone)->where('usertype', '=', 'customer')->first();
-
-        $errorArray = [];
-
-        // if a user exists then I want to check if the name that was entered by the contractor matches
-        // the name of the customer because the names entered should be the same. if the name is different
-        // then the contractor should select the correct name from the drop down menu so that the names match.
-        if (!empty($customer) && strcasecmp($customer->usertype, 'customer') == 0) {
-            if (!strcasecmp($customer->name, $customerName) == 0) {
-                $errorArray = [
-                    "error" => true,
-                    "name" => $customer->name,
-                    "errorText" => "Error: Customer already exists please correct the name."
-                ];
-            } else {
-                $errorArray = [
-                    "error" => false,
-                    "customer" => $customer
-                ];
-            }
-        } else {
-            $errorArray = [
-                "error" => true,
-                "customer" => $customer,
-                "errorText" => "Create a new customer"
-            ];
-        }
-
-        return $errorArray;
-
-    }
-
-    /**
-     * Creating the bid
-     *
-     * @param string $customer_id the customers id
-     * @param string $job_name the jobs name
-     *
-     * @return \Illuminate\Http\RedirectResponse|mixed
-     */
-    public function createBid($customer_id, $job_name)
-    {
-
-
-        // not the best way but autoincrementing the id number
-        // TODO: find a better way but this works for now
-        $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
-
-        $job = new Job;
-        if ($jobId == []) {
-            $job->id = 1;
-        } else {
-            $job->id = $jobId[0]->id + 1;
-        }
-        $job->contractor_id = Auth::user()->id; // actually the user id and not the contractor Id
-        $job->customer_id = $customer_id;       // also the user Id and not the customer Id
-        $job->job_name = $job_name;
-        $job->status = __("status.bid.initiated");
-        if (User::find($customer_id)->customer()->first() !== null) {
-            $job->location_id = User::find($customer_id)->customer()->first()->location_id;
-        }
-
-        try {
-            $job->save();
-        } catch (\Exception $e) {
-            Log::critical('Failed to create a bid: ' . $e->getMessage());
-            return redirect()->back()->with(
-                'error',
-                'Job could not be created. Please try initiating the bid again'
-            );
-        }
-        return $job;
     }
 }
