@@ -91,6 +91,13 @@ class InitiateBidController extends Controller
 
         $contractor->subtractFreeJob();
 
+        // quickooks feature must be turned on
+        // contractor must have a quickbooks account
+
+        if (config('quickBooks')) {
+
+        }
+
         $customer->notify(new BidInitiated($job, $customer));
 
         $request->session()->flash('status', 'Your bid was created');

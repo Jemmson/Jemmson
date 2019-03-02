@@ -7,6 +7,7 @@ use App\Quickbook;
 use QuickBooksOnline\API\DataService\DataService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 
 class QuickBooksController extends Controller
 {
@@ -68,8 +69,10 @@ class QuickBooksController extends Controller
     public function getAuthURL($state)
     {
         $qb = new Quickbook();
+        $guid = $qb->generateCsrf();
+        $qb->addGuidToTable($guid);
         if (!empty($state)) {
-            $qb->setState(['method' => $state]);
+            $qb->setState(['method' => $state, 'guid' => $guid]);
             $dataService = DataService::Configure($qb->getCredsWithState());
             $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
             $authUrl = $OAuth2LoginHelper->getAuthorizationCodeURL();
@@ -99,33 +102,40 @@ class QuickBooksController extends Controller
     public function processToken(Request $request)
     {
         $location = '';
-        if (!empty($request->state)) {
-            $location = collect(json_decode($request->state))->toArray()['method'];
-        }
-        if (empty(Auth::user()->id)) {
-            $companyInfo = $this->processCodeAndGetCompany($request->code, $request->realmId);
-            session(['companyInfo' => $companyInfo]);
-            return Redirect::to('/#/registerQuickBooks');
-        } else
-            if (empty($q) && !empty(Auth::user()->id)) {
-                Quickbook::create([
-                    'user_id' => Auth::user()->id,
-                    'state' => $request->state,
-                    'code' => $request->code,
-                    'company_id' => $request->realmId
-                ]);
-            } else if (!empty($q) && !empty(Auth::user()->id)) {
-                $q->state = $request->state;
-                $q->code = $request->code;
-                $q->company_id = $request->realmId;
-                $q->save();
+        $guid = collect(json_decode($request->state))->toArray()['guid'];
+        $qb = new Quickbook();
+        if ($qb->checkIfGuidIsValid($guid)) {
+            if (!empty($request->state)) {
+                $location = collect(json_decode($request->state))->toArray()['method'];
             }
-        if ($location == 'getCompany') {
-            $companyInfo = $this->processCodeAndGetCompany($request->code, $request->realmId);
-            return Redirect::back(302)->with(json_encode($companyInfo));
-        } else {
-            $this->processCode($request->code, $request->realmId);
-            return Redirect::to('/#/home');
+            if (empty(Auth::user()->id)) {
+                $companyInfo = $this->processCodeAndGetCompany($request->code, $request->realmId);
+                session(['companyInfo' => $companyInfo]);
+                return Redirect::to('/#/registerQuickBooks');
+            } else
+                if (empty($q) && !empty(Auth::user()->id)) {
+                    Quickbook::create([
+                        'user_id' => Auth::user()->id,
+                        'state' => $request->state,
+                        'code' => $request->code,
+                        'company_id' => $request->realmId
+                    ]);
+                } else if (!empty($q) && !empty(Auth::user()->id)) {
+                    $q->state = $request->state;
+                    $q->code = $request->code;
+                    $q->company_id = $request->realmId;
+                    $q->save();
+                }
+            if ($location == 'getCompany') {
+                $companyInfo = $this->processCodeAndGetCompany($request->code, $request->realmId);
+                return Redirect::back(302)->with(json_encode($companyInfo));
+            } else {
+                $this->processCode($request->code, $request->realmId);
+                return Redirect::to('/#/home');
+            }
+        }
+        else {
+            return Redirect::to('/#/check_accounting');
         }
     }
 }

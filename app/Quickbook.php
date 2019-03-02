@@ -2,8 +2,11 @@
 
 namespace App;
 
+use Carbon\Carbon;
+use Doctrine\DBAL\Statement;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp;
+use Illuminate\Support\Facades\DB;
 use QuickBooksOnline\API\DataService\DataService;
 
 class Quickbook extends Model
@@ -60,6 +63,76 @@ class Quickbook extends Model
         $this->redirect_uri = env('OAUTH_REDIRECT_URI');
         $this->scope = env('OAUTH_SCOPE');
         $this->base_url = env('AUTHORIZATION_REQUEST_URL');
+    }
+
+    public function generateCsrf()
+    {
+        if (function_exists('com_create_guid')){
+            return com_create_guid();
+        }else{
+            mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $hyphen = chr(45);// "-"
+            $uuid = substr($charid, 0, 8).$hyphen
+                .substr($charid, 8, 4).$hyphen
+                .substr($charid,12, 4).$hyphen
+                .substr($charid,16, 4).$hyphen
+                .substr($charid,20,12);
+//                .chr(125);// ""
+            return $uuid;
+        }
+    }
+
+    public function checkIfGuidIsValid($guid)
+    {
+        if ($this->checkGuidIsInDb($guid) &&
+            $this->checkGuidIsLessThan5MinutesOld($guid))
+        {
+            $this->consumeToken($guid);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkGuidIsInDb($guid)
+    {
+        $statement = "SELECT guid from quickbook_csrf_tokens where guid = '" . $guid . "'";
+        $response = DB::select($statement);
+        if (!empty($response[0]->guid)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function consumeToken($guid)
+    {
+        $statement = "Update quickbook_csrf_tokens set consumed = true, 
+                          updated_at = NOW() where guid = '".$guid."'";
+        DB::select($statement);
+    }
+
+    public function checkGuidIsLessThan5MinutesOld($guid)
+    {
+        $statement = "SELECT created_at from quickbook_csrf_tokens where guid = '" . $guid . "'";
+        $date = DB::select($statement);
+        $created = Carbon::createFromTimeString($date[0]->created_at);
+        $now = Carbon::now();
+        if ( $now->diffInMinutes($created) < 5 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addGuidToTable($guid)
+    {
+        $now = Carbon::now('gmt');
+        $statement = "Insert Into quickbook_csrf_tokens (guid, consumed, expired, created_at, updated_at)" .
+                        " Values ('".$guid."', false, false, NOW(), NOW())";
+//        dd($statement);
+        DB::insert($statement);
     }
 
     public function setState($state)

@@ -95,5 +95,24 @@ class ContractorTest extends TestCase
 
         $this->assertEquals(true, $contractor->canCreateNewJob());
     }
+
+    /**  @test */
+    function if_contractor_uses_accounting_software_then_it_should_be_recorded_in_the_contractors_table() {
+        //
+        $user = factory(User::class)->create([
+            'current_billing_plan' => 'basic_monthly'
+        ]);
+        $contractor = factory(Contractor::class)->create([
+            'user_id' => $user->id,
+            'free_jobs' => 0,
+            'accounting_software' => 'quickBooks'
+        ]);
+
+        $this->assertDatabaseHas('contractors',[
+            'user_id' => $user->id,
+            'free_jobs' => 0,
+            'accounting_software' => 'quickBooks'
+        ]);
+    }
 }
 
