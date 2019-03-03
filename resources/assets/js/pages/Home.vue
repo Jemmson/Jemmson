@@ -4,7 +4,7 @@
             <div class="intro-header">
                 <div class="slogan intro-main-slogan flex flex-col items-center justify-center">
                     <div>Welcome</div>
-                    <div>{{ user.name }}</div>
+                    <div ref="contractorName" v-text="contractorName()"></div>
                 </div>
                 <div class="slogan intro-sub-slogan">Please review and navigate below</div>
             </div>
@@ -45,7 +45,7 @@
             </div>
 
 
-            <div class="border m-4 shadow-md" v-if="user.usertype === 'contractor'">
+            <div class="border m-4 shadow-md" v-if="checkIfUserIsAContractor">
                 <div @click="route('/tasks')" class="border-b pb-4">
                     <div class="status text-center bg-grey shadow-md ml-1 mr-1">
                         <span>TASKS</span>
@@ -111,7 +111,7 @@
             </div>
 
             <div class="border m-4 shadow-md"
-                 v-if="user.contractor !== null && user.contractor.stripe_express !== null">
+                 v-if="checkContractorStripeIsValid()">
                 <div @click="route('/express')" class="border-b pb-4">
                     <div class="status text-center bg-grey shadow-md ml-1 mr-1">
                         <span>stripe</span>
@@ -151,10 +151,37 @@
       })
     },
     methods: {
+      contractorName() {
+        if (this.user !== undefined && this.user !== null) {
+          return this.user.name
+        }
+      },
+      checkIfUserIsAContractor() {
+        return this.user.usertype === 'contractor'
+      },
+      checkContractorStripeIsValid() {
+        if (
+          this.user !== undefined &&
+          this.user !== null
+        ) {
+          if (
+            this.user.contractor !== null &&
+            this.user.contractor !== undefined
+          ) {
+            if (
+              this.user.contractor.stripe_express !== null &&
+              this.user.contractor.stripe_express !== undefined
+            ) {
+              return true
+            } else {
+              return false
+            }
+          }
+        }
+      },
       route(value) {
         if (value === 'express') {
           axios.post('/stripe/express/dashboard').then((response) => {
-            console.log(response.data)
             window.location = response.data.url
           })
         } else {
@@ -190,24 +217,37 @@
       }
     },
     mounted: function() {
-      console.log('getBids')
       axios.post('/jobs').then((response) => {
-        this.bids = response.data
-        this.sBids = this.bids
-        console.log(this.bids)
+        if(response.data !== undefined) {
+          this.bids = response.data;
+          this.sBids = this.bids;
+        } else {
+          this.bids = [];
+          this.sBids = [];
+        }
       })
-      console.log('getTasks')
       axios.post('/bid/tasks').then((response) => {
-        this.tasks = response.data
-        this.sTasks = this.tasks
+        if(response.data !== undefined) {
+          this.tasks = response.data
+          this.sTasks = this.tasks
+        } else {
+          this.tasks = []
+          this.sTasks = []
+        }
+
       })
-      console.log('getInvoices')
       axios.get('/invoices').then((response) => {
-        this.invoices = response.data
-        this.sInvoices = this.invoices
+        if(response.data !== undefined) {
+          this.invoices = response.data
+          this.sInvoices = this.invoices
+        } else {
+          this.invoices = []
+          this.sInvoices = []
+        }
+
       })
-      console.log(this.bids)
-      console.log(JSON.stringify(this.bids))
+      // console.log(this.bids)
+      // console.log(JSON.stringify(this.bids))
     }
   }
 </script>

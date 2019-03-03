@@ -200,8 +200,17 @@ router.beforeEach((to, from, next) => {
         location.href = '/login'
       }
 
-      let customer = Spark.state.user.customer
-      let contractor = Spark.state.user.contractor
+      let customer = null;
+      let contractor = null;
+
+      if (Spark.state.user !== null) {
+        customer = Spark.state.user.customer
+      }
+
+      if (Spark.state.user !== null) {
+        contractor = Spark.state.user.contractor
+      }
+
 
       if ((customer !== null && customer.location_id === null) ||
         (contractor !== null && contractor.location_id === null)) {

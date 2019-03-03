@@ -1,15 +1,86 @@
-import {mount} from '@vue/test-utils'
+import {shallowMount} from '@vue/test-utils'
 import expect from 'expect'
 import Home from '../../resources/assets/js/pages/Home.vue'
 
 console.log('home.spec')
 
 describe ('Home', () => {
-  it('should say hello', function() {
-    let wrapper = mount(Home);
-    console.log(wrapper);
-    console.log('Hello')
+  let wrapper;
+
+  beforeEach (() => {
+    wrapper = shallowMount(Home, {
+      propsData: {
+        user: {
+          contractor: {
+            stripe_express: null
+          },
+          usertype: 'contractor',
+          name: 'KPS Pools'
+        }
+      }
+    });
+
+    wrapper.setData({
+      bids: [],
+      invoices: [],
+      tasks: [],
+      sBids: 0,
+      sTasks: 0,
+      sInvoices: 0
+    });
   })
+
+  it('stripe should return false if stripe_express is null', function() {
+
+    wrapper.setProps({
+      user: {
+        contractor: {
+          stripe_express: null
+        },
+        usertype: 'contractor',
+        name: 'KPS Pools'
+      }
+    })
+
+    expect(wrapper.vm.checkContractorStripeIsValid()).toBe(false);
+
+  })
+
+
+  it('stripe should return true if stripe_express is undefined', function() {
+
+    wrapper.setProps({
+      user: {
+        contractor: {
+          stripe_express: undefined
+        },
+        usertype: 'contractor',
+        name: 'KPS Pools'
+      }
+    })
+
+    expect(wrapper.vm.checkContractorStripeIsValid()).toBe(false);
+
+  })
+
+
+  it('stripe should return true if stripe_express is not null ' +
+    'or undefined', function() {
+
+    wrapper.setProps({
+      user: {
+        contractor: {
+          stripe_express: 'sdjkjkdjksdkjsdkjsd'
+        },
+        usertype: 'contractor',
+        name: 'KPS Pools'
+      }
+    })
+
+    expect(wrapper.vm.checkContractorStripeIsValid()).toBe(true);
+
+  })
+
 });
 
 // describe ('Home', () => {
