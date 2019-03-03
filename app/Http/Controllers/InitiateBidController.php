@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ContractorCustomer;
+use App\JobStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
@@ -76,6 +77,9 @@ class InitiateBidController extends Controller
                     'errors' => ['job_creation_failed' => 'Job could not be created. Please try initiating the bid again']
                 ], 422);
         }
+        $js = new JobStatus();
+        $js->setStatus($job->id, config("app.job['initiated']"));
+
         $contractor->subtractFreeJob();
 
         // quickbooks feature must be turned on

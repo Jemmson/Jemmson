@@ -17,6 +17,6 @@ $factory->define(App\Job::class, function (Faker $faker) {
         'actual_end_date' => Carbon::parse('+4 week'),
         'deleted_at' => Carbon::parse('+2 week'),
         'declined_message' => $faker->text,
-        'paid_with_cash_message' => $faker->text
+        'paid_with_cash_message' => $faker->sentence
     ];
 });

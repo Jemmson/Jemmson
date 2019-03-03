@@ -3,12 +3,11 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Job;
 use App\User;
 use App\Customer;
+use App\JobStatus;
 use App\Contractor;
 
 class JobTest extends TestCase
@@ -76,7 +75,25 @@ class JobTest extends TestCase
             'contractor_id' => $contractor->id,
             'job_name' => $jobName,
         ]);
-
-
     }
+
+    /**  @test */
+    function the_job_should_set_the_status_to_intiate_bid_once_the_job_is_initiated() {
+
+        $job = factory(Job::class)->create();
+
+        $status = 'initiated';
+
+        $js = new JobStatus();
+        $js->setStatus($job->id, $status);
+
+        $this->assertDatabaseHas('job_status',[
+           'job_id' => $job->id,
+            'status_number' => 1,
+            'status' => $status
+        ]);
+    }
+
+
+
 }
