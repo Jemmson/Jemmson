@@ -19,9 +19,6 @@
                         class="btn btn-default bg-color-red btn-primary w-full qb uppercase"
                         ref="quickbooks"
                 >QuickBooks</a>
-                <!--<button class="btn default w-full m-2 bg-color-blue"-->
-                        <!--ref="xero">Xero-->
-                <!--</button>-->
                 <button class="btn default w-full m-2 bg-color-green"
                         ref="dont_use" @click="goToRegistration()">Dont Use
                 </button>

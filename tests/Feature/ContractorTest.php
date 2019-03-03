@@ -1,19 +1,11 @@
 <?php
 
 namespace Tests\Feature;
-
-use App\Task;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Faker\Factory;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Contractor;
 use App\User;
-use App\Http\Controllers\TaskController;
-use Illuminate\Http\Request;
+
 
 class ContractorTest extends TestCase
 {
@@ -114,5 +106,6 @@ class ContractorTest extends TestCase
             'accounting_software' => 'quickBooks'
         ]);
     }
+
 }
 

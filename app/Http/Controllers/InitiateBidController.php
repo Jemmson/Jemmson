@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Dompdf\Exception;
+use App\ContractorCustomer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use SimpleSoftwareIO\SMS\Facades\SMS;
 use App\User;
 use App\Job;
 use App\Customer;
-use App\Mail\PasswordlessBidPageLogin;
-use Illuminate\Support\Facades\DB;
 use App\Notifications\BidInitiated;
 use App\Services\SanatizeService;
-use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
-use RuntimeException;
 
 
 class InitiateBidController extends Controller
@@ -41,14 +34,15 @@ class InitiateBidController extends Controller
     public function send(Request $request)
     {
 
+        // validate the input
         $this->validate($request, [
             'phone' => 'required|min:10|max:14',
             'customerName' => 'required',
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
 
+        // validate that the contractor can even create a new job
         $contractor = Auth::user()->contractor()->first();
-
         if (!$contractor->canCreateNewJob()) {
             return response()->json(
                 [
@@ -57,51 +51,43 @@ class InitiateBidController extends Controller
                 ], 422);
         }
 
+        // create a new customer if the customer is not in the database
         $customerName = $request->customerName;
         $phone = SanatizeService::phone($request->phone);
         $customer = User::checkIfUserExistsByPhoneNumber($phone);
-
         if (empty($customer)) {
             $customer = Customer::createNewCustomer($phone, $customerName);
         }
 
-        // create a job name if one does not exist
+        // associate the customer with the contractor
+        $cc = new ContractorCustomer();
+        if ($cc->checkIfCustomerCurrentlyExistsForContractor($contractor->id, $customer->id)){
+            $cc->associateCustomer($contractor->id, $customer->id);
+        }
+
+        // create the job
         $job = new Job();
         $jobName = $job->jobName($request->jobName);
-
-        // create a bid
         $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
-
         if (!$job) {
             return redirect()->back()->with(
                 'error',
                 'Job could not be created. Please try initiating the bid again'
             );
         }
-        $job_id = $job->id;
-
-        // with error
-        if ($job_id == null) {
-            // TODO: delete job/token if only one was created
-            return redirect()->back()->with(
-                'error',
-                'Sorry couldn\'t create the bid, please try again.'
-            );
-        }
-
         $contractor->subtractFreeJob();
 
-        // quickooks feature must be turned on
+        // quickbooks feature must be turned on
         // contractor must have a quickbooks account
-
         if (config('quickBooks')) {
 
         }
 
+        //notify the customer the job was created
         $customer->notify(new BidInitiated($job, $customer));
 
+        // notify the user
         $request->session()->flash('status', 'Your bid was created');
-
         return "Bid was created";
 
     }

@@ -57,12 +57,6 @@ class Contractor extends Model
 
     public function canCreateNewJob()
     {
-        // check if the contractor is apart of the monthly plan
-        // true - then return true
-        // false - check if there are any free jobs
-        // true - return true
-        // false - return false
-
         if ($this->isSubscribed()) {
             return true;
         } else if ($this->hasMoreFreeJobs()) {
@@ -71,7 +65,6 @@ class Contractor extends Model
             return false;
 
         }
-//        return $this->hasMoreFreeJobs() || $this->isSubscribed();
     }
 
     public function subtractFreeJob()
@@ -79,9 +72,7 @@ class Contractor extends Model
         if ($this->free_jobs <= 0) {
             return true;
         }
-
         $this->free_jobs -= 1;
-
         try {
             $this->save();
         } catch (\Exception $e) {
