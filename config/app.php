@@ -23,16 +23,20 @@ return [
     'taskIsAccepted' => 'accepted',
     'quickBooks' => true,
 
-    'job' => [
-      'initiated' => 'initiated',
-      'in_progress' => 'in_progress',
-      'completed' => 'completed',
-      'approved' => 'approved',
-      'sent' => 'sent',
-      'declined' => 'declined',
-      'changed' => 'changed',
-      'paid' => 'paid',
-    ],
+
+    /***************
+     * JOB Statuses
+     ***************/
+
+    'initiated' => 'initiated',
+    'in_progress' => 'in_progress',
+    'completed' => 'completed',
+    'approved' => 'approved',
+    'sent' => 'sent',
+    'declined' => 'declined',
+    'changed' => 'changed',
+    'paid' => 'paid',
+
 
     'bid_task' => [
         'initiated' => 'bid_task.initiated',

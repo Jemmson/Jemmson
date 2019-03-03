@@ -78,7 +78,7 @@ class InitiateBidController extends Controller
                 ], 422);
         }
         $js = new JobStatus();
-        $js->setStatus($job->id, config("app.job['initiated']"));
+        $js->setStatus($job->id, config("app.initiated"));
 
         $contractor->subtractFreeJob();
 

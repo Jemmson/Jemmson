@@ -15,8 +15,8 @@ class JobStatus extends Model
 
     public function setStatus($jobId, $status)
     {
-        $statusNumber = $this->getStatusNumer($status);
-        
+        $statusNumber = $this->getStatusNumber($status);
+
         $this->fill([
            'job_id' => $jobId,
            'status_number' => $statusNumber,
@@ -25,7 +25,7 @@ class JobStatus extends Model
         $this->save();
     }
 
-    public function getStatusNumer($status)
+    public function getStatusNumber($status)
     {
         switch ($status){
             case 'initiated':
