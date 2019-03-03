@@ -83,10 +83,13 @@ class InitiateBidController extends Controller
         $contractor->subtractFreeJob();
 
         // quickbooks feature must be turned on
-//        // contractor must have a quickbooks account
-//        if (config('quickBooks')) {
-//
-//        }
+        // contractor must have a quickbooks account
+        if (config('app.quickBooks')) {
+            $accountingSoftware = $contractor->checkAccountingSoftware();
+            if ($accountingSoftware != null) {
+                
+            }
+        }
 
         //notify the customer the job was created
         $customer->notify(new BidInitiated($job, $customer));

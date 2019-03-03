@@ -126,11 +126,30 @@ class ContractorTest extends TestCase
         $contractor->usesAccountingSoftware($softwareName);
 
         $this->assertDatabaseHas('contractors', [
-            'accounting_software' => 'quickbooks',
+            'accounting_software' => 'quickBooks',
             'id' => $contractor->id
         ]);
     }
 
+    /**  @test */
+    function contractorShouldBeAbleToDetermineWhatKindOfAccountingSoftwareTheyAreUsing() {
+        //
+
+        $user = factory(User::class)->create();
+
+        $contractor = factory(Contractor::class)->create([
+            'user_id' => $user->id,
+            'free_jobs' => 100,
+            'accounting_software' => 'quickBooks'
+        ]);
+
+        $softwareName = 'quickBooks';
+
+        $contractor->usesAccountingSoftware($softwareName);
+
+        $this->assertEquals('quickBooks', $contractor->checkAccountingSoftware());
+
+    }
 
 
 }

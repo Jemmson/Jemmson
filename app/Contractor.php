@@ -71,8 +71,12 @@ class Contractor extends Model
             return true;
         } else {
             return false;
-
         }
+    }
+
+    public function checkAccountingSoftware()
+    {
+        return $this->accounting_software;
     }
 
     public function subtractFreeJob()
