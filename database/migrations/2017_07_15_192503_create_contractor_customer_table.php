@@ -17,8 +17,8 @@ class CreateContractorCustomerTable extends Migration
         // more than one customer and a customer can have more than
         // one contractor.
         Schema::create('contractor_customer', function (Blueprint $table) {
-            $table->integer('contractor_id');
-            $table->integer('customer_id');
+            $table->integer('contractor_user_id');
+            $table->integer('customer_user_id');
             $table->primary(['contractor_id', 'customer_id']);
             $table->timestamps();
         });

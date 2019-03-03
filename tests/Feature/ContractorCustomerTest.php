@@ -39,8 +39,8 @@ class ContractorCustomerTest extends TestCase
         $cc->associateCustomer($contractor->id, $customer->id);
 
         $this->assertDatabaseHas('contractor_customer', [
-            'contractor_id' => $contractor->id,
-            'customer_id' => $customer->id
+            'contractor_user_id' => $contractor->id,
+            'customer_user_id' => $customer->id
         ]);
 
     }

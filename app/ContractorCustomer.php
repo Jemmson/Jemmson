@@ -14,14 +14,14 @@ class ContractorCustomer extends Model
     public function checkIfCustomerCurrentlyExistsForContractor($contractorId, $customerId)
     {
         return empty(ContractorCustomer::select()
-            ->where('contractor_id', '=', $contractorId)
-            ->where('customer_id', '=', $customerId)->get()->first());
+            ->where('contractor_user_id', '=', $contractorId)
+            ->where('customer_user_id', '=', $customerId)->get()->first());
     }
 
     public function associateCustomer($contractorId, $customerId)
     {
-        $this->contractor_id = $contractorId;
-        $this->customer_id = $customerId;
+        $this->contractor_user_id = $contractorId;
+        $this->customer_user_id = $customerId;
         $this->save();
     }
 }
