@@ -37,7 +37,6 @@ return [
     'changed' => 'changed',
     'paid' => 'paid',
 
-
     'bid_task' => [
         'initiated' => 'bid_task.initiated',
         'sent' => 'bid_task.sent',

@@ -236,16 +236,16 @@ export default class User {
     }
   }
 
-  async registerContractor(form, updateAccountingCompanyInfoAPI = false) {
+  async registerContractor(form, softwareType, updateAccountingCompanyInfoAPI = false) {
     form.phone_number = Format.numbersOnly(form.phone_number)
 
     // this is always false becuase the update company feature is not yet available
     updateAccountingCompanyInfoAPI = false
 
     try {
-
       const data = await axios.post('/register/contractor', {
         form: form,
+        softwareType: softwareType,
         updateAccountingCompanyInfoAPI: updateAccountingCompanyInfoAPI
       })
       Vue.toasted.success('info updated')

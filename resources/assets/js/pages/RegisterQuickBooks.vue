@@ -891,7 +891,7 @@
           this.registerForm.busy = false
           // debugger;
           this.loading = true
-          User.registerContractor(this.form, updateQBData)
+          User.registerContractor(this.form, 'quickBooks', updateQBData)
           this.registerForm.busy = false
         } else {
           this.inputNotValid = true

@@ -52,6 +52,12 @@ class Contractor extends Model
 
     }
 
+    public function usesAccountingSoftware($softwareName)
+    {
+        $this->accounting_software = $softwareName;
+        $this->save();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -165,7 +171,6 @@ class Contractor extends Model
         } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
         }
-
 
 
     }

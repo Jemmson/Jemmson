@@ -107,5 +107,31 @@ class ContractorTest extends TestCase
         ]);
     }
 
+    /**  @test */
+    function must_be_able_to_add_what_quickbooks_as_the_kind_of_software_the_contractor_is_using() {
+        //
+
+        $user = factory(User::class)->create([
+            'current_billing_plan' => 'basic_monthly'
+        ]);
+
+        $contractor = factory(Contractor::class)->create([
+            'user_id' => $user->id,
+            'free_jobs' => 0,
+            'accounting_software' => 'quickBooks'
+        ]);
+
+        $softwareName = 'quickbooks';
+
+        $contractor->usesAccountingSoftware($softwareName);
+
+        $this->assertDatabaseHas('contractors', [
+            'accounting_software' => 'quickbooks',
+            'id' => $contractor->id
+        ]);
+    }
+
+
+
 }
 

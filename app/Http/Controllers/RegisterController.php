@@ -6,15 +6,9 @@ use App\Contractor;
 use Laravel\Spark\Spark;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Spark\Events\Auth\UserRegistered;
 use Laravel\Spark\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\RedirectsUsers;
-use Laravel\Spark\Contracts\Interactions\Auth\Register;
-use Laravel\Spark\Contracts\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Log;
-use App\Quickbook;
-use App\Http\Controllers\QuickBooksController;
-use Laravel\Spark\User;
+use App\User;
 use App\Location;
 
 class RegisterController extends Controller
@@ -57,7 +51,7 @@ class RegisterController extends Controller
 
         // validation
         $this->validate($request, [
-            'form.email' => 'required|email|unique:users,email',
+            'form.email' => 'required|email|unique:users,email'
         ]);
 
         // create a new user for the contractor
@@ -65,11 +59,11 @@ class RegisterController extends Controller
         $user->fill([
             'name' => $request['form']['name'],
             'email' => $request['form']['email'],
+            'phone' => $request['form']['phone_number'],
             'usertype' => 'contractor',
             'password' => bcrypt($request['form']['password']),
-            'phone' => $request['form']['phone_number'],
-//        'first_name' => '',
 //        'last_name' => '',
+//        'first_name' => '',
         ]);
 
         try {
@@ -113,6 +107,11 @@ class RegisterController extends Controller
             'company_name' => $request['form']['company_name'],
             'location_id' => $location->id
         ]);
+
+        if ($request->softwareType != '') {
+            $contractor->accounting_software = $request->softwareType;
+        }
+
         try {
             $contractor->save();
         } catch (\Exception $error) {
