@@ -55,20 +55,22 @@ class RegisterController extends Controller
     public function registerContractor(Request $request)
     {
 
+        // validation
         $this->validate($request, [
             'form.email' => 'required|email|unique:users,email',
         ]);
 
-        Log::info("************Create Method - Home Controller - Begin****************");
-
+        // create a new user for the contractor
         $user = new User();
-        $user->name = $request['form']['name'];
-        $user->email = $request['form']['email'];
-        $user->usertype = 'contractor';
-        $user->password = bcrypt($request['form']['password']);
-        $user->phone = $request['form']['phone_number'];
-//        $user->first_name = '';
-//        $user->last_name = '';
+        $user->fill([
+            'name' => $request['form']['name'],
+            'email' => $request['form']['email'],
+            'usertype' => 'contractor',
+            'password' => bcrypt($request['form']['password']),
+            'phone' => $request['form']['phone_number'],
+//        'first_name' => '',
+//        'last_name' => '',
+        ]);
 
         try {
             $user->save();
@@ -76,15 +78,19 @@ class RegisterController extends Controller
             Log::debug($error->getMessage());
         }
 
+
+        // create a new location for the contractor
         $location = new Location();
-        $location->user_id = $user->id;
-        $location->default = true;
-        $location->address_line_1 = $request['form']['address_line_1'];
-        $location->address_line_2 = $request['form']['address_line_2'];
-        $location->city = $request->$request['form']['city'];
-        $location->area = $request->$request['form']['city'];
-        $location->state = $request->$request['form']['state'];
-        $location->zip = $request->$request['form']['zip'];
+        $location->fill([
+            'user_id' => $user->id,
+            'default' => true,
+            'address_line_1' => $request['form']['address_line_1'],
+            'address_line_2' => $request['form']['address_line_2'],
+            'city' => $request->$request['form']['city'],
+            'area' => $request->$request['form']['city'],
+            'state' => $request->$request['form']['state'],
+            'zip' => $request->$request['form']['zip']
+        ]);
 
         try {
             $location->save();
@@ -92,40 +98,33 @@ class RegisterController extends Controller
             Log::debug($error->getMessage());
         }
 
-
+        // attach the location to the user
         $user->location_id = $location->id;
-
         try {
             $user->save();
         } catch (\Exception $error) {
             Log::debug($error->getMessage());
         }
 
+        // add user to the contractor table
         $contractor = new Contractor();
-        $contractor->user_id = $user->id;
-        $contractor->company_name = $request['form']['company_name'];
-        $contractor->location_id = $location->id;
-
+        $contractor->fill([
+            'user_id' => $user->id,
+            'company_name' => $request['form']['company_name'],
+            'location_id' => $location->id
+        ]);
         try {
             $contractor->save();
         } catch (\Exception $error) {
             Log::debug($error->getMessage());
         }
 
-//        log::debug(Auth::login(user));
-
-//        Auth::logout();
-
+        // log the contractor in and then send him to the right location
         Auth::loginUsingId($user->id);
-
         if (empty(session('prevDestination'))) {
-            Log::info("going to /home");
-            Log::info("************Create Method - Home Controller - End****************");
             return response()->json('/home', 200);
         } else {
             $link = session()->pull('prevDestination');
-            Log::info("going to previous destination");
-            Log::info("************Create Method - Home Controller - End****************");
             return response()->json($link, 200);
         }
 
