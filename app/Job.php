@@ -144,6 +144,8 @@ class Job extends Model
             Log::critical('Failed to create a bid: ' . $e->getMessage());
             return false;
         }
+
+        return true;
     }
 
     /**

@@ -47,12 +47,14 @@ class Contractor extends Model
 
     public function isSubscribed()
     {
-        return $this->user()->first()->current_billing_plan !== null; // means the contractor has subscribed
+
+        return $this->user->current_billing_plan !== null; // means the contractor has subscribed
+
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class);
     }
 
     public function canCreateNewJob()

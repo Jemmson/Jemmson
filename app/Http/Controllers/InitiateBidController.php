@@ -68,20 +68,21 @@ class InitiateBidController extends Controller
         // create the job
         $job = new Job();
         $jobName = $job->jobName($request->jobName);
-        $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
-        if (!$job) {
-            return redirect()->back()->with(
-                'error',
-                'Job could not be created. Please try initiating the bid again'
-            );
+//        $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
+        if (!$job->createBid($customer->id, $jobName, Auth::user()->id)) {
+            return response()->json(
+                [
+                    'message' => 'Unable to create new job.',
+                    'errors' => ['job_creation_failed' => 'Job could not be created. Please try initiating the bid again']
+                ], 422);
         }
         $contractor->subtractFreeJob();
 
         // quickbooks feature must be turned on
-        // contractor must have a quickbooks account
-        if (config('quickBooks')) {
-
-        }
+//        // contractor must have a quickbooks account
+//        if (config('quickBooks')) {
+//
+//        }
 
         //notify the customer the job was created
         $customer->notify(new BidInitiated($job, $customer));
