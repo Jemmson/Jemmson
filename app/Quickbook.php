@@ -3,9 +3,8 @@
 namespace App;
 
 use Carbon\Carbon;
-use Doctrine\DBAL\Statement;
 use Illuminate\Database\Eloquent\Model;
-use GuzzleHttp;
+use QuickBooksOnline\API\Facades\Customer;
 use Illuminate\Support\Facades\DB;
 use QuickBooksOnline\API\DataService\DataService;
 
@@ -34,10 +33,19 @@ class Quickbook extends Model
     {
         $nd = collect($newCredentials);
         $creds = collect($this->credentials);
-        foreach($nd as $k => $c){
+        foreach ($nd as $k => $c) {
             $creds->put($k, $c);
         }
         $this->credentials = $creds->toArray();
+    }
+
+    public function getAccessTokenFromCompanyId($code, $companyId)
+    {
+        $dataService = DataService::Configure($this->getCredentials());
+        $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
+        $accessToken = $OAuth2LoginHelper
+            ->exchangeAuthorizationCodeForToken($code, $companyId);
+        session(['sessionAccessToken' => $accessToken]);
     }
 
     public function getCredentials()
@@ -46,11 +54,16 @@ class Quickbook extends Model
             'auth_mode' => $this->auth_mode,
             'ClientID' => $this->client_id,
             'ClientSecret' => $this->client_secret,
-            'RedirectURI' =>  $this->redirect_uri,
-            'scope' =>  $this->scope,
+            'RedirectURI' => $this->redirect_uri,
+            'scope' => $this->scope,
             'baseUrl' => env('AUTHORIZATION_REQUEST_URL'),
             'state' => $this->state
         ];
+    }
+
+    public function getDataServiceObject()
+    {
+        return DataService::Configure($this->getAuthCredentials());
     }
 
     public function __construct(array $attributes = [])
@@ -67,17 +80,17 @@ class Quickbook extends Model
 
     public function generateCsrf()
     {
-        if (function_exists('com_create_guid')){
+        if (function_exists('com_create_guid')) {
             return com_create_guid();
-        }else{
-            mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+        } else {
+            mt_srand((double)microtime() * 10000);//optional for php 4.2.0 and up.
             $charid = strtoupper(md5(uniqid(rand(), true)));
             $hyphen = chr(45);// "-"
-            $uuid = substr($charid, 0, 8).$hyphen
-                .substr($charid, 8, 4).$hyphen
-                .substr($charid,12, 4).$hyphen
-                .substr($charid,16, 4).$hyphen
-                .substr($charid,20,12);
+            $uuid = substr($charid, 0, 8) . $hyphen
+                . substr($charid, 8, 4) . $hyphen
+                . substr($charid, 12, 4) . $hyphen
+                . substr($charid, 16, 4) . $hyphen
+                . substr($charid, 20, 12);
 //                .chr(125);// ""
             return $uuid;
         }
@@ -86,8 +99,7 @@ class Quickbook extends Model
     public function checkIfGuidIsValid($guid)
     {
         if ($this->checkGuidIsInDb($guid) &&
-            $this->checkGuidIsLessThan5MinutesOld($guid))
-        {
+            $this->checkGuidIsLessThan5MinutesOld($guid)) {
             $this->consumeToken($guid);
             return true;
         } else {
@@ -109,7 +121,7 @@ class Quickbook extends Model
     public function consumeToken($guid)
     {
         $statement = "Update quickbook_csrf_tokens set consumed = true, 
-                          updated_at = NOW() where guid = '".$guid."'";
+                          updated_at = NOW() where guid = '" . $guid . "'";
         DB::select($statement);
     }
 
@@ -119,7 +131,7 @@ class Quickbook extends Model
         $date = DB::select($statement);
         $created = Carbon::createFromTimeString($date[0]->created_at);
         $now = Carbon::now();
-        if ( $now->diffInMinutes($created) < 5 ) {
+        if ($now->diffInMinutes($created) < 5) {
             return true;
         } else {
             return false;
@@ -130,7 +142,7 @@ class Quickbook extends Model
     {
         $now = Carbon::now('gmt');
         $statement = "Insert Into quickbook_csrf_tokens (guid, consumed, expired, created_at, updated_at)" .
-                        " Values ('".$guid."', false, false, NOW(), NOW())";
+            " Values ('" . $guid . "', false, false, NOW(), NOW())";
 //        dd($statement);
         DB::insert($statement);
     }
@@ -146,9 +158,9 @@ class Quickbook extends Model
             'auth_mode' => $this->auth_mode,
             'ClientID' => $this->client_id,
             'ClientSecret' => $this->client_secret,
-            'RedirectURI' =>  $this->redirect_uri,
-            'scope' =>  $this->scope,
-            'baseUrl' =>  $this->base_url,
+            'RedirectURI' => $this->redirect_uri,
+            'scope' => $this->scope,
+            'baseUrl' => $this->base_url,
             'state' => $this->state
         ];
     }
@@ -172,5 +184,57 @@ class Quickbook extends Model
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
         $authUrl = $OAuth2LoginHelper->getAuthorizationCodeURL();
         echo $authUrl;
+    }
+
+    public function getTheCompanyInfo()
+    {
+
+        $dataService = DataService::Configure($this->getCredentials());
+        $accessToken = session('sessionAccessToken');
+        $dataService->updateOAuth2Token($accessToken);
+
+        // get company information and return it
+        $companyInfo = $dataService->getCompanyInfo();
+        session(['companyInfo' => $companyInfo]);
+    }
+
+    public function checkIfCustomerExists(\App\Customer $customer)
+    {
+
+    }
+
+    public function addCustomer(\App\User $customer)
+    {
+//        if (!$this->checkIfCustomerExists($customer)){
+//            $dataService = DataService::Configure($this->getCredentials());
+//            $accessToken = session('sessionAccessToken');
+//            $accessToken = unserialize(base64_decode($accessToken));
+//            $dataService->updateOAuth2Token($accessToken);
+//            $companyInfo = $dataService->FindAll('customer');
+//
+//        }
+
+        $dataService = DataService::Configure($this->getCredentials());
+        $accessToken = session('sessionAccessToken');
+        $accessToken = unserialize(base64_decode($accessToken));
+        $dataService->updateOAuth2Token($accessToken);
+        $cust = $this->createQBCustomerObject($customer);
+        return $dataService->Add($cust);
+
+    }
+
+    public function createQBCustomerObject(\App\User $customer)
+    {
+        return QuickBooksOnline\API\Facades\Customer::create([
+            "GivenName" => $customer->name,
+            "PrimaryPhone" => [
+                "FreeFormNumber" => $customer->phone
+            ]
+        ]);
+    }
+
+    public function getGuidFromRequest($request)
+    {
+        return collect(json_decode($request))->toArray()['guid'];
     }
 }

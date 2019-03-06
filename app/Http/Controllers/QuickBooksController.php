@@ -101,40 +101,17 @@ class QuickBooksController extends Controller
 
     public function processToken(Request $request)
     {
-        $location = '';
-        $guid = collect(json_decode($request->state))->toArray()['guid'];
+
+        // check if guid is valid to protect against csrf requests
+        // if it is then get the access token
         $qb = new Quickbook();
+        $guid = collect(json_decode($request->state))->toArray()['guid'];
         if ($qb->checkIfGuidIsValid($guid)) {
-            if (!empty($request->state)) {
-                $location = collect(json_decode($request->state))->toArray()['method'];
-            }
-            if (empty(Auth::user()->id)) {
-                $companyInfo = $this->processCodeAndGetCompany($request->code, $request->realmId);
-                session(['companyInfo' => $companyInfo]);
-                return Redirect::to('/#/registerQuickBooks');
-            } else
-                if (empty($q) && !empty(Auth::user()->id)) {
-                    Quickbook::create([
-                        'user_id' => Auth::user()->id,
-                        'state' => $request->state,
-                        'code' => $request->code,
-                        'company_id' => $request->realmId
-                    ]);
-                } else if (!empty($q) && !empty(Auth::user()->id)) {
-                    $q->state = $request->state;
-                    $q->code = $request->code;
-                    $q->company_id = $request->realmId;
-                    $q->save();
-                }
-            if ($location == 'getCompany') {
-                $companyInfo = $this->processCodeAndGetCompany($request->code, $request->realmId);
-                return Redirect::back(302)->with(json_encode($companyInfo));
-            } else {
-                $this->processCode($request->code, $request->realmId);
-                return Redirect::to('/#/home');
-            }
-        }
-        else {
+            $qb->getAccessTokenFromCompanyId($request->code, $request->realmId);
+            $qb->getTheCompanyInfo();
+            return Redirect::to('/#/registerQuickBooks');
+
+        } else {
             return Redirect::to('/#/check_accounting');
         }
     }
