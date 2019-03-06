@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Spark\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use App\Quickbook;
 use App\User;
 use App\Location;
 
@@ -110,6 +111,8 @@ class RegisterController extends Controller
 
         if ($request->softwareType != '') {
             $contractor->accounting_software = $request->softwareType;
+            $qb = new Quickbook();
+            $qb->saveAccessToken($user->id);
         }
 
         try {

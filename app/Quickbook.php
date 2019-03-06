@@ -4,7 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use QuickBooksOnline\API\Facades\Customer;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use QuickBooksOnline\API\DataService\DataService;
 
@@ -14,6 +14,9 @@ class Quickbook extends Model
     protected $fillable = [
         'access_token',
         'code',
+        'refresh_token',
+        'refresh_token_expires_at',
+        'refresh_token_validation_period',
         'company_id',
         'realmId',
         'state',
@@ -46,6 +49,24 @@ class Quickbook extends Model
         $accessToken = $OAuth2LoginHelper
             ->exchangeAuthorizationCodeForToken($code, $companyId);
         session(['sessionAccessToken' => $accessToken]);
+    }
+
+    public function saveAccessToken($userId)
+    {
+        $accessToken = session('sessionAccessToken');
+        $this->fill([
+            'user_id' => $userId,
+            'refresh_token' => $accessToken->getRefreshToken(),
+            'refresh_token_expires_at' => $accessToken->getRefreshTokenExpiresAt(),
+            'refresh_token_validation_period' => $accessToken->getRefreshTokenValidationPeriodInSeconds(),
+            'company_id' => $accessToken->getRealmID()
+        ]);
+        $this->save();
+    }
+
+    public function checkIfAccessTokenHasExpired($accessToken)
+    {
+
     }
 
     public function getCredentials()
