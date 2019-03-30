@@ -19,7 +19,7 @@ class CreateQuickbooksTable extends Migration
             $table->string('company_id')->nullable();
             $table->text('access_token')->nullable();
             $table->text('refresh_token')->nullable();
-            $table->dateTime('refresh_token_expires_at')->nullable();
+            $table->bigInteger('refresh_token_expires_at')->nullable();
             $table->bigInteger('refresh_token_validation_period')->nullable();
             $table->text('access_token_object')->nullable();
             $table->timestamps();

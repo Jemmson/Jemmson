@@ -6,7 +6,17 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use QuickBooksOnline\API\DataService\DataService;
+use QuickBooksOnline\API\Core\OAuth\OAuth2\OAuth2LoginHelper;
+use QuickBooksOnline\API\Exception\SdkException;
+use App\QuickBookCSRFToken;
+
+
+use QuickBooksOnline\API\Core\ServiceContext;
+use QuickBooksOnline\API\PlatformService\PlatformService;
+use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
+use QuickBooksOnline\API\Facades\Customer;
 
 class Quickbook extends Model
 {
@@ -42,6 +52,23 @@ class Quickbook extends Model
         $this->credentials = $creds->toArray();
     }
 
+    public function checkIfRefreshTokenIsValid($userId)
+    {
+        $qbCreds = $this->getQuickBookCredentialsFromDB($userId);
+        return $qbCreds->refresh_token_expires_at - time() > 0;
+
+    }
+
+    public function getQuickBookCredentialsFromDB($userId)
+    {
+        return Quickbook::select()->where('user_id', '=', $userId)->get()->first();
+    }
+
+    public function checkIfSessionAccessTokenExists()
+    {
+        return !empty(session('sessionAccessToken'));
+    }
+
     public function getAccessTokenFromCompanyId($code, $companyId)
     {
         $dataService = DataService::Configure($this->getCredentials());
@@ -54,19 +81,90 @@ class Quickbook extends Model
     public function saveAccessToken($userId)
     {
         $accessToken = session('sessionAccessToken');
-        $this->fill([
-            'user_id' => $userId,
-            'refresh_token' => $accessToken->getRefreshToken(),
-            'refresh_token_expires_at' => $accessToken->getRefreshTokenExpiresAt(),
-            'refresh_token_validation_period' => $accessToken->getRefreshTokenValidationPeriodInSeconds(),
-            'company_id' => $accessToken->getRealmID()
-        ]);
-        $this->save();
+        $refreshTokenExpiresAt = $this->getAccessTokenTimeStamp($accessToken->getRefreshTokenExpiresAt());
+
+        // does a company id exist or that user? If yes then update it, if no then add an entry
+        $qbUser = Quickbook::select()->where('user_id', '=', $userId)->get()->first();
+
+        if(!empty($qbUser)) {
+            if(!empty($qbUser->company_id)){
+                $qbUser->refresh_token = $accessToken->getRefreshToken();
+                $qbUser->refresh_token_validation_period = $accessToken->getRefreshTokenValidationPeriodInSeconds();
+                $qbUser->save();
+            } else {
+                if (!empty($accessToken->getRealmID())) {
+                    $qbUser->company_id = $accessToken->getRealmID();
+                    $qbUser->refresh_token = $accessToken->getRefreshToken();
+                    $qbUser->refresh_token_validation_period = $accessToken->getRefreshTokenValidationPeriodInSeconds();
+                    $qbUser->save();
+                } else {
+                    // TODO: throw an exception that the refresh token can not be saved
+                }
+            }
+        } else {
+            if (!empty($accessToken->getRealmID())) {
+                $this->fill([
+                    'user_id' => $userId,
+                    'refresh_token' => $accessToken->getRefreshToken(),
+                    'refresh_token_expires_at' => $refreshTokenExpiresAt,
+                    'refresh_token_validation_period' => $accessToken->getRefreshTokenValidationPeriodInSeconds(),
+                    'company_id' => $accessToken->getRealmID()
+                ]);
+                $this->save();
+            } else {
+                // TODO: throw an exception that the refresh token can not be saved
+            }
+        }
     }
 
-    public function checkIfAccessTokenHasExpired($accessToken)
+    public function checkOrUpdateAccessToken()
     {
+        $accessToken = session('sessionAccessToken');
+        $accessTokenTimestamp = $this->getAccessTokenTimeStamp($accessToken->getAccessTokenExpiresAt());
+        if (!$this->checkIfAccessTokenHasNotExpired($accessTokenTimestamp)) {
+            // has expired
+            $this->refreshAccessToken();
+        }
+    }
 
+    public function refreshAccessToken()
+    {
+//        $oauth2LoginHelper = new OAuth2LoginHelper($ClientID, $ClientSecret);
+//        $accessTokenObj = $oauth2LoginHelper->
+//        refreshAccessTokenWithRefreshToken($theRefreshTokenValue);
+//        $accessTokenValue = $accessTokenObj->getAccessToken();
+//        $refreshTokenValue = $accessTokenObj->getRefreshToken();
+
+        $user_id = Auth::user()->id;
+
+        // get new Token
+        $oauth2LoginHelper = '';
+        try {
+            $oauth2LoginHelper = new OAuth2LoginHelper(env('CLIENT_ID'), env('CLIENT_SECRET'), env('OAUTH_REDIRECT_URI'));
+        } catch (SdkException $exception) {
+            Log::debug($exception);
+        }
+
+        $refreshToken = $this->getQuickBookCredentialsFromDB(Auth::user()->getAuthIdentifier());
+        $accessToken = $oauth2LoginHelper->
+        refreshAccessTokenWithRefreshToken($refreshToken->refresh_token);
+//        $refreshTokenValue = $accessToken->getRefreshToken();
+
+        // save the refresh token
+        session(['sessionAccessToken' => $accessToken]);
+        $this->saveAccessToken($user_id);
+//        $this->saveNewRefreshToken($refreshTokenValue, $user_id);
+    }
+
+    public function getAccessTokenTimeStamp($date)
+    {
+        $d = Carbon::createFromFormat('Y/m/d H:i:s', $date);
+        return $d->timestamp;
+    }
+
+    public function checkIfAccessTokenHasNotExpired($accessTokenDate)
+    {
+        return $accessTokenDate - time() > 0;
     }
 
     public function getCredentials()
@@ -119,9 +217,10 @@ class Quickbook extends Model
 
     public function checkIfGuidIsValid($guid)
     {
-        if ($this->checkGuidIsInDb($guid) &&
+        if (
+            $this->checkGuidIsInDb($guid) &&
             $this->checkGuidIsLessThan5MinutesOld($guid)) {
-            $this->consumeToken($guid);
+            $this->tokenHasNotBeenConsumed($guid);
             return true;
         } else {
             return false;
@@ -130,29 +229,41 @@ class Quickbook extends Model
 
     public function checkGuidIsInDb($guid)
     {
-        $statement = "SELECT guid from quickbook_csrf_tokens where guid = '" . $guid . "'";
-        $response = DB::select($statement);
-        if (!empty($response[0]->guid)) {
+
+        $guid = QuickBookCSRFToken::select('guid')
+            ->where("guid", "=", $guid)
+            ->get()->first()->guid;
+
+        if (!empty($guid)) {
             return true;
         } else {
             return false;
         }
     }
 
-    public function consumeToken($guid)
+    public function tokenHasNotBeenConsumed($guid)
     {
-        $statement = "Update quickbook_csrf_tokens set consumed = true, 
-                          updated_at = NOW() where guid = '" . $guid . "'";
-        DB::select($statement);
+
+        $qbcsrf = QuickBookCSRFToken::select()->where("guid", "=", $guid)->get()->first();
+        if ($qbcsrf->consumed) {
+            return false;
+        } else {
+            $qbcsrf->consumed = true;
+            $qbcsrf->save();
+            return true;
+        }
+
     }
 
     public function checkGuidIsLessThan5MinutesOld($guid)
     {
-        $statement = "SELECT created_at from quickbook_csrf_tokens where guid = '" . $guid . "'";
-        $date = DB::select($statement);
-        $created = Carbon::createFromTimeString($date[0]->created_at);
+//        $statement = "SELECT created_at from quickbook_csrf_tokens where guid = '" . $guid . "'";
+//        $date = DB::select($statement);
+
+        $created = QuickBookCSRFToken::select('created_at')->where("guid", "=", $guid)->get()->first()->created_at;
         $now = Carbon::now();
-        if ($now->diffInMinutes($created) < 5) {
+        $difference = $now->diffInMinutes($created);
+        if ($difference < 5) {
             return true;
         } else {
             return false;
@@ -161,11 +272,11 @@ class Quickbook extends Model
 
     public function addGuidToTable($guid)
     {
-        $now = Carbon::now('gmt');
-        $statement = "Insert Into quickbook_csrf_tokens (guid, consumed, expired, created_at, updated_at)" .
-            " Values ('" . $guid . "', false, false, NOW(), NOW())";
-//        dd($statement);
-        DB::insert($statement);
+        $qbcsrf = new QuickBookCSRFToken();
+        $qbcsrf->guid = $guid;
+        $qbcsrf->consumed = false;
+        $qbcsrf->expired = false;
+        $qbcsrf->save();
     }
 
     public function setState($state)
@@ -235,12 +346,59 @@ class Quickbook extends Model
 //
 //        }
 
-        $dataService = DataService::Configure($this->getCredentials());
+//        $dataService = DataService::Configure($this->getCredentials());
+//        $accessToken = $this->checkOrUpdateAccessToken();
+//        $dataService->updateOAuth2Token($accessToken);
+//        $cust = $this->createQBCustomerObject($customer);
+//        return $dataService->Add($cust);
+
         $accessToken = session('sessionAccessToken');
-        $accessToken = unserialize(base64_decode($accessToken));
-        $dataService->updateOAuth2Token($accessToken);
-        $cust = $this->createQBCustomerObject($customer);
-        return $dataService->Add($cust);
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' =>  $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+//        $dataService->setLogLocation("/Users/hlu2/Desktop/newFolderForLog");
+// Add a customer
+        $customerObj = Customer::create([
+//            "BillAddr" => [
+//                "Line1"=>  "123 Main Street",
+//                "City"=>  "Mountain View",
+//                "Country"=>  "USA",
+//                "CountrySubDivisionCode"=>  "CA",
+//                "PostalCode"=>  "94042"
+//            ],
+//            "Notes" =>  "Here are other details.",
+//            "Title"=>  "Mr",
+//            "GivenName"=>  $customer->name,
+//            "MiddleName"=>  "1B",
+//            "FamilyName"=>  "King",
+//            "Suffix"=>  "Jr",
+            "FullyQualifiedName"=>  $customer->name,
+//            "CompanyName"=>  "King Evial",
+            "DisplayName"=>  $customer->name,
+            "PrimaryPhone"=>  [
+                "FreeFormNumber"=>  $customer->phone
+            ],
+//            "PrimaryEmailAddr"=>  [
+//                "Address" => "evilkingw@myemail.com"
+//            ]
+        ]);
+        $resultingCustomerObj = $dataService->Add($customerObj);
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+        } else {
+            var_dump($resultingCustomerObj);
+        }
 
     }
 
@@ -257,5 +415,11 @@ class Quickbook extends Model
     public function getGuidFromRequest($request)
     {
         return collect(json_decode($request))->toArray()['guid'];
+    }
+
+    public function isContractorThatUsesQuickbooks()
+    {
+        return Auth::user()->usertype === 'contractor' &&
+            Auth::user()->contractor->accounting_software == 'quickBooks';
     }
 }

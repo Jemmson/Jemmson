@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\User;
+use App\Customer;
 
 class Contractor extends Model
 {
@@ -182,6 +184,14 @@ class Contractor extends Model
     public function location()
     {
         return $this->hasOne(Location::class, 'id', 'location_id');
+    }
+
+    public function firstOrCreateAccountingSoftwareCustomer($accountingSoftware, \App\User $customer)
+    {
+        if($accountingSoftware == 'quickBooks'){
+            $qb = new Quickbook();
+            $qb->addCustomer($customer);
+        }
     }
 }
 

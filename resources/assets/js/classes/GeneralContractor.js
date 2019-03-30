@@ -1,87 +1,84 @@
-import Language from './Language';
+import Language from './Language'
+import { router } from '../app'
 
 export default class GeneralContractor {
-  constructor() {
-    this.user = Spark.state.user;
-  }
-
-  acceptSubBidForTask (jobTask, bid, disabled) {
-    console.log ('acceptSubBidForTask', jobTask);
-    disabled.accept = true;
-    axios.post ('/api/task/accept', {
+  acceptSubBidForTask(jobTask, bid, disabled) {
+    console.log('acceptSubBidForTask', jobTask)
+    disabled.accept = true
+    axios.post('/api/task/accept', {
       jobId: jobTask.job_id,
       jobTaskId: jobTask.id,
       contractorId: bid.contractor_id,
       bidId: bid.id,
       price: bid.bid_price,
-    }).then ((response) => {
-      console.log (response.data)
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success ('Accepted Bid!');
-      disabled.accept = false;
-    }).catch ((error) => {
-      console.error (error);
-      Vue.toasted.error ('Error Trying to Accept Bid!');
-      disabled.accept = false;
-    });
+    }).then((response) => {
+      console.log(response.data)
+      User.emitChange('bidUpdated')
+      Vue.toasted.success('Accepted Bid!')
+      disabled.accept = false
+    }).catch((error) => {
+      console.error(error)
+      Vue.toasted.error('Error Trying to Accept Bid!')
+      disabled.accept = false
+    })
   }
 
-  addNewTaskToBid (bid, form) {
-    console.log ('sendSubInviteToBidOnTask', bid, form);
+  addNewTaskToBid(bid, form) {
+    console.log('sendSubInviteToBidOnTask', bid, form)
     // I want the status to go from initiated to in progress when the first new task is added
     // I want each task to be added to the the tasks table
     // I want the task to associated to a job, customer, and contractor
     // I want to add the existing task to the job
 
-    form.jobId = bid.id;
-    form.contractorId = Spark.state.user.id;
+    form.jobId = bid.id
+    form.contractorId = Spark.state.user.id
 
-    Format.numbers (form, 'taskPrice');
-    Format.numbers (form, 'subTaskPrice');
+    Format.numbers(form, 'taskPrice')
+    Format.numbers(form, 'subTaskPrice')
 
-    Spark.post ('/api/task/addTask', form)
-      .then ((response) => {
-        console.log (response)
+    Spark.post('/api/task/addTask', form)
+      .then((response) => {
+        console.log(response)
         // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
         // show a toast notification
-        form.taskName = '';
-        form.taskPrice = 0;
-        form.subTaskPrice = 0;
-        form.qty = 1;
-        form.taskId = -1;
+        form.taskName = ''
+        form.taskPrice = 0
+        form.subTaskPrice = 0
+        form.qty = 1
+        form.taskId = -1
 
-        Bus.$emit ('taskAdded', true);
-        User.emitChange ('bidUpdated');
-        Vue.toasted.success ('New Task Added!');
-        $ ('#add-task-modal').modal ('hide');
-      }).catch (error => {
-      console.error (error);
+        Bus.$emit('taskAdded', true)
+        User.emitChange('bidUpdated')
+        Vue.toasted.success('New Task Added!')
+        $('#add-task-modal').modal('hide')
+      }).catch(error => {
+      console.error(error)
       // NOTICE: lets us do addNewTaskForm.errors.has('errorName') to check if this error exists & addNewTaskForm.errors.get('errorName') to get the error message
       // usually we don't have to do this, but api routes messes this up
       // we don't have to do this for web routes we can just call addNewTaskForm.errors.has('errorName')
       // without catching the error and assigning the errors
-      form.errors.errors = error.errors;
+      form.errors.errors = error.errors
       // show a toast notification
       if (error.message !== undefined && error.message !== null) {
-        Vue.toasted.error (error.message);
+        Vue.toasted.error(error.message)
       }
-    });
+    })
   }
 
-  adjustDate (date) {
-    let d = '';
+  adjustDate(date) {
+    let d = ''
     if (date === 'today') {
-      d = new Date ()
-      let year = d.getFullYear ();
-      let month = d.getMonth () + 1;
-      let day = d.getDate ();
-      return [year, month, day];
+      d = new Date()
+      let year = d.getFullYear()
+      let month = d.getMonth() + 1
+      let day = d.getDate()
+      return [year, month, day]
     } else {
-      let dateArray = date.split ('-');
-      dateArray[0] = parseInt(dateArray[0]);
-      dateArray[1] = parseInt(dateArray[1]);
-      dateArray[2] = parseInt(dateArray[2]);
-      return dateArray;
+      let dateArray = date.split('-')
+      dateArray[0] = parseInt(dateArray[0])
+      dateArray[1] = parseInt(dateArray[1])
+      dateArray[2] = parseInt(dateArray[2])
+      return dateArray
     }
 
     //
@@ -121,207 +118,220 @@ export default class GeneralContractor {
 
   }
 
-  approveTaskHasBeenFinished (jobTask, disabled) {
-    console.log ('approveTaskHasBeenFinished', jobTask);
-    disabled.approve = true;
-    axios.post ('/api/task/approve', jobTask)
-      .then ((response) => {
-        console.log (response);
+  approveTaskHasBeenFinished(jobTask, disabled) {
+    console.log('approveTaskHasBeenFinished', jobTask)
+    disabled.approve = true
+    axios.post('/api/task/approve', jobTask)
+      .then((response) => {
+        console.log(response)
         // show a toast notification
-        User.emitChange ('bidUpdated');
-        Vue.toasted.success (Language.lang ().submit.approve_task.success);
-        disabled.approve = false;
-      }).catch (error => {
-      console.error (error);
+        User.emitChange('bidUpdated')
+        Vue.toasted.success(Language.lang().submit.approve_task.success)
+        disabled.approve = false
+      }).catch(error => {
+      console.error(error)
       // show a toast notification
-      Vue.toasted.error ('Error: ' + error.message);
-      disabled.approve = false;
-    });
+      Vue.toasted.error('Error: ' + error.message)
+      disabled.approve = false
+    })
   }
 
-  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
-
-  checkDateIsTodayorLater (firstDate, secondDate) {
-    let pickerDate = this.adjustDate (firstDate);
-    let today = this.adjustDate (secondDate);
-    let errorMessage = '';
-    let hasDateError = false;
+  checkDateIsTodayorLater(firstDate, secondDate) {
+    let pickerDate = this.adjustDate(firstDate)
+    let today = this.adjustDate(secondDate)
+    let errorMessage = ''
+    let hasDateError = false
     if (
       (pickerDate[0] < today[0]) ||
       (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
       (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
     ) {
-      errorMessage = 'Start Date cannot be before todays date';
-      hasDateError = true;
+      errorMessage = 'Start Date cannot be before todays date'
+      hasDateError = true
     } else {
-      hasDateError = false;
+      hasDateError = false
     }
     return [errorMessage, hasDateError]
   }
 
-  async deleteTask (jobTask, disabled) {
-    disabled.deleteTask = true;
+  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
+
+  async deleteTask(jobTask, disabled) {
+    disabled.deleteTask = true
     try {
-      const data = await axios.post ('/api/task/delete', {
+      const data = await axios.post('/api/task/delete', {
         jobTaskId: jobTask.id,
         jobId: jobTask.job_id
-      });
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success ('Task Deleted');
-      disabled.deleteTask = false;
+      })
+      User.emitChange('bidUpdated')
+      Vue.toasted.success('Task Deleted')
+      disabled.deleteTask = false
     } catch (error) {
-      error = error.response.data;
-      Vue.toasted.error (error.message);
-      disabled.deleteTask = false;
+      error = error.response.data
+      Vue.toasted.error(error.message)
+      disabled.deleteTask = false
     }
   }
 
-  async initiateBid (form, disabled) {
-    disabled.submit = true;
-    console.log (form)
+  goToUserAuthorizationPage() {
+    router.push('userAuthorizationPage')
+  }
+
+  async initiateBid(form, disabled) {
+    disabled.submit = true
+    console.log(form)
     try {
-      const data = await axios.post ('/initiate-bid', form);
-      console.log (data)
-      console.log(JSON.stringify(data));
-      Vue.toasted.success ('Bid Initiated');
-      disabled.submit = false;
-      window.location = '/#/bids';
+      const data = await axios.post('/initiate-bid', form)
+      if (data.data.tokenState !== undefined) {
+        if (data.data.tokenState === 'refreshTokenHasExpired') {
+          this.goToUserAuthorizationPage();
+        }
+      }
+      console.log(data)
+      console.log(JSON.stringify(data))
+      Vue.toasted.success('Bid Initiated')
+      disabled.submit = false
+      window.location = '/#/bids'
     } catch (error) {
-      console.log (error)
-      error = error.response.data;
-      form.errors.errors = error.errors;
-      Vue.toasted.error (error.message);
-      console.log ('Initiate bid errors')
-      console.log (error)
-      console.log (error.message)
-      disabled.submit = false;
+      console.log(error)
+      error = error.response.data
+      form.errors.errors = error.errors
+      Vue.toasted.error(error.message)
+      console.log('Initiate bid errors')
+      console.log(error)
+      console.log(error.message)
+      disabled.submit = false
       if (error.errors['no_free_jobs'] !== undefined) {
-        window.location = '/settings#/subscription';
+        window.location = '/settings#/subscription'
       }
     }
   }
 
-  async jobCompleted (job, disabled) {
-    disabled.jobCompleted = true;
+  async jobCompleted(job, disabled) {
+    disabled.jobCompleted = true
     try {
-      const data = await axios.post ('/api/job/completed', {
+      const data = await axios.post('/api/job/completed', {
         id: job.id
-      });
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success ('Job Completed');
-      disabled.jobCompleted = false;
+      })
+      User.emitChange('bidUpdated')
+      Vue.toasted.success('Job Completed')
+      disabled.jobCompleted = false
     } catch (error) {
-      error = error.response.data;
-      Vue.toasted.error (error.message);
-      disabled.jobCompleted = false;
+      error = error.response.data
+      Vue.toasted.error(error.message)
+      disabled.jobCompleted = false
     }
 
   }
 
-  notifyCustomerOfFinishedBid (bid, disabled) {
-    disabled.submitBid = true;
-    if (User.needsStripe ()) {
-      disabled.submitBid = false;
-      return false;
+  notifyCustomerOfFinishedBid(bid, disabled) {
+    disabled.submitBid = true
+    if (User.needsStripe()) {
+      disabled.submitBid = false
+      return false
     }
-    console.log ('notifyCustomerOfFinishedBid', bid);
-    axios.post ('/api/task/finishedBidNotification', {
+    console.log('notifyCustomerOfFinishedBid', bid)
+    axios.post('/api/task/finishedBidNotification', {
       jobId: bid.id,
       customerId: bid.customer_id
-    }).then ((response) => {
-      console.log (response);
-      disabled.submitBid = false;
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success ('Bid has been submitted and notification sent!');
-    }).catch ((error) => {
-      console.error (error);
-      disabled.submitBid = false;
-      Vue.toasted.error ('Whoops! Something went wrong! Please try again.');
-    });
+    }).then((response) => {
+      console.log(response)
+      disabled.submitBid = false
+      User.emitChange('bidUpdated')
+      Vue.toasted.success('Bid has been submitted and notification sent!')
+    }).catch((error) => {
+      console.error(error)
+      disabled.submitBid = false
+      Vue.toasted.error('Whoops! Something went wrong! Please try again.')
+    })
   }
 
-  sendSubInviteToBidOnTask (jobTask, form, disabled, jobTaskId) {
-    disabled.invite = true;
+  sendSubInviteToBidOnTask(jobTask, form, disabled, jobTaskId) {
+    disabled.invite = true
     // debugger;
-    form.jobTaskId = jobTaskId;
-    Spark.post ('/api/task/notify', form)
-      .then ((response) => {
-        console.log (response);
-        User.emitChange ('bidUpdated');
-        Vue.toasted.success ('Invite Sent!');
-        disabled.invite = false;
-        form.counter++;
-        form.name = '';
-        form.email = '';
-        form.phone = '';
-      }).catch ((error) => {
-      console.error (error);
-      form.errors.errors = error.errors;
-      Vue.toasted.error ('Error: ' + error.message);
-      disabled.invite = false;
-    });
+    form.jobTaskId = jobTaskId
+    Spark.post('/api/task/notify', form)
+      .then((response) => {
+        console.log(response)
+        User.emitChange('bidUpdated')
+        Vue.toasted.success('Invite Sent!')
+        disabled.invite = false
+        form.counter++
+        form.name = ''
+        form.email = ''
+        form.phone = ''
+      }).catch((error) => {
+      console.error(error)
+      form.errors.errors = error.errors
+      Vue.toasted.error('Error: ' + error.message)
+      disabled.invite = false
+    })
   }
 
-  updateCustomerPrice (price, jobTaskId, jobId) {
-    console.log (price)
+  updateCustomerPrice(price, jobTaskId, jobId) {
+    console.log(price)
     if (price === '') {
       price = 0
     }
-    console.log (price)
-    axios.post ('/api/task/updateCustomerPrice', {
+    console.log(price)
+    axios.post('/api/task/updateCustomerPrice', {
       jobId: jobId,
       jobTaskId: jobTaskId,
       price: price
-    }).then ((response) => {
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success (Language.lang ().bid_task.price_updated.general);
+    }).then((response) => {
+      User.emitChange('bidUpdated')
+      Vue.toasted.success(Language.lang().bid_task.price_updated.general)
       // console.log(response.data)
       // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
-    }).catch (error => {
-      console.error (error);
+    }).catch(error => {
+      console.error(error)
       // show a toast notification
-      Vue.toasted.error ('Error: ' + error.message);
-    });
+      Vue.toasted.error('Error: ' + error.message)
+    })
   }
 
-  async updateCustomerTaskQuantity (quantity, taskId) {
+  async updateCustomerTaskQuantity(quantity, taskId) {
     try {
-      const data = await axios.post ('/api/task/updateTaskQuantity', {
+      const data = await axios.post('/api/task/updateTaskQuantity', {
         quantity: quantity,
         taskId: taskId
-      });
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success (Language.lang ().bid_task.quantity_updated.general);
+      })
+      User.emitChange('bidUpdated')
+      Vue.toasted.success(Language.lang().bid_task.quantity_updated.general)
     } catch (error) {
-      Vue.toasted.error ('Error: ' + error.message);
+      Vue.toasted.error('Error: ' + error.message)
     }
   }
 
-  async updateMessage (message, jobTaskId, actor) {
+  async updateMessage(message, jobTaskId, actor) {
     try {
-      const data = await axios.post ('/api/task/updateMessage/', {
+      const data = await axios.post('/api/task/updateMessage/', {
         message: message,
         jobTaskId: jobTaskId,
         actor: actor
-      });
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success (Language.lang ().bid_task.message_updated.general);
+      })
+      User.emitChange('bidUpdated')
+      Vue.toasted.success(Language.lang().bid_task.message_updated.general)
     } catch (error) {
-      Vue.toasted.error ('Error: ' + error.message);
+      Vue.toasted.error('Error: ' + error.message)
     }
   }
 
-  async updateTaskStartDate (date, jobTaskId) {
+  async updateTaskStartDate(date, jobTaskId) {
     try {
-      const data = await axios.post ('/api/task/updateTaskStartDate', {
+      const data = await axios.post('/api/task/updateTaskStartDate', {
         date: date,
         jobTaskId: jobTaskId,
-      });
-      User.emitChange ('bidUpdated');
-      Vue.toasted.success (Language.lang ().bid_task.start_date.general);
+      })
+      User.emitChange('bidUpdated')
+      Vue.toasted.success(Language.lang().bid_task.start_date.general)
     } catch (error) {
-      Vue.toasted.error ('Error: ' + error.message);
+      Vue.toasted.error('Error: ' + error.message)
     }
+  }
+
+  constructor() {
+    this.user = Spark.state.user
   }
 
   // async updateJobStartDate (date, jobId) {

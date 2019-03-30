@@ -58,7 +58,8 @@ class Kernel extends HttpKernel
         'subscribed' => \Laravel\Spark\Http\Middleware\VerifyUserIsSubscribed::class,
         'teamSubscribed' => \Laravel\Spark\Http\Middleware\VerifyTeamIsSubscribed::class,
         'further.info' => \App\Http\Middleware\RedirectIfFurtherInfoNeeded::class,
-        'block.further.info' => \App\Http\Middleware\BlockFurtherInfo::class
-        
+        'block.further.info' => \App\Http\Middleware\BlockFurtherInfo::class,
+        'quickbook.token' => \App\Http\Middleware\QuickBookTokenMiddleware::class
+
     ];
 }

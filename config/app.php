@@ -109,7 +109,8 @@ return [
     |
     */
 
-    'timezone' => 'America/Phoenix',
+    'timezone' => 'UTC',
+//    'timezone' => 'America/Phoenix',
 
     /*
     |--------------------------------------------------------------------------

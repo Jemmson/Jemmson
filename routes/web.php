@@ -47,7 +47,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/quickbooks/getCompanyInfo', 'QuickbooksController@getCompanyInfo');
 
 
-    Route::post('/initiate-bid', 'InitiateBidController@send');
+    Route::post('/initiate-bid', 'InitiateBidController@send')->middleware('quickbook.token');
 
     // TaskController
     Route::post('/bid/tasks', 'TaskController@bidTasks');

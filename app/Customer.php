@@ -129,7 +129,7 @@ class Customer extends Model
         }
 
 
-        $cust = Customer::create(
+        Customer::create(
             [
                 'user_id' => $customer->id
             ]

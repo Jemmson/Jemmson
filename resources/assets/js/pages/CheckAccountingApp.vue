@@ -16,10 +16,14 @@
             <div class="flex">
                 <a
                         :href="quickbooks.auth_url"
-                        class="btn btn-default bg-color-red btn-primary w-full qb uppercase"
                         ref="quickbooks"
-                >QuickBooks</a>
-                <button class="btn default w-full m-2 bg-color-green"
+                        class="flex-1"
+                >
+                    <img
+                            alt="qbo/docs/develop/authentication-and-authorization/C2QB_auth.png"
+                            src="https://static.developer.intuit.com/images/C2QB_auth.png">
+                </a>
+                <button class="flex-1 btn default w-full m-2 bg-color-green"
                         ref="dont_use" @click="goToRegistration()">Dont Use
                 </button>
             </div>

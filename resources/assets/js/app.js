@@ -70,6 +70,7 @@ import Benefits from './pages/Benefits'
 import Demo from './pages/Demo'
 import HowTo from './pages/HowTo'
 import RegisterQuickBooks from './pages/RegisterQuickBooks'
+import UserAuthorizationPage from './pages/UserAuthorizationPage'
 // import BidTask from './components/job/BidTask';
 
 window.Format = Format
@@ -93,6 +94,10 @@ const routes = [
   {
     path: '/bids',
     component: Jobs
+  },
+  {
+    path: '/userAuthorizationPage',
+    component: UserAuthorizationPage
   },
   {
     path: '/feedback',

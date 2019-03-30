@@ -151,6 +151,25 @@ class ContractorTest extends TestCase
 
     }
 
+    /**  @test */
+    function contractor_must_be_able_to_create_a_quickbooks_estimate() {
+        // 
+
+//        $this->assertEquals(true, $contractor->quickBooksEstimateCreated());
+    }
+    
+    /**  @test */
+    function check_if_contractor_has_a_quickooks_customer_if_not_then_add_it_to_quickBooks() {
+        // 
+
+//        $this->assertEquals(, $contractor->firstOrCreateQuickBooksCustomer($customer));
+    }
+    
+    /**  @test */
+    function check_that_a_contractor_does_not_have_a_the_same_phone_number_as_another_contractor() {
+        // 
+        
+    }
 
 }
 

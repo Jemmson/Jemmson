@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ContractorCustomer;
 use App\JobStatus;
+use App\Quickbook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
@@ -87,7 +88,13 @@ class InitiateBidController extends Controller
         if (config('app.quickBooks')) {
             $accountingSoftware = $contractor->checkAccountingSoftware();
             if ($accountingSoftware != null) {
-                
+
+                // does a customer exist?
+                // yes then do nothing
+                // no then add customer to quickbooks
+
+                $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer);
+
             }
         }
 
