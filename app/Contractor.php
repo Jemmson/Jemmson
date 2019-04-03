@@ -98,7 +98,12 @@ class Contractor extends Model
 
     public function customers()
     {
-        return $this->belongsToMany(Customer::class);
+        return $this->belongsToMany(
+            'App\Customer',
+            'contractor_customer',
+            'contractor_user_id',
+            'customer_user_id'
+        );
     }
 
     public function stripeExpress()
@@ -188,9 +193,18 @@ class Contractor extends Model
 
     public function firstOrCreateAccountingSoftwareCustomer($accountingSoftware, \App\User $customer)
     {
-        if($accountingSoftware == 'quickBooks'){
+//        if ($accountingSoftware == 'quickBooks') {
+//            $qb = new Quickbook();
+//            if (!empty($qb->checkIfQuickbooksCustomerExists($customer))) {
+//                $qb->addCustomer($customer);
+//            }
+//        }
+
+        if ($accountingSoftware == 'quickBooks') {
             $qb = new Quickbook();
+//            if (!empty($qb->checkIfQuickbooksCustomerExists($customer))) {
             $qb->addCustomer($customer);
+//            }
         }
     }
 }

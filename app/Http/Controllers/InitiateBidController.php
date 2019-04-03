@@ -63,8 +63,8 @@ class InitiateBidController extends Controller
 
         // associate the customer with the contractor
         $cc = new ContractorCustomer();
-        if ($cc->checkIfCustomerCurrentlyExistsForContractor($contractor->id, $customer->id)){
-            $cc->associateCustomer($contractor->id, $customer->id);
+        if ($cc->checkIfCustomerCurrentlyExistsForContractor($contractor->id, $customer->customer()->get()->first()->id)){
+            $cc->associateCustomer($contractor->id, $customer->customer()->get()->first()->id);
         }
 
         // create the job

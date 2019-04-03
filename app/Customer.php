@@ -29,7 +29,12 @@ class Customer extends Model
     
     public function contractors()
     {
-        return $this->belongsToMany(Contractor::class);
+        return $this->belongsToMany(
+            'App\Contractor',
+            'contractor_customer',
+            'contractor_user_id',
+            'customer_user_id'
+        );
     }
     
     public function location()
@@ -129,11 +134,13 @@ class Customer extends Model
         }
 
 
-        Customer::create(
-            [
-                'user_id' => $customer->id
-            ]
-        );
+        if (empty(Customer::select()->where("user_id", "=", $customer->id)->get()->first())) {
+            Customer::create(
+                [
+                    'user_id' => $customer->id
+                ]
+            );
+        }
 
         return $customer;
 

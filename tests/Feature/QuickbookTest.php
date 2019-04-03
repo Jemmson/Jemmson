@@ -280,4 +280,10 @@ class QuickbookTest extends TestCase
 
     }
 
+//    /**  @test */
+    function check_if_quickooks_customer_exists() {
+        //
+
+    }
+
 }

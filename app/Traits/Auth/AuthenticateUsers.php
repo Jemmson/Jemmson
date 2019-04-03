@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Quickbook;
 
 trait AuthenticateUsers
 {
@@ -13,7 +14,7 @@ trait AuthenticateUsers
     /**
      * Handle a Authenticates the User.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function login(Request $request)
@@ -29,7 +30,7 @@ trait AuthenticateUsers
     /**
      * Validate the user login request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return void
      */
     protected function validateLogin(Request $request)
@@ -39,24 +40,25 @@ trait AuthenticateUsers
             'password' => 'required',
         ]);
     }
+
     /**
      * Attempt to log the user into the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return bool
      */
     protected function attemptLogin(Request $request)
     {
         //Try with email AND username fields
         if (Auth::attempt([
-            'phone' => preg_replace("/[^0-9]/", "", $request['username']),
-            'password' => $request['password']
-            ],$request->has('remember'))
+                'phone' => preg_replace("/[^0-9]/", "", $request['username']),
+                'password' => $request['password']
+            ], $request->has('remember'))
             || Auth::attempt([
-            'email' => $request['username'],
-            'password' => $request['password']
-            ],$request->has('remember'))){
-                return true;
+                'email' => $request['username'],
+                'password' => $request['password']
+            ], $request->has('remember'))) {
+            return true;
         }
         return false;
     }
@@ -67,7 +69,24 @@ trait AuthenticateUsers
      * @var Request $request
      * @return Reponse
      */
-    protected function successfulLogin(Request $request){
+    protected function successfulLogin(Request $request)
+    {
+
+
+        $qb = new Quickbook();
+        if ($qb->isContractorThatUsesQuickbooks()) {
+            if ($qb->contractorSubscriptionIsStillActive()) {
+                if ($qb->updateAccessToken()) {
+                    $qb->syncCustomerInformationFromQB();
+                }
+            } else {
+                // TODO: Redirect to a page that will say their subscription to QB is no longer active and they should chose whether they want to renew or not
+                // TODO: If they want to renew then they will be logged out of the application and then
+                // TODO: they will be redirected to the subscription page of QB
+                // TODO: If no then they will simply go to the login page
+            }
+        }
+
         return redirect($this->redirectTo);
     }
 
@@ -77,7 +96,8 @@ trait AuthenticateUsers
      * @var Request $request
      * @return Reponse
      */
-    protected function failedLogin(Request $request){
+    protected function failedLogin(Request $request)
+    {
         return redirect()->back()->withErrors(['password' => 'You entered the wrong username or password']);
     }
 

@@ -11,6 +11,8 @@ use QuickBooksOnline\API\DataService\DataService;
 use QuickBooksOnline\API\Core\OAuth\OAuth2\OAuth2LoginHelper;
 use QuickBooksOnline\API\Exception\SdkException;
 use App\QuickBookCSRFToken;
+use App\User;
+use App\Location;
 
 
 use QuickBooksOnline\API\Core\ServiceContext;
@@ -86,8 +88,8 @@ class Quickbook extends Model
         // does a company id exist or that user? If yes then update it, if no then add an entry
         $qbUser = Quickbook::select()->where('user_id', '=', $userId)->get()->first();
 
-        if(!empty($qbUser)) {
-            if(!empty($qbUser->company_id)){
+        if (!empty($qbUser)) {
+            if (!empty($qbUser->company_id)) {
                 $qbUser->refresh_token = $accessToken->getRefreshToken();
                 $qbUser->refresh_token_validation_period = $accessToken->getRefreshTokenValidationPeriodInSeconds();
                 $qbUser->save();
@@ -359,7 +361,7 @@ class Quickbook extends Model
             'auth_mode' => 'oauth2',
             'ClientID' => env('CLIENT_ID'),
             'ClientSecret' => env('CLIENT_SECRET'),
-            'accessTokenKey' =>  $accessToken->getAccessToken(),
+            'accessTokenKey' => $accessToken->getAccessToken(),
             'refreshTokenKey' => $qbUser->refresh_token,
             'QBORealmID' => $qbUser->company_id,
             'baseUrl' => "development"
@@ -380,11 +382,11 @@ class Quickbook extends Model
 //            "MiddleName"=>  "1B",
 //            "FamilyName"=>  "King",
 //            "Suffix"=>  "Jr",
-            "FullyQualifiedName"=>  $customer->name,
+            "FullyQualifiedName" => $customer->name,
 //            "CompanyName"=>  "King Evial",
-            "DisplayName"=>  $customer->name,
-            "PrimaryPhone"=>  [
-                "FreeFormNumber"=>  $customer->phone
+            "DisplayName" => $customer->name,
+            "PrimaryPhone" => [
+                "FreeFormNumber" => $customer->phone
             ],
 //            "PrimaryEmailAddr"=>  [
 //                "Address" => "evilkingw@myemail.com"
@@ -402,6 +404,32 @@ class Quickbook extends Model
 
     }
 
+
+    public function checkIfQuickbooksCustomerExists(\App\User $customer)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+        $entities = $dataService->Query("Select count(*) from Invoice");
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+            exit();
+        }
+// Echo some formatted output
+        var_dump($entities);
+    }
+
     public function createQBCustomerObject(\App\User $customer)
     {
         return QuickBooksOnline\API\Facades\Customer::create([
@@ -417,9 +445,141 @@ class Quickbook extends Model
         return collect(json_decode($request))->toArray()['guid'];
     }
 
+
+    public function updateAccessToken()
+    {
+        if ($this->checkIfSessionAccessTokenExists()) {
+            $accessToken = session('sessionAccessToken');
+            $accessTokenTimestamp = $this->getAccessTokenTimeStamp($accessToken->getAccessTokenExpiresAt());
+            if ($this->checkIfAccessTokenHasNotExpired($accessTokenTimestamp)) {
+                return true;
+            } else {
+                if ($this->checkIfRefreshTokenIsValid(Auth::user()->getAuthIdentifier())) {
+                    $this->refreshAccessToken();
+                    return true;
+                } else {
+//                      need to take them through the authorization flow again
+//                        if they are still using quickbooks
+                    return false;
+                }
+            }
+        } else {
+            if ($this->checkIfRefreshTokenIsValid(Auth::user()->getAuthIdentifier())) {
+                $this->refreshAccessToken();
+                return true;
+            } else {
+//                      need to take them through the authorization flow again
+//                        if they are still using quickbooks
+                return false;
+            }
+        }
+    }
+
     public function isContractorThatUsesQuickbooks()
     {
         return Auth::user()->usertype === 'contractor' &&
             Auth::user()->contractor->accounting_software == 'quickBooks';
+    }
+
+    public function contractorSubscriptionIsStillActive()
+    {
+        // TODO: figure out how to check that the quickbooks account is still active for the user
+        return true;
+    }
+
+    public function syncCustomerInformationFromQB()
+    {
+        $allQBCustomers = $this->pullAllQBCustomersFromAccount();
+        $allJemmsonCustomers = $this->pullAllJemmsonCustomersAssociatedToContractor();
+        $allJemmsonContractors = $this->pullAllJemmsonSubContractorsAssociatedToContractor();
+        $allCustomerUserInfo = $this->getAllUserInformation($allJemmsonCustomers);
+        $allContractorUserInfo = $this->getAllUserInformation($allJemmsonContractors);
+        $allCustomerLocationInfo = $this->getAllCustomerLocationInfo($allJemmsonCustomers);
+        $this->syncCustomerData($allQBCustomers, $allJemmsonCustomers, $allCustomerUserInfo, $allCustomerLocationInfo);
+    }
+
+    public function syncCustomerData($allQBCustomers, $allJemmsonCustomers, $allCustomerUserInfo, $allCustomerLocationInfo)
+    {
+        $customerQuickBooks_idThatAreNull = [];
+        foreach ($allJemmsonCustomers as $jemmsonCustomer) {
+            foreach ($allQBCustomers as $qbCustomer) {
+                if (empty($jemmsonCustomer->quickbooks_id)) {
+                    array_push($customerQuickBooks_idThatAreNull, $jemmsonCustomer);
+                } else {
+                    if ($jemmsonCustomer->quickbooks_id == $qbCustomer->quickooks_id) {
+                        $this->updateCustomer($jemmsonCustomer, $qbCustomer);
+                    }
+                }
+            }
+        }
+    }
+
+    public function updateCustomer($jemmsonCustomer, $qbCustomer)
+    {
+
+    }
+
+    public function getAllCustomerLocationInfo($customers)
+    {
+        $location_id_Array = [];
+        foreach ($customers as $customer) {
+            array_push($location_id_Array, $customer->location_id);
+        }
+        return Location::find($location_id_Array);
+    }
+
+    public function getAllUserInformation($users)
+    {
+        $user_id_Array = [];
+        foreach ($users as $user) {
+            array_push($user_id_Array, $user->user_id);
+        }
+        return User::find($user_id_Array);
+    }
+
+    public function pullAllJemmsonSubContractorsAssociatedToContractor()
+    {
+        $contractorIdsArray = [];
+        $contractorIds = ContractorContractor::where('contractor_id', '=',
+            User::find(Auth::user()->getAuthIdentifier())->contractor()->get()->first()->id);
+        foreach ($contractorIds as $contractorId) {
+            array_push($contractorIdsArray, $contractorId->subcontractor_id);
+        }
+        return Contractor::find($contractorIdsArray);
+    }
+
+    public function pullAllJemmsonCustomersAssociatedToContractor()
+    {
+        return Contractor::find()
+            ->customers()
+            ->get(['user_id', 'location_id']);
+    }
+
+    public function pullAllQBCustomersFromAccount()
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+        $entities = $dataService->Query(
+            "SELECT 
+                      Id, 
+                      GivenName, 
+                      MiddleName,
+                      FamilyName,
+                      FullyQualifiedName,
+                      CompanyName,
+                      DisplayName,
+                      PrimaryPhone
+                    FROM Customer"
+        );
+        return $entities;
     }
 }
