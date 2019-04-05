@@ -26,33 +26,40 @@
                         <h4 class="sub-title text-center">Login</h4>
                     </div>
                     <!--<form class="form" action="/login" method="post">-->
-                    <form class="form form-horizontal" role="form" method="POST" action="/login">
+                    <form class="form form-horizontal" role="form">
                         <input type="hidden" name="_token" :value="csrf">
                         <div class="flex flex-col">
 
                             <!-- E-Mail Address -->
-                            <input type="text"
+                            <input v-model="form.username"
+                                   type="text"
                                    class="input"
                                    name="username"
                                    placeholder="Email Address / Phone"
                                    autofocus>
-
                             <!-- Password -->
-                            <input type="password"
+                            <input v-model="form.password"
+                                   type="password"
                                    class="input"
                                    placeholder="Password"
                                    name="password">
                         </div>
+                        <!-- <div class="flex flex-col">
+                            <div v-if="form.error !== null" class="bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" role="alert">
+                              <strong class="font-bold">Holy smokes!</strong>
+                              <span class="block sm:inline">{{form.error}}</span>
+                            </div>
+                        </div> -->
 
                         <div class="flex flex-col form-submit-section">
                             <!-- Remember Me -->
                             <div class="checkbox align-checkbox flex">
-                                <input type="checkbox" class="checkbox-sizing mr-2" name="remember">
+                                <input v-model="form.remember" type="checkbox" class="checkbox-sizing mr-2" name="remember">
                                 <div>Remember Me</div>
                             </div>
                             <div class="flex form-submit form-item">
                                 <!-- Login Button -->
-                                <button name="login" type="submit" class="btn btn-sm btn-blue">
+                                <button @click.prevent="login(form)" name="login" type="submit" class="btn btn-sm btn-blue">
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
                                 <a class="" :href="currentWindow + '/password/reset'">Forgot Your
@@ -90,6 +97,7 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
   export default {
     computed: {
         csrf () {
@@ -98,17 +106,26 @@
     },
     data () {
         return {
-            currentWindow: window.location.origin
+            currentWindow: window.location.origin,
+            form: {
+                username: '',
+                password: '',
+                remember: null,
+                error: null,
+            }
         }
     },
     methods: {
+      ...mapActions([
+          'login'
+      ]),
       route(value) {
         if (value === 'login') {
           window.location = '/login'
         } else if (value === 'register') {
           window.location = '/register#/'
         }
-      }
+      },
     }
   }
 </script>

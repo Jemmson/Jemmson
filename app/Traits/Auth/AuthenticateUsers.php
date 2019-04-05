@@ -87,7 +87,7 @@ trait AuthenticateUsers
             }
         }
 
-        return redirect($this->redirectTo);
+        return response('Success', 200);
     }
 
     /**
@@ -98,7 +98,7 @@ trait AuthenticateUsers
      */
     protected function failedLogin(Request $request)
     {
-        return redirect()->back()->withErrors(['password' => 'You entered the wrong username or password']);
+        return response('Error', 422);
     }
 
 }

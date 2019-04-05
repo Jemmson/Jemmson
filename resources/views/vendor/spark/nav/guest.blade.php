@@ -18,7 +18,7 @@
         <i class="fas fa-user-plus"></i><br>
         Register
     </a>
-    <a class="text-white flex-1" href="/login">
+    <a class="text-white flex-1" href="/#/">
         <i class="fas fa-sign-in-alt"></i><br>
         Login
     </a>
