@@ -53,17 +53,34 @@ class InitiateBidController extends Controller
                 ], 422);
         }
 
+
         // create a new customer if the customer is not in the database
         $customerName = $request->customerName;
         $phone = SanatizeService::phone($request->phone);
         $customer = User::checkIfUserExistsByPhoneNumber($phone);
         if (empty($customer)) {
-            $customer = Customer::createNewCustomer($phone, $customerName);
+
+            // quickbooks feature must be turned on
+            // contractor must have a quickbooks account
+            if (config('app.quickBooks')) {
+                $accountingSoftware = $contractor->checkAccountingSoftware();
+                if ($accountingSoftware != null) {
+                    if (!empty($request->qbId)) {
+                        $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer, $phone, $request->qbId);
+                    } else {
+                        $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer, $phone);
+                    }
+                }
+            } else {
+                $customer = Customer::createNewCustomer($phone, $customerName);
+            }
+
         }
+
 
         // associate the customer with the contractor
         $cc = new ContractorCustomer();
-        if ($cc->checkIfCustomerCurrentlyExistsForContractor($contractor->id, $customer->customer()->get()->first()->id)){
+        if ($cc->checkIfCustomerCurrentlyExistsForContractor($contractor->id, $customer->customer()->get()->first()->id)) {
             $cc->associateCustomer($contractor->id, $customer->customer()->get()->first()->id);
         }
 
@@ -81,22 +98,8 @@ class InitiateBidController extends Controller
         $js = new JobStatus();
         $js->setStatus($job->id, config("app.initiated"));
 
-        $contractor->subtractFreeJob();
+//        $contractor->subtractFreeJob();
 
-        // quickbooks feature must be turned on
-        // contractor must have a quickbooks account
-        if (config('app.quickBooks')) {
-            $accountingSoftware = $contractor->checkAccountingSoftware();
-            if ($accountingSoftware != null) {
-
-                // does a customer exist?
-                // yes then do nothing
-                // no then add customer to quickbooks
-
-                $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer);
-
-            }
-        }
 
         //notify the customer the job was created
         $customer->notify(new BidInitiated($job, $customer));

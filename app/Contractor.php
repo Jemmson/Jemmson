@@ -70,6 +70,7 @@ class Contractor extends Model
         if ($this->isSubscribed()) {
             return true;
         } else if ($this->hasMoreFreeJobs()) {
+            $this->subtractFreeJob();
             return true;
         } else {
             return false;
@@ -191,7 +192,12 @@ class Contractor extends Model
         return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
-    public function firstOrCreateAccountingSoftwareCustomer($accountingSoftware, \App\User $customer)
+    public function checkIfPhoneMatchesPhoneInQuickbooksCustomerTable($phone)
+    {
+
+    }
+
+    public function firstOrCreateAccountingSoftwareCustomer($accountingSoftware, \App\User $customer, $phone, $qbId = null)
     {
 //        if ($accountingSoftware == 'quickBooks') {
 //            $qb = new Quickbook();
@@ -202,6 +208,27 @@ class Contractor extends Model
 
         if ($accountingSoftware == 'quickBooks') {
             $qb = new Quickbook();
+
+            // check quickbooks customer table
+            if (!empty($qbId)) {
+                $qbc = QuickbooksCustomer::select()->where('quickbooks_id', '=', $qbId);
+                // TODO: pull latest customer data from QB
+
+                // TODO: save data to User Table and Customer Table and ContractorCustomer Table
+
+            } else if (!empty(QuickbooksCustomer::select()->where('phone', '=', $phone))) {
+                // TODO: pull latest customer data from QB
+
+                // TODO: save data to User Table and Customer Table and ContractorCustomer Table
+
+            } else {
+                // TODO: add user customer to quickbooks
+
+                // TODO: save data to User Table and Customer Table and ContractorCustomer Table
+//                $customer = Customer::createNewCustomer($phone, $customerName);
+            }
+
+
 //            if (!empty($qb->checkIfQuickbooksCustomerExists($customer))) {
             $qb->addCustomer($customer);
 //            }

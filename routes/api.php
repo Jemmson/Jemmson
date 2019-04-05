@@ -43,6 +43,10 @@ Route::group([
 // try to edit
 
 Route::get('/search', function (Request $request) {
+    
+    // TODO: needs to search users table, customer table, contractorcustomer table, and quickbooks_customer table
+    
+    
     $query = $request->query('query');
     $users = \App\User::whereHas('contractor', function ($q) use ($query) {
         $q->where('company_name', 'like', '%' . $query . '%');
