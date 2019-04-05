@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use QuickBooksOnline\API\DataService\DataService;
 use QuickBooksOnline\API\Core\OAuth\OAuth2\OAuth2LoginHelper;
 use QuickBooksOnline\API\Exception\SdkException;
+use App\QuickbooksContractor;
+use App\QuickbooksCustomer;
 use App\QuickBookCSRFToken;
 use App\User;
 use App\Location;
@@ -490,13 +492,112 @@ class Quickbook extends Model
     public function syncCustomerInformationFromQB()
     {
         $allQBCustomers = $this->pullAllQBCustomersFromAccount();
-        $allJemmsonCustomers = $this->pullAllJemmsonCustomersAssociatedToContractor();
-        $allJemmsonContractors = $this->pullAllJemmsonSubContractorsAssociatedToContractor();
-        $allCustomerUserInfo = $this->getAllUserInformation($allJemmsonCustomers);
-        $allContractorUserInfo = $this->getAllUserInformation($allJemmsonContractors);
-        $allCustomerLocationInfo = $this->getAllCustomerLocationInfo($allJemmsonCustomers);
-        $this->syncCustomerData($allQBCustomers, $allJemmsonCustomers, $allCustomerUserInfo, $allCustomerLocationInfo);
+
+        foreach ($allQBCustomers as $customer) {
+            if (
+                !$this->checkIfCustomerInQuickbooksCustomerTable($customer) &&
+                !$this->checkIfCustomerInQuickbooksContractorTable($customer)
+            ) {
+                if(empty($customer->CompanyName)){
+                    $this->addCustomerToCustomerTable($customer);
+                } else {
+                    $this->addCustomerToContractorTable($customer);
+                }
+            }
+        }
+
+//        $allJemmsonCustomers = $this->pullAllJemmsonCustomersAssociatedToContractor();
+//        $allJemmsonContractors = $this->pullAllJemmsonSubContractorsAssociatedToContractor();
+//        $allCustomerUserInfo = $this->getAllUserInformation($allJemmsonCustomers);
+//        $allContractorUserInfo = $this->getAllUserInformation($allJemmsonContractors);
+//        $allCustomerLocationInfo = $this->getAllCustomerLocationInfo($allJemmsonCustomers);
+//        $this->syncCustomerData($allQBCustomers, $allJemmsonCustomers, $allCustomerUserInfo, $allCustomerLocationInfo);
     }
+
+    public function returnNonNullAttribute($attribute)
+    {
+        if (empty($attribute)) {
+            return 'NULL';
+        } else {
+            return $attribute;
+        }
+    }
+
+
+
+    public function addCustomerToCustomerTable($customer)
+    {
+        $cust = new QuickbooksCustomer();
+        $cust->quickbooks_id = $customer->Id;
+        $cust->contractor_id = Auth::user()->getAuthIdentifier();
+        $cust->customer_id = $customer->Id;
+        $cust->given_name = $this->returnNonNullAttribute($customer->GivenName);
+        $cust->middle_name = $this->returnNonNullAttribute($customer->MiddleName);
+        $cust->family_name = $this->returnNonNullAttribute($customer->FamilyName);
+        $cust->fully_qualified_name = $this->returnNonNullAttribute($customer->FullyQualifiedName);
+        if (!is_null($customer->PrimaryPhone)) {
+            $cust->primary_phone = $this->returnNonNullAttribute($customer->PrimaryPhone->FreeFormNumber);
+        }
+        $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
+        try{
+            $cust->save();
+        } catch (\Exception $e){
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ], 200);
+        }
+    }
+
+    public function addCustomerToContractorTable($customer)
+    {
+        $cust = new QuickbooksContractor();
+        $cust->quickbooks_id = $customer->Id;
+        $cust->contractor_id = Auth::user()->getAuthIdentifier();
+        $cust->sub_contractor_id = $customer->Id;
+        $cust->company_name = $this->returnNonNullAttribute($customer->CompanyName);
+        $cust->given_name = $this->returnNonNullAttribute($customer->GivenName);
+        $cust->middle_name = $this->returnNonNullAttribute($customer->MiddleName);
+        $cust->family_name = $this->returnNonNullAttribute($customer->FamilyName);
+        $cust->fully_qualified_name = $this->returnNonNullAttribute($customer->FullyQualifiedName);
+        if (!is_null($customer->PrimaryPhone)) {
+            $cust->primary_phone = $this->returnNonNullAttribute($customer->PrimaryPhone->FreeFormNumber);
+        }
+        $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
+
+        try{
+            $cust->save();
+        } catch (\Exception $e){
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ], 200);
+        }
+    }
+
+
+    public function checkIfCustomerInQuickbooksCustomerTable($customer)
+    {
+        $cust = QuickbooksCustomer::select()->where('customer_id', '=', $customer->Id)
+            ->get()->first();
+        if(empty($cust)){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function checkIfCustomerInQuickbooksContractorTable($customer)
+    {
+        $cust = QuickbooksContractor::select()->where('sub_contractor_id', '=', $customer->Id)
+            ->get()->first();
+        if(empty($cust)){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     public function syncCustomerData($allQBCustomers, $allJemmsonCustomers, $allCustomerUserInfo, $allCustomerLocationInfo)
     {

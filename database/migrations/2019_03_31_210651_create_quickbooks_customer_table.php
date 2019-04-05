@@ -18,12 +18,12 @@ class CreateQuickbooksCustomerTable extends Migration
             $table->bigInteger('quickbooks_id');
             $table->bigInteger('contractor_id');
             $table->bigInteger('customer_id');
-            $table->string('given_name');
-            $table->string('middle_name');
-            $table->string('family_name');
-            $table->string('fully_qualified_name');
-            $table->string('primary_phone');
-            $table->string('primary_email_addr');
+            $table->string('given_name')->nullable();
+            $table->string('middle_name')->nullable();
+            $table->string('family_name')->nullable();
+            $table->string('fully_qualified_name')->nullable();
+            $table->string('primary_phone')->nullable();
+            $table->string('primary_email_addr')->nullable();
             $table->timestamps();
         });
     }
