@@ -498,7 +498,7 @@ class Quickbook extends Model
                 !$this->checkIfCustomerInQuickbooksCustomerTable($customer) &&
                 !$this->checkIfCustomerInQuickbooksContractorTable($customer)
             ) {
-                if(empty($customer->CompanyName)){
+                if (empty($customer->CompanyName)) {
                     $this->addCustomerToCustomerTable($customer);
                 } else {
                     $this->addCustomerToContractorTable($customer);
@@ -523,6 +523,37 @@ class Quickbook extends Model
         }
     }
 
+    public function digitIsANumber($digit)
+    {
+        if(
+            $digit == '0' ||
+            $digit == '1' ||
+            $digit == '2' ||
+            $digit == '3' ||
+            $digit == '4' ||
+            $digit == '5' ||
+            $digit == '6' ||
+            $digit == '7' ||
+            $digit == '8' ||
+            $digit == '9'
+        ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function formatPhoneNumber($phone)
+    {
+//        should only be digits
+        $digitsOnly = '';
+        for ($i = 0; $i < strlen($phone); $i++) {
+            if($this->digitIsANumber($phone[$i])){
+                $digitsOnly = $digitsOnly . $phone[$i];
+            }
+        }
+        return $digitsOnly;
+    }
 
 
     public function addCustomerToCustomerTable($customer)
@@ -536,12 +567,12 @@ class Quickbook extends Model
         $cust->family_name = $this->returnNonNullAttribute($customer->FamilyName);
         $cust->fully_qualified_name = $this->returnNonNullAttribute($customer->FullyQualifiedName);
         if (!is_null($customer->PrimaryPhone)) {
-            $cust->primary_phone = $this->returnNonNullAttribute($customer->PrimaryPhone->FreeFormNumber);
+            $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
         }
         $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
-        try{
+        try {
             $cust->save();
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
@@ -561,13 +592,13 @@ class Quickbook extends Model
         $cust->family_name = $this->returnNonNullAttribute($customer->FamilyName);
         $cust->fully_qualified_name = $this->returnNonNullAttribute($customer->FullyQualifiedName);
         if (!is_null($customer->PrimaryPhone)) {
-            $cust->primary_phone = $this->returnNonNullAttribute($customer->PrimaryPhone->FreeFormNumber);
+            $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
         }
         $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
 
-        try{
+        try {
             $cust->save();
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
@@ -580,7 +611,7 @@ class Quickbook extends Model
     {
         $cust = QuickbooksCustomer::select()->where('customer_id', '=', $customer->Id)
             ->get()->first();
-        if(empty($cust)){
+        if (empty($cust)) {
             return false;
         } else {
             return true;
@@ -591,7 +622,7 @@ class Quickbook extends Model
     {
         $cust = QuickbooksContractor::select()->where('sub_contractor_id', '=', $customer->Id)
             ->get()->first();
-        if(empty($cust)){
+        if (empty($cust)) {
             return false;
         } else {
             return true;
