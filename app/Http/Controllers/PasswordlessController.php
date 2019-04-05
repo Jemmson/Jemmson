@@ -23,21 +23,21 @@ class PasswordlessController {
         $token = PasswordlessToken::where('token', $token)->first();
         // invalid token
         if (!$token) {
-            return redirect('login')->withErrors(__('passwordless.invalid_token'));
+            return redirect('home')->withErrors(__('passwordless.invalid_token'));
         }
 
         // find user connected to token
         $user = User::find($token->user_id);
         // user not found or login user if they where found
         if (!$user) {
-            return redirect('login')->withErrors(__('passwordless.no_user'));
+            return redirect('home')->withErrors(__('passwordless.no_user'));
         } else {
             if ($user->isValidToken($token->token)) {
                 Auth::login($user);
                 session(['job_id' => $job_id, 'prevDestination' => '/#/bid/' . $job_id]);
                 return redirect('/#/bid/' . $job_id);
             } else {
-                return redirect('login')->withErrors(__('passwordless.invalid'));
+                return redirect('home')->withErrors(__('passwordless.invalid'));
             }
         }
     }
@@ -55,21 +55,21 @@ class PasswordlessController {
         $token = PasswordlessToken::where('token', $token)->first();
         // invalid token
         if (!$token) {
-            return redirect('login')->withErrors(__('passwordless.invalid_token'));
+            return redirect('home')->withErrors(__('passwordless.invalid_token'));
         }
 
         // find user connected to token
         $user = User::find($token->user_id);
         // user not found or login user if they where found
         if (!$user) {
-            return redirect('login')->withErrors(__('passwordless.no_user'));
+            return redirect('home')->withErrors(__('passwordless.no_user'));
         } else {
             if ($user->isValidToken($token->token)) {
                 Auth::login($user);
                 session(['task_id' => $task_id, 'prevDestination' => '/#/tasks?taskId=' . $task_id]);
                 return redirect('/#/tasks?taskId=' . $task_id);
             } else {
-                return redirect('login')->withErrors(__('passwordless.invalid'));
+                return redirect('home')->withErrors(__('passwordless.invalid'));
             }
         }
     }
