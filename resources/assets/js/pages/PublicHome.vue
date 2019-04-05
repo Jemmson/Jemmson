@@ -59,7 +59,7 @@
                             </div>
                             <div class="flex form-submit form-item">
                                 <!-- Login Button -->
-                                <button @click.prevent="login(form)" name="login" type="submit" class="btn btn-sm btn-blue">
+                                <button @click.prevent="login(form)" :disabled="form.busy" name="login" type="submit" class="btn btn-sm btn-blue">
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
                                 <a class="" :href="currentWindow + '/password/reset'">Forgot Your
@@ -112,6 +112,7 @@
                 password: '',
                 remember: null,
                 error: null,
+                busy: false,
             }
         }
     },
