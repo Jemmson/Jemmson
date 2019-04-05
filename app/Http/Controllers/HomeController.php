@@ -51,12 +51,12 @@ class HomeController extends Controller
 
     }
 
+    // further info method
     public function create(Request $request)
     {
 
         Log::info("************Create Method - Home Controller - Begin****************");
 
-        dd($request);
 
         $this->validate(
             $request,

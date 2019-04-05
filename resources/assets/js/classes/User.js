@@ -365,10 +365,8 @@ export default class User {
     disabled.submit = true
     form.phone_number = Format.numbersOnly(form.phone_number)
     try {
-      const data = await
-        Spark.post('/home', {
-          form: form
-        })
+      const data = await Spark.post('/home', form)
+      
       Vue.toasted.success('info updated')
       Bus.$emit('updateUser')
       disabled.submit = false
