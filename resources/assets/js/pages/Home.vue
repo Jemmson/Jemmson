@@ -5,7 +5,6 @@
                       mainHeader="My Jobs"
                       subHeader="Includes jobs with tasks assigned to subcontractors">
         </icon-header>
-
         <card>
           <list>
             <list-item :left="'Initiated'" :right="bidData('bid.initiated')"></list-item>
