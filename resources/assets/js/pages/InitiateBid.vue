@@ -41,14 +41,21 @@
                        dusk="phone"
                        type="tel" @blur="validateMobileNumber($event.target.value)"
                        v-model="form.phone">
-                <div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()"
-                     style="color: green">
-                    {{ networkType.originalCarrier }}
+
+                <div v-if="getMobileValidResponse.length > 0">
+                    <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
+                        <div style="color: green">{{ getMobileValidResponse[1] }}</div>
+                    </div>
+                    <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                 </div>
-                <div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{
-                    networkType.originalCarrier
-                    }}
-                </div>
+                <!--<div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()"-->
+                     <!--style="color: green">-->
+                    <!--{{ networkType.originalCarrier }}-->
+                <!--</div>-->
+                <!--<div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{-->
+                    <!--networkType.originalCarrier-->
+                    <!--}}-->
+                <!--</div>-->
                 <span class="help-block" v-show="form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
                 </span>
@@ -218,17 +225,22 @@
       },
       fillFields(result) {
         if (result.given_name !== undefined) {
-          this.form.email = result.primary_email_addr
-          this.form.phone = result.primary_phone
-          this.form.customerName = result.fully_qualified_name
-          this.form.quickbooks_id = result.quickbooks_id
+          this.form.email = result.primary_email_addr;
+          this.form.phone = result.primary_phone;
+          this.form.customerName = result.fully_qualified_name;
+          this.form.quickbooks_id = result.quickbooks_id;
+          this.checkMobileNumber(phone);
+          this.validateMobileNumber(result.primary_phone);
+          this.filterPhone();
         } else {
-          this.form.email = result.email
-          this.form.phone = result.phone
-          this.form.customerName = result.name
+          this.form.email = result.email;
+          this.form.phone = result.phone;
+          this.form.customerName = result.name;
+          this.checkMobileNumber(phone);
+          this.validateMobileNumber(result.phone);
+          this.filterPhone();
         }
         this.results = []
-        this.validateMobileNumber(result.phone)
       }
     }
   }

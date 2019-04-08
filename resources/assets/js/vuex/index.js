@@ -19,7 +19,7 @@ export const store = new Vuex.Store({
     },
     mobile: {
       number: '',
-      response: ''
+      response: []
     },
     features: {
       quickbooks: 0

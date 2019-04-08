@@ -65,9 +65,9 @@ class InitiateBidController extends Controller
             if (config('app.quickBooks')) {
                 $accountingSoftware = $contractor->checkAccountingSoftware();
                 if ($accountingSoftware != null) {
-                    if (!empty($request->qbId)) {
+                    if (!empty($request->quickbooks_id)) {
                         $contractor->firstOrCreateAccountingSoftwareCustomer(
-                            $accountingSoftware, $customer, $phone, $request->qbId
+                            $accountingSoftware, $customer, $phone, $request->quickbooks_id
                         );
                     } else {
                         $contractor->firstOrCreateAccountingSoftwareCustomer(
