@@ -1,20 +1,17 @@
 <template>
-    <div class="card flex-col">
-        <div class="flex flex-col border-b p-4 card-header" v-if="header !== undefined && header">
-            <slot name="card-header" class="text-center"></slot>
+    <div class="card">
+        <div class="card-header" v-if="header !== undefined && header">
+            {{ header }}
         </div>
-        <div class="flex flex-col p-5 card-body">
-            <!-- default content goes here -->
+        <div class="card-body">
+            <h5 class="card-title" v-if="title !== undefined && title">{{ title }}</h5>
             <slot></slot>
-        </div>
-        <div class="flex flex-col p-4 border-t card-footer" v-if="footer !== undefined && footer">
-            <slot name="card-footer"></slot>
         </div>
     </div>
 </template>
 
 <script>
-export default {
-    props: ['header', 'footer']
-}
+    export default {
+        props: ['header', 'title']
+    }
 </script>

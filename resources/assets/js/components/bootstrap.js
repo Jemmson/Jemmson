@@ -24,6 +24,11 @@ Vue.component('modal', require('./shared/Modal.vue'));
 Vue.component('brand', require('./shared/Brand.vue'));
 Vue.component('feedback', require('./shared/Feedback.vue'));
 Vue.component('jem-footer', require('./shared/JemmsonFooter.vue'));
+Vue.component('list-item', require('./shared/ListItem.vue'));
+Vue.component('list', require('./shared/list.vue'));
+Vue.component('icon-header', require('./shared/IconHeader.vue'));
+
+
 
 
 // require('./Autocomplete.vue');
@@ -46,6 +51,8 @@ Vue.component('bid-add-task', require('./task/BidAddTask.vue'));
 
 
 Vue.component('task-images', require('./task/UploadTaskImages.vue'));
+
+
 
 
 
