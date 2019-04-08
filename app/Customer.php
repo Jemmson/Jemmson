@@ -149,4 +149,7 @@ class Customer extends Model
     // TODO: understand where an intermidate table relates to two other tables
     // TODO: define relationship where table references itself
     // TODO: I need to be able to have a contractor reference many contractors
+
+
+
 }

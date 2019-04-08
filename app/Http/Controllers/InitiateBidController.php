@@ -66,9 +66,12 @@ class InitiateBidController extends Controller
                 $accountingSoftware = $contractor->checkAccountingSoftware();
                 if ($accountingSoftware != null) {
                     if (!empty($request->qbId)) {
-                        $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer, $phone, $request->qbId);
+                        $contractor->firstOrCreateAccountingSoftwareCustomer(
+                            $accountingSoftware, $customer, $phone, $request->qbId
+                        );
                     } else {
-                        $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer, $phone);
+                        $contractor->firstOrCreateAccountingSoftwareCustomer(
+                            $accountingSoftware, $customer, $phone);
                     }
                 }
             } else {
@@ -80,8 +83,11 @@ class InitiateBidController extends Controller
 
         // associate the customer with the contractor
         $cc = new ContractorCustomer();
-        if ($cc->checkIfCustomerCurrentlyExistsForContractor($contractor->id, $customer->customer()->get()->first()->id)) {
-            $cc->associateCustomer($contractor->id, $customer->customer()->get()->first()->id);
+        if ($cc->checkIfCustomerCurrentlyExistsForContractor(
+            $contractor->id, $customer->customer()->get()->first()->id)) {
+            $cc->associateCustomer(
+                $contractor->id,
+                $customer->customer()->get()->first()->id);
         }
 
         // create the job
@@ -109,4 +115,7 @@ class InitiateBidController extends Controller
         return "Bid was created";
 
     }
+
+
+
 }

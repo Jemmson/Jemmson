@@ -308,4 +308,17 @@ class User extends SparkUser
         // this along with phone validation will need to be updated to handle other country phone numbers
         return '1' . $this->phone;
     }
+
+    public static function  getCustomersInUserTableByName($name)
+    {
+        return User::where('name', 'like', '%' . $name . '%')
+            ->where('usertype', '!=', 'contractor')
+            ->get();
+    }
+
+    public static function isCustomerAssociatedWithContractor ($customer_id, $contractor_id)
+    {
+
+    }
+
 }

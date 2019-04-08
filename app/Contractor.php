@@ -213,6 +213,7 @@ class Contractor extends Model
             if (!empty($qbId)) {
                 $qbc = QuickbooksCustomer::select()->where('quickbooks_id', '=', $qbId);
                 // TODO: pull latest customer data from QB
+                $qb->getLatestCustomerDataFromQB($qbId);
 
                 // TODO: save data to User Table and Customer Table and ContractorCustomer Table
 

@@ -714,4 +714,24 @@ class Quickbook extends Model
         );
         return $entities;
     }
+
+    public function getLatestCustomerDataFromQB($qbId)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $entities = $dataService->Query("SELECT * FROM Customer WHERE 'Id' = $qbId");
+
+        return $entities;
+    }
+
 }

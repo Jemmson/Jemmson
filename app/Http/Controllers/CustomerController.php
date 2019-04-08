@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractorCustomer;
 use App\Customer;
+use App\QuickbooksCustomer;
 use App\User;
 use App\Location;
-
+use Illuminate\Support\Facades\Auth;
 use App\Services\UpdateRecordsService;
 
 use Illuminate\Foundation\Bootstrap\LoadConfiguration;
@@ -162,5 +164,35 @@ class CustomerController extends Controller
     {
         $customer = User::select()->where("id", "=", $request->id)->get()->first();
         return $customer;
+    }
+
+    public function getCustomerAssociatedToContractor(Request $request)
+    {
+        // TODO: needs to search users table, customer table, contractorcustomer table, and quickbooks_customer table
+        $query = $request->query('query');
+
+        $users = User::getCustomersInUserTableByName($query);
+
+        if (empty($users[0])) {
+            return QuickbooksCustomer::getAssociatedCustomers($query, Auth::user()->getAuthIdentifier());
+        } else {
+            $associatedUserIds = ContractorCustomer::getAssociatedCustomers($users, Auth::user()->getAuthIdentifier());
+            return User::find($associatedUserIds);
+        }
+
+//        $cont_id = 1;
+//
+//        $customers = $users->filter(function ($user) use ($cont_id) {
+//            if ($user != null) {
+//                if (ContractorCustomer::isCustomerAssociatedWithContractor(
+//                    $cont_id,
+//                    $user->customer->id
+//                )) {
+//                    return $user;
+//                }
+//            }
+//        });
+//
+//        return $customers;
     }
 }
