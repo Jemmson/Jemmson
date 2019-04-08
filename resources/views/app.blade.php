@@ -40,11 +40,10 @@
         @else
         @include('spark::nav.guest')
         @endif
-
 <!-- Main Content -->
 <transition name="fade">
     <!-- <router-view :user='user'></router-view> -->
-    <router-view :user='user' class="jemmson-container"></router-view>
+    <router-view :user='user'></router-view>
 </transition>
 
 
@@ -54,8 +53,7 @@
     @include('spark::modals.notifications')x
     @include('spark::modals.support')
     @include('spark::modals.session-expired')
-    <!-- <feedback>
-        </feedback> -->
+
         @endif
         --}}
 </div>
