@@ -47,7 +47,8 @@
     <!-- <router-view :user='user'></router-view> -->
     <router-view :user='user'></router-view>
 </transition>
-
+<div style="height: 56px;"></div>
+<main-footer></main-footer>
 
 <!-- Application Level Modals -->
 {{-- 

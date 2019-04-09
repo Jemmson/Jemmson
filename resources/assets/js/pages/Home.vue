@@ -11,7 +11,7 @@
             <list-item :left="'Sent'" :right="bidData('bid.sent')"></list-item>
             <list-item :left="'Declined'" :right="bidData('bid.declined')"></list-item>
             <list-item :left="'Approved'" :right="bidData('bid.approved')"></list-item>
-            <list-item :left="'Completed'" :right="bidData('bid.completed')" noDivider></list-item>
+            <list-item :left="'Completed'" :right="bidData('bid.completed')" noDivider="true"></list-item>
           </list>
         </card>
         <br>
@@ -32,7 +32,7 @@
             <list-item :left="'Approved By Customer'" :right="bidData('bid_task.approved_by_customer')"></list-item>
             <list-item :left="'Payment Sent'" :right="bidData('bid_task.customer_sent_payment')"></list-item>
             <list-item :left="'Reopened'" :right="bidData('bid_task.reopened')"></list-item>
-            <list-item :left="'Denied'" :right="bidData('bid_task.denied')" noDivider></list-item>
+            <list-item :left="'Denied'" :right="bidData('bid_task.denied')" noDivider="true"></list-item>
 
           </list>
         </card>
@@ -45,7 +45,7 @@
         </icon-header>
         <card>
           <list>
-            <list-item :left="'Total Invoices'" :right="invoices.length" noDivider></list-item>
+            <list-item :left="'Total Invoices'" :right="invoices.length" noDivider="true"></list-item>
           </list>
         </card>
         <br>
