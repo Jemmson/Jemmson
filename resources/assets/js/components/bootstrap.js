@@ -27,6 +27,8 @@ Vue.component('jem-footer', require('./shared/JemmsonFooter.vue'));
 Vue.component('list-item', require('./shared/ListItem.vue'));
 Vue.component('list', require('./shared/list.vue'));
 Vue.component('icon-header', require('./shared/IconHeader.vue'));
+Vue.component('home-header', require('./shared/HomeHeader.vue'));
+
 
 
 

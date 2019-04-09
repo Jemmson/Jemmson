@@ -36,7 +36,9 @@
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
         @if (Auth::check())
-        @include('spark::nav.user')
+            <div class="container-fluid">
+                <home-header></home-header>
+            </div>
         @else
         @include('spark::nav.guest')
         @endif

@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-
         <icon-header icon="jobs"
                       mainHeader="My Jobs"
                       subHeader="Includes jobs with tasks assigned to subcontractors">
