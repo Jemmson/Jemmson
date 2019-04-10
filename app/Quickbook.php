@@ -339,7 +339,7 @@ class Quickbook extends Model
 
     }
 
-    public function addCustomer(\App\User $customer)
+    public static function addCustomer(\App\User $customer)
     {
 //        if (!$this->checkIfCustomerExists($customer)){
 //            $dataService = DataService::Configure($this->getCredentials());
@@ -525,7 +525,7 @@ class Quickbook extends Model
 
     public function digitIsANumber($digit)
     {
-        if(
+        if (
             $digit == '0' ||
             $digit == '1' ||
             $digit == '2' ||
@@ -536,7 +536,7 @@ class Quickbook extends Model
             $digit == '7' ||
             $digit == '8' ||
             $digit == '9'
-        ){
+        ) {
             return true;
         } else {
             return false;
@@ -548,7 +548,7 @@ class Quickbook extends Model
 //        should only be digits
         $digitsOnly = '';
         for ($i = 0; $i < strlen($phone); $i++) {
-            if($this->digitIsANumber($phone[$i])){
+            if ($this->digitIsANumber($phone[$i])) {
                 $digitsOnly = $digitsOnly . $phone[$i];
             }
         }
@@ -569,7 +569,12 @@ class Quickbook extends Model
         if (!is_null($customer->PrimaryPhone)) {
             $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
         }
-        $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
+
+        if (!is_null($customer->PrimaryEmailAddr)) {
+            $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr->Address);
+        }
+
+
         try {
             $cust->save();
         } catch (\Exception $e) {
@@ -594,8 +599,10 @@ class Quickbook extends Model
         if (!is_null($customer->PrimaryPhone)) {
             $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
         }
-        $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
-
+        
+        if (!is_null($customer->PrimaryEmailAddr)) {
+            $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr->Address);
+        }
         try {
             $cust->save();
         } catch (\Exception $e) {
@@ -715,10 +722,10 @@ class Quickbook extends Model
         return $entities;
     }
 
-    public function getLatestCustomerDataFromQB($qbId)
+    public function getLatestCustomerDataFromQB($qbId, $contractorId)
     {
         $accessToken = session('sessionAccessToken');
-        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $qbUser = Quickbook::select()->where('user_id', '=', $contractorId)->get()->first();
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('CLIENT_ID'),
@@ -729,7 +736,7 @@ class Quickbook extends Model
             'baseUrl' => "development"
         ));
 
-        $entities = $dataService->Query("SELECT * FROM Customer WHERE 'Id' = $qbId");
+        $entities = $dataService->Query("SELECT * FROM Customer WHERE Id = '" . $qbId . "'");
 
         return $entities;
     }
