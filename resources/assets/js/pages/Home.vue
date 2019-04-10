@@ -147,6 +147,7 @@
       }
     },
     mounted: function() {
+      this.$store.commit('setCurrentPage', this.$router.history.current.path);
       axios.post('/jobs').then((response) => {
         if(response.data !== undefined) {
           this.bids = response.data;

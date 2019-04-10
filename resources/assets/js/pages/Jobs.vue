@@ -104,6 +104,9 @@
         console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
       }
     },
+    mounted() {
+      this.$store.commit('setCurrentPage', this.$router.history.current.path);
+    },
     created() {
       this.getBids()
       Bus.$on('bidUpdated', (payload) => {

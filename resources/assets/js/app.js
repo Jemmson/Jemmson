@@ -264,6 +264,10 @@ var app = new Vue({
   }
 })
 
+router.afterEach((to, from) => {
+  // app.$store.commit('setCurrentPage', router.history.current.path);
+})
+
 require('./bootstrap')
 
 var originalHeight = document.documentElement.clientHeight

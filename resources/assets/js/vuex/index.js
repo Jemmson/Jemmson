@@ -4,7 +4,7 @@ import job from './modules/job'
 import user from './modules/user'
 import * as actions from './actions'
 import * as getters from './getters'
-import * as mutations from './mutations'
+import mutations from './mutations'
 
 Vue.use(Vuex);
 
@@ -14,6 +14,7 @@ export const store = new Vuex.Store({
     user
   },
   state: {
+    page: '/',
     customer: {
       name: ''
     },
