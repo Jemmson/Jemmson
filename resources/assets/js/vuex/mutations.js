@@ -29,5 +29,9 @@ export default {
 
   setCurrentPage (state, payload) {
     state.page = payload;
-  }
+  },
+
+  toggleBidsContractor (state, payload) {
+    state.bidsContractorSectionPicked = payload;
+  },
 }
