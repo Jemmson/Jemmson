@@ -40,6 +40,12 @@
                 </p>
             </div>
         </div>
+        <div v-if="page.split('/')[1] === 'bid'" class="row bg-white bid-row mb-4">
+            <div class="col-12 d-flex align-items-center">
+                <i class="fas fa-chevron-left text-primary float-left sm-icon align-self-center"></i>
+                <h3 class="page-header-title mx-auto">Job #1</h3>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -69,6 +75,11 @@
 .bids-row {
     height: 112px;
 }
+
+.bid-row {
+    height: 55px;
+}
+
 
 .profile-pic {
     margin-top: 57px;

@@ -1,5 +1,15 @@
 <template>
-  <div class="flex flex-col">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="card-title">Details</h1>
+        <card></card>
+      </div>
+      <div class="col-12">
+        <h1 class="card-title mt-2">Payment Details</h1>
+        <card></card>
+      </div>
+    </div>
     <card footer="true">
       <!-- /show all bid information -->
       <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
@@ -211,6 +221,7 @@
       Bus.$off('taskAdded')
     },
     mounted: function () {
+      this.$store.commit('setCurrentPage', this.$router.history.current.path);
       // set up init data
       this.bidForm.id = this.bid.id;
       this.bidForm.status = this.bid.status;
