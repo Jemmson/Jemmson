@@ -46,7 +46,7 @@
                 <h3 class="page-header-title mx-auto">Job #1</h3>
             </div>
         </div>
-        <div v-else class="row bg-white bid-row mb-4">
+        <div v-else class="row bg-white default-row mb-4">
             <div class="col-12 d-flex align-items-center">
                 <i class="fas fa-tree text-primary float-left sm-icon align-self-center"></i>
                 <h3 class="page-header-title font-weight-bold mx-auto">Jemsub</h3>
@@ -85,6 +85,10 @@
 
 .bid-row {
     height: 55px;
+}
+
+.default-row {
+    height: 70px;
 }
 
 
