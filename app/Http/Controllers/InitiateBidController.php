@@ -59,35 +59,50 @@ class InitiateBidController extends Controller
         $phone = SanatizeService::phone($request->phone);
         $customer = User::checkIfUserExistsByPhoneNumber($phone);
         if (empty($customer)) {
-
             // quickbooks feature must be turned on
             // contractor must have a quickbooks account
             if (config('app.quickBooks')) {
                 $accountingSoftware = $contractor->checkAccountingSoftware();
                 if ($accountingSoftware != null) {
                     if (!empty($request->quickbooks_id)) {
-                        $contractor->firstOrCreateAccountingSoftwareCustomer(
-                            $accountingSoftware, $customer, $phone, $request->quickbooks_id
+                        $customer = $contractor->firstOrCreateAccountingSoftwareCustomer(
+                            $accountingSoftware,
+                            Auth::user()->getAuthIdentifier(),
+                            $customerName, $phone, $request->quickbooks_id
                         );
                     } else {
-                        $contractor->firstOrCreateAccountingSoftwareCustomer(
-                            $accountingSoftware, $customer, $phone);
+
+                        // TODO: creating a new customer that is not in Quickbooks
+
+                        $customer = Customer::createNewCustomer($phone, $customerName);
+                        Quickbook::addNewCustomerToQuickBooks($customer);
+//                        $contractor->firstOrCreateAccountingSoftwareCustomer(
+//                            $accountingSoftware,
+//                            Auth::user()->getAuthIdentifier(),
+//                            $customerName, $phone);
+
+                        // associate the customer with the contractor
+                        $cc = new ContractorCustomer();
+                        if ($cc->checkIfCustomerCurrentlyExistsForContractor(
+                            $contractor->id, $customer->id)) {
+                            $cc->associateCustomer(
+                                $contractor->id,
+                                $customer->id);
+                        }
                     }
                 }
             } else {
                 $customer = Customer::createNewCustomer($phone, $customerName);
+                // associate the customer with the contractor
+                $cc = new ContractorCustomer();
+                if ($cc->checkIfCustomerCurrentlyExistsForContractor(
+                    $contractor->id, $customer->id)) {
+                    $cc->associateCustomer(
+                        $contractor->id,
+                        $customer->id);
+                }
             }
 
-        }
-
-
-        // associate the customer with the contractor
-        $cc = new ContractorCustomer();
-        if ($cc->checkIfCustomerCurrentlyExistsForContractor(
-            $contractor->id, $customer->customer()->get()->first()->id)) {
-            $cc->associateCustomer(
-                $contractor->id,
-                $customer->customer()->get()->first()->id);
         }
 
         // create the job
@@ -115,7 +130,6 @@ class InitiateBidController extends Controller
         return "Bid was created";
 
     }
-
 
 
 }

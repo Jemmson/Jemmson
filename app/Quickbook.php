@@ -339,7 +339,7 @@ class Quickbook extends Model
 
     }
 
-    public static function addCustomer(\App\User $customer)
+    public static function addNewCustomerToQuickBooks(\App\User $customer)
     {
 //        if (!$this->checkIfCustomerExists($customer)){
 //            $dataService = DataService::Configure($this->getCredentials());
@@ -599,7 +599,7 @@ class Quickbook extends Model
         if (!is_null($customer->PrimaryPhone)) {
             $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
         }
-        
+
         if (!is_null($customer->PrimaryEmailAddr)) {
             $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr->Address);
         }

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Customer;
+use App\ContractorCustomer;
+use App\Location;
 
 class Contractor extends Model
 {
@@ -192,12 +194,109 @@ class Contractor extends Model
         return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
-    public function checkIfPhoneMatchesPhoneInQuickbooksCustomerTable($phone)
+    public function addLocation($qbCustomerData)
     {
+        $location = new Location();
+        $location->address_line_1 = $qbCustomerData[0]->BillAddr->Line1;
+        $location->address_line_2 = $qbCustomerData[0]->BillAddr->Line2;
+        $location->city = $qbCustomerData[0]->BillAddr->City;
+        $location->state = $qbCustomerData[0]->BillAddr->CountrySubDivisionCode;
+        $location->zip = $qbCustomerData[0]->BillAddr->PostalCode;
+        $location->lat = $qbCustomerData[0]->BillAddr->Lat;
+        $location->long = $qbCustomerData[0]->BillAddr->Long;
 
+        try {
+            $location->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $location->id;
     }
 
-    public function firstOrCreateAccountingSoftwareCustomer($accountingSoftware, \App\User $customer, $phone, $qbId = null)
+    //TODO: if location is saved from QB data then it is not saved again once a customer registers
+
+    public function addCustomerToUserTable($qbCustomerData, $locationId)
+    {
+        $customer = new \App\User();
+        $customer->name = $qbCustomerData[0]->FullyQualifiedName;
+        $customer->location_id = $locationId;
+        $customer->email = $qbCustomerData[0]->PrimaryEmailAddr->Address;
+        $customer->usertype = 'customer';
+        $customer->phone = $qbCustomerData[0]->PrimaryPhone->FreeFormNumber;
+        $customer->first_name = $qbCustomerData[0]->GivenName;
+        $customer->last_name = $qbCustomerData[0]->FamilyName;
+        $customer->password = bcrypt(rand(100000, 999999).'gibberishslksdlkdslksdslkdsdlk');
+        $customer->password_updated = false;
+
+        try {
+            $customer->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $customer->id;
+    }
+
+    public function addCustomerToCustomerTable($qbCustomerData, $locationId, $user_id)
+    {
+        $customer = new Customer();
+        $customer->user_id = $user_id;
+        $customer->location_id = $locationId;
+
+        try {
+            $customer->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+//        return $customer->id;
+    }
+
+    public function associateContractorToCustomerTable($user_id, $contractorId)
+    {
+        $customer = new ContractorCustomer();
+        $customer->contractor_user_id = $contractorId;
+        $customer->customer_user_id = $user_id;
+
+        try {
+            $customer->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+    }
+
+    public function addUserIdToLocationsTable($user_id, $locationId)
+    {
+        $location = \App\Location::find($locationId);
+        $location->user_id = $user_id;
+        
+        try {
+            $location->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+    }
+
+    public function firstOrCreateAccountingSoftwareCustomer($accountingSoftware,
+                                                            $contractorId,
+                                                            $customerName,
+                                                            $phone,
+                                                            $qbId = null)
     {
 //        if ($accountingSoftware == 'quickBooks') {
 //            $qb = new Quickbook();
@@ -211,29 +310,33 @@ class Contractor extends Model
 
             // check quickbooks customer table
             if (!empty($qbId)) {
-                $qbc = QuickbooksCustomer::select()->where('quickbooks_id', '=', $qbId);
-                // TODO: pull latest customer data from QB
-                $qb->getLatestCustomerDataFromQB($qbId);
-
-                // TODO: save data to User Table and Customer Table and ContractorCustomer Table
-
-            } else if (!empty(QuickbooksCustomer::select()->where('phone', '=', $phone))) {
-                // TODO: pull latest customer data from QB
-
-                // TODO: save data to User Table and Customer Table and ContractorCustomer Table
-
-            } else {
+                $qbCustomerData = $qb->getLatestCustomerDataFromQB($qbId, $contractorId);
+                $locationId = $this->addLocation($qbCustomerData);
+                $user_id = $this->addCustomerToUserTable($qbCustomerData, $locationId);
+                $this->addUserIdToLocationsTable($user_id, $locationId);
+                $this->addCustomerToCustomerTable(
+                    $qbCustomerData, $locationId, $user_id);
+                $this->associateContractorToCustomerTable($user_id, $contractorId);
+            }
+//            else if (!empty(QuickbooksCustomer::select()->where('phone', '=', $phone))) {
+//                // pull latest customer data from QB
+//
+//                // save data to User Table and Customer Table and ContractorCustomer Table
+//
+//            }
+            else {
                 // TODO: add user customer to quickbooks
-
-                // TODO: save data to User Table and Customer Table and ContractorCustomer Table
+//                 TODO: save data to User Table and Customer Table and ContractorCustomer Table
 //                $customer = Customer::createNewCustomer($phone, $customerName);
             }
 
 
 //            if (!empty($qb->checkIfQuickbooksCustomerExists($customer))) {
-            $qb->addCustomer($customer);
+//            $qb->addCustomer($customer);
 //            }
         }
+
+        return User::find($user_id);
     }
 }
 
