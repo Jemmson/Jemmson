@@ -197,13 +197,16 @@ class Contractor extends Model
     public function addLocation($qbCustomerData)
     {
         $location = new Location();
-        $location->address_line_1 = $qbCustomerData[0]->BillAddr->Line1;
-        $location->address_line_2 = $qbCustomerData[0]->BillAddr->Line2;
-        $location->city = $qbCustomerData[0]->BillAddr->City;
-        $location->state = $qbCustomerData[0]->BillAddr->CountrySubDivisionCode;
-        $location->zip = $qbCustomerData[0]->BillAddr->PostalCode;
-        $location->lat = $qbCustomerData[0]->BillAddr->Lat;
-        $location->long = $qbCustomerData[0]->BillAddr->Long;
+
+        if(!isNull($qbCustomerData[0]->BillAddr)) {
+            $location->address_line_1 = $qbCustomerData[0]->BillAddr->Line1;
+            $location->address_line_2 = $qbCustomerData[0]->BillAddr->Line2;
+            $location->city = $qbCustomerData[0]->BillAddr->City;
+            $location->state = $qbCustomerData[0]->BillAddr->CountrySubDivisionCode;
+            $location->zip = $qbCustomerData[0]->BillAddr->PostalCode;
+            $location->lat = $qbCustomerData[0]->BillAddr->Lat;
+            $location->long = $qbCustomerData[0]->BillAddr->Long;
+        }
 
         try {
             $location->save();
@@ -224,9 +227,17 @@ class Contractor extends Model
         $customer = new \App\User();
         $customer->name = $qbCustomerData[0]->FullyQualifiedName;
         $customer->location_id = $locationId;
-        $customer->email = $qbCustomerData[0]->PrimaryEmailAddr->Address;
+
+        if (!isNull($qbCustomerData[0]->PrimaryEmailAddr)) {
+            $customer->email = $qbCustomerData[0]->PrimaryEmailAddr->Address;
+        }
+
         $customer->usertype = 'customer';
-        $customer->phone = $qbCustomerData[0]->PrimaryPhone->FreeFormNumber;
+
+        if (!isNull($qbCustomerData[0]->PrimaryPhone)) {
+            $customer->phone = $qbCustomerData[0]->PrimaryPhone->FreeFormNumber;
+        }
+
         $customer->first_name = $qbCustomerData[0]->GivenName;
         $customer->last_name = $qbCustomerData[0]->FamilyName;
         $customer->password = bcrypt(rand(100000, 999999).'gibberishslksdlkdslksdslkdsdlk');
