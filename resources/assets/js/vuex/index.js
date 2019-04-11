@@ -14,6 +14,7 @@ export const store = new Vuex.Store({
     user
   },
   state: {
+    user: null,
     page: '/',
     bidsContractorSectionPicked: true,
     customer: {

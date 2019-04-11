@@ -34,4 +34,8 @@ export default {
   toggleBidsContractor (state, payload) {
     state.bidsContractorSectionPicked = payload;
   },
+
+  setUser (state, payload) {
+    state.user = payload;
+  }
 }

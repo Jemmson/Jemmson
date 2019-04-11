@@ -36,11 +36,7 @@
 <body class="with-navbar">
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
-        @if (Auth::check())
-            <main-header></main-header>
-        @else
-        @include('spark::nav.guest')
-        @endif
+    <main-header :user="user"></main-header>
 <!-- Main Content -->
 <transition name="fade">
     <!-- <router-view :user='user'></router-view> -->

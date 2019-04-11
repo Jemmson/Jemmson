@@ -212,7 +212,10 @@ export default {
       this.results = [];
       this.validateMobileNumber(result.phone);
     }
-  }
+  },
+  mounted() {
+    this.$store.commit('setCurrentPage', this.$router.history.current.path);
+  },
 };
 </script>
 

@@ -1,29 +1,67 @@
 <template>
 <div class="container-fluid border-top">
-    <div class="row mt-2 align-items-center justify-content-center">
+    <div v-if="isLoggedIn" class="row mt-2 align-items-center justify-content-center">
         <div class="col d-flex align-items-center">
-            <figure @click.prevent="goTo('home')" class="item mx-auto text-center" :class="page === '/home' ? 'text-primary' : 'text-secondary'">
+            <figure @click.prevent="goTo('/home')" class="item mx-auto text-center" :class="isCurrentPage('/home', '/home/')">
                 <i class="fas fa-home sm-icon"></i>
-                <figcaption class="caption small-header" :class="page === '/home' ? 'text-primary' : 'text-secondary'">Home</figcaption>
+                <figcaption class="caption small-header" :class="isCurrentPage('/home', '/home/')">Home</figcaption>
             </figure>
         </div>
         <div class="col d-flex align-items-center">
-            <figure @click.prevent="goTo('bids')" class="item mx-auto text-center" :class="page === '/bids' ? 'text-primary' : 'text-secondary'">
+            <figure @click.prevent="goTo('/bids')" class="item mx-auto text-center" :class="isCurrentPage('/bids', '/bids/')">
                 <i class="fas fa-briefcase sm-icon"></i>
-                <figcaption class="caption small-header" :class="page === '/bids' ? 'text-primary' : 'text-secondary'">Jobs</figcaption>
+                <figcaption class="caption small-header" :class="isCurrentPage('/bids', '/bids/')">Jobs</figcaption>
             </figure>
         </div>
         <div class="col d-flex align-items-center">
-            <figure @click.prevent="goTo('invoices')" class="item mx-auto text-center" :class="page === '/invoices' ? 'text-primary' : 'text-secondary'">
+            <figure @click.prevent="goTo('/invoices')" class="item mx-auto text-center" :class="isCurrentPage('/invoices', '/invoices/')">
                 <i class="fas fa-file-alt sm-icon"></i>
-                <figcaption class="caption small-header" :class="page === '/invoices' ? 'text-primary' : 'text-secondary'">Invoices</figcaption>
+                <figcaption class="caption small-header" :class="isCurrentPage('/invoices', '/invoices/')">Invoices</figcaption>
             </figure>
         </div>
-        <div class="col d-flex align-items-center">
-            <figure class="item mx-auto text-center">
-                <i class="fas fa-plus-circle text-secondary sm-icon"></i>
-                <figcaption class="caption small-header">New Job</figcaption>
+        <div v-if="userType === 'contractor'" class="col d-flex align-items-center">
+            <figure @click.prevent="goTo('/initiate-bid')" class="item mx-auto text-center" :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">
+                <i class="fas fa-plus-circle sm-icon"></i>
+                <figcaption class="caption small-header" :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">New Job</figcaption>
             </figure>
+        </div>
+        <div v-if="userType === 'customer'" class="col d-flex align-items-center">
+            <a href="/settings">
+            <figure class="item mx-auto text-center" :class="isCurrentPage('/settings#', '/settings#/')">
+                <i class="fas fa-cog text-secondary sm-icon"></i>
+                <figcaption class="caption small-header" :class="isCurrentPage('/settings#', '/settings#/')">Settings</figcaption>
+            </figure>
+            </a>
+        </div>
+    </div>
+    <div v-else class="row mt-2 align-items-center justify-content-center">
+        <!-- <div class="col d-flex align-items-center">
+            <figure class="item mx-auto text-center">
+                <i class="fas fa-home sm-icon"></i>
+                <figcaption class="caption small-header">Home</figcaption>
+            </figure>
+        </div> -->
+        <!-- <div class="col d-flex align-items-center">
+            <figure class="item mx-auto text-center">
+                <i class="fas fa-briefcase sm-icon"></i>
+                <figcaption class="caption small-header">Jobs</figcaption>
+            </figure>
+        </div> -->
+        <div class="col d-flex align-items-center">
+            <a href="/#" class="mx-auto">
+            <figure class="item mx-auto text-center">
+                <i class="fas fa-sign-in-alt text-secondary sm-icon"></i>
+                <figcaption class="caption small-header">Login</figcaption>
+            </figure>
+            </a>
+        </div>
+        <div class="col d-flex align-items-center">
+            <a href="/register" class="mx-auto">
+            <figure class="item mx-auto text-center" :class="page === '/register#' ? 'text-primary' : 'text-secondary'">
+                <i class="fas fa-user-plus text-secondary sm-icon"></i>
+                <figcaption class="caption small-header" :class="page === '/register#' ? 'text-primary' : 'text-secondary'">Register</figcaption>
+            </figure>
+            </a>
         </div>
     </div>
 </div>
@@ -35,11 +73,26 @@
         computed: {
             ...mapState({
                 page: state => state.page,
+                userType: (state) => {
+                    if (state.user !== undefined && state.user !== null) {
+                        return state.user.usertype;
+                    }
+                    return null;
+                },
+                isLoggedIn () {
+                    return this.userType !== undefined && this.userType !== null;
+                }
             })
         },
         methods: {
             goTo (to) {
                 this.$router.push(to);
+            },
+            isCurrentPage (a, b) {
+                if (this.page === a || this.page === b) {
+                    return 'text-primary';
+                }
+                return 'text-secondary';
             }
         },
     }

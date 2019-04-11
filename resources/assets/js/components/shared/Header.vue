@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        <div v-if="page === '/home'" class="row bg-primary home-row">
+        <div v-if="page === '/home' || page === '/home/'" class="row bg-primary home-row">
             <div class="col-12 pt-3" style="height: 40px;">
                 <i class="fas fa-search text-white float-left sm-icon"></i>
                 <i class="far fa-bell text-white float-right sm-icon"></i>
@@ -17,14 +17,16 @@
                             <p>Edit Profile</p>
                         </div>
                         <div class="col pl-0">
+                            <a href="/logout">
                             <img class="float-left" src="/img/Logout.svg" alt="">
                             <p>Log Out</p>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div v-else-if="page === '/bids'" class="row bg-white bids-row ">
+        <div v-else-if="page === '/bids' || page === '/home/'" class="row bg-white bids-row ">
             <div class="col-12 pt-3" style="height: 40px;">
                 <i class="fas fa-search text-primary float-left sm-icon"></i>
                 <i class="fas fa-plus text-primary float-right sm-icon"></i>
@@ -59,6 +61,7 @@
 <script>
     import { mapState, mapMutations } from 'vuex'
     export default {
+        props: ['user'],
         computed: {
             ...mapState({
                 page: state => state.page,
@@ -69,7 +72,12 @@
             ...mapMutations([
                 'toggleBidsContractor'
             ]),
-        }
+        },
+        mounted() {
+            if (this.user !== undefined && this.user !== null) {
+                this.$store.commit('setUser', this.user);
+            }
+        },
     }
 </script>
 
