@@ -49,12 +49,12 @@
                     <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                 </div>
                 <!--<div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()"-->
-                     <!--style="color: green">-->
-                    <!--{{ networkType.originalCarrier }}-->
+                <!--style="color: green">-->
+                <!--{{ networkType.originalCarrier }}-->
                 <!--</div>-->
                 <!--<div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{-->
-                    <!--networkType.originalCarrier-->
-                    <!--}}-->
+                <!--networkType.originalCarrier-->
+                <!--}}-->
                 <!--</div>-->
                 <span class="help-block" v-show="form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
@@ -225,20 +225,24 @@
       },
       fillFields(result) {
         if (result.given_name !== undefined) {
-          this.form.email = result.primary_email_addr;
-          this.form.phone = result.primary_phone;
-          this.form.customerName = result.fully_qualified_name;
-          this.form.quickbooks_id = result.quickbooks_id;
-          this.checkMobileNumber(phone);
-          this.validateMobileNumber(result.primary_phone);
-          this.filterPhone();
+          this.form.email = result.primary_email_addr
+          this.form.customerName = result.fully_qualified_name
+          this.form.quickbooks_id = result.quickbooks_id
+          if (result.primary_phone !== null) {
+            this.form.phone = result.primary_phone
+            this.checkMobileNumber(phone)
+            this.validateMobileNumber(result.primary_phone)
+            this.filterPhone()
+          }
         } else {
-          this.form.email = result.email;
-          this.form.phone = result.phone;
-          this.form.customerName = result.name;
-          this.checkMobileNumber(phone);
-          this.validateMobileNumber(result.phone);
-          this.filterPhone();
+          this.form.email = result.email
+          this.form.customerName = result.name
+          if (result.phone !== null) {
+            this.form.phone = result.primary_phone
+            this.checkMobileNumber(phone)
+            this.validateMobileNumber(result.primary_phone)
+            this.filterPhone()
+          }
         }
         this.results = []
       }
