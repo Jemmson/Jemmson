@@ -1,15 +1,44 @@
 <template>
   <div class="container">
     <div class="row">
+
       <div class="col-12">
         <h1 class="card-title">Details</h1>
         <card></card>
       </div>
+
       <div class="col-12">
-        <h1 class="card-title mt-2">Payment Details</h1>
+        <h1 class="card-title mt-4">Payment Details</h1>
         <card></card>
       </div>
+
+      <div class="col-12">
+        <h1 class="card-title mt-4">Job Address</h1>
+        <card></card>
+      </div>
+
+      <div class="col-12">
+        <h1 class="card-title mt-4">Special Instructions</h1>
+        <card></card>
+      </div>
+
+      <div class="col-12">
+        <h1 class="card-title mt-4">Attachments</h1>
+      </div>
+
+      <div class="col-12 mb-4">
+        <card>
+          <div class="row">
+            <div class="col">
+              <p class="d-inline">Upload Attachment</p>
+              <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>
+            </div>
+          </div>
+        </card>
+      </div>
+      
     </div>
+    
     <card footer="true">
       <!-- /show all bid information -->
       <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
