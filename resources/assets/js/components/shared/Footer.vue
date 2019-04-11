@@ -2,43 +2,46 @@
 <div class="container-fluid border-top">
     <div class="row mt-2 align-items-center justify-content-center">
         <div class="col d-flex align-items-center">
-            <figure class="item mx-auto text-center">
-                <img class="sm-icon" src="/img/home.svg"/>
-                <figcaption class="caption small-header">Home</figcaption>
+            <figure @click.prevent="goTo('home')" class="item mx-auto text-center" :class="page === '/home' ? 'text-primary' : 'text-secondary'">
+                <i class="fas fa-home sm-icon"></i>
+                <figcaption class="caption small-header" :class="page === '/home' ? 'text-primary' : 'text-secondary'">Home</figcaption>
             </figure>
-            <!-- <img class="sm-icon d-block mx-auto" src="/img/home.svg" alt="home button" srcset="">
-            <p class="small-header">Home</p> -->
+        </div>
+        <div class="col d-flex align-items-center">
+            <figure @click.prevent="goTo('bids')" class="item mx-auto text-center" :class="page === '/bids' ? 'text-primary' : 'text-secondary'">
+                <i class="fas fa-briefcase sm-icon"></i>
+                <figcaption class="caption small-header" :class="page === '/bids' ? 'text-primary' : 'text-secondary'">Jobs</figcaption>
+            </figure>
+        </div>
+        <div class="col d-flex align-items-center">
+            <figure @click.prevent="goTo('invoices')" class="item mx-auto text-center" :class="page === '/invoices' ? 'text-primary' : 'text-secondary'">
+                <i class="fas fa-file-alt sm-icon"></i>
+                <figcaption class="caption small-header" :class="page === '/invoices' ? 'text-primary' : 'text-secondary'">Invoices</figcaption>
+            </figure>
         </div>
         <div class="col d-flex align-items-center">
             <figure class="item mx-auto text-center">
-                <img class="sm-icon" src="/img/jobs.svg"/>
-                <figcaption class="caption small-header">Jobs</figcaption>
-            </figure>
-            <!-- <img class="sm-icon d-block mx-auto" src="/img/jobs.svg" alt="home button" srcset="">
-            <p class="small-header">Jobs</p> -->
-        </div>
-        <div class="col d-flex align-items-center">
-            <figure class="item mx-auto text-center">
-                <img class="sm-icon" src="/img/invoices.svg"/>
-                <figcaption class="caption small-header">Invoices</figcaption>
-            </figure>
-            <!-- <img class="sm-icon d-block mx-auto" src="/img/invoices.svg" alt="home button" srcset="">
-            <p class="small-header">Invoices</p> -->
-        </div>
-        <div class="col d-flex align-items-center">
-            <figure class="item mx-auto text-center">
-                <img class="sm-icon" src="/img/plus.svg"/>
+                <i class="fas fa-plus-circle text-secondary sm-icon"></i>
                 <figcaption class="caption small-header">New Job</figcaption>
             </figure>
-            <!-- <img class="sm-icon mx-auto" src="/img/plus.svg" alt="home button" srcset="">
-            <p class="small-header">New Job</p> -->
         </div>
     </div>
 </div>
 </template>
 
 <script>
+    import { mapState } from 'vuex';
     export default {
+        computed: {
+            ...mapState({
+                page: state => state.page,
+            })
+        },
+        methods: {
+            goTo (to) {
+                this.$router.push(to);
+            }
+        },
     }
 </script>
 

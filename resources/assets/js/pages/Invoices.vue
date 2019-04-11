@@ -90,7 +90,10 @@
         this.invoices = data.data
         this.sInvoices = this.invoices
       })
-    }
+    },
+    mounted() {
+      this.$store.commit('setCurrentPage', this.$router.history.current.path);
+    },
   }
 </script>
 
