@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="page === '/bids'" class="row bg-white bids-row ">
+        <div v-else-if="page === '/bids'" class="row bg-white bids-row ">
             <div class="col-12 pt-3" style="height: 40px;">
                 <i class="fas fa-search text-primary float-left sm-icon"></i>
                 <i class="fas fa-plus text-primary float-right sm-icon"></i>
@@ -40,10 +40,17 @@
                 </p>
             </div>
         </div>
-        <div v-if="page.split('/')[1] === 'bid'" class="row bg-white bid-row mb-4">
+        <div v-else-if="page.split('/')[1] === 'bid'" class="row bg-white bid-row mb-4">
             <div class="col-12 d-flex align-items-center">
                 <i class="fas fa-chevron-left text-primary float-left sm-icon align-self-center"></i>
                 <h3 class="page-header-title mx-auto">Job #1</h3>
+            </div>
+        </div>
+        <div v-else class="row bg-white bid-row mb-4">
+            <div class="col-12 d-flex align-items-center">
+                <i class="fas fa-tree text-primary float-left sm-icon align-self-center"></i>
+                <h3 class="page-header-title font-weight-bold mx-auto">Jemsub</h3>
+                <i class="fas fa-search text-primary float-right sm-icon"></i>
             </div>
         </div>
     </div>
