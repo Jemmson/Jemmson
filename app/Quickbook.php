@@ -489,14 +489,14 @@ class Quickbook extends Model
         return true;
     }
 
-    public function syncCustomerInformationFromQB()
+    public function syncCustomerInformationFromQB($contractorId)
     {
         $allQBCustomers = $this->pullAllQBCustomersFromAccount();
 
         foreach ($allQBCustomers as $customer) {
             if (
-                !$this->checkIfCustomerInQuickbooksCustomerTable($customer) &&
-                !$this->checkIfCustomerInQuickbooksContractorTable($customer)
+                !$this->checkIfCustomerInQuickbooksCustomerTable($customer, $contractorId) &&
+                !$this->checkIfCustomerInQuickbooksContractorTable($customer, $contractorId)
             ) {
                 if (empty($customer->CompanyName)) {
                     $this->addCustomerToCustomerTable($customer);
@@ -614,10 +614,12 @@ class Quickbook extends Model
     }
 
 
-    public function checkIfCustomerInQuickbooksCustomerTable($customer)
+    public function checkIfCustomerInQuickbooksCustomerTable($customer, $contractorId)
     {
-        $cust = QuickbooksCustomer::select()->where('customer_id', '=', $customer->Id)
+        $cust = QuickbooksCustomer::where('customer_id', '=', $customer->Id)
+            ->where('contractor_id', '=', $contractorId)
             ->get()->first();
+
         if (empty($cust)) {
             return false;
         } else {
@@ -625,9 +627,10 @@ class Quickbook extends Model
         }
     }
 
-    public function checkIfCustomerInQuickbooksContractorTable($customer)
+    public function checkIfCustomerInQuickbooksContractorTable($customer, $contractorId)
     {
         $cust = QuickbooksContractor::select()->where('sub_contractor_id', '=', $customer->Id)
+            ->where('contractor_id', '=', $contractorId)
             ->get()->first();
         if (empty($cust)) {
             return false;

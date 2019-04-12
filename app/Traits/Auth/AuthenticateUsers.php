@@ -77,7 +77,7 @@ trait AuthenticateUsers
         if ($qb->isContractorThatUsesQuickbooks()) {
             if ($qb->contractorSubscriptionIsStillActive()) {
                 if ($qb->updateAccessToken()) {
-                    $qb->syncCustomerInformationFromQB();
+                    $qb->syncCustomerInformationFromQB(Auth::user()->getAuthIdentifier());
                 }
             } else {
                 // TODO: Redirect to a page that will say their subscription to QB is no longer active and they should chose whether they want to renew or not
