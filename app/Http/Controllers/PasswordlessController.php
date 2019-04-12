@@ -11,7 +11,6 @@ use App\JobTask;
 use App\PasswordlessToken;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-
 use Auth;
 
 

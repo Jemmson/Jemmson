@@ -119,9 +119,6 @@ class InitiateBidController extends Controller
         $js = new JobStatus();
         $js->setStatus($job->id, config("app.initiated"));
 
-//        $contractor->subtractFreeJob();
-
-
         //notify the customer the job was created
         $customer->notify(new BidInitiated($job, $customer));
 
