@@ -26,8 +26,8 @@
             </figure>
         </div>
         <div v-if="userType === 'customer'" class="col d-flex align-items-center">
-            <a href="/settings">
-            <figure class="item mx-auto text-center" :class="isCurrentPage('/settings#', '/settings#/')">
+            <a class="mx-auto" href="/settings">
+            <figure class="item text-center" :class="isCurrentPage('/settings#', '/settings#/')">
                 <i class="fas fa-cog text-secondary sm-icon"></i>
                 <figcaption class="caption small-header" :class="isCurrentPage('/settings#', '/settings#/')">Settings</figcaption>
             </figure>
