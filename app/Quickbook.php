@@ -479,8 +479,12 @@ class Quickbook extends Model
 
     public function isContractorThatUsesQuickbooks()
     {
-        return Auth::user()->usertype === 'contractor' &&
+        if (Auth::user()->contractor != null) {
+            return Auth::user()->usertype === 'contractor' &&
             Auth::user()->contractor->accounting_software == 'quickBooks';
+        }
+
+        return false;
     }
 
     public function contractorSubscriptionIsStillActive()
