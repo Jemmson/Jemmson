@@ -335,15 +335,8 @@ class Contractor extends Model
                                                             $phone,
                                                             $qbId = null)
     {
-//        if ($accountingSoftware == 'quickBooks') {
-//            $qb = new Quickbook();
-//            if (!empty($qb->checkIfQuickbooksCustomerExists($customer))) {
-//                $qb->addCustomer($customer);
-//            }
-//        }
 
         $phone = $this->formatPhone($phone);
-
         if ($accountingSoftware == 'quickBooks') {
             $qb = new Quickbook();
 
@@ -357,22 +350,6 @@ class Contractor extends Model
                     $qbCustomerData, $locationId, $user_id);
                 $this->associateContractorToCustomerTable($user_id, $contractorId);
             }
-//            else if (!empty(QuickbooksCustomer::select()->where('phone', '=', $phone))) {
-//                // pull latest customer data from QB
-//
-//                // save data to User Table and Customer Table and ContractorCustomer Table
-//
-//            }
-            else {
-                // TODO: add user customer to quickbooks
-//                 TODO: save data to User Table and Customer Table and ContractorCustomer Table
-//                $customer = Customer::createNewCustomer($phone, $customerName);
-            }
-
-
-//            if (!empty($qb->checkIfQuickbooksCustomerExists($customer))) {
-//            $qb->addCustomer($customer);
-//            }
         }
 
         return User::find($user_id);

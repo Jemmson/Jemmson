@@ -13,7 +13,6 @@ use App\Customer;
 use App\Notifications\BidInitiated;
 use App\Services\SanatizeService;
 
-
 class InitiateBidController extends Controller
 {
     /**
@@ -71,15 +70,8 @@ class InitiateBidController extends Controller
                             $customerName, $phone, $request->quickbooks_id
                         );
                     } else {
-
-                        // TODO: creating a new customer that is not in Quickbooks
-
                         $customer = Customer::createNewCustomer($phone, $customerName);
                         Quickbook::addNewCustomerToQuickBooks($customer);
-//                        $contractor->firstOrCreateAccountingSoftwareCustomer(
-//                            $accountingSoftware,
-//                            Auth::user()->getAuthIdentifier(),
-//                            $customerName, $phone);
 
                         // associate the customer with the contractor
                         $cc = new ContractorCustomer();
@@ -105,6 +97,12 @@ class InitiateBidController extends Controller
 
         }
 
+
+
+
+
+
+
         // create the job
         $job = new Job();
         $jobName = $job->jobName($request->jobName);
@@ -113,11 +111,18 @@ class InitiateBidController extends Controller
             return response()->json(
                 [
                     'message' => 'Unable to create new job.',
-                    'errors' => ['job_creation_failed' => 'Job could not be created. Please try initiating the bid again']
+                    'errors' => ['job_creation_failed' => 'Estimate could not be created. Please try initiating the bid again']
                 ], 422);
         }
         $js = new JobStatus();
         $js->setStatus($job->id, config("app.initiated"));
+
+
+
+
+
+
+
 
         //notify the customer the job was created
         $customer->notify(new BidInitiated($job, $customer));

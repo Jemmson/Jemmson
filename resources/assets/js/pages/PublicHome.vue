@@ -20,7 +20,7 @@
                     <div class="flex flex-col">
 
                         <!--<h3 class="form-title">-->
-                            <!--Simplify Subcontracting-->
+                        <!--Simplify Subcontracting-->
                         <!--</h3>-->
                         <!--<h4 class="sub-title text-center">Create Your Bid</h4>-->
                         <h4 class="sub-title text-center">Login</h4>
@@ -35,12 +35,14 @@
                                    type="text"
                                    class="input"
                                    name="username"
+                                   ref="username"
                                    placeholder="Email Address / Phone"
                                    autofocus>
                             <!-- Password -->
                             <input v-model="form.password"
                                    type="password"
                                    class="input"
+                                   ref="password"
                                    placeholder="Password"
                                    name="password">
                         </div>
@@ -54,12 +56,17 @@
                         <div class="flex flex-col form-submit-section">
                             <!-- Remember Me -->
                             <div class="checkbox align-checkbox flex">
-                                <input v-model="form.remember" type="checkbox" class="checkbox-sizing mr-2" name="remember">
+                                <input v-model="form.remember" type="checkbox" class="checkbox-sizing mr-2"
+                                       name="remember">
                                 <div>Remember Me</div>
                             </div>
                             <div class="flex form-submit form-item">
                                 <!-- Login Button -->
-                                <button @click.prevent="login(form)" :disabled="form.busy" name="login" type="submit" class="btn btn-sm btn-blue">
+                                <button @click.prevent="login(form)"
+                                        :disabled="form.busy"
+                                        ref="submit"
+                                        name="login" type="submit"
+                                        class="btn btn-sm btn-blue">
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
                                 <a class="" :href="currentWindow + '/password/reset'">Forgot Your
@@ -98,27 +105,31 @@
 
 <script>
   import { mapActions } from 'vuex'
+
   export default {
     computed: {
-        csrf () {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      csrf() {
+        if (document.querySelector('meta[name="csrf-token"]')) {
+          return document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
         }
+      }
     },
-    data () {
-        return {
-            currentWindow: window.location.origin,
-            form: {
-                username: '',
-                password: '',
-                remember: null,
-                error: null,
-                busy: false,
-            }
+    data() {
+      return {
+        currentWindow: window.location.origin,
+        form: {
+          username: '',
+          password: '',
+          remember: null,
+          error: null,
+          busy: false,
         }
+      }
     },
     methods: {
       ...mapActions([
-          'login'
+        'login'
       ]),
       route(value) {
         if (value === 'login') {
@@ -149,7 +160,7 @@
         /*color: #fff !important;*/
         letter-spacing: -1.55px;
         line-height: 1.18;
-        font-family: Montserrat,Helvetica,Arial,sans-serif;
+        font-family: Montserrat, Helvetica, Arial, sans-serif;
         /*font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;*/
         font-style: normal;
         font-variant-ligatures: normal;
@@ -184,7 +195,7 @@
         font-size: 12.96pt;
         color: black !important;
         /*color: #fff !important;*/
-        font-family: Montserrat,Helvetica,Arial,sans-serif;
+        font-family: Montserrat, Helvetica, Arial, sans-serif;
         /*font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;*/
         margin-bottom: 1rem;
         padding-top: 1rem;

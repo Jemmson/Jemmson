@@ -133,19 +133,21 @@
       },
       unformatNumber(number) {
         let unformattedNumber = ''
-        for (let i = 0; i < number.length; i++) {
-          if (!isNaN(parseInt(number[i]))) {
-            unformattedNumber = unformattedNumber + number[i]
+        if(number){
+          for (let i = 0; i < number.length; i++) {
+            if (!isNaN(parseInt(number[i]))) {
+              unformattedNumber = unformattedNumber + number[i]
+            }
           }
-        }
-        let numberLength = unformattedNumber.length
-        if (numberLength < 10) {
-          if (this.getMobileValidResponse[1] !== '') {
-            this.$store.commit('setTheMobileResponse', ['', '', ''])
+          let numberLength = unformattedNumber.length
+          if (numberLength < 10) {
+            if (this.getMobileValidResponse[1] !== '') {
+              this.$store.commit('setTheMobileResponse', ['', '', ''])
+            }
           }
+          // debugger;
+          return numberLength
         }
-        // debugger;
-        return numberLength
       },
       checkValidData() {
         // debugger
@@ -212,6 +214,7 @@
             })
             .then(response => {
               console.log(response.data)
+              console.log(JSON.stringify(response.data));
               this.results = response.data
             })
         }
@@ -230,7 +233,7 @@
           this.form.quickbooks_id = result.quickbooks_id
           if (result.primary_phone !== null) {
             this.form.phone = result.primary_phone
-            this.checkMobileNumber(phone)
+            this.checkMobileNumber(result.primary_phone)
             this.validateMobileNumber(result.primary_phone)
             this.filterPhone()
           }
@@ -238,9 +241,9 @@
           this.form.email = result.email
           this.form.customerName = result.name
           if (result.phone !== null) {
-            this.form.phone = result.primary_phone
-            this.checkMobileNumber(phone)
-            this.validateMobileNumber(result.primary_phone)
+            this.form.phone = result.phone
+            this.checkMobileNumber(result.phone)
+            this.validateMobileNumber(result.phone)
             this.filterPhone()
           }
         }

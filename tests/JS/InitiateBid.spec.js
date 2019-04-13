@@ -116,11 +116,11 @@ describe('InitiateBid', () => {
 
   })
 
-  it('should display "Landline" when a landline number is put in the text box and then the blur action occurs', function () {
+  it.skip('should display "Landline" when a landline number is put in the text box and then the blur action occurs', function () {
 
   })
 
-  it('the submit button should be disabled when only the customer field is filled out and the other fields are blank', function () {
+  it.skip('the submit button should be disabled when only the customer field is filled out and the other fields are blank', function () {
 
   })
 
@@ -300,29 +300,48 @@ describe('InitiateBid', () => {
     expect(wrapper.vm.form.customerName).toBe('long john silver');
   })
 
-  it('should show an error if the same phone number is for a different customer and the submit button is sent', function() {
+  it('should show phone number for Shara Barnett', function() {
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue
+    });
+    wrapper.setData({
+      form: new SparkForm({
+        email: '',
+        quickbooks_id: '',
+        phone: '',
+        customerName: '',
+        jobName: ''
+      })
+    })
+    let result = JSON.parse('{"id":3,"location_id":3,"name":"Shara Barnett","email":"Shara@Barnett.com","usertype":"customer","password_updated":0,"photo_url":"https://www.gravatar.com/avatar/477300cee74332fecb664d30a163c37f.jpg?s=200&d=mm","logo_url":null,"uses_two_factor_auth":false,"phone":"4807034902","two_factor_reset_code":null,"current_team_id":null,"stripe_id":null,"current_billing_plan":null,"billing_state":null,"trial_ends_at":null,"last_read_announcements_at":null,"created_at":"2019-04-13 16:30:51","updated_at":"2019-04-13 16:30:51","first_name":"Shara","last_name":"Barnett","tax_rate":0}');
+    wrapper.vm.fillFields(result);
+    expect(wrapper.$data.form.email).toBe('Shara@Barnett.com');
+  })
+
+  it.skip('should show an error if the same phone number is for a different customer and the submit button is sent', function() {
     
   })
 
-  it('should show an error if the customer name exists and the phone number is wrong and the submit button is pressed', function() {
+  it.skip('should show an error if the customer name exists and the phone number is wrong and the submit button is pressed', function() {
     
   })
 
-  it('should only show name of customer in drop down that exists for this particular contractor', function() {
+  it.skip('should only show name of customer in drop down that exists for this particular contractor', function() {
 
   })
 
-  it('should not show the name of the customer ' +
+  it.skip('should not show the name of the customer ' +
     'if the customer is not associated with that contractor once the form is submitted', function() {
 
   })
 
-  it('should send a contractor to the subscription page and not ' +
+  it.skip('should send a contractor to the subscription page and not ' +
     'create a new bid if the sixth free bid trying to be sent', function () {
 
   })
 
-  it('should create a unique job name if bid is created and ' +
+  it.skip('should create a unique job name if bid is created and ' +
     'the job name is left blank', function () {
 
   })
