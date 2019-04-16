@@ -107,7 +107,7 @@ class InitiateBidController extends Controller
         $job = new Job();
         $jobName = $job->jobName($request->jobName);
 //        $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
-        if (!$job->createBid($customer->id, $jobName, Auth::user()->id)) {
+        if (!$job->createEstimate($customer->id, $jobName, Auth::user()->id)) {
             return response()->json(
                 [
                     'message' => 'Unable to create new job.',

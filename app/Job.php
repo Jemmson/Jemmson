@@ -125,27 +125,42 @@ class Job extends Model
         $qb->createEstimate($job_name, $quickbooksId, $job);
     }
 
-    public static function createEstimate($customer_id, $job_name, $contractor_id)
-    {
 
-        $job  = new Job;
+    public function getJobId()
+    {
+        $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
+
+        if ($jobId == []) {
+            return 1;
+        } else {
+            return $jobId[0]->id + 1;
+        }
+
+    }
+    
+    public function createEstimate($customer_id, $job_name, $contractor_id)
+    {
+        
+        $jobId = $this->getJobId();
+
         $attributes = [
+            'job_id' => $jobId,
             'contractor_id' => $contractor_id,
             'customer_id' => $customer_id,
             'job_name' => $job_name,
             'status' => __("status.bid.initiated"),
             'location_id' => User::find($customer_id)->customer()->first()->location_id
         ];
-        $job->fill($attributes);
+        $this->fill($attributes);
 
         try {
-            $job->save();
+            $this->save();
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e->getMessage());
             return false;
         }
 
-        return $job;
+        return true;
 
 //        // not the best way but autoincrementing the id number
 //        // TODO: find a better way but this works for now
