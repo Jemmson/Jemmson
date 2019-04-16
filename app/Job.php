@@ -24,17 +24,20 @@ class Job extends Model
     ];
 
     protected $fillable = [
+        'actual_end_date',
         'address_line_1',
         'address_line_2',
-        'city',
-        'state',
-        'zip',
-        'status',
-        'completed_bid_date',
-        'bid_price',
         'agreed_start_date',
-        'actual_end_date',
-        'job_name'
+        'bid_price',
+        'city',
+        'completed_bid_date',
+        'contractor_id',
+        'customer_id',
+        'job_name',
+        'location_id',
+        'state',
+        'status',
+        'zip',
     ];
 
     public function customer()
@@ -102,7 +105,7 @@ class Job extends Model
         return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
-    public function jobName($jobName = '')
+    public static function jobName($jobName = '')
     {
         if (empty($jobName)) {
             // what if there are no Jobs?
@@ -116,36 +119,59 @@ class Job extends Model
         return $jobName;
     }
 
-    public function createBid($customer_id, $job_name, $contractor_id)
+    public static function createQuickBooksEstimate($job_name, $quickbooksId, $job)
+    {
+        $qb = new Quickbook();
+        $qb->createEstimate($job_name, $quickbooksId, $job);
+    }
+
+    public static function createEstimate($customer_id, $job_name, $contractor_id)
     {
 
-
-        // not the best way but autoincrementing the id number
-        // TODO: find a better way but this works for now
-        $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
-
-        if ($jobId == []) {
-            $this->id = 1;
-        } else {
-            $this->id = $jobId[0]->id + 1;
-        }
-        $this->contractor_id = $contractor_id; // actually the user id and not the contractor Id
-//        $this->contractor_id = Auth::user()->id; // actually the user id and not the contractor Id
-        $this->customer_id = $customer_id;       // also the user Id and not the customer Id
-        $this->job_name = $job_name;
-        $this->status = __("status.bid.initiated");
-        if (User::find($customer_id)->customer()->first() !== null) {
-            $this->location_id = User::find($customer_id)->customer()->first()->location_id;
-        }
+        $job  = new Job;
+        $attributes = [
+            'contractor_id' => $contractor_id,
+            'customer_id' => $customer_id,
+            'job_name' => $job_name,
+            'status' => __("status.bid.initiated"),
+            'location_id' => User::find($customer_id)->customer()->first()->location_id
+        ];
+        $job->fill($attributes);
 
         try {
-            $this->save();
+            $job->save();
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e->getMessage());
             return false;
         }
 
-        return true;
+        return $job;
+
+//        // not the best way but autoincrementing the id number
+//        // TODO: find a better way but this works for now
+//        $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
+//
+//        if ($jobId == []) {
+//            $this->id = 1;
+//        } else {
+//            $this->id = $jobId[0]->id + 1;
+//        }
+//        $this->contractor_id = $contractor_id; // actually the user id and not the contractor Id
+////        $this->contractor_id = Auth::user()->id; // actually the user id and not the contractor Id
+//        $this->customer_id = $customer_id;       // also the user Id and not the customer Id
+//        $this->job_name = $job_name;
+//        $this->status = __("status.bid.initiated");
+//        if (User::find($customer_id)->customer()->first() !== null) {
+//            $this->location_id = User::find($customer_id)->customer()->first()->location_id;
+//        }
+//
+//        try {
+//            $this->save();
+//        } catch (\Exception $e) {
+//            Log::critical('Failed to create a bid: ' . $e->getMessage());
+//            return false;
+//        }
+//        return true;
     }
 
     /**

@@ -45,7 +45,10 @@ class ContractorCustomer extends Model
     {
         $ids = [];
         foreach ($users as $user){
-            array_push($ids, $user->customer_user_id);
+            array_push($ids, [
+                'user_id' => $user->customer_user_id,
+                'quickbooks_id' => $user->quickbooks_id
+            ]);
         }
         return $ids;
     }
@@ -53,7 +56,7 @@ class ContractorCustomer extends Model
     public static function getAssociatedCustomers($users, $contractorId)
     {
         $customerIds = ContractorCustomer::getCustomerIdsAsAnArray($users);
-        $filteredCustomers = ContractorCustomer::select('customer_user_id')
+        $filteredCustomers = ContractorCustomer::select('customer_user_id', 'quickbooks_id')
             ->whereIn('customer_user_id', $customerIds)
             ->where('contractor_user_id', '=', $contractorId)->get();
         return ContractorCustomer::filterCustomerUserIds($filteredCustomers);

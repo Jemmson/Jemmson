@@ -116,11 +116,11 @@ class CustomerController extends Controller
         $user->password = $password_updated == null ? bcrypt($request->password) : $user->password;
         $user->password_updated = 1;
 
-        $result = DB::transaction(function () use ($location, $user, $customer) {
-            $customer->updateLocation($request);
-            $user->save();
-            $customer->save();
-        });
+//        $result = DB::transaction(function () use ($location, $user, $customer) {
+//            $customer->updateLocation($request);
+//            $user->save();
+//            $customer->save();
+//        });
 
         // try {
         // } catch (\Exception $e) {
@@ -176,8 +176,19 @@ class CustomerController extends Controller
         if (empty($users[0])) {
             return QuickbooksCustomer::getAssociatedCustomers($query, Auth::user()->getAuthIdentifier());
         } else {
-            $associatedUserIds = ContractorCustomer::getAssociatedCustomers($users, Auth::user()->getAuthIdentifier());
-            return User::find($associatedUserIds);
+            $associatedUsers = ContractorCustomer::getAssociatedCustomers($users, Auth::user()->getAuthIdentifier());
+
+            $users = [];
+            foreach ($associatedUsers as $user){
+                $u = User::find($user['user_id'])->toArray();
+                $u['quickbooks_id'] = $user['quickbooks_id'];
+                array_push($users, $u);
+//                array_push($ids, [$user->customer_user_id]);
+            }
+
+//            $associatedUserIds
+
+            return $users;
         }
 
 //        $cont_id = 1;

@@ -240,6 +240,9 @@
         } else {
           this.form.email = result.email
           this.form.customerName = result.name
+          if (result.quickbooks_id) {
+            this.form.quickbooks_id = result.quickbooks_id
+          }
           if (result.phone !== null) {
             this.form.phone = result.phone
             this.checkMobileNumber(result.phone)

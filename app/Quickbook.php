@@ -21,6 +21,7 @@ use QuickBooksOnline\API\Core\ServiceContext;
 use QuickBooksOnline\API\PlatformService\PlatformService;
 use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
 use QuickBooksOnline\API\Facades\Customer;
+use QuickBooksOnline\API\Facades\Estimate;
 
 class Quickbook extends Model
 {
@@ -746,6 +747,78 @@ class Quickbook extends Model
         $entities = $dataService->Query("SELECT * FROM Customer WHERE Id = '" . $qbId . "'");
 
         return $entities;
+    }
+
+    public function createEstimate($job_name, $quickbooksId, $job)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $theResourceObj = Estimate::create([
+            "Line" => [
+                [
+                    "Description" => "Pest Control Services",
+                    "Amount" => 35.0,
+                    "DetailType" => "SalesItemLineDetail",
+                    "SalesItemLineDetail" => [
+                        "ItemRef" => [
+                            "value" => "10",
+                            "name" => "Pest Control"
+                        ],
+                        "UnitPrice" => 35,
+                        "Qty" => 1,
+                        "TaxCodeRef" => [
+                            "value" => "NON"
+                        ]
+                    ]
+                ],
+                [
+                    "Amount" => 35.0,
+                    "DetailType" => "SubTotalLineDetail",
+                    "SubTotalLineDetail" => []
+                ],
+                [
+                    "Amount" => 3.5,
+                    "DetailType" => "DiscountLineDetail",
+                    "DiscountLineDetail" => [
+                        "PercentBased" => true,
+                        "DiscountPercent" => 10,
+                        "DiscountAccountRef" => [
+                            "value" => "86",
+                            "name" => "Discounts given"
+                        ]
+                    ]
+                ]
+            ],
+            "TxnTaxDetail" => [
+                "TotalTax" => 0
+            ],
+            "CustomerRef" => [
+                "value" => $quickbooksId,
+                "name"=> "Cool Cars"
+            ],
+            "TotalAmt" => 31.5,
+            "ApplyTaxAfterDiscount" => false,
+            "PrintStatus" => "NeedToPrint",
+            "EmailStatus" => "NotSet",
+            "BillEmail" => [
+                "Address" => "Cool_Cars@intuit.com"
+            ]
+        ]);
+
+        $resultingObj = $dataService->Add($theResourceObj);
+        return $resultingObj;
+
+//        ‌‌$dataService->Query('select count(*) from Estimate');
     }
 
 }

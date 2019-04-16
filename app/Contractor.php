@@ -269,11 +269,12 @@ class Contractor extends Model
 //        return $customer->id;
     }
 
-    public function associateContractorToCustomerTable($user_id, $contractorId)
+    public function associateContractorToCustomerTable($user_id, $contractorId, $quickbooksId)
     {
         $customer = new ContractorCustomer();
         $customer->contractor_user_id = $contractorId;
         $customer->customer_user_id = $user_id;
+        $customer->quickbooks_id = $quickbooksId;
 
         try {
             $customer->save();
@@ -348,7 +349,7 @@ class Contractor extends Model
                 $this->addUserIdToLocationsTable($user_id, $locationId);
                 $this->addCustomerToCustomerTable(
                     $qbCustomerData, $locationId, $user_id);
-                $this->associateContractorToCustomerTable($user_id, $contractorId);
+                $this->associateContractorToCustomerTable($user_id, $contractorId, $qbId);
             }
         }
 
