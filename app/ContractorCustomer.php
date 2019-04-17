@@ -34,6 +34,15 @@ class ContractorCustomer extends Model
         }
     }
 
+    public static function addQuickBookIdToAssociation($contractorId, $customerId, $quickbookId)
+    {
+        $cc = ContractorCustomer::where('contractor_user_id', '=', $contractorId)
+            ->where('customer_user_id', '=', $customerId)->get()->first();
+        $cc->quickbooks_id = $quickbookId;
+        $cc->save();
+//        ContractorCustomer::where('contractor_user_id', '=', 1)->where('customer_user_id', '=', 2)
+    }
+
     public static function getCustomerIdsAsAnArray($users)
     {
         $ids = [];

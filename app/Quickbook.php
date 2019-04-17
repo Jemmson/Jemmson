@@ -342,20 +342,6 @@ class Quickbook extends Model
 
     public static function addNewCustomerToQuickBooks(\App\User $customer)
     {
-//        if (!$this->checkIfCustomerExists($customer)){
-//            $dataService = DataService::Configure($this->getCredentials());
-//            $accessToken = session('sessionAccessToken');
-//            $accessToken = unserialize(base64_decode($accessToken));
-//            $dataService->updateOAuth2Token($accessToken);
-//            $companyInfo = $dataService->FindAll('customer');
-//
-//        }
-
-//        $dataService = DataService::Configure($this->getCredentials());
-//        $accessToken = $this->checkOrUpdateAccessToken();
-//        $dataService->updateOAuth2Token($accessToken);
-//        $cust = $this->createQBCustomerObject($customer);
-//        return $dataService->Add($cust);
 
         $accessToken = session('sessionAccessToken');
         $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
@@ -369,8 +355,6 @@ class Quickbook extends Model
             'QBORealmID' => $qbUser->company_id,
             'baseUrl' => "development"
         ));
-//        $dataService->setLogLocation("/Users/hlu2/Desktop/newFolderForLog");
-// Add a customer
         $customerObj = Customer::create([
 //            "BillAddr" => [
 //                "Line1"=>  "123 Main Street",
@@ -405,6 +389,7 @@ class Quickbook extends Model
             var_dump($resultingCustomerObj);
         }
 
+        return $resultingCustomerObj->Id;
     }
 
 

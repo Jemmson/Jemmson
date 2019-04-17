@@ -71,7 +71,8 @@ class InitiateBidController extends Controller
                         );
                     } else {
                         $customer = Customer::createNewCustomer($phone, $customerName, Auth::user()->getAuthIdentifier());
-                        Quickbook::addNewCustomerToQuickBooks($customer);
+                        $quickbookId = Quickbook::addNewCustomerToQuickBooks($customer);
+                        ContractorCustomer::addQuickBookIdToAssociation(Auth::user()->getAuthIdentifier(), $customer->id, $quickbookId);
                     }
                 }
             } else {
