@@ -27,9 +27,11 @@ class ContractorCustomer extends Model
 
     public function associateCustomer($contractorId, $customerId)
     {
-        $this->contractor_user_id = $contractorId;
-        $this->customer_user_id = $customerId;
-        $this->save();
+        if ($this->checkIfCustomerCurrentlyExistsForContractor($contractorId, $customerId)) {
+            $this->contractor_user_id = $contractorId;
+            $this->customer_user_id = $customerId;
+            $this->save();
+        }
     }
 
     public static function getCustomerIdsAsAnArray($users)

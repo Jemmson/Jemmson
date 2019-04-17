@@ -105,7 +105,7 @@ class Customer extends Model
      *
      * @return $this|\Illuminate\Database\Eloquent\Model
      */
-    public static function createNewCustomer($phone, $customerName)
+    public static function createNewCustomer($phone, $customerName, $contractorId)
     {
 
         if (empty($phone) || $phone === '') {
@@ -141,6 +141,9 @@ class Customer extends Model
                 ]
             );
         }
+
+        $cc = new ContractorCustomer();
+        $cc->associateCustomer($contractorId, $customer->id);
 
         return $customer;
 
