@@ -63,6 +63,7 @@
         <div class="flex justify-between mb-6">
             <div class="flex flex-col">
                 <span class="label">JOB ADDRESS:</span>
+                <button style="background-color: black; color: white;" class="btn btn-lg btn-primary" v-on:click="">ChangeJobAddress->implement</button>
                 <a
                         target="_blank"
                         v-if="showAddress"
@@ -75,7 +76,7 @@
                         {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
                     </address>
                 </a>
-                <div v-else class>No Address is Set Yet</div>
+            <button style="background-color: black; color: white;" class="btn btn-lg btn-primary" v-on:click="">CustomerCanAddJobPictures->implement</button>
             </div>
             <!-- <div class="flex flex-col">
                       <span class="label mb-4">TOTAL PRICE:</span>

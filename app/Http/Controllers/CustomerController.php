@@ -30,6 +30,8 @@ class CustomerController extends Controller
 
     public function updateCustomerNotes(Request $request)
     {
+//        TODO:: this has to change so that these notes are contractor to customer notes. they are contractor_customer_general. they are customer_contractor_job_specific
+
         $customer = Customer::where('user_id', '=', $request->customer_id)->get()->first();
         $customer->notes = $request->customerNotesMessage;
 
