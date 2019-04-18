@@ -340,7 +340,6 @@ class Contractor extends Model
         $phone = $this->formatPhone($phone);
         if ($accountingSoftware == 'quickBooks') {
             $qb = new Quickbook();
-
             // check quickbooks customer table
             if (!empty($qbId)) {
                 $qbCustomerData = $qb->getLatestCustomerDataFromQB($qbId, $contractorId);
@@ -350,6 +349,11 @@ class Contractor extends Model
                 $this->addCustomerToCustomerTable(
                     $qbCustomerData, $locationId, $user_id);
                 $this->associateContractorToCustomerTable($user_id, $contractorId, $qbId);
+                CustomerNeedsUpdating::addEntryToCustomerNeedsUpdatingIfNeeded(
+                    $contractorId,
+                    $user_id,
+                    $qbId
+                );
             }
         }
 

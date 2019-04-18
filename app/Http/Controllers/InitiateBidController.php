@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ContractorCustomer;
 use App\JobStatus;
 use App\Quickbook;
+use App\CustomerNeedsUpdating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
@@ -63,6 +64,7 @@ class InitiateBidController extends Controller
             if (config('app.quickBooks')) {
                 $accountingSoftware = $contractor->checkAccountingSoftware();
                 if ($accountingSoftware != null) {
+                    // customer exists in QB but not in Jemmson
                     if (!empty($request->quickbooks_id)) {
                         $customer = $contractor->firstOrCreateAccountingSoftwareCustomer(
                             $accountingSoftware,
@@ -70,9 +72,15 @@ class InitiateBidController extends Controller
                             $customerName, $phone, $request->quickbooks_id
                         );
                     } else {
+                        // customer is new but is added in Jemmson and not from Quickbooks
                         $customer = Customer::createNewCustomer($phone, $customerName, Auth::user()->getAuthIdentifier());
                         $quickbookId = Quickbook::addNewCustomerToQuickBooks($customer);
                         ContractorCustomer::addQuickBookIdToAssociation(Auth::user()->getAuthIdentifier(), $customer->id, $quickbookId);
+                        CustomerNeedsUpdating::addEntryToCustomerNeedsUpdatingIfNeeded(
+                            Auth::user()->getAuthIdentifier(),
+                            $customer->id,
+                            $quickbookId
+                        );
                     }
                 }
             } else {

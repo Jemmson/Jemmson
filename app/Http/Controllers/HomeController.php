@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomerNeedsUpdating;
 use Illuminate\Http\Request;
 use App\Contractor;
 use App\Customer;
@@ -163,8 +164,10 @@ class HomeController extends Controller
             $user->last_name = $splitName[1];
         }
         $user->phone = $phone;
-
         $user->save();
+
+        $cnu = new CustomerNeedsUpdating();
+        $cnu->customerNeedsUpdating($user->id);
 
         if (empty(session('prevDestination'))) {
             Log::info("going to /#/home");
