@@ -81,6 +81,7 @@ class Customer extends Model
             $location->area = $request->city;
             $location->state = $request->state;
             $location->zip = $request->zip;
+            $location->default = true;
         }
 
         try {
