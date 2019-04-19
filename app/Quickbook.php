@@ -467,7 +467,7 @@ class Quickbook extends Model
     {
         if (Auth::user()->contractor != null) {
             return Auth::user()->usertype === 'contractor' &&
-            Auth::user()->contractor->accounting_software == 'quickBooks';
+                Auth::user()->contractor->accounting_software == 'quickBooks';
         }
 
         return false;
@@ -477,6 +477,49 @@ class Quickbook extends Model
     {
         // TODO: figure out how to check that the quickbooks account is still active for the user
         return true;
+    }
+
+    public function updateCustomerInQB($jem_customer_id, $quickbooksId)
+    {
+        $customer = User::find($jem_customer_id);
+
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $entities = $dataService->Query("SELECT * FROM Customer where Id='" . $quickbooksId . "'");
+        $theCustomer = reset($entities);
+
+        $location = Location::where('user_id', '=', $customer->id)->where('default', '=', 1)->get()->first();
+
+        $theResourceObj = Customer::update($theCustomer, [
+            'sparse' => 'true',
+            "BillAddr" => [
+                "Line1" => $location->address_line_1,
+                "City" => $location->city,
+                "CountrySubDivisionCode" => $location->state,
+                "PostalCode" => $location->zip
+            ],
+            "FullyQualifiedName" => $customer->name,
+            "DisplayName" => $customer->name,
+            "PrimaryPhone" => [
+                "FreeFormNumber" => $customer->phone
+            ],
+            "PrimaryEmailAddr" => [
+                "Address" => $customer->email
+            ]
+        ]);
+
+        $resultingObj = $dataService->Update($theResourceObj);
+        return $resultingObj;
     }
 
     public function syncCustomerInformationFromQB($contractorId)
@@ -493,6 +536,31 @@ class Quickbook extends Model
                 } else {
                     $this->addCustomerToContractorTable($customer);
                 }
+            }
+
+            if (empty($customer->CompanyName)) {
+                $quickbooksId = $customer->Id;
+                $jem_customer = CustomerNeedsUpdating::hasCustomerBeenMarkedForUpdating($contractorId, $quickbooksId);
+                if (!empty($jem_customer) && $jem_customer->needs_updating) {
+                    $this->updateCustomerInQB($jem_customer->customer_id, $quickbooksId);
+
+                    $cnu = CustomerNeedsUpdating::where('customer_id', '=', $jem_customer->customer_id)
+                        ->where('contractor_id', '=', $contractorId)
+                        ->where('quickbooks_id', '=', $quickbooksId)->get()->first();
+                    $cnu->needs_updating = false;
+                    try {
+                        $cnu->save();
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => $e->getMessage(),
+                            'code' => $e->getCode()
+                        ], 200);
+                    }
+
+                }
+                $this->addCustomerToCustomerTable($customer);
+            } else {
+                $this->addCustomerToContractorTable($customer);
             }
         }
 
@@ -646,11 +714,6 @@ class Quickbook extends Model
         }
     }
 
-    public function updateCustomer($jemmsonCustomer, $qbCustomer)
-    {
-
-    }
-
     public function getAllCustomerLocationInfo($customers)
     {
         $location_id_Array = [];
@@ -789,7 +852,7 @@ class Quickbook extends Model
             ],
             "CustomerRef" => [
                 "value" => $quickbooksId,
-                "name"=> "Cool Cars"
+                "name" => "Cool Cars"
             ],
             "TotalAmt" => 31.5,
             "ApplyTaxAfterDiscount" => false,

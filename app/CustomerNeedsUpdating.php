@@ -36,7 +36,7 @@ class CustomerNeedsUpdating extends Model
         }
     }
 
-    public function customerNeedsUpdating($customerId)
+    public function customerHasUpdatedSettings($customerId)
     {
         $customerEntries = CustomerNeedsUpdating::where('customer_id', '=',$customerId)->get();
 
@@ -45,4 +45,12 @@ class CustomerNeedsUpdating extends Model
             $customer->save();
         }
     }
+
+    public static function hasCustomerBeenMarkedForUpdating($contractorId, $quickbooksId)
+    {
+        return CustomerNeedsUpdating::select(['needs_updating', 'customer_id'])
+            ->where('contractor_id','=', $contractorId)
+            ->where('quickbooks_id', '=', $quickbooksId)->get()->first();
+    }
+
 }

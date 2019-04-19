@@ -167,7 +167,7 @@ class HomeController extends Controller
         $user->save();
 
         $cnu = new CustomerNeedsUpdating();
-        $cnu->customerNeedsUpdating($user->id);
+        $cnu->customerHasUpdatedSettings($user->id);
 
         if (empty(session('prevDestination'))) {
             Log::info("going to /#/home");
