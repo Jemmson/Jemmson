@@ -28,8 +28,8 @@ class CreateJobTaskTable extends Migration
             $table->string('status')->nullable();
             $table->text('details')->nullable();
             
-            $table->float('cust_final_price')->unsigned()->nullable();
-            $table->float('sub_final_price')->unsigned()->nullable();
+            $table->bigInteger('cust_final_price')->unsigned()->nullable();
+            $table->bigInteger('sub_final_price')->unsigned()->nullable();
             
             $table->boolean('start_when_accepted')->default(false);
             $table->boolean('stripe')->default(false);            

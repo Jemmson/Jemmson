@@ -22,10 +22,10 @@ class CreateTasksTable extends Migration
             $table->string('name');
             $table->integer('standard_task_id')->nullable();
             $table->integer('contractor_id')->nullable();
-            $table->float('proposed_cust_price')->nullable();
-            $table->float('average_cust_price')->nullable();
-            $table->float('proposed_sub_price')->nullable();
-            $table->float('average_sub_price')->nullable();
+            $table->bigInteger('proposed_cust_price')->nullable();
+            $table->bigInteger('average_cust_price')->nullable();
+            $table->bigInteger('proposed_sub_price')->nullable();
+            $table->bigInteger('average_sub_price')->nullable();
             $table->timestamps();
         });
     }

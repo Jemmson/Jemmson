@@ -14,7 +14,7 @@ class AddUnitPriceToJobTaskTable extends Migration
     public function up()
     {
         Schema::table('job_task', function (Blueprint $table) {
-            $table->double('unit_price')->unsigned()->default(0);
+            $table->bigInteger('unit_price')->unsigned()->default(0);
         });
     }
 
