@@ -556,11 +556,7 @@ class Quickbook extends Model
                             'code' => $e->getCode()
                         ], 200);
                     }
-
                 }
-                $this->addCustomerToCustomerTable($customer);
-            } else {
-                $this->addCustomerToContractorTable($customer);
             }
         }
 
@@ -685,6 +681,19 @@ class Quickbook extends Model
         }
     }
 
+    public function checkIfItemExistsInQuickbooksTable($item, $contractorId)
+    {
+        $item = QuickbooksItem::where('item_id', '=', $item->Id)
+            ->where('contractor_id', '=', $contractorId)
+            ->get()->first();
+
+        if (empty($item)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function checkIfCustomerInQuickbooksContractorTable($customer, $contractorId)
     {
         $cust = QuickbooksContractor::select()->where('sub_contractor_id', '=', $customer->Id)
@@ -795,6 +804,67 @@ class Quickbook extends Model
         $entities = $dataService->Query("SELECT * FROM Customer WHERE Id = '" . $qbId . "'");
 
         return $entities;
+    }
+
+    public function pullAllItemsFromQB($contractorId)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', $contractorId)->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $entities = $dataService->Query(
+            "SELECT
+              *
+            FROM Item"
+        );
+
+        return $entities;
+    }
+
+    public function syncTasksFromQB($contractorId)
+    {
+        $allItems = $this->pullAllItemsFromQB($contractorId);
+
+        if (!empty($allItems)) {
+            foreach ($allItems as $item) {
+                if (!$this->checkIfItemExistsInQuickbooksTable($item, $contractorId)) {
+                    $this->addItemToQuickbooksTable($item, $contractorId);
+                }
+            }
+        }
+
+    }
+
+    public function addItemToQuickbooksTable($item, $contractorId)
+    {
+        $qbitem = new QuickbooksItem();
+        $qbitem->name = $this->returnNonNullAttribute($item->Name);
+        $qbitem->description = $this->returnNonNullAttribute($item->Description);
+        $qbitem->fully_qualified_name = $this->returnNonNullAttribute($item->FullyQualifiedName);
+        $qbitem->unit_price = $this->returnNonNullAttribute($item->UnitPrice);
+        $qbitem->type = $this->returnNonNullAttribute($item->Type);
+        $qbitem->payment_method_ref = $this->returnNonNullAttribute($item->PaymentMethodRef);
+        $qbitem->avg_cost = $this->returnNonNullAttribute($item->AvgCost);
+        $qbitem->item_id = $item->Id;
+        $qbitem->contractor_id = $contractorId;
+
+        try {
+            $qbitem->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
     }
 
     public function createEstimate($job_name, $quickbooksId, $job)
