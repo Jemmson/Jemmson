@@ -473,6 +473,16 @@ class Quickbook extends Model
         return false;
     }
 
+    public static function checkIfContractorUsesQuickbooks()
+    {
+        if (Auth::user()->contractor != null) {
+            return Auth::user()->usertype === 'contractor' &&
+                Auth::user()->contractor->accounting_software == 'quickBooks';
+        }
+
+        return false;
+    }
+
     public function contractorSubscriptionIsStillActive()
     {
         // TODO: figure out how to check that the quickbooks account is still active for the user

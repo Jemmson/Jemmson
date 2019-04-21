@@ -15,6 +15,8 @@ use App\Notifications\UploadedTaskImage;
 use App\Notifications\TaskImageDeleted;
 use App\Notifications\NotifyCustomerOfUpdatedMessage;
 use App\Notifications\NotifySubOfUpdatedMessage;
+use App\Quickbook;
+use App\QuickbooksItem;
 use App\Task;
 use App\Job;
 use App\Contractor;
@@ -727,6 +729,29 @@ class TaskController extends Controller
             ->where('id', $taskId)
             ->update(['name' => $taskName]);
 
+    }
+
+    public function getTasks(Request $request)
+    {
+
+        $tasks = Task::select()->
+        where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+        where('name', 'like', $request->taskname . '%')->get();
+
+//        Task::select()->where('contractor_id', '=', 1)->where('name', 'like', 'pool%')->get();
+
+        if (Quickbook::checkIfContractorUsesQuickbooks()) {
+            $qbtasks = QuickbooksItem::select()->
+                where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+                where('name', 'like', $request->taskname . '%')->get();
+
+            foreach ($qbtasks as $task){
+                $tasks->push($task);
+            }
+
+        }
+
+        return $tasks;
     }
 
     public function addTask(Request $request)

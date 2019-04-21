@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
 
     Route::get('/customer/search', 'CustomerController@getCustomerAssociatedToContractor');
 
+    Route::post('/search/task', 'TaskController@getTasks');
+
 //    Route::get('/quickbooks/getAuthUrl', 'QuickbooksController@getAuthUrl');
 //    Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
     Route::get('/quickbooks/getCompanyInfo', 'QuickbooksController@getCompanyInfo');

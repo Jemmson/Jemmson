@@ -470,7 +470,6 @@
         }
       },
       checkIfNameExistsInDB(taskName) {
-
         // need to check if the task that is being typed is in the job already
         // if it is in the job then disable all inputs and show the error
         this.taskExistsInJob = false;
@@ -479,7 +478,6 @@
             this.taskExistsInJob = true;
           }
         }
-
 
         // check if the name is in the database already so that I can show the
         // correct buttons on the footer of the modal window
@@ -493,7 +491,6 @@
             this.nameExistsInDB = true;
           }
         }
-
         this.showTaskResults = true;
 
       },
@@ -503,9 +500,8 @@
 
         this.checkIfNameExistsInDB(this.addNewTaskForm.taskName);
 
-
         if (this.addNewTaskForm.taskName.length > 1) {
-          axios.post('/api/search/task', {
+          axios.post('/search/task', {
             taskname: this.addNewTaskForm.taskName,
             jobId: this.bid.id
           }).then(response => {
