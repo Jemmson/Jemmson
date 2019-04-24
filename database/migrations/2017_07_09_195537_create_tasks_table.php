@@ -26,6 +26,13 @@ class CreateTasksTable extends Migration
             $table->bigInteger('average_cust_price')->nullable();
             $table->bigInteger('proposed_sub_price')->nullable();
             $table->bigInteger('average_sub_price')->nullable();
+            $table->string('description')->nullable();
+            $table->string('fully_qualified_name')->nullable();
+            $table->string('unit_price')->nullable();
+            $table->string('type')->nullable();
+            $table->string('payment_method_ref')->nullable();
+            $table->string('avg_cost')->nullable();
+            $table->bigInteger('item_id');
             $table->timestamps();
         });
     }

@@ -737,20 +737,7 @@ class TaskController extends Controller
         $tasks = Task::select()->
         where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
         where('name', 'like', $request->taskname . '%')->get();
-
-//        Task::select()->where('contractor_id', '=', 1)->where('name', 'like', 'pool%')->get();
-
-        if (Quickbook::checkIfContractorUsesQuickbooks()) {
-            $qbtasks = QuickbooksItem::select()->
-                where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
-                where('name', 'like', $request->taskname . '%')->get();
-
-            foreach ($qbtasks as $task){
-                $tasks->push($task);
-            }
-
-        }
-
+        
         return $tasks;
     }
 

@@ -14,6 +14,7 @@ use App\QuickbooksContractor;
 use App\QuickbooksCustomer;
 use App\QuickBookCSRFToken;
 use App\User;
+use App\Task;
 use App\Location;
 
 
@@ -691,9 +692,9 @@ class Quickbook extends Model
         }
     }
 
-    public function checkIfItemExistsInQuickbooksTable($item, $contractorId)
+    public function checkIfItemExistsInTaskTable($item, $contractorId)
     {
-        $item = QuickbooksItem::where('item_id', '=', $item->Id)
+        $item = Task::where('item_id', '=', $item->Id)
             ->where('contractor_id', '=', $contractorId)
             ->get()->first();
 
@@ -845,24 +846,55 @@ class Quickbook extends Model
 
         if (!empty($allItems)) {
             foreach ($allItems as $item) {
-                if (!$this->checkIfItemExistsInQuickbooksTable($item, $contractorId)) {
-                    $this->addItemToQuickbooksTable($item, $contractorId);
+                if (!$this->checkIfItemExistsInTaskTable($item, $contractorId)) {
+                    $this->addItemTaskTable($item, $contractorId);
                 }
             }
         }
 
     }
 
-    public function addItemToQuickbooksTable($item, $contractorId)
+    public function returnNonNullAttributeAsInteger($digits)
     {
-        $qbitem = new QuickbooksItem();
+        $number = "";
+
+        for ($i = 0; $i < strlen($digits); $i++) {
+            if (
+                $digits[$i] == '-' ||
+                $digits[$i] == '0' ||
+                $digits[$i] == '1' ||
+                $digits[$i] == '2' ||
+                $digits[$i] == '3' ||
+                $digits[$i] == '4' ||
+                $digits[$i] == '5' ||
+                $digits[$i] == '6' ||
+                $digits[$i] == '7' ||
+                $digits[$i] == '8' ||
+                $digits[$i] == '9'
+            ) {
+                $number = $number . $digits[$i];
+            }
+        }
+
+        if($number == '0'){
+            return 0;
+        }
+
+        return (int)$number;
+    }
+
+    public function addItemTaskTable($item, $contractorId)
+    {
+        $qbitem = new Task();
         $qbitem->name = $this->returnNonNullAttribute($item->Name);
         $qbitem->description = $this->returnNonNullAttribute($item->Description);
         $qbitem->fully_qualified_name = $this->returnNonNullAttribute($item->FullyQualifiedName);
+        $qbitem->proposed_cust_price = $this->returnNonNullAttributeAsInteger($item->UnitPrice);
         $qbitem->unit_price = $this->returnNonNullAttribute($item->UnitPrice);
         $qbitem->type = $this->returnNonNullAttribute($item->Type);
         $qbitem->payment_method_ref = $this->returnNonNullAttribute($item->PaymentMethodRef);
-        $qbitem->avg_cost = $this->returnNonNullAttribute($item->AvgCost);
+        $qbitem->avg_cost = $this->returnNonNullAttributeAsInteger($item->AvgCost);
+        $qbitem->average_cust_price = $this->returnNonNullAttributeAsInteger($item->AvgCost);
         $qbitem->item_id = $item->Id;
         $qbitem->contractor_id = $contractorId;
 
