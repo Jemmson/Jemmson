@@ -737,7 +737,7 @@ class TaskController extends Controller
         $tasks = Task::select()->
         where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
         where('name', 'like', $request->taskname . '%')->get();
-        
+
         return $tasks;
     }
 
