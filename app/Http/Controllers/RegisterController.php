@@ -111,8 +111,6 @@ class RegisterController extends Controller
 
         if ($request->softwareType != '') {
             $contractor->accounting_software = $request->softwareType;
-            $qb = new Quickbook();
-            $qb->saveAccessToken($user->id);
         }
 
         try {
@@ -123,6 +121,13 @@ class RegisterController extends Controller
 
         // log the contractor in and then send him to the right location
         Auth::loginUsingId($user->id);
+
+        if ($request->softwareType == 'quickBooks') {
+            $qb = new Quickbook();
+            $qb->saveAccessToken($user->id);
+            $qb->syncCustomerInformationFromQB($user->id);
+        }
+
         if (empty(session('prevDestination'))) {
             return response()->json('/home', 200);
         } else {

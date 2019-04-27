@@ -182,7 +182,7 @@
 //        $user->save();
 //        $this->actingAs($user);
 //
-//        $job_id = $ib->createBid($customer->id, $job['name']);
+//        $job_id = $ib->createEstimate($customer->id, $job['name']);
 //
 //        $this->assertDatabaseHas('jobs', [
 //            'job_name' => $job['name'],

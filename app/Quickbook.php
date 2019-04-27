@@ -21,6 +21,7 @@ use QuickBooksOnline\API\Core\ServiceContext;
 use QuickBooksOnline\API\PlatformService\PlatformService;
 use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
 use QuickBooksOnline\API\Facades\Customer;
+use QuickBooksOnline\API\Facades\Estimate;
 
 class Quickbook extends Model
 {
@@ -339,22 +340,8 @@ class Quickbook extends Model
 
     }
 
-    public function addCustomer(\App\User $customer)
+    public static function addNewCustomerToQuickBooks(\App\User $customer)
     {
-//        if (!$this->checkIfCustomerExists($customer)){
-//            $dataService = DataService::Configure($this->getCredentials());
-//            $accessToken = session('sessionAccessToken');
-//            $accessToken = unserialize(base64_decode($accessToken));
-//            $dataService->updateOAuth2Token($accessToken);
-//            $companyInfo = $dataService->FindAll('customer');
-//
-//        }
-
-//        $dataService = DataService::Configure($this->getCredentials());
-//        $accessToken = $this->checkOrUpdateAccessToken();
-//        $dataService->updateOAuth2Token($accessToken);
-//        $cust = $this->createQBCustomerObject($customer);
-//        return $dataService->Add($cust);
 
         $accessToken = session('sessionAccessToken');
         $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
@@ -368,8 +355,6 @@ class Quickbook extends Model
             'QBORealmID' => $qbUser->company_id,
             'baseUrl' => "development"
         ));
-//        $dataService->setLogLocation("/Users/hlu2/Desktop/newFolderForLog");
-// Add a customer
         $customerObj = Customer::create([
 //            "BillAddr" => [
 //                "Line1"=>  "123 Main Street",
@@ -404,6 +389,7 @@ class Quickbook extends Model
             var_dump($resultingCustomerObj);
         }
 
+        return $resultingCustomerObj->Id;
     }
 
 
@@ -479,8 +465,12 @@ class Quickbook extends Model
 
     public function isContractorThatUsesQuickbooks()
     {
-        return Auth::user()->usertype === 'contractor' &&
-            Auth::user()->contractor->accounting_software == 'quickBooks';
+        if (Auth::user()->contractor != null) {
+            return Auth::user()->usertype === 'contractor' &&
+                Auth::user()->contractor->accounting_software == 'quickBooks';
+        }
+
+        return false;
     }
 
     public function contractorSubscriptionIsStillActive()
@@ -489,20 +479,88 @@ class Quickbook extends Model
         return true;
     }
 
-    public function syncCustomerInformationFromQB()
+    public function updateCustomerInQB($jem_customer_id, $quickbooksId)
+    {
+        $customer = User::find($jem_customer_id);
+
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $entities = $dataService->Query("SELECT * FROM Customer where Id='" . $quickbooksId . "'");
+        $theCustomer = reset($entities);
+
+        $location = Location::where('user_id', '=', $customer->id)->where('default', '=', 1)->get()->first();
+
+        $theResourceObj = Customer::update($theCustomer, [
+            'sparse' => 'true',
+            "BillAddr" => [
+                "Line1" => $location->address_line_1,
+                "City" => $location->city,
+                "CountrySubDivisionCode" => $location->state,
+                "PostalCode" => $location->zip
+            ],
+            "FullyQualifiedName" => $customer->name,
+            "DisplayName" => $customer->name,
+            "PrimaryPhone" => [
+                "FreeFormNumber" => $customer->phone
+            ],
+            "PrimaryEmailAddr" => [
+                "Address" => $customer->email
+            ]
+        ]);
+
+        $resultingObj = $dataService->Update($theResourceObj);
+        return $resultingObj;
+    }
+
+    public function syncCustomerInformationFromQB($contractorId)
     {
         $allQBCustomers = $this->pullAllQBCustomersFromAccount();
 
         foreach ($allQBCustomers as $customer) {
             if (
-                !$this->checkIfCustomerInQuickbooksCustomerTable($customer) &&
-                !$this->checkIfCustomerInQuickbooksContractorTable($customer)
+                !$this->checkIfCustomerInQuickbooksCustomerTable($customer, $contractorId) &&
+                !$this->checkIfCustomerInQuickbooksContractorTable($customer, $contractorId)
             ) {
                 if (empty($customer->CompanyName)) {
                     $this->addCustomerToCustomerTable($customer);
                 } else {
                     $this->addCustomerToContractorTable($customer);
                 }
+            }
+
+            if (empty($customer->CompanyName)) {
+                $quickbooksId = $customer->Id;
+                $jem_customer = CustomerNeedsUpdating::hasCustomerBeenMarkedForUpdating($contractorId, $quickbooksId);
+                if (!empty($jem_customer) && $jem_customer->needs_updating) {
+                    $this->updateCustomerInQB($jem_customer->customer_id, $quickbooksId);
+
+                    $cnu = CustomerNeedsUpdating::where('customer_id', '=', $jem_customer->customer_id)
+                        ->where('contractor_id', '=', $contractorId)
+                        ->where('quickbooks_id', '=', $quickbooksId)->get()->first();
+                    $cnu->needs_updating = false;
+                    try {
+                        $cnu->save();
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => $e->getMessage(),
+                            'code' => $e->getCode()
+                        ], 200);
+                    }
+
+                }
+                $this->addCustomerToCustomerTable($customer);
+            } else {
+                $this->addCustomerToContractorTable($customer);
             }
         }
 
@@ -525,7 +583,7 @@ class Quickbook extends Model
 
     public function digitIsANumber($digit)
     {
-        if(
+        if (
             $digit == '0' ||
             $digit == '1' ||
             $digit == '2' ||
@@ -536,7 +594,7 @@ class Quickbook extends Model
             $digit == '7' ||
             $digit == '8' ||
             $digit == '9'
-        ){
+        ) {
             return true;
         } else {
             return false;
@@ -548,7 +606,7 @@ class Quickbook extends Model
 //        should only be digits
         $digitsOnly = '';
         for ($i = 0; $i < strlen($phone); $i++) {
-            if($this->digitIsANumber($phone[$i])){
+            if ($this->digitIsANumber($phone[$i])) {
                 $digitsOnly = $digitsOnly . $phone[$i];
             }
         }
@@ -569,7 +627,12 @@ class Quickbook extends Model
         if (!is_null($customer->PrimaryPhone)) {
             $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
         }
-        $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
+
+        if (!is_null($customer->PrimaryEmailAddr)) {
+            $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr->Address);
+        }
+
+
         try {
             $cust->save();
         } catch (\Exception $e) {
@@ -594,8 +657,10 @@ class Quickbook extends Model
         if (!is_null($customer->PrimaryPhone)) {
             $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
         }
-        $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr);
 
+        if (!is_null($customer->PrimaryEmailAddr)) {
+            $cust->primary_email_addr = $this->returnNonNullAttribute($customer->PrimaryEmailAddr->Address);
+        }
         try {
             $cust->save();
         } catch (\Exception $e) {
@@ -607,10 +672,12 @@ class Quickbook extends Model
     }
 
 
-    public function checkIfCustomerInQuickbooksCustomerTable($customer)
+    public function checkIfCustomerInQuickbooksCustomerTable($customer, $contractorId)
     {
-        $cust = QuickbooksCustomer::select()->where('customer_id', '=', $customer->Id)
+        $cust = QuickbooksCustomer::where('customer_id', '=', $customer->Id)
+            ->where('contractor_id', '=', $contractorId)
             ->get()->first();
+
         if (empty($cust)) {
             return false;
         } else {
@@ -618,9 +685,10 @@ class Quickbook extends Model
         }
     }
 
-    public function checkIfCustomerInQuickbooksContractorTable($customer)
+    public function checkIfCustomerInQuickbooksContractorTable($customer, $contractorId)
     {
         $cust = QuickbooksContractor::select()->where('sub_contractor_id', '=', $customer->Id)
+            ->where('contractor_id', '=', $contractorId)
             ->get()->first();
         if (empty($cust)) {
             return false;
@@ -644,11 +712,6 @@ class Quickbook extends Model
                 }
             }
         }
-    }
-
-    public function updateCustomer($jemmsonCustomer, $qbCustomer)
-    {
-
     }
 
     public function getAllCustomerLocationInfo($customers)
@@ -714,4 +777,96 @@ class Quickbook extends Model
         );
         return $entities;
     }
+
+    public function getLatestCustomerDataFromQB($qbId, $contractorId)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', $contractorId)->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $entities = $dataService->Query("SELECT * FROM Customer WHERE Id = '" . $qbId . "'");
+
+        return $entities;
+    }
+
+    public function createEstimate($job_name, $quickbooksId, $job)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $theResourceObj = Estimate::create([
+            "Line" => [
+                [
+                    "Description" => "Pest Control Services",
+                    "Amount" => 35.0,
+                    "DetailType" => "SalesItemLineDetail",
+                    "SalesItemLineDetail" => [
+                        "ItemRef" => [
+                            "value" => "10",
+                            "name" => "Pest Control"
+                        ],
+                        "UnitPrice" => 35,
+                        "Qty" => 1,
+                        "TaxCodeRef" => [
+                            "value" => "NON"
+                        ]
+                    ]
+                ],
+                [
+                    "Amount" => 35.0,
+                    "DetailType" => "SubTotalLineDetail",
+                    "SubTotalLineDetail" => []
+                ],
+                [
+                    "Amount" => 3.5,
+                    "DetailType" => "DiscountLineDetail",
+                    "DiscountLineDetail" => [
+                        "PercentBased" => true,
+                        "DiscountPercent" => 10,
+                        "DiscountAccountRef" => [
+                            "value" => "86",
+                            "name" => "Discounts given"
+                        ]
+                    ]
+                ]
+            ],
+            "TxnTaxDetail" => [
+                "TotalTax" => 0
+            ],
+            "CustomerRef" => [
+                "value" => $quickbooksId,
+                "name" => "Cool Cars"
+            ],
+            "TotalAmt" => 31.5,
+            "ApplyTaxAfterDiscount" => false,
+            "PrintStatus" => "NeedToPrint",
+            "EmailStatus" => "NotSet",
+            "BillEmail" => [
+                "Address" => "Cool_Cars@intuit.com"
+            ]
+        ]);
+
+        $resultingObj = $dataService->Add($theResourceObj);
+        return $resultingObj;
+
+//        ‌‌$dataService->Query('select count(*) from Estimate');
+    }
+
 }

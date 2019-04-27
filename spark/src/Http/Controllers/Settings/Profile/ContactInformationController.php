@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Spark\Http\Controllers\Controller;
 use Laravel\Spark\Contracts\Interactions\Settings\Profile\UpdateContactInformation;
 use Illuminate\Support\Facades\Auth;
+use App\CustomerNeedsUpdating;
 
 class ContactInformationController extends Controller
 {
@@ -46,6 +47,9 @@ class ContactInformationController extends Controller
         $location->zip = $request->zip;
 
         $location->save();
+
+        $cnu = new CustomerNeedsUpdating();
+        $cnu->customerHasUpdatedSettings(Auth::user()->getAuthIdentifier());
 
     }
 }

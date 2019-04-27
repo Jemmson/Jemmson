@@ -189,8 +189,7 @@ router.beforeEach((to, from, next) => {
 
       let customer = Spark.state.user.customer
       let contractor = Spark.state.user.contractor
-      if ((customer !== null && customer.location_id !== null) ||
-        (contractor !== null && contractor.location_id !== null)) {
+      if (Spark.state.user.password_updated) {
         console.log('wtf')
         next('/home')
       }
@@ -217,8 +216,7 @@ router.beforeEach((to, from, next) => {
       }
 
 
-      if ((customer !== null && customer.location_id === null) ||
-        (contractor !== null && contractor.location_id === null)) {
+      if (Spark.state.user.password_updated == false) {
         console.log('to further info')
         next('/furtherInfo')
       } else {

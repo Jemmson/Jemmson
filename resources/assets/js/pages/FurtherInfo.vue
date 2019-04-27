@@ -424,6 +424,13 @@
       this.form.phone_number = this.user.phone != null ? this.user.phone : ''
       this.form.email = this.user.email != null ? this.user.email : ''
       this.form.name = this.user.name != null ? this.user.name : ''
+      if(this.user.customer.location){
+        this.form.address_line_1 = this.user.customer.location.address_line_1 != null ? this.user.customer.location.address_line_1 : ''
+        this.form.address_line_2 = this.user.customer.location.address_line_2 != null ? this.user.customer.location.address_line_2 : ''
+        this.form.city = this.user.customer.location.city != null ? this.user.customer.location.city : ''
+        this.form.state = this.user.customer.location.state != null ? this.user.customer.location.state : ''
+        this.form.zip = this.user.customer.location.zip != null ? this.user.customer.location.zip : ''
+      }
 
       this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : ''
 

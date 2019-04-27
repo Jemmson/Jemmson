@@ -68,7 +68,7 @@ class JobTest extends TestCase
             'phone_method_of_contact' => 1
         ]);
 
-        $j->createBid($customer->id, $jobName, $contractor->id);
+        $j->createEstimate($customer->id, $jobName, $contractor->id);
 
         $this->assertDatabaseHas('jobs',[
             'customer_id' => $customer->id,

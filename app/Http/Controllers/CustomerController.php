@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractorCustomer;
 use App\Customer;
+use App\QuickbooksCustomer;
 use App\User;
 use App\Location;
-
+use Illuminate\Support\Facades\Auth;
 use App\Services\UpdateRecordsService;
 
 use Illuminate\Foundation\Bootstrap\LoadConfiguration;
@@ -28,6 +30,8 @@ class CustomerController extends Controller
 
     public function updateCustomerNotes(Request $request)
     {
+//        TODO:: this has to change so that these notes are contractor to customer notes. they are contractor_customer_general. they are customer_contractor_job_specific
+
         $customer = Customer::where('user_id', '=', $request->customer_id)->get()->first();
         $customer->notes = $request->customerNotesMessage;
 
@@ -114,11 +118,11 @@ class CustomerController extends Controller
         $user->password = $password_updated == null ? bcrypt($request->password) : $user->password;
         $user->password_updated = 1;
 
-        $result = DB::transaction(function () use ($location, $user, $customer) {
-            $customer->updateLocation($request);
-            $user->save();
-            $customer->save();
-        });
+//        $result = DB::transaction(function () use ($location, $user, $customer) {
+//            $customer->updateLocation($request);
+//            $user->save();
+//            $customer->save();
+//        });
 
         // try {
         // } catch (\Exception $e) {
@@ -162,5 +166,46 @@ class CustomerController extends Controller
     {
         $customer = User::select()->where("id", "=", $request->id)->get()->first();
         return $customer;
+    }
+
+    public function getCustomerAssociatedToContractor(Request $request)
+    {
+        // TODO: needs to search users table, customer table, contractorcustomer table, and quickbooks_customer table
+        $query = $request->query('query');
+
+        $users = User::getCustomersInUserTableByName($query);
+
+        if (empty($users[0])) {
+            return QuickbooksCustomer::getAssociatedCustomers($query, Auth::user()->getAuthIdentifier());
+        } else {
+            $associatedUsers = ContractorCustomer::getAssociatedCustomers($users, Auth::user()->getAuthIdentifier());
+
+            $users = [];
+            foreach ($associatedUsers as $user){
+                $u = User::find($user['user_id'])->toArray();
+                $u['quickbooks_id'] = $user['quickbooks_id'];
+                array_push($users, $u);
+//                array_push($ids, [$user->customer_user_id]);
+            }
+
+//            $associatedUserIds
+
+            return $users;
+        }
+
+//        $cont_id = 1;
+//
+//        $customers = $users->filter(function ($user) use ($cont_id) {
+//            if ($user != null) {
+//                if (ContractorCustomer::isCustomerAssociatedWithContractor(
+//                    $cont_id,
+//                    $user->customer->id
+//                )) {
+//                    return $user;
+//                }
+//            }
+//        });
+//
+//        return $customers;
     }
 }

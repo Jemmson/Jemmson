@@ -11,7 +11,6 @@ use App\JobTask;
 use App\PasswordlessToken;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-
 use Auth;
 
 
@@ -23,6 +22,7 @@ class PasswordlessController {
         $token = PasswordlessToken::where('token', $token)->first();
         // invalid token
         if (!$token) {
+            Log::warning('invalid token');
             return redirect('home')->withErrors(__('passwordless.invalid_token'));
         }
 
@@ -30,6 +30,7 @@ class PasswordlessController {
         $user = User::find($token->user_id);
         // user not found or login user if they where found
         if (!$user) {
+            Log::warning('user not found with given token');
             return redirect('home')->withErrors(__('passwordless.no_user'));
         } else {
             if ($user->isValidToken($token->token)) {

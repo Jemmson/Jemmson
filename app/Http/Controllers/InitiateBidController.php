@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ContractorCustomer;
 use App\JobStatus;
 use App\Quickbook;
+use App\CustomerNeedsUpdating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
@@ -12,7 +13,6 @@ use App\Job;
 use App\Customer;
 use App\Notifications\BidInitiated;
 use App\Services\SanatizeService;
-
 
 class InitiateBidController extends Controller
 {
@@ -59,46 +59,61 @@ class InitiateBidController extends Controller
         $phone = SanatizeService::phone($request->phone);
         $customer = User::checkIfUserExistsByPhoneNumber($phone);
         if (empty($customer)) {
-
             // quickbooks feature must be turned on
             // contractor must have a quickbooks account
             if (config('app.quickBooks')) {
                 $accountingSoftware = $contractor->checkAccountingSoftware();
                 if ($accountingSoftware != null) {
-                    if (!empty($request->qbId)) {
-                        $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer, $phone, $request->qbId);
+                    // customer exists in QB but not in Jemmson
+                    if (!empty($request->quickbooks_id)) {
+                        $customer = $contractor->firstOrCreateAccountingSoftwareCustomer(
+                            $accountingSoftware,
+                            Auth::user()->getAuthIdentifier(),
+                            $customerName, $phone, $request->quickbooks_id
+                        );
                     } else {
-                        $contractor->firstOrCreateAccountingSoftwareCustomer($accountingSoftware, $customer, $phone);
+                        // customer is new but is added in Jemmson and not from Quickbooks
+                        $customer = Customer::createNewCustomer($phone, $customerName, Auth::user()->getAuthIdentifier());
+                        $quickbookId = Quickbook::addNewCustomerToQuickBooks($customer);
+                        ContractorCustomer::addQuickBookIdToAssociation(Auth::user()->getAuthIdentifier(), $customer->id, $quickbookId);
+                        CustomerNeedsUpdating::addEntryToCustomerNeedsUpdatingIfNeeded(
+                            Auth::user()->getAuthIdentifier(),
+                            $customer->id,
+                            $quickbookId
+                        );
                     }
                 }
             } else {
-                $customer = Customer::createNewCustomer($phone, $customerName);
+                $customer = Customer::createNewCustomer($phone, $customerName, Auth::user()->getAuthIdentifier());
             }
 
         }
 
 
-        // associate the customer with the contractor
-        $cc = new ContractorCustomer();
-        if ($cc->checkIfCustomerCurrentlyExistsForContractor($contractor->id, $customer->customer()->get()->first()->id)) {
-            $cc->associateCustomer($contractor->id, $customer->customer()->get()->first()->id);
-        }
+
+
+
+
 
         // create the job
         $job = new Job();
         $jobName = $job->jobName($request->jobName);
 //        $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
-        if (!$job->createBid($customer->id, $jobName, Auth::user()->id)) {
+        if (!$job->createEstimate($customer->id, $jobName, Auth::user()->id)) {
             return response()->json(
                 [
                     'message' => 'Unable to create new job.',
-                    'errors' => ['job_creation_failed' => 'Job could not be created. Please try initiating the bid again']
+                    'errors' => ['job_creation_failed' => 'Estimate could not be created. Please try initiating the bid again']
                 ], 422);
         }
         $js = new JobStatus();
         $js->setStatus($job->id, config("app.initiated"));
 
-//        $contractor->subtractFreeJob();
+
+
+
+
+
 
 
         //notify the customer the job was created
@@ -109,4 +124,6 @@ class InitiateBidController extends Controller
         return "Bid was created";
 
     }
+
+
 }

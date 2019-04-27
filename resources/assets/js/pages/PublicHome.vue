@@ -99,27 +99,31 @@
 
 <script>
   import { mapActions } from 'vuex'
+
   export default {
     computed: {
-        csrf () {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      csrf() {
+        if (document.querySelector('meta[name="csrf-token"]')) {
+          return document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
         }
+      }
     },
-    data () {
-        return {
-            currentWindow: window.location.origin,
-            form: {
-                username: '',
-                password: '',
-                remember: null,
-                error: null,
-                busy: false,
-            }
+    data() {
+      return {
+        currentWindow: window.location.origin,
+        form: {
+          username: '',
+          password: '',
+          remember: null,
+          error: null,
+          busy: false,
         }
+      }
     },
     methods: {
       ...mapActions([
-          'login'
+        'login'
       ]),
       route(value) {
         if (value === 'login') {
@@ -153,7 +157,7 @@
         /*color: #fff !important;*/
         letter-spacing: -1.55px;
         line-height: 1.18;
-        font-family: Montserrat,Helvetica,Arial,sans-serif;
+        font-family: Montserrat, Helvetica, Arial, sans-serif;
         /*font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;*/
         font-style: normal;
         font-variant-ligatures: normal;
@@ -188,7 +192,7 @@
         font-size: 12.96pt;
         color: black !important;
         /*color: #fff !important;*/
-        font-family: Montserrat,Helvetica,Arial,sans-serif;
+        font-family: Montserrat, Helvetica, Arial, sans-serif;
         /*font-family: Sailec-Bold, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;*/
         margin-bottom: 1rem;
         padding-top: 1rem;

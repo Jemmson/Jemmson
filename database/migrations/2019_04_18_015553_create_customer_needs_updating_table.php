@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class createBidContractorJobTaskTable extends Migration
+class CreateCustomerNeedsUpdatingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class createBidContractorJobTaskTable extends Migration
      */
     public function up()
     {
-        Schema::create('bid_contractor_job_task', function (Blueprint $table) {
+        Schema::create('customer_needs_updating', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('contractor_id')->unsigned();
-            $table->integer('job_task_id')->unsigned();
-            $table->float('bid_price')->nullable()->default(0.00);
+            $table->bigInteger('contractor_id');
+            $table->bigInteger('customer_id');
+            $table->bigInteger('quickbooks_id');
+            $table->boolean('needs_updating')->default(false);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class createBidContractorJobTaskTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bid_contractor_job_task');
+        Schema::dropIfExists('customer_needs_updating');
     }
 }

@@ -10,43 +10,52 @@
             <div class="form-group">
                 <label for="customerName">Customer Name *</label>
 
-                <input name="customer" 
-                       id="customerName" 
+                <input name="customer"
+                       id="customerName"
                        dusk="customerName"
                        data-dependency="phone"
-                       type="text" 
+                       type="text"
                        v-model="form.customerName"
                        v-on:keyup="autoComplete"
                        class="form-control" required>
                 <div class="flex flex-col" v-if="results.length">
                     <button class="flex-1 m-2 btn-format" v-for="result in results" v-bind:key="result.id"
                             :name="result.phone" @click.prevent="fillFields(result)">
-                        {{ result.name }}
+                        {{ showCustomerName(result) }}
                     </button>
                 </div>
             </div>
 
             <!-- Phone Number -->
             <div class="form-group" :class="{'has-error': form.errors.has('phone')}">
-                <div class="flex justify-between"> 
-                  <label for="phone">Mobile Phone *</label>
-                  <div v-show="phoneFormatError" class="formatErrorLabel">The phone number must be 10 numbers</div>
+                <div class="flex justify-between">
+                    <label for="phone">Mobile Phone *</label>
+                    <div v-show="phoneFormatError" class="formatErrorLabel">The phone number must be 10 numbers</div>
                 </div>
-                <input class="form-control" 
-                       :class="{'formatError': phoneFormatError}" 
-                       id="phone" @keyup="filterPhone" 
-                       maxlength="10" 
+                <input class="form-control"
+                       :class="{'formatError': phoneFormatError}"
+                       id="phone" @keyup="filterPhone"
+                       maxlength="10"
                        data-dependency="jobName"
-                       name="phone" 
+                       name="phone"
                        dusk="phone"
                        type="tel" @blur="validateMobileNumber($event.target.value)"
                        v-model="form.phone">
-                <div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()" style="color: green">
-                    {{ networkType.originalCarrier }}
+
+                <div v-if="getMobileValidResponse.length > 0">
+                    <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
+                        <div style="color: green">{{ getMobileValidResponse[1] }}</div>
+                    </div>
+                    <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                 </div>
-                <div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{ networkType.originalCarrier
-                    }}
-                </div>
+                <!--<div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()"-->
+                <!--style="color: green">-->
+                <!--{{ networkType.originalCarrier }}-->
+                <!--</div>-->
+                <!--<div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{-->
+                <!--networkType.originalCarrier-->
+                <!--}}-->
+                <!--</div>-->
                 <span class="help-block" v-show="form.errors.has('phone')">
                   {{ form.errors.get('phone') }}
                 </span>
@@ -77,160 +86,192 @@
 </template>
 
 <script>
-import Card from "../components/shared/Card";
-import Feedback from '../components/shared/Feedback';
-import { mapGetters, mapMutations, mapActions } from "vuex";
+  import Card from '../components/shared/Card'
+  import Feedback from '../components/shared/Feedback'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
 
-export default {
-  components: {
-    Card,
-    Feedback
-  },
-  data() {
-    return {
-      query: "",
-      phoneFormatError: false,
-      validMobileNumber: "",
-      results: [],
-      form: new SparkForm({
-        phone: "",
-        customerName: "",
-        jobName: ""
-      }),
-      networkType: {
-        success: "",
-        originalCarrier: "",
-        currentCarrier: "",
-        exists: ""
+  export default {
+    components: {
+      Card,
+      Feedback
+    },
+    data() {
+      return {
+        query: '',
+        phoneFormatError: false,
+        validMobileNumber: '',
+        results: [],
+        form: new SparkForm({
+          email: '',
+          quickbooks_id: '',
+          phone: '',
+          customerName: '',
+          jobName: ''
+        }),
+        networkType: {
+          success: '',
+          originalCarrier: '',
+          currentCarrier: '',
+          exists: ''
+        },
+        disabled: {
+          submit: false,
+          validData: true
+        },
+        numberType: ''
+      }
+    },
+    computed: {
+      ...mapGetters(['getMobileValidResponse'])
+    },
+    methods: {
+      ...mapMutations(['setMobileResponse']),
+      ...mapActions(['checkMobileNumber']),
+      submit() {
+        console.log('submit')
+        GeneralContractor.initiateBid(this.form, this.disabled)
       },
-      disabled: {
-        submit: false,
-        validData: true
-      },
-      numberType: ""
-    };
-  },
-  computed: {
-    ...mapGetters(["getMobileValidResponse"])
-  },
-  methods: {
-    ...mapMutations(["setMobileResponse"]),
-    ...mapActions(["checkMobileNumber"]),
-    submit() {
-      console.log("submit");
-      GeneralContractor.initiateBid(this.form, this.disabled);
-    },
-    unformatNumber(number) {
-      let unformattedNumber = "";
-      for (let i = 0; i < number.length; i++) {
-        if (!isNaN(parseInt(number[i]))) {
-          unformattedNumber = unformattedNumber + number[i];
-        }
-      }
-      let numberLength = unformattedNumber.length;
-      if (numberLength < 10) {
-        if (this.getMobileValidResponse[1] !== "") {
-          this.$store.commit("setTheMobileResponse", ["", "", ""]);
-        }
-      }
-      // debugger;
-      return numberLength;
-    },
-    checkValidData() {
-      // debugger
-      let phoneLength = this.unformatNumber(this.form.phone);
-      if (
-        (this.getMobileValidResponse[1] === "mobile" ||
-          this.getMobileValidResponse[2] === "mobile") &&
-        this.form.customerName !== "" &&
-        phoneLength === 10
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-    validateMobileNumber(phone) {
-      this.phoneFormatError = false;
-      if (this.unformatNumber(this.form.phone) === 10) {
-        this.checkMobileNumber(phone);
-      } else {
-        this.phoneFormatError = true;
-      }
-    },
-    validResponse() {
-      this.networkType.success = this.getMobileValidResponse[0];
-      this.networkType.originalCarrier = this.getMobileValidResponse[1];
-      this.networkType.currentCarrier = this.getMobileValidResponse[2];
-      this.networkType.exists = this.getMobileValidResponse[3];
-    },
-    checkThatNumberIsMobile() {
-      // debugger;
-      if (
-        this.getMobileValidResponse[1] === "mobile" ||
-        this.getMobileValidResponse[2] === "mobile"
-      ) {
-        this.validResponse();
-        return true;
-      } else {
-        return false;
-      }
-    },
-    checkLandLineNumber() {
-      if (
-        this.getMobileValidResponse[1] === "landline" ||
-        this.getMobileValidResponse[2] === "landline"
-      ) {
-        this.validResponse();
-        return true;
-      } else {
-        return false;
-      }
-    },
-    filterPhone() {
-      this.form.phone = Format.phone(this.form.phone);
-    },
-    autoComplete() {
-      this.results = [];
-      if (this.form.customerName.length > 2) {
-        axios
-          .get("/api/customer/search", {
-            params: {
-              query: this.form.customerName
+      unformatNumber(number) {
+        let unformattedNumber = ''
+        if(number){
+          for (let i = 0; i < number.length; i++) {
+            if (!isNaN(parseInt(number[i]))) {
+              unformattedNumber = unformattedNumber + number[i]
             }
-          })
-          .then(response => {
-            console.log(response.data);
-            this.results = response.data;
-          });
+          }
+          let numberLength = unformattedNumber.length
+          if (numberLength < 10) {
+            if (this.getMobileValidResponse[1] !== '') {
+              this.$store.commit('setTheMobileResponse', ['', '', ''])
+            }
+          }
+          // debugger;
+          return numberLength
+        }
+      },
+      checkValidData() {
+        // debugger
+        let phoneLength = this.unformatNumber(this.form.phone)
+        if (
+          (this.getMobileValidResponse[1] === 'mobile' ||
+            this.getMobileValidResponse[2] === 'mobile') &&
+          this.form.customerName !== '' &&
+          phoneLength === 10
+        ) {
+          return false
+        } else {
+          return true
+        }
+      },
+      validateMobileNumber(phone) {
+        this.phoneFormatError = false
+        if (this.unformatNumber(this.form.phone) === 10) {
+          this.checkMobileNumber(phone)
+        } else {
+          this.phoneFormatError = true
+        }
+      },
+      validResponse() {
+        this.networkType.success = this.getMobileValidResponse[0]
+        this.networkType.originalCarrier = this.getMobileValidResponse[1]
+        this.networkType.currentCarrier = this.getMobileValidResponse[2]
+        this.networkType.exists = this.getMobileValidResponse[3]
+      },
+      checkThatNumberIsMobile() {
+        // debugger;
+        if (
+          this.getMobileValidResponse[1] === 'mobile' ||
+          this.getMobileValidResponse[2] === 'mobile'
+        ) {
+          this.validResponse()
+          return true
+        } else {
+          return false
+        }
+      },
+      checkLandLineNumber() {
+        if (
+          this.getMobileValidResponse[1] === 'landline' ||
+          this.getMobileValidResponse[2] === 'landline'
+        ) {
+          this.validResponse()
+          return true
+        } else {
+          return false
+        }
+      },
+      filterPhone() {
+        this.form.phone = Format.phone(this.form.phone)
+      },
+      autoComplete() {
+        this.results = []
+        if (this.form.customerName.length > 2) {
+          axios
+            .get('/customer/search', {
+              params: {
+                query: this.form.customerName
+              }
+            })
+            .then(response => {
+              console.log(response.data)
+              console.log(JSON.stringify(response.data));
+              this.results = response.data
+            })
+        }
+      },
+      showCustomerName(result) {
+        if (result.given_name !== undefined) {
+          return result.fully_qualified_name
+        } else {
+          return result.name
+        }
+      },
+      fillFields(result) {
+        if (result.given_name !== undefined) {
+          this.form.email = result.primary_email_addr
+          this.form.customerName = result.fully_qualified_name
+          this.form.quickbooks_id = result.quickbooks_id
+          if (result.primary_phone !== null) {
+            this.form.phone = result.primary_phone
+            this.checkMobileNumber(result.primary_phone)
+            this.validateMobileNumber(result.primary_phone)
+            this.filterPhone()
+          }
+        } else {
+          this.form.email = result.email
+          this.form.customerName = result.name
+          if (result.quickbooks_id) {
+            this.form.quickbooks_id = result.quickbooks_id
+          }
+          if (result.phone !== null) {
+            this.form.phone = result.phone
+            this.checkMobileNumber(result.phone)
+            this.validateMobileNumber(result.phone)
+            this.filterPhone()
+          }
+        }
+        this.results = []
       }
-    },
-    fillFields(result) {
-      this.form.email = result.email;
-      this.form.phone = result.phone;
-      this.form.customerName = result.name;
-      this.results = [];
-      this.validateMobileNumber(result.phone);
-    }
   },
   mounted() {
     this.$store.commit('setCurrentPage', this.$router.history.current.path);
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
-  .formatError {
-    border-color: red;
-    background-color: yellow;
-  }
-  .formatErrorLabel {
-    color: red;
-  }
+    .formatError {
+        border-color: red;
+        background-color: yellow;
+    }
 
-  .btn-format {
-      background-color: beige;
-      border-bottom: solid thin black;
-      padding: .5rem;
-  }
+    .formatErrorLabel {
+        color: red;
+    }
+
+    .btn-format {
+        background-color: beige;
+        border-bottom: solid thin black;
+        padding: .5rem;
+    }
 </style>

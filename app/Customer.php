@@ -81,6 +81,7 @@ class Customer extends Model
             $location->area = $request->city;
             $location->state = $request->state;
             $location->zip = $request->zip;
+            $location->default = true;
         }
 
         try {
@@ -105,7 +106,7 @@ class Customer extends Model
      *
      * @return $this|\Illuminate\Database\Eloquent\Model
      */
-    public static function createNewCustomer($phone, $customerName)
+    public static function createNewCustomer($phone, $customerName, $contractorId)
     {
 
         if (empty($phone) || $phone === '') {
@@ -142,6 +143,9 @@ class Customer extends Model
             );
         }
 
+        $cc = new ContractorCustomer();
+        $cc->associateCustomer($contractorId, $customer->id);
+
         return $customer;
 
     }
@@ -149,4 +153,7 @@ class Customer extends Model
     // TODO: understand where an intermidate table relates to two other tables
     // TODO: define relationship where table references itself
     // TODO: I need to be able to have a contractor reference many contractors
+
+
+
 }

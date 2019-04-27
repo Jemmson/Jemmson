@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomerNeedsUpdating;
 use Illuminate\Http\Request;
 use App\Contractor;
 use App\Customer;
@@ -93,6 +94,8 @@ class HomeController extends Controller
             Auth::user()->updatePassword(request('password'));
         }
 
+
+
         if (Auth::user()->usertype == 'contractor') {
 
 //             TODO: maybe the registration page does not open if the user is in the system
@@ -127,6 +130,7 @@ class HomeController extends Controller
 
         } else if (Auth::user()->usertype == 'customer') {
 
+
             // TODO: if email method of contact is selected then there must be an email address
             // TODO: if sms or phone is selected then a phone number must be present
 
@@ -134,6 +138,10 @@ class HomeController extends Controller
                 'user_id' => $user_id,
             ]);
 
+            // location updated or is new but this location can be added to the job because
+            // this is the first job that is created so default location will work
+            // once the contractor goes to the created job then they can update the
+            // job location if it is different
             $customer->updateLocation($request);
             $customer->update([
                 'notes' => request('notes'),
@@ -156,8 +164,10 @@ class HomeController extends Controller
             $user->last_name = $splitName[1];
         }
         $user->phone = $phone;
-
         $user->save();
+
+        $cnu = new CustomerNeedsUpdating();
+        $cnu->customerHasUpdatedSettings($user->id);
 
         if (empty(session('prevDestination'))) {
             Log::info("going to /#/home");
