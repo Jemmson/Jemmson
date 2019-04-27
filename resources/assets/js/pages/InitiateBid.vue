@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <icon-header icon="jobs" mainHeader="New Job" subHeader="Initiate a new job with a customer.">
+    <icon-header icon="jobs" mainHeader="Add New Job" subHeader="Initiate a new job with a customer.">
     </icon-header>
     <card>
       <div class="form-group">
