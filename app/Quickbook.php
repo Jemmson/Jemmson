@@ -372,7 +372,8 @@ class Quickbook extends Model
 //            "Suffix"=>  "Jr",
             "FullyQualifiedName" => $customer->name,
 //            "CompanyName"=>  "King Evial",
-            "DisplayName" => $customer->name,
+        // TODO: Display name must be unique. not sure how to do this.
+            "DisplayName" => $customer->name . "_" .  $customer->id,
             "PrimaryPhone" => [
                 "FreeFormNumber" => $customer->phone
             ],
@@ -852,49 +853,44 @@ class Quickbook extends Model
             }
         }
 
+//        $this->uploadTasksToQBThatAreNewAndHaveNotBeenAdded($contractorId);
     }
 
-    public function returnNonNullAttributeAsInteger($digits)
+//    public function uploadTasksToQBThatAreNewAndHaveNotBeenAdded($contractorId)
+//    {
+//        $AllItems = Task::where('contractor_id', '=', $contractorId)
+//            ->where('item_id', '=', 0)
+//            ->get();
+//
+//        Task::where('contractor_id', '=', $contractorId)->where('item_id', '=', null)->orWhere('item_id', '=', 'Null')->get();
+//    }
+
+    public function formatPriceToCents($price)
     {
-        $number = "";
-
-        for ($i = 0; $i < strlen($digits); $i++) {
-            if (
-                $digits[$i] == '-' ||
-                $digits[$i] == '0' ||
-                $digits[$i] == '1' ||
-                $digits[$i] == '2' ||
-                $digits[$i] == '3' ||
-                $digits[$i] == '4' ||
-                $digits[$i] == '5' ||
-                $digits[$i] == '6' ||
-                $digits[$i] == '7' ||
-                $digits[$i] == '8' ||
-                $digits[$i] == '9'
-            ) {
-                $number = $number . $digits[$i];
+        if (!is_null($price)) {
+            if(count(explode(".", $price)) > 1){
+                return (int) explode('.', ((float) $price * 100))[0];
+            } else {
+                return (int) $price * 100;
             }
-        }
-
-        if($number == '0'){
+        } else {
             return 0;
         }
-
-        return (int)$number;
     }
 
     public function addItemTaskTable($item, $contractorId)
     {
+
         $qbitem = new Task();
         $qbitem->name = $this->returnNonNullAttribute($item->Name);
         $qbitem->description = $this->returnNonNullAttribute($item->Description);
         $qbitem->fully_qualified_name = $this->returnNonNullAttribute($item->FullyQualifiedName);
-        $qbitem->proposed_cust_price = $this->returnNonNullAttributeAsInteger($item->UnitPrice);
-        $qbitem->unit_price = $this->returnNonNullAttribute($item->UnitPrice);
+        $qbitem->proposed_cust_price = $this->formatPriceToCents($item->UnitPrice);
+        $qbitem->unit_price = $this->formatPriceToCents($item->UnitPrice);
         $qbitem->type = $this->returnNonNullAttribute($item->Type);
         $qbitem->payment_method_ref = $this->returnNonNullAttribute($item->PaymentMethodRef);
-        $qbitem->avg_cost = $this->returnNonNullAttributeAsInteger($item->AvgCost);
-        $qbitem->average_cust_price = $this->returnNonNullAttributeAsInteger($item->AvgCost);
+        $qbitem->avg_cost = $this->formatPriceToCents($item->AvgCost);
+        $qbitem->average_cust_price = $this->formatPriceToCents($item->AvgCost);
         $qbitem->item_id = $item->Id;
         $qbitem->contractor_id = $contractorId;
 
