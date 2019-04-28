@@ -46,7 +46,6 @@
                             </div>
 
 
-
                             <!--Task Price-->
                             <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
@@ -72,7 +71,6 @@
                                 </span>
                             </div>
                         </div>
-
 
 
                         <div class="flex m-t-2">
@@ -230,25 +228,27 @@
                     <!--</button>-->
                     <!--</div>-->
                     <!--<label for="taskResultsChange"></label>-->
-                    <div id="taskResultsChange" class="flex justify-around" v-show="this.addNewTaskForm.taskName !== ''">
+                    <div id="taskResultsChange" class="flex justify-around"
+                         v-show="this.addNewTaskForm.taskName !== ''">
 
                         <!-- Name in task name is different than a task name in the database-->
-                        <button v-if="!nameExistsInDB && !taskExistsInJob"
+                        <!--<button v-if="!nameExistsInDB && !taskExistsInJob"-->
+                        <button
                                 class="btn btn-green" :disabled="checkErrors"
                                 @click.prevent="changeTask('Add')">
                             Add Task
                         </button>
 
                         <!--Name is the same as one in the database-->
-                        <button v-if="nameExistsInDB" class="btn btn-green"
-                                :disabled="checkErrors"
-                                @click.prevent="changeTask('Update')">Update and Add Task
-                        </button>
+                        <!--<button v-if="nameExistsInDB" class="btn btn-green"-->
+                        <!--:disabled="checkErrors"-->
+                        <!--@click.prevent="changeTask('Update')">Update and Add Task-->
+                        <!--</button>-->
 
-                        <button v-if="nameExistsInDB" class="btn btn-green"
-                                :disabled="checkErrors"
-                                @click.prevent="changeTask('Ignore')">Dont Update and Add Task
-                        </button>
+                        <!--<button v-if="nameExistsInDB" class="btn btn-green"-->
+                        <!--:disabled="checkErrors"-->
+                        <!--@click.prevent="changeTask('Ignore')">Dont Update and Add Task-->
+                        <!--</button>-->
 
 
                         <!--&lt;!&ndash; show if-->
@@ -280,23 +280,28 @@
     data() {
       return {
         addNewTaskForm: new SparkForm({
-          taskId: -1,  // if -1 then the task did not come from the drop down
-          taskExists: '',
-          createNew: false,
-          jobId: this.bid.id,
-          subTaskPrice: 0.0,
-          taskPrice: 0.0,
+          // one to one
+          taskId: 0,  // if -1 then the task did not come from the drop down
           taskName: '',
           contractorId: '',
-          area: this.bid.city,
-          start_date: '',
-          start_when_accepted: true,
-          // sub_sets_own_price_for_job: true,
-          useStripe: false,
+          taskPrice: 0,
+          item_id: '',
+
+          // not apart of the api
+          subTaskPrice: 0,
+          qtyUnit: '',
           sub_message: '',
           customer_message: '',
+          jobId: this.bid.id,
+          createNew: false,
+          area: this.bid.city,
+          start_date: '',
+          taskExists: '',
+          start_when_accepted: true,
+
+          // sub_sets_own_price_for_job: true,
+          useStripe: false,
           qty: 1,
-          qtyUnit: '',
           updateTask: false,
           qtyUnitErrorMessage: '',
           hasQtyUnitError: false,
@@ -307,10 +312,10 @@
         result: {
           resultReturned: false,
           taskName: '',
-          standardCustomerTaskPrice: 0.0,
+          standardCustomerTaskPrice: 0,
           // quantity: 1,
           quantityUnit: '',
-          standardSubTaskPrice: 0.0,
+          standardSubTaskPrice: 0,
           // start_date: '',
           customer_instructions: '',
           sub_instructions: ''
@@ -463,43 +468,45 @@
             !this.customerMessageChanged &&
             !this.subMessageChanged
           ) {
-            this.valueChanged = false;
+            this.valueChanged = false
           } else {
-            this.valueChanged = true;
+            this.valueChanged = true
           }
         }
       },
       checkIfNameExistsInDB(taskName) {
         // need to check if the task that is being typed is in the job already
         // if it is in the job then disable all inputs and show the error
-        this.taskExistsInJob = false;
+        this.taskExistsInJob = false
+        // debugger;
         for (let i = 0; i < this.bid.job_tasks.length; i++) {
           if (this.bid.job_tasks[i].task.name === taskName) {
-            this.taskExistsInJob = true;
+            this.taskExistsInJob = true
           }
         }
 
         // check if the name is in the database already so that I can show the
         // correct buttons on the footer of the modal window
-        this.nameExistsInDB = false;
+        this.nameExistsInDB = false
         // debugger;
         for (let i = 0; i < this.currentTasks.length; i++) {
           if (
             this.currentTasks[i].name === taskName ||
             this.currentTasks[i].name === this.addNewTaskForm.taskName
           ) {
-            this.nameExistsInDB = true;
+            this.nameExistsInDB = true
           }
         }
-        this.showTaskResults = true;
+        this.showTaskResults = true
 
       },
       getExistingTask(message) {
         this.taskResults = []
-        this.submitted = false;
+        this.submitted = false
 
-        this.checkIfNameExistsInDB(this.addNewTaskForm.taskName);
+        this.checkIfNameExistsInDB(this.addNewTaskForm.taskName)
 
+        // debugger;
         if (this.addNewTaskForm.taskName.length > 1) {
           axios.post('/search/task', {
             taskname: this.addNewTaskForm.taskName,
@@ -508,31 +515,10 @@
             // debugger;
             console.log(response.data)
             if (response.data.length > 0) {
-
-              console.log(JSON.stringify(this.bid.job_tasks));
-              
-              console.log(JSON.stringify(response.data));
-
-              let filteredResults = [];
-              let add = true;
-              for (let i = 0; i < response.data.length; i++) {
-                add = true
-                for (let j = 0; j < this.bid.job_tasks.length; j++) {
-                  if (response.data[i].id === this.bid.job_tasks[j].task_id) {
-                    add = false
-                  }
-                }
-                if (add) {
-                  filteredResults[filteredResults.length] = response.data[i]
-                }
-              }
-
-              this.currentTasks = filteredResults;
-              this.taskResults = filteredResults;
-
-              // this.taskResults = response.data;
+              let filteredResults = this.filterResultsSoOnlyTasksNotCurrentlyInJobAreInDropdown(response.data)
+              this.currentTasks = filteredResults
+              this.taskResults = filteredResults
               this.showTaskResults = true
-              // console.log(JSON.stringify(response.data));
             } else {
               // if there are no results returned then the task results array should be empty and
               // the name does not exist in the database
@@ -546,8 +532,24 @@
         }
 
       },
-      hideTaskResults () {
-        this.showTaskResults = false;
+      filterResultsSoOnlyTasksNotCurrentlyInJobAreInDropdown(results) {
+        let filteredResults = []
+        let add = true
+        for (let i = 0; i < results.length; i++) {
+          add = true
+          for (let j = 0; j < this.bid.job_tasks.length; j++) {
+            if (results[i].id === this.bid.job_tasks[j].task_id) {
+              add = false
+            }
+          }
+          if (add) {
+            filteredResults[filteredResults.length] = results[i]
+          }
+        }
+        return filteredResults
+      },
+      hideTaskResults() {
+        this.showTaskResults = false
       },
       fillTaskValues(result) {  // this method fills values of the form when a drop down item is selected  x
         console.log(result)
@@ -569,8 +571,8 @@
           this.addNewTaskForm.taskPrice = 0
           this.result.standardCustomerTaskPrice = 0
         } else {
-          this.addNewTaskForm.taskPrice = result.proposed_cust_price
-          this.result.standardCustomerTaskPrice = result.proposed_cust_price
+          this.addNewTaskForm.taskPrice = result.proposed_cust_price / 100
+          this.result.standardCustomerTaskPrice = result.proposed_cust_price / 100
         }
 
         this.addNewTaskForm.qty = 1
@@ -590,8 +592,8 @@
           this.addNewTaskForm.subTaskPrice = 0
           this.result.standardSubTaskPrice = 0
         } else {
-          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
-          this.result.standardSubTaskPrice = result.proposed_sub_price
+          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price / 100
+          this.result.standardSubTaskPrice = result.proposed_sub_price / 100
         }
 
         // Sub Instructions
@@ -611,6 +613,9 @@
           this.addNewTaskForm.customer_message = result.customer_instructions
           this.result.customer_instructions = result.customer_instructions
         }
+
+        this.addNewTaskForm.item_id = result.item_id
+
         this.priceChange = false
         this.messageChange = false
         this.taskResults = []
@@ -620,8 +625,8 @@
         this.addNewTaskForm.taskId = -1  // if -1 then the task did not come from the drop down
         this.addNewTaskForm.taskExists = ''
         this.addNewTaskForm.jobId = this.bid.id
-        this.addNewTaskForm.subTaskPrice = 0.0
-        this.addNewTaskForm.taskPrice = 0.0
+        this.addNewTaskForm.subTaskPrice = 0
+        this.addNewTaskForm.taskPrice = 0
         this.addNewTaskForm.taskName = ''
         this.addNewTaskForm.contractorId = ''
         this.addNewTaskForm.area = this.bid.city
@@ -636,11 +641,11 @@
         this.addNewTaskForm.qtyUnitErrorMessage = ''
         this.addNewTaskForm.hasQtyUnitError = false
         this.result.resultReturned = false
-        this.result.standardCustomerTaskPrice = 0.0
+        this.result.standardCustomerTaskPrice = 0
         this.result.sub_instructions = ''
         this.result.customer_instructions = ''
         this.result.taskName = ''
-        this.result.standardSubTaskPrice = 0.0
+        this.result.standardSubTaskPrice = 0
         this.taskResultsChange = false
         this.taskResults = []
         this.valueChanged = false
@@ -656,13 +661,7 @@
 
       },
       changeTask(message) {
-        if (message === 'Update') {
-          this.addNewTaskForm.updateTask = true
-          this.addNewTaskForm.createNew = false
-        } else if (message === 'Ignore') {
-          this.addNewTaskForm.updateTask = false
-          this.addNewTaskForm.createNew = false
-        } else if (message === 'New' || message === 'Add') {
+        if (message === 'New' || message === 'Add') {
           this.addNewTaskForm.updateTask = false
           this.addNewTaskForm.createNew = true
         }
@@ -683,7 +682,7 @@
       },
       addNewTaskToBid() {
         if (this.addNewTaskForm.subTaskPrice === '') {
-          this.addNewTaskForm.subTaskPrice = 0.0
+          this.addNewTaskForm.subTaskPrice = 0
         }
         if (
           !this.addNewTaskForm.hasQtyUnitError &&
