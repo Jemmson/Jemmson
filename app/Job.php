@@ -137,20 +137,35 @@ class Job extends Model
         }
 
     }
+
+    public function hasAQuickbookEstimateBeenCreated()
+    {
+        return  $this->qb_estimate_id != 'NULL';
+    }
     
     public function createEstimate($customer_id, $job_name, $contractor_id)
     {
         
         $jobId = $this->getJobId();
 
-        $attributes = [
-            'job_id' => $jobId,
-            'contractor_id' => $contractor_id,
-            'customer_id' => $customer_id,
-            'job_name' => $job_name,
-            'status' => __("status.bid.initiated"),
-            'location_id' => User::find($customer_id)->customer()->first()->location_id
-        ];
+        if (empty(User::find($customer_id)->customer()->first()->location_id)) {
+            $attributes = [
+                'job_id' => $jobId,
+                'contractor_id' => $contractor_id,
+                'customer_id' => $customer_id,
+                'job_name' => $job_name,
+                'status' => __("status.bid.initiated")
+            ];
+        } else {
+            $attributes = [
+                'job_id' => $jobId,
+                'contractor_id' => $contractor_id,
+                'customer_id' => $customer_id,
+                'job_name' => $job_name,
+                'status' => __("status.bid.initiated"),
+                'location_id' => User::find($customer_id)->customer()->first()->location_id
+            ];
+        }
         $this->fill($attributes);
 
         try {
