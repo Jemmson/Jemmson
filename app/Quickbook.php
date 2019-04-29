@@ -15,6 +15,7 @@ use App\QuickbooksCustomer;
 use App\QuickBookCSRFToken;
 use App\User;
 use App\Task;
+use App\Job;
 use App\Location;
 
 
@@ -905,7 +906,7 @@ class Quickbook extends Model
 
     }
 
-    public function createEstimate($job_name, $quickbooksId, $job)
+    public function createEstimate(User $customer, Task $task, Job $job, JobTask $jobTask, $quickBooks_Id)
     {
         $accessToken = session('sessionAccessToken');
         $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
@@ -919,55 +920,40 @@ class Quickbook extends Model
             'baseUrl' => "development"
         ));
 
+        $unitPrice = $task->unit_price / 100;
+        $bidPrice = $job->bid_price / 100;
+
         $theResourceObj = Estimate::create([
             "Line" => [
                 [
-                    "Description" => "Pest Control Services",
-                    "Amount" => 35.0,
+                    "Description" => $task->description,
+                    "Amount" => $unitPrice,
                     "DetailType" => "SalesItemLineDetail",
                     "SalesItemLineDetail" => [
                         "ItemRef" => [
-                            "value" => "10",
-                            "name" => "Pest Control"
+                            "value" => $task->item_id,
+                            "name" => $task->name
                         ],
-                        "UnitPrice" => 35,
-                        "Qty" => 1,
+                        "UnitPrice" => $unitPrice,
+                        "Qty" => $jobTask->qty,
                         "TaxCodeRef" => [
                             "value" => "NON"
                         ]
                     ]
                 ],
                 [
-                    "Amount" => 35.0,
+                    "Amount" => $bidPrice,
                     "DetailType" => "SubTotalLineDetail",
                     "SubTotalLineDetail" => []
-                ],
-                [
-                    "Amount" => 3.5,
-                    "DetailType" => "DiscountLineDetail",
-                    "DiscountLineDetail" => [
-                        "PercentBased" => true,
-                        "DiscountPercent" => 10,
-                        "DiscountAccountRef" => [
-                            "value" => "86",
-                            "name" => "Discounts given"
-                        ]
-                    ]
                 ]
             ],
-            "TxnTaxDetail" => [
-                "TotalTax" => 0
-            ],
             "CustomerRef" => [
-                "value" => $quickbooksId,
-                "name" => "Cool Cars"
+                "value" => $quickBooks_Id,
+                "name" => $customer->name
             ],
-            "TotalAmt" => 31.5,
-            "ApplyTaxAfterDiscount" => false,
-            "PrintStatus" => "NeedToPrint",
-            "EmailStatus" => "NotSet",
+            "TotalAmt" => $bidPrice,
             "BillEmail" => [
-                "Address" => "Cool_Cars@intuit.com"
+                "Address" => $customer->email
             ]
         ]);
 

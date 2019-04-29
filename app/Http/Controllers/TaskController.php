@@ -22,6 +22,7 @@ use App\Job;
 use App\Contractor;
 use App\Customer;
 use App\User;
+use App\ContractorCustomer;
 use App\BidContractorJobTask;
 use App\JobTask;
 use Illuminate\Support\Facades\Log;
@@ -748,37 +749,43 @@ class TaskController extends Controller
 
         $task = Task::find($request->taskId);
         $job = Job::find($request->jobId);
+        $customer = User::find($request->customer_id);
+        $customer_quickBooks_Id = ContractorCustomer::where('contractor_user_id', '=', 1)
+            ->where('customer_user_id', '=', 4)->get()->first()->quickbooks_id;
         $qb = new Quickbook();
 
         if (!empty($task)) {
-            $jt = new JobTask();
-            $jt->createJobTask($request);
+            $jobTask = new JobTask();
+            $jobTask->createJobTask($request);
             if($task->isTaskAQBLineItem($request->item_id)){
                 if($job->hasAQuickbookEstimateBeenCreated()){
-                    $estimate = $this->getQBEstimate($request);
-                    $this->addTaskToQBEstimate($request, $estimate);
+                    $estimate = $job->updateQuickBooksEstimate($task, $job, $jobTask);
+//                    $this->addTaskToQBEstimate($request, $estimate);
                 }
               else {
-                    $estimate = $qb->createEstimate($request);
-//                    $this->addTaskToQBEstimate($request, $estimate);
+                    $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
+                    $job->qb_estimate_id = $estimate->Id;
+                    $job->save();
                 }
             }
         }
 
-//        else {
-//            $task = $this->createNewTask($request);
-//            $this->addTaskToJobTaskTable($task);
-//            $qb = new Quickbook();
-//            if($qb->isContractorThatUsesQuickbooks()){
-//                if($this->hasAQuickbookEstimateBeenCreated($request)){
-//                    $estimate = $this->getQBEstimate($request);
-//                    $this->addTaskToQBEstimate($request, $estimate);
-//                } else {
-//                    $estimate = $this->createQBEstimate($request);
-//                    $this->addTaskToQBEstimate($request, $estimate);
-//                }
-//            }
-//        }
+        else {
+            $task = $this->createNewTask($request);
+            $this->addTaskToJobTaskTable($task);
+            $qb = new Quickbook();
+            if($qb->isContractorThatUsesQuickbooks()){
+                if($this->hasAQuickbookEstimateBeenCreated($request)){
+                    $estimate = $this->getQBEstimate($request);
+                    $this->addTaskToQBEstimate($request, $estimate);
+                } else {
+                    $item = $this->createItem($task);
+                    $this->addItemToTaskTable($item);
+                    $estimate = $this->createQBEstimate($request);
+                    $this->addTaskToQBEstimate($request, $estimate);
+                }
+            }
+        }
 
 
 //        if ($request->taskId != -1) {

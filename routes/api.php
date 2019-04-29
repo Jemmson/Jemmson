@@ -87,7 +87,6 @@ Route::post('/task/updateMessage', 'TaskController@updateMessage');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
-Route::post('/task/addTask', 'TaskController@addTask');
 Route::post('/task/updateTaskStartDate', function (Request $request) {
 
     $jt = JobTask::find($request->jobTaskId);

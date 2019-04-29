@@ -158,8 +158,6 @@ class Task extends Model
         return $itemId != '';
     }
 
-
-
     public static function getBidPrices($jobId)
     {
 //         $bidPrices = DB::select("select 

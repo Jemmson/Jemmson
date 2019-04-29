@@ -73,7 +73,6 @@ trait AuthenticateUsers
     protected function successfulLogin(Request $request)
     {
 
-
         $qb = new Quickbook();
         if ($qb->isContractorThatUsesQuickbooks()) {
             if ($qb->contractorSubscriptionIsStillActive()) {

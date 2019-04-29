@@ -286,7 +286,7 @@
           contractorId: '',
           taskPrice: 0,
           item_id: '',
-
+          customer_id: 0,
           // not apart of the api
           subTaskPrice: 0,
           qtyUnit: '',
@@ -552,27 +552,26 @@
         this.showTaskResults = false
       },
       fillTaskValues(result) {  // this method fills values of the form when a drop down item is selected  x
-        console.log(result)
+        console.log(result);
+
         // since the user selected a drop down option then the name automatically exists in the database
-        this.nameExistsInDB = true
-
-        this.dropdownSelected = true
-        this.taskExists = true
-        this.result.resultReturned = true
-
-        this.addNewTaskForm.taskId = result.id
+        this.nameExistsInDB = true;
+        this.dropdownSelected = true;
+        this.taskExists = true;
+        this.result.resultReturned = true;
+        this.addNewTaskForm.taskId = result.id;
 
         // Task Name
-        this.addNewTaskForm.taskName = result.name
-        this.result.taskName = result.name
+        this.addNewTaskForm.taskName = result.name;
+        this.result.taskName = result.name;
 
         // Task Price
         if (result.proposed_cust_price === null) {
           this.addNewTaskForm.taskPrice = 0
           this.result.standardCustomerTaskPrice = 0
         } else {
-          this.addNewTaskForm.taskPrice = result.proposed_cust_price / 100
-          this.result.standardCustomerTaskPrice = result.proposed_cust_price / 100
+          this.addNewTaskForm.taskPrice = result.proposed_cust_price / 100;
+          this.result.standardCustomerTaskPrice = result.proposed_cust_price / 100;
         }
 
         this.addNewTaskForm.qty = 1
@@ -583,8 +582,8 @@
           this.addNewTaskForm.qtyUnit = result.qtyUnit
           this.result.quantityUnit = result.qtyUnit
         } else {
-          this.addNewTaskForm.qtyUnit = ''
-          this.result.quantityUnit = ''
+          this.addNewTaskForm.qtyUnit = '';
+          this.result.quantityUnit = '';
         }
 
         // Sub price
@@ -592,8 +591,8 @@
           this.addNewTaskForm.subTaskPrice = 0
           this.result.standardSubTaskPrice = 0
         } else {
-          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price / 100
-          this.result.standardSubTaskPrice = result.proposed_sub_price / 100
+          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price / 100;
+          this.result.standardSubTaskPrice = result.proposed_sub_price / 100;
         }
 
         // Sub Instructions
@@ -601,8 +600,8 @@
           this.addNewTaskForm.sub_message = ''
           this.result.sub_instructions = ''
         } else {
-          this.addNewTaskForm.sub_message = result.sub_instructions
-          this.result.sub_instructions = result.sub_instructions
+          this.addNewTaskForm.sub_message = result.sub_instructions;
+          this.result.sub_instructions = result.sub_instructions;
         }
 
         // Sub price
@@ -610,15 +609,17 @@
           this.addNewTaskForm.customer_message = ''
           this.result.customer_instructions = ''
         } else {
-          this.addNewTaskForm.customer_message = result.customer_instructions
-          this.result.customer_instructions = result.customer_instructions
+          this.addNewTaskForm.customer_message = result.customer_instructions;
+          this.result.customer_instructions = result.customer_instructions;
         }
 
-        this.addNewTaskForm.item_id = result.item_id
+        this.addNewTaskForm.customer_id = this.bid.customer_id;
 
-        this.priceChange = false
-        this.messageChange = false
-        this.taskResults = []
+        this.addNewTaskForm.item_id = result.item_id;
+
+        this.priceChange = false;
+        this.messageChange = false;
+        this.taskResults = [];
       },
       clearTaskResults() {
         this.taskResults = []
