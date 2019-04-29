@@ -1,7 +1,7 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
-    <div class="flex flex-col v-height justify-between">
-        <div>
+    <div class="container">
+        <card class="mt-4">
             <search-bar>
                 <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
             </search-bar>
@@ -22,12 +22,12 @@
                     <div class="bg-white bid-btn">click to view</div>
                 </section>
             </paginate>
-        </div>
-        <div class="card p-5 card-body justify-center">
+        </card>
+        <br>
+        <card>
             <paginate-links for="sBids" :limit="2" :show-step-links="true">
             </paginate-links>
-        </div>
-        <feedback></feedback>
+        </card>
     </div>
 </template>
 
