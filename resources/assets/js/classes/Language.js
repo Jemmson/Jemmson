@@ -43,8 +43,8 @@ export default class Language {
         customer: 'Approved Task'
       },
       'bid_task.customer_sent_payment': {
-        sub: 'Customer Has Sent A Payment',
-        general: 'Customer Has Sent A Payment',
+        sub: 'Customer Sent A Payment',
+        general: 'Customer Sent A Payment',
         customer: 'Sent Payment'
       },
       'bid_task.reopened': {

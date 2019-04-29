@@ -38,22 +38,12 @@
             <paginate-links for="sInvoices" :limit="2" :show-step-links="true">
             </paginate-links>
         </div>
-        <feedback></feedback>
     </div>
 </template>
 
 <script>
 
-  import SearchBar from '../components/shared/SearchBar'
-  import Feedback from '../components/shared/Feedback'
-  import Card from '../components/shared/Card'
-
-  export default {
-    components: {
-      SearchBar,
-      Feedback,
-      Card
-    },
+export default {
     props: {
       user: Object,
     },

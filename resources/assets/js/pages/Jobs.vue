@@ -1,48 +1,52 @@
 <template>
-    <!-- /all bids shown in a list as a customer should see it -->
-    <div class="container">
-        <card class="mt-4">
-            <search-bar>
-                <input type="text" class="flex" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
-            </search-bar>
-            <paginate ref="paginator" name="sBids" :list="sBids" :per="6" class="paginated" v-show="sBids.length > 0">
-                <section class="flex job-section rounded mb-4 justify-around items-center"
-                         :class="getLabelClass(bid)"
-                         v-for="bid in paginated('sBids')"
-                         v-bind:key="bid.id"
-                         style="z-index: 2;"
-                         @click="goToBid(bid.id)">
-                    <div class="flex flex-col w-full">
-                        <div class="text-white text-center mb-1">{{ status(bid) }}</div>
-                        <div class="flex justify-around">
-                            <div class="text-white" v-if="user.usertype !== 'customer'">{{ bid.customer.name }}</div>
-                            <div class="text-white">{{ jobName(bid.job_name) }}</div>
-                        </div>
-                    </div>
-                    <div class="bg-white bid-btn">click to view</div>
-                </section>
-            </paginate>
-        </card>
-        <br>
-        <card>
-            <paginate-links for="sBids" :limit="2" :show-step-links="true">
-            </paginate-links>
-        </card>
-    </div>
+  <!-- /all bids shown in a list as a customer should see it -->
+  <div class="container-fluid">
+    <search-bar>
+      <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
+    </search-bar>
+
+    <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
+      <div class="paginated mt-4 mb-1">
+
+      <card class="list-card" v-for="bid in sBids" v-bind:key="bid.id" @click.native="goToBid(bid.id)">
+        <div class="row">
+          <div class="col-12 page-header-title">
+                {{ jobName(bid.job_name) }}
+          </div>
+          <div class="col-12">
+              <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
+            <span :class="getLabelClass(bid)">
+              {{ status(bid) }}
+            </span>
+
+            <span class="float-right list-card-info">2 Subs
+              <i class="fas fa-users"></i>
+            </span>
+
+            <span class="float-right mr-2 list-card-info">3 Tasks 
+              <i class="far fa-check-square"></i>
+            </span>
+
+          </div>
+        </div>
+      </card>
+      </div>
+    <!-- </paginate> -->
+
+    <!-- <div class="card mb-4 mt-3">
+      <div class="card-body d-flex justify-content-center">
+        <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
+        </paginate-links>
+      </div>
+    </div> -->
+  </div>
 </template>
 
 <script>
 
-  import SearchBar from '../components/shared/SearchBar'
-  import Feedback from '../components/shared/Feedback'
-
   export default {
     props: {
       user: Object
-    },
-    components: {
-      SearchBar,
-      Feedback
     },
     data() {
       return {
@@ -62,12 +66,12 @@
     },
     methods: {
       search() {
-        this.sBids = this.bids.filter((bid) => {
-          if (this.searchTerm === '' || this.searchTerm.length <= 1) {
-            return true
-          }
-          return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
-        })
+          this.sBids = this.bids.filter((bid) => {
+              if (this.searchTerm === '' || this.searchTerm.length <= 1) {
+                return true
+            }
+            return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+          })
         if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
           this.$refs.paginator.goToPage(1)
         }
