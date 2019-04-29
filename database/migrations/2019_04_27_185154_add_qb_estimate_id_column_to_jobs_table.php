@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUnitPriceToJobTaskTable extends Migration
+class AddQbEstimateIdColumnToJobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddUnitPriceToJobTaskTable extends Migration
      */
     public function up()
     {
-        Schema::table('job_task', function (Blueprint $table) {
-            $table->bigInteger('unit_price')->unsigned()->default(0);
+        Schema::table('jobs', function (Blueprint $table) {
+            //
+            $table->string('qb_estimate_id')->default('NULL');
         });
     }
 
@@ -25,8 +26,9 @@ class AddUnitPriceToJobTaskTable extends Migration
      */
     public function down()
     {
-        Schema::table('job_task', function (Blueprint $table) {
-            $table->dropColumn('unit_price');
+        Schema::table('jobs', function (Blueprint $table) {
+            //
+            $table->dropColumn('qb_estimate_id');
         });
     }
 }

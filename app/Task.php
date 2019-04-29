@@ -153,6 +153,11 @@ class Task extends Model
         }
     }
 
+    public function isTaskAQBLineItem($itemId)
+    {
+        return $itemId != '';
+    }
+
     public static function getBidPrices($jobId)
     {
 //         $bidPrices = DB::select("select 

@@ -33,6 +33,7 @@ Route::get('/quickbooks/getAuthUrl/{state}', 'QuickbooksController@getAuthUrl');
 Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
 Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCompanyInfo');
 Route::post('/register/contractor', 'RegisterController@registerContractor');
+Route::post('/task/addTask', 'TaskController@addTask');
 
 // login routes
 Route::get('login', 'Auth\LoginController@show');
@@ -43,6 +44,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/feedback', 'FeedbackController@show');
 
     Route::get('/customer/search', 'CustomerController@getCustomerAssociatedToContractor');
+
+    Route::post('/search/task', 'TaskController@getTasks');
 
 //    Route::get('/quickbooks/getAuthUrl', 'QuickbooksController@getAuthUrl');
 //    Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');

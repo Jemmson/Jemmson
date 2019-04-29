@@ -286,4 +286,20 @@ class QuickbookTest extends TestCase
 
     }
 
+    /**  @test */
+    function check_that_a_digit_is_returned_as_an_int() {
+        //
+        $qb = new Quickbook();
+        $this->assertEquals(0, $qb->returnNonNullAttributeAsInteger("0"));
+
+    }
+
+    /**  @test */
+    function check_that_a_digit_is_returned_as_null() {
+        //
+        $qb = new Quickbook();
+        $this->assertEquals(null, $qb->returnNonNullAttributeAsInteger("NULL"));
+
+    }
+
 }

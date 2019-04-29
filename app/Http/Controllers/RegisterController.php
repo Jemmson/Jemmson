@@ -126,6 +126,7 @@ class RegisterController extends Controller
             $qb = new Quickbook();
             $qb->saveAccessToken($user->id);
             $qb->syncCustomerInformationFromQB($user->id);
+            $qb->syncTasksFromQB($user->id);
         }
 
         if (empty(session('prevDestination'))) {

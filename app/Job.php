@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 use Log;
+use QuickBooksOnline\API\Facades\Estimate;
+use Illuminate\Support\Facades\Auth;
+use QuickBooksOnline\API\DataService\DataService;
+use QuickBooksOnline\API\Core\OAuth\OAuth2\OAuth2LoginHelper;
+use QuickBooksOnline\API\Exception\SdkException;
 
 use App\JobActions;
 
@@ -119,12 +124,65 @@ class Job extends Model
         return $jobName;
     }
 
-    public static function createQuickBooksEstimate($job_name, $quickbooksId, $job)
+    public static function createQuickBooksEstimate($customer, $task, $job, $jt, $customer_quickBooks_Id)
     {
         $qb = new Quickbook();
-        $qb->createEstimate($job_name, $quickbooksId, $job);
+        $qb->createEstimate($customer, $task, $job, $jt, $customer_quickBooks_Id);
     }
 
+    public function updateQuickBooksEstimate($task, $job, $jobTask)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $unitPrice = $task->unit_price / 100;
+        $bidPrice = $job->bid_price / 100;
+
+        $estimate = $dataService->FindbyId('estimate', $job->qb_estimate_id);
+        $theResourceObj = Estimate::update($estimate  , [
+            "Line" => [
+                [
+                    "Description" => $task->description,
+                    "Amount" => $unitPrice,
+                    "DetailType" => "SalesItemLineDetail",
+                    "SalesItemLineDetail" => [
+                        "ItemRef" => [
+                            "value" => $task->item_id,
+                            "name" => $task->name
+                        ],
+                        "UnitPrice" => $unitPrice,
+                        "Qty" => $jobTask->qty,
+                        "TaxCodeRef" => [
+                            "value" => "NON"
+                        ]
+                    ]
+                ],
+                [
+                    "Amount" => $bidPrice,
+                    "DetailType" => "SubTotalLineDetail",
+                    "SubTotalLineDetail" => []
+                ]
+            ],
+        ]);
+        $resultingObj = $dataService->Update($theResourceObj);
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+        }
+
+        return $resultingObj;
+    }
 
     public function getJobId()
     {
@@ -137,20 +195,35 @@ class Job extends Model
         }
 
     }
+
+    public function hasAQuickbookEstimateBeenCreated()
+    {
+        return  $this->qb_estimate_id != 'NULL';
+    }
     
     public function createEstimate($customer_id, $job_name, $contractor_id)
     {
         
         $jobId = $this->getJobId();
 
-        $attributes = [
-            'job_id' => $jobId,
-            'contractor_id' => $contractor_id,
-            'customer_id' => $customer_id,
-            'job_name' => $job_name,
-            'status' => __("status.bid.initiated"),
-            'location_id' => User::find($customer_id)->customer()->first()->location_id
-        ];
+        if (empty(User::find($customer_id)->customer()->first()->location_id)) {
+            $attributes = [
+                'job_id' => $jobId,
+                'contractor_id' => $contractor_id,
+                'customer_id' => $customer_id,
+                'job_name' => $job_name,
+                'status' => __("status.bid.initiated")
+            ];
+        } else {
+            $attributes = [
+                'job_id' => $jobId,
+                'contractor_id' => $contractor_id,
+                'customer_id' => $customer_id,
+                'job_name' => $job_name,
+                'status' => __("status.bid.initiated"),
+                'location_id' => User::find($customer_id)->customer()->first()->location_id
+            ];
+        }
         $this->fill($attributes);
 
         try {

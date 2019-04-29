@@ -12,6 +12,8 @@ global.moment = require('moment');
 global.Promise = require('promise');
 global.Cookies = require('js-cookie');
 global.expect = require('expect');
+global.Pusher = require('pusher-js');
+global.Vue = require('vue');
 
 /*//
  * Define Moment locales

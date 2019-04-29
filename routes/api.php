@@ -50,30 +50,14 @@ Route::get('/search', function (Request $request) {
     return $users;
 });
 
-//Route::get('/customer/search', function (Request $request) {
-//
-//    // TODO: needs to search users table, customer table, contractorcustomer table, and quickbooks_customer table
-//    $query = $request->query('query');
-//    $users = \App\User::where('name', 'like', '%' . $query . '%')
-//        ->where('usertype', '!=', 'contractor')
-//        ->get();
-////    $users = \App\User::where('name', 'like', '%Brenda%')->where('usertype', '!=', 'contractor')->get();
-//
-////    if (!empty($users)){
-////
-////    }
-//
-//    return $users;
+//Route::post('/search/task', function (Request $request) {
+//    $jobId = $request->jobId;
+//    $job = \App\Job::find($jobId);
+//    $tasks = Task::select()->
+//        where('contractor_id', '=', $job->contractor_id)->
+//        where('name', 'like', $request->taskname.'%')->get();
+//    return $tasks;
 //});
-
-Route::post('/search/task', function (Request $request) {
-    $jobId = $request->jobId;
-    $job = \App\Job::find($jobId);
-    $tasks = Task::select()->
-        where('contractor_id', '=', $job->contractor_id)->
-        where('name', 'like', $request->taskname.'%')->get();
-    return $tasks;
-});
 
 
 // Jobs
@@ -103,7 +87,6 @@ Route::post('/task/updateMessage', 'TaskController@updateMessage');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
-Route::post('/task/addTask', 'TaskController@addTask');
 Route::post('/task/updateTaskStartDate', function (Request $request) {
 
     $jt = JobTask::find($request->jobTaskId);

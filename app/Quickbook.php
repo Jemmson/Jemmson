@@ -14,6 +14,8 @@ use App\QuickbooksContractor;
 use App\QuickbooksCustomer;
 use App\QuickBookCSRFToken;
 use App\User;
+use App\Task;
+use App\Job;
 use App\Location;
 
 
@@ -371,7 +373,8 @@ class Quickbook extends Model
 //            "Suffix"=>  "Jr",
             "FullyQualifiedName" => $customer->name,
 //            "CompanyName"=>  "King Evial",
-            "DisplayName" => $customer->name,
+        // TODO: Display name must be unique. not sure how to do this.
+            "DisplayName" => $customer->name . "_" .  $customer->id,
             "PrimaryPhone" => [
                 "FreeFormNumber" => $customer->phone
             ],
@@ -473,6 +476,16 @@ class Quickbook extends Model
         return false;
     }
 
+    public static function checkIfContractorUsesQuickbooks()
+    {
+        if (Auth::user()->contractor != null) {
+            return Auth::user()->usertype === 'contractor' &&
+                Auth::user()->contractor->accounting_software == 'quickBooks';
+        }
+
+        return false;
+    }
+
     public function contractorSubscriptionIsStillActive()
     {
         // TODO: figure out how to check that the quickbooks account is still active for the user
@@ -556,11 +569,7 @@ class Quickbook extends Model
                             'code' => $e->getCode()
                         ], 200);
                     }
-
                 }
-                $this->addCustomerToCustomerTable($customer);
-            } else {
-                $this->addCustomerToContractorTable($customer);
             }
         }
 
@@ -685,6 +694,19 @@ class Quickbook extends Model
         }
     }
 
+    public function checkIfItemExistsInTaskTable($item, $contractorId)
+    {
+        $item = Task::where('item_id', '=', $item->Id)
+            ->where('contractor_id', '=', $contractorId)
+            ->get()->first();
+
+        if (empty($item)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function checkIfCustomerInQuickbooksContractorTable($customer, $contractorId)
     {
         $cust = QuickbooksContractor::select()->where('sub_contractor_id', '=', $customer->Id)
@@ -797,7 +819,94 @@ class Quickbook extends Model
         return $entities;
     }
 
-    public function createEstimate($job_name, $quickbooksId, $job)
+    public function pullAllItemsFromQB($contractorId)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', $contractorId)->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $entities = $dataService->Query(
+            "SELECT
+              *
+            FROM Item"
+        );
+
+        return $entities;
+    }
+
+    public function syncTasksFromQB($contractorId)
+    {
+        $allItems = $this->pullAllItemsFromQB($contractorId);
+
+        if (!empty($allItems)) {
+            foreach ($allItems as $item) {
+                if (!$this->checkIfItemExistsInTaskTable($item, $contractorId)) {
+                    $this->addItemTaskTable($item, $contractorId);
+                }
+            }
+        }
+
+//        $this->uploadTasksToQBThatAreNewAndHaveNotBeenAdded($contractorId);
+    }
+
+//    public function uploadTasksToQBThatAreNewAndHaveNotBeenAdded($contractorId)
+//    {
+//        $AllItems = Task::where('contractor_id', '=', $contractorId)
+//            ->where('item_id', '=', 0)
+//            ->get();
+//
+//        Task::where('contractor_id', '=', $contractorId)->where('item_id', '=', null)->orWhere('item_id', '=', 'Null')->get();
+//    }
+
+    public function formatPriceToCents($price)
+    {
+        if (!is_null($price)) {
+            if(count(explode(".", $price)) > 1){
+                return (int) explode('.', ((float) $price * 100))[0];
+            } else {
+                return (int) $price * 100;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public function addItemTaskTable($item, $contractorId)
+    {
+
+        $qbitem = new Task();
+        $qbitem->name = $this->returnNonNullAttribute($item->Name);
+        $qbitem->description = $this->returnNonNullAttribute($item->Description);
+        $qbitem->fully_qualified_name = $this->returnNonNullAttribute($item->FullyQualifiedName);
+        $qbitem->proposed_cust_price = $this->formatPriceToCents($item->UnitPrice);
+        $qbitem->unit_price = $this->formatPriceToCents($item->UnitPrice);
+        $qbitem->type = $this->returnNonNullAttribute($item->Type);
+        $qbitem->payment_method_ref = $this->returnNonNullAttribute($item->PaymentMethodRef);
+        $qbitem->avg_cost = $this->formatPriceToCents($item->AvgCost);
+        $qbitem->average_cust_price = $this->formatPriceToCents($item->AvgCost);
+        $qbitem->item_id = $item->Id;
+        $qbitem->contractor_id = $contractorId;
+
+        try {
+            $qbitem->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+    }
+
+    public function createEstimate(User $customer, Task $task, Job $job, JobTask $jobTask, $quickBooks_Id)
     {
         $accessToken = session('sessionAccessToken');
         $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
@@ -811,55 +920,40 @@ class Quickbook extends Model
             'baseUrl' => "development"
         ));
 
+        $unitPrice = $task->unit_price / 100;
+        $bidPrice = $job->bid_price / 100;
+
         $theResourceObj = Estimate::create([
             "Line" => [
                 [
-                    "Description" => "Pest Control Services",
-                    "Amount" => 35.0,
+                    "Description" => $task->description,
+                    "Amount" => $unitPrice,
                     "DetailType" => "SalesItemLineDetail",
                     "SalesItemLineDetail" => [
                         "ItemRef" => [
-                            "value" => "10",
-                            "name" => "Pest Control"
+                            "value" => $task->item_id,
+                            "name" => $task->name
                         ],
-                        "UnitPrice" => 35,
-                        "Qty" => 1,
+                        "UnitPrice" => $unitPrice,
+                        "Qty" => $jobTask->qty,
                         "TaxCodeRef" => [
                             "value" => "NON"
                         ]
                     ]
                 ],
                 [
-                    "Amount" => 35.0,
+                    "Amount" => $bidPrice,
                     "DetailType" => "SubTotalLineDetail",
                     "SubTotalLineDetail" => []
-                ],
-                [
-                    "Amount" => 3.5,
-                    "DetailType" => "DiscountLineDetail",
-                    "DiscountLineDetail" => [
-                        "PercentBased" => true,
-                        "DiscountPercent" => 10,
-                        "DiscountAccountRef" => [
-                            "value" => "86",
-                            "name" => "Discounts given"
-                        ]
-                    ]
                 ]
             ],
-            "TxnTaxDetail" => [
-                "TotalTax" => 0
-            ],
             "CustomerRef" => [
-                "value" => $quickbooksId,
-                "name" => "Cool Cars"
+                "value" => $quickBooks_Id,
+                "name" => $customer->name
             ],
-            "TotalAmt" => 31.5,
-            "ApplyTaxAfterDiscount" => false,
-            "PrintStatus" => "NeedToPrint",
-            "EmailStatus" => "NotSet",
+            "TotalAmt" => $bidPrice,
             "BillEmail" => [
-                "Address" => "Cool_Cars@intuit.com"
+                "Address" => $customer->email
             ]
         ]);
 

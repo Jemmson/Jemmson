@@ -20,7 +20,7 @@ class CreateContractorTaskTable extends Migration
         Schema::create('contractor_task', function (Blueprint $table) {
             $table->integer('contractor_id');
             $table->integer('task_id');
-            $table->integer('base_price')->default(0);
+            $table->bigInteger('base_price')->default(0);
             $table->primary(['contractor_id', 'task_id']);
             $table->timestamps();
         });

@@ -201,7 +201,7 @@ router.beforeEach((to, from, next) => {
 
       if (Spark.state.user === undefined ||
         Spark.state.user === null) {
-        location.href = '/login'
+        return location.href = '/login'
       }
 
       let customer = null;

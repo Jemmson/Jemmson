@@ -75,11 +75,11 @@ class JobTask extends Model
 
     }
 
-    public function createJobTask($request, $taskId)
+    public function createJobTask($request)
     {
         // standard task column = new column value
         $this->job_id = $request->jobId;
-        $this->task_id = $taskId;
+        $this->task_id = $request->taskId;
         $this->status = 'bid_task.initiated';
         $this->contractor_id = $request->contractorId;
         $this->cust_final_price = $request->qty * $request->taskPrice;

@@ -36,7 +36,7 @@ export default class GeneralContractor {
     Format.numbers(form, 'taskPrice')
     Format.numbers(form, 'subTaskPrice')
 
-    Spark.post('/api/task/addTask', form)
+    Spark.post('task/addTask', form)
       .then((response) => {
         console.log(response)
         // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data

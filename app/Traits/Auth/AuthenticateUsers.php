@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Quickbook;
+use App\QuickbooksItem;
 
 trait AuthenticateUsers
 {
@@ -72,13 +73,12 @@ trait AuthenticateUsers
     protected function successfulLogin(Request $request)
     {
 
-
         $qb = new Quickbook();
         if ($qb->isContractorThatUsesQuickbooks()) {
             if ($qb->contractorSubscriptionIsStillActive()) {
                 if ($qb->updateAccessToken()) {
                     $qb->syncCustomerInformationFromQB(Auth::user()->getAuthIdentifier());
-//                    $qb->syncTasksFromQB(Auth::user()->getAuthIdentifier());
+                    $qb->syncTasksFromQB(Auth::user()->getAuthIdentifier());
                 }
             } else {
                 // TODO: Redirect to a page that will say their subscription to QB is no longer active and they should chose whether they want to renew or not
