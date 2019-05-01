@@ -759,8 +759,7 @@ class TaskController extends Controller
             $jobTask->createJobTask($request);
             if($task->isTaskAQBLineItem($request->item_id)){
                 if($job->hasAQuickbookEstimateBeenCreated()){
-                    $estimate = $job->updateQuickBooksEstimate($task, $job, $jobTask);
-//                    $this->addTaskToQBEstimate($request, $estimate);
+                    $job->updateQuickBooksEstimate($task, $job, $jobTask);
                 }
               else {
                     $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
@@ -771,18 +770,21 @@ class TaskController extends Controller
         }
 
         else {
-            $task = $this->createNewTask($request);
-            $this->addTaskToJobTaskTable($task);
+            $task = new Task();
+            $task->createTask($request);
+            $jobTask = new JobTask();
+            $jobTask->addToJobTask($job->id, $task->id, $request);
+
             $qb = new Quickbook();
             if($qb->isContractorThatUsesQuickbooks()){
-                if($this->hasAQuickbookEstimateBeenCreated($request)){
-                    $estimate = $this->getQBEstimate($request);
-                    $this->addTaskToQBEstimate($request, $estimate);
+                $item = $task->createItem($task, $request);
+                $task->updateTaskWithQuickbooksItem($item);
+                if($job->hasAQuickbookEstimateBeenCreated()){
+                    $job->updateQuickBooksEstimate($task, $job, $jobTask);
                 } else {
-                    $item = $this->createItem($task);
-                    $this->addItemToTaskTable($item);
-                    $estimate = $this->createQBEstimate($request);
-                    $this->addTaskToQBEstimate($request, $estimate);
+                    $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
+                    $job->qb_estimate_id = $estimate->Id;
+                    $job->save();
                 }
             }
         }

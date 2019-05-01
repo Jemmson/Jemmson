@@ -23,7 +23,7 @@
                                 <label for="taskName">Task Description *</label>
 
                                 <input type="text"
-                                       class="form-control mb-1"
+                                       class="form-control bat-input mb-1"
                                        id="taskName"
                                        name="taskName"
                                        autofocus
@@ -52,7 +52,7 @@
                                 <label for="custTaskPrice">Price</label>
                                 <div class="flex items-center">
                                     <span class="dollarSign">$</span>
-                                    <input type="text" class="form-control"
+                                    <input type="text" class="form-control bat-input"
                                            id="custTaskPrice"
                                            name="taskPrice"
                                            autocomplete="text"
@@ -81,7 +81,7 @@
                                  :class="{'has-error': addNewTaskForm.errors.has('qty')}">
                                 <label for="qty">Quantity</label>
                                 <input type="number"
-                                       class="form-control"
+                                       class="form-control bat-input"
                                        min="1"
                                        id="qty"
                                        name="qty"
@@ -104,7 +104,7 @@
                             <div class="flex-1 m-l-4"
                                  :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
                                 <label for="qtyUnit">Quantity Description</label>
-                                <input type="text" class="form-control" min="1" id="qtyUnit"
+                                <input type="text" class="form-control bat-input" min="1" id="qtyUnit"
                                        placeholder="ex. ft, sq. ft, etc."
                                        name="qtyUnit"
                                        v-model="addNewTaskForm.qtyUnit"
@@ -132,7 +132,7 @@
                                     <span class="dollarSign">$</span>
                                     <input type="text"
                                            autocomplete="text"
-                                           class="form-control" id="subTaskPrice" name="subTaskPrice"
+                                           class="form-control bat-input" id="subTaskPrice" name="subTaskPrice"
                                            v-model="addNewTaskForm.subTaskPrice"
                                            @focus="hideTaskResults"
                                            :disabled="taskExistsInJob"
@@ -152,7 +152,7 @@
                             <div class="flex-1"
                                  :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
                                 <label for="start_date">Start Date</label>
-                                <input type="date" class="form-control"
+                                <input type="date" class="form-control bat-input"
                                        id="start_date"
                                        name="start_date"
                                        required
@@ -179,13 +179,84 @@
                             </div> -->
                         </div>
 
+                        <!--<div class="m-auto">Income Account Ref</div>-->
+                        <div class="flex">
+                            <input type="text"
+                                   class="form-control bat-input mr-2"
+                                   v-model="addNewTaskForm.incomeAccountRef.name"
+                                   placeholder="Income Account name"
+                            >
+                            <input type="text"
+                                   class="form-control bat-input ml-2"
+                                   v-model="addNewTaskForm.incomeAccountRef.value"
+                                   placeholder="Income Account value">
+                        </div>
+
+                        <!--<div class="m-auto">Expense Account Ref</div>-->
+                        <div class="flex">
+                            <input type="text"
+                                   class="form-control bat-input mr-2"
+                                   v-model="addNewTaskForm.expenseAccountRef.name"
+                                   placeholder="Expense Account name"
+                            >
+                            <input type="text"
+                                   class="form-control bat-input ml-2"
+                                   v-model="addNewTaskForm.expenseAccountRef.value"
+                                   placeholder="Expense Account value"
+                            >
+                        </div>
+
+                        <!--<div class="m-auto">Asset Account Ref</div>-->
+                        <div class="flex">
+                            <input type="text"
+                                   class="form-control bat-input mr-2"
+                                   v-model="addNewTaskForm.assetAccountRef.name"
+                                   placeholder="Asset Account name"
+                            >
+                            <input type="text"
+                                   class="form-control bat-input ml-2"
+                                   v-model="addNewTaskForm.assetAccountRef.value"
+                                   placeholder="Asset Account value"
+                            >
+                        </div>
+
+                        <div class="flex">
+                            <input type="text"
+                                   class="form-control bat-input mr-2"
+                                   v-model="addNewTaskForm.type"
+                                   placeholder="Type"
+                            >
+                            <input type="text"
+                                   class="form-control bat-input ml-2"
+                                   v-model="addNewTaskForm.invStartDate"
+                                   placeholder="Item Added Date"
+                            >
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex">
+                                <div class="small mr-2">Track Qty On Hand</div>
+                                <input type="checkbox"
+                                       class="bat-input ml-2"
+                                       :checked="addNewTaskForm.trackQtyOnHand"
+                                       v-model="addNewTaskForm.trackQtyOnHand"
+                                >
+                            </div>
+                            <input type="text"
+                                   class="form-control w-1/4 bat-input ml-2"
+                                   v-model="addNewTaskForm.qtyOnHand"
+                                   placeholder="Quantity On Hand"
+                            >
+                        </div>
+
+
                         <div class="flex flex-col m-t-4">
 
                             <!--Customer Message-->
                             <div class="form-group customer-notes"
                                  :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
                                 <label for="customer_message">Instructions For The Customer</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control bat-input"
                                           id="customer_message"
                                           name="customer_message"
                                           :disabled="taskExistsInJob"
@@ -203,7 +274,7 @@
                             <div class="form-group sub-notes"
                                  :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
                                 <label for="sub_message">Subcontractor Instructions</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control bat-input"
                                           id="sub_message"
                                           name="sub_message"
                                           :disabled="taskExistsInJob"
@@ -298,6 +369,23 @@
           start_date: '',
           taskExists: '',
           start_when_accepted: true,
+
+          incomeAccountRef: {
+            value: '79',
+            name: 'Sales of Product Income'
+          },
+          expenseAccountRef: {
+            value: '80',
+            name: 'Cost of Goods Sold'
+          },
+          assetAccountRef: {
+            value: '81',
+            name: 'Inventory Asset'
+          },
+          type: 'Inventory',
+          trackQtyOnHand: false,
+          qtyOnHand: '10',
+          invStartDate: '2015-01-01',
 
           // sub_sets_own_price_for_job: true,
           useStripe: false,
@@ -552,26 +640,26 @@
         this.showTaskResults = false
       },
       fillTaskValues(result) {  // this method fills values of the form when a drop down item is selected  x
-        console.log(result);
+        console.log(result)
 
         // since the user selected a drop down option then the name automatically exists in the database
-        this.nameExistsInDB = true;
-        this.dropdownSelected = true;
-        this.taskExists = true;
-        this.result.resultReturned = true;
-        this.addNewTaskForm.taskId = result.id;
+        this.nameExistsInDB = true
+        this.dropdownSelected = true
+        this.taskExists = true
+        this.result.resultReturned = true
+        this.addNewTaskForm.taskId = result.id
 
         // Task Name
-        this.addNewTaskForm.taskName = result.name;
-        this.result.taskName = result.name;
+        this.addNewTaskForm.taskName = result.name
+        this.result.taskName = result.name
 
         // Task Price
         if (result.proposed_cust_price === null) {
           this.addNewTaskForm.taskPrice = 0
           this.result.standardCustomerTaskPrice = 0
         } else {
-          this.addNewTaskForm.taskPrice = result.proposed_cust_price / 100;
-          this.result.standardCustomerTaskPrice = result.proposed_cust_price / 100;
+          this.addNewTaskForm.taskPrice = result.proposed_cust_price / 100
+          this.result.standardCustomerTaskPrice = result.proposed_cust_price / 100
         }
 
         this.addNewTaskForm.qty = 1
@@ -582,8 +670,8 @@
           this.addNewTaskForm.qtyUnit = result.qtyUnit
           this.result.quantityUnit = result.qtyUnit
         } else {
-          this.addNewTaskForm.qtyUnit = '';
-          this.result.quantityUnit = '';
+          this.addNewTaskForm.qtyUnit = ''
+          this.result.quantityUnit = ''
         }
 
         // Sub price
@@ -591,8 +679,8 @@
           this.addNewTaskForm.subTaskPrice = 0
           this.result.standardSubTaskPrice = 0
         } else {
-          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price / 100;
-          this.result.standardSubTaskPrice = result.proposed_sub_price / 100;
+          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price / 100
+          this.result.standardSubTaskPrice = result.proposed_sub_price / 100
         }
 
         // Sub Instructions
@@ -600,8 +688,8 @@
           this.addNewTaskForm.sub_message = ''
           this.result.sub_instructions = ''
         } else {
-          this.addNewTaskForm.sub_message = result.sub_instructions;
-          this.result.sub_instructions = result.sub_instructions;
+          this.addNewTaskForm.sub_message = result.sub_instructions
+          this.result.sub_instructions = result.sub_instructions
         }
 
         // Sub price
@@ -609,17 +697,17 @@
           this.addNewTaskForm.customer_message = ''
           this.result.customer_instructions = ''
         } else {
-          this.addNewTaskForm.customer_message = result.customer_instructions;
-          this.result.customer_instructions = result.customer_instructions;
+          this.addNewTaskForm.customer_message = result.customer_instructions
+          this.result.customer_instructions = result.customer_instructions
         }
 
-        this.addNewTaskForm.customer_id = this.bid.customer_id;
+        this.addNewTaskForm.customer_id = this.bid.customer_id
 
-        this.addNewTaskForm.item_id = result.item_id;
+        this.addNewTaskForm.item_id = result.item_id
 
-        this.priceChange = false;
-        this.messageChange = false;
-        this.taskResults = [];
+        this.priceChange = false
+        this.messageChange = false
+        this.taskResults = []
       },
       clearTaskResults() {
         this.taskResults = []
@@ -710,6 +798,10 @@
 </script>
 
 <style scoped>
+
+    .bat-input {
+        height: 2.25rem;
+    }
 
     .error {
         color: red;
