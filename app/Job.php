@@ -148,7 +148,7 @@ class Job extends Model
         $bidPrice = $job->bid_price / 100;
 
         $estimate = $dataService->FindbyId('estimate', $job->qb_estimate_id);
-        $theResourceObj = Estimate::update($estimate  , [
+        $theResourceObj = Estimate::update($estimate, [
             "Line" => [
                 [
                     "Description" => $task->description,
@@ -184,6 +184,13 @@ class Job extends Model
         return $resultingObj;
     }
 
+
+    public function setEarliestStartDateToTask(JobTask $jobTask)
+    {
+        $earliestDate = JobTask::findEarliestStartDate($this->id);
+        $this->updateJobAgreedStartDate($earliestDate);
+    }
+
     public function getJobId()
     {
         $jobId = DB::select('SELECT id FROM jobs ORDER BY id DESC LIMIT 1');
@@ -198,12 +205,12 @@ class Job extends Model
 
     public function hasAQuickbookEstimateBeenCreated()
     {
-        return  $this->qb_estimate_id != 'NULL';
+        return $this->qb_estimate_id != 'NULL';
     }
-    
+
     public function createEstimate($customer_id, $job_name, $contractor_id)
     {
-        
+
         $jobId = $this->getJobId();
 
         if (empty(User::find($customer_id)->customer()->first()->location_id)) {

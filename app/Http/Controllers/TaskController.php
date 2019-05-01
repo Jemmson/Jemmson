@@ -752,7 +752,6 @@ class TaskController extends Controller
         $customer = User::find($request->customer_id);
         $customer_quickBooks_Id = ContractorCustomer::where('contractor_user_id', '=', 1)
             ->where('customer_user_id', '=', 4)->get()->first()->quickbooks_id;
-        $qb = new Quickbook();
 
         if (!empty($task)) {
             $jobTask = new JobTask();
@@ -789,59 +788,12 @@ class TaskController extends Controller
             }
         }
 
+        $jobTask->setLocation($job);
+        $job->changeJobStatus($job, __('bid.in_progress'));
+        $job->jobTotal();
+        $job->setEarliestStartDateToTask($jobTask);
 
-//        if ($request->taskId != -1) {
-//
-//        }
-//
-//        $taskInput = Task::create_task_input_array($request);
-//
-//        if ($taskInput['taskPrice'] <= $taskInput['subTaskPrice']) {
-//            return response()->json([
-//                "message" => "Unit price for customer needs to be greater than or equal to Unit Price for Sub",
-//                "errors" => ["error" => ['Unit price for customer needs to be greater than or equal to Unit Price for Sub']]], 422);
-//        }
-//
-//        if ($request->updateTask && !$request->createNew) {
-//            $task = Task::find($request->taskId);
-//            $task->updateTask($request);
-//            $jobTask = new JobTask;
-//            $jobTask->createJobTask($request, $request->taskId);
-////            $task->update_existing_standard_task_add_to_jobTask_table($request);
-//        } else if (!$request->updateTask && !$request->createNew) {
-//            // find the existing task but dont update the standard task table
-//            $jobTask = new JobTask;
-//            $jobTask->createJobTask($request, $request->taskId);
-//
-//            Log::debug('updateTask is false; CreateNew is false');
-//
-//        } else if (!$request->updateTask && $request->createNew) {
-//            // create a new task and add it to the standard task table
-//            // add a new task to the job task table
-//
-//            Log::debug('updateTask is false; CreateNew is true');
-//
-//            $task = new Task;
-//            $task->createTask($request);
-//
-//            $jobTask = new JobTask;
-//            $jobTask->createJobTask($request, $task->id);
-//
-//        }
-//
-//        $job = Job::find($request->jobId);
-//
-//        if ($job->location_id != null) {
-//            $jobTask->location_id = $job->location_id;
-//            $jobTask->save();
-//        }
-//
-//        $job->changeJobStatus($job, __('bid.in_progress'));
-//        $job->jobTotal();
-//        $earliestDate = JobTask::findEarliestStartDate($request->jobId);
-//        $job->updateJobAgreedStartDate($earliestDate);
-//
-//        return response()->json($job->tasks()->get(), 200);
+        return response()->json($job->tasks()->get(), 200);
     }
 
     /**

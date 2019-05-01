@@ -109,7 +109,15 @@ class JobTask extends Model
         }
     }
 
-public function addToJobTask(String $jobId, String $taskId, $request)
+    public function setLocation(Job $job)
+    {
+        if ($job->location_id != null) {
+            $this->location_id = $job->location_id;
+            $this->save();
+        }
+    }
+
+    public function addToJobTask(String $jobId, String $taskId, $request)
     {
         // standard task column = new column value
         $this->job_id = $jobId;
@@ -133,15 +141,15 @@ public function addToJobTask(String $jobId, String $taskId, $request)
 
 //        dd($this);
 
-    try {
-        $this->save();
-    } catch (\Exception $e) {
-        Log::error('Add Job Task: ' . $e->getMessage());
-        return response()->json([
-            "message" => "Couldn't add Job Task.",
-            "errors" => ["error" => [$e->getMessage()]]], 404);
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Add Job Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't add Job Task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
     }
-}
 
     public function job()
     {
