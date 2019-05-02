@@ -109,6 +109,48 @@ class JobTask extends Model
         }
     }
 
+    public function setLocation(Job $job)
+    {
+        if ($job->location_id != null) {
+            $this->location_id = $job->location_id;
+            $this->save();
+        }
+    }
+
+    public function addToJobTask(String $jobId, String $taskId, $request)
+    {
+        // standard task column = new column value
+        $this->job_id = $jobId;
+        $this->task_id = $taskId;
+        $this->status = 'bid_task.initiated';
+        $this->contractor_id = $request->contractorId;
+        $this->cust_final_price = $request->qty * $request->taskPrice;
+        $this->sub_final_price = 0;
+        if (empty($request->start_date)) {
+            $this->start_date = \Carbon\Carbon::now();
+        } else {
+            $this->start_date = $request->start_date;
+        }
+        $this->customer_message = $request->customer_message;
+        $this->sub_message = $request->sub_message;
+        $this->stripe = $request->useStripe;
+        $this->qty = (int)$request->qty;
+        $this->unit_price = (int)$request->taskPrice;
+
+//        Log::message($task);
+
+//        dd($this);
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Add Job Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't add Job Task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
+    }
+
     public function job()
     {
         return $this->belongsTo(Job::class);

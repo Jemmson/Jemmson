@@ -8,8 +8,11 @@ use Illuminate\Notifications\Notifiable;
 use Nexmo\Laravel\Facade\Nexmo;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Log;
+use Illuminate\Support\Facades\Auth;
 //use Zend\Diactoros\Request;
 use Illuminate\Http\Request;
+use QuickBooksOnline\API\Facades\Item;
+use QuickBooksOnline\API\DataService\DataService;
 //use Carbon\Carbon;
 //\Illuminate\Support\Carbon::
 
@@ -156,6 +159,65 @@ class Task extends Model
     public function isTaskAQBLineItem($itemId)
     {
         return $itemId != '';
+    }
+
+    public function createItem($task, $request)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $theResourceObj = Item::create([
+            "Name" => $task->name,
+            "UnitPrice" => $task->proposed_cust_price,
+            "IncomeAccountRef" => [
+                "value" => $request->incomeAccountRef['value'],
+                "name" => $request->incomeAccountRef['name']
+            ],
+            "ExpenseAccountRef" => [
+                "value" => $request->expenseAccountRef['value'],
+                "name" => $request->expenseAccountRef['name']
+            ],
+            "AssetAccountRef" => [
+                "value" => $request->assetAccountRef['value'],
+                "name" => $request->assetAccountRef['name']
+            ],
+            "Type" => $request->type,
+            "TrackQtyOnHand" => $request->trackQtyOnHand,
+            "QtyOnHand" => $request->qtyOnHand,
+            "InvStartDate" => $request->invStartDate
+        ]);
+        $resultingObj = $dataService->Add($theResourceObj);
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+        }
+        return $resultingObj;
+
+    }
+
+    public function updateTaskWithQuickbooksItem($item)
+    {
+        $this->item_id = $item->Id;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
     }
 
     public static function getBidPrices($jobId)
