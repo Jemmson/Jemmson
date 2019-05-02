@@ -1,32 +1,37 @@
 export default class Format {
-  static addDollarSign (obj, key) {
-    obj[key] = '$' + this.numbersOnly (obj[key]);
+
+  constructor(){
+
   }
 
-  static customerLabel (status) {
+  static addDollarSign(obj, key) {
+    obj[key] = '$' + this.numbersOnly(obj[key])
+  }
+
+  static customerLabel(status) {
     switch (status) {
       // action required: yellow
       case 'bid_task.approved_by_general':
       case 'bid_task.finished_by_general':
       case 'bid.sent':
-        return 'status-yellow';
-        break;
+        return 'status-yellow'
+        break
       // important update: blue
       case 'job.approved':
       case 'bid.in_progress':
       case 'bid_task.approved_by_customer':
       case 'bid_task.reopened':
-        return 'status-blue';
-        break;
+        return 'status-blue'
+        break
       // rejected something: red
       case 'bid.declined':
       case 'bid_task.denied':
-        return 'status-red';
-        break;
+        return 'status-red'
+        break
       // finished: green
       case 'job.completed':
       case 'bid_task.customer_sent_payment':
-        return 'status-green';
+        return 'status-green'
       // don't need to do anything and not important info: grey
       case 'bid.initiated':
       case 'bid_task.initiated':
@@ -34,12 +39,12 @@ export default class Format {
       case 'bid_task.accepted':
       case 'bid_task.finished_by_sub':
       default:
-        return 'status-grey';
-        break;
+        return 'status-grey'
+        break
     }
   }
 
-  static generalContractorLabel (status) {
+  static generalContractorLabel(status) {
     switch (status) {
       // action required: yellow
       case 'bid_task.reopened':
@@ -47,23 +52,23 @@ export default class Format {
       case 'bid_task.finished_by_sub':
       case 'bid_task.approved_by_customer':
       case 'job.approved':
-        return 'status-yellow';
-        break;
+        return 'status-yellow'
+        break
       // important update: blue
       case 'bid_task.accepted':
       case 'bid.sent':
-        return 'status-blue';
-        break;
+        return 'status-blue'
+        break
       // rejected something: red
       case 'bid.declined':
       case 'bid_task.denied':
-        return 'status-red';
-        break;
+        return 'status-red'
+        break
       // finished: green
       case 'job.completed':
       case 'bid_task.customer_sent_payment':
-        return 'status-green';
-        break;
+        return 'status-green'
+        break
       // don't need to do anything and not important info: grey
       case 'bid.initiated':
       case 'bid.in_progress':
@@ -71,29 +76,29 @@ export default class Format {
       case 'bid_task.approved_by_general':
       case 'bid_task.finished_by_general':
       default:
-        return 'status-grey';
-        break;
+        return 'status-grey'
+        break
     }
   }
 
-  static jobName (name) {
+  static jobName(name) {
     // if (name.length > 20) {
     //     return name.substring(0, 20) + '...';
     // }
-    return name;
+    return name
   }
 
-  static numbers (obj, key) {
-    obj[key] = this.numbersOnly (obj[key]);
+  static numbers(obj, key) {
+    obj[key] = this.numbersOnly(obj[key])
   }
 
-  static numbersOnly (num) {
-    return num.toString ().replace (/[^0-9.]/g, '');
+  static numbersOnly(num) {
+    return num.toString().replace(/[^0-9.]/g, '')
   }
 
-  static phone (phone) {
-    return phone.replace (/[^0-9]/g, '')
-      .replace (/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+  static phone(phone) {
+    return phone.replace(/[^0-9]/g, '')
+      .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
   }
 
   /**
@@ -105,51 +110,51 @@ export default class Format {
   static statusLabel(status, isCustomer, isGeneral, jobTask) {
 
     if (typeof jobTask !== 'undefined') {
-      console.log (jobTask);
+      console.log(jobTask)
       // job_task status
       if (isCustomer) {
-        return this.customerLabel (status);
+        return this.customerLabel(status)
       } else if (isGeneral) {
-        return this.generalContractorLabel (status);
+        return this.generalContractorLabel(status)
       } else {
         // subcontractor labels
-        return this.subContractorLabel ();
+        return this.subContractorLabel()
       }
 
     } else {
       // is job status
 
       if (isCustomer) {
-        return this.customerLabel (status);
+        return this.customerLabel(status)
       } else {
         // contractor labels
-        return this.generalContractorLabel (status);
+        return this.generalContractorLabel(status)
       }
     }
   }
 
-  static subContractorLabel (status) {
+  static subContractorLabel(status) {
     switch (status) {
       // action required: yellow
       case 'bid_task.reopened':
       case 'bid_task.approved_by_customer':
-        return 'status-yellow';
-        break;
+        return 'status-yellow'
+        break
       // important update: blue
       case 'job.approved':
       case 'bid_task.approved_by_general':
       case 'bid_task.accepted':
-        return 'status-blue';
-        break;
+        return 'status-blue'
+        break
       // rejected something: red
       case 'bid.declined':
       case 'bid_task.denied':
-        return 'status-red';
-        break;
+        return 'status-red'
+        break
       // finished: green
       case 'job.completed':
       case 'bid_task.customer_sent_payment':
-        return 'status-green';
+        return 'status-green'
       // don't need to do anything and not important info: grey
       case 'bid.initiated':
       case 'bid.in_progress':
@@ -159,8 +164,8 @@ export default class Format {
       case 'bid_task.finished_by_general':
       case 'bid.sent':
       default:
-        return 'status-grey';
-        break;
+        return 'status-grey'
+        break
     }
   }
 }

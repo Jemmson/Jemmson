@@ -1,4 +1,4 @@
-<template>
+    <template>
     <!-- Modal -->
     <div class="modal fade" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
          aria-hidden="false">
@@ -95,6 +95,8 @@
                                         {{ initiateBidForSubForm.errors.get('email') }}
                                     </span>
                         </div>
+
+                        <div></div>
                     </form>
                     <!-- /end col-md6ss -->
                 </div>

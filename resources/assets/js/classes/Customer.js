@@ -1,5 +1,9 @@
 export default class Customer {
 
+  constructor() {
+    this.user = Spark.state.user
+  }
+
   /**
    * Approve bid and all its tasks.
    *
@@ -272,10 +276,6 @@ export default class Customer {
       // error = error.response.data
       Vue.toasted.error(error)
     }
-  }
-
-  constructor() {
-    this.user = Spark.state.user
   }
 
 }
