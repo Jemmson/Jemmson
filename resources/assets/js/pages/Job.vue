@@ -1,47 +1,10 @@
 <template>
   <div class="container">
-    <div class="row">
 
-      <div class="col-12">
-        <h1 class="card-title">Details</h1>
-        <card>
-          <!-- /show all bid information -->
-          <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
-          </bid-details>
-        </card>
-      </div>
+      <!-- /show all bid information -->
+      <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
+      </bid-details>
 
-      <div class="col-12">
-        <h1 class="card-title mt-4">Payment Details</h1>
-        <card></card>
-      </div>
-
-      <div class="col-12">
-        <h1 class="card-title mt-4">Job Address</h1>
-        <card></card>
-      </div>
-
-      <div class="col-12">
-        <h1 class="card-title mt-4">Special Instructions</h1>
-        <card></card>
-      </div>
-
-      <div class="col-12">
-        <h1 class="card-title mt-4">Attachments</h1>
-      </div>
-
-      <div class="col-12 mb-4">
-        <card>
-          <div class="row">
-            <div class="col">
-              <p class="d-inline">Upload Attachment</p>
-              <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>
-            </div>
-          </div>
-        </card>
-      </div>
-    </div>
-    
     <card footer="true">
 
       <template slot="card-footer">
@@ -130,6 +93,9 @@
       }
     },
     computed: {
+      status() {
+        return User.status(this.bid.status, this.bid)
+      },
       customerName() {
         if (this.isCustomer) {
           return this.user.name;
@@ -172,6 +138,9 @@
       },
     },
     methods: {
+      getLabelClass(status) {
+        return Format.statusLabel(status,)
+      },
       reloadPage() {
         location.reload()
       },

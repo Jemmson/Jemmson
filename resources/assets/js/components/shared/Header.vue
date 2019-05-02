@@ -45,7 +45,9 @@
         <div v-else-if="page.split('/')[1] === 'bid'" class="row bg-white bid-row mb-4">
             <div class="col-12 d-flex align-items-center">
                 <i class="fas fa-chevron-left text-primary float-left sm-icon align-self-center"></i>
-                <h3 class="page-header-title mx-auto">{{$store.state.job.model.job_name}}</h3>
+                <span class="page-header-title mx-auto align-middle" style="font-weight: 700;">
+                    {{$store.state.job.model.job_name}}
+                </span>
             </div>
         </div>
         <div v-else class="row bg-white default-row mb-4">
