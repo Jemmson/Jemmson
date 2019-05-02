@@ -3,8 +3,9 @@ import * as getters from './getters'
 import * as mutations from './mutations'
 
 export default {
-  namespaced: true,
+  namespaced: false,
   state: {
+    model: {},
     id: '',
     customer_id: '',
     contractor_id: '',

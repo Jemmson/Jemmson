@@ -4,7 +4,11 @@
 
       <div class="col-12">
         <h1 class="card-title">Details</h1>
-        <card></card>
+        <card>
+          <!-- /show all bid information -->
+          <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
+          </bid-details>
+        </card>
       </div>
 
       <div class="col-12">
@@ -39,9 +43,6 @@
     </div>
     
     <card footer="true">
-      <!-- /show all bid information -->
-      <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
-      </bid-details>
 
       <template slot="card-footer">
         <!-- /customer approve bid form -->
@@ -70,7 +71,6 @@
     <!-- / stripe testing delete after -->
     <stripe :user='user'>
     </stripe>
-    <feedback></feedback>
   </div>
 </template>
 
@@ -210,12 +210,13 @@
           } = await axios.get('/job/' + id);
           // debugger
           this.bid = data;
+          this.$store.commit('setJob', data);
         } catch (error) {
           console.log(error);
           // debugger;  
           if (
             error.message === 'Not Authorized to access this resource/api' ||
-            error.response.status === 403
+            error.response !== undefined && error.response.status === 403
           ) {
             this.$router.push('/bids');
           }

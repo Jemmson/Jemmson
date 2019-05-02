@@ -23,6 +23,10 @@ export const loadStore = (state, job) => {
   setUpdatedAt(state, job.updated_at)
 }
 
+export const setJob = (state, job) => {
+  state.model = job
+}
+
 export const setId = (state, id) => {
   state.id = id
 }
