@@ -1,44 +1,46 @@
 <template>
-    <div class="flex flex-col justify-between full-height">
-        <div>
-            <search-bar>
-                <input
-                        type="text"
-                        placeholder="Search Invoices"
-                        v-model="searchTerm"
-                        @keyup="search">
-            </search-bar>
-            <paginate v-show="sInvoices.length > 0"
-                      ref="paginator" name="sInvoices"
-                      :list="sInvoices"
-                      :per="8"
-                      class="paginated">
-                <div v-for="invoice in paginated('sInvoices')"
-                     v-bind:key="invoice.id"
-                     class="invoice-section"
-                >
-                    <div
-                            v-if="invoice.job_id !== undefined"
-                            class="sizing text-center w-full h-full"
-                            @click="goToInvoice('/sub/invoice/' + invoice.id)"
-                    >
-                        {{invoice.task.name}}
-                    </div>
-                    <div
-                            v-else
-                            @click="goToInvoice('/invoice/' + invoice.id)"
-                            class="sizing text-center w-full h-full"
-                    >
-                        {{invoice.job_name}}
-                    </div>
-                </div>
-            </paginate>
+
+  <div class="container-fluid">
+    <search-bar>
+      <input type="text" class="form-control" placeholder="Search Invoices" v-model="searchTerm" @keyup="search">
+    </search-bar>
+
+    <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
+    <div class="paginated mt-4 mb-1">
+
+      <card class="list-card" v-for="invoice in sInvoices" v-bind:key="invoice.id" @click.native="invoice.job_id !== undefined ? goToInvoice('/sub/invoice/' + invoice.id) : goToInvoice('/invoice/' + invoice.id)">
+        <div class="row">
+          <div class="col-12 page-header-title">
+            <div v-if="invoice.job_id !== undefined">
+              {{invoice.task.name}}
+            </div>
+            <div v-else>
+              {{invoice.job_name}}
+            </div>
+          </div>
+          <div class="col-12 mt-1">
+            <span class="float-left list-card-info">
+              Customer Name Here
+            </span>
+
+            <span class="float-right mr-2 list-card-info">
+              Completed On: {{invoice.completed_bid_date.split(' ')[0]}}
+              <i class="far fa-calendar-check"></i>
+            </span>
+
+          </div>
         </div>
-        <div class="card p-5 card-body justify-center">
-            <paginate-links for="sInvoices" :limit="2" :show-step-links="true">
-            </paginate-links>
-        </div>
+      </card>
     </div>
+    <!-- </paginate> -->
+
+    <!-- <div class="card mb-4 mt-3">
+      <div class="card-body d-flex justify-content-center">
+        <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
+        </paginate-links>
+      </div>
+    </div> -->
+  </div>
 </template>
 
 <script>
