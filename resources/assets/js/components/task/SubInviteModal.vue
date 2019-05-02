@@ -36,16 +36,20 @@
                             >
                             <div
                                     class="panel-footer"
-                                    v-if="aResults.length">
-                                <div class="flex flex-col">
+                                    v-if="aResults.length > 0">
+                                <div class="flex flex-col"
+                                    ref="buttons"
+                                >
                                     <button
                                             class="flex-1 m-2 btn-format"
-                                            v-for="result in aResults"
+                                            v-for="(result, index) in aResults"
                                             v-bind:key="result.id"
                                             :name="result.phone"
                                             @click.prevent="fillFields(result)"
                                     >
-                                        {{ result.name }} - {{ result.contractor.company_name }}
+                                        <span :id="'result' + index">
+                                            {{ result.name }} - {{ result.contractor.company_name }}
+                                        </span>
                                     </button>
                                 </div>
                             </div>
@@ -96,7 +100,27 @@
                                     </span>
                         </div>
 
-                        <div></div>
+                        <div class="flex flex-col" id="preferredPaymentMethod">
+                            <label class="text-center mb-3">Preferred Payment Method</label>
+                            <div class="flex justify-between">
+                                <div class="flex">
+                                    <label for="cash" class="mr-6">Cash</label>
+                                    <input type="checkbox"
+                                           :checked="paymentTypeCash"
+                                           @click="paymentMethod('cash')"
+                                           id="cash"
+                                    >
+                                </div>
+                                <div class="flex">
+                                    <label for="stripe" class="mr-6">Stripe</label>
+                                    <input type="checkbox"
+                                           :checked="paymentTypeStripe"
+                                           @click="paymentMethod('stripe')"
+                                           id="stripe"
+                                    >
+                                </div>
+                            </div>
+                        </div>
                     </form>
                     <!-- /end col-md6ss -->
                 </div>
@@ -131,8 +155,11 @@
           email: '',
           phone: '',
           counter: 0,
-          name: ''
+          name: '',
+          paymentType: 'stripe'
         }),
+        paymentTypeCash: false,
+        paymentTypeStripe: true,
         companyName: '',
         user: '',
         results: [],
@@ -157,6 +184,17 @@
         this.initiateBidForSubForm.name = result.name
         this.companyName = result.contractor.company_name
         this.results = ''
+      },
+      paymentMethod(paymentType){
+        if(paymentType === 'cash'){
+          this.initiateBidForSubForm.paymentType = 'cash';
+          this.paymentTypeCash = true;
+          this.paymentTypeStripe = false;
+        } else {
+          this.initiateBidForSubForm.paymentType = 'stripe';
+          this.paymentTypeCash = false;
+          this.paymentTypeStripe = true;
+        }
       },
       autoComplete() {
         this.results = []
