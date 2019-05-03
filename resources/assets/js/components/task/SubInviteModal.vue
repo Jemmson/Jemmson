@@ -203,11 +203,7 @@
         // let query = this.initiateBidForSubForm.name;
         console.log('checking for names')
         if (query.length > 2) {
-          axios.get('/api/search', {
-            params: {
-              query: query
-            }
-          }).then(function(response) {
+          axios.get('/search/' + query).then(function(response) {
             console.log('autocomplete', response.data)
             this.results = response.data
           }.bind(this))

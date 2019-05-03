@@ -42,13 +42,7 @@ Route::group([
 // based on user and the resources they
 // try to edit
 
-Route::get('/search', function (Request $request) {
-    $query = $request->query('query');
-    $users = \App\User::whereHas('contractor', function ($q) use ($query) {
-        $q->where('company_name', 'like', '%' . $query . '%');
-    })->orWhere('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'customer')->with('contractor')->get();
-    return $users;
-});
+
 
 //Route::post('/search/task', function (Request $request) {
 //    $jobId = $request->jobId;
