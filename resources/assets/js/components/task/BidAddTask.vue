@@ -345,11 +345,12 @@
 <script>
   export default {
     props: {
-      bid: Object,
-      show: Boolean
+      // bid: Object,
+      show: Boolean,
+      bidId: String
     },
     data() {
-      return {
+      return{
         addNewTaskForm: new SparkForm({
           // one to one
           taskId: 0,  // if -1 then the task did not come from the drop down
@@ -357,15 +358,15 @@
           contractorId: '',
           taskPrice: 0,
           item_id: '',
-          customer_id: 0,
+          customer_id: '',
           // not apart of the api
           subTaskPrice: 0,
           qtyUnit: '',
           sub_message: '',
           customer_message: '',
-          jobId: this.bid.id,
+          jobId: '',
           createNew: false,
-          area: this.bid.city,
+          area: '',
           start_date: '',
           taskExists: '',
           start_when_accepted: true,
@@ -440,7 +441,8 @@
         customerMessageChanged: false,
         subMessageChanged: false,
         startDateError: false,
-        submitted: false
+        submitted: false,
+        bid: {}
       }
     },
     computed: {
@@ -780,6 +782,9 @@
           !this.errors.notANumber.quantity &&
           !this.errors.notANumber.subTaskPrice
         ) {
+          this.addNewTaskForm.customer_id = this.bid.customer_id;
+          this.addNewTaskForm.jobId = this.bid.id;
+          this.addNewTaskForm.area = this.bid.location.city;
           GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
           // console.log (newTask);
           // debugger;
@@ -793,6 +798,8 @@
       },
     },
     mounted: function() {
+      console.log(JSON.stringify(this.$props));
+      this.bid = GeneralContractor.getBid(this.bidId);
     }
   }
 </script>
