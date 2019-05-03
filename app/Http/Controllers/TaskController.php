@@ -750,8 +750,8 @@ class TaskController extends Controller
         $task = Task::find($request->taskId);
         $job = Job::find($request->jobId);
         $customer = User::find($request->customer_id);
-        $customer_quickBooks_Id = ContractorCustomer::where('contractor_user_id', '=', 1)
-            ->where('customer_user_id', '=', 4)->get()->first()->quickbooks_id;
+        $customer_quickBooks_Id = ContractorCustomer::where('contractor_user_id', '=', $request->contractorId)
+            ->where('customer_user_id', '=', $request->customer_id)->get()->first()->quickbooks_id;
 
         if (!empty($task)) {
             $jobTask = new JobTask();

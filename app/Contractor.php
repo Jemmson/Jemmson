@@ -390,9 +390,19 @@ class Contractor extends Model
             array_push($subsArray, $subInfo);
         }
 
+        $qb = new Quickbook();
+        if ($qb->isContractorThatUsesQuickbooks()) {
+            $this->getAllQuickbookCompanies();
+        }
+
         return  $subsArray;
     }
 
+    public function getAllQuickbookCompanies()
+    {
+        
+    }
+    
     public function getSubContractors($company_name, $generalContractorsCompanyName)
     {
         $subs = $this->getAllContractorsExceptTheGeneralContractor($company_name, $generalContractorsCompanyName);
