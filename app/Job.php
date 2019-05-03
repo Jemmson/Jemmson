@@ -127,7 +127,7 @@ class Job extends Model
     public static function createQuickBooksEstimate($customer, $task, $job, $jt, $customer_quickBooks_Id)
     {
         $qb = new Quickbook();
-        $qb->createEstimate($customer, $task, $job, $jt, $customer_quickBooks_Id);
+        return $qb->createEstimate($customer, $task, $job, $jt, $customer_quickBooks_Id);
     }
 
     public function updateQuickBooksEstimate($task, $job, $jobTask)

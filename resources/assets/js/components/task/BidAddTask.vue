@@ -384,7 +384,7 @@
             name: 'Inventory Asset'
           },
           type: 'Inventory',
-          trackQtyOnHand: false,
+          trackQtyOnHand: true,
           qtyOnHand: '10',
           invStartDate: '2015-01-01',
 
@@ -454,6 +454,35 @@
       }
     },
     methods: {
+
+      async getBid(id) {
+        try {
+          const {
+            data
+            // } = await axios.get('/job/' + id);
+          } = await axios.get('/job/' + id);
+          // debugger
+          this.bid = data;
+
+          this.addNewTaskForm.customer_id = data.customer_id;
+          this.addNewTaskForm.contractorId = data.contractor_id;
+          this.addNewTaskForm.jobId = data.id;
+
+        } catch (error) {
+          console.log(error);
+          // debugger;
+          if (
+            error.message === 'Not Authorized to access this resource/api' ||
+            error.response.status === 403
+          ) {
+            this.$router.push('/bids');
+          }
+          // error = error.response.data;
+          // Vue.toasted.error(error.message);
+          Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.');
+        }
+      },
+
       checkDateIsTodayorLater(date) {
         let dateArray = GeneralContractor.checkDateIsTodayorLater(date, 'today')
         this.addNewTaskForm.startDateErrorMessage = dateArray[0]
@@ -799,7 +828,7 @@
     },
     mounted: function() {
       console.log(JSON.stringify(this.$props));
-      this.bid = GeneralContractor.getBid(this.bidId);
+      this.bid = this.getBid(this.bidId);
     }
   }
 </script>

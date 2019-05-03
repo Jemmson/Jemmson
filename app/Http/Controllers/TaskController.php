@@ -783,7 +783,14 @@ class TaskController extends Controller
                 } else {
                     $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
                     $job->qb_estimate_id = $estimate->Id;
-                    $job->save();
+                   try {
+                       $job->save();
+                   } catch (\Exception $e) {
+                       return response()->json([
+                           'message' => $e->getMessage(),
+                           'code' => $e->getCode()
+                       ], 200);
+                   }
                 }
             }
         }

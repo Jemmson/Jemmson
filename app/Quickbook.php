@@ -965,6 +965,14 @@ class Quickbook extends Model
         ]);
 
         $resultingObj = $dataService->Add($theResourceObj);
+
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+        }
+
         return $resultingObj;
 
 //        ‌‌$dataService->Query('select count(*) from Estimate');
