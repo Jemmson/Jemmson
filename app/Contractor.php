@@ -390,24 +390,78 @@ class Contractor extends Model
             array_push($subsArray, $subInfo);
         }
 
-        $qb = new Quickbook();
-        if ($qb->isContractorThatUsesQuickbooks()) {
-            $this->getAllQuickbookCompanies();
+        return $subsArray;
+    }
+
+    public function getSubsThatHaveBeenUsedByLineItemInOrderOfUsedMost()
+    {
+        // TODO:: get all subs used for a given line item in the order of those used most per given line item
+    }
+
+    public function getFavoritedSubsForGivenLineItem()
+    {
+        // TODO:: get all subs for a given line item that have been favorited by the general contractor
+    }
+
+    public function getAllQuickbookCompaniesAndFormattedSubs($companyName, $formattedSubs)
+    {
+//        TODO:: pull back unique contractors from the quickbooks table becuase different general contractors can have
+        // TODO:: the same subs that they have worked with. I would like for this to be sorted
+        // TODO:: by company name
+        // TODO:: by state and city of where job is located
+        // TODO:: by contractors have used in the past in this app
+
+        $allCompanies = \App\QuickbooksContractor::where('company_name', 'like', "$companyName%")->get();
+
+        $subs = [];
+
+        foreach ($allCompanies as $c){
+            $subExists = false;
+            foreach($subs as $sub){
+                if ($sub == $c) {
+                    $subExists = true;
+                }
+            }
+            if (!$subExists) {
+                array_push($subs, [
+                    'name' => $c->given_name . " " . $c->family_name,
+                    'contractor' => [
+                        'company_name' => $c->company_name
+                    ],
+                    'phone' => $c->primary_phone,
+                    'email' => $c->primary_email_addr,
+                ]);
+            }
         }
 
-        return  $subsArray;
+
+        foreach ($formattedSubs as $c){
+            $subExists = false;
+            foreach($subs as $sub){
+                if ($sub == $c) {
+                    $subExists = true;
+                }
+            }
+            if (!$subExists) {
+                array_push($subs, $c);
+            }
+        }
+
+
+
     }
 
-    public function getAllQuickbookCompanies()
-    {
-        
-    }
-    
     public function getSubContractors($company_name, $generalContractorsCompanyName)
     {
         $subs = $this->getAllContractorsExceptTheGeneralContractor($company_name, $generalContractorsCompanyName);
-        $filteredSubs = $this->subsWithPhoneNumberAndEmail($subs);
-        return $filteredSubs;
+        $formattedSubs = $this->subsWithPhoneNumberAndEmail($subs);
+
+        $qb = new Quickbook();
+        if ($qb->isContractorThatUsesQuickbooks()) {
+            return $this->getAllQuickbookCompaniesAndFormattedSubs($company_name, $formattedSubs);
+        }
+
+        return $formattedSubs;
     }
 }
 
