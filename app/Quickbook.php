@@ -662,6 +662,7 @@ class Quickbook extends Model
         $cust->given_name = $this->returnNonNullAttribute($customer->GivenName);
         $cust->middle_name = $this->returnNonNullAttribute($customer->MiddleName);
         $cust->family_name = $this->returnNonNullAttribute($customer->FamilyName);
+        $cust->state = $this->returnNonNullAttribute($customer->BillAddr->CountrySubDivisionCode);
         $cust->fully_qualified_name = $this->returnNonNullAttribute($customer->FullyQualifiedName);
         if (!is_null($customer->PrimaryPhone)) {
             $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);
@@ -787,16 +788,22 @@ class Quickbook extends Model
         ));
         $entities = $dataService->Query(
             "SELECT 
-                      Id, 
-                      GivenName, 
-                      MiddleName,
-                      FamilyName,
-                      FullyQualifiedName,
-                      CompanyName,
-                      DisplayName,
-                      PrimaryPhone
+                     *
                     FROM Customer"
         );
+
+//        $entities = $dataService->Query(
+//            "SELECT
+//                      Id,
+//                      GivenName,
+//                      MiddleName,
+//                      FamilyName,
+//                      FullyQualifiedName,
+//                      CompanyName,
+//                      DisplayName,
+//                      PrimaryPhone
+//                    FROM Customer"
+//        );
         return $entities;
     }
 
@@ -958,6 +965,14 @@ class Quickbook extends Model
         ]);
 
         $resultingObj = $dataService->Add($theResourceObj);
+
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+        }
+
         return $resultingObj;
 
 //        ‌‌$dataService->Query('select count(*) from Estimate');

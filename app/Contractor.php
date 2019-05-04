@@ -8,6 +8,7 @@ use App\User;
 use App\Customer;
 use App\ContractorCustomer;
 use App\Location;
+use Illuminate\Support\Facades\Auth;
 
 class Contractor extends Model
 {
@@ -358,6 +359,55 @@ class Contractor extends Model
         }
 
         return User::find($user_id);
+    }
+
+    public function getGeneralContractorsCompanyName()
+    {
+        return \App\User::find(Auth::user()->getAuthIdentifier())->contractor()->get()->first()->company_name;
+    }
+
+    public function getAllContractorsExceptTheGeneralContractor($company_name, $generalContractorsCompanyName)
+    {
+        return \App\Contractor::where('company_name', 'like', "$company_name%")
+            ->where('company_name', '!=', "$generalContractorsCompanyName")->get();
+    }
+
+    public function subsWithPhoneNumberAndEmail($subs)
+    {
+        $subsArray = [];
+        foreach ($subs as $sub) {
+
+            $c = $sub->user()->get(['name', 'email', 'phone'])->first();
+
+            $subInfo = [
+                'name' => $c->name,
+                'contractor' => [
+                    'company_name' => $sub->company_name
+                ],
+                'phone' => $c->phone,
+                'email' => $c->email,
+            ];
+            array_push($subsArray, $subInfo);
+        }
+
+        $qb = new Quickbook();
+        if ($qb->isContractorThatUsesQuickbooks()) {
+            $this->getAllQuickbookCompanies();
+        }
+
+        return  $subsArray;
+    }
+
+    public function getAllQuickbookCompanies()
+    {
+        
+    }
+    
+    public function getSubContractors($company_name, $generalContractorsCompanyName)
+    {
+        $subs = $this->getAllContractorsExceptTheGeneralContractor($company_name, $generalContractorsCompanyName);
+        $filteredSubs = $this->subsWithPhoneNumberAndEmail($subs);
+        return $filteredSubs;
     }
 }
 
