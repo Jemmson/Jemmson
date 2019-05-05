@@ -19,3 +19,6 @@ public/css/
 public/js/
 public/mix.*
 public/variables.txt
+redis-stable
+redis-stable.tar.gz
+composer.phar
