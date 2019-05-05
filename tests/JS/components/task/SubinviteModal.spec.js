@@ -98,4 +98,9 @@ describe('SubInviteModal', () => {
 
     expect(ppm.exists()).toBe(true)
   })
+
+  it('should show whether a phone number is mobile or not', function() {
+    
+  })
+
 })

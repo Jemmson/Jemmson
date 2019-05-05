@@ -93,6 +93,8 @@ class ContractorController extends Controller
 
 
 
+
+
         return $contractor->getSubContractors($company_name, $generalContractorsCompanyName);
 
 //        $company_name = \App\User::find(Auth::user()->getAuthIdentifier())->name;

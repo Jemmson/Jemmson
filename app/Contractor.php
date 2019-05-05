@@ -415,16 +415,23 @@ class Contractor extends Model
 
         $subs = [];
 
-        foreach ($allCompanies as $c){
+        foreach ($allCompanies as $c) {
             $subExists = false;
-            foreach($subs as $sub){
+            foreach ($subs as $sub) {
                 if ($sub == $c) {
                     $subExists = true;
                 }
             }
             if (!$subExists) {
+                if ($c->family_name == "NULL") {
+                        $name = $c->given_name;
+                    } else if ($c->given_name == "NULL") {
+                        $name = $c->family_name;
+                    } else {
+                        $name = $c->given_name . " " . $c->family_name;
+                    }
                 array_push($subs, [
-                    'name' => $c->given_name . " " . $c->family_name,
+                    'name' => $name,
                     'contractor' => [
                         'company_name' => $c->company_name
                     ],
@@ -435,9 +442,9 @@ class Contractor extends Model
         }
 
 
-        foreach ($formattedSubs as $c){
+        foreach ($formattedSubs as $c) {
             $subExists = false;
-            foreach($subs as $sub){
+            foreach ($subs as $sub) {
                 if ($sub == $c) {
                     $subExists = true;
                 }
@@ -447,7 +454,7 @@ class Contractor extends Model
             }
         }
 
-
+        return $subs;
 
     }
 

@@ -171,19 +171,19 @@
     },
     methods: {
       filterPhone() {
-        this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
+        this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone);
       },
       sendSubInviteToBidOnTask() {
         // debugger;
-        GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
-        this.companyName = ''
+        GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id);
+        this.companyName = '';
       },
       fillFields(result) {
-        this.initiateBidForSubForm.email = result.email
-        this.initiateBidForSubForm.phone = result.phone
-        this.initiateBidForSubForm.name = result.name
-        this.companyName = result.contractor.company_name
-        this.results = ''
+        this.initiateBidForSubForm.email = result.email;
+        this.initiateBidForSubForm.phone = result.phone;
+        this.initiateBidForSubForm.name = result.name;
+        this.companyName = result.contractor.company_name;
+        this.results = '';
       },
       paymentMethod(paymentType){
         if(paymentType === 'cash'){
@@ -197,15 +197,15 @@
         }
       },
       autoComplete() {
-        this.results = []
-        let query = this.companyName
+        this.results = [];
+        let query = this.companyName;
         // let query = this.initiateBidForSubForm.name;
         // let query = this.initiateBidForSubForm.name;
-        console.log('checking for names')
+        console.log('checking for names');
         if (query.length > 2) {
           axios.get('/search/' + query).then(function(response) {
-            console.log('autocomplete', response.data)
-            this.results = response.data
+            console.log('autocomplete', response.data);
+            this.results = response.data;
           }.bind(this))
         }
       }
