@@ -25,7 +25,7 @@
 
     <!-- /add task to bid -->
     <transition name="slide-fade">
-      <bid-add-task :show="showAddTaskPanel" :bid="bid" v-if="!jobApproved">
+      <bid-add-task :show="showAddTaskPanel" :bid="bid" :bidId="this.$route.params.id" v-if="!jobApproved">
       </bid-add-task>
     </transition>
 
@@ -212,6 +212,9 @@
     },
     mounted: function () {
       // set up init data
+      // const bidId = this.$route.params.id;
+      // this.getBid(bidId);
+
       this.bidForm.id = this.bid.id;
       this.bidForm.status = this.bid.status;
       const success = this.$route.query.success;

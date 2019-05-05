@@ -29,6 +29,8 @@ Route::get('/loadFeatures', function () {
 
 Route::get('/welcome', 'WelcomeController@show');
 
+Route::get('/search/{company_name}', 'ContractorController@getContractors');
+
 Route::get('/quickbooks/getAuthUrl/{state}', 'QuickbooksController@getAuthUrl');
 Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
 Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCompanyInfo');

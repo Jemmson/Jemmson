@@ -154,8 +154,6 @@ export default class GeneralContractor {
     return [errorMessage, hasDateError]
   }
 
-  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
-
   async deleteTask(jobTask, disabled) {
     disabled.deleteTask = true
     try {
@@ -173,6 +171,27 @@ export default class GeneralContractor {
     }
   }
 
+  // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'pike.shawn@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`name`, `email`, `phone`, `usertype`, `password_updated`, `password`, `updated_at`, `created_at`) values (sjdsskdj, pike.shawn@gmail.com, 6024326933, customer, 0, $2y$10$3hfOxxahyXmKvc1IN71xn.//Is8H./U.KPwuunTSX9jLgvZe/FP4O, 2018-04-21 09:51:22, 2018-04-21 09:51:22))
+
+  getBid(id) {
+    axios.get('/job/' + id).then((data) => {
+      console.log(JSON.stringify(data.data))
+      return data.data
+    }).catch(() => {
+      console.log(error)
+      // debugger;
+      if (
+        error.message === 'Not Authorized to access this resource/api' ||
+        error.response.status === 403
+      ) {
+        this.$router.push('/bids')
+      }
+      // error = error.response.data;
+      // Vue.toasted.error(error.message);
+      Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
+    })
+  }
+
   goToUserAuthorizationPage() {
     router.push('userAuthorizationPage')
   }
@@ -184,7 +203,7 @@ export default class GeneralContractor {
       const data = await axios.post('/initiate-bid', form)
       if (data.data.tokenState !== undefined) {
         if (data.data.tokenState === 'refreshTokenHasExpired') {
-          this.goToUserAuthorizationPage();
+          this.goToUserAuthorizationPage()
         }
       }
       console.log(data)
