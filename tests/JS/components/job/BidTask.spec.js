@@ -6,7 +6,7 @@ import VuePaginate from 'vue-paginate'
 import BidTask from '../../../../resources/assets/js/components/job/BidTask'
 import User from '../../../../resources/assets/js/classes/User'
 
-require('../../bootstrap')
+// require('../../bootstrap')
 
 const localVue = createLocalVue()
 localVue.use(VuePaginate)

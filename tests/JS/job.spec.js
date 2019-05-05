@@ -5,6 +5,7 @@ import {
 }
   from '@vue/test-utils'
 import sinon from 'sinon'
+import User from '../../resources/assets/js/classes/User';
 
 const $route = {
   path: '/#/bid/1',
@@ -60,7 +61,7 @@ describe('Job', () => {
       }
     },
     propsData: {
-      user: global.User.user,
+      user: User.user,
     }
   })
 

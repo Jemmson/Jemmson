@@ -3,9 +3,11 @@ import {
 } from '@vue/test-utils'
 import BidDetails from '../../../../resources/assets/js/components/job/BidDetails'
 import Customer from '../../../../resources/assets/js/classes/Customer'
+import User from '../../../../resources/assets/js/classes/User';
+
 import sinon from 'sinon'
 
-require('../../bootstrap')
+// require('../../bootstrap')
 
 describe('BidDetails', () => {
 

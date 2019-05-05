@@ -2,7 +2,7 @@ import { shallowMount } from "@vue/test-utils";
 import CompletedTasks from '../../../../resources/assets/js/components/job/CompletedTasks';
 import sinon from 'sinon';
 
-require('../../bootstrap');
+// require('../../bootstrap');
 
 describe('CompletedTasks', () => {
     const reopenTask = sinon.spy();

@@ -4,7 +4,7 @@ import {
 import sinon from 'sinon';
 import UpdateTaskLocationModal from '../../../../resources/assets/js/components/task/UpdateTaskLocationModal';
 
-require('../../bootstrap');
+// require('../../bootstrap');
 
 describe('UpdateTaskLocationModal', () => {
     const update = sinon.spy();

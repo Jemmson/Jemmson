@@ -1,4 +1,4 @@
-    <template>
+<template>
     <!-- Modal -->
     <div class="modal fade" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
          aria-hidden="false">
@@ -10,7 +10,8 @@
                     </button>
                     <h4 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
                         taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h4>
-                    <h4 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }} -
+                    <h4 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :
+                        jobTaskNameForSubInvite.toUpperCase() }} -
                         would you like to invite another sub to bid on this task?</h4>
                 </div>
                 <div class="modal-body">
@@ -38,7 +39,7 @@
                                     class="panel-footer"
                                     v-if="aResults.length > 0">
                                 <div class="flex flex-col"
-                                    ref="buttons"
+                                     ref="buttons"
                                 >
                                     <button
                                             class="flex-1 m-2 btn-format"
@@ -85,10 +86,17 @@
                                    placeholder="Phone Number"
                                    class="form-control" id="phone" name="phone" maxlength="10" required
                                    v-model="initiateBidForSubForm.phone"
+                                   @blur="validateMobileNumber($event.target.value)"
                                    @keyup="filterPhone">
                             <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
                                         {{ initiateBidForSubForm.errors.get('phone') }}
                                     </span>
+                            <div v-if="getMobileValidResponse.length > 0">
+                                <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
+                                    <div style="color: green">{{ getMobileValidResponse[1] }}</div>
+                                </div>
+                                <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
+                            </div>
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
                             <label for="email">Email</label>
@@ -127,7 +135,7 @@
                 <div class="modal-footer">
                     <div class="form-group">
                         <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit"
-                                :disabled="disabled.invite" ref="submit">
+                                :disabled="checkValidData()" ref="submit">
                             <span v-if="disabled.invite">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
@@ -141,6 +149,9 @@
 </template>
 
 <script>
+
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
+
   export default {
     props: {
       jobTask: Object,
@@ -170,54 +181,99 @@
       }
     },
     methods: {
+      ...mapMutations(['setMobileResponse']),
+      ...mapActions(['checkMobileNumber']),
       filterPhone() {
-        this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone);
+        this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
       },
       sendSubInviteToBidOnTask() {
         // debugger;
-        GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id);
-        this.companyName = '';
+        GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
+        this.companyName = ''
       },
       fillFields(result) {
-        this.initiateBidForSubForm.email = result.email;
-        this.initiateBidForSubForm.phone = result.phone;
-        this.initiateBidForSubForm.name = result.name;
-        this.companyName = result.contractor.company_name;
-        this.results = '';
+        this.initiateBidForSubForm.email = result.email
+        this.initiateBidForSubForm.phone = result.phone
+        this.initiateBidForSubForm.name = result.name
+        this.companyName = result.contractor.company_name
+        this.results = ''
       },
-      paymentMethod(paymentType){
-        if(paymentType === 'cash'){
-          this.initiateBidForSubForm.paymentType = 'cash';
-          this.paymentTypeCash = true;
-          this.paymentTypeStripe = false;
+      paymentMethod(paymentType) {
+        if (paymentType === 'cash') {
+          this.initiateBidForSubForm.paymentType = 'cash'
+          this.paymentTypeCash = true
+          this.paymentTypeStripe = false
         } else {
-          this.initiateBidForSubForm.paymentType = 'stripe';
-          this.paymentTypeCash = false;
-          this.paymentTypeStripe = true;
+          this.initiateBidForSubForm.paymentType = 'stripe'
+          this.paymentTypeCash = false
+          this.paymentTypeStripe = true
         }
       },
       autoComplete() {
-        this.results = [];
-        let query = this.companyName;
+        this.results = []
+        let query = this.companyName
         // let query = this.initiateBidForSubForm.name;
         // let query = this.initiateBidForSubForm.name;
-        console.log('checking for names');
+        console.log('checking for names')
         if (query.length > 2) {
           axios.get('/search/' + query).then(function(response) {
-            console.log('autocomplete', response.data);
-            this.results = response.data;
+            console.log('autocomplete', response.data)
+            this.results = response.data
           }.bind(this))
+        }
+      },
+      validateMobileNumber(phone) {
+        this.phoneFormatError = false
+        if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
+          this.checkMobileNumber(phone)
+        } else {
+          this.phoneFormatError = true
+        }
+      },
+      unformatNumber(number) {
+        let unformattedNumber = ''
+        if (number !== '') {
+          if (number) {
+            for (let i = 0; i < number.length; i++) {
+              if (!isNaN(parseInt(number[i]))) {
+                unformattedNumber = unformattedNumber + number[i];
+              }
+            }
+            let numberLength = unformattedNumber.length;
+            if (numberLength < 10) {
+              if (this.getMobileValidResponse[1] !== '') {
+                this.$store.commit('setTheMobileResponse', ['', '', ''])
+              }
+            }
+            return numberLength;
+          }
+        } else {
+          return 0;
+        }
+      },
+      checkValidData() {
+        let phoneLength = this.unformatNumber(this.initiateBidForSubForm.phone)
+        if (
+          (this.getMobileValidResponse[1] === 'mobile' ||
+            this.getMobileValidResponse[2] === 'mobile') &&
+          this.initiateBidForSubForm.name !== '' &&
+          phoneLength === 10
+        ) {
+          return false
+        } else {
+          return true
         }
       }
     },
     computed: {
-      taskForSubInvite () {
+      ...mapGetters(['getMobileValidResponse']),
+      taskForSubInvite() {
         // debugger;
-        return this.jobTaskTask;
+        return this.jobTaskTask
       },
-      jobTaskNameForSubInvite () {
+      jobTaskNameForSubInvite() {
         // debugger;
-        return this.jobTaskName;
+        return this.jobTaskName
       },
       aResults() {
         // if (this.results.length > 0) {

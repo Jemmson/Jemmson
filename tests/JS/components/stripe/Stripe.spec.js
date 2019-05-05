@@ -2,6 +2,7 @@ import {
     shallowMount
 } from "@vue/test-utils";
 import Stripe from '../../../../resources/assets/js/components/stripe/Stripe';
+import User from '../../../../resources/assets/js/classes/User';
 
 require('../../bootstrap');
 
@@ -13,7 +14,7 @@ describe('Stripe', () => {
             'signup-with-stripe'
         ],
         propsData: {
-            user: global.User.user
+            user: User.user
         }
     });
 
@@ -34,7 +35,7 @@ describe('Stripe', () => {
     });
 
     it('Should render the signup-with-stripe component', () => {
-        global.User.setUser({
+        User.setUser({
             id: 1,
             usertype: 'customer',
             contractor: null,
@@ -46,7 +47,7 @@ describe('Stripe', () => {
                 'signup-with-stripe'
             ],
             propsData: {
-                user: global.User.user
+                user: User.user
             }
         });
         expect(wrapper.html()).toContain('signup-with-stripe');

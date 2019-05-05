@@ -4,7 +4,7 @@ import {
 import sinon from 'sinon';
 import ApproveBid from '../../../../resources/assets/js/components/job/ApproveBid';
 
-require('../../bootstrap');
+// require('../../bootstrap');
 
 describe('ApproveBid', () => {
     const declineBid = sinon.spy();

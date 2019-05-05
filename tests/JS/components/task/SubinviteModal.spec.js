@@ -1,19 +1,45 @@
 import {
+  createLocalVue,
   shallowMount
 } from '@vue/test-utils'
 import sinon from 'sinon'
+import Vuex from 'vuex'
 import SubInviteModal from '../../../../resources/assets/js/components/task/SubInviteModal'
+import moxios from 'moxios'
 
-require('../../bootstrap')
+// require('../../bootstrap')
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
 describe('SubInviteModal', () => {
+
+  let actions = {
+    checkMobileNumber: () => ''
+  }
+  let mutations = {
+    setTheMobileResponse: () => 'hell',
+  }
+  let getters = {
+    getMobileValidResponse: () => ['phone', 'mobile', 'land'],
+  }
+  let store = new Vuex.Store({
+    state: {},
+    actions,
+    getters,
+    mutations
+  })
+
+  let wrapper = {};
   const sendSubInviteToBidOnTask = sinon.spy()
   const autoComplete = sinon.spy()
-  const wrapper = shallowMount(SubInviteModal, {
+
+  wrapper = shallowMount(SubInviteModal, {
     methods: {
       sendSubInviteToBidOnTask,
       autoComplete
     },
+    store,
+    localVue,
     propsData: {
       jobTask: {
         bid_contractor_job_tasks: [],
@@ -39,7 +65,18 @@ describe('SubInviteModal', () => {
     }
   })
 
+  beforeEach(() => {
+    moxios.install()
+
+
+  })
+
+  afterEach(() => {
+    moxios.uninstall()
+  })
+
   it('Should render itself', () => {
+
     expect(wrapper.isEmpty()).toBe(false)
   })
 
@@ -68,7 +105,7 @@ describe('SubInviteModal', () => {
           email: 'jane@email.com',
           phone: '4903477834',
           contractor: {
-            companyName: "Jane's Company"
+            companyName: 'Jane\'s Company'
           }
         }
       ],
@@ -81,7 +118,7 @@ describe('SubInviteModal', () => {
     })
 
     const subButton = wrapper.find(
-      "#result0"
+      '#result0'
     )
 
     subButton.trigger('click')
@@ -100,7 +137,7 @@ describe('SubInviteModal', () => {
   })
 
   it('should show whether a phone number is mobile or not', function() {
-    
+
   })
 
 })

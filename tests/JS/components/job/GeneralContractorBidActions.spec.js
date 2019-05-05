@@ -4,7 +4,7 @@ import {
 import sinon from "sinon";
 import GeneralContractorBidActions from '../../../../resources/assets/js/components/job/GeneralContractorBidActions';
 
-require('../../bootstrap');
+// require('../../bootstrap');
 
 describe('GeneralContractorBidActions', () => {
     const openModal = sinon.spy();

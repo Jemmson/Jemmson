@@ -3,7 +3,7 @@ import {
 } from "@vue/test-utils";
 import UploadTaskImages from '../../../../resources/assets/js/components/task/UploadTaskImages';
 
-require('../../bootstrap');
+// require('../../bootstrap');
 
 describe('UploadTaskImages', () => {
     const wrapper = shallowMount(UploadTaskImages, {
