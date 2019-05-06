@@ -135,7 +135,7 @@
                 <div class="modal-footer">
                     <div class="form-group">
                         <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit"
-                                :disabled="checkValidData()" ref="submit">
+                                :disabled="phoneFormatError" ref="submit">
                             <span v-if="disabled.invite">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
@@ -171,6 +171,7 @@
         }),
         paymentTypeCash: false,
         paymentTypeStripe: true,
+        phoneFormatError: true,
         companyName: '',
         user: '',
         results: [],
@@ -192,11 +193,12 @@
         this.companyName = ''
       },
       fillFields(result) {
-        this.initiateBidForSubForm.email = result.email
-        this.initiateBidForSubForm.phone = result.phone
-        this.initiateBidForSubForm.name = result.name
-        this.companyName = result.contractor.company_name
-        this.results = ''
+        this.initiateBidForSubForm.email = result.email;
+        this.initiateBidForSubForm.phone = result.phone;
+        this.initiateBidForSubForm.name = result.name;
+        this.companyName = result.contractor.company_name;
+        this.results = '';
+        this.validateMobileNumber(this.initiateBidForSubForm.phone);
       },
       paymentMethod(paymentType) {
         if (paymentType === 'cash') {
@@ -226,6 +228,7 @@
         this.phoneFormatError = false
         if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
           this.checkMobileNumber(phone)
+          this.checkValidData();
         } else {
           this.phoneFormatError = true
         }
@@ -259,9 +262,9 @@
           this.initiateBidForSubForm.name !== '' &&
           phoneLength === 10
         ) {
-          return false
+          this.phoneFormatError = false
         } else {
-          return true
+          this.phoneFormatError = true
         }
       }
     },
