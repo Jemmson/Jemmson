@@ -135,7 +135,7 @@
                 <div class="modal-footer">
                     <div class="form-group">
                         <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit"
-                                :disabled="phoneFormatError" ref="submit">
+                                :disabled="getMobileValidResponse[1] !== 'mobile'" ref="submit">
                             <span v-if="disabled.invite">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
@@ -248,7 +248,7 @@
         }
       },
       validateMobileNumber(phone) {
-        this.phoneFormatError = false
+        // this.phoneFormatError = false
         if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
           this.checkMobileNumber(phone)
           this.checkValidData()
