@@ -157,7 +157,8 @@
       jobTask: Object,
       jobTaskTask: Object,
       jobTaskName: String,
-      id: Number
+      id: Number,
+      bidId: Number
     },
     data() {
       return {
@@ -184,6 +185,28 @@
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),
+      returnContractorsNotAlreadyAssignedToTask(subs) {
+
+        let filteredSubs = []
+        let assignedSubs = this.jobTask.bid_contractor_job_tasks
+
+
+     // TODO: need to filter on something more unique than name comparison but it is a start
+        for (let i = 0; i < subs.length; i++) {
+          let subExists = false
+          for (let j = 0; j < assignedSubs.length; j++) {
+            if (subs[i].name == assignedSubs[j].contractor.name) {
+              subExists = true
+            }
+          }
+          if (!subExists) {
+            filteredSubs.push(subs[i])
+          }
+        }
+
+        return filteredSubs
+
+      },
       filterPhone() {
         this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
       },
@@ -193,12 +216,12 @@
         this.companyName = ''
       },
       fillFields(result) {
-        this.initiateBidForSubForm.email = result.email;
-        this.initiateBidForSubForm.phone = result.phone;
-        this.initiateBidForSubForm.name = result.name;
-        this.companyName = result.contractor.company_name;
-        this.results = '';
-        this.validateMobileNumber(this.initiateBidForSubForm.phone);
+        this.initiateBidForSubForm.email = result.email
+        this.initiateBidForSubForm.phone = result.phone
+        this.initiateBidForSubForm.name = result.name
+        this.companyName = result.contractor.company_name
+        this.results = ''
+        this.validateMobileNumber(this.initiateBidForSubForm.phone)
       },
       paymentMethod(paymentType) {
         if (paymentType === 'cash') {
@@ -220,7 +243,7 @@
         if (query.length > 2) {
           axios.get('/search/' + query).then(function(response) {
             console.log('autocomplete', response.data)
-            this.results = response.data
+            this.results = this.returnContractorsNotAlreadyAssignedToTask(response.data)
           }.bind(this))
         }
       },
@@ -228,7 +251,7 @@
         this.phoneFormatError = false
         if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
           this.checkMobileNumber(phone)
-          this.checkValidData();
+          this.checkValidData()
         } else {
           this.phoneFormatError = true
         }
@@ -239,19 +262,19 @@
           if (number) {
             for (let i = 0; i < number.length; i++) {
               if (!isNaN(parseInt(number[i]))) {
-                unformattedNumber = unformattedNumber + number[i];
+                unformattedNumber = unformattedNumber + number[i]
               }
             }
-            let numberLength = unformattedNumber.length;
+            let numberLength = unformattedNumber.length
             if (numberLength < 10) {
               if (this.getMobileValidResponse[1] !== '') {
                 this.$store.commit('setTheMobileResponse', ['', '', ''])
               }
             }
-            return numberLength;
+            return numberLength
           }
         } else {
-          return 0;
+          return 0
         }
       },
       checkValidData() {
