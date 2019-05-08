@@ -77,6 +77,31 @@
                     </address>
                 </a>
             <button v-if="isCustomer" style="background-color: black; color: white;" class="btn btn-lg btn-primary" v-on:click="">CustomerCanAddJobPictures->implement</button>
+
+                <div  v-if="isCustomer" class="flex flex-col" id="preferredPaymentMethod">
+                    <label class="text-center mb-3">Preferred Payment Method</label>
+                    <div class="flex justify-between">
+                        <div class="flex">
+                            <label for="cash" class="mr-6">Cash</label>
+                            <input type="checkbox"
+                                   :checked="paymentTypeCash"
+                                   @click="paymentMethod('cash')"
+                                   id="cash"
+                            >
+                        </div>
+                        <div class="flex">
+                            <label for="stripe" class="mr-6">Credit Card</label>
+                            <input type="checkbox"
+                                   :checked="paymentTypeStripe"
+                                   @click="paymentMethod('stripe')"
+                                   id="stripe"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <button v-if="isCustomer" style="background-color: black; color: white;" class="btn btn-lg btn-primary" v-on:click="">CustomerDictatesTheirPreferredPaymentMethod->implement</button>
+
             </div>
             <!-- <div class="flex flex-col">
                       <span class="label mb-4">TOTAL PRICE:</span>
@@ -299,7 +324,10 @@
         customerNotes_contractor: false,
         areaError: '',
         locationExists: false,
-        customerInfo: false
+        customerInfo: false,
+        paymentTypeCash: false,
+        paymentTypeStripe: true,
+        selectedPayment: ''
       }
     },
     computed: {
@@ -341,6 +369,17 @@
       }
     },
     methods: {
+      paymentMethod(paymentType) {
+        if (paymentType === 'cash') {
+          this.selectedPayment = 'cash'
+          this.paymentTypeCash = true
+          this.paymentTypeStripe = false
+        } else {
+          this.selectedPayment = 'stripe'
+          this.paymentTypeCash = false
+          this.paymentTypeStripe = true
+        }
+      },
       getLabelClass(status) {
         return Format.statusLabel(status,)
       },

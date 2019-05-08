@@ -120,7 +120,7 @@
                                     >
                                 </div>
                                 <div class="flex">
-                                    <label for="stripe" class="mr-6">Stripe</label>
+                                    <label for="stripe" class="mr-6">Credit Card</label>
                                     <input type="checkbox"
                                            :checked="paymentTypeStripe"
                                            @click="paymentMethod('stripe')"
