@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractorSubcontractorPreferredPayment;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
 use App\Notifications\NotifySubOfBidNotAcceptedBid;
@@ -83,7 +84,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Task $task
+     * @param \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function getJobTask($jobTaskId)
@@ -101,7 +102,7 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Task $task
+     * @param \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function edit(Task $task)
@@ -112,8 +113,8 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Task $task
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Task $task)
@@ -130,8 +131,8 @@ class TaskController extends Controller
     /**
      * Update jobtask location
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Task $task
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function updateTaskLocation(Request $request)
@@ -143,7 +144,7 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Task $task
+     * @param \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function toggleStripe(Request $request)
@@ -161,8 +162,8 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\BidContractorJobTask $task
+     * @param \Illuminate\Http\Request $request
+     * @param \App\BidContractorJobTask $task
      * @return \Illuminate\Http\Response
      */
     public function updateBidContractorJobTask(Request $request, $id)
@@ -201,7 +202,7 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Task $task
+     * @param \App\Task $task
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
@@ -275,10 +276,10 @@ class TaskController extends Controller
 
     }
 
-    public function addBidEntryForTheSubContractor($contractor, $jobTaskId, $taskId)
+    public function addBidEntryForTheSubContractor($subcontractor, $jobTaskId, $taskId)
     {
-        if ($contractor->checkIfContractorSetBidForATask($contractor->user_id, $jobTaskId)) {
-            $contractor->addContractorToBidForJobTable($contractor->user_id, $jobTaskId, $taskId);
+        if ($subcontractor->checkIfContractorSetBidForATask($subcontractor->user_id, $jobTaskId)) {
+            $subcontractor->addContractorToBidForJobTable($subcontractor->user_id, $jobTaskId, $taskId);
             return true;
         } else {
             return false;
@@ -330,8 +331,7 @@ class TaskController extends Controller
         $jobTaskId = $request->jobTaskId;
         $name = $request->name;
 
-        $user = User::where('phone', $phone)->orWhere('email', $email)->first();
-
+        $user = User::getUserByPhoneOrEmail($phone, $email);
 
         // TODO: Not sure about this logic. Should be if a user is not a contractor then create a contractor. If a user is a customer then that should not throw an error becuase a user can be both a contractor and a customer
         if ($user === null) {
@@ -350,10 +350,32 @@ class TaskController extends Controller
             return response()->json(["message" => "Task Already Exists.", "errors" => ["error" => "Task Already Exists."]], 422);
         }
 
+        // adding a preferred payment entry for contractor for a given task
+        $ccspp = ContractorSubcontractorPreferredPayment::where('job_task_id', '=', $jobTask->id)->
+        where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+        where('sub_id', '=', $user->id)->get()->first();
+        if (empty($ccspp)) {
+            $ccspp = new ContractorSubcontractorPreferredPayment();
+            $ccspp->job_task_id = $jobTask->id;
+            $ccspp->contractor_id = Auth::user()->getAuthIdentifier();
+            $ccspp->sub_id = $user->id;
+            $ccspp->contractor_preferred_payment_type = $request->paymentType;
+        } else {
+            $ccspp->contractor_preferred_payment_type = $request->paymentType;
+        }
+
+        try {
+            $ccspp->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
         // this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
         $user->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user));
-
 
         $bidPrices = Task::getBidPrices($jobTask->job_id);
 
@@ -756,41 +778,38 @@ class TaskController extends Controller
         if (!empty($task)) {
             $jobTask = new JobTask();
             $jobTask->createJobTask($request);
-            if($task->isTaskAQBLineItem($request->item_id)){
-                if($job->hasAQuickbookEstimateBeenCreated()){
+            if ($task->isTaskAQBLineItem($request->item_id)) {
+                if ($job->hasAQuickbookEstimateBeenCreated()) {
                     $job->updateQuickBooksEstimate($task, $job, $jobTask);
-                }
-              else {
+                } else {
                     $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
                     $job->qb_estimate_id = $estimate->Id;
                     $job->save();
                 }
             }
-        }
-
-        else {
+        } else {
             $task = new Task();
             $task->createTask($request);
             $jobTask = new JobTask();
             $jobTask->addToJobTask($job->id, $task->id, $request);
 
             $qb = new Quickbook();
-            if($qb->isContractorThatUsesQuickbooks()){
+            if ($qb->isContractorThatUsesQuickbooks()) {
                 $item = $task->createItem($task, $request);
                 $task->updateTaskWithQuickbooksItem($item);
-                if($job->hasAQuickbookEstimateBeenCreated()){
+                if ($job->hasAQuickbookEstimateBeenCreated()) {
                     $job->updateQuickBooksEstimate($task, $job, $jobTask);
                 } else {
                     $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
                     $job->qb_estimate_id = $estimate->Id;
-                   try {
-                       $job->save();
-                   } catch (\Exception $e) {
-                       return response()->json([
-                           'message' => $e->getMessage(),
-                           'code' => $e->getCode()
-                       ], 200);
-                   }
+                    try {
+                        $job->save();
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => $e->getMessage(),
+                            'code' => $e->getCode()
+                        ], 200);
+                    }
                 }
             }
         }

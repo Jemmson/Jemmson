@@ -321,4 +321,9 @@ class User extends SparkUser
 
     }
 
+    public static function getUserByPhoneOrEmail($phone, $email)
+    {
+        return  User::where('phone', $phone)->orWhere('email', $email)->first();
+    }
+
 }

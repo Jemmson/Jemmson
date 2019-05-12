@@ -269,7 +269,7 @@ export default class GeneralContractor {
         disabled.invite = true;
         // debugger;
         form.jobTaskId = jobTaskId;
-        Spark.post('/api/task/notify', form)
+        Spark.post('/task/notify', form)
             .then((response) => {
                 console.log(response)
                 User.emitChange('bidUpdated');

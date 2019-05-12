@@ -133,24 +133,25 @@ class Contractor extends Model
         return $this->hasMany(BidContractorJobTask::class, 'contractor_id', 'user_id');
     }
 
-    public function addContractorToBidForJobTable($contractorId, $jobTaskId, $taskId)
+    public function addContractorToBidForJobTable($subcontractorId, $jobTaskId, $taskId)
     {
         $proposedBidPrice = Task::find($taskId)->proposed_sub_price;
         // TODO: update this
         DB::table('bid_contractor_job_task')->insert(
-            ['contractor_id' => $contractorId, 'job_task_id' => $jobTaskId, "bid_price" => $proposedBidPrice]
+            ['contractor_id' => $subcontractorId, 'job_task_id' => $jobTaskId, "bid_price" => $proposedBidPrice]
         );
 
     }
 
-    public function checkIfContractorSetBidForATask($contractorId, $jobTaskId)
+    public function checkIfContractorSetBidForATask($subcontractorId, $jobTaskId)
     {
         if (empty(DB::table('bid_contractor_job_task')
             ->select('job_task_id')
-            ->where('contractor_id', '=', $contractorId)
+            ->where('contractor_id', '=', $subcontractorId)
             ->where('job_task_id', '=', $jobTaskId)
             ->get()[0])) {
             return true;
+//            DB::table('bid_contractor_job_task')->select('job_task_id')->where('contractor_id', '=', 3)->where('job_task_id', '=', 3)->get()[0];
         } else {
             return false;
         }
