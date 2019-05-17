@@ -1,3 +1,16 @@
 
 string
 "2017-11-30"
+
+parameters = {array} [10]
+ task_id = {int} 0
+ email = null
+ phone = "(480) 703-4902"
+ counter = {int} 0
+ name = "Sasha Tillou"
+ paymentType = "stripe"
+ errors = {array} [1]
+  errors = {array} [0]
+ busy = true
+ successful = false
+ jobTaskId = {int} 4

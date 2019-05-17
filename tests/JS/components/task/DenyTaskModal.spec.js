@@ -4,7 +4,7 @@ import {
 import sinon from 'sinon';
 import DenyTaskModal from '../../../../resources/assets/js/components/task/DenyTaskModal';
 
-require('../../bootstrap');
+// require('../../bootstrap');
 
 
 describe('DenyTaskModal', () => {

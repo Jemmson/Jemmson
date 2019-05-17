@@ -2,9 +2,9 @@ import {
   mount,
   shallowMount,
   createLocalVue
-}
-  from '@vue/test-utils'
-import sinon from 'sinon'
+}  from '@vue/test-utils';
+import User from '../../resources/assets/js/classes/User';
+import sinon from 'sinon';
 
 const $route = {
   path: '/#/invoice/1',
@@ -30,7 +30,7 @@ describe('Invoice', () => {
       'card',
     ],
     propsData: {
-      user: global.User.user,
+      user: User,
     }
   });
 
@@ -63,7 +63,7 @@ describe('Invoice', () => {
   });
 
   it('Should render all contractor sections - contractor', () => {
-    global.User.setUser({
+    User.setUser({
       usertype: 'contractor'
     });
     const wrapper = shallowMount(Invoice, {
@@ -74,14 +74,14 @@ describe('Invoice', () => {
         'card',
       ],
       propsData: {
-        user: global.User.user,
+        user: User.user,
       }
     });
     expect(wrapper.vm.isContractor).toBe(true);
   });
 
   it('Should not render any contractor sections - customer', () => {
-    global.User.setUser({
+    User.setUser({
       usertype: 'customer'
     });
     const wrapper = shallowMount(Invoice, {
@@ -92,7 +92,7 @@ describe('Invoice', () => {
             'card',
           ],
           propsData: {
-            user: global.User.user,
+            user: User.user,
           }});
     expect(wrapper.vm.isContractor).toBe(false);
   });

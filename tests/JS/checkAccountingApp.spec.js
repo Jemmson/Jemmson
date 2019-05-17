@@ -3,7 +3,9 @@ import expect from 'expect'
 import sinon from 'sinon';
 import CheckAccountingApp from '../../resources/assets/js/pages/CheckAccountingApp'
 
-console.log('CheckAccountingApp.spec')
+require('./bootstrap');
+
+// console.log('CheckAccountingApp.spec')
 
 describe ('CheckAccountingApp', () => {
   let wrapper;
@@ -13,10 +15,12 @@ describe ('CheckAccountingApp', () => {
     methods: {
       getAuthURL
     },
-    data: {
-      isContractor: false,
-      quickbooks: {
-        auth_url: ''
+    data () {
+      return {
+        isContractor: false,
+        quickbooks: {
+          auth_url: ''
+        }
       }
     }
   });
@@ -55,7 +59,7 @@ describe ('CheckAccountingApp', () => {
     //
     let qbs = wrapper.find({ref: 'xero'});
     //
-    console.log(qbs);
+    // console.log(qbs);
     //
     expect(qbs.isVisible()).toBe(true);
 

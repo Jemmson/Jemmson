@@ -90,17 +90,8 @@ class ContractorController extends Controller
 
         $contractor = new Contractor();
         $generalContractorsCompanyName = $contractor->getGeneralContractorsCompanyName();
-        return $contractor->getSubContractors($company_name, $generalContractorsCompanyName);
 
-//        $company_name = \App\User::find(Auth::user()->getAuthIdentifier())->name;
-//
-//        \App\Contractor::where('company_name', 'like', "Sand%")->user()->get();
-//
-//        $query = $request->query('query');
-//        $users = \App\User::whereHas('contractor', function ($q) use ($query) {
-//            $q->where('company_name', 'like', '%' . $query . '%')->where();
-//        })->orWhere('name', 'like', '%' . $query . '%')->where('usertype', '!=', 'customer')->with('contractor')->get();
-//        return $users;
+        return $contractor->getSubContractors($company_name, $generalContractorsCompanyName);
 
     }
 

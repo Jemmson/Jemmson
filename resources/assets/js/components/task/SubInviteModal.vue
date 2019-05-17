@@ -1,4 +1,4 @@
-    <template>
+<template>
     <!-- Modal -->
     <div class="modal fade" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
          aria-hidden="false">
@@ -10,7 +10,8 @@
                     </button>
                     <h4 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
                         taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h4>
-                    <h4 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }} -
+                    <h4 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :
+                        jobTaskNameForSubInvite.toUpperCase() }} -
                         would you like to invite another sub to bid on this task?</h4>
                 </div>
                 <div class="modal-body">
@@ -38,7 +39,7 @@
                                     class="panel-footer"
                                     v-if="aResults.length > 0">
                                 <div class="flex flex-col"
-                                    ref="buttons"
+                                     ref="buttons"
                                 >
                                     <button
                                             class="flex-1 m-2 btn-format"
@@ -53,31 +54,28 @@
                                     </button>
                                 </div>
                             </div>
-                            <!-- <input
-                                type="text"
-                                class="form-control"
-                                id="contractorName"
-                                name="contractorName"
-                                placeholder="Name"
-                                v-model="initiateBidForSubForm.name"
-                                v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}"
-                                autofocus
-                                required
-                                v-on:keyup="autoComplete">
-                            <div
-                                class="panel-footer"
-                                v-if="aResults.length">
-                                <ul class="list-group">
-                                    <button
-                                        class="list-group-item"
-                                        v-for="result in aResults"
-                                        v-bind:key="result.id"
-                                        :name="result.phone"
-                                        @click.prevent="fillFields(result)">
-                                        {{ result.name }} - {{ result.contractor.company_name }}
-                                    </button>
-                                </ul>
-                            </div> -->
+
+                            <div class="flex flex-col">
+                                <div class="flex-1">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="firstName"
+                                           name="contractorName"
+                                           v-model="initiateBidForSubForm.firstName"
+                                    >
+                                </div>
+                                <div class="flex-1">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="lastName"
+                                           name="contractorName"
+                                           v-model="initiateBidForSubForm.lastName"
+                                    >
+                                </div>
+                            </div>
+
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
                             <label for="phone">Phone *</label>
@@ -85,10 +83,17 @@
                                    placeholder="Phone Number"
                                    class="form-control" id="phone" name="phone" maxlength="10" required
                                    v-model="initiateBidForSubForm.phone"
+                                   @blur="validateMobileNumber($event.target.value)"
                                    @keyup="filterPhone">
                             <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
                                         {{ initiateBidForSubForm.errors.get('phone') }}
                                     </span>
+                            <div v-if="getMobileValidResponse.length > 0">
+                                <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
+                                    <div style="color: green">{{ getMobileValidResponse[1] }}</div>
+                                </div>
+                                <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
+                            </div>
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
                             <label for="email">Email</label>
@@ -112,7 +117,7 @@
                                     >
                                 </div>
                                 <div class="flex">
-                                    <label for="stripe" class="mr-6">Stripe</label>
+                                    <label for="stripe" class="mr-6">Credit Card</label>
                                     <input type="checkbox"
                                            :checked="paymentTypeStripe"
                                            @click="paymentMethod('stripe')"
@@ -127,7 +132,7 @@
                 <div class="modal-footer">
                     <div class="form-group">
                         <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit"
-                                :disabled="disabled.invite" ref="submit">
+                                :disabled="getMobileValidResponse[1] !== 'mobile'" ref="submit">
                             <span v-if="disabled.invite">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
@@ -141,12 +146,16 @@
 </template>
 
 <script>
+
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
+
   export default {
     props: {
       jobTask: Object,
       jobTaskTask: Object,
       jobTaskName: String,
-      id: Number
+      id: Number,
+      bidId: Number
     },
     data() {
       return {
@@ -156,10 +165,15 @@
           phone: '',
           counter: 0,
           name: '',
+          firstName: '',
+          lastName: '',
+          givenName: '',
+          familyName: '',
           paymentType: 'stripe'
         }),
         paymentTypeCash: false,
         paymentTypeStripe: true,
+        phoneFormatError: true,
         companyName: '',
         user: '',
         results: [],
@@ -170,6 +184,29 @@
       }
     },
     methods: {
+      ...mapMutations(['setMobileResponse']),
+      ...mapActions(['checkMobileNumber']),
+      returnContractorsNotAlreadyAssignedToTask(subs) {
+
+        let filteredSubs = []
+        let assignedSubs = this.jobTask.bid_contractor_job_tasks
+
+        // TODO: need to filter on something more unique than name comparison but it is a start
+        for (let i = 0; i < subs.length; i++) {
+          let subExists = false
+          for (let j = 0; j < assignedSubs.length; j++) {
+            if (subs[i].name == assignedSubs[j].contractor.name) {
+              subExists = true
+            }
+          }
+          if (!subExists) {
+            filteredSubs.push(subs[i])
+          }
+        }
+
+        return filteredSubs
+
+      },
       filterPhone() {
         this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
       },
@@ -178,22 +215,47 @@
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
         this.companyName = ''
       },
+      clearFields() {
+
+        this.initiateBidForSubForm.id = ''
+        this.initiateBidForSubForm.email = ''
+        this.initiateBidForSubForm.phone = ''
+        this.initiateBidForSubForm.name = ''
+        this.initiateBidForSubForm.firstName = ''
+        this.initiateBidForSubForm.lastName = ''
+        this.initiateBidForSubForm.givenName = ''
+        this.initiateBidForSubForm.familyName = ''
+        this.companyName = ''
+
+      },
       fillFields(result) {
+
+        this.clearFields()
+
+        this.initiateBidForSubForm.id = result.id
         this.initiateBidForSubForm.email = result.email
         this.initiateBidForSubForm.phone = result.phone
         this.initiateBidForSubForm.name = result.name
+        if (result.first_name !== null && result.last_name !== null) {
+          this.initiateBidForSubForm.firstName = result.given_name
+          this.initiateBidForSubForm.lastName = result.family_name
+          this.initiateBidForSubForm.givenName = result.given_name
+          this.initiateBidForSubForm.familyName = result.family_name
+        }
         this.companyName = result.contractor.company_name
         this.results = ''
+        this.validateMobileNumber(this.initiateBidForSubForm.phone)
+
       },
-      paymentMethod(paymentType){
-        if(paymentType === 'cash'){
-          this.initiateBidForSubForm.paymentType = 'cash';
-          this.paymentTypeCash = true;
-          this.paymentTypeStripe = false;
+      paymentMethod(paymentType) {
+        if (paymentType === 'cash') {
+          this.initiateBidForSubForm.paymentType = 'cash'
+          this.paymentTypeCash = true
+          this.paymentTypeStripe = false
         } else {
-          this.initiateBidForSubForm.paymentType = 'stripe';
-          this.paymentTypeCash = false;
-          this.paymentTypeStripe = true;
+          this.initiateBidForSubForm.paymentType = 'stripe'
+          this.paymentTypeCash = false
+          this.paymentTypeStripe = true
         }
       },
       autoComplete() {
@@ -205,19 +267,63 @@
         if (query.length > 2) {
           axios.get('/search/' + query).then(function(response) {
             console.log('autocomplete', response.data)
-            this.results = response.data
+            this.results = this.returnContractorsNotAlreadyAssignedToTask(response.data)
           }.bind(this))
+        }
+      },
+      validateMobileNumber(phone) {
+        // this.phoneFormatError = false
+        if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
+          this.checkMobileNumber(phone)
+          this.checkValidData()
+        } else {
+          this.phoneFormatError = true
+        }
+      },
+      unformatNumber(number) {
+        let unformattedNumber = ''
+        if (number !== '') {
+          if (number) {
+            for (let i = 0; i < number.length; i++) {
+              if (!isNaN(parseInt(number[i]))) {
+                unformattedNumber = unformattedNumber + number[i]
+              }
+            }
+            let numberLength = unformattedNumber.length
+            if (numberLength < 10) {
+              if (this.getMobileValidResponse[1] !== '') {
+                this.$store.commit('setTheMobileResponse', ['', '', ''])
+              }
+            }
+            return numberLength
+          }
+        } else {
+          return 0
+        }
+      },
+      checkValidData() {
+        let phoneLength = this.unformatNumber(this.initiateBidForSubForm.phone)
+        if (
+          (this.getMobileValidResponse[1] === 'mobile' ||
+            this.getMobileValidResponse[2] === 'mobile') &&
+          this.initiateBidForSubForm.name !== '' &&
+          phoneLength === 10
+        ) {
+          this.phoneFormatError = false
+        } else {
+          this.phoneFormatError = true
         }
       }
     },
     computed: {
-      taskForSubInvite () {
+      ...mapGetters(['getMobileValidResponse']),
+      taskForSubInvite() {
         // debugger;
-        return this.jobTaskTask;
+        return this.jobTaskTask
       },
-      jobTaskNameForSubInvite () {
+      jobTaskNameForSubInvite() {
         // debugger;
-        return this.jobTaskName;
+        return this.jobTaskName
       },
       aResults() {
         // if (this.results.length > 0) {

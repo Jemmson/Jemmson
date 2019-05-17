@@ -1,7 +1,8 @@
 import Vue from 'vue';
-// import User from '../../resources/assets/js/classes/User';
 import Format from '../../resources/assets/js/classes/Format';
 import Language from '../../resources/assets/js/classes/Language';
+import User from '../../resources/assets/js/classes/User';
+
 // import GeneralContractor from '../../resources/assets/js/classes/GeneralContractor';
 import SubContractor from '../../resources/assets/js/classes/SubContractor';
 import Customer from '../../resources/assets/js/classes/Customer';
@@ -27,6 +28,7 @@ global.Language = Language;
 global.SubContractor = new SubContractor;
 global.Customer = new Customer;
 global.TaskUtil = TaskUtil;
+global.User = User;
 
 // Vue.use(Toasted, {
 //     duration: 5000,

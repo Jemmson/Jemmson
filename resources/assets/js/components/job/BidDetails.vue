@@ -204,7 +204,10 @@
         customerNotes_contractor: false,
         areaError: '',
         locationExists: false,
-        customerInfo: false
+        customerInfo: false,
+        paymentTypeCash: false,
+        paymentTypeStripe: true,
+        selectedPayment: ''
       }
     },
     computed: {
@@ -246,6 +249,17 @@
       }
     },
     methods: {
+      paymentMethod(paymentType) {
+        if (paymentType === 'cash') {
+          this.selectedPayment = 'cash'
+          this.paymentTypeCash = true
+          this.paymentTypeStripe = false
+        } else {
+          this.selectedPayment = 'stripe'
+          this.paymentTypeCash = false
+          this.paymentTypeStripe = true
+        }
+      },
       getLabelClass(status) {
         return Format.statusLabel(status,)
       },

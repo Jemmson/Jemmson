@@ -309,15 +309,49 @@ class User extends SparkUser
         return '1' . $this->phone;
     }
 
-    public static function  getCustomersInUserTableByName($name)
+    public static function getCustomersInUserTableByName($name)
     {
         return User::where('name', 'like', '%' . $name . '%')
             ->where('usertype', '!=', 'contractor')
             ->get();
     }
 
-    public static function isCustomerAssociatedWithContractor ($customer_id, $contractor_id)
+    public static function isCustomerAssociatedWithContractor($customer_id, $contractor_id)
     {
+
+    }
+
+    public static function getUserByPhoneOrEmail($phone, $email)
+    {
+        return User::where('phone', $phone)->orWhere('email', $email)->first();
+    }
+
+
+    public function updatePhoneNumberInQuickBooks($newPhone, $subContractorId, $companyName, $givenName, $familyName)
+    {
+        $qb = new Quickbook();
+
+        $quickbooksId = QuickbooksContractor::select('quickbooks_id')->
+        where('contractor_id', '=', $subContractorId)->
+        where('company_name', '=', $companyName)->
+        where('given_name', '=', $givenName)->
+        where('family_name', '=', $familyName)->get()->first();
+
+        $qb->UpdateSubPhoneNumberInQuickbooks($newPhone, $quickbooksId);
+    }
+
+    public function updatePhoneNumber($newPhone)
+    {
+
+        $this->phone = $newPhone;
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
 
     }
 

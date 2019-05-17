@@ -3,7 +3,7 @@ import {
 } from "@vue/test-utils";
 import BidAddTask from '../../../../resources/assets/js/components/task/BidAddTask';
 
-require('../../bootstrap');
+// require('../../bootstrap');
 
 describe('BidAddTask', () => {
     const wrapper = shallowMount(BidAddTask, {

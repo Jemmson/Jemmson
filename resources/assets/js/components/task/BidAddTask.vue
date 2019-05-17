@@ -455,6 +455,7 @@
     },
     methods: {
 
+      // TODO:: move this to vuex action
       async getBid(id) {
         try {
           const {
