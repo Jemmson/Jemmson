@@ -74,16 +74,17 @@
       <h1 class="card-title mt-4">Job Address</h1>
       <card>
         <div class="map-responsive">
-        <iframe width="600" height="450" frameborder="0" style="border:0"
-:src="'https://www.google.com/maps/embed/v1/search?q='+ bid.location.address_line_1 + ' ' + bid.location.city + ' ' + bid.location.state + ' ' + bid.location.zip +'&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'" allowfullscreen></iframe>
-        </div>  
-            <!-- <a target="_blank"
+          <iframe width="600" height="450" frameborder="0" style="border:0"
+            :src="'https://www.google.com/maps/embed/v1/search?q='+ bid.location.address_line_1 + ' ' + bid.location.city + ' ' + bid.location.state + ' ' + bid.location.zip +'&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"
+            allowfullscreen></iframe>
+        </div>
+        <!-- <a target="_blank"
               :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
                 {{ bid.location.address_line_1 }}
                 <br>
                 {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
             </a> -->
-          <!-- <div class="flex flex-col">
+        <!-- <div class="flex flex-col">
                       <span class="label mb-4">TOTAL PRICE:</span>
                       <span>${{ bid.bid_price }}</span>
             </div>-->
@@ -96,9 +97,32 @@
         <div class="row">
           <div class="col-12">
             <span>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam commodo orci vitae arcu mattis, 
-            quis efficitur erat aliquam. Aenean commodo sapien sed ipsum fermentum rutrum. Donec congue, arcu eu interdum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam commodo orci vitae arcu mattis,
+              quis efficitur erat aliquam. Aenean commodo sapien sed ipsum fermentum rutrum. Donec congue, arcu eu
+              interdum.
             </span>
+          </div>
+        </div>
+      </card>
+    </div>
+
+    <!-- / tasks -->
+    <div class="col-12">
+      <h1 class="card-title mt-4">Job Tasks</h1>
+      <card @click.native="$router.push('/job/tasks')">
+        Total
+        <span class="float-right" v-if="bid.job_tasks !== undefined">
+          (<b>{{bid.job_tasks.length}}</b>)
+        </span>
+      </card>
+    </div>
+
+    <div class="col-12">
+      <card class="mt-4" @click.native="$router.push('/job/add/task')">
+        <div class="row">
+          <div class="col">
+            <p class="d-inline">Add New Task</p>
+            <i class="fas fa-chevron-right text-primary float-right sm-icon"></i>
           </div>
         </div>
       </card>
@@ -107,8 +131,7 @@
     <div class="col-12">
       <h1 class="card-title mt-4">Attachments</h1>
       <div class="mb-4">
-
-      <img src="" alt="Attachments">
+        <img src="" alt="Attachments">
       </div>
     </div>
 
