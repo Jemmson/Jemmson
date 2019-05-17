@@ -59,6 +59,8 @@ import Feedback from './pages/Feedback'
 import PublicHome from './pages/PublicHome'
 import Jobs from './pages/Jobs'
 import JobTasks from './pages/JobTasks'
+import AddJobTask from './pages/AddJobTask'
+
 import Job from './pages/Job'
 import InitiateBid from './pages/InitiateBid'
 import Tasks from './pages/Tasks'
@@ -99,6 +101,10 @@ const routes = [
   {
     path: '/job/tasks',
     component: JobTasks
+  },
+  {
+    path: '/job/add/task',
+    component: AddJobTask
   },
   {
     path: '/userAuthorizationPage',
