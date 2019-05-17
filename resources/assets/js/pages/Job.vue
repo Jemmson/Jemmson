@@ -4,22 +4,7 @@
     <!-- /show all bid information -->
     <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
     </bid-details>
-
-    <!-- / tasks -->
-    <div class="row">
-      <div class="col-12">
-        <h1 class="card-title">Job Tasks</h1>
-        <card @click.native="$router.push('/job/tasks')">
-          Tasks
-          <span class="float-right">
-            4
-          </span>
-        </card>
-      </div>
-    </div>
-
-    <br>
-
+    
     <card class="mb-4">
       <template slot="card-footer">
         <!-- /customer approve bid form -->
@@ -30,6 +15,7 @@
         </general-contractor-bid-actions>
       </template>
     </card>
+    
 
 
     <!-- / show all completed tasks-->
