@@ -169,6 +169,7 @@
           lastName: '',
           givenName: '',
           familyName: '',
+          quickbooksId: '',
           paymentType: 'stripe'
         }),
         paymentTypeCash: false,
@@ -225,6 +226,7 @@
         this.initiateBidForSubForm.lastName = ''
         this.initiateBidForSubForm.givenName = ''
         this.initiateBidForSubForm.familyName = ''
+        this.initiateBidForSubForm.quickbooksId = ''
         this.companyName = ''
 
       },
@@ -241,6 +243,9 @@
           this.initiateBidForSubForm.lastName = result.family_name
           this.initiateBidForSubForm.givenName = result.given_name
           this.initiateBidForSubForm.familyName = result.family_name
+        }
+        if (this.initiateBidForSubForm.quickbooksId !== null) {
+          this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
         }
         this.companyName = result.contractor.company_name
         this.results = ''

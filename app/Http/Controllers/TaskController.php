@@ -332,7 +332,6 @@ class TaskController extends Controller
         $jobTaskId = $request->jobTaskId;
         $name = $request;
 
-
         if ($request->id == '') {
             $user_sub = User::getUserByPhoneOrEmail($phone, $email);
         } else {
@@ -364,12 +363,12 @@ class TaskController extends Controller
                 $user_sub->updatePhoneNumber($phone);
                 if ($qb->isContractorThatUsesQuickbooks()) {
 //
-//                    $companyName = '';
-//                    $givenName = '';
-//                    $familyName = '';
-//
-//                        $user_sub->updatePhoneNumberInQuickBooks($phone,
-//                            $user_sub->id, $companyName, $givenName, $familyName);
+                    $companyName = '';
+                    $givenName = '';
+                    $familyName = '';
+
+                        $user_sub->updatePhoneNumberInQuickBooks($phone,
+                            $user_sub->id, $companyName, $givenName, $familyName);
                 }
             }
         }

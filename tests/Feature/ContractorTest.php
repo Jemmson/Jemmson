@@ -441,7 +441,7 @@ class ContractorTest extends TestCase
 
         $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
 
-        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+//        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
         $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
@@ -526,7 +526,7 @@ class ContractorTest extends TestCase
 
         $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
 
-        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+//        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
         $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
@@ -594,7 +594,7 @@ class ContractorTest extends TestCase
 
         $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
 
-        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+//        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
         $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
@@ -700,7 +700,7 @@ class ContractorTest extends TestCase
 
         $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
 
-        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+//        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
         $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
@@ -829,7 +829,7 @@ class ContractorTest extends TestCase
 
         $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
 
-        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+        // var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 
         $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
 

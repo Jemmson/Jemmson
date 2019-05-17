@@ -376,25 +376,57 @@ class Contractor extends Model
     public function subsWithPhoneNumberAndEmail($subs)
     {
         $subsArray = [];
+        $subInfo = '';
         foreach ($subs as $sub) {
 
             $c = $sub->user()->get(['id', 'name', 'email', 'phone', 'first_name', 'last_name'])->first();
 
-            $subInfo = [
-                'id' => $c->id,
-                'contractor_id' => '',
-                'quickbooks_id' => '',
-                'name' => $c->name,
-                'contractor' => [
-                    'company_name' => $sub->company_name
-                ],
-                'phone' => $c->phone,
-                'email' => $c->email,
-                'given_name' => '',
-                'family_name' => '',
-                'first_name' => $c->first_name,
-                'last_name' => $c->last_name
-            ];
+            $qbc = QuickbooksContractor::where('given_name', '=', $c->first_name)->
+            where('family_name', '=', $c->last_name)->
+            where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+            get()->first();
+
+
+            if (empty($qbc)) {
+                $qbc = QuickbooksContractor::where('given_name', '=', $c->first_name)->
+                where('family_name', '=', $c->last_name)->
+                get()->first();
+            }
+
+            if (empty($qbc)) {
+                $subInfo = [
+                    'id' => $sub->user_id,
+                    'contractor_id' => $sub->user_id,
+                    'name' => $c->name,
+                    'contractor' => [
+                        'company_name' => $sub->company_name
+                    ],
+                    'phone' => $c->phone,
+                    'email' => $c->email,
+                    'quickbooks_id' => '',
+                    'given_name' => '',
+                    'family_name' => '',
+                    'first_name' => $c->first_name,
+                    'last_name' => $c->last_name
+                ];
+                array_push($subsArray, $subInfo);
+            } else {
+                $subInfo = [
+                    'id' => $sub->user_id,
+                    'contractor_id' => $sub->user_id,
+                    'name' => $c->name,
+                    'contractor' => [
+                        'company_name' => $sub->company_name
+                    ],
+                    'phone' => $c->phone,
+                    'email' => $c->email,
+                    'quickbooks_id' => $qbc->quickbooks_id,
+                    'given_name' => $qbc->given_name,
+                    'family_name' => $qbc->family_name,
+                    'first_name' => $c->first_name,
+                    'last_name' => $c->last_name
+                ];
+            }
             array_push($subsArray, $subInfo);
         }
 
@@ -749,10 +781,10 @@ class Contractor extends Model
         $subs = $this->getAllContractorsExceptTheGeneralContractor($company_name, $generalContractorsCompanyName);
         $formattedSubs = $this->subsWithPhoneNumberAndEmail($subs);
 
-        $qb = new Quickbook();
-        if ($qb->isContractorThatUsesQuickbooks()) {
-            return $this->getAllQuickbookCompaniesAndFormattedSubs($company_name, $formattedSubs, Auth::user()->getAuthIdentifier());
-        }
+//        $qb = new Quickbook();
+//        if ($qb->isContractorThatUsesQuickbooks()) {
+//            return $this->getAllQuickbookCompaniesAndFormattedSubs($company_name, $formattedSubs, Auth::user()->getAuthIdentifier());
+//        }
 
         return $formattedSubs;
     }
