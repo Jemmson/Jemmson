@@ -17,6 +17,7 @@ use App\Notifications\TaskImageDeleted;
 use App\Notifications\NotifyCustomerOfUpdatedMessage;
 use App\Notifications\NotifySubOfUpdatedMessage;
 use App\Quickbook;
+use App\QuickbooksContractor;
 use App\QuickbooksItem;
 use App\Task;
 use App\Job;
@@ -329,23 +330,54 @@ class TaskController extends Controller
         $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
         $jobTaskId = $request->jobTaskId;
-        $name = $request->name;
+        $name = $request;
 
-        $user = User::getUserByPhoneOrEmail($phone, $email);
 
+        if ($request->id == '') {
+            $user_sub = User::getUserByPhoneOrEmail($phone, $email);
+        } else {
+            $user_sub = User::find($request->id);
+        }
+        $qb = new Quickbook();
         // TODO: Not sure about this logic. Should be if a user is not a contractor then create a contractor. If a user is a customer then that should not throw an error becuase a user can be both a contractor and a customer
-        if ($user === null) {
+        if ($user_sub === null) {
             // if no user found create one
-            $user = $this->createNewUser($name, $email, $phone);
-        } else if ($user->usertype === 'customer') {
-            // return if the user is a customer
-            return response()->json(["message" => "This person is a customer in the system and can not also be a contractor", "errors" => ["error" => "No valid user."]], 422);
+//            if ($qb->isContractorThatUsesQuickbooks()) {
+//                if (QuickbooksContractor::ContractorExists()) {
+//                    if ($user_sub->phone !== $phone) {
+//                        $qb->updateCustomerPhone();
+//                    }
+//                    User::addContractor();
+//                } else {
+//                    User::addUserToQuickbooksContractotTableAndQuickbooks();
+//                    User::addContractor();
+//                }
+//            } else{
+//                $user_sub = $this->createNewUser($name, $email, $phone);
+//            }
+//
+//        } else if ($user_sub->usertype === 'customer') {
+//            // return if the user is a customer
+//            return response()->json(["message" => "This person is a customer in the system and can not also be a contractor", "errors" => ["error" => "No valid user."]], 422);
+        } else {
+            if ($user_sub->phone !== $phone) {
+                $user_sub->updatePhoneNumber($phone);
+                if ($qb->isContractorThatUsesQuickbooks()) {
+//
+//                    $companyName = '';
+//                    $givenName = '';
+//                    $familyName = '';
+//
+//                        $user_sub->updatePhoneNumberInQuickBooks($phone,
+//                            $user_sub->id, $companyName, $givenName, $familyName);
+                }
+            }
         }
 
-        $contractor = $user->contractor()->first();
-        $jobTask = JobTask::find($jobTaskId);
-
+        // add bid entry for the sub
         // add an entry in to the contractor bid table so that the sub can bid on the task
+        $contractor = $user_sub->contractor()->first();
+        $jobTask = JobTask::find($jobTaskId);
         if ($this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id) === false) {
             return response()->json(["message" => "Task Already Exists.", "errors" => ["error" => "Task Already Exists."]], 422);
         }
@@ -353,12 +385,12 @@ class TaskController extends Controller
         // adding a preferred payment entry for contractor for a given task
         $ccspp = ContractorSubcontractorPreferredPayment::where('job_task_id', '=', $jobTask->id)->
         where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
-        where('sub_id', '=', $user->id)->get()->first();
+        where('sub_id', '=', $user_sub->id)->get()->first();
         if (empty($ccspp)) {
             $ccspp = new ContractorSubcontractorPreferredPayment();
             $ccspp->job_task_id = $jobTask->id;
             $ccspp->contractor_id = Auth::user()->getAuthIdentifier();
-            $ccspp->sub_id = $user->id;
+            $ccspp->sub_id = $user_sub->id;
             $ccspp->contractor_preferred_payment_type = $request->paymentType;
         } else {
             $ccspp->contractor_preferred_payment_type = $request->paymentType;
@@ -375,7 +407,7 @@ class TaskController extends Controller
 
         // this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
-        $user->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user));
+        $user_sub->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user_sub));
 
         $bidPrices = Task::getBidPrices($jobTask->job_id);
 

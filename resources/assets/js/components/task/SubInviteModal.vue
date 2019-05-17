@@ -54,31 +54,28 @@
                                     </button>
                                 </div>
                             </div>
-                            <!-- <input
-                                type="text"
-                                class="form-control"
-                                id="contractorName"
-                                name="contractorName"
-                                placeholder="Name"
-                                v-model="initiateBidForSubForm.name"
-                                v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}"
-                                autofocus
-                                required
-                                v-on:keyup="autoComplete">
-                            <div
-                                class="panel-footer"
-                                v-if="aResults.length">
-                                <ul class="list-group">
-                                    <button
-                                        class="list-group-item"
-                                        v-for="result in aResults"
-                                        v-bind:key="result.id"
-                                        :name="result.phone"
-                                        @click.prevent="fillFields(result)">
-                                        {{ result.name }} - {{ result.contractor.company_name }}
-                                    </button>
-                                </ul>
-                            </div> -->
+
+                            <div class="flex flex-col">
+                                <div class="flex-1">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="firstName"
+                                           name="contractorName"
+                                           v-model="initiateBidForSubForm.firstName"
+                                    >
+                                </div>
+                                <div class="flex-1">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="lastName"
+                                           name="contractorName"
+                                           v-model="initiateBidForSubForm.lastName"
+                                    >
+                                </div>
+                            </div>
+
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
                             <label for="phone">Phone *</label>
@@ -168,6 +165,10 @@
           phone: '',
           counter: 0,
           name: '',
+          firstName: '',
+          lastName: '',
+          givenName: '',
+          familyName: '',
           paymentType: 'stripe'
         }),
         paymentTypeCash: false,
@@ -190,8 +191,7 @@
         let filteredSubs = []
         let assignedSubs = this.jobTask.bid_contractor_job_tasks
 
-
-     // TODO: need to filter on something more unique than name comparison but it is a start
+        // TODO: need to filter on something more unique than name comparison but it is a start
         for (let i = 0; i < subs.length; i++) {
           let subExists = false
           for (let j = 0; j < assignedSubs.length; j++) {
@@ -215,13 +215,37 @@
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
         this.companyName = ''
       },
+      clearFields() {
+
+        this.initiateBidForSubForm.id = ''
+        this.initiateBidForSubForm.email = ''
+        this.initiateBidForSubForm.phone = ''
+        this.initiateBidForSubForm.name = ''
+        this.initiateBidForSubForm.firstName = ''
+        this.initiateBidForSubForm.lastName = ''
+        this.initiateBidForSubForm.givenName = ''
+        this.initiateBidForSubForm.familyName = ''
+        this.companyName = ''
+
+      },
       fillFields(result) {
+
+        this.clearFields()
+
+        this.initiateBidForSubForm.id = result.id
         this.initiateBidForSubForm.email = result.email
         this.initiateBidForSubForm.phone = result.phone
         this.initiateBidForSubForm.name = result.name
+        if (result.first_name !== null && result.last_name !== null) {
+          this.initiateBidForSubForm.firstName = result.given_name
+          this.initiateBidForSubForm.lastName = result.family_name
+          this.initiateBidForSubForm.givenName = result.given_name
+          this.initiateBidForSubForm.familyName = result.family_name
+        }
         this.companyName = result.contractor.company_name
         this.results = ''
         this.validateMobileNumber(this.initiateBidForSubForm.phone)
+
       },
       paymentMethod(paymentType) {
         if (paymentType === 'cash') {

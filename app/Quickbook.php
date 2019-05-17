@@ -535,6 +535,47 @@ class Quickbook extends Model
         return $resultingObj;
     }
 
+
+    public function UpdateSubPhoneNumberInQuickbooks($newPhoneNumber, $quickbooksId)
+    {
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        $dataService->throwExceptionOnError(true);
+        $subContractor = $dataService->FindbyId('customer', $quickbooksId);
+        $theResourceObj = Customer::update($subContractor  , [
+            "PrimaryPhone" => [
+                "FreeFormNumber" => $newPhoneNumber
+            ]
+        ]);
+        $resultingObj = $dataService->Update($theResourceObj);
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+        }
+        else {
+            echo "Created Id={$resultingObj->Id}. Reconstructed response body:\n\n";
+            $xmlBody = XmlObjectSerializer::getPostXmlFromArbitraryEntity($resultingObj, $urlResource);
+            echo $xmlBody . "\n";
+        }
+
+
+        $resultingObj = $dataService->Update($theResourceObj);
+        return $resultingObj;
+    }
+
+
     public function syncCustomerInformationFromQB($contractorId)
     {
         $allQBCustomers = $this->pullAllQBCustomersFromAccount();

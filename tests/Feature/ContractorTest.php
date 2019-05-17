@@ -275,7 +275,8 @@ class ContractorTest extends TestCase
     }
 
     /**  @test */
-    function make_sure_sub_that_exists_in_both_quickbooksContractor_table_and_users_table_are_not_added_twice_to_the_drop_down() {
+    function make_sure_sub_that_exists_in_both_quickbooksContractor_table_and_users_table_are_not_added_twice_to_the_drop_down()
+    {
         //
 
 
@@ -377,6 +378,463 @@ class ContractorTest extends TestCase
         $this->assertEquals($finalArray, $subs);
 
     }
+
+    /**  @test */
+    function return_all_contractors_in_quickbook_contractors_table_that_prioritize_companies_with_the_contractors_id()
+    {
+        $this->withExceptionHandling();
+
+        // 
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 7,
+            'contractor_id' => 1,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 8,
+            'contractor_id' => 2,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 9,
+            'contractor_id' => 3,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        $subsArray = [
+            [
+                'id' => '',
+                'contractor_id' => 1,
+                'quickbooks_id' => 7,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Goods',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ]
+        ];
+
+        $c = new Contractor();
+
+        $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
+
+        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+        $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+    }
+
+
+    /**  @test */
+    function return_2_contractor_enititys_in_quickbook_contractors_table_that_prioritize_companies_with_the_contractors_id()
+    {
+        $this->withExceptionHandling();
+
+        //
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 7,
+            'contractor_id' => 1,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 8,
+            'contractor_id' => 1,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 9,
+            'contractor_id' => 3,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        $subsArray = [
+            [
+                'id' => '',
+                'contractor_id' => 1,
+                'quickbooks_id' => 7,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Goods',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ],
+            [
+                'id' => '',
+                'contractor_id' => 1,
+                'quickbooks_id' => 8,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Goods',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ]
+        ];
+
+        $c = new Contractor();
+
+        $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
+
+        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+        $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+    }
+
+    /**  @test */
+    function return_first_contractor_enitity_in_quickbook_contractors_table_if_contractors_id_does_not_exist_for_subs()
+    {
+        $this->withExceptionHandling();
+
+        //
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 7,
+            'contractor_id' => 2,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 8,
+            'contractor_id' => 4,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 9,
+            'contractor_id' => 3,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        $subsArray = [
+            [
+                'id' => '',
+                'contractor_id' => 3,
+                'quickbooks_id' => 9,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Goods',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ]
+        ];
+
+        $c = new Contractor();
+
+        $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
+
+        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+        $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+    }
+
+    /**  @test */
+    function return_2_contractors_with_different_company_names_but_one_has_the_contractors_id_and_the_other_one_does_not()
+    {
+        $this->withExceptionHandling();
+
+        //
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 7,
+            'contractor_id' => 1,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 8,
+            'contractor_id' => 4,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 9,
+            'contractor_id' => 3,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 8,
+            'contractor_id' => 2,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Stores',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 9,
+            'contractor_id' => 2,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Stores',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        $subsArray = [
+            [
+                'id' => '',
+                'contractor_id' => 1,
+                'quickbooks_id' => 7,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Goods',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ],
+            [
+                'id' => '',
+                'contractor_id' => 2,
+                'quickbooks_id' => 9,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Stores',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ]
+        ];
+
+        $c = new Contractor();
+
+        $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
+
+        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+        $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+    }
+
+//     pu --filter return_all_contractors_in_quickbook_contractors_table_that_prioritize_companies_with_the_contractors_id tests/Feature/ContractorTest.php;
+// pu --filter return_2_contractor_enititys_in_quickbook_contractors_table_that_prioritize_companies_with_the_contractors_id tests/Feature/ContractorTest.php;
+// pu --filter return_first_contractor_enitity_in_quickbook_contractors_table_if_contractors_id_does_not_exist_for_subs tests/Feature/ContractorTest.php;
+// pu --filter return_2_contractors_with_different_company_names_but_one_has_the_contractors_id_and_the_other_one_does_not tests/Feature/ContractorTest.php;
+// pu --filter return_3_contractors_with_different_company_names_but_one_has_the_contractors_id_and_the_other_two_do_not tests/Feature/ContractorTest.php;
+
+
+    /**  @test */
+    function return_3_contractors_with_different_company_names_but_one_has_the_contractors_id_and_the_other_two_do_not()
+    {
+        $this->withExceptionHandling();
+
+        //
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 7,
+            'contractor_id' => 1,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 8,
+            'contractor_id' => 4,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 9,
+            'contractor_id' => 3,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Goods',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 8,
+            'contractor_id' => 4,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Places',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        factory(QuickbooksContractor::class)->create([
+            'quickbooks_id' => 9,
+            'contractor_id' => 2,
+            'sub_contractor_id' => 7,
+            'company_name' => 'Freeman Sporting Stores',
+            'given_name' => 'sasha',
+            'family_name' => 'touli',
+            'primary_phone' => '6505550987',
+            'primary_email_addr' => 'kirb@kirb.net',
+        ]);
+
+        $subsArray = [
+            [
+                'id' => '',
+                'contractor_id' => 1,
+                'quickbooks_id' => 7,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Goods',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ],
+            [
+                'id' => '',
+                'contractor_id' => 4,
+                'quickbooks_id' => 8,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Places',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ],
+            [
+                'id' => '',
+                'contractor_id' => 2,
+                'quickbooks_id' => 9,
+                'name' => 'sasha touli',
+                'given_name' => 'sasha',
+                'family_name' => 'touli',
+                'last_name' => '',
+                'first_name' => '',
+                'contractor' =>
+                    [
+                        'company_name' => 'Freeman Sporting Stores',
+                    ],
+                'phone' => '6505550987',
+                'email' => 'kirb@kirb.net',
+            ]
+        ];
+
+        $c = new Contractor();
+
+        $allCompanies = $c->getAllCompaniesInQuickBookContractorsByCompanyName('Freeman');
+
+        var_dump($c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+        $this->assertEquals($subsArray, $c->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, 1));
+
+    }
+
 
     /**  @test */
     function contractor_must_be_able_to_create_a_quickbooks_estimate()
