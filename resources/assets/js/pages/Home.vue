@@ -77,7 +77,7 @@
     },
     computed: {
       ...mapState({
-        job: state => state.job
+        job: state => state.job.model
       })
     },
     methods: {

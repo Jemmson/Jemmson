@@ -5,10 +5,11 @@
     <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
     </bid-details>
 
+    <!-- / tasks -->
     <div class="row">
       <div class="col-12">
         <h1 class="card-title">Job Tasks</h1>
-        <card @click.native="href()">
+        <card @click.native="$router.push('/job/tasks')">
           Tasks
           <span class="float-right">
             4
@@ -19,8 +20,7 @@
 
     <br>
 
-    <card footer="true">
-
+    <card class="mb-4">
       <template slot="card-footer">
         <!-- /customer approve bid form -->
         <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
@@ -31,35 +31,34 @@
       </template>
     </card>
 
-    <!-- / show all completed tasks-->
-    <completed-tasks :bid="bid">
-    </completed-tasks>
 
-    <!-- /show all tasks associated to this bid -->
+    <!-- / show all completed tasks-->
+    <!-- <completed-tasks :bid="bid">
+    </completed-tasks> -->
+
+    <!-- /show all tasks associated to this bid
     <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
-    </bid-tasks>
+    </bid-tasks> -->
 
     <!-- /add task to bid -->
-    <transition name="slide-fade">
+    <!-- <transition name="slide-fade">
       <bid-add-task :show="showAddTaskPanel" :bid="bid" :bidId="this.$route.params.id" v-if="!jobApproved">
       </bid-add-task>
-    </transition>
+    </transition> -->
 
     <!-- / stripe testing delete after -->
-    <stripe :user='user'>
-    </stripe>
+    <!-- <stripe :user='user'>
+    </stripe> -->
   </div>
 </template>
 
 <script>
 
   import Feedback from '../components/shared/Feedback';
-  import Card from '../components/shared/Card';
   import BidDetails from '../components/job/BidDetails';
   import ApproveBid from '../components/job/ApproveBid';
   import GeneralContractorBidActions from '../components/job/GeneralContractorBidActions';
   import CompletedTasks from '../components/job/CompletedTasks';
-  import BidTasks from '../components/job/BidTasks';
   import Stripe from '../components/stripe/Stripe';
   import BidAddTask from '../components/task/BidAddTask';
 
@@ -68,13 +67,11 @@
       user: Object,
     },
     components: {
-      Card,
       Feedback,
       BidDetails,
       ApproveBid,
       GeneralContractorBidActions,
       CompletedTasks,
-      BidTasks,
       BidAddTask,
       Stripe
     },

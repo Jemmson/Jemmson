@@ -58,6 +58,7 @@ import Home from './pages/Home'
 import Feedback from './pages/Feedback'
 import PublicHome from './pages/PublicHome'
 import Jobs from './pages/Jobs'
+import JobTasks from './pages/JobTasks'
 import Job from './pages/Job'
 import InitiateBid from './pages/InitiateBid'
 import Tasks from './pages/Tasks'
@@ -94,6 +95,10 @@ const routes = [
   {
     path: '/bids',
     component: Jobs
+  },
+  {
+    path: '/job/tasks',
+    component: JobTasks
   },
   {
     path: '/userAuthorizationPage',
