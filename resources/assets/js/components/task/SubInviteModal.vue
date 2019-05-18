@@ -170,6 +170,7 @@
           givenName: '',
           familyName: '',
           quickbooksId: '',
+          companyName: '',
           paymentType: 'stripe'
         }),
         paymentTypeCash: false,
@@ -227,6 +228,7 @@
         this.initiateBidForSubForm.givenName = ''
         this.initiateBidForSubForm.familyName = ''
         this.initiateBidForSubForm.quickbooksId = ''
+        this.initiateBidForSubForm.companyName = ''
         this.companyName = ''
 
       },
@@ -247,6 +249,7 @@
         if (this.initiateBidForSubForm.quickbooksId !== null) {
           this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
         }
+        this.initiateBidForSubForm.companyName = result.contractor.company_name
         this.companyName = result.contractor.company_name
         this.results = ''
         this.validateMobileNumber(this.initiateBidForSubForm.phone)

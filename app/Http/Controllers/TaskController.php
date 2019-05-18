@@ -341,34 +341,40 @@ class TaskController extends Controller
         // TODO: Not sure about this logic. Should be if a user is not a contractor then create a contractor. If a user is a customer then that should not throw an error becuase a user can be both a contractor and a customer
         if ($user_sub === null) {
             // if no user found create one
-//            if ($qb->isContractorThatUsesQuickbooks()) {
-//                if (QuickbooksContractor::ContractorExists()) {
+            if ($qb->isContractorThatUsesQuickbooks()) {
+                if (QuickbooksContractor::ContractorExists()) {
 //                    if ($user_sub->phone !== $phone) {
-//                        $qb->updateCustomerPhone();
+//                        $qb->updateCustomerPhoneInQB();
 //                    }
-//                    User::addContractor();
-//                } else {
-//                    User::addUserToQuickbooksContractotTableAndQuickbooks();
-//                    User::addContractor();
-//                }
-//            } else{
-//                $user_sub = $this->createNewUser($name, $email, $phone);
-//            }
-//
-//        } else if ($user_sub->usertype === 'customer') {
-//            // return if the user is a customer
-//            return response()->json(["message" => "This person is a customer in the system and can not also be a contractor", "errors" => ["error" => "No valid user."]], 422);
+//                    User::addContractorToJemTable();
+                }
+                else {
+//                    User::addUserToQuickbooksContractorTableAndQuickbooks();
+//                    User::addContractorToJemTable();
+                }
+            } else{
+                $user_sub = $this->createNewUser($name, $email, $phone);
+            }
+
+        } else if ($user_sub->usertype === 'customer') {
+            // return if the user is a customer
+            return response()->json(["message" => "This person is a customer in the system and can not also be a contractor", "errors" => ["error" => "No valid user."]], 422);
         } else {
             if ($user_sub->phone !== $phone) {
                 $user_sub->updatePhoneNumber($phone);
                 if ($qb->isContractorThatUsesQuickbooks()) {
-//
-                    $companyName = '';
-                    $givenName = '';
-                    $familyName = '';
-
-                        $user_sub->updatePhoneNumberInQuickBooks($phone,
-                            $user_sub->id, $companyName, $givenName, $familyName);
+                    $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
+                    $qbc = QuickbooksContractor::where('quickbooks_id', '=', $request->quickbooksId)->
+                    where('contractor_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+                    $qbc->primary_phone = $phone;
+                    try {
+                        $qbc->save();
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'message' => $e->getMessage(),
+                            'code' => $e->getCode()
+                        ], 200);
+                    }
                 }
             }
         }

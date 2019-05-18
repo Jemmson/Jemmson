@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::delete('/stripe/customer/card', 'StripeController@deleteCard');
 
     // Tasks
-    Route::post('/task/notify', 'TaskController@notify');
+    Route::post('/task/notify', 'TaskController@notify')->middleware('quickbook.token');
 
 }
 );

@@ -564,14 +564,12 @@ class Quickbook extends Model
             echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
             echo "The Response message is: " . $error->getResponseBody() . "\n";
         }
-        else {
-            echo "Created Id={$resultingObj->Id}. Reconstructed response body:\n\n";
-            $xmlBody = XmlObjectSerializer::getPostXmlFromArbitraryEntity($resultingObj, $urlResource);
-            echo $xmlBody . "\n";
-        }
+//        else {
+//            echo "Created Id={$resultingObj->Id}. Reconstructed response body:\n\n";
+//            $xmlBody = XmlObjectSerializer::getPostXmlFromArbitraryEntity($resultingObj, $urlResource);
+//            echo $xmlBody . "\n";
+//        }
 
-
-        $resultingObj = $dataService->Update($theResourceObj);
         return $resultingObj;
     }
 
@@ -592,6 +590,7 @@ class Quickbook extends Model
                 }
             }
 
+            // TODO: need the below logic for the sub contractors as well
             if (empty($customer->CompanyName)) {
                 $quickbooksId = $customer->Id;
                 $jem_customer = CustomerNeedsUpdating::hasCustomerBeenMarkedForUpdating($contractorId, $quickbooksId);

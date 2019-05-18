@@ -326,20 +326,6 @@ class User extends SparkUser
         return User::where('phone', $phone)->orWhere('email', $email)->first();
     }
 
-
-    public function updatePhoneNumberInQuickBooks($newPhone, $subContractorId, $companyName, $givenName, $familyName)
-    {
-        $qb = new Quickbook();
-
-        $quickbooksId = QuickbooksContractor::select('quickbooks_id')->
-        where('contractor_id', '=', $subContractorId)->
-        where('company_name', '=', $companyName)->
-        where('given_name', '=', $givenName)->
-        where('family_name', '=', $familyName)->get()->first();
-
-        $qb->UpdateSubPhoneNumberInQuickbooks($newPhone, $quickbooksId);
-    }
-
     public function updatePhoneNumber($newPhone)
     {
 
