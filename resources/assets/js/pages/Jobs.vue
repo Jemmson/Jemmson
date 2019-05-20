@@ -6,15 +6,15 @@
     </search-bar>
 
     <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
-      <div class="paginated mt-4 mb-1">
+    <div class="mt-4 mb-1">
 
-      <card class="list-card" v-for="bid in sBids" v-bind:key="bid.id" @click.native="goToBid(bid.id)">
+      <card class="list-card " v-for="bid in sBids" v-bind:key="bid.id" @click.native="goToJob(bid.id)">
         <div class="row">
           <div class="col-12 page-header-title">
-                {{ jobName(bid.job_name) }}
+            {{ jobName(bid.job_name) }}
           </div>
           <div class="col-12">
-              <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
+            <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
             <span :class="getLabelClass(bid)">
               {{ status(bid) }}
             </span>
@@ -23,14 +23,13 @@
               <i class="fas fa-users"></i>
             </span>
 
-            <span class="float-right mr-2 list-card-info">3 Tasks 
+            <span class="float-right mr-2 list-card-info">3 Tasks
               <i class="far fa-check-square"></i>
             </span>
-
           </div>
         </div>
       </card>
-      </div>
+    </div>
     <!-- </paginate> -->
 
     <!-- <div class="card mb-4 mt-3">
@@ -92,7 +91,7 @@
         date = date.split(' ')
         return date[0]
       },
-      goToBid(id) {
+      goToJob(id) {
         this.$router.push('/bid/' + id)
       },
       getBids() {

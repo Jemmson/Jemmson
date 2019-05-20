@@ -1,31 +1,45 @@
 <template>
-    <!-- /all tasks of a bid -->
-    <div class="container">
-        <!-- <search-bar>
-            <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
-        </search-bar> -->
-        <!-- <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated"
+  <!-- /all tasks of a bid -->
+  <div class="container-fluid">
+    <search-bar>
+      <input type="text" class="form-control" placeholder="Search Job Tasks" v-model="searchTerm" @keyup="search">
+    </search-bar>
+    <!-- <paginate ref="paginator" name="jobTasks" :list="jobTasks" :per="6" class="paginated"
                   v-if="jobTasks.length > 0"> -->
-            <!-- / status -->
-            <card v-for="jobTask of jobTasks" v-bind:key="jobTask.id"
-                  :id="'task-' + jobTask.id">
+    <!-- / status -->
+    <div class="mt-4 mb-1">
+      <card class="list-card" v-for="(jobTask, index) of jobTasks" v-bind:key="jobTask.id" :id="'task-' + jobTask.id" @click.native="goToJobTask(index)">
+        <!-- <bid-task :job-task="jobTask" :bid="job" :user="globalUser">
+        </bid-task> -->
+        <div class="row">
+          <div class="col-12 page-header-title">
+            {{ jobTask.task.name }}
+          </div>
+          <div class="col-12">
+            <span class="dot" :class="'bg-' + getLabelClass(jobTask)"></span>
+            <span :class="getLabelClass(jobTask)">
+              {{ status(jobTask) }}
+            </span>
 
-                <bid-task
-                        :job-task="jobTask"
-                        :bid="bid"
-                        :user="globalUser"
-                >
-                </bid-task>
+            <span class="float-right list-card-info">2 Subs
+              <i class="fas fa-users"></i>
+            </span>
 
-            </card>
-        <!-- </paginate> -->
+            <span class="float-right mr-2 list-card-info">3 Tasks
+              <i class="far fa-check-square"></i>
+            </span>
+          </div>
+        </div>
+      </card>
+    </div>
+    <!-- </paginate> -->
 
-        <!-- <div class="card p-5 card-body justify-center">
+    <!-- <div class="card p-5 card-body justify-center">
             <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
             </paginate-links>
         </div> -->
 
-    </div>
+  </div>
 </template>
 
 <script>
@@ -45,6 +59,7 @@
         sendSubMessage: true,
         sendCustomerMessage: true,
         customerMessage: '',
+        searchTerm: '',
         disabled: {
           showDenyForm: false,
           pay: false,
@@ -69,8 +84,23 @@
         job: state => state.job.model
       })
     },
-    methods: {},
+    methods: {
+      search () {
+
+      },
+      goToJobTask(index) {
+        console.log(index);
+        
+      },
+      getLabelClass(bid) {
+        return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid))
+      },
+      status(bid) {
+        return User.status(bid.status, bid)
+      },
+    },
     mounted: function() {
+
     }
   }
 </script>
