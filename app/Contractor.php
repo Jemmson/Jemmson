@@ -454,7 +454,7 @@ class Contractor extends Model
     {
         return \App\QuickbooksContractor::where('company_name', 'like', "$companyName%")->orderBy('company_name', 'asc')->get();
     }
-    
+
     public
     function getAllQuickbookCompaniesAndFormattedSubs($companyName, $formattedSubs, $contractorId)
     {
@@ -497,7 +497,7 @@ class Contractor extends Model
                         'id' => '',
                         'contractor_id' => '',
                         'name' => $name,
-                        'quickbooksId' => $companies[$j]->quickbooks_id,
+                        'quickbooks_id' => $companies[$j]->quickbooks_id,
                         'contractor' => [
                             'company_name' => $companies[$j]->company_name
                         ],
@@ -554,7 +554,7 @@ class Contractor extends Model
                         'id' => '',
                         'contractor_id' => '',
                         'name' => $name,
-                        'quickbooksId' => $companies[$j]->quickbooks_id,
+                        'quickbooks_id' => $companies[$j]->quickbooks_id,
                         'contractor' => [
                             'company_name' => $companies[$j]->company_name
                         ],
