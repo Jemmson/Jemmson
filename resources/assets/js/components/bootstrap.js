@@ -51,7 +51,6 @@ Vue.component('approve-bid', require('./job/ApproveBid'));
 Vue.component('sub-invite-modal', require('./task/SubInviteModal'));
 Vue.component('deny-task-modal', require('./task/DenyTaskModal'));
 Vue.component('update-task-location-modal', require('./task/UpdateTaskLocationModal'));
-Vue.component('bid-add-task', require('./task/BidAddTask.vue'));
 
 
 Vue.component('task-images', require('./task/UploadTaskImages.vue'));

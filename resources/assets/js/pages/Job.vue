@@ -46,7 +46,6 @@
   import GeneralContractorBidActions from '../components/job/GeneralContractorBidActions';
   import CompletedTasks from '../components/job/CompletedTasks';
   import Stripe from '../components/stripe/Stripe';
-  import BidAddTask from '../components/task/BidAddTask';
 
   export default {
     props: {
@@ -58,7 +57,6 @@
       ApproveBid,
       GeneralContractorBidActions,
       CompletedTasks,
-      BidAddTask,
       Stripe
     },
     data() {
