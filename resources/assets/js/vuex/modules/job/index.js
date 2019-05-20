@@ -5,7 +5,7 @@ import * as mutations from './mutations'
 export default {
   namespaced: false,
   state: {
-    model: {},
+    model: null,
     id: '',
     customer_id: '',
     contractor_id: '',

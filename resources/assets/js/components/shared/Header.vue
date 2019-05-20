@@ -46,7 +46,7 @@
             <div class="col-12 d-flex align-items-center">
                 <i class="fas fa-chevron-left text-primary float-left sm-icon align-self-center"></i>
                 <span class="page-header-title mx-auto align-middle" style="font-weight: 700;">
-                    {{$store.state.job.model.job_name}}
+                    {{$store.state.job.model !== null ? $store.state.job.model.job_name : 'No Job Name'}}
                 </span>
             </div>
         </div>
