@@ -185,6 +185,9 @@ export const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
+  checkThatCurrentJobExistsForRoutesThatNeedIt(to.path);
+
   if(
     to.path === '/demo' ||
     to.path === '/check_accounting' ||
@@ -257,6 +260,11 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+
+router.afterEach((to, from) => {
+  // app.$store.commit('setCurrentPage', router.history.current.path);
+})
+
 var app = new Vue({
   mixins: [require('spark')],
   router,
@@ -267,38 +275,44 @@ var app = new Vue({
   mounted() {
     axios.get('/loadFeatures').then((response) => {
       this.$store.commit('loadFeatures', response.data)
-    }).catch(function(error){
+    }).catch(function (error) {
       console.log(JSON.stringify(error));
     })
   }
 })
 
-router.afterEach((to, from) => {
-  // app.$store.commit('setCurrentPage', router.history.current.path);
-})
-
 require('./bootstrap')
 
-var originalHeight = document.documentElement.clientHeight
-var originalWidth = document.documentElement.clientWidth
-$(window).resize(function() {
-  console.log('inside resize')
+// var originalHeight = document.documentElement.clientHeight
+// var originalWidth = document.documentElement.clientWidth
+// $(window).resize(function() {
+//   console.log('inside resize')
 
-  // Control landscape/portrait mode switch
-  if (document.documentElement.clientHeight == originalWidth &&
-    document.documentElement.clientWidth == originalHeight) {
-    originalHeight = document.documentElement.clientHeight
-    originalWidth = document.documentElement.clientWidth
-  }
+//   // Control landscape/portrait mode switch
+//   if (document.documentElement.clientHeight == originalWidth &&
+//     document.documentElement.clientWidth == originalHeight) {
+//     originalHeight = document.documentElement.clientHeight
+//     originalWidth = document.documentElement.clientWidth
+//   }
 
-  // Check if the available height is smaller (keyboard is shown) so we hide the footer.
-  if (document.documentElement.clientHeight < originalHeight) {
-    $('.jemmson-footer').hide()
-    $('#feedback').hide()
-    console.log('hide')
-  } else {
-    $('.jemmson-footer').show()
-    $('#feedback').show()
-    console.log('show')
+//   // Check if the available height is smaller (keyboard is shown) so we hide the footer.
+//   if (document.documentElement.clientHeight < originalHeight) {
+//     $('.jemmson-footer').hide()
+//     $('#feedback').hide()
+//     console.log('hide')
+//   } else {
+//     $('.jemmson-footer').show()
+//     $('#feedback').show()
+//     console.log('show')
+//   }
+// })
+
+function checkThatCurrentJobExistsForRoutesThatNeedIt(route) {
+  console.log('checking that job exists in store', route);
+  
+  if (route == '/job/tasks' || route == '/job/add/task') {
+    if (store.state.job.model === null) {
+      router.push('/bids');
+    }
   }
-})
+}
