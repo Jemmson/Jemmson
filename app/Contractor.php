@@ -376,7 +376,7 @@ class Contractor extends Model
     public function subsWithPhoneNumberAndEmail($subs)
     {
         $subsArray = [];
-        $subInfo = '';
+//        $subInfo = '';
         foreach ($subs as $sub) {
 
             $c = $sub->user()->get(['id', 'name', 'email', 'phone', 'first_name', 'last_name'])->first();
@@ -393,18 +393,24 @@ class Contractor extends Model
                 get()->first();
             }
 
+            $state = '';
+            if (!empty($sub->location()->get()->first())) {
+                $state = $sub->location()->get()->first()->state;
+            }
+
             if (empty($qbc)) {
                 $subInfo = [
                     'id' => $sub->user_id,
                     'contractor_id' => $sub->user_id,
                     'name' => $c->name,
+                    'quickbooks_id' => '',
                     'contractor' => [
                         'company_name' => $sub->company_name
                     ],
+                    'state' => $state,
+                    'given_name' => '',
                     'phone' => $c->phone,
                     'email' => $c->email,
-                    'quickbooks_id' => '',
-                    'given_name' => '',
                     'family_name' => '',
                     'first_name' => $c->first_name,
                     'last_name' => $c->last_name
@@ -415,13 +421,14 @@ class Contractor extends Model
                     'id' => $sub->user_id,
                     'contractor_id' => $sub->user_id,
                     'name' => $c->name,
+                    'quickbooks_id' => $qbc->quickbooks_id,
                     'contractor' => [
                         'company_name' => $sub->company_name
                     ],
+                    'state' => $state,
+                    'given_name' => $qbc->given_name,
                     'phone' => $c->phone,
                     'email' => $c->email,
-                    'quickbooks_id' => $qbc->quickbooks_id,
-                    'given_name' => $qbc->given_name,
                     'family_name' => $qbc->family_name,
                     'first_name' => $c->first_name,
                     'last_name' => $c->last_name
@@ -447,213 +454,7 @@ class Contractor extends Model
     {
         return \App\QuickbooksContractor::where('company_name', 'like', "$companyName%")->orderBy('company_name', 'asc')->get();
     }
-
-
-    public function filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, $contractorId)
-    {
-        $subs = [];
-
-
-        // TODO: need to advance c to the next name once found. must include all companies that have the
-        // TODO: same company names but different given and family names.
-
-
-        for ($i = 0; $i < count($allCompanies); $i++) {
-            $subExists = false;
-            $counter = 0;
-            $start = $i;
-            for ($j = $i; $j < count($allCompanies); $j++) {
-                $counter++;
-                if ($allCompanies[$i]->company_name == $allCompanies[$j]->company_name) {
-                    if ($allCompanies[$j]->contractor_id == $contractorId) {
-                        $subExists = true;
-                        $contractorSub = $allCompanies[$j];
-
-                        if ($contractorSub->family_name == "NULL") {
-                            $name = $contractorSub->given_name;
-                        } else if ($contractorSub->given_name == "NULL") {
-                            $name = $contractorSub->family_name;
-                        } else {
-                            $name = $contractorSub->given_name . " " . $contractorSub->family_name;
-                        }
-                        array_push($subs, [
-                            'id' => '',
-                            'contractor_id' => $contractorSub->contractor_id,
-                            'quickbooks_id' => $contractorSub->quickbooks_id,
-                            'name' => $name,
-                            'given_name' => $contractorSub->given_name,
-                            'family_name' => $contractorSub->family_name,
-                            'last_name' => '',
-                            'first_name' => '',
-                            'contractor' => [
-                                'company_name' => $contractorSub->company_name
-                            ],
-                            'phone' => $contractorSub->primary_phone,
-                            'email' => $contractorSub->primary_email_addr,
-                        ]);
-
-                    }
-
-                } else {
-                    $i = $j;
-                    break;
-                }
-
-                if ($counter == count($allCompanies)) {
-                    $i = $j;
-                }
-
-                if ($j == count($allCompanies)) {
-                    $i = $j;
-                }
-            }
-            if (!$subExists) {
-                if ($allCompanies[$start]->family_name == "NULL") {
-                    $name = $allCompanies[$start]->given_name;
-                } else if ($allCompanies[$start]->given_name == "NULL") {
-                    $name = $allCompanies[$start]->family_name;
-                } else {
-                    $name = $allCompanies[$start]->given_name . " " . $allCompanies[$start]->family_name;
-                }
-                array_push($subs, [
-                    'id' => '',
-                    'contractor_id' => $allCompanies[$start]->contractor_id,
-                    'quickbooks_id' => $allCompanies[$start]->quickbooks_id,
-                    'name' => $name,
-                    'given_name' => $allCompanies[$start]->given_name,
-                    'family_name' => $allCompanies[$start]->family_name,
-                    'last_name' => '',
-                    'first_name' => '',
-                    'contractor' => [
-                        'company_name' => $allCompanies[$start]->company_name
-                    ],
-                    'phone' => $allCompanies[$start]->primary_phone,
-                    'email' => $allCompanies[$start]->primary_email_addr,
-                ]);
-            }
-        }
-
-
-//            foreach ($allCompanies as $c) {
-//
-//                $subExists = false;
-//                $contractorSub = new QuickbooksContractor();
-//                foreach ($allCompanies as $s) {
-//                    if ($c->company_name == $s->company_name) {
-//                        if ($c->contractor_id == $contractorId) {
-//                            $subExists = true;
-//                            $contractorSub = $s;
-//
-//                            if ($contractorSub->family_name == "NULL") {
-//                                $name = $contractorSub->given_name;
-//                            } else if ($contractorSub->given_name == "NULL") {
-//                                $name = $contractorSub->family_name;
-//                            } else {
-//                                $name = $contractorSub->given_name . " " . $contractorSub->family_name;
-//                            }
-//                            array_push($subs, [
-//                                'id' => '',
-//                                'contractor_id' => $contractorSub->contractor_id,
-//                                'quickbooks_id' => $contractorSub->quickbooks_id,
-//                                'name' => $name,
-//                                'given_name' => $contractorSub->given_name,
-//                                'family_name' => $contractorSub->family_name,
-//                                'last_name' => '',
-//                                'first_name' => '',
-//                                'contractor' => [
-//                                    'company_name' => $contractorSub->company_name
-//                                ],
-//                                'phone' => $contractorSub->primary_phone,
-//                                'email' => $contractorSub->primary_email_addr,
-//                            ]);
-//
-//                        }
-//                    } else {
-//                        break;
-//                    }
-//                }
-
-//                if (!$subExists) {
-//                    if ($c->family_name == "NULL") {
-//                        $name = $c->given_name;
-//                    } else if ($c->given_name == "NULL") {
-//                        $name = $c->family_name;
-//                    } else {
-//                        $name = $c->given_name . " " . $c->family_name;
-//                    }
-//                    array_push($subs, [
-//                        'id' => '',
-//                        'contractor_id' => $contractorSub->contractor_id,
-//                        'quickbooks_id' => $contractorSub->quickbooks_id,
-//                        'name' => $name,
-//                        'given_name' => $c->given_name,
-//                        'family_name' => $c->family_name,
-//                        'last_name' => '',
-//                        'first_name' => '',
-//                        'contractor' => [
-//                            'company_name' => $c->company_name
-//                        ],
-//                        'phone' => $c->primary_phone,
-//                        'email' => $c->primary_email_addr,
-//                    ]);
-//                }
-
-
-//            if ($subExists) {
-//
-//                if ($contractorSub->family_name == "NULL") {
-//                    $name = $contractorSub->given_name;
-//                } else if ($contractorSub->given_name == "NULL") {
-//                    $name = $contractorSub->family_name;
-//                } else {
-//                    $name = $contractorSub->given_name . " " . $contractorSub->family_name;
-//                }
-//                array_push($subs, [
-//                    'id' => '',
-//                    'contractor_id' => $contractorSub->contractor_id,
-//                    'quickbooks_id' => $contractorSub->quickbooks_id,
-//                    'name' => $name,
-//                    'given_name' => $contractorSub->given_name,
-//                    'family_name' => $contractorSub->family_name,
-//                    'last_name' => '',
-//                    'first_name' => '',
-//                    'contractor' => [
-//                        'company_name' => $contractorSub->company_name
-//                    ],
-//                    'phone' => $contractorSub->primary_phone,
-//                    'email' => $contractorSub->primary_email_addr,
-//                ]);
-//
-//            }
-//            else {
-//
-//                if ($c->family_name == "NULL") {
-//                    $name = $c->given_name;
-//                } else if ($c->given_name == "NULL") {
-//                    $name = $c->family_name;
-//                } else {
-//                    $name = $c->given_name . " " . $c->family_name;
-//                }
-//                array_push($subs, [
-//                    'id' => '',
-//                    'contractor_id' => $contractorSub->contractor_id,
-//                    'quickbooks_id' => $contractorSub->quickbooks_id,
-//                    'name' => $name,
-//                    'given_name' => $c->given_name,
-//                    'family_name' => $c->family_name,
-//                    'last_name' => '',
-//                    'first_name' => '',
-//                    'contractor' => [
-//                        'company_name' => $c->company_name
-//                    ],
-//                    'phone' => $c->primary_phone,
-//                    'email' => $c->primary_email_addr,
-//                ]);
-//            }
-
-        return $subs;
-    }
-
+    
     public
     function getAllQuickbookCompaniesAndFormattedSubs($companyName, $formattedSubs, $contractorId)
     {
@@ -663,110 +464,165 @@ class Contractor extends Model
         // TODO:: by state and city of where job is located
         // TODO:: by contractors have used in the past in this app
 
-        $allCompanies = $this->getAllCompaniesInQuickBookContractorsByCompanyName($companyName);
 
-        $subs = $this->filterCompaniesByMakingThemUniqueAndPrioritizingThoseWithGeneralContractorId($allCompanies, $contractorId);
+        $companies = QuickbooksContractor::where('company_name', 'like', $companyName . '%')->
+        where('contractor_id', '!=', Auth::user()->getAuthIdentifier())->
+        orderBy('company_name', 'asc')->
+        orderBy('state', 'asc')->get();
 
-//        $qbSub = \App\QuickbooksContractor::where('given_name', '=', $c->first_name)->
-//        where('last_name', '=', $c->last_name)->
-//        where('contractor_id', '=', $c->id)->get()->first();
-//
-//        if (empty($qbSub)) {
-//            $qbSub = \App\QuickbooksContractor::where('given_name', '=', $c->first_name)->
-//            where('last_name', '=', $c->last_name)->get()->first();
-//        }
-//
-//        if (empty($qbSub)) {
-//            $contractorId = '';
-//            $quickbooksId = '';
-//        } else {
-//            $contractorId = $qbSub->contractor_id;
-//            $quickbooksId = $qbSub->quickbooks_id;
-//        }
-//
+        $subArrayQBNonContractor = [];
+
+        $subArrayCounter = -1;
+        for ($i = 0; $i < count($companies); $i++) {
+            $subArrayCounter++;
+            for ($j = 0; $j < count($companies); $j++) {
+                if (
+                    $companies[$i]->company_name ==
+                    $companies[$j]->company_name &&
+                    $companies[$i]->state ==
+                    $companies[$j]->state
+                ) {
 
 
-//        $subs = [];
-//
-//        foreach ($allCompanies as $c) {
-//            $subExists = false;
-//            foreach ($subs as $sub) {
-//                if ($sub == $c) {
-//                    $subExists = true;
-//                }
-//            }
-//            if (!$subExists) {
-//                if ($c->family_name == "NULL") {
-//                    $name = $c->given_name;
-//                } else if ($c->given_name == "NULL") {
-//                    $name = $c->family_name;
-//                } else {
-//                    $name = $c->given_name . " " . $c->family_name;
-//                }
-//                array_push($subs, [
-//                    'id' => '',
-//                    'quickbooksId' => $c->quickbooks_id,
-//                    'name' => $name,
-//                    'given_name' => $c->given_name,
-//                    'family_name' => $c->family_name,
-//                    'last_name' => '',
-//                    'first_name' => '',
-//                    'contractor' => [
-//                        'company_name' => $c->company_name
-//                    ],
-//                    'phone' => $c->primary_phone,
-//                    'email' => $c->primary_email_addr,
-//                ]);
-//            }
-//        }
-
-
-        $subArray = [];
-
-        if (count($formattedSubs) > count($subs)) {
-
-            foreach ($formattedSubs as $c) {
-                $subExists = false;
-                foreach ($subs as $sub) {
-                    if (
-                        $sub['name'] == $c['name'] &&
-                        $sub['contractor']['company_name'] == $c['contractor']['company_name']
-                    ) {
-                        $sub['id'] = $c['id'];
-                        array_push($subArray, $sub);
-                        $subExists = true;
+                    if ($companies[$j]->family_name == "NULL") {
+                        $name = $companies[$j]->given_name;
+                    } else if ($companies[$j]->given_name == "NULL") {
+                        $name = $companies[$j]->family_name;
+                    } else {
+                        $name = $companies[$j]->given_name . " " . $companies[$j]->family_name;
                     }
-                }
-                if (!$subExists) {
-                    array_push($subArray, $c);
-                }
-            }
 
-        } else {
-            foreach ($subs as $sub) {
-                $subExists = false;
-                foreach ($formattedSubs as $c) {
-                    if (
-                        $sub['name'] == $c['name'] &&
-                        $sub['contractor']['company_name'] == $c['contractor']['company_name']
-                    ) {
-                        $sub['id'] = $c['id'];
-                        array_push($subArray, $sub);
-                        $subExists = true;
-                    }
-                }
-                if (!$subExists) {
-                    array_push($subArray, $c);
+
+                    $sub = [
+                        'id' => '',
+                        'contractor_id' => '',
+                        'name' => $name,
+                        'quickbooksId' => $companies[$j]->quickbooks_id,
+                        'contractor' => [
+                            'company_name' => $companies[$j]->company_name
+                        ],
+                        'state' => $companies[$j]->state,
+                        'given_name' => $companies[$j]->given_name,
+                        'phone' => $companies[$j]->primary_phone,
+                        'email' => $companies[$j]->primary_email_addr,
+                        'family_name' => $companies[$j]->family_name,
+                        'first_name' => '',
+                        'last_name' => '',
+                    ];
+
+                    $subArrayQBNonContractor[$subArrayCounter] = $sub;
+
+                } else {
+                    $i = $j - 1;
+                    break;
                 }
             }
         }
 
-        return $subArray;
+
+
+
+        $companies = QuickbooksContractor::where('company_name', 'like', $companyName . '%')->
+        where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+        orderBy('company_name', 'asc')->
+        orderBy('state', 'asc')->get();
+
+        $subArrayQBGeneralContractor = [];
+
+        $subArrayCounter = -1;
+        for ($i = 0; $i < count($companies); $i++) {
+            $subArrayCounter++;
+            for ($j = 0; $j < count($companies); $j++) {
+                if (
+                    $companies[$i]->company_name ==
+                    $companies[$j]->company_name &&
+                    $companies[$i]->state ==
+                    $companies[$j]->state
+                ) {
+
+
+                    if ($companies[$j]->family_name == "NULL") {
+                        $name = $companies[$j]->given_name;
+                    } else if ($companies[$j]->given_name == "NULL") {
+                        $name = $companies[$j]->family_name;
+                    } else {
+                        $name = $companies[$j]->given_name . " " . $companies[$j]->family_name;
+                    }
+
+
+                    $sub = [
+                        'id' => '',
+                        'contractor_id' => '',
+                        'name' => $name,
+                        'quickbooksId' => $companies[$j]->quickbooks_id,
+                        'contractor' => [
+                            'company_name' => $companies[$j]->company_name
+                        ],
+                        'state' => $companies[$j]->state,
+                        'given_name' => $companies[$j]->given_name,
+                        'phone' => $companies[$j]->primary_phone,
+                        'email' => $companies[$j]->primary_email_addr,
+                        'family_name' => $companies[$j]->family_name,
+                        'first_name' => '',
+                        'last_name' => '',
+                    ];
+
+                    $subArrayQBGeneralContractor[$subArrayCounter] = $sub;
+
+                } else {
+                    $i = $j - 1;
+                    break;
+                }
+            }
+        }
+
+        $subArrayGeneralJemGeneralQB = [];
+
+        foreach ($subArrayQBGeneralContractor as $qbcompany){
+            $jemCompanyExists = false;
+            foreach ($formattedSubs as $jemSub) {
+                if (
+                    $qbcompany['contractor']['company_name'] == $jemSub['contractor']['company_name'] &&
+                    $qbcompany['state'] == $jemSub['state']
+                ) {
+                    $jemCompanyExists = true;
+                    break;
+                }
+            }
+            if ($jemCompanyExists) {
+                array_push($subArrayGeneralJemGeneralQB, $jemSub);
+            } else {
+                array_push($subArrayGeneralJemGeneralQB, $qbcompany);
+            }
+        }
+
+
+        $finalSubArray = [];
+
+        foreach ($subArrayGeneralJemGeneralQB as $qbcompany){
+            $jemCompanyExists = false;
+            foreach ($formattedSubs as $jemSub) {
+                if (
+                    $qbcompany['contractor']['company_name'] == $jemSub['contractor']['company_name'] &&
+                    $qbcompany['state'] == $jemSub['state']
+                ) {
+                    $jemCompanyExists = true;
+                    break;
+                }
+            }
+            if ($jemCompanyExists) {
+                array_push($finalSubArray, $jemSub);
+            } else {
+                array_push($finalSubArray, $qbcompany);
+            }
+        }
+
+
+        return $finalSubArray;
 
     }
 
-    public
-    function getSubContractors($company_name, $generalContractorsCompanyName)
+    public function getSubContractors($company_name, $generalContractorsCompanyName)
     {
 
 //        TODO: this method does not work like it should
@@ -781,13 +637,11 @@ class Contractor extends Model
         $subs = $this->getAllContractorsExceptTheGeneralContractor($company_name, $generalContractorsCompanyName);
         $formattedSubs = $this->subsWithPhoneNumberAndEmail($subs);
 
-//        $qb = new Quickbook();
-//        if ($qb->isContractorThatUsesQuickbooks()) {
-//            return $this->getAllQuickbookCompaniesAndFormattedSubs($company_name, $formattedSubs, Auth::user()->getAuthIdentifier());
-//        }
+        $qb = new Quickbook();
+        if ($qb->isContractorThatUsesQuickbooks()) {
+            return $this->getAllQuickbookCompaniesAndFormattedSubs($company_name, $formattedSubs, Auth::user()->getAuthIdentifier());
+        }
 
         return $formattedSubs;
     }
 }
-
-//DB::table('bid_contractor_job_task')->select('task_id')->where('contractor_id', '=', 5)->where('task_id', '=', 2)->where('job_id', '=', 1)->get()[0];
