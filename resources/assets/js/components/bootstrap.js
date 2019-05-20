@@ -12,7 +12,6 @@
 // /bid components
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
-Vue.component('bid-tasks', require('./job/BidTasks.vue'));
 Vue.component('completed-tasks', require('./job/CompletedTasks.vue'));
 
 

@@ -60,6 +60,8 @@ import PublicHome from './pages/PublicHome'
 import Jobs from './pages/Jobs'
 import JobTasks from './pages/JobTasks'
 import AddJobTask from './pages/AddJobTask'
+import JobTask from './pages/JobTask'
+
 
 import Job from './pages/Job'
 import InitiateBid from './pages/InitiateBid'
@@ -101,6 +103,10 @@ const routes = [
   {
     path: '/job/tasks',
     component: JobTasks
+  },
+  {
+    path: '/job/task/:index',
+    component: JobTask
   },
   {
     path: '/job/add/task',

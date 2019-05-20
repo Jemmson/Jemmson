@@ -1,6 +1,5 @@
 <template>
     <div class="flex flex-col">
-        <h3 class="self-center mb-4 card-h2">Images</h3>
         <div class="flex justify-between">
             <div class="" v-if="showTaskImage1(jobTask)">
                 <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
@@ -40,7 +39,7 @@
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
             </span>
             <span v-if="!disabled.uploadTaskImageBtn"> -->
-                <input :ref="'task_photo_' + jobTask.id" class="mt-4 mb-4" :id="'task_photo_' + jobTask.id" type="file" @change="uploadTaskImage(jobTask.id)">
+        <input :ref="'task_photo_' + jobTask.id" class="mt-4" :id="'task_photo_' + jobTask.id" type="file" @change="uploadTaskImage(jobTask.id)">
             <!-- </span>
         </button> -->
         <!-- / end upload task images-->

@@ -90,7 +90,7 @@
       },
       goToJobTask(index) {
         console.log(index);
-        
+        this.$router.push('/job/task/' + index);
       },
       getLabelClass(bid) {
         return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid))
