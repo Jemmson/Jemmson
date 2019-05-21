@@ -342,17 +342,18 @@ class TaskController extends Controller
         if ($user_sub === null) {
             // if no user found create one
             if ($qb->isContractorThatUsesQuickbooks()) {
-                if (QuickbooksContractor::ContractorExists()) {
-//                    if ($user_sub->phone !== $phone) {
-//                        $qb->updateCustomerPhoneInQB();
-//                    }
-//                    User::addContractorToJemTable();
-                }
-                else {
+                if (QuickbooksContractor::ContractorExists($request)) {
+                    if ($user_sub->phone !== $phone) {
+                        $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
+                    }
+                    $user = new User();
+                    $user->addContractorToJemTable($request);
+                } else {
 //                    User::addUserToQuickbooksContractorTableAndQuickbooks();
-//                    User::addContractorToJemTable();
+                    $user = new User();
+                    $user_sub = $user->addContractorToJemTable($request);
                 }
-            } else{
+            } else {
                 $user_sub = $this->createNewUser($name, $email, $phone);
             }
 

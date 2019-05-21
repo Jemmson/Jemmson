@@ -78,7 +78,7 @@
 
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
-                            <label for="phone">Phone *</label>
+                            <label for="phone">Mobile Phone *</label>
                             <input type="tel"
                                    placeholder="Phone Number"
                                    class="form-control" id="phone" name="phone" maxlength="10" required

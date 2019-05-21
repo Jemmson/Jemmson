@@ -24,6 +24,14 @@ class CreateQuickbooksContractorTable extends Migration
             $table->string('family_name')->nullable();
             $table->string('fully_qualified_name')->nullable();
             $table->string('primary_phone')->nullable();
+            $table->string('line1')->nullable();
+            $table->string('line2')->nullable();
+            $table->string('line3')->nullable();
+            $table->string('line4')->nullable();
+            $table->string('line5')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('postal_code')->nullable();
             $table->string('primary_email_addr')->nullable();
             $table->timestamps();
         });
