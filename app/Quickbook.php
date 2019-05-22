@@ -396,6 +396,65 @@ class Quickbook extends Model
     }
 
 
+    public static function addNewContractorToQuickBooks($request)
+    {
+
+        $accessToken = session('sessionAccessToken');
+        $qbUser = Quickbook::select()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('CLIENT_ID'),
+            'ClientSecret' => env('CLIENT_SECRET'),
+            'accessTokenKey' => $accessToken->getAccessToken(),
+            'refreshTokenKey' => $qbUser->refresh_token,
+            'QBORealmID' => $qbUser->company_id,
+            'baseUrl' => "development"
+        ));
+
+        // TODO: need to find some way to make this unique for adding this to the contractor table
+        !empty($request->firstName) ?
+            $displayName = $request->firstName . " " . $request->lastName . "_" .  rand(100, 9999) :
+            $displayName = $request->givenName . " " . $request->familyName . "_" .  rand(100, 9999);
+
+        $customerObj = Customer::create([
+//            "BillAddr" => [
+//                "Line1"=>  "123 Main Street",
+//                "City"=>  "Mountain View",
+//                "Country"=>  "USA",
+//                "CountrySubDivisionCode"=>  "CA",
+//                "PostalCode"=>  "94042"
+//            ],
+//            "Notes" =>  "Here are other details.",
+//            "Title"=>  "Mr",
+//            "GivenName"=>  $request->firstName,
+//            "MiddleName"=>  "1B",
+//            "FamilyName"=>  $request->lastName,
+//            "Suffix"=>  "Jr",
+            "FullyQualifiedName" => $request->name,
+            "CompanyName"=>  $request->companyName,
+            // TODO: Display name must be unique. not sure how to do this.
+            "DisplayName" => $request->companyName,
+            "PrimaryPhone" => [
+                "FreeFormNumber" => $request->phone
+            ],
+            "PrimaryEmailAddr"=>  [
+                "Address" => $request->email
+            ]
+        ]);
+        $resultingCustomerObj = $dataService->Add($customerObj);
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+        } else {
+            var_dump($resultingCustomerObj);
+        }
+
+        return $resultingCustomerObj;
+    }
+
     public function checkIfQuickbooksCustomerExists(\App\User $customer)
     {
         $accessToken = session('sessionAccessToken');

@@ -28,7 +28,7 @@
                                     id="contractorName"
                                     name="contractorName"
                                     autocomplete="off"
-                                    v-model="companyName"
+                                    v-model="initiateBidForSubForm.companyName"
                                     placeholder="Name"
                                     v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}"
                                     autofocus

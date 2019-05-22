@@ -338,7 +338,14 @@ class TaskController extends Controller
             $user_sub = User::find($request->id);
         }
         $qb = new Quickbook();
-        // TODO: Not sure about this logic. Should be if a user is not a contractor then create a contractor. If a user is a customer then that should not throw an error becuase a user can be both a contractor and a customer
+        // TODO: Not sure about this logic.
+        // TODO: Should be if a user is not a contractor then create a contractor.
+        // TODO: If a user is a customer then that should not throw an error
+        //   becuase a user can be both a contractor and a customer
+//           Have to resolve that a customer name does not have to be unique
+//           in QB becuase more than one person can have the same name. Can
+//           take into account middle name maybe. Can check that name is not
+//           in the QB customer table for that contractor. Needs to be fixed though.
         if ($user_sub === null) {
             // if no user found create one
             if ($qb->isContractorThatUsesQuickbooks()) {
@@ -347,11 +354,12 @@ class TaskController extends Controller
                         $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
                     }
                     $user = new User();
-                    $user->addContractorToJemTable($request);
+                    $user->addExistingQBContractorToJemTable($request);
                 } else {
-//                    User::addUserToQuickbooksContractorTableAndQuickbooks();
+                    $resultingCustomerObj = Quickbook::addNewContractorToQuickBooks($request);
+                    QuickbooksContractor::addContractorToQuickbooksContractorTable($request, $resultingCustomerObj);
                     $user = new User();
-                    $user_sub = $user->addContractorToJemTable($request);
+                    $user_sub = $user->addNewContractorToJemTable($request, $resultingCustomerObj->Id);
                 }
             } else {
                 $user_sub = $this->createNewUser($name, $email, $phone);

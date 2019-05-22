@@ -408,6 +408,25 @@ class User extends SparkUser
         return $cc;
     }
 
+    private function addGeneralAndNewSubToContractorContractorTable($user, $quickbooksId)
+    {
+        $cc = new ContractorContractor();
+        $cc->contractor_id = Auth::user()->getAuthIdentifier();
+        $cc->subcontractor_id = $user->id;
+        $cc->quickbooks_id = $quickbooksId;
+
+        try {
+            $cc->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $cc;
+    }
+
     private function addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user)
     {
         $qbContractor = QuickbooksContractor::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
@@ -453,13 +472,22 @@ class User extends SparkUser
         return $location;
     }
 
-    public function addContractorToJemTable($request)
+    public function addExistingQBContractorToJemTable($request)
     {
       $user = $this->addContractorUser($request);
       $contractor = $this->addUserToContractorTable($request, $user);
       $this->addGeneralAndSubToContractorContractorTable($request, $user);
       $this->addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user);
       return $user;
+    }
+
+    public function addNewContractorToJemTable($request, $quickbooksId)
+    {
+        $user = $this->addContractorUser($request);
+        $this->addUserToContractorTable($request, $user);
+        $this->addGeneralAndNewSubToContractorContractorTable($user, $quickbooksId);
+//        $this->addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user);
+        return $user;
     }
 
 }
