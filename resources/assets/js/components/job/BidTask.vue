@@ -204,7 +204,7 @@
                             <div class="flex-1">Action</div>
                         </div>
                         <div class="flex pl-2 mb-2" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
-                            <div class="flex-1">{{ bid.contractor.name }}</div>
+                            <div class="flex-1">{{ bid.contractor.contractor.company_name }}</div>
                             <div class="flex-1 uppercase">{{ bid.payment_type }}</div>
                             <div class="flex-1">${{ bid.bid_price }}</div>
                             <div class="flex-1">

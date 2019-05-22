@@ -81,6 +81,7 @@ class JobController extends Controller
                     [
                         'jobTasks.task',
                         'jobTasks.bidContractorJobTasks.contractor',
+                        'jobTasks.bidContractorJobTasks.contractor.contractor',
                         'jobTasks.location',
                         'customer' => function ($query) {
                             $query->select('id', 'name');
@@ -188,6 +189,7 @@ class JobController extends Controller
                 [
                     'jobTasks.task',
                     'jobTasks.bidContractorJobTasks.contractor',
+                    'jobTasks.bidContractorJobTasks.contractor.contractor',
                     'location',
                     'jobTasks.location',
                     'jobTasks.images',
@@ -415,6 +417,7 @@ class JobController extends Controller
                     [
                         'jobTasks.task',
                         'jobTasks.bidContractorJobTasks.contractor',
+                        'jobTasks.bidContractorJobTasks.contractor.contractor',
                         'jobTasks.location',
                         'customer' => function ($query) {
                             $query->select('id', 'name');
