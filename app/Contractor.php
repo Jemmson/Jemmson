@@ -137,9 +137,22 @@ class Contractor extends Model
     {
         $proposedBidPrice = Task::find($taskId)->proposed_sub_price;
         // TODO: update this
-        DB::table('bid_contractor_job_task')->insert(
-            ['contractor_id' => $subcontractorId, 'job_task_id' => $jobTaskId, "bid_price" => $proposedBidPrice]
-        );
+        
+        $bcjt = new BidContractorJobTask();
+        $bcjt->contractor_id  = $subcontractorId;
+        $bcjt->job_task_id  = $jobTaskId;
+        $bcjt->bid_price  = $proposedBidPrice;
+        
+        try {
+            $bcjt->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $bcjt;
 
     }
 

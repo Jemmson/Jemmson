@@ -205,7 +205,7 @@
                         </div>
                         <div class="flex pl-2 mb-2" v-for="bid in jobTask.bid_contractor_job_tasks" :key="bid.id">
                             <div class="flex-1">{{ bid.contractor.contractor.company_name }}</div>
-                            <div class="flex-1 uppercase">{{ bid.contractor_sub_contractor_preferred_payment.contractor_preferred_payment_type }}</div>
+                            <div class="flex-1 uppercase">{{ preferredPaymentType(bid) }}</div>
                             <div class="flex-1">${{ bid.bid_price }}</div>
                             <div class="flex-1">
                                 <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
@@ -452,6 +452,11 @@
           return true
         }
         return false
+      },
+      preferredPaymentType (bid) {
+        if (bid.contractor_sub_contractor_preferred_payment) {
+          return bid.contractor_sub_contractor_preferred_payment.contractor_preferred_payment_type
+        }
       },
       showAcceptBtn(status) {
         return status === 'bid_task.bid_sent'

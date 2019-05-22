@@ -280,8 +280,8 @@ class TaskController extends Controller
     public function addBidEntryForTheSubContractor($subcontractor, $jobTaskId, $taskId)
     {
         if ($subcontractor->checkIfContractorSetBidForATask($subcontractor->user_id, $jobTaskId)) {
-            $subcontractor->addContractorToBidForJobTable($subcontractor->user_id, $jobTaskId, $taskId);
-            return true;
+            $sub = $subcontractor->addContractorToBidForJobTable($subcontractor->user_id, $jobTaskId, $taskId);
+            return $sub;
         } else {
             return false;
         }
@@ -392,19 +392,16 @@ class TaskController extends Controller
         // add an entry in to the contractor bid table so that the sub can bid on the task
         $contractor = $user_sub->contractor()->first();
         $jobTask = JobTask::find($jobTaskId);
-        if ($this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id) === false) {
+        $subBid = $this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id);
+        if ($subBid == false) {
             return response()->json(["message" => "Task Already Exists.", "errors" => ["error" => "Task Already Exists."]], 422);
         }
 
         // adding a preferred payment entry for contractor for a given task
-        $ccspp = ContractorSubcontractorPreferredPayment::where('job_task_id', '=', $jobTask->id)->
-        where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
-        where('sub_id', '=', $user_sub->id)->get()->first();
-        if (empty($ccspp)) {
+        $ccspp = ContractorSubcontractorPreferredPayment::where('bid_contractor_job_task_id', '=', $subBid->id);
+        if (empty($ccspp->id)) {
             $ccspp = new ContractorSubcontractorPreferredPayment();
-            $ccspp->job_task_id = $jobTask->id;
-            $ccspp->contractor_id = Auth::user()->getAuthIdentifier();
-            $ccspp->sub_id = $user_sub->id;
+            $ccspp->bid_contractor_job_task_id = $subBid ->id;
             $ccspp->contractor_preferred_payment_type = $request->paymentType;
         } else {
             $ccspp->contractor_preferred_payment_type = $request->paymentType;
