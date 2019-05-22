@@ -39,4 +39,9 @@ class BidContractorJobTask extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function contractorSubContractorPreferredPayment()
+    {
+        return $this->hasOne(ContractorSubcontractorPreferredPayment::class);
+    }
+
 }
