@@ -13,16 +13,15 @@ class QuickbooksContractor extends Model
     public static function ContractorExists($request)
     {
 
-        $contractor = QuickbooksContractor::where('primary_email_addr', '=', $request->email)->
-        where('primary_phone', '=', $request->phone)->
-        where('given_name', '=', $request->givenName)->
+        $contractor = QuickbooksContractor::
         where('company_name', '=', $request->companyName)->
-        where('family_name', '=', $request->familyName)->get()->first();
+        where('quickbooks_id', '=', $request->quickbooksId)->get()->first();
 
         if (is_null($contractor)) {
             return false;
         } else {
-            return true;
+
+            return $contractor;
         }
 
     }

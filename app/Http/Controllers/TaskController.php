@@ -323,7 +323,7 @@ class TaskController extends Controller
 
         $this->validate($request, [
             'phone' => 'required|string|min:10|max:14',
-            // 'email' => 'required|email',
+            'email' => 'required|unique:users',
         ]);
 
         //
@@ -349,12 +349,13 @@ class TaskController extends Controller
         if ($user_sub === null) {
             // if no user found create one
             if ($qb->isContractorThatUsesQuickbooks()) {
-                if (QuickbooksContractor::ContractorExists($request)) {
-                    if ($user_sub->phone !== $phone) {
+                $qbc = QuickbooksContractor::ContractorExists($request);
+                if ($qbc != false) {
+                    if ($qbc->phone !== $phone) {
                         $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
                     }
                     $user = new User();
-                    $user->addExistingQBContractorToJemTable($request);
+                    $user_sub = $user->addExistingQBContractorToJemTable($request);
                 } else {
                     $resultingCustomerObj = Quickbook::addNewContractorToQuickBooks($request);
                     QuickbooksContractor::addContractorToQuickbooksContractorTable($request, $resultingCustomerObj);
@@ -401,7 +402,7 @@ class TaskController extends Controller
         $ccspp = ContractorSubcontractorPreferredPayment::where('bid_contractor_job_task_id', '=', $subBid->id);
         if (empty($ccspp->id)) {
             $ccspp = new ContractorSubcontractorPreferredPayment();
-            $ccspp->bid_contractor_job_task_id = $subBid ->id;
+            $ccspp->bid_contractor_job_task_id = $subBid->id;
             $ccspp->contractor_preferred_payment_type = $request->paymentType;
         } else {
             $ccspp->contractor_preferred_payment_type = $request->paymentType;

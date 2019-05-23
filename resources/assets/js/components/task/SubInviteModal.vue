@@ -268,7 +268,7 @@
       },
       autoComplete() {
         this.results = []
-        let query = this.companyName
+        let query = this.initiateBidForSubForm.companyName;
         // let query = this.initiateBidForSubForm.name;
         // let query = this.initiateBidForSubForm.name;
         console.log('checking for names')

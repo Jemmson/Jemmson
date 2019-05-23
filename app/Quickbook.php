@@ -761,14 +761,19 @@ class Quickbook extends Model
         $cust->given_name = $this->returnNonNullAttribute($customer->GivenName);
         $cust->middle_name = $this->returnNonNullAttribute($customer->MiddleName);
         $cust->family_name = $this->returnNonNullAttribute($customer->FamilyName);
-        $cust->line1 = $this->returnNonNullAttribute($customer->BillAddr->Line1);
-        $cust->line2 = $this->returnNonNullAttribute($customer->BillAddr->Line2);
-        $cust->line3 = $this->returnNonNullAttribute($customer->BillAddr->Line3);
-        $cust->line4 = $this->returnNonNullAttribute($customer->BillAddr->Line4);
-        $cust->line5 = $this->returnNonNullAttribute($customer->BillAddr->Line5);
-        $cust->city = $this->returnNonNullAttribute($customer->BillAddr->City);
-        $cust->state = $this->returnNonNullAttribute($customer->BillAddr->CountrySubDivisionCode);
-        $cust->postal_code = $this->returnNonNullAttribute($customer->BillAddr->PostalCode);
+
+        if (!is_null($customer->BillAddr)) {
+            $cust->line1 = $this->returnNonNullAttribute($customer->BillAddr->Line1);
+            $cust->line2 = $this->returnNonNullAttribute($customer->BillAddr->Line2);
+            $cust->line3 = $this->returnNonNullAttribute($customer->BillAddr->Line3);
+            $cust->line4 = $this->returnNonNullAttribute($customer->BillAddr->Line4);
+            $cust->line5 = $this->returnNonNullAttribute($customer->BillAddr->Line5);
+            $cust->city = $this->returnNonNullAttribute($customer->BillAddr->City);
+            $cust->state = $this->returnNonNullAttribute($customer->BillAddr->CountrySubDivisionCode);
+            $cust->postal_code = $this->returnNonNullAttribute($customer->BillAddr->PostalCode);
+        }
+
+
         $cust->fully_qualified_name = $this->returnNonNullAttribute($customer->FullyQualifiedName);
         if (!is_null($customer->PrimaryPhone)) {
             $cust->primary_phone = $this->formatPhoneNumber($customer->PrimaryPhone->FreeFormNumber);

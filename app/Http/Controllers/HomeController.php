@@ -63,7 +63,8 @@ class HomeController extends Controller
             $request,
             [
                 'email' => 'required|email',
-                'name' => 'required|string',
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
                 'phone_number' => 'required|min:10|max:14',
                 'address_line_1' => 'required|min:2',
                 'city' => 'required|min:2',
