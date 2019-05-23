@@ -183,7 +183,6 @@
                 </button>
 
 
-
             </div>
         </div>
         <jemmson-footer></jemmson-footer>
@@ -229,7 +228,7 @@
           sms_text: false,
         }),
         passwordsMatch: true,
-        states:  [
+        states: [
           'AS',
           'AL',
           'AK',
@@ -433,24 +432,36 @@
       this.form.phone_number = this.user.phone != null ? this.user.phone : ''
       this.form.email = this.user.email != null ? this.user.email : ''
       this.form.name = this.user.name != null ? this.user.name : ''
-      if(this.user.customer){
+      if (this.user.customer) {
         if (this.user.customer.location) {
-          this.form.address_line_1 = this.user.customer.location.address_line_1 != null ? this.user.customer.location.address_line_1 : ''
-          this.form.address_line_2 = this.user.customer.location.address_line_2 != null ? this.user.customer.location.address_line_2 : ''
-          this.form.city = this.user.customer.location.city != null ? this.user.customer.location.city : ''
-          this.form.state = this.user.customer.location.state != null ? this.user.customer.location.state : ''
-          this.form.zip = this.user.customer.location.zip != null ? this.user.customer.location.zip : '' 
+          this.form.address_line_1 = this.user.customer.location.address_line_1 != null ?
+            this.user.customer.location.address_line_1 : ''
+          this.form.address_line_2 = this.user.customer.location.address_line_2 != null &&
+          this.user.customer.location.address_line_2 != 'NULL' ?
+            this.user.customer.location.address_line_2 : ''
+          this.form.city = this.user.customer.location.city != null ?
+            this.user.customer.location.city : ''
+          this.form.state = this.user.customer.location.state != null ?
+            this.user.customer.location.state : ''
+          this.form.zip = this.user.customer.location.zip != null ?
+            this.user.customer.location.zip : ''
         }
       } else if (this.user.contractor.location) {
-        this.form.address_line_1 = this.user.contractor.location.address_line_1 != null ? this.user.contractor.location.address_line_1 : ''
-        this.form.address_line_2 = this.user.contractor.location.address_line_2 != null ? this.user.contractor.location.address_line_2 : ''
-        this.form.city = this.user.contractor.location.city != null ? this.user.contractor.location.city : ''
-        this.form.state = this.user.contractor.location.state != null ? this.user.contractor.location.state : ''
-        this.form.zip = this.user.contractor.location.zip != null ? this.user.contractor.location.zip : ''
+        this.form.address_line_1 = this.user.contractor.location.address_line_1 != null ?
+            this.user.contractor.location.address_line_1 : ''
+        this.form.address_line_2 = this.user.contractor.location.address_line_2 != null &&
+            this.user.contractor.location.address_line_2 != 'NULL' ?
+            this.user.contractor.location.address_line_2 : ''
+        this.form.city = this.user.contractor.location.city != null ?
+            this.user.contractor.location.city : ''
+        this.form.state = this.user.contractor.location.state != null ?
+          this.user.contractor.location.state : ''
+        this.form.zip = this.user.contractor.location.zip != null ?
+          this.user.contractor.location.zip : ''
       }
 
-      this.form.first_name = this.user.first_name;
-      this.form.last_name = this.user.last_name;
+      this.form.first_name = this.user.first_name
+      this.form.last_name = this.user.last_name
 
       this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : ''
 
