@@ -1,48 +1,52 @@
 <template>
   <!-- /all bids shown in a list as a customer should see it -->
   <div class="container-fluid">
-    <search-bar>
-      <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
-    </search-bar>
+    <div v-if="bidsContractorSectionPicked" ref="jobs">
+      <search-bar>
+        <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
+      </search-bar>
 
-    <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
-    <div class="mt-4 mb-1">
+      <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
+      <div class="mt-4 mb-1">
 
-      <card class="list-card " v-for="bid in sBids" v-bind:key="bid.id" @click.native="goToJob(bid.id)">
-        <div class="row">
-          <div class="col-12 page-header-title">
-            {{ jobName(bid.job_name) }}
+        <card class="list-card " v-for="bid in sBids" v-bind:key="bid.id" @click.native="goToJob(bid.id)">
+          <div class="row">
+            <div class="col-12 page-header-title">
+              {{ jobName(bid.job_name) }}
+            </div>
+            <div class="col-12">
+              <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
+              <span :class="getLabelClass(bid)">
+                {{ status(bid) }}
+              </span>
+
+              <span class="float-right list-card-info">2 Subs
+                <i class="fas fa-users"></i>
+              </span>
+
+              <span class="float-right mr-2 list-card-info">3 Tasks
+                <i class="far fa-check-square"></i>
+              </span>
+            </div>
           </div>
-          <div class="col-12">
-            <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
-            <span :class="getLabelClass(bid)">
-              {{ status(bid) }}
-            </span>
+        </card>
+      </div>
+      <!-- </paginate> -->
 
-            <span class="float-right list-card-info">2 Subs
-              <i class="fas fa-users"></i>
-            </span>
-
-            <span class="float-right mr-2 list-card-info">3 Tasks
-              <i class="far fa-check-square"></i>
-            </span>
-          </div>
-        </div>
-      </card>
-    </div>
-    <!-- </paginate> -->
-
-    <!-- <div class="card mb-4 mt-3">
+      <!-- <div class="card mb-4 mt-3">
       <div class="card-body d-flex justify-content-center">
         <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
         </paginate-links>
       </div>
-    </div> -->
+      </div> -->
+    </div>
+    <tasks v-else>
+    </tasks>
   </div>
 </template>
 
 <script>
-
+  import { mapState, mapMutations } from 'vuex'
   export default {
     props: {
       user: Object
@@ -62,6 +66,12 @@
         // get the bids
         this.getBids()
       }
+    },
+    computed: {
+      ...mapState({
+                page: state => state.page,
+                bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
+            })
     },
     methods: {
       search() {

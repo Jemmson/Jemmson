@@ -52,7 +52,10 @@ Vue.component('deny-task-modal', require('./task/DenyTaskModal'));
 Vue.component('update-task-location-modal', require('./task/UpdateTaskLocationModal'));
 
 
+Vue.component('tasks', require('./task/Tasks.vue'));
+Vue.component('task', require('./task/Task.vue'));
 Vue.component('task-images', require('./task/UploadTaskImages.vue'));
+
 
 
 
