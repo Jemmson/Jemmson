@@ -30,7 +30,7 @@ class QuickBookTokenMiddleware
                         $qb->refreshAccessToken();
                         return $next($request);
                     } else {
-//                      need to take them through the authorization flow again
+//                 TODO:  need to take them through the authorization flow again
 //                        if they are still using quickbooks
                         return response()->json([
                             'tokenState' => 'refreshTokenHasExpired'
@@ -43,7 +43,7 @@ class QuickBookTokenMiddleware
                     return $next($request);
                 } else {
 
-//                      need to take them through the authorization flow again
+//                TODO:      need to take them through the authorization flow again
 //                        if they are still using quickbooks
                     return response()->json([
                         'tokenState' => 'refreshTokenHasExpired'

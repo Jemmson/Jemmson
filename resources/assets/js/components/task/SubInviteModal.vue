@@ -28,7 +28,7 @@
                                     id="contractorName"
                                     name="contractorName"
                                     autocomplete="off"
-                                    v-model="companyName"
+                                    v-model="initiateBidForSubForm.companyName"
                                     placeholder="Name"
                                     v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}"
                                     autofocus
@@ -78,7 +78,7 @@
 
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
-                            <label for="phone">Phone *</label>
+                            <label for="phone">Mobile Phone *</label>
                             <input type="tel"
                                    placeholder="Phone Number"
                                    class="form-control" id="phone" name="phone" maxlength="10" required
@@ -169,6 +169,8 @@
           lastName: '',
           givenName: '',
           familyName: '',
+          quickbooksId: '',
+          companyName: '',
           paymentType: 'stripe'
         }),
         paymentTypeCash: false,
@@ -225,6 +227,8 @@
         this.initiateBidForSubForm.lastName = ''
         this.initiateBidForSubForm.givenName = ''
         this.initiateBidForSubForm.familyName = ''
+        this.initiateBidForSubForm.quickbooksId = ''
+        this.initiateBidForSubForm.companyName = ''
         this.companyName = ''
 
       },
@@ -242,6 +246,10 @@
           this.initiateBidForSubForm.givenName = result.given_name
           this.initiateBidForSubForm.familyName = result.family_name
         }
+        if (this.initiateBidForSubForm.quickbooksId !== null) {
+          this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
+        }
+        this.initiateBidForSubForm.companyName = result.contractor.company_name
         this.companyName = result.contractor.company_name
         this.results = ''
         this.validateMobileNumber(this.initiateBidForSubForm.phone)
@@ -260,7 +268,7 @@
       },
       autoComplete() {
         this.results = []
-        let query = this.companyName
+        let query = this.initiateBidForSubForm.companyName;
         // let query = this.initiateBidForSubForm.name;
         // let query = this.initiateBidForSubForm.name;
         console.log('checking for names')

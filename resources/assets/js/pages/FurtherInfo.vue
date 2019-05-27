@@ -13,7 +13,7 @@
 
                 <!-- email -->
                 <div class="input-section" :class="{'has-error': form.errors.has('email')}">
-                    <label class="j-label">Update Login Email:</label>
+                    <label class="j-label">Update Login Email: *</label>
                     <div>
                         <input type="text" class="border input" name="email" v-model="form.email"
                                autofocus required>
@@ -25,11 +25,18 @@
 
                 <!-- Name -->
                 <div class="input-section" :class="{'has-error': form.errors.has('name')}">
-                    <label class="j-label">First and Last Name</label>
+                    <label class="j-label">First Name *</label>
                     <div>
-                        <input type="text" class="border input" name="name" v-model="form.name" required>
+                        <input type="text" class="border input" name="name" v-model="form.first_name" required>
                         <span class="help-block" v-show="form.errors.has('name')">
-                                    {{ form.errors.get('name') }}
+                                    {{ form.errors.get('first_name') }}
+                                </span>
+                    </div>
+                    <label class="j-label">Last Name *</label>
+                    <div>
+                        <input type="text" class="border input" name="name" v-model="form.last_name" required>
+                        <span class="help-block" v-show="form.errors.has('name')">
+                                    {{ form.errors.get('last_name') }}
                                 </span>
                     </div>
                 </div>
@@ -37,7 +44,7 @@
                 <!-- Company Name -->
                 <div class="input-section" :class="{'has-error': form.errors.has('company_name')}"
                      v-if="isContractor">
-                    <label class="j-label">Company Name</label>
+                    <label class="j-label">Company Name *</label>
                     <div class="">
                         <input type="text" class="border input" name="company_name" v-model="form.company_name">
                         <span class="help-block" v-show="form.errors.has('company_name')">
@@ -48,7 +55,7 @@
 
                 <!-- Phone Number -->
                 <div class="input-section" :class="{'has-error': form.errors.has('phone_number')}">
-                    <label class="j-label">Mobile Phone Number</label>
+                    <label class="j-label">Mobile Phone Number *</label>
                     <div class="">
                         <input type="tel" class="border input" name="phone_number" maxlength="10"
                                v-model="form.phone_number"
@@ -68,7 +75,7 @@
 
                 <!-- Address Line 1 -->
                 <div class="input-section" :class="{'has-error': form.errors.has('address_line_1')}">
-                    <label class="j-label">Address Line 1</label>
+                    <label class="j-label">Address Line 1 *</label>
                     <div class="col-md-8">
                         <input type="text" class="border input" name="address_line_1" id="route"
                                v-model="form.address_line_1">
@@ -89,7 +96,7 @@
 
                 <!-- City -->
                 <div class="input-section" :class="{'has-error': form.errors.has('city')}">
-                    <label class="j-label">City</label>
+                    <label class="j-label">City *</label>
                     <div class="col-md-8">
                         <input type="text" class="border input" name="city" id="administrative_area_level_1"
                                v-model="form.city">
@@ -103,7 +110,7 @@
 
                     <!-- State -->
                     <div class="w-1/3 mr-2" :class="{'has-error': form.errors.has('state')}">
-                        <label class="j-label" style="font-size: 1rem">State</label>
+                        <label class="j-label" style="font-size: 1rem">State *</label>
                         <div style="height: .75rem"></div>
                         <select v-model="form.state" class="form-control form-control-lg">
                             <option v-for="state in states" :value="state">{{ state }}</option>
@@ -112,7 +119,7 @@
 
                     <!-- Zip Code -->
                     <div class="input-section w-full ml-2" :class="{'has-error': form.errors.has('zip')}">
-                        <label class="j-label">ZipCode</label>
+                        <label class="j-label">ZipCode *</label>
 
                         <input type="text" class="border input" name="zip" id="postal_code" v-model="form.zip">
                         <span class="help-block" v-show="form.errors.has('zip')">
@@ -138,7 +145,7 @@
                              style="margin-top: 2rem; margin-bottom: 2rem; margin-left: 2rem">
                             <!-- Update password -->
                             <div class="input-section p-r-8" :class="{'has-error': form.errors.has('password')}">
-                                <label class="j-label">Password</label>
+                                <label class="j-label">Password *</label>
 
                                 <div class="col-md-8">
                                     <input class="border input" type="password" name="password" ref="password"
@@ -151,7 +158,7 @@
 
                             <div class="input-section p-r-8"
                                  :class="{'has-error': form.errors.has('password_confirmation')}">
-                                <label class="j-label">Confirm Password</label>
+                                <label class="j-label">Confirm Password *</label>
 
                                 <div class="col-md-8">
                                     <input class="border input" type="password" name="password_confirmation"
@@ -174,7 +181,6 @@
                                 </span>
                     Register
                 </button>
-
 
 
             </div>
@@ -209,6 +215,8 @@
           phone_number: '',
           address_line_1: '',
           address_line_2: '',
+          first_name: '',
+          last_name: '',
           city: '',
           state: '',
           zip: '',
@@ -220,7 +228,7 @@
           sms_text: false,
         }),
         passwordsMatch: true,
-        states:  [
+        states: [
           'AS',
           'AL',
           'AK',
@@ -424,13 +432,36 @@
       this.form.phone_number = this.user.phone != null ? this.user.phone : ''
       this.form.email = this.user.email != null ? this.user.email : ''
       this.form.name = this.user.name != null ? this.user.name : ''
-      if(this.user.customer.location){
-        this.form.address_line_1 = this.user.customer.location.address_line_1 != null ? this.user.customer.location.address_line_1 : ''
-        this.form.address_line_2 = this.user.customer.location.address_line_2 != null ? this.user.customer.location.address_line_2 : ''
-        this.form.city = this.user.customer.location.city != null ? this.user.customer.location.city : ''
-        this.form.state = this.user.customer.location.state != null ? this.user.customer.location.state : ''
-        this.form.zip = this.user.customer.location.zip != null ? this.user.customer.location.zip : ''
+      if (this.user.customer) {
+        if (this.user.customer.location) {
+          this.form.address_line_1 = this.user.customer.location.address_line_1 != null ?
+            this.user.customer.location.address_line_1 : ''
+          this.form.address_line_2 = this.user.customer.location.address_line_2 != null &&
+          this.user.customer.location.address_line_2 != 'NULL' ?
+            this.user.customer.location.address_line_2 : ''
+          this.form.city = this.user.customer.location.city != null ?
+            this.user.customer.location.city : ''
+          this.form.state = this.user.customer.location.state != null ?
+            this.user.customer.location.state : ''
+          this.form.zip = this.user.customer.location.zip != null ?
+            this.user.customer.location.zip : ''
+        }
+      } else if (this.user.contractor.location) {
+        this.form.address_line_1 = this.user.contractor.location.address_line_1 != null ?
+            this.user.contractor.location.address_line_1 : ''
+        this.form.address_line_2 = this.user.contractor.location.address_line_2 != null &&
+            this.user.contractor.location.address_line_2 != 'NULL' ?
+            this.user.contractor.location.address_line_2 : ''
+        this.form.city = this.user.contractor.location.city != null ?
+            this.user.contractor.location.city : ''
+        this.form.state = this.user.contractor.location.state != null ?
+          this.user.contractor.location.state : ''
+        this.form.zip = this.user.contractor.location.zip != null ?
+          this.user.contractor.location.zip : ''
       }
+
+      this.form.first_name = this.user.first_name
+      this.form.last_name = this.user.last_name
 
       this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : ''
 

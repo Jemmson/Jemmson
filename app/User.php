@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Services\SanatizeService;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Spark\User as SparkUser;
 use Illuminate\Notifications\Notifiable;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -326,20 +328,6 @@ class User extends SparkUser
         return User::where('phone', $phone)->orWhere('email', $email)->first();
     }
 
-
-    public function updatePhoneNumberInQuickBooks($newPhone, $subContractorId, $companyName, $givenName, $familyName)
-    {
-        $qb = new Quickbook();
-
-        $quickbooksId = QuickbooksContractor::select('quickbooks_id')->
-        where('contractor_id', '=', $subContractorId)->
-        where('company_name', '=', $companyName)->
-        where('given_name', '=', $givenName)->
-        where('family_name', '=', $familyName)->get()->first();
-
-        $qb->UpdateSubPhoneNumberInQuickbooks($newPhone, $quickbooksId);
-    }
-
     public function updatePhoneNumber($newPhone)
     {
 
@@ -353,6 +341,153 @@ class User extends SparkUser
             ], 200);
         }
 
+    }
+
+    private function addContractorUser($request)
+    {
+
+        $phone = SanatizeService::phone($request->phone);
+
+        $user = new User();
+        $user->email = $request->email;
+        $user->name = $request->name;
+        $user->phone = $phone;
+        $user->password_updated = 0;
+        $user->password = bcrypt('random'.rand(0,9999));
+        $user->usertype = 'contractor';
+        !empty($request->firstName) ? $user->first_name = $request->firstName  :  $user->first_name = $request->givenName;
+        !empty($request->lastName) ? $user->last_name = $request->lastName  :  $user->last_name = $request->familyName;
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $user;
+    }
+
+    private function addUserToContractorTable($request, $user)
+    {
+        $contractor = new Contractor();
+        $contractor->user_id = $user->id;
+        $contractor->free_jobs = '5';
+        $contractor->company_name = $request->companyName;
+
+        try {
+            $contractor->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $contractor;
+    }
+
+    private function addGeneralAndSubToContractorContractorTable($request, $user)
+    {
+        $cc = new ContractorContractor();
+        $cc->contractor_id = Auth::user()->getAuthIdentifier();
+        $cc->subcontractor_id = $user->id;
+        $cc->quickbooks_id = $request->quickbooksId;
+
+        try {
+            $cc->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $cc;
+    }
+
+    private function addGeneralAndNewSubToContractorContractorTable($user, $quickbooksId)
+    {
+        $cc = new ContractorContractor();
+        $cc->contractor_id = Auth::user()->getAuthIdentifier();
+        $cc->subcontractor_id = $user->id;
+        $cc->quickbooks_id = $quickbooksId;
+
+        try {
+            $cc->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $cc;
+    }
+
+    private function addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user)
+    {
+        $qbContractor = QuickbooksContractor::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+            where('quickbooks_id', '=', $request->quickbooksId)->get()->first();
+        $location = new Location();
+        $location->address_line_1 = $qbContractor->line1;
+        $location->address_line_2 = $qbContractor->line2;
+        $location->city = $qbContractor->city;
+        $location->state = $qbContractor->state;
+        $location->zip = $qbContractor->postal_code;
+
+        try {
+            $location->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        $contractor->location_id = $location->id;
+
+        try {
+            $contractor->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        $user->location_id = $location->id;
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $location;
+    }
+
+    public function addExistingQBContractorToJemTable($request)
+    {
+      $user = $this->addContractorUser($request);
+      $contractor = $this->addUserToContractorTable($request, $user);
+      $this->addGeneralAndSubToContractorContractorTable($request, $user);
+      $this->addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user);
+      return $user;
+    }
+
+    public function addNewContractorToJemTable($request, $quickbooksId)
+    {
+        $user = $this->addContractorUser($request);
+        $this->addUserToContractorTable($request, $user);
+        $this->addGeneralAndNewSubToContractorContractorTable($user, $quickbooksId);
+//        $this->addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user);
+        return $user;
     }
 
 }
