@@ -848,8 +848,12 @@ class TaskController extends Controller
                 if ($job->hasAQuickbookEstimateBeenCreated()) {
                     $job->updateQuickBooksEstimate($task, $job, $jobTask);
                 } else {
-                    $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
-                    $job->qb_estimate_id = $estimate->Id;
+                    try {
+                        $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
+                        $job->qb_estimate_id = $estimate->Id;
+                    } catch (\Throwable $th) {
+                        Log::error($th->getMessage());
+                    }
                     try {
                         $job->save();
                     } catch (\Exception $e) {
