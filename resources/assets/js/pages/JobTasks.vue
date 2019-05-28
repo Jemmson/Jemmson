@@ -8,17 +8,17 @@
                   v-if="jobTasks.length > 0"> -->
     <!-- / status -->
     <div class="mt-4 mb-1">
-      <card class="list-card" v-for="(jobTask, index) of jobTasks" v-bind:key="jobTask.id" :id="'task-' + jobTask.id" @click.native="goToJobTask(index)">
+      <card class="list-card" v-for="jTask of jobTasks" v-bind:key="jTask.id" :id="'task-' + jTask.id" @click.native="setCurrentJobTaskToBidOn(jTask)">
         <!-- <bid-task :job-task="jobTask" :bid="job" :user="globalUser">
         </bid-task> -->
         <div class="row">
           <div class="col-12 page-header-title">
-            {{ jobTask.task.name }}
+            {{ jTask.task.name }}
           </div>
           <div class="col-12">
-            <span class="dot" :class="'bg-' + getLabelClass(jobTask)"></span>
-            <span :class="getLabelClass(jobTask)">
-              {{ status(jobTask) }}
+            <span class="dot" :class="'bg-' + getLabelClass(jTask)"></span>
+            <span :class="getLabelClass(jTask)">
+              {{ status(jTask) }}
             </span>
 
             <span class="float-right list-card-info">2 Subs
@@ -38,7 +38,8 @@
             <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
             </paginate-links>
         </div> -->
-
+  <job-task-bid-modal :jobTask="jobTask">
+  </job-task-bid-modal>
   </div>
 </template>
 
@@ -54,7 +55,7 @@
       return {
         globalUser: User,
         paginate: ['jobTasks'],
-        jTask: {},
+        jobTask: null,
         message: '',
         sendSubMessage: true,
         sendCustomerMessage: true,
@@ -85,6 +86,10 @@
       })
     },
     methods: {
+      setCurrentJobTaskToBidOn (jobTask) {
+        this.jobTask = jobTask;
+        $('#job-task-bid-modal').modal();
+      },
       search () {
 
       },
