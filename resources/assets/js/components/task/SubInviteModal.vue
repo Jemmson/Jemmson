@@ -1,148 +1,107 @@
 <template>
-    <!-- Modal -->
-    <div class="modal fade" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
-         aria-hidden="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content styled">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
-                        taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h4>
-                    <h4 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :
+  <!-- Modal -->
+  <div class="modal" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
+    aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
+                        taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
+          <h6 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :
                         jobTaskNameForSubInvite.toUpperCase() }} -
-                        would you like to invite another sub to bid on this task?</h4>
-                </div>
-                <div class="modal-body">
-                    <form role="form">
-                        <div class="form-group">
-                            <label for="contractorName">Company Name *</label>
-                            <span class="validationError"
-                                  v-show="initiateBidForSubForm.errors.has('name')"
-                                  ref="name">Please Enter A Name
-                                    </span>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    id="contractorName"
-                                    name="contractorName"
-                                    autocomplete="off"
-                                    v-model="initiateBidForSubForm.companyName"
-                                    placeholder="Name"
-                                    v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}"
-                                    autofocus
-                                    required
-                                    v-on:keyup="autoComplete"
-                            >
-                            <div
-                                    class="panel-footer"
-                                    v-if="aResults.length > 0">
-                                <div class="flex flex-col"
-                                     ref="buttons"
-                                >
-                                    <button
-                                            class="flex-1 m-2 btn-format"
-                                            v-for="(result, index) in aResults"
-                                            v-bind:key="result.id"
-                                            :name="result.phone"
-                                            @click.prevent="fillFields(result)"
-                                    >
-                                        <span :id="'result' + index">
-                                            {{ result.name }} - {{ result.contractor.company_name }}
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col">
-                                <div class="flex-1">
-                                    <label for="firstName">First Name</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="firstName"
-                                           name="contractorName"
-                                           v-model="initiateBidForSubForm.firstName"
-                                    >
-                                </div>
-                                <div class="flex-1">
-                                    <label for="lastName">Last Name</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="lastName"
-                                           name="contractorName"
-                                           v-model="initiateBidForSubForm.lastName"
-                                    >
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
-                            <label for="phone">Mobile Phone *</label>
-                            <input type="tel"
-                                   placeholder="Phone Number"
-                                   class="form-control" id="phone" name="phone" maxlength="10" required
-                                   v-model="initiateBidForSubForm.phone"
-                                   @blur="validateMobileNumber($event.target.value)"
-                                   @keyup="filterPhone">
-                            <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
-                                        {{ initiateBidForSubForm.errors.get('phone') }}
-                                    </span>
-                            <div v-if="getMobileValidResponse.length > 0">
-                                <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
-                                    <div style="color: green">{{ getMobileValidResponse[1] }}</div>
-                                </div>
-                                <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
-                            <label for="email">Email</label>
-                            <input type="email"
-                                   placeholder="Email"
-                                   class="form-control" id="email" name="email" v-model="initiateBidForSubForm.email">
-                            <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
-                                        {{ initiateBidForSubForm.errors.get('email') }}
-                                    </span>
-                        </div>
-
-                        <div class="flex flex-col" id="preferredPaymentMethod">
-                            <label class="text-center mb-3">Preferred Payment Method</label>
-                            <div class="flex justify-between">
-                                <div class="flex">
-                                    <label for="cash" class="mr-6">Cash</label>
-                                    <input type="checkbox"
-                                           :checked="paymentTypeCash"
-                                           @click="paymentMethod('cash')"
-                                           id="cash"
-                                    >
-                                </div>
-                                <div class="flex">
-                                    <label for="stripe" class="mr-6">Credit Card</label>
-                                    <input type="checkbox"
-                                           :checked="paymentTypeStripe"
-                                           @click="paymentMethod('stripe')"
-                                           id="stripe"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <!-- /end col-md6ss -->
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group">
-                        <button @click="sendSubInviteToBidOnTask" class="btn btn-green" type="submit"
-                                :disabled="getMobileValidResponse[1] !== 'mobile'" ref="submit">
-                            <span v-if="disabled.invite">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </div>
+            would you like to invite another sub to bid on this task?</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+        <div class="modal-body">
+          <form role="form">
+            <div class="form-group">
+              <label for="contractorName">Company Name *</label>
+              <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')" ref="name">Please Enter A
+                Name
+              </span>
+              <input type="text" class="form-control" id="contractorName" name="contractorName" autocomplete="off"
+                v-model="initiateBidForSubForm.companyName" placeholder="Name"
+                v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" autofocus required
+                v-on:keyup="autoComplete">
+              <div class="panel-footer" v-if="aResults.length > 0">
+                <div class="flex flex-col" ref="buttons">
+                  <button class="flex-1 m-2 btn-format" v-for="(result, index) in aResults" v-bind:key="result.id"
+                    :name="result.phone" @click.prevent="fillFields(result)">
+                    <span :id="'result' + index">
+                      {{ result.name }} - {{ result.contractor.company_name }}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex flex-col">
+                <div class="flex-1">
+                  <label for="firstName">First Name</label>
+                  <input type="text" class="form-control" id="firstName" name="contractorName"
+                    v-model="initiateBidForSubForm.firstName">
+                </div>
+                <div class="flex-1">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" class="form-control" id="lastName" name="contractorName"
+                    v-model="initiateBidForSubForm.lastName">
+                </div>
+              </div>
+
+            </div>
+            <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
+              <label for="phone">Mobile Phone *</label>
+              <input type="tel" placeholder="Phone Number" class="form-control" id="phone" name="phone" maxlength="10"
+                required v-model="initiateBidForSubForm.phone" @blur="validateMobileNumber($event.target.value)"
+                @keyup="filterPhone">
+              <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
+                {{ initiateBidForSubForm.errors.get('phone') }}
+              </span>
+              <div v-if="getMobileValidResponse.length > 0">
+                <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
+                  <div style="color: green">{{ getMobileValidResponse[1] }}</div>
+                </div>
+                <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
+              </div>
+            </div>
+            <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
+              <label for="email">Email</label>
+              <input type="email" placeholder="Email" class="form-control" id="email" name="email"
+                v-model="initiateBidForSubForm.email">
+              <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
+                {{ initiateBidForSubForm.errors.get('email') }}
+              </span>
+            </div>
+
+            <div class="flex flex-col" id="preferredPaymentMethod">
+              <label class="text-center mb-3">Preferred Payment Method</label>
+              <div class="flex justify-between">
+                <div class="flex">
+                  <label for="cash" class="mr-6">Cash</label>
+                  <input type="checkbox" :checked="paymentTypeCash" @click="paymentMethod('cash')" id="cash">
+                </div>
+                <div class="flex">
+                  <label for="stripe" class="mr-6">Credit Card</label>
+                  <input type="checkbox" :checked="paymentTypeStripe" @click="paymentMethod('stripe')" id="stripe">
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- /end col-md6ss -->
+        </div>
+        <div class="modal-footer">
+            <button @click="sendSubInviteToBidOnTask" class="btn btn-success" type="submit"
+              :disabled="getMobileValidResponse[1] !== 'mobile'" ref="submit">
+              <span v-if="disabled.invite">
+                <i class="fa fa-btn fa-spinner fa-spin"></i>
+              </span>
+              Submit
+            </button>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

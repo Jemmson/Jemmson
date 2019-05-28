@@ -1,14 +1,14 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" :id="'update-task-location-modal_'+id" tabindex="-1" role="dialog"
+    <div class="modal" :id="'update-task-location-modal_'+id" tabindex="-1" role="dialog"
          aria-labelledby="stripe-modal" aria-hidden="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content styled">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
+                    <h5 class="modal-title">Update Task Location</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Update Task Location</h4>
                 </div>
                 <div class="modal-body">
                     <form role="form">
@@ -62,7 +62,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <button @click="update" class="btn btn-green" type="submit" :disabled="disabled.update">
+                        <button @click="update" class="btn btn-success" type="submit" :disabled="disabled.update">
                             <span v-if="disabled.update">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>

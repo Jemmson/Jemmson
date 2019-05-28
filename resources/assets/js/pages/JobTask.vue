@@ -280,7 +280,7 @@
                 </button>
             </div>
         </div>
-        <sub-invite-modal v-if="isContractor() && !checkIfAnyBidHasBeenAccepted(jobTask)" :job-task="jobTask"
+        <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
             :job-task-task="jobTask.task" :job-task-name="jobTask.task.name" :id="jobTask.id">
         </sub-invite-modal>
         <deny-task-modal v-if="isContractor()" :job-task="jobTask" :id="jobTask.id">
