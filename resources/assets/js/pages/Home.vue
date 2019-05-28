@@ -1,125 +1,55 @@
 <template>
-    <div>
-        <div class="intro">
-            <div class="intro-header">
-                <div class="slogan intro-main-slogan flex flex-col items-center justify-center">
-                    <div>Welcome</div>
-                    <div ref="contractorName" v-text="contractorName()"></div>
-                </div>
-                <div class="slogan intro-sub-slogan">Please review and navigate below</div>
-            </div>
-        </div>
-        <div class="flex flex-col home-content">
-            <div class="border m-4 shadow-md">
-                <div @click="route('/bids')" class="border-b pb-4">
-                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
-                        <span>Bids</span>
-                    </div>
-                </div>
-                <div class="statuses mb-1">
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>INITIATED</div>
-                        <div>{{ bidData('bid.initiated') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>IN PROGRESS</div>
-                        <div>{{ bidData('bid.in_progress') }}</div>
-                    </div>
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>SENT</div>
-                        <div>{{ bidData('bid.sent') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>DECLINED</div>
-                        <div>{{ bidData('bid.declined') }}</div>
-                    </div>
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>APPROVED</div>
-                        <div>{{ bidData('bid.approved') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>COMPLETED</div>
-                        <div>{{ bidData('bid.completed') }}</div>
-                    </div>
-                </div>
-            </div>
+    <div class="container">
+        <icon-header icon="jobs"
+                      mainHeader="My Jobs"
+                      subHeader="Includes jobs with tasks assigned to subcontractors">
+        </icon-header>
+        <card>
+          <list>
+            <list-item :left="'Initiated'" :right="bidData('bid.initiated')"></list-item>
+            <list-item :left="'In Progress'" :right="bidData('bid.in_progress')"></list-item>
+            <list-item :left="'Sent'" :right="bidData('bid.sent')"></list-item>
+            <list-item :left="'Declined'" :right="bidData('bid.declined')"></list-item>
+            <list-item :left="'Approved'" :right="bidData('bid.approved')"></list-item>
+            <list-item :left="'Completed'" :right="bidData('bid.completed')" noDivider="true"></list-item>
+          </list>
+        </card>
+        <br>
+        <!-- / end jobs -->
 
+        <icon-header v-if="checkIfUserIsAContractor" icon="tasks"
+                      mainHeader="My Tasks"
+                      subHeader="Tasks you've accepted or subbed out to subs">
+        </icon-header>
+        <card v-if="checkIfUserIsAContractor">
+          <list>
+            <list-item :left="'Initiated'" :right="bidData('bid_task.initiated')"></list-item>
+            <list-item :left="'Sent'" :right="bidData('bid_task.bid_sent')"></list-item>
+            <list-item :left="'Accepted'" :right="bidData('bid_task.accepted')"></list-item>
+            <list-item :left="'Finished By Sub'" :right="bidData('bid_task.finished_by_sub')"></list-item>
+            <list-item :left="'Approved'" :right="bidData('bid_task.approved_by_general')"></list-item>
+            <list-item :left="'Finished By General'" :right="bidData('bid_task.finished_by_general')"></list-item>
+            <list-item :left="'Approved By Customer'" :right="bidData('bid_task.approved_by_customer')"></list-item>
+            <list-item :left="'Payment Sent'" :right="bidData('bid_task.customer_sent_payment')"></list-item>
+            <list-item :left="'Reopened'" :right="bidData('bid_task.reopened')"></list-item>
+            <list-item :left="'Denied'" :right="bidData('bid_task.denied')" noDivider="true"></list-item>
 
-            <div class="border m-4 shadow-md" v-if="checkIfUserIsAContractor">
-                <div @click="route('/tasks')" class="border-b pb-4">
-                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
-                        <span>TASKS</span>
-                    </div>
-                </div>
-                <div class="statuses mb-1">
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>INITIATED</div>
-                        <div>{{ bidTaskData('bid_task.initiated') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>SENT</div>
-                        <div>{{ bidTaskData('bid_task.bid_sent') }}</div>
-                    </div>
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>ACCEPTED</div>
-                        <div>{{ taskData('bid_task.accepted') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>FINISHED BY SUB</div>
-                        <div>{{ taskData('bid_task.finished_by_sub') }}</div>
-                    </div>
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>APPROVED</div>
-                        <div>{{ taskData('bid_task.approved_by_general') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>FINISHED BY GENERAL</div>
-                        <div>{{ taskData('bid_task.finished_by_general') }}</div>
-                    </div>
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>APPROVED BY CUSTOMER</div>
-                        <div>{{ taskData('bid_task.approved_by_customer') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>PAYMENT SENT</div>
-                        <div>{{ taskData('bid_task.customer_sent_payment') }}</div>
-                    </div>
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>REOPENED</div>
-                        <div>{{ taskData('bid_task.reopened') }}</div>
-                    </div>
-                    <div class="current-status bg-brown-lightest pt-1 pb-1">
-                        <div>DENIED</div>
-                        <div>{{ taskData('bid_task.denied') }}</div>
-                    </div>
-                </div>
-            </div>
+          </list>
+        </card>
+        <br>
+        <!-- / end tasks -->
 
-
-            <div class="border m-4 shadow-md">
-                <div @click="route('/invoices')" class="border-b pb-4">
-                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
-                        <span>Invoices</span>
-                    </div>
-                </div>
-                <div class="statuses mb-1">
-                    <div class="current-status bg-blue-lightest pt-1 pb-1">
-                        <div>FINISHED</div>
-                        <div>{{ invoices.length }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border m-4 shadow-md"
-                 v-if="checkContractorStripeIsValid()">
-                <div @click="route('/express')" class="border-b pb-4">
-                    <div class="status text-center bg-grey shadow-md ml-1 mr-1">
-                        <span>stripe</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <feedback></feedback>
+        <icon-header icon="invoices"
+                      mainHeader="My Invoices"
+                      subHeader="All Invoices for completed jobs and tasks">
+        </icon-header>
+        <card>
+          <list>
+            <list-item :left="'Total Invoices'" :right="invoices.length" noDivider="true"></list-item>
+          </list>
+        </card>
+        <br>
+        <!-- / end invoices -->
     </div>
 </template>
 
@@ -147,7 +77,7 @@
     },
     computed: {
       ...mapState({
-        job: state => state.job
+        job: state => state.job.model
       })
     },
     methods: {
@@ -217,6 +147,7 @@
       }
     },
     mounted: function() {
+      this.$store.commit('setCurrentPage', this.$router.history.current.path);
       axios.post('/jobs').then((response) => {
         if(response.data !== undefined) {
           this.bids = response.data;
@@ -251,74 +182,3 @@
     }
   }
 </script>
-
-<style>
-
-    .border-b {
-        margin: .5rem .25rem 0rem .25rem;
-    }
-
-    .current-status {
-        display: grid;
-        grid-template-columns: 70% 1fr;
-        padding-left: 2.5rem;
-    }
-
-    .statuses {
-        display: flex;
-        flex-direction: column;
-        /*margin-left: .5rem;*/
-        /*align-items: center;*/
-        justify-content: flex-start;
-    }
-
-    .home-content {
-        min-height: 100vh;
-        background-color: white;
-    }
-
-    .bid-header {
-        margin-top: 1rem;
-        font-size: 18pt;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    .home-box {
-        display: flex;
-        /*align-items: center;*/
-        width: 40%;
-        height: 10rem;
-        margin: .8rem;
-        border-radius: 3px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .12), 0 2px 4px 0 rgba(0, 0, 0, .08);
-    }
-
-    .home-box:active {
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
-    }
-
-    .home-text {
-        color: black;
-        /*text-align: center;*/
-        /*vertical-align: middle;*/
-        height: 100%;
-        width: 100%;
-        /*margin-right: .5rem;*/
-        /*margin-left: .5rem;*/
-        margin-top: .15rem;
-        margin-bottom: .15rem;
-    }
-
-    .home-icon {
-        height: 7rem;
-        width: 7rem;
-    }
-
-    .sub-label {
-        color: red;
-        font-weight: bold;
-        font-size: 1.3rem;
-    }
-
-</style>

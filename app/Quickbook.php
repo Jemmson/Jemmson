@@ -808,9 +808,13 @@ class Quickbook extends Model
 
     public function checkIfItemExistsInTaskTable($item, $contractorId)
     {
-        $item = Task::where('item_id', '=', $item->Id)
-            ->where('contractor_id', '=', $contractorId)
-            ->get()->first();
+        try {
+            $item = Task::where('item_id', '=', $item->Id)
+                ->where('contractor_id', '=', $contractorId)
+                ->get()->first();
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+        }
 
         if (empty($item)) {
             return false;

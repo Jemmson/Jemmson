@@ -1,248 +1,151 @@
 <template>
-    <!-- /all details of a bid -->
-    <div class="flex flex-col" v-if="bid.job_name !== undefined">
-        <!-- JOB STATUS -->
-        <div class="border-b pb-4 mb-6">
-            <div
-                    class="status flex justify-between"
-                    ref="bidStatus"
-                    :class="getLabelClass(bid.status)">
-                <div></div>
-                <div>{{ status }}</div>
-                <div>
-                    <info
-                            buttons="false"
-                            class="spacing"
-                            v-show="!isCustomer"
-                            title="Statuses">
-                        <div slot="tldr">
-                            <div class="flex flex-col">
-                                <div v-for="status in statuses" :key="status.type">
-                                    <div class="flex justify-between">
-                                        <div class="mr-2">
-                                            <strong class="status-header uppercase">{{ status.type }}:</strong>
-                                            <div class="description">{{ status.description }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div slot="full">
-                            <p>As a contractor the job goes through various statuses. The first status is:</p>
-                            <div class="text-center">
-                                <strong>Initiated</strong>
-                            </div>
-                            <p>
-                                This status refers to a job that has just been initiated but there have been no tasks
-                                assigned to the bid.
-                            </p>
-                        </div>
-                    </info>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex flex-col self-center mb-6 mt-3">
-            <!-- <span class="label mb-2">JOB NAME</span> -->
-            <p class="text-2xl font-extrabold uppercase">{{ bid.job_name }}</p>
-        </div>
-
-        <div class="flex justify-between mb-6">
-            <div class="flex flex-col">
-                <span class="label mb-2">CUSTOMER NAME</span>
-                <span v-if="isCustomer">{{ customerName }}</span>
-                <span v-else>{{ customerName }}</span>
-            </div>
-            <div class="flex flex-col">
-                <span class="label mb-2">START DATE</span>
-                <span>{{ agreedStartDate }}</span>
-            </div>
-        </div>
-
-        <div class="flex justify-between mb-6">
-            <div class="flex flex-col">
-                <span class="label">JOB ADDRESS:</span>
-                <button v-if="isCustomer" style="background-color: black; color: white;" class="btn btn-lg btn-primary" v-on:click="">ChangeJobAddress->implement</button>
-                <a
-                        target="_blank"
-                        v-if="showAddress"
-                        :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1"
-                >
-                    <address>
-                        <br>
-                        {{ bid.location.address_line_1 }}
-                        <br>
-                        {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                    </address>
-                </a>
-            <button v-if="isCustomer" style="background-color: black; color: white;" class="btn btn-lg btn-primary" v-on:click="">CustomerCanAddJobPictures->implement</button>
-
-                <div  v-if="isCustomer" class="flex flex-col" id="preferredPaymentMethod">
-                    <label class="text-center mb-3">Preferred Payment Method</label>
+  <div class="row">
+    <div class="col-12 mb-3">
+      <div class="text-center font-weight-bold" :class="getLabelClass(bid.status)">{{ status }}</div>
+      <!-- <info buttons="false" class="spacing" v-show="!isCustomer" title="Statuses">
+              <div slot="tldr">
+                <div class="flex flex-col">
+                  <div v-for="status in statuses" :key="status.type">
                     <div class="flex justify-between">
-                        <div class="flex">
-                            <label for="cash" class="mr-6">Cash</label>
-                            <input type="checkbox"
-                                   :checked="paymentTypeCash"
-                                   @click="paymentMethod('cash')"
-                                   id="cash"
-                            >
-                        </div>
-                        <div class="flex">
-                            <label for="stripe" class="mr-6">Credit Card</label>
-                            <input type="checkbox"
-                                   :checked="paymentTypeStripe"
-                                   @click="paymentMethod('stripe')"
-                                   id="stripe"
-                            >
-                        </div>
+                      <div class="mr-2">
+                        <strong class="status-header uppercase">{{ status.type }}:</strong>
+                        <div class="description">{{ status.description }}</div>
+                      </div>
                     </div>
+                  </div>
                 </div>
+              </div>
 
-                <button v-if="isCustomer" style="background-color: black; color: white;" class="btn btn-lg btn-primary" v-on:click="">CustomerDictatesTheirPreferredPaymentMethod->implement</button>
+              <div slot="full">
+                <p>As a contractor the job goes through various statuses. The first status is:</p>
+                <div class="text-center">
+                  <strong>Initiated</strong>
+                </div>
+                <p>
+                  This status refers to a job that has just been initiated but there have been no tasks
+                  assigned to the bid.
+                </p>
+              </div>
+            </info> -->
+    </div>
 
-            </div>
-            <!-- <div class="flex flex-col">
+    <div class="col-12">
+      <h1 class="card-title">Details</h1>
+      <card>
+        <div class="row">
+          <div class="col-12 mb-3">
+            <span class="">Customer Name:</span>
+            <span v-if="isCustomer" class="float-right">{{ customerName }}</span>
+            <span v-else class="float-right">{{ customerName }}</span>
+          </div>
+          <div class="col-12 mb-3">
+            <span class="">Start Date:</span>
+            <span class="float-right">{{ agreedStartDate }}</span>
+          </div>
+          <div class="col-12 mb-3">
+            <span class="">Contractor Suggested Price:</span>
+            <span class="float-right">${{ bid.bid_price }}</span>
+          </div>
+          <div class="col-12 mb-2">
+            <span class="">Accepted Price:</span>
+            <span class="float-right">${{ bid.bid_price + 50 }}</span>
+          </div>
+        </div>
+      </card>
+    </div>
+
+    <div class="col-12">
+      <h1 class="card-title mt-4">Payment Details</h1>
+      <card>
+        <div class="row">
+          <div class="col-12 mb-3">
+            <span class="">Payment Method Selected:</span>
+            <span class="float-right">{{ 'Stripe' }}</span>
+          </div>
+          <div class="col-12 mb-2">
+            <span class="">Payment Instructions:</span>
+            <span class="float-right">{{ 'Pay in Person' }}</span>
+          </div>
+        </div>
+      </card>
+    </div>
+
+    <div class="col-12" v-if="showAddress">
+      <h1 class="card-title mt-4">Job Address</h1>
+      <card>
+        <div class="map-responsive">
+          <iframe width="600" height="450" frameborder="0" style="border:0"
+            :src="'https://www.google.com/maps/embed/v1/search?q='+ bid.location.address_line_1 + ' ' + bid.location.city + ' ' + bid.location.state + ' ' + bid.location.zip +'&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"
+            allowfullscreen></iframe>
+        </div>
+        <!-- <a target="_blank"
+              :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
+                {{ bid.location.address_line_1 }}
+                <br>
+                {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+            </a> -->
+        <!-- <div class="flex flex-col">
                       <span class="label mb-4">TOTAL PRICE:</span>
                       <span>${{ bid.bid_price }}</span>
             </div>-->
-        </div>
-
-
-        <div v-show="!isCustomer">
-            <button
-                    class="btn btn-blue btn-width mb-1"
-                    name="showNotes"
-                    id="showNotesContractor"
-                    ref="notesForCustomerButton_contractor"
-                    @click="customerNotes_contractor = !customerNotes_contractor">
-                Customer Notes For Job
-            </button>
-
-            <div v-show="customerNotes_contractor">
-                <transition name="slide-fade">
-
-                    <div>
-                        <div v-show="customerNotes_contractor">
-                            <div class="mt-3"
-                                 ref="customerNotesInfo_contractor_empty">
-                                {{ bid.customer.customer.notes }}
-                            </div>
-                        </div>
-                        <!--<div v-else>-->
-                            <!--<div class="mt-3 no-notes"-->
-                                 <!--ref="customerNotesInfo_contractor">-->
-                                <!--The customer does not have any notes for-->
-                                <!--this job-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    </div>
-
-                </transition>
-                <!--<div v-else>-->
-                <!--<transition name="slide-fade">-->
-                <!---->
-                <!--</transition>-->
-                <!--</div>-->
-            </div>
-        </div>
-
-
-        <div v-show="!isCustomer">
-            <button
-                    v-show="bid.paid_with_cash_message !== '' &&
-                                bid.paid_with_cash_message !== null"
-                    class="btn btn-blue btn-width mt-1"
-                    name="showPaidWithCashNotes"
-                    id="showPaidWithCashNotes"
-                    ref="paidWithCashBtn"
-                    @click="showPaidWithCashNotes = !showPaidWithCashNotes"
-            >Paid With Cash Instructions
-            </button>
-            <div v-show="showPaidWithCashNotes">
-                <transition name="slide-fade">
-                    <div class="mt-3 ml-6" v-show="showPaidWithCashNotes">{{ bid.paid_with_cash_message }}</div>
-                </transition>
-            </div>
-        </div>
-
-
-        <div v-show="isCustomer">
-            <button
-                    class="btn btn-blue btn-width mb-1"
-                    name="showNotes"
-                    id="showNotesCustomer"
-                    ref="notesForCustomerButton_customer"
-                    @click="customerNotes = !customerNotes"
-            >Customer Notes For Job
-            </button>
-            <div v-show="customerNotes" class>
-                <transition name="slide-fade">
-                    <div>
-                        <div class="mt-4">
-                            <textarea
-                                    class="form-control"
-                                    :value="bid.customer.customer.notes"
-                                    cols="40"
-                                    ref="customerNotesTextArea"
-                                    rows="10"
-                                    @keyup="customerNotesMessage = $event.target.value"
-                            >blah</textarea>
-                        </div>
-                        <div class="mt-2">
-                            <button
-                                    class="btn btn-red"
-                                    @click.prevent="updateGeneralContractorNotes()"
-                                    :disabled="disableCustomerNotesButton"
-                                    ref="customerNotesSubmitButton">
-                                  <span v-if="disableCustomerNotesButton">
-                                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                  </span>
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                </transition>
-            </div>
-        </div>
-
-
-        <div class="flex justify-between mt-4">
-            <span class="label mb-4">TOTAL PRICE:</span>
-            <div v-if="!isCustomer">
-                <span class="font-bold">${{ bid.bid_price }}</span>
-            </div>
-            <div v-else>
-        <span
-                v-if="bid.status !== 'bid.in_progress' && bid.status !== 'bid.initiated' "
-                class="font-bold"
-        >${{ bid.bid_price }}</span>
-                <span v-else class="font-bold">
-          <i>PENDING</i>
-        </span>
-            </div>
-        </div>
-
-        <!-- Declined Message -->
-        <div class="flex space-between flex-col" v-if="showDeclinedMessage">
-            <h4>
-                <label class="status label label-warning red py-s">Declined Reason</label>
-            </h4>
-            <p class="message">{{ bid.declined_message}}</p>
-        </div>
-
-
-        <!--<div v-show="isCustomer">-->
-        <!--<div ref="hello" v-show="customerNotes">hello</div>-->
-        <!--</div>-->
-
-        <!--<div ref="world">-->
-        <!--<div ref="hello" v-show="customerNotes">hello</div>-->
-        <!--</div>-->
-
-
+      </card>
     </div>
+
+    <div class="col-12">
+      <h1 class="card-title mt-4">Special Instructions</h1>
+      <card>
+        <div class="row">
+          <div class="col-12">
+            <span>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam commodo orci vitae arcu mattis,
+              quis efficitur erat aliquam. Aenean commodo sapien sed ipsum fermentum rutrum. Donec congue, arcu eu
+              interdum.
+            </span>
+          </div>
+        </div>
+      </card>
+    </div>
+
+    <!-- / tasks -->
+    <div class="col-12">
+      <h1 class="card-title mt-4">Job Tasks</h1>
+      <card @click.native="$router.push('/job/tasks')">
+        Total
+        <span class="float-right" v-if="bid.job_tasks !== undefined">
+          (<b>{{bid.job_tasks.length}}</b>)
+        </span>
+      </card>
+    </div>
+
+    <div class="col-12">
+      <card class="mt-4" @click.native="$router.push('/job/add/task')">
+        <div class="row">
+          <div class="col">
+            <p class="d-inline">Add New Task</p>
+            <i class="fas fa-chevron-right text-primary float-right sm-icon"></i>
+          </div>
+        </div>
+      </card>
+    </div>
+
+    <div class="col-12">
+      <h1 class="card-title mt-4">Attachments</h1>
+      <div class="mb-4">
+        <img src="" alt="Attachments">
+      </div>
+    </div>
+
+    <div class="col-12 mb-4">
+      <card>
+        <div class="row">
+          <div class="col">
+            <p class="d-inline">Upload Attachment</p>
+            <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>
+          </div>
+        </div>
+      </card>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -333,7 +236,7 @@
     computed: {
       ...mapGetters(['getCustomerName']),
       agreedStartDate() {
-        if (this.bid.agreed_start_date !== null) {
+        if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
           let d = this.bid.agreed_start_date
           let date = d.split(' ')
           let format_date = date[0].split('-')
@@ -465,6 +368,10 @@
 
     .notes-width {
         max-width: 75%;
+    }
+
+    span {
+      font-size: 15px;
     }
 
     /*@media (min-width: 762px) {*/

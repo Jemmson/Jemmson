@@ -1,10 +1,11 @@
 <template>
-  <div class="flex flex-col">
-    <card footer="true">
-      <!-- /show all bid information -->
-      <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
-      </bid-details>
+  <div class="container">
 
+    <!-- /show all bid information -->
+    <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
+    </bid-details>
+    
+    <card class="mb-4">
       <template slot="card-footer">
         <!-- /customer approve bid form -->
         <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
@@ -14,53 +15,48 @@
         </general-contractor-bid-actions>
       </template>
     </card>
+    
+
 
     <!-- / show all completed tasks-->
-    <completed-tasks :bid="bid">
-    </completed-tasks>
+    <!-- <completed-tasks :bid="bid">
+    </completed-tasks> -->
 
-    <!-- /show all tasks associated to this bid -->
+    <!-- /show all tasks associated to this bid
     <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
-    </bid-tasks>
+    </bid-tasks> -->
 
     <!-- /add task to bid -->
-    <transition name="slide-fade">
+    <!-- <transition name="slide-fade">
       <bid-add-task :show="showAddTaskPanel" :bid="bid" :bidId="this.$route.params.id" v-if="!jobApproved">
       </bid-add-task>
-    </transition>
+    </transition> -->
 
     <!-- / stripe testing delete after -->
-    <stripe :user='user'>
-    </stripe>
-    <feedback></feedback>
+    <!-- <stripe :user='user'>
+    </stripe> -->
   </div>
 </template>
 
 <script>
 
   import Feedback from '../components/shared/Feedback';
-  import Card from '../components/shared/Card';
   import BidDetails from '../components/job/BidDetails';
   import ApproveBid from '../components/job/ApproveBid';
   import GeneralContractorBidActions from '../components/job/GeneralContractorBidActions';
   import CompletedTasks from '../components/job/CompletedTasks';
-  import BidTasks from '../components/job/BidTasks';
   import Stripe from '../components/stripe/Stripe';
-  import BidAddTask from '../components/task/BidAddTask';
 
   export default {
     props: {
       user: Object,
     },
     components: {
-      Card,
       Feedback,
       BidDetails,
       ApproveBid,
       GeneralContractorBidActions,
       CompletedTasks,
-      BidTasks,
-      BidAddTask,
       Stripe
     },
     data() {
@@ -92,6 +88,9 @@
       }
     },
     computed: {
+      status() {
+        return User.status(this.bid.status, this.bid)
+      },
       customerName() {
         if (this.isCustomer) {
           return this.user.name;
@@ -134,6 +133,9 @@
       },
     },
     methods: {
+      getLabelClass(status) {
+        return Format.statusLabel(status,)
+      },
       reloadPage() {
         location.reload()
       },
@@ -172,12 +174,13 @@
           } = await axios.get('/job/' + id);
           // debugger
           this.bid = data;
+          this.$store.commit('setJob', data);
         } catch (error) {
           console.log(error);
           // debugger;  
           if (
             error.message === 'Not Authorized to access this resource/api' ||
-            error.response.status === 403
+            error.response !== undefined && error.response.status === 403
           ) {
             this.$router.push('/bids');
           }
@@ -211,6 +214,7 @@
       Bus.$off('taskAdded')
     },
     mounted: function () {
+      this.$store.commit('setCurrentPage', this.$router.history.current.path);
       // set up init data
       // const bidId = this.$route.params.id;
       // this.getBid(bidId);

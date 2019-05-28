@@ -816,8 +816,12 @@ class TaskController extends Controller
         $task = Task::find($request->taskId);
         $job = Job::find($request->jobId);
         $customer = User::find($request->customer_id);
-        $customer_quickBooks_Id = ContractorCustomer::where('contractor_user_id', '=', $request->contractorId)
-            ->where('customer_user_id', '=', $request->customer_id)->get()->first()->quickbooks_id;
+
+        $contractorCustomer = ContractorCustomer::where('contractor_user_id', '=', $request->contractorId)
+            ->where('customer_user_id', '=', $request->customer_id)->first();
+        if ($contractorCustomer != null) {
+            $customer_quickBooks_Id = $contractorCustomer->quickbooks_id;
+        }
 
         if (!empty($task)) {
             $jobTask = new JobTask();
@@ -844,8 +848,12 @@ class TaskController extends Controller
                 if ($job->hasAQuickbookEstimateBeenCreated()) {
                     $job->updateQuickBooksEstimate($task, $job, $jobTask);
                 } else {
-                    $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
-                    $job->qb_estimate_id = $estimate->Id;
+                    try {
+                        $estimate = $job->createQuickBooksEstimate($customer, $task, $job, $jobTask, $customer_quickBooks_Id);
+                        $job->qb_estimate_id = $estimate->Id;
+                    } catch (\Throwable $th) {
+                        Log::error($th->getMessage());
+                    }
                     try {
                         $job->save();
                     } catch (\Exception $e) {

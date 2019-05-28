@@ -1,88 +1,71 @@
 <template>
-    <div class="flex flex-row">
-        <card header="true">
-            <template slot="card-header">
-                <h2 for="header">
-                    Initiate A Bid With A Customer
-                </h2>
-            </template>
+  <div class="container">
+    <icon-header icon="jobs" mainHeader="Add New Job" subHeader="Initiate a new job with a customer.">
+    </icon-header>
+    <card>
+      <div class="form-group">
+        <label for="customerName">Customer Name *</label>
 
-            <div class="form-group">
-                <label for="customerName">Customer Name *</label>
+        <input name="customer" id="customerName" dusk="customerName" data-dependency="phone" type="text"
+          v-model="form.customerName" v-on:keyup="autoComplete" class="form-control" required>
+        <div class="flex flex-col" v-if="results.length">
+          <button class="flex-1 m-2 btn-format" v-for="result in results" v-bind:key="result.id" :name="result.phone"
+            @click.prevent="fillFields(result)">
+            {{ showCustomerName(result) }}
+          </button>
+        </div>
+      </div>
 
-                <input name="customer"
-                       id="customerName"
-                       dusk="customerName"
-                       data-dependency="phone"
-                       type="text"
-                       v-model="form.customerName"
-                       v-on:keyup="autoComplete"
-                       class="form-control" required>
-                <div class="flex flex-col" v-if="results.length">
-                    <button class="flex-1 m-2 btn-format" v-for="result in results" v-bind:key="result.id"
-                            :name="result.phone" @click.prevent="fillFields(result)">
-                        {{ showCustomerName(result) }}
-                    </button>
-                </div>
-            </div>
+      <!-- Phone Number -->
+      <div class="form-group" :class="{'has-error': form.errors.has('phone')}">
+        <div class="flex justify-between">
+          <label for="phone">Mobile Phone *</label>
+          <div v-show="phoneFormatError" class="formatErrorLabel">The phone number must be 10 numbers</div>
+        </div>
+        <input class="form-control" :class="{'formatError': phoneFormatError}" id="phone" @keyup="filterPhone"
+          maxlength="10" data-dependency="jobName" name="phone" dusk="phone" type="tel"
+          @blur="validateMobileNumber($event.target.value)" v-model="form.phone">
 
-            <!-- Phone Number -->
-            <div class="form-group" :class="{'has-error': form.errors.has('phone')}">
-                <div class="flex justify-between">
-                    <label for="phone">Mobile Phone *</label>
-                    <div v-show="phoneFormatError" class="formatErrorLabel">The phone number must be 10 numbers</div>
-                </div>
-                <input class="form-control"
-                       :class="{'formatError': phoneFormatError}"
-                       id="phone" @keyup="filterPhone"
-                       maxlength="10"
-                       data-dependency="jobName"
-                       name="phone"
-                       dusk="phone"
-                       type="tel" @blur="validateMobileNumber($event.target.value)"
-                       v-model="form.phone">
-
-                <div v-if="getMobileValidResponse.length > 0">
-                    <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
-                        <div style="color: green">{{ getMobileValidResponse[1] }}</div>
-                    </div>
-                    <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
-                </div>
-                <!--<div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()"-->
-                <!--style="color: green">-->
-                <!--{{ networkType.originalCarrier }}-->
-                <!--</div>-->
-                <!--<div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{-->
-                <!--networkType.originalCarrier-->
-                <!--}}-->
-                <!--</div>-->
-                <span class="help-block" v-show="form.errors.has('phone')">
-                  {{ form.errors.get('phone') }}
-                </span>
-            </div>
+        <div v-if="getMobileValidResponse.length > 0">
+          <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
+            <div style="color: green">{{ getMobileValidResponse[1] }}</div>
+          </div>
+          <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
+        </div>
+        <!--<div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()"-->
+        <!--style="color: green">-->
+        <!--{{ networkType.originalCarrier }}-->
+        <!--</div>-->
+        <!--<div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{-->
+        <!--networkType.originalCarrier-->
+        <!--}}-->
+        <!--</div>-->
+        <span class="help-block" v-show="form.errors.has('phone')">
+          {{ form.errors.get('phone') }}
+        </span>
+      </div>
 
 
-            <div class="form-group" :class="{'has-error': form.errors.has('jobName')}">
-                <label for="jobName">Job Name</label>
-                <input class="form-control" id="jobName" name="jobName" dusk="jobName" type="text"
-                       v-model="form.jobName">
-                <span class="help-block" v-show="form.errors.has('jobName')">
+      <div class="form-group" :class="{'has-error': form.errors.has('jobName')}">
+        <label for="jobName">Job Name</label>
+        <input class="form-control" id="jobName" name="jobName" dusk="jobName" type="text" v-model="form.jobName">
+        <span class="help-block" v-show="form.errors.has('jobName')">
           {{ form.errors.get('jobName') }}
         </span>
-            </div>
+      </div>
 
-            <div class="">
-                <button name="submit" id="submit" dusk="submitBid" class="btn btn-green btn-full"
-                        @click.prevent="submit" :disabled="checkValidData()">
+      <div class="form-group pt-4 mb-0">
+        <button name="submit" id="submit" dusk="submitBid" class="btn btn-green btn-block" @click.prevent="submit"
+          :disabled="checkValidData()">
           <span v-if="disabled.submit">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
           </span>
-                    Submit
-                </button>
-            </div>
-        </card>
-        <feedback></feedback>
-    </div>
+          Submit
+        </button>
+      </div>
+    </card>
+    <br>
+  </div>
 </template>
 
 <script>
@@ -252,8 +235,11 @@
         }
         this.results = []
       }
-    }
-  }
+  },
+  mounted() {
+    this.$store.commit('setCurrentPage', this.$router.history.current.path);
+  },
+}
 </script>
 
 <style lang="less" scoped>

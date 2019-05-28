@@ -12,7 +12,6 @@
 // /bid components
 Vue.component('bid-details', require('./job/BidDetails.vue'));
 Vue.component('general-contractor-bid-actions', require('./job/GeneralContractorBidActions.vue'));
-Vue.component('bid-tasks', require('./job/BidTasks.vue'));
 Vue.component('completed-tasks', require('./job/CompletedTasks.vue'));
 
 
@@ -24,6 +23,15 @@ Vue.component('modal', require('./shared/Modal.vue'));
 Vue.component('brand', require('./shared/Brand.vue'));
 Vue.component('feedback', require('./shared/Feedback.vue'));
 Vue.component('jem-footer', require('./shared/JemmsonFooter.vue'));
+Vue.component('list-item', require('./shared/ListItem.vue'));
+Vue.component('list', require('./shared/list.vue'));
+Vue.component('icon-header', require('./shared/IconHeader.vue'));
+Vue.component('main-header', require('./shared/Header.vue'));
+Vue.component('main-footer', require('./shared/Footer.vue'));
+
+
+
+
 
 
 // require('./Autocomplete.vue');
@@ -40,12 +48,17 @@ Vue.component('signup-with-stripe', require('./stripe/SignupWithStripe'));
 // forms
 Vue.component('approve-bid', require('./job/ApproveBid'));
 Vue.component('sub-invite-modal', require('./task/SubInviteModal'));
+Vue.component('job-task-bid-modal', require('./task/JobTaskBidModal'));
 Vue.component('deny-task-modal', require('./task/DenyTaskModal'));
 Vue.component('update-task-location-modal', require('./task/UpdateTaskLocationModal'));
-Vue.component('bid-add-task', require('./task/BidAddTask.vue'));
 
 
+Vue.component('tasks', require('./task/Tasks.vue'));
+Vue.component('task', require('./task/Task.vue'));
 Vue.component('task-images', require('./task/UploadTaskImages.vue'));
+
+
+
 
 
 
