@@ -40,7 +40,7 @@
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.24",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "browser-sync": "^2.26.3",
+    "browser-sync": "^2.26.5",
     "browser-sync-webpack-plugin": "^2.2.2",
     "expect": "^21.2.1",
     "flush-promises": "^1.0.0",
