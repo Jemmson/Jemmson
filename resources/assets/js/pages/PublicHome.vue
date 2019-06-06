@@ -129,7 +129,7 @@
         if (value === 'login') {
           window.location = '/login'
         } else if (value === 'register') {
-          window.location = '/register#'
+          window.location = '/#/register'
         }
       },
     },

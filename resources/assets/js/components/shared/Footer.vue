@@ -56,10 +56,10 @@
             </a>
         </div>
         <div class="col d-flex align-items-center">
-            <a href="/register" class="mx-auto">
-            <figure class="item mx-auto text-center" :class="page === '/register#' ? 'text-primary' : 'text-secondary'">
+            <a href="/#/register" class="mx-auto">
+            <figure class="item mx-auto text-center" :class="page === '/#/register' ? 'text-primary' : 'text-secondary'">
                 <i class="fas fa-user-plus text-secondary sm-icon"></i>
-                <figcaption class="caption small-header" :class="page === '/register#' ? 'text-primary' : 'text-secondary'">Register</figcaption>
+                <figcaption class="caption small-header" :class="page === '/#/register' ? 'text-primary' : 'text-secondary'">Register</figcaption>
             </figure>
             </a>
         </div>

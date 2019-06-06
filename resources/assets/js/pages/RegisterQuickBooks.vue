@@ -631,7 +631,8 @@
           busy: false,
           email: '',
           errors: {},
-          name: '',
+          first_name: '',
+          last_name: '',
           password: '',
           usertype: ''
         },
