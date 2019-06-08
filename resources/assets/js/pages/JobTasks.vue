@@ -8,7 +8,7 @@
                   v-if="jobTasks.length > 0"> -->
     <!-- / status -->
     <div class="mt-4 mb-1">
-      <card class="list-card" v-for="jTask of jobTasks" v-bind:key="jTask.id" :id="'task-' + jTask.id" @click.native="setCurrentJobTaskToBidOn(jTask)">
+      <card class="list-card" v-for="(jTask, index) of jobTasks" v-bind:key="jTask.id" :id="'task-' + jTask.id" @click.native="goToJobTask(index)">
         <!-- <bid-task :job-task="jobTask" :bid="job" :user="globalUser">
         </bid-task> -->
         <div class="row">
