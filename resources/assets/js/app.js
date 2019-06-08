@@ -75,6 +75,7 @@ import Benefits from './pages/Benefits'
 import Demo from './pages/Demo'
 import HowTo from './pages/HowTo'
 import RegisterQuickBooks from './pages/RegisterQuickBooks'
+import Register from './pages/Register'
 import UserAuthorizationPage from './pages/UserAuthorizationPage'
 // import BidTask from './components/job/BidTask';
 
@@ -181,6 +182,10 @@ const routes = [
     component: RegisterQuickBooks
   },
   {
+    path: '/register',
+    component: Register
+  },
+  {
     path: '/#*'
   }
 
@@ -199,6 +204,7 @@ router.beforeEach((to, from, next) => {
     to.path === '/check_accounting' ||
     to.path === '/howto' ||
     to.path === '/benefits' ||
+    to.path === '/register' ||
     to.path === '/registerQuickBooks'
   ) {
     next()

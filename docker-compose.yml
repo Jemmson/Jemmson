@@ -1,0 +1,70 @@
+version: "3"
+services:
+  app:
+    image: jemmson-www
+    container_name: jemmson-www
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - mysql
+      - redis
+    env_file:
+      - .docker.env
+    volumes:
+      - .:/var/www/html
+    environment:
+      CONTAINER_ROLE: app
+    ports:
+      - 9500:80
+##  scheduler:
+##    image: jemmson-www
+##    container_name: jemmson-scheduler
+##    env_file:
+##      - .docker.env
+##    volumes:
+##      - .:/var/www/html
+##    environment:
+##      CONTAINER_ROLE: scheduler
+##    depends_on:
+##      - app
+##      - mysql
+##      - redis
+##  queue:
+##    image: jemmson-www
+##    container_name: jemmson-queue
+##    env_file:
+##      - .docker.env
+##    volumes:
+##      - .:/var/www/html
+##    environment:
+##      CONTAINER_ROLE: queue
+##    depends_on:
+##      - app
+##      - mysql
+##      - redis
+  mysql:
+    container_name: jemmson-mysql
+    image: mysql:5.7
+    volumes:
+      - jemmson-mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: jemmson
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: jemmson
+      MYSQL_PASSWORD: secret
+    ports:
+      - 23306:3306
+  redis:
+    container_name: jemmson-redis
+    image: redis:4-alpine
+    ports:
+      - 26379:6379
+    volumes:
+      - jemmson-redis:/data
+
+volumes:
+  jemmson-mysql:
+    driver: "local"
+  jemmson-redis:
+    driver: "local"
