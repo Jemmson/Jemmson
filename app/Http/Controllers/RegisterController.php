@@ -10,6 +10,7 @@ use Laravel\Spark\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Quickbook;
 use App\User;
+//use Illuminate\Validation\ValidationException;
 use App\Location;
 
 class RegisterController extends Controller
@@ -30,7 +31,7 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      *
-     * @param  Request $request
+     * @param Request $request
      * @return Response
      */
     public function showRegistrationForm(Request $request)
@@ -51,9 +52,22 @@ class RegisterController extends Controller
     {
 
         // validation
-        $this->validate($request, [
-            'form.email' => 'required|email|unique:users,email'
-        ]);
+        try {
+            $this->validate($request, [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required',
+                'terms' => 'required',
+            ]);
+        } catch (Illuminate\Validation\ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Error',
+                'errors' => $exception->errors(),
+            ], 422);
+        }
+
 
         // create a new user for the contractor
         $user = new User();

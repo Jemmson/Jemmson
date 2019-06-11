@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
+use Laravel\Spark\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+
 $router->group(['middleware' => 'web'], function ($router) {
     $teamString = Spark::teamString();
 
@@ -178,6 +183,72 @@ $router->group(['middleware' => 'web'], function ($router) {
     // Registration...
     $router->get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     $router->post('/register', 'Auth\RegisterController@register');
+    $router->post('/registerContractor', function (Request $request) {
+//        try {
+
+//            $v = new Illuminate\Foundation\Validation\ValidatesRequests();
+
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required',
+                'terms' => 'required',
+            ]);
+
+
+            if ($validator->fails()) {
+//                return redirect('post/create')
+//                    ->withErrors($validator)
+//                    ->withInput();
+
+                return redirect()->back(422)
+                    ->withErrors($validator)
+                    ->withInput();
+
+//                return response()->json([
+//                    'status' => 'error',
+//                    'msg' => 'Error',
+//                    'errors' => $exception->errors(),
+//                ], 422);
+            }
+
+//        } catch (Illuminate\Validation\ValidationException $exception) {
+//            return response()->json([
+//                'status' => 'error',
+//                'msg' => 'Error',
+//                'errors' => $exception->errors(),
+//            ], 422);
+//        }
+
+
+        $user = new User();
+        $user->name = $request->first_name . " " . $request->last_name;
+        $user->email = $request->email;
+        $user->usertype = $request->usertype;
+        $user->password = bcrypt($request->password);
+        $user->phone = $request->phone;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->password_updated = true;
+        try {
+            $user->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
+
+//        Auth::loginUsingId($user->id);
+
+//        event(new UserRegistered($user));
+
+        return response()->json([
+            'redirect' => '/#/furtherInfo',
+            'user' => $user
+        ]);
+
+    });
+//    $router->post('/registerContractor', 'Auth\RegisterController@registerContractor');
+    $router->post('/registerCustomer', 'Auth\RegisterController@registerCustomer');
     $router->post('/registerUser', 'Auth\RegisterController@registerUser');
 
 

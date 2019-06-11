@@ -98,7 +98,54 @@ class RegisterController extends Controller
 
     }
 
+    public function registerContractor(Request $request)
+    {
 
+        Log::info("************Create Method - Home Controller - Begin****************");
+
+
+        try {
+            $this->validate($request, [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required',
+                'terms' => 'required',
+            ]);
+        } catch (Illuminate\Validation\ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Error',
+                'errors' => $exception->errors(),
+            ], 422);
+        }
+
+
+        $user = new User();
+        $user->name = $request->first_name . " " . $request->last_name;
+        $user->email = $request->email;
+        $user->usertype = $request->usertype;
+        $user->password = bcrypt($request->password);
+        $user->phone = $request->phone;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        try {
+            $user->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
+
+//        Auth::loginUsingId($user->id);
+
+//        event(new UserRegistered($user));
+
+        return response()->json([
+            'redirect' => '/#/furtherInfo'
+        ]);
+
+
+
+    }
 
     /**
      * Handle a registration request for the application.
@@ -108,6 +155,7 @@ class RegisterController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+
         Auth::login($user = Spark::interact(
             Register::class, [$request]
         ));

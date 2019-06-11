@@ -5,6 +5,7 @@ import * as mutations from './mutations'
 export default {
   namespaced: false,
   state: {
+    user: ''
   },
   getters,
   mutations,

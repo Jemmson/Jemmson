@@ -54,16 +54,51 @@ class SparkServiceProvider extends ServiceProvider
     public function booted()
     {
 
-        Spark::validateUsersWith(function () {
-            return [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users',
-                'password' => 'required|confirmed|min:6',
-                'vat_id' => 'max:50|vat_id',
-                'terms' => 'required|accepted',
-                'usertype' => 'required'
-            ];
-        });
+//        Spark::validateUsersWith(function () {
+//            return [
+//                'name' => 'required|max:255',
+//                'email' => 'required|email|max:255|unique:users',
+//                'password' => 'required|confirmed|min:6',
+//                'vat_id' => 'max:50|vat_id',
+//                'terms' => 'required|accepted',
+//                'usertype' => 'required'
+//            ];
+//        });
+
+
+
+        try {
+//            $this->validate($request, [
+//                'first_name' => 'required',
+//                'last_name' => 'required',
+//                'email' => 'required|email|unique:users,email',
+//                'password' => 'required',
+//                'terms' => 'required',
+//            ]);
+
+
+            Spark::validateUsersWith(function () {
+                return [
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    'email' => 'required|email|unique:users,email',
+                    'password' => 'required',
+                    'terms' => 'required',
+                ];
+            });
+
+
+
+        } catch (Illuminate\Validation\ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Error',
+                'errors' => $exception->errors(),
+            ], 422);
+        }
+
+
+
 
         Spark::useStripe()->noCardUpFront()->trialDays(30);
 
@@ -94,7 +129,8 @@ class SparkServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Spark::swap('UserRepository@current', 
+//        dd('spark/RegisterController');
+        Spark::swap('UserRepository@current',
             function () {
                 // Return the current user...
                 if (Auth::user() != null) 

@@ -56,56 +56,57 @@
 
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('first_name')">-->
-                            <label for="firstName" class="m-auto pt-1 pt-2" style="">First Name</label>
+                            <label for="firstName" class="m-auto pt-1 pt-2" style="">First Name *</label>
                             <input
                                     id="firstName"
                                     type="text"
                                     class="form-control m-auto"
-                                    @blur="checkValidData"
                                     v-model="registerForm.first_name">
                             <!--                <span class="help-block" v-show="registerForm.errors.has('first_name')"></span>-->
+                            <span class="help-block" v-show="registerForm.errors.first_name !== ''">{{registerForm.errors.first_name}}</span>
                         </div>
 
                         <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('last_name')">-->
-                            <label for="lastName" class="m-auto pt-3 pt-2">Last Name</label>
-                            <input id="lastName"
-                                   @blur="checkValidData"
-                                   type="text" class="form-control m-auto"
-                                   v-model="registerForm.last_name">
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('last_name')"></span>-->
+                            <div class="flex flex-col mt-2 mb-2">
+                                <!--                                 :class="{'has-error': registerForm.errors.has('last_name')">-->
+                                <label for="lastName" class="m-auto pt-3 pt-2">Last Name *</label>
+                                <input id="lastName"
+                                       type="text" class="form-control m-auto"
+                                       v-model="registerForm.last_name">
+                                <span class="help-block" v-show="registerForm.errors.last_name !== ''">{{registerForm.errors.last_name}}</span>
+                            </div>
                         </div>
 
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="email" class="m-auto pt-3 pt-2">E-Mail Address</label>
+                            <label for="email" class="m-auto pt-3 pt-2">E-Mail Address *</label>
                             <input id="email"
-                                   @blur="checkValidData"
                                    type="text" class="form-control m-auto"
                                    v-model="registerForm.email">
+                            <span class="help-block" v-show="registerForm.errors.email !== ''">{{registerForm.errors.email}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
 
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="password"
-                                   class="m-auto pt-3 pt-2">Password</label>
+                                   class="m-auto pt-3 pt-2">Password *</label>
                             <input id="password"
-                                   @blur="checkValidData"
                                    type="password" class="form-control m-auto"
                                    v-model="registerForm.password">
+                            <span class="help-block" v-show="registerForm.errors.password !== ''">{{registerForm.errors.password}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
 
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="password_confirmation" class="m-auto pt-3 pt-2">Confirm
-                                Password</label>
+                                Password *</label>
                             <input id="password_confirmation"
-                                   @blur="checkValidData"
+                                   @keyup="verifyPassword()"
                                    type="password" class="form-control m-auto"
                                    v-model="registerForm.password_confirmation">
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
+                            <span class="help-block" v-show="registerForm.errors.password_confirmation !== ''">{{registerForm.errors.password_confirmation}}</span>
                         </div>
 
 
@@ -118,12 +119,13 @@
                         <div class="row pt-3 pt-2 m-auto">
                             <input
                                     type="checkbox"
-                                    @blur="checkValidData"
+
                                     class="mr-2"
                                     name="terms"
                                     style="align-self: center;"
                                     v-model="registerForm.terms">I Accept The
-                            <a href="/terms" target="_blank">Terms Of Service</a>
+                            <a href="/terms" target="_blank">Terms Of Service *</a>
+                            <span class="help-block" v-show="registerForm.errors.terms !== ''">{{registerForm.errors.terms}}</span>
                         </div>
 
                         <button id="register" name=register
@@ -167,7 +169,14 @@
           password: '',
           password_confirmation: '',
           terms: '',
-          errors: {},
+          errors: {
+            first_name: '',
+            last_name: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+            terms: '',
+          },
           usertype: '',
           busy: false
         },
@@ -215,6 +224,13 @@
         this.usesQuickbooks = false
         this.showRegistration = true
       },
+      verifyPassword(){
+        if (this.registerForm.password !== this.registerForm.password_confirmation) {
+          this.registerForm.errors.password_confirmation = 'The password fields must match';
+        } else {
+          this.registerForm.errors.password_confirmation = '';
+        }
+      },
       checkValidData() {
         if (
           this.registerForm.first_name !== '' &&
@@ -257,10 +273,90 @@
         }
       },
       register() {
-        Spark.post('/register', this.registerForm)
-          .then(response => {
-            window.location = response.redirect
-          })
+        if (this.registerForm.usertype === 'contractor') {
+          axios.post('/registerContractor', this.registerForm)
+            .then(function(response) {
+              console.log(response.data)
+
+              this.$store.commit('setUser', response.data.user);
+
+              window.location = response.data.redirect
+            }.bind(this))
+            .catch(function(error) {
+
+              if (error.response.data.errors.first_name !== undefined) {
+                this.registerForm.errors.first_name = error.response.data.errors.first_name[0]
+              } else {
+                this.registerForm.errors.first_name = ''
+              }
+
+              if (error.response.data.errors.last_name !== undefined) {
+                this.registerForm.errors.last_name = error.response.data.errors.last_name[0]
+              } else {
+                this.registerForm.errors.last_name = ''
+              }
+
+              if (error.response.data.errors.email !== undefined) {
+                this.registerForm.errors.email = error.response.data.errors.email[0]
+              } else {
+                this.registerForm.errors.email = ''
+              }
+
+              if (error.response.data.errors.password !== undefined) {
+                this.registerForm.errors.password = error.response.data.errors.password[0]
+              } else {
+                this.registerForm.errors.password = ''
+              }
+
+              if (error.response.data.errors.terms !== undefined) {
+                this.registerForm.errors.terms = error.response.data.errors.terms[0]
+              } else {
+                this.registerForm.errors.terms = ''
+              }
+
+              console.log(error)
+            }.bind(this))
+        } else {
+          axios.post('/registerCustomer', this.registerForm)
+            .then(function(response) {
+              console.log(response)
+              window.location = response.redirect
+            })
+            .catch(function(error) {
+
+              if (error.response.data.errors.first_name !== undefined) {
+                this.registerForm.errors.first_name = error.response.data.errors.first_name[0]
+              } else {
+                this.registerForm.errors.first_name = ''
+              }
+
+              if (error.response.data.errors.last_name !== undefined) {
+                this.registerForm.errors.last_name = error.response.data.errors.last_name[0]
+              } else {
+                this.registerForm.errors.last_name = ''
+              }
+
+              if (error.response.data.errors.email !== undefined) {
+                this.registerForm.errors.email = error.response.data.errors.email[0]
+              } else {
+                this.registerForm.errors.email = ''
+              }
+
+              if (error.response.data.errors.password !== undefined) {
+                this.registerForm.errors.password = error.response.data.errors.password[0]
+              } else {
+                this.registerForm.errors.password = ''
+              }
+
+              if (error.response.data.errors.terms !== undefined) {
+                this.registerForm.errors.terms = error.response.data.errors.terms[0]
+              } else {
+                this.registerForm.errors.terms = ''
+              }
+
+              console.log(error)
+            })
+        }
       }
     },
   }
@@ -298,6 +394,17 @@
 
     .shadow {
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);
+    }
+
+    .help-block {
+        display: block;
+        margin-bottom: 10px;
+        color:red;
+        /*color: lighten(@text-color, 25%); // lighten the text some for contrast*/
+    }
+
+    .selected-button {
+        border: solid thick red;
     }
 
 </style>

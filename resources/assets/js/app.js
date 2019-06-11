@@ -213,59 +213,129 @@ router.beforeEach((to, from, next) => {
 
       console.log('hello further info');
 
-      let customer = Spark.state.user.customer
-      let contractor = Spark.state.user.contractor
-      if (Spark.state.user.password_updated) {
-        console.log('wtf')
-        next('/home')
+      let customer = {};
+      let contractor = {};
+
+      if (Spark.state.user !== null) {
+        if (Spark.state.user.customer !== undefined) {
+          customer = Spark.state.user.customer
+        } else {
+          contractor = Spark.state.user.contractor
+        }
+        if (Spark.state.user.password_updated) {
+          console.log('wtf')
+          next('/home')
+        }
       }
+
+      // let userObject = app.$store.state.user;
+      let userObject = store.state.user;
+      if (Object.keys(userObject).length > 0) {
+        if (userObject.usertype === 'customer') {
+          customer = userObject
+        } else {
+          contractor = userObject
+        }
+        if (userObject.password_updated) {
+          console.log('wtf')
+          next('/home')
+        }
+      }
+
     }
     if (to.path !== '/furtherInfo' &&
       to.path !== '/#' &&
       to.path !== '/' &&
       from.path !== '/furtherInfo') {
 
-      if (Spark.state.user === undefined ||
-        Spark.state.user === null) {
+      let userObject = store.state.user;
+
+      if (
+        (Spark.state.user === undefined ||
+          Spark.state.user === null) &&
+        (Object.keys(userObject).length === 0)
+      ) {
         return location.href = '/'
       }
 
       let customer = null;
       let contractor = null;
 
-      if (Spark.state.user !== null) {
-        customer = Spark.state.user.customer
-      }
+     if (Spark.state.user !== null) {
+       if (Spark.state.user.customer) {
+         customer = Spark.state.user.customer
+       }
 
-      if (Spark.state.user !== null) {
-        contractor = Spark.state.user.contractor
-      }
+       if (Spark.state.user.contractor) {
+         contractor = Spark.state.user.contractor
+       }
 
 
-      if (Spark.state.user.password_updated == false) {
-        console.log('to further info')
-        next('/furtherInfo')
-      } else {
-        switch (to.path) {
-          case '/initiate-bid':
-            if (Spark.state.user.usertype === 'customer') {
-              next('/home')
-            } else {
-              next()
-            }
-            break
-          case '/tasks':
-            if (Spark.state.user.usertype === 'customer') {
-              next('/home')
-            } else {
-              next()
-            }
-            break
-          default:
-            next()
-            break
-        }
-      }
+       if (Spark.state.user.password_updated == false) {
+         console.log('to further info')
+         next('/#/furtherInfo')
+       } else {
+         switch (to.path) {
+           case '/initiate-bid':
+             if (Spark.state.user.usertype === 'customer') {
+               next('/home')
+             } else {
+               next()
+             }
+             break
+           case '/tasks':
+             if (Spark.state.user.usertype === 'customer') {
+               next('/home')
+             } else {
+               next()
+             }
+             break
+           default:
+             next()
+             break
+         }
+       }
+
+
+     } else if (Object.keys(userObject).length > 0) {
+       if (userObject.usertype === 'customer') {
+         customer = userObject
+       }
+       if (userObject.usertype === 'contractor') {
+         contractor = userObject
+       }
+
+
+       if (userObject.password_updated == false) {
+         console.log('to further info')
+         next('/furtherInfo')
+       } else {
+         switch (to.path) {
+           case '/initiate-bid':
+             if (Spark.state.user.usertype === 'customer') {
+               next('/home')
+             } else {
+               next()
+             }
+             break
+           case '/tasks':
+             if (Spark.state.user.usertype === 'customer') {
+               next('/home')
+             } else {
+               next()
+             }
+             break
+           default:
+             next()
+             break
+         }
+       }
+
+
+     }
+
+
+
     } else {
       next()
     }
