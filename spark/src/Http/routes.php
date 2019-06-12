@@ -184,9 +184,6 @@ $router->group(['middleware' => 'web'], function ($router) {
     $router->get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     $router->post('/register', 'Auth\RegisterController@register');
     $router->post('/registerContractor', function (Request $request) {
-//        try {
-
-//            $v = new Illuminate\Foundation\Validation\ValidatesRequests();
 
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required',
@@ -194,32 +191,21 @@ $router->group(['middleware' => 'web'], function ($router) {
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required',
                 'terms' => 'required',
+                'companyName' => 'required',
+                'phoneNumber' => 'required',
+                'addressLine1' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'zip' => 'required',
+                'country' => 'required'
             ]);
 
 
             if ($validator->fails()) {
-//                return redirect('post/create')
-//                    ->withErrors($validator)
-//                    ->withInput();
-
-                return redirect()->back(422)
-                    ->withErrors($validator)
-                    ->withInput();
-
-//                return response()->json([
-//                    'status' => 'error',
-//                    'msg' => 'Error',
-//                    'errors' => $exception->errors(),
-//                ], 422);
+                return response()->json([
+                    'errors' => $validator->errors()
+                ], 422);
             }
-
-//        } catch (Illuminate\Validation\ValidationException $exception) {
-//            return response()->json([
-//                'status' => 'error',
-//                'msg' => 'Error',
-//                'errors' => $exception->errors(),
-//            ], 422);
-//        }
 
 
         $user = new User();
@@ -230,6 +216,13 @@ $router->group(['middleware' => 'web'], function ($router) {
         $user->phone = $request->phone;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
+        $user->phone = $request->phoneNumber;
+        $user->billing_address = $request->addressLine1;
+        $user->billing_address_line_2 = $request->addressLine2;
+        $user->billing_city = $request->city;
+        $user->billing_state = $request->state['code'];
+        $user->billing_zip = $request->zip;
+        $user->billing_country = $request->country['code'];
         $user->password_updated = true;
         try {
             $user->save();
@@ -237,18 +230,154 @@ $router->group(['middleware' => 'web'], function ($router) {
             Log::debug($error->getMessage());
         }
 
-//        Auth::loginUsingId($user->id);
 
-//        event(new UserRegistered($user));
+        $location = new \App\Location();
+        $location->user_id = $user->id;
+        $location->address_line_1 = $request->addressLine1;
+        $location->address_line_2 = $request->addressLine2;
+        $location->city = $request->city;
+        $location->state = $request->state['code'];
+        $location->zip = $request->zip;
+        $location->country = $request->country['code'];
+
+        try {
+            $location->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+
+        $contractor = new \App\Contractor();
+        $contractor->user_id = $user->id;
+        $contractor->location_id = $location->id;
+        $contractor->company_name = $user->companyName;
+
+        try {
+            $contractor->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        $user->location_id = $location->id;
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
 
         return response()->json([
-            'redirect' => '/#/furtherInfo',
+            'redirect' => '/#/home',
             'user' => $user
         ]);
 
     });
 //    $router->post('/registerContractor', 'Auth\RegisterController@registerContractor');
-    $router->post('/registerCustomer', 'Auth\RegisterController@registerCustomer');
+    $router->post('/registerCustomer', function (Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required',
+            'terms' => 'required',
+            'phoneNumber' => 'required',
+            'addressLine1' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+            'country' => 'required'
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+
+        $user = new User();
+        $user->name = $request->first_name . " " . $request->last_name;
+        $user->email = $request->email;
+        $user->usertype = $request->usertype;
+        $user->password = bcrypt($request->password);
+        $user->phone = $request->phone;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->phone = $request->phoneNumber;
+        $user->billing_address = $request->addressLine1;
+        $user->billing_address_line_2 = $request->addressLine2;
+        $user->billing_city = $request->city;
+        $user->billing_state = $request->state['code'];
+        $user->billing_zip = $request->zip;
+        $user->billing_country = $request->country['code'];
+        $user->password_updated = true;
+        try {
+            $user->save();
+        } catch (\Exception $error) {
+            Log::debug($error->getMessage());
+        }
+
+
+        $location = new \App\Location();
+        $location->user_id = $user->id;
+        $location->address_line_1 = $request->addressLine1;
+        $location->address_line_2 = $request->addressLine2;
+        $location->city = $request->city;
+        $location->state = $request->state['code'];
+        $location->zip = $request->zip;
+        $location->country = $request->country['code'];
+
+        try {
+            $location->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+
+        $customer = new \App\Customer();
+        $customer->user_id = $user->id;
+        $customer->location_id = $location->id;
+
+        try {
+            $customer->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        $user->location_id = $location->id;
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return response()->json([
+            'redirect' => '/#/home',
+            'user' => $user
+        ]);
+
+    });
     $router->post('/registerUser', 'Auth\RegisterController@registerUser');
 
 

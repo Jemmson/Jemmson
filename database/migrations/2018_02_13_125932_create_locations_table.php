@@ -23,6 +23,7 @@ class CreateLocationsTable extends Migration
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->string('area')->nullable();
+            $table->string('country')->nullable();
 
             $table->timestamps();
         });
