@@ -1,399 +1,417 @@
 <template>
 
-    <div class="flex flex-col further-info-main text-center">
-        <div class="main-header p-4 uppercase">
-            Please enter and review the below information
-        </div>
-        <h3 class="text-center m-4">{{ companyInfo.message.CompanyName }}</h3>
-        <div class="box border flex flex-col section">
-            <div class="content">
 
-                <vue-element-loading :active="loading" :is-full-screen="true"/>
+    <div>
 
-                <h2 class="text-center text-red uppercase" v-show="inputNotValid">Please Check That All Mandatory Fields
-                    Are Setup Correctly</h2>
-
-                <div class="flex flex-col m-4">
-                    <h5 class="text-center text-red uppercase" v-show="errors.email">email address missing or has
-                        incorrect format</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.name">The name field is missing</h5>
-                    <h5 class="text-center text-red uppercase" ref="phoneError" v-if="errors.phone">The phone field is
-                        not correct</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.password.error">The password field is
-                        missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.company_name">The company name field is
-                        missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.address_line_1">The address line 1 field
-                        is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.city">The city field is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.state">The state field is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.zip">The zip field is missing</h5>
-                    <h5 class="text-center text-red uppercase" v-show="errors.terms">please accept the terms of
-                        agreement</h5>
+        <div class="container">
+            <card class="w-full">
+                <div class="row">
+                    <h3 class="uppercase m-auto">{{ companyInfo.message.CompanyName }}</h3>
                 </div>
+                <div class="row" style="flex-direction: column; margin-top: 1.25rem">
+                    <vue-element-loading :active="loading" :is-full-screen="true"/>
 
-                <!-- Name -->
-                <div class="input-section">
-                    <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('name')}">-->
-                    <label class="j-label">First and Last Name</label><span class="j-label ml-2 star">*</span>
-                    <div class="">
-                        <input type="text" class="border input" name="name" v-model="form.name" autofocus>
+                    <h5 class="text-center uppercase" style="color:red; display:block" v-show="inputNotValid">Some
+                        Fields Are Missing</h5>
+
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.email">email address missing or
+                        has
+                        incorrect format
                     </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.first_name">Your first name
+                        field is missing
+                    </div>
+
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.last_name">Your last name field
+                        is missing
+                    </div>
+
+                    <div class="text-center uppercase" style="color:red;" ref="phoneError" v-if="errors.phone">The phone
+                        field
+                        is
+                        not correct
+                    </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.password.error">The password
+                        field is
+                        missing
+                    </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.company_name">The company name
+                        field
+                        is
+                        missing
+                    </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.address_line_1">The address
+                        line 1
+                        field
+                        is missing
+                    </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.city">The city field is
+                        missing
+                    </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.state">The state field is
+                        missing
+                    </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.zip">The zip field is missing
+                    </div>
+                    <div class="text-center uppercase" style="color:red;" v-show="errors.terms">please accept the terms
+                        of
+                        agreement
+                    </div>
+
                 </div>
-
-                <!--&lt;!&ndash; E-Mail Address &ndash;&gt;-->
-                <!--<div class="input-section">-->
-                <!--&lt;!&ndash;<div class="input-section" :class="{'has-error': registerForm.errors.has('email')}">&ndash;&gt;-->
-                <!--<label class="j-label">E-Mail Address</label>-->
-
-                <!--<div>-->
-                <!--<input-->
-                <!--type="email"-->
-                <!--class="border input"-->
-                <!--name="email"-->
-                <!--v-model="companyInfo.message.Email.Address">-->
-                <!--&lt;!&ndash;<span class="help-block" v-show="registerForm.errors.has('email')"></span>&ndash;&gt;-->
-                <!--</div>-->
-                <!--</div>-->
-
+                <div class="row">
+                    <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('first_name')">-->
+                    <label for="firstName" class=" pt-1 pt-2">First Name *</label>
+                    <input
+                            id="firstName"
+                            autocomplete="on"
+                            name="fname"
+                            type="text"
+                            class="form-control "
+                            v-model="form.first_name">
+                    <!--                <span class="help-block" v-show="form.errors.has('first_name')"></span>-->
+                    <span class="help-block" v-show="form.errors.first_name !== ''"></span>
+                </div>
+                <div class="row">
+                    <label for="lastName" class="pt-3 pt-2">Last Name *</label>
+                    <input id="lastName"
+                           autocomplete="on"
+                           name="lname"
+                           type="text" class="form-control"
+                           v-model="form.last_name">
+                    <span class="help-block" v-show="form.errors.last_name !== ''"></span>
+                </div>
                 <hr>
-
-                <!-- Password -->
-                <div class="input-section">
-                    <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('password')}">-->
-                    <div class="flex justify-between">
-                        <div class="flex">
-                            <label class="j-label">Password</label><span class="j-label ml-2 star">*</span>
-                        </div>
-                        <div style="color:red;"
-                             ref="password_error"
-                             v-show="errors.password.pw_length < 6"
-                        >
-                            Must Be at least 6 alphanumeric characters
-                        </div>
+                <div class="row">
+                    <label class="">Password *</label>
+                    <div style="color:red;"
+                         ref="password_error"
+                         class="pl-2"
+                         v-show="errors.password.pw_length < 6"
+                    >
+                        Must Be at least 6 alphanumeric characters
                     </div>
-
-                    <div>
-                        <input type="password"
-                               class="border input"
-                               name="password"
-                               ref="password"
-                               @keyup="passwordLength"
-                               v-model="form.password">
-                        <!--<span class="help-block" v-show="registerForm.errors.has('password')"></span>-->
-                    </div>
+                    <input type="password"
+                           class="form-control"
+                           name="password"
+                           ref="password"
+                           @keyup="passwordLength"
+                           v-model="form.password">
                 </div>
-
-                <!-- Password Confirmation -->
-                <!--<div class="input-section">-->
-                <div class="input-section">
-                    <div class="flex justify-between">
-                        <div>
-                            <label class="j-label">Confirm Password</label><span class="j-label ml-2 star">*</span>
-                        </div>
-                        <div v-if="!errors.password.match">
+                <div class="row mt-3">
+                    <label class="">Confirm Password *</label>
+                    <div v-if="!errors.password.match">
                             <span class="has-error-name text-center">
                                 {{ errors.password.message }}
                             </span>
-                        </div>
                     </div>
-                    <div>
-                        <input type="password"
-                               :class="{'has-error': !errors.password.match}"
-                               class="border input"
-                               name="password_confirmation"
-                               v-model="form.password_confirmation" @keyup="confirmPassword">
-
-                        <!--<span class="help-block" v-show="registerForm.errors.has('password_confirmation')"></span>-->
-                    </div>
+                    <input type="password"
+                           :class="{'has-error': !errors.password.match}"
+                           class="form-control"
+                           name="password_confirmation"
+                           v-model="form.password_confirmation" @keyup="confirmPassword">
                 </div>
-            </div>
-        </div>
+                <hr>
 
+                <h4 class="text-center mt-2">General Info</h4>
+                <div class="row" style="justify-content: center" v-show="!sections.editGeneralInfo">
+                    <div class="flex-1 w-full"></div>
+                    <button class="flex-1 w-full btn btn-small btn-primary"
+                            ref="edit_btn"
+                            @click="sections.editGeneralInfo = true">Edit
+                    </button>
+                    <div class="flex-1 w-full"></div>
+                </div>
+                <div class="row" style="justify-content: space-evenly" v-show="sections.editGeneralInfo">
+                    <button class="flex-1 w-full btn btn-small btn-primary"
+                            id="cancel_btn"
+                            ref="cancel_btn"
+                            @click="cancel()">Cancel
+                    </button>
+                    <button class="flex-1 w-full btn btn-small btn-primary"
+                            ref="reset_btn"
+                            @click="reset()">Reset
+                    </button>
+                    <button class="flex-1 w-full btn btn-small btn-primary"
+                            ref="save_btn"
+                            @click="save()">Save
+                    </button>
+                </div>
 
-        <div class="box border flex flex-col section">
-            <h4 class="text-center mt-2">General Info</h4>
-            <div class="flex justify-around items-center m-2" v-show="!sections.editGeneralInfo">
-                <div class="flex-1 w-full"></div>
-                <button class="flex-1 w-full btn bg-blue"
-                        ref="edit_btn"
-                        @click="sections.editGeneralInfo = true">Edit
-                </button>
-                <div class="flex-1 w-full"></div>
-            </div>
-            <div class="flex justify-around items-center m-2" v-show="sections.editGeneralInfo">
-                <button class="w-full flex-1 btn bg-blue mr-2"
-                        id="cancel_btn"
-                        ref="cancel_btn"
-                        @click="cancel()">Cancel
-                </button>
-                <button class="w-full flex-1 btn bg-blue mr-2"
-                        ref="reset_btn"
-                        @click="reset()">Reset
-                </button>
-                <button class="flex-1 btn bg-blue w-full ml-2"
-                        ref="save_btn"
-                        @click="save()">Save
-                </button>
-            </div>
-            <div class="content" v-show="!sections.editGeneralInfo">
-                <div class="flex mt-2 mb-2 justify-between">
-                    <div class="flex">
+                <hr>
+
+                <div class="content" v-show="!sections.editGeneralInfo">
+                    <div class="row" style="justify-content: space-between">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyName ? '' : 'empty-field-name'"
-                        >Company Name
+                        >Company Name *
                         </div>
-                        <span class="j-label ml-2 star">*</span>
+                        <div class="mr-2">{{ companyInfo.message.CompanyName }}</div>
                     </div>
-                    <div class="mr-2">{{ companyInfo.message.CompanyName }}</div>
-                </div>
-                <div class="flex mt-2 mb-2 justify-between">
-                    <div class="flex">
+                    <div class="row" style="justify-content: space-between">
                         <div class="ml-2"
                              :class="companyInfo.message.CompanyAddr.Line1 ? '' : 'empty-field-name'"
                         >Address Line 1
                         </div>
-                        <span class="j-label ml-2 star">*</span>
+                        <div class="mr-2">{{ companyInfo.message.CompanyAddr.Line1 }}</div>
                     </div>
-                    <div class="mr-2">{{ companyInfo.message.CompanyAddr.Line1 }}</div>
-                </div>
-                <div v-if="companyInfo.message.CompanyAddr.Line2" class="flex mt-2 mb-2 justify-between">
-                    <div class="ml-2">Address Line 2</div>
-                    <div class="mr-2">{{ companyInfo.message.CompanyAddr.Line2 }}</div>
-                </div>
-                <div class="flex mt-2 mb-2 justify-between">
-                    <div class="flex">
-                        <div class="ml-2"
-                             :class="companyInfo.message.CompanyAddr.City ? '' : 'empty-field-name'"
-                        >City
-                        </div>
-                        <span class="j-label ml-2 star">*</span>
+                    <div v-if="companyInfo.message.CompanyAddr.Line2" class="row"
+                         style="justify-content: space-between">
+                        <div class="ml-2">Address Line 2</div>
+                        <div class="mr-2">{{ companyInfo.message.CompanyAddr.Line2 }}</div>
                     </div>
-                    <div class="mr-2">{{ companyInfo.message.CompanyAddr.City }}</div>
-                </div>
-                <div class="flex mt-2 mb-2 justify-between">
-                    <div class="flex">
-                        <div class="ml-2"
-                             :class="companyInfo.message.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field-name'"
-                        >State
-                        </div>
-                        <span class="j-label ml-2 star">*</span>
-                    </div>
-                    <div class="mr-2">{{ companyInfo.message.CompanyAddr.CountrySubDivisionCode }}</div>
-                </div>
-                <div class="flex mt-2 mb-2 justify-between">
-                    <div class="flex">
-                        <div class="ml-2"
-                             :class="companyInfo.message.CompanyAddr.PostalCode ? '' : 'empty-field-name'"
-                        >PostalCode
-                        </div>
-                        <span class="j-label ml-2 star">*</span>
-                    </div>
-                    <div class="mr-2">{{ companyInfo.message.CompanyAddr.PostalCode }}</div>
-                </div>
-                <div class="flex mt-2 mb-2 justify-between">
-                    <div class="flex">
+                    <div class="row" style="justify-content: space-between">
                         <div class="flex">
                             <div class="ml-2"
-                                 ref="primaryPhone"
-                                 :class="checkPhoneErrorsForClass"
-                            >Mobile Phone Number
+                                 :class="companyInfo.message.CompanyAddr.City ? '' : 'empty-field-name'"
+                            >City
                             </div>
-                            <span
-                                    class="j-label ml-2 star"
-                                    ref="savedPhoneLabelStar"
-                                    :class="checkPhoneErrorsForClass"
-                            >*</span>
+
                         </div>
+                        <div class="mr-2">{{ companyInfo.message.CompanyAddr.City }}</div>
                     </div>
-                    <div ref="primaryPhoneFromQB"
-                         :class="checkPhoneErrorsForClass"
-                         class="mr-2">{{ companyInfo.message.PrimaryPhone }}</div>
-                </div>
-                <div class="flex mt-2 mb-2 justify-between">
-                    <div class="flex">
-                        <div class="ml-2"
-                             :class="companyInfo.message.Email.Address ? '' : 'empty-field-name'"
-                        >Email Address
-                        </div>
-                        <span class="j-label ml-2 star">*</span>
-                    </div>
-                    <div class="mr-2">{{ companyInfo.message.Email.Address }}</div>
-                </div>
-            </div>
-            <div class="content" v-show="sections.editGeneralInfo">
-                <div class="input-section">
-                    <label class="j-label">Company Name</label><span class="j-label ml-2 star">*</span>
-                    <div>
-                        <input type="text" class="border input" name="password_confirmation"
-                               :class="companyInfoTemporary.CompanyName ? '' : 'empty-field'"
-                               v-model="companyInfoTemporary.CompanyName">
-                    </div>
-                </div>
-
-                <div class="input-section">
-                    <label class="j-label">Address Line 1</label><span class="j-label ml-2 star">*</span>
-                    <div>
-                        <input type="text" class="border input" name="password_confirmation"
-                               :class="companyInfoTemporary.CompanyAddr.Line1 ? '' : 'empty-field'"
-                               v-model="companyInfoTemporary.CompanyAddr.Line1">
-                    </div>
-                </div>
-
-                <div class="input-section">
-                    <label class="j-label">Address Line 2</label>
-                    <div>
-                        <input type="text" class="border input" name="password_confirmation"
-                               v-model="companyInfoTemporary.CompanyAddr.Line2">
-                    </div>
-                </div>
-
-                <div class="input-section">
-                    <label class="j-label">City</label><span class="j-label ml-2 star">*</span>
-                    <div>
-                        <input type="text" class="border input" name="password_confirmation"
-                               :class="companyInfoTemporary.CompanyAddr.City ? '' : 'empty-field'"
-                               v-model="companyInfoTemporary.CompanyAddr.City">
-                    </div>
-                </div>
-
-                <div class="input-section">
-                    <label class="j-label">State</label><span class="j-label ml-2 star">*</span>
-                    <div>
-                        <input type="text" class="border input" name="password_confirmation"
-                               :class="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field'"
-                               v-model="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode">
-                    </div>
-                </div>
-
-                <div class="input-section">
-                    <label class="j-label">Zip Code</label><span class="j-label ml-2 star">*</span>
-                    <div>
-                        <input type="text" class="border input" name="password_confirmation"
-                               :class="companyInfoTemporary.CompanyAddr.PostalCode ? '' : 'empty-field'"
-                               v-model="companyInfoTemporary.CompanyAddr.PostalCode">
-                    </div>
-                </div>
-
-
-                <div class="input-section">
-                    <!--<div class="input-section" :class="{'has-error': form.errors.has('phone_number')}">-->
-                    <div class="flex justify-between">
+                    <div class="row" style="justify-content: space-between">
                         <div class="flex">
-                            <label
-                                    class="j-label"
-                                    ref="editedPhoneLabel"
-                                    :class="checkPhoneErrorsForClass"
-                            >Mobile Phone Number</label>
-                            <span
-                                    class="j-label ml-2 star"
-                                    ref="editedPhoneLabelStar"
-                                    :class="checkPhoneErrorsForClass"
-                            >*</span>
+                            <div class="ml-2"
+                                 :class="companyInfo.message.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field-name'"
+                            >State
+                            </div>
+
                         </div>
-                        <div v-if="errors.phone" class="text-center text-red uppercase">Phone Number must be 10 digits
-                        </div>
-                        <div></div>
+                        <div class="mr-2">{{ companyInfo.message.CompanyAddr.CountrySubDivisionCode }}</div>
                     </div>
-                    <div class="">
-                        <input type="tel" class="border input"
-                               ref="phone_number_input"
-                               name="phone_number" maxlength="10"
-                               v-model="companyInfoTemporary.PrimaryPhone"
-                               @blur="validateMobileNumber($event.target.value)"
-                               :class="companyInfoTemporary.PrimaryPhone ? '' : 'empty-field'"
-                               v-on:keyup.delete="makePhoneNumberIntoDigits($event.target.value)"
-                               @keyup="filterPhone">
-                        <div v-if="checkThatNumberIsMobile()" style="color: green">
-                            {{ this.getMobileValidResponse[1] }}
+                    <div class="row" style="justify-content: space-between">
+                        <div class="flex">
+                            <div class="ml-2"
+                                 :class="companyInfo.message.CompanyAddr.PostalCode ? '' : 'empty-field-name'"
+                            >PostalCode
+                            </div>
+
                         </div>
-                        <div v-else-if="checkLandLineNumber()" style="color: red">
-                            {{ this.getMobileValidResponse[1] }}
-                        </div>
-                        <div v-else-if="checkIfNumberIsVirtual()" style="color: red">
-                            {{ this.getMobileValidResponse[1] }}
-                        </div>
-                        <!--<span class="help-block" v-show="form.errors('phone_number')">-->
-                        <!--{{ form.errors.get('phone_number') }}-->
-                        <!--</span>-->
+                        <div class="mr-2">{{ companyInfo.message.CompanyAddr.PostalCode }}</div>
                     </div>
-                </div>
+                    <div class="row" style="justify-content: space-between">
+                        <div class="flex">
+                            <div class="ml-2"
+                                 :class="companyInfo.message.Country ? '' : 'empty-field-name'"
+                            >Country
+                            </div>
 
-                <!-- E-Mail Address -->
-                <div class="input-section">
-                    <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('email')}">-->
-                    <label class="j-label">E-Mail Address</label><span class="j-label ml-2 star">*</span>
-
-                    <div>
-                        <input
-                                type="email"
-                                class="border input"
-                                name="email"
-                                @blur="validateEmail()"
-                                :class="companyInfoTemporary.Email.Address ? '' : 'empty-field'"
-                                v-model="companyInfoTemporary.Email.Address">
-                        <span class="help-block uppercase" v-show="!validateEmail()">Your Email Does Not have the correct format</span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
-        <div class="box border flex flex-col section">
-            <div class="content">
-                <!-- Terms And Conditions -->
-                <div class="input-section">
-                    <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('terms')}">-->
-                    <div class="col-md-6 col-md-offset-4">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="terms" v-model="form.terms">
-                                I Accept The <a href="/terms" target="_blank">Terms Of Service</a>
-                            </label>
-
-                            <!--<span class="help-block" v-show="registerForm.errors.has('terms')"></span>-->
                         </div>
+                        <div class="mr-2">{{ companyInfo.message.Country }}</div>
+                    </div>
+                    <div class="row" style="justify-content: space-between">
+                        <div class="flex">
+                            <div class="flex">
+                                <div class="ml-2"
+                                     ref="primaryPhone"
+                                     :class="checkPhoneErrorsForClass"
+                                >Mobile Phone Number
+                                    <span
+                                            class="j-label ml-2 star"
+                                            ref="savedPhoneLabelStar"
+                                            :class="checkPhoneErrorsForClass"
+                                    >*</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div ref="primaryPhoneFromQB"
+                             :class="checkPhoneErrorsForClass"
+                             class="mr-2">{{ companyInfo.message.PrimaryPhone }}
+                        </div>
+                    </div>
+                    <div class="row" style="justify-content: space-between">
+                        <div class="flex">
+                            <div class="ml-2"
+                                 :class="companyInfo.message.Email.Address ? '' : 'empty-field-name'"
+                            >Email Address
+                            </div>
+
+                        </div>
+                        <div class="mr-2">{{ companyInfo.message.Email.Address }}</div>
                     </div>
                 </div>
 
+                <div class="content" v-show="sections.editGeneralInfo">
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <label class="">Company Name</label>
+                        <div>
+                            <input type="text" class="form-control" name="password_confirmation"
+                                   :class="companyInfoTemporary.CompanyName ? '' : 'empty-field'"
+                                   v-model="companyInfoTemporary.CompanyName">
+                        </div>
+                    </div>
 
-                <!--<pre>{{ registerForm.terms }}</pre>-->
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <label class="">Address Line 1</label>
+                        <div>
+                            <input type="text" class="form-control" name="password_confirmation"
+                                   :class="companyInfoTemporary.CompanyAddr.Line1 ? '' : 'empty-field'"
+                                   v-model="companyInfoTemporary.CompanyAddr.Line1">
+                        </div>
+                    </div>
+
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <label class="">Address Line 2</label>
+                        <div>
+                            <input type="text" class="form-control" name="password_confirmation"
+                                   v-model="companyInfoTemporary.CompanyAddr.Line2">
+                        </div>
+                    </div>
+
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <label class="">City</label>
+                        <div>
+                            <input type="text" class="form-control" name="password_confirmation"
+                                   :class="companyInfoTemporary.CompanyAddr.City ? '' : 'empty-field'"
+                                   v-model="companyInfoTemporary.CompanyAddr.City">
+                        </div>
+                    </div>
+
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <label class="">State</label>
+                        <div>
+                            <input type="text" class="form-control" name="password_confirmation"
+                                   :class="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode ? '' : 'empty-field'"
+                                   v-model="companyInfoTemporary.CompanyAddr.CountrySubDivisionCode">
+                        </div>
+                    </div>
+
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <label class="">Zip Code</label>
+                        <div>
+                            <input type="text" class="form-control" name="password_confirmation"
+                                   :class="companyInfoTemporary.CompanyAddr.PostalCode ? '' : 'empty-field'"
+                                   v-model="companyInfoTemporary.CompanyAddr.PostalCode">
+                        </div>
+                    </div>
+
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <label class="">Country</label>
+                        <div>
+                            <input type="text" class="form-control" name="password_confirmation"
+                                   :class="companyInfoTemporary.Country ? '' : 'empty-field'"
+                                   v-model="companyInfoTemporary.Country">
+                        </div>
+                    </div>
 
 
-                <!--TODO check if checkValidData can be used-->
-                <!--<button type="submit" name="submit" class="register text-center border shadow uppercase"-->
-                <!--@click.prevent="submitFurtherInfo()"-->
-                <!--:disabled="checkValidData()">-->
-                <!--<span v-if="disabled.submit">-->
-                <!--<i class="fa fa-btn fa-spinner fa-spin"></i>-->
-                <!--</span>-->
-                <!--Register-->
-                <!--</button>-->
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <!--<div class="input-section" :class="{'has-error': form.errors.has('phone_number')}">-->
+                        <div class="flex justify-between">
+                            <div class="flex">
+                                <label
+                                        class="j-label"
+                                        ref="editedPhoneLabel"
+                                        :class="checkPhoneErrorsForClass"
+                                >Mobile Phone Number
+                                    <span
+                                            class="j-label ml-2 star"
+                                            ref="editedPhoneLabelStar"
+                                            :class="checkPhoneErrorsForClass"
+                                    >*</span>
+                                </label>
+                            </div>
+                            <div v-if="errors.phone" class="text-center uppercase">
+                                Phone Number must be 10 digits
+                            </div>
+                            <div></div>
+                        </div>
+                        <div class="">
+                            <input type="tel" class="form-control"
+                                   ref="phone_number_input"
+                                   name="phone_number" maxlength="10"
+                                   v-model="companyInfoTemporary.PrimaryPhone"
+                                   @blur="validateMobileNumber($event.target.value)"
+                                   :class="companyInfoTemporary.PrimaryPhone ? '' : 'empty-field'"
+                                   v-on:keyup.delete="makePhoneNumberIntoDigits($event.target.value)"
+                                   @keyup="filterPhone">
+                            <div v-if="checkThatNumberIsMobile()" style="color: green">
+                                {{ this.getMobileValidResponse[1] }}
+                            </div>
+                            <div v-else-if="checkLandLineNumber()" style="color: red">
+                                {{ this.getMobileValidResponse[1] }}
+                            </div>
+                            <div v-else-if="checkIfNumberIsVirtual()" style="color: red">
+                                {{ this.getMobileValidResponse[1] }}
+                            </div>
+                            <!--<span class="help-block" v-show="form.errors('phone_number')">-->
+                            <!--{{ form.errors.get('phone_number') }}-->
+                            <!--</span>-->
+                        </div>
+                    </div>
 
-                <div class="input-section">
-                    <div class="col-md-6 col-md-offset-4">
-                        <button id="register" name=register
-                                class="register text-center border shadow uppercase"
-                                @click.prevent="register"
-                                ref="register"
-                                :disabled="registerForm.busy">
+                    <!-- E-Mail Address -->
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('email')}">-->
+                        <label class="">E-Mail Address</label>
+
+                        <div>
+                            <input
+                                    type="email"
+                                    class="form-control"
+                                    name="email"
+                                    @blur="validateEmail()"
+                                    :class="companyInfoTemporary.Email.Address ? '' : 'empty-field'"
+                                    v-model="companyInfoTemporary.Email.Address">
+                            <span class="help-block uppercase" style="color:red;" v-show="!validateEmail()">Your Email Does Not have the correct format</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="content">
+                    <!-- Terms And Conditions -->
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('terms')}">-->
+                        <div class="col-md-6 col-md-offset-4">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="terms" v-model="form.terms">
+                                    I Accept The <a href="/terms" target="_blank">Terms Of Service</a>
+                                </label>
+
+                                <!--<span class="help-block" v-show="registerForm.errors.has('terms')"></span>-->
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--<pre>{{ registerForm.terms }}</pre>-->
+
+
+                    <!--TODO check if checkValidData can be used-->
+                    <!--<button type="submit" name="submit" class="register text-center border shadow uppercase"-->
+                    <!--@click.prevent="submitFurtherInfo()"-->
+                    <!--:disabled="checkValidData()">-->
+                    <!--<span v-if="disabled.submit">-->
+                    <!--<i class="fa fa-btn fa-spinner fa-spin"></i>-->
+                    <!--</span>-->
+                    <!--Register-->
+                    <!--</button>-->
+
+                    <div class="row pt-2" style="flex-direction: column;">
+                        <div class="col-md-6 col-md-offset-4">
+                            <button id="register" name=register
+                                    class="register form-control shadow uppercase"
+                                    @click.prevent="register"
+                                    ref="register"
+                                    :disabled="registerForm.busy">
                     <span v-if="registerForm.busy">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
                     </span>
-                            <span v-else>
+                                <span v-else>
                         <i class="fa fa-btn fa-check-circle mr-2"></i>Register
                     </span>
-                        </button>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </card>
         </div>
-
-        <!--<pre>{{ companyInfo }}</pre>-->
-
     </div>
-
 </template>
 
 <script>
@@ -562,7 +580,8 @@
         },
         form: {
           email: '',
-          name: '',
+          first_name: '',
+          last_name: '',
           company_name: '',
           phone_number: '',
           address_line_1: '',
@@ -570,6 +589,7 @@
           city: '',
           state: '',
           zip: '',
+          country: '',
           terms: false,
           notes: '',
           password: '',
@@ -590,18 +610,21 @@
             error: false
           },
           email: false,
-          name: false,
+          last_name: false,
+          first_name: false,
           company_name: false,
           phone: false,
           address_line_1: false,
           city: false,
           state: false,
           zip: false,
+          country: false,
           terms: false
         },
         qbCompanyInfoWasUpdated: false,
         companyInfoTemporary: {
           CompanyName: '',
+          Country: '',
           CompanyAddr: {
             Line1: '',
             Line2: '',
@@ -615,6 +638,7 @@
         },
         companyInfoOriginal: {
           CompanyName: '',
+          Country: '',
           CompanyAddr: {
             Line1: '',
             Line2: '',
@@ -687,6 +711,7 @@
             this.companyInfoTemporary.CompanyAddr.City = response.data.message.CompanyAddr.City
             this.companyInfoTemporary.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
             this.companyInfoTemporary.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
+            this.companyInfoTemporary.Country = response.data.message.Country
             this.companyInfoTemporary.PrimaryPhone = response.data.message.PrimaryPhone
             this.companyInfoTemporary.Email.Address = response.data.message.Email.Address
 
@@ -696,6 +721,7 @@
             this.companyInfoOriginal.CompanyAddr.City = response.data.message.CompanyAddr.City
             this.companyInfoOriginal.CompanyAddr.CountrySubDivisionCode = response.data.message.CompanyAddr.CountrySubDivisionCode
             this.companyInfoOriginal.CompanyAddr.PostalCode = response.data.message.CompanyAddr.PostalCode
+            this.companyInfoOriginal.Country = response.data.message.Country
             this.companyInfoOriginal.PrimaryPhone = response.data.message.PrimaryPhone
             this.companyInfoOriginal.Email.Address = response.data.message.Email.Address
 
@@ -724,11 +750,11 @@
           (this.form.password !== this.form.password_confirmation) ||
           (this.form.password === '' || this.form.password_confirmation === '')
         ) {
-          this.errors.password.error = true;
-          return false;
+          this.errors.password.error = true
+          return false
         } else {
-          this.errors.password.error = false;
-          return true;
+          this.errors.password.error = false
+          return true
         }
       },
       checkValidPhoneNumber() {
@@ -743,13 +769,15 @@
           if (
             this.getMobileValidResponse[1] !== 'mobile' || this.getMobileValidResponse[2] !== 'mobile'
           ) {
-            this.errors.phone = true;
+            debugger
+            this.errors.phone = true
             return false
           } else {
-            this.errors.phone = false;
+            this.errors.phone = false
             return true
           }
         } else {
+          debugger
           this.errors.phone = true
           return false
         }
@@ -764,11 +792,18 @@
         }
       },
       checkName() {
-        if (this.form.name === '') {
-          this.errors.name = true
+        if (this.form.first_name === '') {
+          this.errors.first_name = true
           return false
         } else {
-          this.errors.name = false
+          this.errors.first_name = false
+          return true
+        }
+        if (this.form.last_name === '') {
+          this.errors.last_name = true
+          return false
+        } else {
+          this.errors.last_name = false
           return true
         }
       },
@@ -814,6 +849,15 @@
           return false
         } else {
           this.errors.zip = false
+          return true
+        }
+      },
+      checkCountry() {
+        if (this.form.country === '') {
+          this.errors.country = true
+          return false
+        } else {
+          this.errors.country = false
           return true
         }
       },
@@ -874,9 +918,14 @@
           submit = false
         }
 
+        if (!this.checkCountry()) {
+          submit = false
+        }
+
         if (!this.checkTerms()) {
           submit = false
         }
+
         this.inputNotValid = false
         if (submit) {
 
@@ -1046,6 +1095,7 @@
             this.checkMobileNumber(phone)
           }
         } else {
+          debugger
           this.errors.phone = true
         }
       },
@@ -1093,6 +1143,7 @@
           this.form.address_line_2 = null
         }
         this.form.city = this.companyInfo.message.CompanyAddr.City
+        this.form.country = this.companyInfo.message.Country
         this.form.state = this.companyInfo.message.CompanyAddr.CountrySubDivisionCode
         this.form.zip = this.companyInfo.message.CompanyAddr.PostalCode
         this.form.phone_number = this.companyInfo.message.PrimaryPhone

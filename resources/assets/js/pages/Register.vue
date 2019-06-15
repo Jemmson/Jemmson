@@ -56,7 +56,7 @@
 
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('first_name')">-->
-                            <label for="firstName" class=" pt-1 pt-2">First Name *</label>
+                            <label for="firstName" class="pt-1 pt-2">First Name *</label>
                             <input
                                     id="firstName"
                                     type="text"

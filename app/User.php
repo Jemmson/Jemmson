@@ -24,9 +24,18 @@ class User extends SparkUser
      */
     protected $fillable = [
         'name',
+        'first_name',
+        'last_name',
         'email',
+        'billing_address',
+        'billing_address_line_2',
+        'billing_city',
+        'billing_state',
+        'billing_zip',
+        'billing_country',
         'phone',
         'usertype',
+        'password',
         'password_updated'
     ];
 

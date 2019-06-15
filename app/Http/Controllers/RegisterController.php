@@ -51,14 +51,22 @@ class RegisterController extends Controller
     public function registerContractor(Request $request)
     {
 
+//        dd($request);
+
+
+//        $message = "hello";
+
         // validation
         try {
             $this->validate($request, [
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required',
-                'terms' => 'required',
+                'form' => [
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    'phone_number' => 'required',
+                    'email' => 'required',
+                    'password' => 'required',
+                    'terms' => 'required'
+                ]
             ]);
         } catch (Illuminate\Validation\ValidationException $exception) {
             return response()->json([
@@ -68,13 +76,22 @@ class RegisterController extends Controller
             ], 422);
         }
 
+        $fullName = $request['form']['first_name'] . " " . $request['form']['last_name'];
 
         // create a new user for the contractor
         $user = new User();
         $user->fill([
-            'name' => $request['form']['name'],
+            'name' => $fullName,
+            'first_name' => $request['form']['first_name'],
+            'last_name' => $request['form']['last_name'],
             'email' => $request['form']['email'],
             'phone' => $request['form']['phone_number'],
+            'billing_address' => $request['form']['address_line_1'],
+            'billing_address_line_2' => $request['form']['address_line_2'],
+            'billing_city' => $request['form']['city'],
+            'billing_state' => $request['form']['state'],
+            'billing_zip' => $request['form']['zip'],
+            'billing_country' => $request['form']['country'],
             'usertype' => 'contractor',
             'password' => bcrypt($request['form']['password']),
 //        'last_name' => '',
