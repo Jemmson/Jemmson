@@ -10,7 +10,7 @@
                     src="http://infinisolutionslk.com/wp-content/uploads/2018/09/profilephotocircle.png"
                     alt="profile pic">
                 <div class="profile-details">
-                    <h4>Jane Doe</h4>
+                    <h4>{{ user.first_name }}  {{ user.last_name }}</h4>
                     <div class="row">
                         <div class="col pr-0">
                             <img class="float-left" src="/img/edit.svg" alt="">
@@ -53,7 +53,7 @@
         <div v-else class="row bg-white default-row mb-4">
             <div class="col-12 d-flex align-items-center">
                 <i class="fas fa-tree text-primary float-left sm-icon align-self-center"></i>
-                <h3 class="page-header-title font-weight-bold mx-auto">Jemsub</h3>
+                <h3 class="page-header-title font-weight-bold mx-auto">{{ user.contractor.company_name }}</h3>
                 <i class="fas fa-search text-primary float-right sm-icon"></i>
             </div>
         </div>
