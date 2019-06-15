@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Spark\User;
 use Illuminate\Support\Facades\Validator;
@@ -275,6 +276,8 @@ $router->group(['middleware' => 'web'], function ($router) {
             ], 200);
         }
 
+        Auth::loginUsingId($user->id);
+
         return response()->json([
             'redirect' => '/#/home',
             'user' => $user
@@ -371,6 +374,8 @@ $router->group(['middleware' => 'web'], function ($router) {
                 'code' => $e->getCode()
             ], 200);
         }
+
+        Auth::loginUsingId($user->id);
 
         return response()->json([
             'redirect' => '/#/home',

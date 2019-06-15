@@ -53,7 +53,7 @@
         <div v-else class="row bg-white default-row mb-4">
             <div class="col-12 d-flex align-items-center">
                 <i class="fas fa-tree text-primary float-left sm-icon align-self-center"></i>
-                <h3 class="page-header-title font-weight-bold mx-auto">{{ user.contractor.company_name }}</h3>
+                <h3 class="page-header-title font-weight-bold mx-auto">{{ getCompanyName }}</h3>
                 <i class="fas fa-search text-primary float-right sm-icon"></i>
             </div>
         </div>
@@ -68,7 +68,12 @@
             ...mapState({
                 page: state => state.page,
                 bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
-            })
+            }),
+          getCompanyName() {
+              if (this.user.contractor) {
+                return this.user.contractor.company_name
+              }
+          }
         },
         methods: {
             ...mapMutations([
