@@ -70,6 +70,7 @@
         bids: '',
         invoices: '',
         tasks: '',
+        theUser: '',
         sBids: 0,
         sTasks: 0,
         sInvoices: 0
@@ -77,30 +78,31 @@
     },
     computed: {
       ...mapState({
-        job: state => state.job.model
+        job: state => state.job.model,
+        userFromState: state => state.user.user,
       })
     },
     methods: {
       contractorName() {
-        if (this.user !== undefined && this.user !== null) {
-          return this.user.name
+        if (this.theUser !== undefined && this.theUser !== null) {
+          return this.theUser.name
         }
       },
       checkIfUserIsAContractor() {
-        return this.user.usertype === 'contractor'
+        return this.theUser.usertype === 'contractor'
       },
       checkContractorStripeIsValid() {
         if (
-          this.user !== undefined &&
-          this.user !== null
+          this.theUser !== undefined &&
+          this.theUser !== null
         ) {
           if (
-            this.user.contractor !== null &&
-            this.user.contractor !== undefined
+            this.theUser.contractor !== null &&
+            this.theUser.contractor !== undefined
           ) {
             if (
-              this.user.contractor.stripe_express !== null &&
-              this.user.contractor.stripe_express !== undefined
+              this.theUser.contractor.stripe_express !== null &&
+              this.theUser.contractor.stripe_express !== undefined
             ) {
               return true
             } else {
@@ -177,6 +179,11 @@
         }
 
       })
+      if (this.user.user === null || this.user.user === undefined ) {
+        this.theUser = this.userFromState;
+      } else {
+        this.theUser = this.user;
+      }
       // console.log(this.bids)
       // console.log(JSON.stringify(this.bids))
     }

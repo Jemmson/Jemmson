@@ -14,16 +14,18 @@
 use App\Feature;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Request;
 
 Route::get('/', 'WebController@index');
 Route::get('/home', 'WebController@index');
-Route::get('/loadFeatures', function () {
+Route::post('/loadFeatures/', 'LoadController@load');
 
-    if (Auth::user() != null &&
-        Auth::user()->email == 'pike.shawn@gmail.com' || 'jemmsoninc@gmail.com') {
-        return Feature::select(['name', 'on'])->get();
-    } else {
-        return redirect('/home');
+Route::get('/loggedIn', function () {
+    if (Auth::check()) {
+        return response()->json([
+            'user' => Auth::user()
+        ], 200);
+
     }
 });
 

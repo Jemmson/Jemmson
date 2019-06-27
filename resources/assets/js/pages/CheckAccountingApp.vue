@@ -47,6 +47,7 @@
       }
     },
     mounted() {
+      // TODO: Feature Not Working
       axios.get('/loadFeatures').then((response) => {
           console.log(JSON.stringify(response.data))
           for (let i = 0; i < response.data.length; i++) {

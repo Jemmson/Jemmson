@@ -74,8 +74,8 @@
             ...mapState({
                 page: state => state.page,
                 userType: (state) => {
-                    if (state.user !== undefined && state.user !== null) {
-                        return state.user.usertype;
+                    if (state.user.user !== undefined && state.user.user !== null) {
+                        return state.user.user.usertype;
                     }
                     return null;
                 },

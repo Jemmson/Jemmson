@@ -60,6 +60,8 @@
                             <input
                                     id="firstName"
                                     type="text"
+                                    name="fname"
+                                    autocomplete="on"
                                     class="form-control "
                                     v-model="registerForm.first_name">
                             <!--                <span class="help-block" v-show="registerForm.errors.has('first_name')"></span>-->
@@ -69,6 +71,8 @@
                         <div class="row">
                             <label for="lastName" class=" pt-3 pt-2">Last Name *</label>
                             <input id="lastName"
+                                   name="lname"
+                                   autocomplete="on"
                                    type="text" class="form-control "
                                    v-model="registerForm.last_name">
                             <span class="help-block" v-show="registerForm.errors.last_name !== ''">{{registerForm.errors.last_name}}</span>
@@ -78,6 +82,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="email" class=" pt-3 pt-2">E-Mail Address *</label>
                             <input id="email"
+                                   name="email"
+                                   autocomplete="on"
                                    type="text" class="form-control "
                                    v-model="registerForm.email">
                             <span class="help-block" v-show="registerForm.errors.email !== ''">{{registerForm.errors.email}}</span>
@@ -89,6 +95,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="companyName" class=" pt-3 pt-2">Company Name *</label>
                             <input id="companyName"
+                                   name="companyname"
+                                   autocomplete="on"
                                    type="text" class="form-control "
                                    v-model="registerForm.companyName">
                             <span class="help-block" v-show="registerForm.errors.companyName !== ''">{{registerForm.errors.companyName}}</span>
@@ -104,6 +112,8 @@
                             </div>
                             <input id="phoneNumber"
                                    type="text"
+                                   name="phone"
+                                   autocomplete="on"
                                    class="form-control "
                                    @blur="validateMobileNumber($event.target.value)"
                                    @keyup="filterPhone"
@@ -123,6 +133,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="addressLine1" class=" pt-3 pt-2">Address Line 1 *</label>
                             <input id="addressLine1"
+                                   name="addressLine1"
+                                   autocomplete="on"
                                    type="text" class="form-control "
                                    v-model="registerForm.addressLine1">
                             <span class="help-block" v-show="registerForm.errors.addressLine1 !== ''">{{registerForm.errors.addressLine1}}</span>
@@ -132,6 +144,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="addressLine2" class=" pt-3 pt-2">Address Line 2</label>
                             <input id="addressLine2"
+                                   name="addressLine2"
+                                   autocomplete="on"
                                    type="text" class="form-control "
                                    v-model="registerForm.addressLine2">
                             <span class="help-block" v-show="registerForm.errors.addressLine2 !== ''">{{registerForm.errors.addressLine2}}</span>
@@ -141,6 +155,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="city" class=" pt-3 pt-2">City *</label>
                             <input id="city"
+                                   name="city"
+                                   autocomplete="on"
                                    type="text" class="form-control "
                                    v-model="registerForm.city">
                             <span class="help-block" v-show="registerForm.errors.city !== ''">{{registerForm.errors.city}}</span>
@@ -150,6 +166,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="state" class=" pt-3 pt-2">State *</label>
                             <select id="state"
+                                    name="state"
+                                    autocomplete="on"
                                     type="text" class="form-control "
                                     v-model="registerForm.state">
                                 <option v-for="state in states" :value="state">{{ state.name }}</option>
@@ -161,6 +179,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="zip" class=" pt-3 pt-2">Zip Code *</label>
                             <input id="zip"
+                                   name="zip"
+                                   autocomplete="on"
                                    type="text" class="form-control "
                                    v-model="registerForm.zip">
                             <span class="help-block"
@@ -172,6 +192,8 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="country" class=" pt-3 pt-2">Country *</label>
                             <select id="country"
+                                    name="country"
+                                    autocomplete="on"
                                     type="text" class="form-control "
                                     v-model="registerForm.country">
                                 <option v-for="country in countries" :value="country">{{ country.name }}</option>
@@ -251,9 +273,13 @@
 
 <script>
   import { mapGetters, mapState, mapActions, mapMutations } from 'vuex'
+  import Card from '../components/shared/Card'
 
   export default {
     name: 'Register',
+    components: {
+      Card
+    },
     data() {
       return {
         registerForm: {
@@ -609,6 +635,7 @@
       }
     },
     mounted() {
+      // TODO: Feature Not Working
       axios.get('/loadFeatures').then((response) => {
           console.log(JSON.stringify(response.data))
           for (let i = 0; i < response.data.length; i++) {
@@ -766,11 +793,8 @@
             axios.post('/registerContractor', this.registerForm)
               .then(function(response) {
                 console.log(response.data)
-
                 this.$store.commit('setUser', response.data.user)
-
                 window.location = response.data.redirect
-                this.registerForm.busy = false
               }.bind(this))
               .catch(function(error) {
 
@@ -848,6 +872,7 @@
             axios.post('/registerCustomer', this.registerForm)
               .then(function(response) {
                 console.log(response)
+                this.$store.commit('setUser', response.data.user)
                 window.location = response.data.redirect
                 this.registerForm.busy = false
               })
@@ -929,7 +954,7 @@
 <style scoped>
 
     .jem-width {
-        width: 106%
+        width: 100%
     }
 
     .register {
