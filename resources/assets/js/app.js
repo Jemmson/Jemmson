@@ -206,57 +206,7 @@ function goingToANonAuthorizedPage(path) {
 
 }
 
-// function goingToTheFurtherInfoPage(path) {
-//   return path === '/furtherInfo'
-// }
-//
-// function setUserInfoWithSparkData(){
-//   if (Spark.state.user !== null) {
-//     if (Spark.state.user.customer !== undefined) {
-//       customer = Spark.state.user.customer
-//     } else {
-//       contractor = Spark.state.user.contractor
-//     }
-//     if (Spark.state.user.password_updated) {
-//       console.log('wtf')
-//       next('/home')
-//     }
-//   }
-// }
-
-// function setUserInfo() {
-//
-//   let customer = {}
-//   let contractor = {}
-//
-//   setUserInfoWithSparkData()
-//
-//   // let userObject = app.$store.state.user;
-//   let userObject = store.state.user
-//   if (Object.keys(userObject).length > 0) {
-//     if (userObject.usertype === 'customer') {
-//       customer = userObject
-//     } else {
-//       contractor = userObject
-//     }
-//     if (userObject.password_updated) {
-//       console.log('wtf')
-//       next('/home')
-//     }
-//   }
-//
-//   if (
-//     (Spark.state.user === undefined ||
-//       Spark.state.user === null) &&
-//     (Object.keys(userObject).length === 0)
-//   ) {
-//     return location.href = '/'
-//   }
-// }
-
 function isUserLoggedIn() {
-  // console.log(JSON.stringify(store.state.user.user))
-  // return Sark.state.user && store.state.user.user
   return Object.keys(User).length > 0;
 }
 
@@ -279,151 +229,6 @@ router.beforeEach((to, from, next) => {
       }
     }
   }
-
-  // if (
-  //   to.path === '/demo' ||
-  //   to.path === '/check_accounting' ||
-  //   to.path === '/howto' ||
-  //   to.path === '/benefits' ||
-  //   to.path === '/register' ||
-  //   to.path === '/' ||
-  //   to.path === '/registerQuickBooks'
-  // ) {
-  //   next()
-  // } else {
-  //   if (to.path === '/furtherInfo') {
-  //
-  //     console.log('hello further info')
-  //
-  //     let customer = {}
-  //     let contractor = {}
-  //
-  //     if (Spark.state.user !== null) {
-  //       if (Spark.state.user.customer !== undefined) {
-  //         customer = Spark.state.user.customer
-  //       } else {
-  //         contractor = Spark.state.user.contractor
-  //       }
-  //       if (Spark.state.user.password_updated) {
-  //         console.log('wtf')
-  //         next('/home')
-  //       }
-  //     }
-  //
-  //     // let userObject = app.$store.state.user;
-  //     let userObject = store.state.user
-  //     if (Object.keys(userObject).length > 0) {
-  //       if (userObject.usertype === 'customer') {
-  //         customer = userObject
-  //       } else {
-  //         contractor = userObject
-  //       }
-  //       if (userObject.password_updated) {
-  //         console.log('wtf')
-  //         next('/home')
-  //       }
-  //     }
-  //
-  //     if (
-  //       (Spark.state.user === undefined ||
-  //         Spark.state.user === null) &&
-  //       (Object.keys(userObject).length === 0)
-  //     ) {
-  //       return location.href = '/'
-  //     }
-  //
-  //   }
-  //   if (to.path !== '/furtherInfo' &&
-  //     to.path !== '/#' &&
-  //     to.path !== '/' &&
-  //     from.path !== '/furtherInfo') {
-  //
-  //     let userObject = store.state.user
-  //
-  //     if (
-  //       (Spark.state.user === undefined ||
-  //         Spark.state.user === null) &&
-  //       (Object.keys(userObject).length === 0)
-  //     ) {
-  //       return location.href = '/'
-  //     }
-  //
-  //     let customer = null
-  //     let contractor = null
-  //
-  //     if (Spark.state.user !== null) {
-  //       if (Spark.state.user.customer) {
-  //         customer = Spark.state.user.customer
-  //       }
-  //
-  //       if (Spark.state.user.contractor) {
-  //         contractor = Spark.state.user.contractor
-  //       }
-  //
-  //       if (Spark.state.user.password_updated == false) {
-  //         console.log('to further info')
-  //         next('/#/furtherInfo')
-  //       } else {
-  //         switch (to.path) {
-  //           case '/initiate-bid':
-  //             if (Spark.state.user.usertype === 'customer') {
-  //               next('/home')
-  //             } else {
-  //               next()
-  //             }
-  //             break
-  //           case '/tasks':
-  //             if (Spark.state.user.usertype === 'customer') {
-  //               next('/home')
-  //             } else {
-  //               next()
-  //             }
-  //             break
-  //           default:
-  //             next()
-  //             break
-  //         }
-  //       }
-  //
-  //     } else if (Object.keys(userObject).length > 0) {
-  //       if (userObject.usertype === 'customer') {
-  //         customer = userObject
-  //       }
-  //       if (userObject.usertype === 'contractor') {
-  //         contractor = userObject
-  //       }
-  //
-  //       if (userObject.password_updated == false) {
-  //         console.log('to further info')
-  //         next('/furtherInfo')
-  //       } else {
-  //         switch (to.path) {
-  //           case '/initiate-bid':
-  //             if (Spark.state.user.usertype === 'customer') {
-  //               next('/home')
-  //             } else {
-  //               next()
-  //             }
-  //             break
-  //           case '/tasks':
-  //             if (Spark.state.user.usertype === 'customer') {
-  //               next('/home')
-  //             } else {
-  //               next()
-  //             }
-  //             break
-  //           default:
-  //             next()
-  //             break
-  //         }
-  //       }
-  //
-  //     }
-  //
-  //   } else {
-  //     next()
-  //   }
-  // }
 
 })
 
@@ -474,48 +279,11 @@ var app = new Vue({
     }).catch(function(error) {
       console.log(JSON.stringify(error))
     })
-
-    // axios.get('/loggedIn').then((response) => {
-    //
-    //   if (response.data) {
-    //     this.$store.commit('setUser', response.data.user)
-    //   } else {
-    //     window.location = '/'
-    //   }
-    //
-    //
-    // }).catch(function (error) {
-    //   console.log(JSON.stringify(error));
-    // })
-
   }
 })
 
 require('./bootstrap')
 
-// var originalHeight = document.documentElement.clientHeight
-// var originalWidth = document.documentElement.clientWidth
-// $(window).resize(function() {
-//   console.log('inside resize')
-
-//   // Control landscape/portrait mode switch
-//   if (document.documentElement.clientHeight == originalWidth &&
-//     document.documentElement.clientWidth == originalHeight) {
-//     originalHeight = document.documentElement.clientHeight
-//     originalWidth = document.documentElement.clientWidth
-//   }
-
-//   // Check if the available height is smaller (keyboard is shown) so we hide the footer.
-//   if (document.documentElement.clientHeight < originalHeight) {
-//     $('.jemmson-footer').hide()
-//     $('#feedback').hide()
-//     console.log('hide')
-//   } else {
-//     $('.jemmson-footer').show()
-//     $('#feedback').show()
-//     console.log('show')
-//   }
-// })
 
 function checkThatCurrentJobExistsForRoutesThatNeedIt(route) {
   console.log('checking that job exists in store', route)
