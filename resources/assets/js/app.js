@@ -255,28 +255,30 @@ function goingToANonAuthorizedPage(path) {
 // }
 
 function isUserLoggedIn() {
-  console.log(JSON.stringify(store.state.user.user))
-  return Spark.state.user && store.state.user.user
+  // console.log(JSON.stringify(store.state.user.user))
+  // return Sark.state.user && store.state.user.user
+  return Object.keys(User).length > 0;
 }
 
-// router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
 
-    // checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
+  checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
 
-    // if (goingToANonAuthorizedPage(to.path)) {
-    //   // next()
-    // } else {
-    //   if (isUserLoggedIn()) {
-    //     next()
-    //   } else {
-    //     if (to.path !== '/') {
-    //       next('/')
-    //     } else {
-    //       next()
-    //     }
-    //   }
-    // }
-
+  if (goingToANonAuthorizedPage(to.path)) {
+    next()
+  } else {
+    let UserLength = Object.keys(window.User).length;
+    // let loggedIn = UserLength > 0;
+    if (UserLength > 0) {
+      next()
+    } else {
+      if (to.path !== '/') {
+        next('/')
+      } else {
+        next()
+      }
+    }
+  }
 
   // if (
   //   to.path === '/demo' ||
@@ -423,11 +425,13 @@ function isUserLoggedIn() {
   //   }
   // }
 
-  // })
+})
 
-// router.afterEach((to, from) => {
-//   app.$store.commit('setCurrentPage', router.history.current.path);
-// })
+router.afterEach((to, from) => {
+  if (window.location.pathname === '/' && Object.keys(User).length > 0) {
+    window.location = '/home'
+  }
+})
 
 var app = new Vue({
   mixins: [require('spark')],

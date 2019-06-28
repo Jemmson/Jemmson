@@ -3,6 +3,7 @@
 namespace App\Traits\Auth;
 
 use App\User;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -88,7 +89,11 @@ trait AuthenticateUsers
             }
         }
 
-        return response('Success', 200);
+        return response()->json([
+            'user' => Auth::user()
+        ], 200);
+
+//        return response('Success', 200);
     }
 
     /**

@@ -11,6 +11,7 @@ export default {
     payload.busy = true;
     try {
       const data = await axios.post('login', payload);
+      commit('setUser', data.data);
       location.href = '/#/home';
       payload.busy = false;
 
