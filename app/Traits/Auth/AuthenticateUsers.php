@@ -89,9 +89,7 @@ trait AuthenticateUsers
             }
         }
 
-        return response()->json([
-            'user' => Auth::user()
-        ], 200);
+        return response()->json(Auth::user(), 200);
 
 //        return response('Success', 200);
     }
