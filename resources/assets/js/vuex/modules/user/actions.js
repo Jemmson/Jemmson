@@ -10,8 +10,10 @@ export default {
     payload.error = null;
     payload.busy = true;
     try {
-      const data = await axios.post('login', payload);
-      commit('setUser', data.data);
+      const {data} = await axios.post('login', payload);
+      console.log(data);
+      
+      commit('setUser', data);
       location.href = '/#/home';
       payload.busy = false;
 
