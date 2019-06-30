@@ -207,28 +207,31 @@ function goingToANonAuthorizedPage(path) {
 }
 
 function isUserLoggedIn() {
-  return Object.keys(User).length > 0;
+  return Object.keys(User).length > 0
 }
 
 router.beforeEach((to, from, next) => {
 
-  checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
-
-  if (goingToANonAuthorizedPage(to.path)) {
-    next()
-  } else {
-    let UserLength = Object.keys(window.User).length;
-    // let loggedIn = UserLength > 0;
-    if (UserLength > 0) {
-      next()
-    } else {
-      if (to.path !== '/') {
-        next('/')
-      } else {
+  axios.get('/checkAuth')
+    .then(response => {
+      if (response.data.auth) {
+        checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
         next()
+      } else {
+        if (goingToANonAuthorizedPage(to.path)) {
+          if (to.path !== '/') {
+            next('/')
+          } else {
+            next()
+          }
+        } else {
+          next('/')
+        }
       }
-    }
-  }
+    })
+    .catch(error => {
+      console.log(JSON.stringify(error))
+    })
 
 })
 
@@ -283,7 +286,6 @@ var app = new Vue({
 })
 
 require('./bootstrap')
-
 
 function checkThatCurrentJobExistsForRoutesThatNeedIt(route) {
   console.log('checking that job exists in store', route)

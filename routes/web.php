@@ -29,6 +29,18 @@ Route::get('/loggedIn', function () {
     }
 });
 
+Route::get('checkAuth', function() {
+   if (Auth::check()) {
+       return response()->json([
+           'auth' => true
+       ], 200);
+   } else {
+       return response()->json([
+           'auth' => false
+       ], 200);
+   }
+});
+
 Route::get('/welcome', 'WelcomeController@show');
 
 Route::get('/search/{company_name}', 'ContractorController@getContractors');
