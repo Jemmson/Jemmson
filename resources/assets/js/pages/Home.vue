@@ -180,7 +180,11 @@
 
       })
       if (this.user.user === null || this.user.user === undefined ) {
-        this.theUser = this.userFromState;
+        if (this.userFromState !== '') {
+          this.theUser = this.userFromState;
+        } else {
+          this.theUser = Spark.state.user;
+        }
       } else {
         this.theUser = this.user;
       }

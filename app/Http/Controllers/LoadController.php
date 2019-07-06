@@ -39,8 +39,6 @@ class LoadController extends Controller
 
         } else {
 
-            // hello world
-
             if (
                 $request->location["pathname"] != '/' &&
                 $request->location["pathname"] != '/demo' &&
