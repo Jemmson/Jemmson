@@ -216,16 +216,17 @@ router.beforeEach((to, from, next) => {
     .then(response => {
       if (response.data.auth) {
         checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
+
+        // need to send a user to further info if the user does not have
+        // their password updated
+
+        // a customer should not be able to initiate a bid or look at tasks
+        // page
+
         next()
       } else {
         if (goingToANonAuthorizedPage(to.path)) {
-          if (to.path !== '/') {
-            next('/')
-          } else {
-            next()
-          }
-        } else {
-          next('/')
+          next()
         }
       }
     })
