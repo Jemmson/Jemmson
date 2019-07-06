@@ -786,166 +786,104 @@
           }.bind(this))
         }
       },
-      register() {
+      async register() {
+        this.registerForm.busy = true
         if (this.getMobileValidResponse[1] === 'mobile') {
-          this.registerForm.busy = true
           if (this.registerForm.usertype === 'contractor') {
-            axios.post('/registerContractor', this.registerForm)
-              .then(function(response) {
-                console.log(response.data)
-                this.$store.commit('setUser', response.data.user)
-                window.location = response.data.redirect
-              }.bind(this))
-              .catch(function(error) {
-
-                if (error.response.data.errors.first_name !== undefined) {
-                  this.registerForm.errors.first_name = error.response.data.errors.first_name[0]
+            try {
+                let {data} = await axios.post('/registerContractor', this.registerForm);
+                console.log(data)
+                this.registerForm.busy = false;
+                this.$store.commit('setUser', data.user);
+                this.$router.push('/home');
+            } catch (error) {
+                let {errors} = error.response.data;
+                this.setErrors(errors);
+                this.registerForm.busy = false;
+            }
+          } else {
+            try {
+                let {data} = await axios.post('/registerCustomer', this.registerForm);
+                console.log(data)
+                this.registerForm.busy = false;
+                this.$store.commit('setUser', data.user);
+                this.$router.push('/home');
+            } catch (error) {
+              let {errors} = error.response.data;
+              this.setErrors(errors);
+              this.registerForm.disabled = false
+            }
+          }
+        } else {
+          this.registerForm.busy = true
+        }
+      },
+      setErrors(errors) {
+        if (errors.first_name !== undefined) {
+                  this.registerForm.errors.first_name = errors.first_name[0]
                 } else {
                   this.registerForm.errors.first_name = ''
                 }
 
-                if (error.response.data.errors.last_name !== undefined) {
-                  this.registerForm.errors.last_name = error.response.data.errors.last_name[0]
+                if (errors.last_name !== undefined) {
+                  this.registerForm.errors.last_name = errors.last_name[0]
                 } else {
                   this.registerForm.errors.last_name = ''
                 }
 
-                if (error.response.data.errors.email !== undefined) {
-                  this.registerForm.errors.email = error.response.data.errors.email[0]
+                if (errors.email !== undefined) {
+                  this.registerForm.errors.email = errors.email[0]
                 } else {
                   this.registerForm.errors.email = ''
                 }
 
-                if (error.response.data.errors.password !== undefined) {
-                  this.registerForm.errors.password = error.response.data.errors.password[0]
+                if (errors.password !== undefined) {
+                  this.registerForm.errors.password = errors.password[0]
                 } else {
                   this.registerForm.errors.password = ''
                 }
 
-                if (error.response.data.errors.terms !== undefined) {
-                  this.registerForm.errors.terms = error.response.data.errors.terms[0]
+                if (errors.terms !== undefined) {
+                  this.registerForm.errors.terms = errors.terms[0]
                 } else {
                   this.registerForm.errors.terms = ''
                 }
 
-                if (error.response.data.errors.companyName !== undefined) {
-                  this.registerForm.errors.companyName = error.response.data.errors.companyName[0]
+                if (errors.companyName !== undefined) {
+                  this.registerForm.errors.companyName = errors.companyName[0]
                 } else {
                   this.registerForm.errors.companyName = ''
                 }
 
-                if (error.response.data.errors.phoneNumber !== undefined) {
-                  this.registerForm.errors.phoneNumber = error.response.data.errors.phoneNumber[0]
+                if (errors.phoneNumber !== undefined) {
+                  this.registerForm.errors.phoneNumber = errors.phoneNumber[0]
                 } else {
                   this.registerForm.errors.phoneNumber = ''
                 }
 
-                if (error.response.data.errors.addressLine1 !== undefined) {
-                  this.registerForm.errors.addressLine1 = error.response.data.errors.addressLine1[0]
+                if (errors.addressLine1 !== undefined) {
+                  this.registerForm.errors.addressLine1 = errors.addressLine1[0]
                 } else {
                   this.registerForm.errors.addressLine1 = ''
                 }
 
-                if (error.response.data.errors.city !== undefined) {
-                  this.registerForm.errors.city = error.response.data.errors.city[0]
+                if (errors.city !== undefined) {
+                  this.registerForm.errors.city = errors.city[0]
                 } else {
                   this.registerForm.errors.city = ''
                 }
 
-                if (error.response.data.errors.state !== undefined) {
-                  this.registerForm.errors.state = error.response.data.errors.state[0]
+                if (errors.state !== undefined) {
+                  this.registerForm.errors.state = errors.state[0]
                 } else {
                   this.registerForm.errors.state = ''
                 }
 
-                if (error.response.data.errors.zip !== undefined) {
-                  this.registerForm.errors.zip = error.response.data.errors.zip[0]
+                if (errors.zip !== undefined) {
+                  this.registerForm.errors.zip = errors.zip[0]
                 } else {
                   this.registerForm.errors.zip = ''
                 }
-
-                this.registerForm.busy = false
-
-                console.log(error)
-              }.bind(this))
-          } else {
-            axios.post('/registerCustomer', this.registerForm)
-              .then(function(response) {
-                console.log(response)
-                this.$store.commit('setUser', response.data.user)
-                window.location = response.data.redirect
-                this.registerForm.busy = false
-              })
-              .catch(function(error) {
-
-                if (error.response.data.errors.first_name !== undefined) {
-                  this.registerForm.errors.first_name = error.response.data.errors.first_name[0]
-                } else {
-                  this.registerForm.errors.first_name = ''
-                }
-
-                if (error.response.data.errors.last_name !== undefined) {
-                  this.registerForm.errors.last_name = error.response.data.errors.last_name[0]
-                } else {
-                  this.registerForm.errors.last_name = ''
-                }
-
-                if (error.response.data.errors.email !== undefined) {
-                  this.registerForm.errors.email = error.response.data.errors.email[0]
-                } else {
-                  this.registerForm.errors.email = ''
-                }
-
-                if (error.response.data.errors.password !== undefined) {
-                  this.registerForm.errors.password = error.response.data.errors.password[0]
-                } else {
-                  this.registerForm.errors.password = ''
-                }
-
-                if (error.response.data.errors.terms !== undefined) {
-                  this.registerForm.errors.terms = error.response.data.errors.terms[0]
-                } else {
-                  this.registerForm.errors.terms = ''
-                }
-
-                if (error.response.data.errors.phoneNumber !== undefined) {
-                  this.registerForm.errors.phoneNumber = error.response.data.errors.phoneNumber[0]
-                } else {
-                  this.registerForm.errors.phoneNumber = ''
-                }
-
-                if (error.response.data.errors.addressLine1 !== undefined) {
-                  this.registerForm.errors.addressLine1 = error.response.data.errors.addressLine1[0]
-                } else {
-                  this.registerForm.errors.addressLine1 = ''
-                }
-
-                if (error.response.data.errors.city !== undefined) {
-                  this.registerForm.errors.city = error.response.data.errors.city[0]
-                } else {
-                  this.registerForm.errors.city = ''
-                }
-
-                if (error.response.data.errors.state !== undefined) {
-                  this.registerForm.errors.state = error.response.data.errors.state[0]
-                } else {
-                  this.registerForm.errors.state = ''
-                }
-
-                if (error.response.data.errors.zip !== undefined) {
-                  this.registerForm.errors.zip = error.response.data.errors.zip[0]
-                } else {
-                  this.registerForm.errors.zip = ''
-                }
-
-                this.registerForm.busy = false
-
-                console.log(error)
-              })
-          }
-        } else {
-          this.registerForm.disabled = true
-        }
       }
     },
   }
