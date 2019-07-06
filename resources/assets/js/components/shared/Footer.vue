@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid border-top">
+<div class="container-fluid border-top" v-if="page !== '/' || userType !== undefined">
     <div v-if="isLoggedIn" class="row mt-2 align-items-center justify-content-center">
         <div class="col d-flex align-items-center">
             <figure @click.prevent="goTo('/home')" class="item mx-auto text-center" :class="isCurrentPage('/home', '/home/')">

@@ -422,9 +422,10 @@ class JobController extends Controller
                         'jobTasks.bidContractorJobTasks.contractor.contractor',
                         // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
                         'jobTasks.location',
-                        'customer' => function ($query) {
-                            $query->select('id', 'name');
-                        }
+                        'customer'
+//                        'customer' => function ($query) {
+//                            $query->select('id', 'name');
+//                        }
                     ]
                 )->where('status', '!=', __('job.completed'))->get();
         }

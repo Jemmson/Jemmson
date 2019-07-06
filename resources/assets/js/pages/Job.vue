@@ -94,9 +94,7 @@
       customerName() {
         if (this.isCustomer) {
           return this.user.name;
-        }
-
-        if (this.bid.customer !== undefined) {
+        } else if (this.bid.customer) {
           return this.bid.customer.name;
         }
       },

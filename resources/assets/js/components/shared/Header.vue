@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid" v-if="page !== '/' || userType !== undefined">
         <div v-if="page === '/home' || page === '/home/'" class="row bg-primary home-row">
             <div class="col-12 pt-3" style="height: 40px;">
                 <i class="fas fa-search text-white float-left sm-icon"></i>
@@ -75,6 +75,12 @@
       ...mapState({
         page: state => state.page,
         userFromState: state => state.user.user,
+        userType: (state) => {
+          if (state.user.user !== undefined && state.user.user !== null) {
+            return state.user.user.usertype;
+          }
+          return null;
+        },
         bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
       }),
       getCompanyName() {
@@ -89,7 +95,10 @@
       ]),
     },
     mounted() {
-      if (this.user.user !== undefined && this.user.user !== null && this.userFromState !== '' ) {
+      if (
+        this.user.user !== undefined &&
+        this.user.user !== null &&
+        this.userFromState !== '' ) {
         this.$store.commit('setUser', this.user)
       }
 
