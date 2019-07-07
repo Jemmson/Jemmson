@@ -4,10 +4,6 @@
         </icon-header>
         <card>
             <div class="form-group">
-                <label for="customerName">Customer Name *</label>
-
-                <input name="customer" id="customerName" dusk="customerName" data-dependency="phone" type="text"
-                       v-model="form.customerName" v-on:keyup="autoComplete" class="form-control" required>
                 <div class="flex flex-col" v-if="results.length">
                     <button class="flex-1 m-2 btn-format" v-for="result in results" v-bind:key="result.id"
                             :name="result.phone"
@@ -63,14 +59,6 @@
                     </div>
                     <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                 </div>
-                <!--<div dusk="networkType" class="mt-2" id="#mobileNetworktype" v-show="checkThatNumberIsMobile()"-->
-                <!--style="color: green">-->
-                <!--{{ networkType.originalCarrier }}-->
-                <!--</div>-->
-                <!--<div dusk="networkType" class="mt-2" v-show="checkLandLineNumber()" style="color: red">{{-->
-                <!--networkType.originalCarrier-->
-                <!--}}-->
-                <!--</div>-->
                 <span class="help-block" v-show="form.errors.has('phone')">
           {{ form.errors.get('phone') }}
         </span>
@@ -267,6 +255,8 @@
         if (result.given_name !== undefined) {
           this.form.email = result.primary_email_addr
           this.form.customerName = result.fully_qualified_name
+          this.form.firstName = result.given_name
+          this.form.lastName = result.family_name
           this.form.quickbooks_id = result.quickbooks_id
           if (result.primary_phone !== null) {
             this.form.phone = result.primary_phone
@@ -277,6 +267,8 @@
         } else {
           this.form.email = result.email
           this.form.customerName = result.name
+          this.form.firstName = result.first_name
+          this.form.lastName = result.last_name
           if (result.quickbooks_id) {
             this.form.quickbooks_id = result.quickbooks_id
           }

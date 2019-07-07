@@ -106,7 +106,7 @@ class Customer extends Model
      *
      * @return $this|\Illuminate\Database\Eloquent\Model
      */
-    public static function createNewCustomer($phone, $customerName, $contractorId)
+    public static function createNewCustomer($phone, $customerName, $contractorId, $firstName = '', $lastName = '')
     {
 
         if (empty($phone) || $phone === '') {
@@ -124,6 +124,8 @@ class Customer extends Model
                     'name' => $customerName,
 //                    'email' => $email,
                     'phone' => $phone,
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
                     'usertype' => 'customer',
                     'password_updated' => false,
                     'password' => bcrypt($pass),

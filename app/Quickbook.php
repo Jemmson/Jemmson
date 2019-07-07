@@ -388,9 +388,10 @@ class Quickbook extends Model
             echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
             echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
             echo "The Response message is: " . $error->getResponseBody() . "\n";
-        } else {
-            var_dump($resultingCustomerObj);
         }
+//        else {
+//            var_dump($resultingCustomerObj);
+//        }
 
         return $resultingCustomerObj->Id;
     }

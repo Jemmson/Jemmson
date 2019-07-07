@@ -73,7 +73,8 @@ class InitiateBidController extends Controller
                         );
                     } else {
                         // customer is new but is added in Jemmson and not from Quickbooks
-                        $customer = Customer::createNewCustomer($phone, $customerName, Auth::user()->getAuthIdentifier());
+                        $customer = Customer::createNewCustomer(
+                            $phone, $customerName, Auth::user()->getAuthIdentifier(), $request->firstName, $request->lastName);
                         $quickbookId = Quickbook::addNewCustomerToQuickBooks($customer);
                         ContractorCustomer::addQuickBookIdToAssociation(Auth::user()->getAuthIdentifier(), $customer->id, $quickbookId);
                         CustomerNeedsUpdating::addEntryToCustomerNeedsUpdatingIfNeeded(
@@ -83,19 +84,15 @@ class InitiateBidController extends Controller
                         );
                     }
                 } else {
-                    $customer = Customer::createNewCustomer($phone, $customerName, Auth::user()->getAuthIdentifier());
+                    $customer = Customer::createNewCustomer(
+                        $phone, $customerName, Auth::user()->getAuthIdentifier(), $request->firstName, $request->lastName);
                 }
             } else {
-                $customer = Customer::createNewCustomer($phone, $customerName, Auth::user()->getAuthIdentifier());
+                $customer = Customer::createNewCustomer(
+                    $phone, $customerName, Auth::user()->getAuthIdentifier(), $request->firstName, $request->lastName);
             }
 
         }
-
-
-
-
-
-
 
         // create the job
         $job = new Job();
@@ -110,13 +107,6 @@ class InitiateBidController extends Controller
         }
         $js = new JobStatus();
         $js->setStatus($job->id, config("app.initiated"));
-
-
-
-
-
-
-
 
         //notify the customer the job was created
         $customer->notify(new BidInitiated($job, $customer));
