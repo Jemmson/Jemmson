@@ -16,6 +16,13 @@ Different ways to register
 - Contractor
     1. Register Directly
         1. Through Quickbooks
+            1. Component -> RegisterQuickBooks.vue
+            2. Register button flow
+                1. User.registerContractor
+                1. register/contractor -> web.php
+                2. RegisterController -> registerContractor
+            3. Uses Bus.$on('updateUser')
+            4. Vuex Store is being update with the user in that method -> spark.js
         2. Just with the site 
             
     2. Passwordless link from as a sub from a contractor
