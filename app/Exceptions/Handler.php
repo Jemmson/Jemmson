@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof MethodNotAllowedHttpException) {
             //
 //            dd('hello');
-            dd('Sorry, the page you are looking for could not be found.');
+//            dd('Sorry, the page you are looking for could not be found.');
 //            return redirect('home/dashboard');
             return response()->view('errors.app', [], 500);
         }
