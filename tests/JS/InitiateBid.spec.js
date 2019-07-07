@@ -1,8 +1,11 @@
 import { mount, createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import moxios from 'moxios'
+import VueRouter from 'vue-router'
 
 const localVue = createLocalVue()
+localVue.use(VueRouter)
+const router = new VueRouter()
 
 localVue.use(Vuex)
 
@@ -22,6 +25,7 @@ describe('InitiateBid', () => {
     }
     mutations = {
       setTheMobileResponse: () => 'hell',
+      setCurrentPage: () => 'hell',
     }
     getters = {
       getMobileValidResponse: () => ['phone', 'mobile', 'land'],
@@ -38,10 +42,77 @@ describe('InitiateBid', () => {
     moxios.uninstall();
   });
 
-  it('should display The Phone field is required. if name is input but not phone number', function () {
+  it('should set the first name to form.firstName on keyup', function() {
+
     const wrapper = mount(InitiateBid, {
       store,
       localVue,
+      router,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            firstName: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+
+    let input = wrapper.find({
+      ref: 'firstName'
+    });
+
+    input.setValue('Sarah')
+
+    input.trigger('keyUp')
+
+    expect(wrapper.vm.$data.form.firstName).toBe('Sarah')
+
+  })
+
+  it('should set the last name to form.lastName on keyup', function() {
+
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            lastName: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+
+    let input = wrapper.find({
+      ref: 'lastName'
+    });
+
+    input.setValue('Conners')
+
+    input.trigger('keyUp')
+
+    expect(wrapper.vm.$data.form.lastName).toBe('Conners')
+
+  })
+
+  it.skip('should display The Phone field is required. if name is input but not phone number', function () {
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
       data () {
         return {
           query: '',
@@ -78,6 +149,7 @@ describe('InitiateBid', () => {
       localVue,
       actions,
       getters,
+      router,
       data () {
         return {
           query: '',
@@ -128,6 +200,7 @@ describe('InitiateBid', () => {
     const wrapper = shallowMount(InitiateBid, {
       store,
       localVue,
+      router,
       data () {
         return {
           query: '',
@@ -160,6 +233,7 @@ describe('InitiateBid', () => {
     const wrapper = shallowMount(InitiateBid, {
       store,
       localVue,
+      router,
       data () {
         return {
           query: '',
@@ -190,6 +264,7 @@ describe('InitiateBid', () => {
     const wrapper = shallowMount(InitiateBid, {
       store,
       localVue,
+      router,
       data () {
         return {
           query: '',
@@ -220,6 +295,7 @@ describe('InitiateBid', () => {
     const wrapper = shallowMount(InitiateBid, {
       store,
       localVue,
+      router,
       data () {
         return {
           query: '',
@@ -250,6 +326,7 @@ describe('InitiateBid', () => {
     const wrapper = shallowMount(InitiateBid, {
       store,
       localVue,
+      router,
       data () {
         return {
           query: '',
@@ -280,6 +357,7 @@ describe('InitiateBid', () => {
     const wrapper = mount(InitiateBid, {
       store,
       localVue,
+      router,
       data () {
         return {
           query: '',
@@ -303,7 +381,8 @@ describe('InitiateBid', () => {
   it('should show phone number for Shara Barnett', function() {
     const wrapper = mount(InitiateBid, {
       store,
-      localVue
+      localVue,
+      router,
     });
     wrapper.setData({
       form: new SparkForm({
