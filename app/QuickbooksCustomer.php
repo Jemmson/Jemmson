@@ -16,8 +16,14 @@ class QuickbooksCustomer extends Model
             ->where('contractor_id', '=', $contractorId)
             ->get();
 
+
+        if (empty($quickbookCustomers->first())) {
+            $quickbookCustomers = QuickbooksCustomer::where('family_name', 'like', '%' . $name . '%')
+                ->where('contractor_id', '=', $contractorId)
+                ->get();
+        }
+
         return $quickbookCustomers;
 
-//        QuickbooksCustomer::where('given_name', 'like', '%Diego%')->where('contractor_id', '=', 1)->get();
     }
 }
