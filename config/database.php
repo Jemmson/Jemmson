@@ -56,11 +56,11 @@ return [
 
         'mysqlTest' => [
             'driver' => 'mysql',
-            'host' => env('', 'mysql'),
-            'port' => env('', '3306'),
+            'host' => env('', '127.0.0.1'),
+            'port' => env('', '23306'),
             'database' => env('', 'testDB'),
-            'username' => env('', 'jemmson'),
-            'password' => env('', 'secret'),
+            'username' => env('', 'root'),
+            'password' => env('', 'root'),
             'unix_socket' => env('', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

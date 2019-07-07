@@ -170,6 +170,7 @@ class CustomerController extends Controller
 
     public function getCustomerAssociatedToContractor(Request $request)
     {
+
         // TODO: needs to search users table, customer table, contractorcustomer table, and quickbooks_customer table
         $query = $request->query('query');
 
@@ -185,27 +186,10 @@ class CustomerController extends Controller
                 $u = User::find($user['user_id'])->toArray();
                 $u['quickbooks_id'] = $user['quickbooks_id'];
                 array_push($users, $u);
-//                array_push($ids, [$user->customer_user_id]);
             }
-
-//            $associatedUserIds
 
             return $users;
         }
 
-//        $cont_id = 1;
-//
-//        $customers = $users->filter(function ($user) use ($cont_id) {
-//            if ($user != null) {
-//                if (ContractorCustomer::isCustomerAssociatedWithContractor(
-//                    $cont_id,
-//                    $user->customer->id
-//                )) {
-//                    return $user;
-//                }
-//            }
-//        });
-//
-//        return $customers;
     }
 }
