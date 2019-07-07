@@ -19,3 +19,11 @@ a user can be either a contractor, subcontractor, or a customer
     2. Updated
     3. Deleted
     4. Removed
+    
+
+###Database Table
+1. the name column should be the conjunction of the first name and the last name 
+   with a single space in between.
+2. Users in the application will input their first and last names. the database
+   will record both the first name and last name and the conjunction between the
+   two.

@@ -17,7 +17,6 @@
                 </div>
             </div>
 
-
             <div class="form-group">
                 <label for="firstName">First Name *</label>
 
@@ -26,6 +25,7 @@
                        ref="firstName"
                        id="firstName"
                        class="form-control"
+                       v-on:keyup="autoComplete"
                        required
                        v-model="form.firstName"
                 >
@@ -40,13 +40,12 @@
                        ref="lastName"
                        id="lastName"
                        class="form-control"
+                       v-on:keyup="autoComplete"
                        required
                        v-model="form.lastName"
                 >
             </div>
-            
-            
-            
+
 
             <!-- Phone Number -->
             <div class="form-group" :class="{'has-error': form.errors.has('phone')}">
@@ -153,6 +152,11 @@
         console.log('submit')
         GeneralContractor.initiateBid(this.form, this.disabled)
       },
+
+      imclicked() {
+        console.log('Im clicked')
+      },
+
       unformatNumber(number) {
         let unformattedNumber = ''
         if (number) {
@@ -225,14 +229,26 @@
       filterPhone() {
         this.form.phone = Format.phone(this.form.phone)
       },
+      createName() {
+        if (this.form.firstName === "" && this.form.lastName !== "") {
+          this.form.customerName = this.form.lastName;
+        } else if (this.form.firstName !== "" && this.form.lastName === "") {
+          this.form.customerName = this.form.firstName;
+        } else if (this.form.firstName === "" && this.form.lastName === "") {
+          this.form.customerName = "";
+        } else {
+          this.form.customerName = this.form.firstName + " " + this.form.lastName;
+        }
+      },
       autoComplete() {
         this.results = []
+        this.createName()
         if (this.form.customerName.length > 2) {
           axios.get('/customer/search', {
-              params: {
-                query: this.form.customerName
-              }
-            })
+            params: {
+              query: this.form.customerName
+            }
+          })
             .then(response => {
               console.log(response.data)
               console.log(JSON.stringify(response.data))

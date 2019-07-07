@@ -2,6 +2,8 @@ import { mount, createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import moxios from 'moxios'
 import VueRouter from 'vue-router'
+import sinon from 'sinon';
+
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)
@@ -10,6 +12,7 @@ const router = new VueRouter()
 localVue.use(Vuex)
 
 import InitiateBid from '../../resources/assets/js/pages/InitiateBid'
+import expect from 'expect'
 
 describe('InitiateBid', () => {
   let actions
@@ -41,6 +44,166 @@ describe('InitiateBid', () => {
   afterEach(() => {
     moxios.uninstall();
   });
+
+  it('should not have the name being searched for have a space in the front if the firstname is empty and the last name has a value', function() {
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            firstName: '',
+            lastName: 'connors',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+
+    wrapper.vm.createName();
+
+    expect(wrapper.vm.$data.form.customerName).toBe('connors')
+
+  })
+
+  it('customer name should be the first name if only the first name is entered', function() {
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            firstName: 'Sarah',
+            lastName: '',
+            customerName: ''
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+
+    wrapper.vm.createName();
+
+    expect(wrapper.vm.$data.form.customerName).toBe('Sarah')
+
+  })
+
+  it('customerName should be empty if first and last names are empty', function() {
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            firstName: '',
+            lastName: '',
+            customerName: 'sdssds'
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+
+    wrapper.vm.createName();
+
+    expect(wrapper.vm.$data.form.customerName).toBe('')
+
+  })
+
+  it('customerName should be the conjunction of the first name and the last name if both names are not empty', function() {
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
+      data () {
+        return {
+          query: '',
+          results: [],
+          form: new SparkForm({
+            firstName: 'Sarah',
+            lastName: 'Connors',
+            customerName: 'sdssds'
+          }),
+          disabled: {
+            submit: false
+          }
+        }
+      }
+    })
+
+    wrapper.vm.createName();
+
+    expect(wrapper.vm.$data.form.customerName).toBe('Sarah Connors')
+
+  })
+
+  it('should call autocomplete method when the keyup event is called in the first name input box', function() {
+
+    const autoCompleteStub = sinon.stub();
+
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
+      methods: {
+        autoComplete: autoCompleteStub
+      }
+    })
+
+    let input = wrapper.find({
+      ref: 'firstName'
+    });
+
+    input.setValue('Sarah')
+
+    input.trigger('keyup')
+
+    expect(autoCompleteStub.called).toBe(true);
+
+
+  })
+
+  it('should call autocomplete method when the keyup event is called in the last name input box', function() {
+
+    const autoCompleteStub = sinon.stub();
+
+    const wrapper = mount(InitiateBid, {
+      store,
+      localVue,
+      router,
+      methods: {
+        autoComplete: autoCompleteStub
+      }
+    })
+
+    let input = wrapper.find({
+      ref: 'lastName'
+    });
+
+    input.setValue('Connors')
+
+    input.trigger('keyup')
+
+    expect(autoCompleteStub.called).toBe(true);
+
+
+  })
 
   it('should set the first name to form.firstName on keyup', function() {
 
@@ -395,7 +558,7 @@ describe('InitiateBid', () => {
     })
     let result = JSON.parse('{"id":3,"location_id":3,"name":"Shara Barnett","email":"Shara@Barnett.com","usertype":"customer","password_updated":0,"photo_url":"https://www.gravatar.com/avatar/477300cee74332fecb664d30a163c37f.jpg?s=200&d=mm","logo_url":null,"uses_two_factor_auth":false,"phone":"4807034902","two_factor_reset_code":null,"current_team_id":null,"stripe_id":null,"current_billing_plan":null,"billing_state":null,"trial_ends_at":null,"last_read_announcements_at":null,"created_at":"2019-04-13 16:30:51","updated_at":"2019-04-13 16:30:51","first_name":"Shara","last_name":"Barnett","tax_rate":0}');
     wrapper.vm.fillFields(result);
-    expect(wrapper.$data.form.email).toBe('Shara@Barnett.com');
+    expect(wrapper.vm.$data.form.email).toBe('Shara@Barnett.com');
   })
 
   it.skip('should show an error if the same phone number is for a different customer and the submit button is sent', function() {
