@@ -11,8 +11,9 @@ const router = new VueRouter()
 
 localVue.use(Vuex)
 
-import InitiateBid from '../../resources/assets/js/pages/InitiateBid'
 import expect from 'expect'
+
+import InitiateBid from '../../resources/assets/js/pages/InitiateBid'
 
 describe('InitiateBid', () => {
   let actions
@@ -44,6 +45,7 @@ describe('InitiateBid', () => {
   afterEach(() => {
     moxios.uninstall();
   });
+
 
   it('should not have the name being searched for have a space in the front if the firstname is empty and the last name has a value', function() {
     const wrapper = mount(InitiateBid, {
@@ -379,11 +381,13 @@ describe('InitiateBid', () => {
       }
     })
     const phone = wrapper.find('#phone')
-    const customername = wrapper.find('#customerName')
+    const firstName = wrapper.find('#firstName')
+    const lastName = wrapper.find('#lastName')
     const jobname = wrapper.find('#jobName')
     const submit = wrapper.find('#submit')
     phone.setValue('4807034902')
-    customername.setValue('')
+    firstName.setValue('')
+    lastName.setValue('')
     jobname.setValue('')
     // phone.trigger('blur')
 
@@ -412,11 +416,13 @@ describe('InitiateBid', () => {
       }
     })
     const phone = wrapper.find('#phone')
-    const customername = wrapper.find('#customerName')
+    const firstName = wrapper.find('#firstName')
+    const lastName = wrapper.find('#lastName')
     const jobname = wrapper.find('#jobName')
     const submit = wrapper.find('#submit')
     phone.setValue('')
-    customername.setValue('mookie blaylock')
+    firstName.setValue('mookie')
+    lastName.setValue('blaylock')
     jobname.setValue('')
     // phone.trigger('blur')
 
@@ -443,11 +449,13 @@ describe('InitiateBid', () => {
       }
     })
     const phone = wrapper.find('#phone')
-    const customername = wrapper.find('#customerName')
+    const firstName = wrapper.find('#firstName')
+    const lastName = wrapper.find('#lastName')
     const jobname = wrapper.find('#jobName')
     const submit = wrapper.find('#submit')
     phone.setValue('4807034902')
-    customername.setValue('')
+    firstName.setValue('')
+    lastName.setValue('')
     jobname.setValue('my job')
     // phone.trigger('blur')
 
@@ -474,11 +482,13 @@ describe('InitiateBid', () => {
       }
     })
     const phone = wrapper.find('#phone')
-    const customername = wrapper.find('#customerName')
+    const firstName = wrapper.find('#firstName')
+    const lastName = wrapper.find('#lastName')
     const jobname = wrapper.find('#jobName')
     const submit = wrapper.find('#submit')
     phone.setValue('')
-    customername.setValue('ajskdlsdakj')
+    firstName.setValue('assddsds')
+    lastName.setValue('sdasdsada')
     jobname.setValue('my job')
     // phone.trigger('blur')
 
@@ -505,11 +515,13 @@ describe('InitiateBid', () => {
       }
     })
     const phone = wrapper.find('#phone')
-    const customername = wrapper.find('#customerName')
+    const firstName = wrapper.find('#firstName')
+    const lastName = wrapper.find('#lastName')
     const jobname = wrapper.find('#jobName')
     const submit = wrapper.find('#submit')
     phone.setValue('4807034902')
-    customername.setValue('ajskdlsdakj')
+    firstName.setValue('assddsds')
+    lastName.setValue('sdasdsada')
     jobname.setValue('')
     // phone.trigger('blur')
 
@@ -535,10 +547,13 @@ describe('InitiateBid', () => {
         }
       }
     })
+    const firstName = wrapper.find('#firstName')
+    const lastName = wrapper.find('#lastName')
+    firstName.setValue('long john')
+    lastName.setValue('silver')
+    wrapper.vm.createName()
+    expect(wrapper.vm.$data.form.customerName).toBe('long john silver');
 
-    const name = wrapper.find('#customerName');
-    name.setValue('long john silver');
-    expect(wrapper.vm.form.customerName).toBe('long john silver');
   })
 
   it('should show phone number for Shara Barnett', function() {

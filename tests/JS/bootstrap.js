@@ -11,17 +11,18 @@ import TaskUtil from '../../resources/assets/js/classes/TaskUtil';
 
 // console.log('importing our dependencies');
 
-// global.User = new User({
-//     id: 1,
-//     usertype: 'contractor',
-//     name: 'John Doe',
-//     contractor: {
-//         id: 1,
-//         user_id: 1,
-//         company_name: 'KPS Pools',
-//         stripe_express: null
-//     }
-// });
+global.User = new User({
+    id: 1,
+    usertype: 'contractor',
+    name: 'John Doe',
+    contractor: {
+        id: 1,
+        user_id: 1,
+        company_name: 'KPS Pools',
+        stripe_express: null
+    }
+});
+
 global.Format = Format;
 global.Language = Language;
 // global.GeneralContractor = new GeneralContractor;

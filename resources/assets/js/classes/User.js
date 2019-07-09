@@ -1,5 +1,7 @@
-import { router } from '../app.js'
+import { router } from '../router.js'
+
 export default class User {
+
   async chargeCustomer() {
     // charge customer
     const {
@@ -442,3 +444,5 @@ export default class User {
     this.user = user
   }
 }
+
+export var __useDefault = true;

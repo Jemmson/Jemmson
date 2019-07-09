@@ -169,7 +169,8 @@
         if (
           (this.getMobileValidResponse[1] === 'mobile' ||
             this.getMobileValidResponse[2] === 'mobile') &&
-          this.form.customerName !== '' &&
+          this.form.firstName !== '' &&
+          this.form.lastName !== '' &&
           phoneLength === 10
         ) {
           return false

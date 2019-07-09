@@ -1,5 +1,4 @@
 const Vue = require('vue');
-// import {  store } from '../../../../resources/assets/js/vuex/index'
 
 /**
  * Export the root Spark application.
