@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid border-top" v-if="page !== '/' || userType !== undefined">
+<div class="container-fluid border-top" v-if="page !== '/' || user.usertype !== undefined">
     <div v-if="isLoggedIn" class="row mt-2 align-items-center justify-content-center">
         <div class="col d-flex align-items-center">
             <figure @click.prevent="goTo('/home')" class="item mx-auto text-center" :class="isCurrentPage('/home', '/home/')">
@@ -70,17 +70,18 @@
 <script>
     import { mapState } from 'vuex';
     export default {
+        props: ['user'],
         computed: {
             ...mapState({
                 page: state => state.page,
-                userType: (state) => {
-                    if (state.user.user !== undefined && state.user.user !== null) {
-                        return state.user.user.usertype;
+                userType () {
+                    if (this.user !== undefined && this.user !== null) {
+                        return this.user.usertype;
                     }
                     return null;
                 },
                 isLoggedIn () {
-                    return this.userType !== undefined && this.userType !== null;
+                    return this.user !== undefined && this.user !== null;
                 }
             })
         },

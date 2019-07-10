@@ -795,6 +795,7 @@
                 console.log(data)
                 this.registerForm.busy = false;
                 this.$store.commit('setUser', data.user);
+                Bus.$emit('updateUser')
                 this.$router.push('/home');
             } catch (error) {
                 let {errors} = error.response.data;
@@ -807,6 +808,7 @@
                 console.log(data)
                 this.registerForm.busy = false;
                 this.$store.commit('setUser', data.user);
+                Bus.$emit('updateUser')
                 this.$router.push('/home');
             } catch (error) {
               let {errors} = error.response.data;

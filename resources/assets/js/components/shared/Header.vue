@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid" v-if="page !== '/' || userType !== undefined">
+    <div class="container-fluid" v-if="page !== '/' || user.usertype !== undefined">
         <div v-if="page === '/home' || page === '/home/'" class="row bg-primary home-row">
             <div class="col-12 pt-3" style="height: 40px;">
                 <i class="fas fa-search text-white float-left sm-icon"></i>
@@ -7,10 +7,10 @@
             </div>
             <div class="col-12">
                 <img class="profile-pic float-left ml-2"
-                     src="http://infinisolutionslk.com/wp-content/uploads/2018/09/profilephotocircle.png"
+                     src="https://www.skylightsearch.co.uk/wp-content/uploads/2017/01/Hadie-profile-pic-circle-1.png"
                      alt="profile pic">
                 <div class="profile-details">
-                    <h4>{{ userFromState.first_name }} {{ userFromState.last_name }}</h4>
+                    <h4>{{ user.first_name }} {{ user.last_name }}</h4>
 
                     <div class="row">
                         <div class="col pr-0">

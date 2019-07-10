@@ -43,7 +43,7 @@
     <router-view :user='user'></router-view>
 </transition>
 <div style="height: 56px;"></div>
-<main-footer></main-footer>
+<main-footer :user="user"></main-footer>
 
 <!-- Application Level Modals -->
 {{-- 
