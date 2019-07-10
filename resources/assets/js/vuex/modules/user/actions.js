@@ -14,6 +14,7 @@ export default {
       console.log(data);
       
       commit('setUser', data);
+      Bus.$emit('updateUser');
       location.href = '/#/home';
       payload.busy = false;
 
