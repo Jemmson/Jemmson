@@ -1,8 +1,7 @@
 <spark-update-contact-information :user="user" inline-template>
-    <div class="panel panel-default">
-        <div class="panel-heading">Contact Information</div>
-
-        <div class="panel-body">
+    <div class="card mb-2">
+        <div class="card-body">
+        <div class="card-title">Contact Information</div>
             <!-- Success Message -->
             <div class="alert alert-success" v-if="form.successful">
                 Your contact information has been updated!

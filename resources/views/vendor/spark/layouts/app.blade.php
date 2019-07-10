@@ -32,21 +32,22 @@
 <div id="spark-app" v-cloak>
     <!-- Navigation -->
 @if (Auth::check())
-    @include('spark::nav.user')
+      <main-header :user="user"> </main-header>
 @else
-    @include('spark::nav.guest')
+   <main-header :user="user"> </main-header>
 @endif
 
 <!-- Main Content -->
 @yield('content')
+
+<div style="height: 56px;"></div>
+<main-footer :user="user"></main-footer>
 
 <!-- Application Level Modals -->
     @if (Auth::check())
         @include('spark::modals.notifications')
         @include('spark::modals.support')
         @include('spark::modals.session-expired')
-        <feedback>
-        </feedback>
     @endif
 </div>
 

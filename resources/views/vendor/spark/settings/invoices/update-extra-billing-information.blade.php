@@ -1,8 +1,8 @@
 <spark-update-extra-billing-information :user="user" :team="team" :billable-type="billableType" inline-template>
-    <div class="panel panel-default">
-        <div class="panel-heading">Extra Billing Information</div>
+    <div class="card mb-2">
 
-        <div class="panel-body">
+        <div class="card-body">
+        <div class="card-title">Extra Billing Information</div>
             <!-- Information Message -->
             <div class="alert alert-info">
                 This information will appear on all of your receipts, and is a great place to add your full

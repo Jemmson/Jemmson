@@ -6,10 +6,10 @@
         @include('spark::settings.subscription.subscribe-common')
 
         <!-- Billing Information -->
-        <div class="panel panel-default" v-show="selectedPlan">
-            <div class="panel-heading">Billing Information</div>
+        <div class="card mb-2" v-show="selectedPlan">
 
-            <div class="panel-body">
+            <div class="card-body">
+            <div class="card-title">Billing Information</div>
                 <!-- Generic 500 Level Error Message / Stripe Threw Exception -->
                 <div class="alert alert-danger" v-if="form.errors.has('form')">
                     We had trouble validating your card. It's possible your card provider is preventing

@@ -1,8 +1,8 @@
 <spark-update-password inline-template>
-    <div class="panel panel-default">
-        <div class="panel-heading">Update Password</div>
+    <div class="card mb-2">
 
-        <div class="panel-body">
+        <div class="card-body">
+        <div class="card-title">Update Password</div>
             <!-- Success Message -->
             <div class="alert alert-success" v-if="form.successful">
                 Your password has been updated!

@@ -1,9 +1,9 @@
 <spark-update-profile-photo :user="user" inline-template>
     <div>
-        <div class="panel panel-default" v-if="user">
-            <div class="panel-heading">Profile Photo</div>
+        <div class="card mb-2" v-if="user">
 
-            <div class="panel-body">
+            <div class="card-body">
+            <div class="card-title">Profile Photo</div>
                 <div class="alert alert-danger" v-if="form.errors.has('photo')">
                     @{{ form.errors.get('photo') }}
                 </div>
