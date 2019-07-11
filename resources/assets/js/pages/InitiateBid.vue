@@ -75,7 +75,7 @@
             </div>
 
             <div class="form-group pt-4 mb-0">
-                <button name="submit" id="submit" dusk="submitBid" class="btn btn-green btn-block"
+                <button name="submit" id="submit" dusk="submitBid" class="btn btn-success btn-block"
                         @click.prevent="submit"
                         :disabled="checkValidData()">
           <span v-if="disabled.submit">

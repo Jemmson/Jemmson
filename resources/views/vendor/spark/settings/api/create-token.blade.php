@@ -1,11 +1,10 @@
 <spark-create-token :available-abilities="availableAbilities" inline-template>
     <div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card mb-2">
+            <div class="card-body">
+            <div class="card-title">
                 Create API Token
             </div>
-
-            <div class="panel-body">
                 <form class="form-horizontal" role="form">
                     <!-- Token Name -->
                     <div class="form-group" :class="{'has-error': form.errors.has('name')}">

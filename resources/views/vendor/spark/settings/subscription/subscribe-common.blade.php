@@ -1,5 +1,7 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card mb-2">
+
+    <div class="card-body table-responsive">
+    <div class="card-title">
         <div class="pull-left" :class="{'btn-table-align': hasMonthlyAndYearlyPlans}">
             Subscribe
         </div>
@@ -27,8 +29,6 @@
 
         <div class="clearfix"></div>
     </div>
-
-    <div class="panel-body table-responsive">
         <!-- Subscription Notice -->
         <div class="p-b-lg">
             You are not subscribed to a plan. Choose from the plans below to get started.

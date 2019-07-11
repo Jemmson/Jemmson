@@ -1,7 +1,9 @@
 <spark-update-payment-method-stripe :user="user" :team="team" :billable-type="billableType" inline-template>
-    <div class="panel panel-default">
+    <div class="card mb-2">
+
+        <div class="card-body">
         <!-- Update Payment Method Heading -->
-        <div class="panel-heading">
+        <div class="card-title">
             <div class="pull-left">
                 Update Payment Method
             </div>
@@ -15,8 +17,6 @@
 
             <div class="clearfix"></div>
         </div>
-
-        <div class="panel-body">
             <!-- Card Update Success Message -->
             <div class="alert alert-success" v-if="form.successful">
                 Your card has been updated.

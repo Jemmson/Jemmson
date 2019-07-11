@@ -14,12 +14,11 @@
         <div class="row">
             <!-- Tabs -->
             <div class="col-md-4">
-                <div class="panel panel-default panel-flush">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-body">
+                    <div class="card-title">
                         Settings
                     </div>
-
-                    <div class="panel-body">
                         <div class="spark-settings-tabs">
                             <ul class="nav spark-settings-stacked-tabs" role="tablist">
                                 <!-- Profile Link -->
@@ -60,12 +59,11 @@
 
                 <!-- Billing Tabs -->
                 @if (Spark::canBillCustomers())
-                    <div class="panel panel-default panel-flush">
-                        <div class="panel-heading">
+                    <div class="card mt-2 mb-2">
+                        <div class="card-body">
+                        <div class="card-title">
                             Billing
                         </div>
-
-                        <div class="panel-body">
                             <div class="spark-settings-tabs">
                                 <ul class="nav spark-settings-stacked-tabs" role="tablist">
                                     @if (Spark::hasPaidPlans())

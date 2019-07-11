@@ -14,12 +14,12 @@
         <div class="row">
             <!-- Tabs -->
             <div class="col-md-4">
-                <div class="panel panel-default panel-flush">
+                <div class="card">
                     <div class="panel-heading">
                         Settings
                     </div>
 
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="spark-settings-tabs">
                             <ul class="nav spark-settings-stacked-tabs" role="tablist">
                                 <!-- Profile Link -->
