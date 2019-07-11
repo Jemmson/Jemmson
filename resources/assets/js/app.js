@@ -27,8 +27,6 @@ window.Echo = new Echo({
 
 require('spark-bootstrap')
 
-
-
 // register the plugin on vue
 import Toasted from 'vue-toasted'
 
@@ -70,7 +68,6 @@ Spark.forms.register = {
   usertype: ''
 }
 
-
 function goingToANonAuthorizedPage(path) {
 
   return path === '/demo' ||
@@ -87,26 +84,118 @@ function isUserLoggedIn() {
   return Object.keys(User).length > 0
 }
 
+function isUserInVuexStore() {
+  return store.state.user.user !== ''
+}
+
+function isUserInSparkState() {
+  if (Spark.state.user) {
+    return true
+  } else {
+    return false
+  }
+}
+
+function updateStoreWithSparkState() {
+  store.state.user.user = Spark.state.user
+}
+
+function doAuthRouting(to, from, next) {
+
+  if (store.state.user.user.password_updated === 0) {
+    if (to !== '/#/furtherInfo')
+      next('/#/furtherInfo')
+  } else {
+    next()
+  }
+
+}
+
 router.beforeEach((to, from, next) => {
 
   axios.get('/checkAuth')
     .then(response => {
-      if (response.data.auth) {
-        checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
 
-        // need to send a user to further info if the user does not have
-        // their password updated
+        if (response.data.auth) {
+          checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
 
-        // a customer should not be able to initiate a bid or look at tasks
-        // page
+          if (isUserInVuexStore()) {
 
-        next()
-      } else {
-        if (goingToANonAuthorizedPage(to.path)) {
-          next()
+            // doAuthRouting(to, from, next)
+
+            if (store.state.user.user.password_updated === 0) {
+              if (to.fullPath === '/furtherInfo') {
+                next()
+              } else {
+                next('/furtherInfo')
+              }
+            } else {
+              next()
+            }
+
+          } else {
+
+            if (isUserInSparkState()) {
+
+              updateStoreWithSparkState()
+
+              // doAuthRouting(to, from, next)
+
+              if (store.state.user.user.password_updated === 0) {
+                if (to.fullPath === '/furtherInfo') {
+                  next()
+                } else {
+                  next('/furtherInfo')
+                }
+              } else {
+                next()
+              }
+
+            } else {
+
+              axios.get('/user/current')
+                .then(response => {
+                  this.user = response.data
+                  console.log(JSON.stringify(this.user))
+                  Spark.state.user = this.user
+
+                  this.$store.commit('setUser', this.user)
+                  window.User.user = this.user
+                  window.GeneralContractor.user = this.user
+                  window.SubContractor.user = this.user
+                  window.Customer.user = this.user
+
+                  // doAuthRouting(to, from, next)
+
+                  if (store.state.user.user.password_updated === 0) {
+                    if (to.fullPath === '/furtherInfo') {
+                      next()
+                    } else {
+                      next('/furtherInfo')
+                    }
+                  } else {
+                    next()
+                  }
+
+                })
+
+            }
+
+          }
+
+          // need to send a user to further info if the user does not have
+          // their password updated
+
+          // a customer should not be able to initiate a bid or look at tasks
+          // page
+
+        } else {
+          if (goingToANonAuthorizedPage(to.path)) {
+            next()
+          }
         }
       }
-    })
+    )
     .catch(error => {
       console.log(JSON.stringify(error))
     })

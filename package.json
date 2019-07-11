@@ -8,14 +8,17 @@
     "test": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JS/setup.js tests/JS/**/*.spec.js",
     "test_file": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JS/setup.js",
     "test_file_watch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js",
+    "test:integration": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js && ",
+    "testst": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js — timeout 10000 --require tests/JS/setup.js",
     "jswatch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js tests/JS/**/*.spec.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.3.1",
     "@saeris/vue-spinners": "^1.0.8",
-    "axios": "^0.15.2",
+    "axios": "^0.19.0",
     "bootstrap": "^3.0.0",
     "cross-env": "^3.2.3",
+    "cypress.io": "0.0.2",
     "emotion": "^9.2.6",
     "jquery": "^2.2.4",
     "js-cookie": "^2.1.0",
@@ -40,7 +43,7 @@
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.24",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "browser-sync": "^2.26.5",
+    "browser-sync": "^2.26.7",
     "browser-sync-webpack-plugin": "^2.2.2",
     "expect": "^21.2.1",
     "flush-promises": "^1.0.0",
@@ -52,6 +55,7 @@
     "mocha-webpack": "^1.1.0",
     "moxios": "^0.4.0",
     "sinon": "^6.3.1",
+    "supertest": "^4.0.2",
     "vue-template-compiler": "^2.5.17"
   }
 }
