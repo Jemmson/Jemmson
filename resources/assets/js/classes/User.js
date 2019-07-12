@@ -161,7 +161,7 @@ export default class User {
     return this.user.id === jobTask.contractor_id
   }
 
-  isContractor() {
+  static isContractor() {
     return this.user.usertype === 'contractor'
   }
 
@@ -173,9 +173,9 @@ export default class User {
    *
    * @param {JobTask} bid //
    */
-  isGeneral(bid) {
+  static isGeneral(bid) {
     if (bid !== null) {
-      return bid.contractor_id === this.user.id
+      return bid.contractor_id === User.id
     }
 
     return false
@@ -185,8 +185,8 @@ export default class User {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
   }
 
-  isSub(bid, usertype) {
-    return bid !== null && (usertype === 'contractor' && bid.contractor_id !== this.user.id)
+  static isSub(bid, usertype) {
+    return bid !== null && (usertype === 'contractor' && bid.contractor_id !== User.id)
   }
 
   /**
@@ -292,7 +292,7 @@ export default class User {
     this.user = user
   }
 
-  status(status, bid) {
+  static status(status, bid) {
     // debugger;
 
     if (status === null) {
@@ -305,11 +305,11 @@ export default class User {
       return ''
     }
 
-    if (this.isContractor()) {
-      if (this.isSub(bid, Spark.state.user.usertype) !== undefined && this.isSub(bid, Spark.state.user.usertype))
+    if (User.isContractor) {
+      if (User.isSub(bid, Spark.state.user.usertype) !== undefined && User.isSub(bid, Spark.state.user.usertype))
         return status.sub
 
-      if (this.isGeneral(bid))
+      if (User.isGeneral(bid))
         return status.general
     }
 
@@ -320,7 +320,7 @@ export default class User {
    * User has a stripe express account connected
    */
   stripeExpressConnected() {
-    if (!this.isContractor()) {
+    if (!User.isContractor) {
       return false
     }
 

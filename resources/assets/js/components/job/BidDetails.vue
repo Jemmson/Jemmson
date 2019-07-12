@@ -29,46 +29,55 @@
             </info> -->
     </div>
 
-    <div class="col-12">
+    <section class="col-12">
       <h1 class="card-title">Details</h1>
       <card>
-        <div class="row">
-          <div class="col-12 mb-3">
-            <span class="">Customer Name:</span>
-            <span v-if="isCustomer" class="float-right">{{ customerName }}</span>
-            <span v-else class="float-right">{{ customerName }}</span>
-          </div>
-          <div class="col-12 mb-3">
-            <span class="">Start Date:</span>
-            <span class="float-right">{{ agreedStartDate }}</span>
-          </div>
-          <div class="col-12 mb-3">
-            <span class="">Contractor Suggested Price:</span>
-            <span class="float-right">${{ bid.bid_price }}</span>
-          </div>
-          <div class="col-12 mb-2">
-            <span class="">Accepted Price:</span>
-            <span class="float-right">${{ bid.bid_price + 50 }}</span>
-          </div>
-        </div>
-      </card>
-    </div>
+        <header class="row">
 
-    <div class="col-12">
+          <section class="col-12 mb-3" v-if="isCustomer">
+            <label for="contractorName">Contractor Name:</label>
+            <strong id="contractorName" ref="details_contractor_name" class="float-right">Contractor Joe</strong>
+<!--            <span ref="details_contractor_name" class="float-right">{{ contractorName }}</span>-->
+          </section>
+
+          <section class="col-12 mb-3" v-else>
+            <label for="customerName" class="">Customer Name:</label>
+            <strong id="customerName" ref="details_customer_name" class="float-right">{{ customerName }}</strong>
+          </section>
+
+
+          <section class="col-12 mb-3">
+            <label for="startDate" class="">Start Date:</label>
+            <strong id="startDate" ref="details_start_date" class="float-right">{{ agreedStartDate }}</strong>
+          </section>
+
+          <section class="col-12 mb-3">
+            <label for="totalBidPrice" class="">Total Bid Price:</label>
+            <strong id="totalBidPrice" ref="details_total_bid_price" class="float-right">{{ bidPrice }}</strong>
+          </section>
+
+        </header>
+      </card>
+    </section>
+
+    <section class="col-12">
       <h1 class="card-title mt-4">Payment Details</h1>
       <card>
-        <div class="row">
-          <div class="col-12 mb-3">
-            <span class="">Payment Method Selected:</span>
-            <span class="float-right">{{ 'Stripe' }}</span>
-          </div>
-          <div class="col-12 mb-2">
-            <span class="">Payment Instructions:</span>
-            <span class="float-right">{{ 'Pay in Person' }}</span>
-          </div>
-        </div>
+        <header class="row">
+          <section class="col-12 mb-3">
+            <label for="paymentType" class="">Payment Method Selected:</label>
+            <select v-model="selectedPayment" class="float-right form-control" name="paymentType" id="paymentType">
+              <option value="creditCard">Credit Card</option>
+              <option value="cash">Cash</option>
+            </select>
+          </section>
+          <section ref="paymentInstructions" class="col-12 mb-2" v-if="selectedPayment === 'cash'">
+            <label for="paymentInstructions" class="">Payment Instructions:</label>
+            <input ref="paymentInstructionsMessage" id="paymentInstructions" class="float-right form-control" v-model="payWithCashMessage">
+          </section>
+        </header>
       </card>
-    </div>
+    </section>
 
     <div class="col-12" v-if="showAddress">
       <h1 class="card-title mt-4">Job Address</h1>
@@ -150,11 +159,17 @@
 
 <script>
   import Info from '../shared/Info'
+  import Format from '../../classes/Format'
+  import Card from '../shared/Card'
+
+
+
   // import Customer from '../../classes/Customer'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
     components: {
+      Card,
       Info
     },
     props: {
@@ -226,11 +241,12 @@
         customerNotes: false,
         customerNotes_contractor: false,
         areaError: '',
+        payWithCashMessage: '',
         locationExists: false,
         customerInfo: false,
         paymentTypeCash: false,
         paymentTypeStripe: true,
-        selectedPayment: ''
+        selectedPayment: 'creditCard'
       }
     },
     computed: {
@@ -241,10 +257,19 @@
           let date = d.split(' ')
           let format_date = date[0].split('-')
           return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
+        } else {
+          return "Not Set"
+        }
+      },
+      bidPrice() {
+        if (this.bid.status !== 'bid.initiated' && this.bid.status !== 'bid.in_progress') {
+          return "$ " + Format.decimal(this.bid.bid_price)
+        } else {
+          return "In Process"
         }
       },
       showBidPrice() {
-        if (User.isCustomer()) {
+        if (this.isCustomer) {
           const status = this.bid.status
           if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
             return true
@@ -301,11 +326,18 @@
         // Customer.updateArea (this.area.area, this.bid.id);
       },
       showArea() {
-        console.log('user type: ' + User.isContractor())
-        return this.area.area !== '' && User.isContractor()
+        // console.log('user type: ' + User.isContractor())
+        return this.area.area !== '' && !this.isCustomer
+      },
+      initializePayWithCashMessageValue(){
+        if(this.bid.paid_with_cash_message){
+          this.payWithCashMessage = this.bid.paid_with_cash_message
+        }
       }
     },
-    mounted: function() {}
+    mounted () {
+      this.initializePayWithCashMessageValue()
+    }
   }
 </script>
 

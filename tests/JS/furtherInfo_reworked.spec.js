@@ -5,7 +5,6 @@ import sinon from 'sinon'
 import FurtherInfo from '../../resources/assets/js/pages/FurtherInfo'
 import moxios from 'moxios'
 import Vuex from 'vuex'
-import User from '../../resources/assets/js/classes/User'
 
 const localVue = createLocalVue()
 
