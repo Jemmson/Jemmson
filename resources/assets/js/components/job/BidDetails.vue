@@ -129,26 +129,26 @@
         </section>
 
         <!-- / tasks -->
-        <div class="col-12">
+        <section class="col-12">
             <h1 class="card-title mt-4">Job Tasks</h1>
             <card @click.native="$router.push('/job/tasks')">
                 Total
                 <span class="float-right" v-if="bid.job_tasks !== undefined">
-          (<b>{{bid.job_tasks.length}}</b>)
+          (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
         </span>
             </card>
-        </div>
+        </section>
 
-        <div class="col-12">
+        <section class="col-12" v-if="!isCustomer" ref="add_new_task">
             <card class="mt-4" @click.native="$router.push('/job/add/task')">
-                <div class="row">
+                <main class="row">
                     <div class="col">
                         <p class="d-inline">Add New Task</p>
                         <i class="fas fa-chevron-right text-primary float-right sm-icon"></i>
                     </div>
-                </div>
+                </main>
             </card>
-        </div>
+        </section>
 
         <div class="col-12">
             <h1 class="card-title mt-4">Attachments</h1>

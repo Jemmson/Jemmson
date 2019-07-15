@@ -161,7 +161,8 @@ export default class User {
     return this.user.id === jobTask.contractor_id
   }
 
-  static isContractor() {
+  isContractor() {
+  // static isContractor() {
     return this.user.usertype === 'contractor'
   }
 
@@ -173,7 +174,8 @@ export default class User {
    *
    * @param {JobTask} bid //
    */
-  static isGeneral(bid) {
+  isGeneral(bid) {
+  // static isGeneral(bid) {
     if (bid !== null) {
       return bid.contractor_id === User.id
     }
@@ -185,7 +187,8 @@ export default class User {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
   }
 
-  static isSub(bid, usertype) {
+  // static isSub(bid, usertype) {
+  isSub(bid, usertype) {
     return bid !== null && (usertype === 'contractor' && bid.contractor_id !== User.id)
   }
 
@@ -292,8 +295,8 @@ export default class User {
     this.user = user
   }
 
-  // status(status, bid) {
-  static status(status, bid) {
+  status(status, bid) {
+  // static status(status, bid) {
     // debugger;
 
     if (status === null) {
