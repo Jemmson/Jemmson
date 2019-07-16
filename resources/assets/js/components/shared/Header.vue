@@ -5,12 +5,14 @@
                 <i class="fas fa-search text-white float-left sm-icon"></i>
                 <i class="far fa-bell text-white float-right sm-icon"></i>
             </div>
-            <div class="col-12">
+            <div class="col-12" ref="biographical_information">
                 <img class="profile-pic float-left ml-2"
                      src="https://www.skylightsearch.co.uk/wp-content/uploads/2017/01/Hadie-profile-pic-circle-1.png"
                      alt="profile pic">
                 <div class="profile-details">
-                    <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                    <h4
+                        ref="user_name"
+                    >{{ user.first_name }} {{ user.last_name }}</h4>
 
                     <div class="row">
                         <div class="col pr-0">
@@ -27,19 +29,21 @@
                 </div>
             </div>
         </div>
-        <div v-else-if="page === '/bids' || page === '/home/'" class="row bg-white bids-row ">
+        <div v-else-if="page === '/bids' && user.usertype !== 'customer'" class="row bg-white bids-row "
+             ref="job_toggle"
+        >
             <div class="col-12 pt-3" style="height: 40px;">
                 <i class="fas fa-search text-primary float-left sm-icon"></i>
                 <i class="fas fa-plus text-primary float-right sm-icon"></i>
             </div>
-            <div @click.prevent="toggleBidsContractor(true)"
+            <div ref="toggle_contractors" @click.prevent="toggleBidsContractor(true)"
                  class="col pr-0 pl-0 text-center text-uppercase align-self-end"
                  :class="bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
                 <p class="bids-toggle text-primary">
                     Contractor
                 </p>
             </div>
-            <div @click.prevent="toggleBidsContractor(false)"
+            <div ref="toggle_subContractors" @click.prevent="toggleBidsContractor(false)"
                  class="col pr-0 pl-0 text-center text-uppercase align-self-end"
                  :class="!bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
                 <p class="bids-toggle text-primary">
@@ -50,17 +54,9 @@
         <div v-else-if="page.split('/')[1] === 'bid'" class="row bg-white bid-row mb-4">
             <div class="col-12 d-flex align-items-center">
                 <i class="fas fa-chevron-left text-primary float-left sm-icon align-self-center"></i>
-                <span class="page-header-title mx-auto align-middle" style="font-weight: 700;">
+                <span ref="job_name" class="page-header-title mx-auto align-middle" style="font-weight: 700;">
                     {{$store.state.job.model !== null ? $store.state.job.model.job_name : 'No Job Name'}}
                 </span>
-            </div>
-        </div>
-        <div v-else class="row bg-white default-row mb-4">
-            <div class="col-12 d-flex align-items-center">
-                <i class="fas fa-tree text-primary float-left sm-icon align-self-center"></i>
-                <h3 class="page-header-title font-weight-bold mx-auto">A SAMPLE COMPANY</h3>
-                <!--                <h3 class="page-header-title font-weight-bold mx-auto">{{ getCompanyName }}</h3>-->
-                <i class="fas fa-search text-primary float-right sm-icon"></i>
             </div>
         </div>
     </div>
@@ -71,6 +67,11 @@
 
   export default {
     props: ['user'],
+    data(){
+      return {
+        currentUser: ''
+      }
+    },
     computed: {
       ...mapState({
         page: state => state.page,
@@ -100,6 +101,8 @@
         this.user.user !== null &&
         this.userFromState !== '' ) {
         this.$store.commit('setUser', this.user)
+        this.currentUser = this.user;
+      } else {
       }
 
       console.log('header', this.page)
