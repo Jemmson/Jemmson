@@ -87,7 +87,11 @@
         },
         methods: {
             goTo (to) {
-                this.$router.push(to);
+                if (window.location.pathname === '/settings') {
+                    window.location.href = '/#' + to;
+                } else {
+                    this.$router.push(to);
+                }
             },
             isCurrentPage (a, b) {
                 if (this.page === a || this.page === b) {
