@@ -82,6 +82,10 @@
                                id="paymentInstructions"
                                class="float-right form-control"
                                v-model="payWithCashMessage">
+                        <button class="btn btn-sm btn-primary float-right"
+                                ref="paywithCashButton"
+                                @click="submitPayWithCashMessage"
+                        >Submit</button>
                     </section>
                 </main>
             </card>
@@ -132,7 +136,7 @@
         <section class="col-12">
             <h1 class="card-title mt-4">Job Tasks</h1>
             <card @click.native="$router.push('/job/tasks')">
-                Total
+               {{  }} Total
                 <span class="float-right" v-if="bid.job_tasks !== undefined">
           (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
         </span>
@@ -319,6 +323,9 @@
           this.paymentTypeCash = false
           this.paymentTypeStripe = true
         }
+      },
+      submitPayWithCashMessage(){
+        // TODO: update pay this method to update the pay with cash message in the back end
       },
       getLabelClass(status) {
         return Format.statusLabel(status,)

@@ -14,11 +14,15 @@ describe('BidDetails', () => {
 
   const initializePayWithCashMessageValueStub = sinon.stub()
   const updateGeneralContractorNotesStub = sinon.stub()
+  const submitPayWithCashMessageStub = sinon.stub()
 
   const wrapper = shallowMount(BidDetails, {
     propsData: {
       isCustomer: false,
       customerName: 'Jane Doe',
+      mocks: {
+
+      },
       bid: {
         job_name: 'Pool Job',
         customer: {
@@ -150,6 +154,24 @@ describe('BidDetails', () => {
     })
 
     expect(wrapper.find({ref: 'paymentInstructions'}).exists()).toBe(false)
+
+  })
+
+  it.only('should trigger payment with cash method when submit button is triggered', function() {
+
+    wrapper.setData({
+      selectedPayment: 'cash'
+    })
+
+    wrapper.setMethods({
+      submitPayWithCashMessage: submitPayWithCashMessageStub
+    })
+
+    let paywithCashButton = wrapper.find({ref: 'paywithCashButton'})
+
+    paywithCashButton.trigger('click')
+
+    expect(submitPayWithCashMessageStub.called).toBe(true)
 
   })
 

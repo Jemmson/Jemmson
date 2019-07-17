@@ -295,7 +295,7 @@ export default class User {
     this.user = user
   }
 
-  status(status, bid) {
+  static status(status, bid) {
   // static status(status, bid) {
     // debugger;
 

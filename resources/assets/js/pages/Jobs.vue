@@ -1,53 +1,62 @@
 <template>
-  <!-- /all bids shown in a list as a customer should see it -->
-  <div class="container-fluid">
-    <div v-if="bidsContractorSectionPicked" ref="jobs">
-      <search-bar>
-        <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
-      </search-bar>
+    <!-- /all bids shown in a list as a customer should see it -->
+    <div class="container-fluid">
+        <div v-if="bidsContractorSectionPicked" ref="jobs">
+            <search-bar>
+                <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
+            </search-bar>
 
-      <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
-      <div class="mt-4 mb-1">
+            <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
 
-        <card class="list-card " v-for="bid in sBids" v-bind:key="bid.id" @click.native="goToJob(bid.id)">
-          <div class="row">
-            <div class="col-12 page-header-title">
-              {{ jobName(bid.job_name) }}
-            </div>
-            <div class="col-12">
-              <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
-              <span :class="getLabelClass(bid)">
-                {{ status(bid) }}
-              </span>
+            <div class="mt-4 mb-1" ref="all_bids">
 
-              <span class="float-right list-card-info">2 Subs
-                <i class="fas fa-users"></i>
-              </span>
+                <card class="list-card"
+                      v-for="bid in sBids" v-bind:key="bid.id"
+                      @click.native="goToJob(bid.id)">
 
-              <span class="float-right mr-2 list-card-info">3 Tasks
+                    <section class="row">
+                        <header class="col-12 page-header-title">
+                            {{ jobName(bid.job_name) }}
+                        </header>
+                        <div class="col-12">
+                            <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
+                            <label :class="getLabelClass(bid)">
+                                {{ status(bid) }}
+                            </label>
+                            <span class="float-right list-card-info">2 Subs
+                                <i class="fas fa-users"></i></span>
+
+                            <span class="float-right mr-2 list-card-info" ref="show_number_of_job_tasks">Tasks
                 <i class="far fa-check-square"></i>
               </span>
+                        </div>
+                    </section>
+                </card>
             </div>
-          </div>
-        </card>
-      </div>
-      <!-- </paginate> -->
+            <!-- </paginate> -->
 
-      <!-- <div class="card mb-4 mt-3">
-      <div class="card-body d-flex justify-content-center">
-        <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
-        </paginate-links>
-      </div>
-      </div> -->
+            <!-- <div class="card mb-4 mt-3">
+            <div class="card-body d-flex justify-content-center">
+              <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
+              </paginate-links>
+            </div>
+            </div> -->
+        </div>
+        <tasks v-else>
+        </tasks>
     </div>
-    <tasks v-else>
-    </tasks>
-  </div>
 </template>
 
 <script>
   import { mapState, mapMutations } from 'vuex'
+  import Tasks from './Tasks'
+
+
+
   export default {
+    components: [
+      Tasks
+    ],
     props: {
       user: Object
     },
@@ -69,18 +78,18 @@
     },
     computed: {
       ...mapState({
-                page: state => state.page,
-                bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
-            })
+        page: state => state.page,
+        bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
+      })
     },
     methods: {
       search() {
-          this.sBids = this.bids.filter((bid) => {
-              if (this.searchTerm === '' || this.searchTerm.length <= 1) {
-                return true
-            }
-            return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
-          })
+        this.sBids = this.bids.filter((bid) => {
+          if (this.searchTerm === '' || this.searchTerm.length <= 1) {
+            return true
+          }
+          return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+        })
         if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
           this.$refs.paginator.goToPage(1)
         }
@@ -118,7 +127,7 @@
       }
     },
     mounted() {
-      this.$store.commit('setCurrentPage', this.$router.history.current.path);
+      this.$store.commit('setCurrentPage', this.$router.history.current.path)
     },
     created() {
       this.getBids()
