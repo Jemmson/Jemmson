@@ -1,14 +1,14 @@
 import {
   shallowMount
 } from '@vue/test-utils'
-import BidDetails from '../../../../resources/assets/js/components/job/BidDetails'
+import BidDetails from '../../resources/assets/js/components/job/BidDetails'
 // import Customer from '../../../../resources/assets/js/classes/Customer'
-import User from '../../../../resources/assets/js/classes/User'
+import User from '../../resources/assets/js/classes/User'
 
 import sinon from 'sinon'
 import expect from 'expect'
 
-require('../../bootstrap')
+require('./bootstrap')
 
 describe('BidDetails', () => {
 
@@ -157,7 +157,7 @@ describe('BidDetails', () => {
 
   })
 
-  it.only('should trigger payment with cash method when submit button is triggered', function() {
+  it('should trigger payment with cash method when submit button is triggered', function() {
 
     wrapper.setData({
       selectedPayment: 'cash'

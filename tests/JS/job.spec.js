@@ -66,9 +66,7 @@ describe('Job', () => {
     moxios.uninstall();
   });
 
-  it('should ', function() {
-    
-  })
+
 
   // const wrapper = shallowMount(Job, {
   //   router,

@@ -2,9 +2,9 @@ import {
   shallowMount
 } from "@vue/test-utils";
 import sinon from 'sinon';
-import Task from '../../../../resources/assets/js/components/task/Task';
+import Task from '../../resources/assets/js/components/task/Task';
 
-require('../../bootstrap');
+require('./bootstrap');
 
 describe('Task', () => {
 

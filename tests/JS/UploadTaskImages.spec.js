@@ -1,7 +1,7 @@
 import {
     shallowMount
 } from "@vue/test-utils";
-import UploadTaskImages from '../../../../resources/assets/js/components/task/UploadTaskImages';
+import UploadTaskImages from '../../resources/assets/js/components/task/UploadTaskImages';
 
 // require('../../bootstrap');
 

@@ -1,9 +1,9 @@
 import {
     shallowMount
 } from "@vue/test-utils";
-import PayWithStripe from '../../../../resources/assets/js/components/stripe/PayWithStripe';
+import PayWithStripe from '../../resources/assets/js/components/stripe/PayWithStripe';
 
-require('../../bootstrap');
+require('./bootstrap');
 
 
 let Stripe = () => {

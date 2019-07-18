@@ -4,7 +4,7 @@ import {
 } from '@vue/test-utils'
 import sinon from 'sinon'
 import Vuex from 'vuex'
-import SubInviteModal from '../../../../resources/assets/js/components/task/SubInviteModal'
+import SubInviteModal from '../../resources/assets/js/components/task/SubInviteModal'
 import moxios from 'moxios'
 
 // require('../../bootstrap')

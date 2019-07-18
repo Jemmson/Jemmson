@@ -2,7 +2,7 @@ import {
     shallowMount
 } from "@vue/test-utils";
 import sinon from 'sinon';
-import DenyTaskModal from '../../../../resources/assets/js/components/task/DenyTaskModal';
+import DenyTaskModal from '../../resources/assets/js/components/task/DenyTaskModal';
 
 // require('../../bootstrap');
 

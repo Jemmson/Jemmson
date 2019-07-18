@@ -84,7 +84,7 @@ export default class User {
     })
   }
 
-  getAllPayableTasks(jobTasks) {
+  static getAllPayableTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {
         return jobTask.status === 'bid_task.approved_by_general' || jobTask.status === 'bid_task.finished_by_general'
