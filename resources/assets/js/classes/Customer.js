@@ -45,7 +45,7 @@ export default class Customer {
     console.log(bid)
     disabled.cancelBid = true
     try {
-      const data = await axios.post('/job/cancel', bid)
+      await axios.post('/job/cancel', bid)
       Vue.toasted.success('Bid Canceled')
       disabled.cancelBid = false
       location.href = '/#/bids'
@@ -66,7 +66,7 @@ export default class Customer {
   async declineBid(bid, disabled) {
     disabled.declineBid = true
     try {
-      const data = await axios.post('/bid/job/decline', bid)
+      await axios.post('/bid/job/decline', bid)
       User.emitChange('bidUpdated')
       Vue.toasted.success('Bid Declined & Notification Sent')
       disabled.declineBid = false
@@ -85,7 +85,7 @@ export default class Customer {
   async denyTask(denyForm, disabled) {
     disabled.deny = true
     try {
-      const data = await axios.post('/task/deny', {
+      await axios.post('/task/deny', {
         job_task_id: denyForm.job_task_id,
         user_id: denyForm.user_id,
         message: denyForm.message
@@ -150,7 +150,7 @@ export default class Customer {
     disabled.payCash = true
 
     try {
-      const data = await axios.post('/api/stripe/task/cash', jobTask)
+      await axios.post('/api/stripe/task/cash', jobTask)
       User.emitChange('bidUpdated')
       Vue.toasted.success('Paid For Task')
       disabled.payCash = false
@@ -182,7 +182,7 @@ export default class Customer {
     }
 
     try {
-      const data = await axios.post('/stripe/customer/pay/tasks', {id: id, excluded: excluded})
+      await axios.post('/stripe/customer/pay/tasks', {id: id, excluded: excluded})
       User.emitChange('bidUpdated')
       Vue.toasted.success('Paid For All Payable Tasks')
       disabled.payAll = false
@@ -203,7 +203,7 @@ export default class Customer {
     console.log('payAllPayableTasksWithCash', id)
     disabled.payCash = true
     try {
-      const data = await axios.post('/stripe/customer/pay/tasks/cash', {
+      await axios.post('/stripe/customer/pay/tasks/cash', {
         id: id,
         excluded: excluded,
         cashMessage: cashMessage
@@ -237,7 +237,7 @@ export default class Customer {
     }
 
     try {
-      const data = await axios.post('/stripe/express/task/payment', jobTask)
+      await axios.post('/stripe/express/task/payment', jobTask)
       User.emitChange('bidUpdated')
       Vue.toasted.success('Paid For Task')
       disabled.pay = false
@@ -264,7 +264,7 @@ export default class Customer {
 
   async updateNotesForJob(customerNotesMessage, customer_id) {
     try {
-      const data = await axios.post('/customer/updateCustomerNotes',
+      await axios.post('/customer/updateCustomerNotes',
         {
           customerNotesMessage: customerNotesMessage,
           customer_id: customer_id
