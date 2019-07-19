@@ -139,7 +139,10 @@
         </section>
 
         <!-- / tasks -->
-        <section class="col-12" v-if="bid.job_tasks !== undefined">
+        <section ref="job_tasks" class="col-12"
+                 v-if="bid.job_tasks !== undefined &&
+                 bid.status !== 'bid.initiated' &&
+                 bid.status !== 'bid.in_progress'">
             <h1 class="card-title mt-4">Job Tasks</h1>
             <card>
 

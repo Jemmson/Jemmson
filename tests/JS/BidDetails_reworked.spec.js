@@ -305,7 +305,7 @@ describe('BidDetails', () => {
 
   })
 
-  it.only('should show save message in the customernotes variable when notes are being entered', function() {
+  it('should show save message in the customernotes variable when notes are being entered', function() {
     wrapper.setData({
       customerNotesMessage: ''
     })
@@ -315,6 +315,70 @@ describe('BidDetails', () => {
     textarea.setValue('my message')
 
     expect(wrapper.vm.$data.customerNotesMessage).toBe('my message');
+
+  })
+
+  it('should see job tasks once the bid has been submitted', function() {
+    wrapper.setProps({
+      bid: {
+        status: 'bid.submitted',
+        job_tasks: [
+          {task_id: 1},
+          {task_id: 2},
+          {task_id: 3}
+        ]
+      }
+    })
+
+    expect(wrapper.find({ref: 'job_tasks'}).exists()).toBe(true)
+
+  })
+
+  it('should not see job tasks when the bid is initiated', function() {
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        job_tasks: [
+          {task_id: 1},
+          {task_id: 2},
+          {task_id: 3}
+        ]
+      }
+    })
+
+    expect(wrapper.find({ref: 'job_tasks'}).exists()).toBe(false)
+
+  })
+
+  it('should not see job tasks when the bid is in progress', function() {
+    wrapper.setProps({
+      bid: {
+        status: 'bid.in_progress',
+        job_tasks: [
+          {task_id: 1},
+          {task_id: 2},
+          {task_id: 3}
+        ]
+      }
+    })
+
+    expect(wrapper.find({ref: 'job_tasks'}).exists()).toBe(false)
+
+  })
+
+
+
+  it('should not see job tasks if job tasks are undefined', function() {
+    wrapper.setProps({
+      isCustomer: false,
+      contractorName: 'Joe Customer',
+      bid: {
+        status: 'bid.initiated',
+        job_tasks: undefined
+      }
+    })
+
+    expect(wrapper.find({ref: 'job_tasks'}).exists()).toBe(false)
 
   })
 
