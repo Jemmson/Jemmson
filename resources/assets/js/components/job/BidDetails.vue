@@ -169,9 +169,9 @@
         </section>
 
         <div class="col-12">
-            <h1 class="card-title mt-4">Attachments</h1>
+            <h1 class="card-title ml-4 mt-4">Attachments</h1>
             <div class="mb-4">
-                <img src="" alt="Attachments">
+                <img src="img/test.jpg" style="height: 100px;" alt="Attachments">
             </div>
         </div>
 
