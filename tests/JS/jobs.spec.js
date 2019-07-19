@@ -1,7 +1,8 @@
 import {
   mount,
   shallowMount,
-  createLocalVue
+  createLocalVue,
+  config
 }
   from '@vue/test-utils'
 import VuePaginate from 'vue-paginate'
@@ -13,9 +14,9 @@ import expect from 'expect'
 require('./bootstrap')
 
 const localVue = createLocalVue()
+localVue.use(Vuex)
 
 localVue.use(VuePaginate)
-localVue.use(Vuex)
 localVue.use(VueRouter)
 
 import Jobs from '../../resources/assets/js/pages/Jobs.vue'
@@ -27,112 +28,35 @@ const $on = {
 
 describe('Jobs', () => {
   const search = sinon.stub()
-
-  const mutations = {
-    setCurrentPage: sinon.spy()
-  }
-
-  let store = new Vuex.Store({
-    mutations
-  })
+  let store;
+  let storeOptions;
 
   const router = new VueRouter({})
 
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(Jobs, {
-      store,
-      localVue,
-      router,
-      stubs: [
-        'search-bar',
-        'tasks',
-      ],
-      mocks: {
-        $on,
-        search
+    storeOptions = {
+      getters: {},
+      actions: {},
+      mutations: {
+        setCurrentPage: sinon.spy()
       },
-      propsData: {
-        user: {
-          usertype: 'contractor',
-          contractor: {
-            company_name: 'KPS Pools'
-          }
-        }
-      },
-      data() {
-        return {
-          bids: [],
-          sBids: [{
-            bid_price: 245,
-            customer: {
-              name: 'Laurel Ailie'
-            },
-            job_name: 'Clear up Green Pool',
-            status: 'bid.sent'
-          }, {
-            bid_price: 245,
-            customer: {
-              name: 'Jane Doe'
-            },
-            job_name: 'Fix Sink',
-            status: 'bid.sent'
-          }, {
-            bid_price: 245,
-            customer: {
-              name: 'Jane Doe'
-            },
-            job_name: 'Fix Sink',
-            status: 'bid.sent'
-          }, {
-            bid_price: 245,
-            customer: {
-              name: 'Jane Doe'
-            },
-            job_name: 'Fix Sink',
-            status: 'bid.sent'
-          }, {
-            bid_price: 245,
-            customer: {
-              name: 'Jane Doe'
-            },
-            job_name: 'Fix Sink',
-            status: 'bid.sent'
-          }, {
-            bid_price: 245,
-            customer: {
-              name: 'Jane Doe'
-            },
-            job_name: 'Fix Sink',
-            status: 'bid.sent'
-          }, {
-            bid_price: 245,
-            customer: {
-              name: 'Jane Doe'
-            },
-            job_name: 'Fix Sink',
-            status: 'bid.sent'
-          }, {
-            bid_price: 245,
-            customer: {
-              name: 'John Doe'
-            },
-            job_name: 'Fix Pool',
-            status: 'job.completed'
-          }],
-          showBid: false,
-          bidIndex: 0,
-          searchTerm: '',
-          paginate: ['sBids']
-        }
+      state: {
+        bidsContractorSectionPicked: true
       }
-    })
+    }
+    store = new Vuex.Store(storeOptions)
   })
 
-  it.only('Should contain the name Fix Sink', () => {
+  it('Should contain the name Fix Sink', () => {
 
-
+    wrapper = shallowMount(Jobs, {
+      localVue,
+      store,
+      router,
+      mocks: {}
+    })
 
     wrapper.setData({
       bids: [],
@@ -201,9 +125,8 @@ describe('Jobs', () => {
       paginate: ['sBids']
     })
 
-    console.log(wrapper.find({ref: 'all_bids'}).html())
-
-    expect(wrapper.text()).toContain('Fix Sink')
+    expect(wrapper.findAll({ref: 'job'}).length).toBe(8)
+    expect(wrapper.findAll({ref: 'job_name'}).at(0).text()).toBe('Clear up Green Pool')
 
   })
 
