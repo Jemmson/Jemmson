@@ -85,7 +85,8 @@
                         <button class="btn btn-sm btn-primary float-right"
                                 ref="paywithCashButton"
                                 @click="submitPayWithCashMessage"
-                        >Submit</button>
+                        >Submit
+                        </button>
                     </section>
                 </main>
             </card>
@@ -118,14 +119,19 @@
                 <main class="row">
                     <section class="col-12">
 
-                        <textarea name="notes" id="" cols="30" rows="10" class="form-control">
+                        <textarea ref="message_text_area"
+                                  v-model="customerNotesMessage"
+                                  name="notes" id="" cols="30" rows="10"
+                                  class="form-control">
 
                         </textarea>
 
-                        <button class="btn btn-default"
+                        <button class="btn btn-primary btn-sm"
+                                style="margin-top: .5rem"
                                 ref="update_customer_notes_button"
                                 @click="updateGeneralContractorNotes"
-                        >Submit</button>
+                        >Submit
+                        </button>
 
                     </section>
                 </main>
@@ -133,13 +139,18 @@
         </section>
 
         <!-- / tasks -->
-        <section class="col-12">
+        <section class="col-12" v-if="bid.job_tasks !== undefined">
             <h1 class="card-title mt-4">Job Tasks</h1>
-            <card @click.native="$router.push('/job/tasks')">
-               {{  }} Total
-                <span class="float-right" v-if="bid.job_tasks !== undefined">
-          (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
-        </span>
+            <card>
+
+                <span class="">
+                (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
+                </span> Total
+
+                <button class="btn btn-primary btn-sm float-right"
+                        @click.prevent="viewTasks()">View Tasks
+                </button>
+
             </card>
         </section>
 
@@ -313,6 +324,9 @@
       }
     },
     methods: {
+      viewTasks(){
+        this.$router.push('/job/tasks')
+      },
       paymentMethod(paymentType) {
         if (paymentType === 'cash') {
           this.selectedPayment = 'cash'
@@ -324,7 +338,7 @@
           this.paymentTypeStripe = true
         }
       },
-      submitPayWithCashMessage(){
+      submitPayWithCashMessage() {
         // TODO: update pay this method to update the pay with cash message in the back end
       },
       getLabelClass(status) {

@@ -15,14 +15,15 @@ describe('BidDetails', () => {
   const initializePayWithCashMessageValueStub = sinon.stub()
   const updateGeneralContractorNotesStub = sinon.stub()
   const submitPayWithCashMessageStub = sinon.stub()
+  // const User.status = sinon.stub()
 
   const wrapper = shallowMount(BidDetails, {
+    // methods: {
+    //   status: sinon.stub()
+    // },
     propsData: {
       isCustomer: false,
       customerName: 'Jane Doe',
-      mocks: {
-
-      },
       bid: {
         job_name: 'Pool Job',
         customer: {
@@ -301,6 +302,27 @@ describe('BidDetails', () => {
 
     expect(wrapper.find({ref: 'add_new_task'}).exists()).toBe(true);
 
+
+  })
+
+  it.only('should show save message in the customernotes variable when notes are being entered', function() {
+    wrapper.setData({
+      customerNotesMessage: ''
+    })
+
+    let textarea = wrapper.find({ ref: 'message_text_area'})
+
+    textarea.setValue('my message')
+
+    expect(wrapper.vm.$data.customerNotesMessage).toBe('my message');
+
+  })
+
+  it.skip('should not be able to submit customer notes if the notes are blank', function() {
+
+  })
+
+  it.skip('should be able to delete notes for the customer notes', function() {
 
   })
 
