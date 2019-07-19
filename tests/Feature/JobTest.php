@@ -4,16 +4,20 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Job;
 use App\User;
 use App\Customer;
 use App\JobStatus;
 use App\Contractor;
+use App\Location;
+use App\Task;
+use App\JobTask;
 
 class JobTest extends TestCase
 {
 
-    use DatabaseMigrations;
+//    use RefreshDatabase;
 
     /**  @test */
     function create_a_job_name_from_an_empty_job() {
@@ -94,6 +98,60 @@ class JobTest extends TestCase
         ]);
     }
 
+
+    /**  @test */
+    function that_i_get_the_correct_payload_when_querying_existing_jobs() {
+        //
+        $contractor = factory(User::class)->create([
+            'usertype' => 'contractor',
+            'password_updated' => 1
+        ]);
+
+        $location = factory(Location::class)->create();
+
+        factory(Contractor::class)->create([
+            'user_id' => $contractor->id,
+            'location_id' => $location->id,
+        ]);
+
+        $customer = factory(User::class)->create([
+            'usertype' => 'customer'
+        ]);
+
+        $location1 = factory(Location::class)->create();
+
+        factory(Customer::class)->create([
+            'user_id' => $customer->id,
+            'location_id' => $location1->id,
+        ]);
+
+
+        $job = factory(Job::class)->create([
+            'customer_id' => $customer->id,
+            'contractor_id' => $contractor->id
+        ]);
+
+        $task = factory(Task::class)->create([
+            "name" => "pool work",
+            "sub_instructions" => "sub Instruction",
+            "customer_instructions" => "customer instructions"
+        ]);
+
+        factory(JobTask::class)->create([
+            "job_id" => $job->id,
+            "task_id" => $task->id
+        ]);
+
+
+        $response = $this->actingAs($contractor)->json('POST', '/jobs');
+
+
+        $response->assertJson([
+            "created" => "true"
+        ]);
+
+
+    }
 
 
 }

@@ -84,7 +84,8 @@ export default class User {
     })
   }
 
-  static getAllPayableTasks(jobTasks) {
+  getAllPayableTasks(jobTasks) {
+  // static getAllPayableTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {
         return jobTask.status === 'bid_task.approved_by_general' || jobTask.status === 'bid_task.finished_by_general'
@@ -174,8 +175,8 @@ export default class User {
    *
    * @param {JobTask} bid //
    */
-  isGeneral(bid) {
   // static isGeneral(bid) {
+  isGeneral(bid) {
     if (bid !== null) {
       return bid.contractor_id === User.id
     }
@@ -295,7 +296,7 @@ export default class User {
     this.user = user
   }
 
-  static status(status, bid) {
+  status(status, bid) {
   // static status(status, bid) {
     // debugger;
 
@@ -337,7 +338,6 @@ export default class User {
     for (let jobTask of jobTasks) {
       if (jobTask.stripe) {
         return true
-        break
       }
     }
     return false
@@ -348,7 +348,7 @@ export default class User {
     let page_url = window.location.href
     let user_id = this.user.id
     try {
-      const data = await
+      await
         axios.post('/api/feedback', {
           user_id: user_id,
           page_url: page_url,
@@ -398,7 +398,7 @@ export default class User {
   async updateTaskLocation(form, disabled) {
     disabled.update = true
     try {
-      const data = await axios.post('/api/location', form)
+      await axios.post('/api/location', form)
       Bus.$emit('bidUpdated')
       Vue.toasted.success('Location Updated')
       disabled.update = false
