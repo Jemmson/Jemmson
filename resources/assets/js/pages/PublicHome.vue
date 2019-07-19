@@ -45,9 +45,9 @@
                         <div class="flex flex-col form-submit-section">
                             <!-- Remember Me -->
                             <div class="checkbox align-checkbox flex">
-                                <input v-model="form.remember" type="checkbox" class="checkbox-sizing mr-2"
+                                <label for="rememeber_me">Remember Me</label>
+                                <input id="rememeber_me" v-model="form.remember" type="checkbox" class="checkbox-sizing mr-2"
                                     name="remember">
-                                <div>Remember Me</div>
                             </div>
                             <div class="flex form-submit form-item">
                                 <!-- Login Button -->
