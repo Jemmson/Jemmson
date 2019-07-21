@@ -1,71 +1,94 @@
 <template>
-    <div class="container-fluid" v-if="page !== '/' || user.usertype !== undefined">
-        <div v-if="page === '/home' || page === '/home/'" class="row bg-primary home-row">
-            <div class="col-12 pt-3" style="height: 40px;">
-                <i class="fas fa-search text-white float-left sm-icon"></i>
-                <i class="far fa-bell text-white float-right sm-icon"></i>
-            </div>
-            <div class="col-12" ref="biographical_information">
-                <img class="profile-pic float-left ml-2"
-                     src="https://www.skylightsearch.co.uk/wp-content/uploads/2017/01/Hadie-profile-pic-circle-1.png"
-                     alt="profile pic">
-                <div class="profile-details">
-                    <h4
-                        ref="user_name"
-                    >{{ user.first_name }} {{ user.last_name }}</h4>
+    <nav>
 
-                    <div class="row">
-                        <div class="col pr-0">
-                            <img class="float-left" src="/img/edit.svg" alt="">
-                            <p>Edit Profile</p>
-                        </div>
-                        <div class="col pl-0">
-                            <a href="/logout">
-                                <img class="float-left" src="/img/Logout.svg" alt="">
-                                <p>Log Out</p>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+        <section v-if="onHomePage()">
+            <header-bio
+                    ref="homePage"
+                    :first-name="user.first_name"
+                    :last-name="user.last_name"
+            ></header-bio>
+        </section>
+
+        <section v-else-if="onParticularJobPage()">
+            <header-job-name-settings-logout
+                ref="headerJobNameSettingsLogout"
+                :job-name=getCompanyName
+            ></header-job-name-settings-logout>
+        </section>
+
+        <section v-else-if="onInvoicesPage() ||
+                        onParticularInvoicePage() ||
+                        onImagesPage()">
+
+<!--            onSettingsPage() ||-->
+
+            <header-bio
+                    ref="homePage1"
+                    :first-name="user.first_name"
+                    :last-name="user.last_name"
+            ></header-bio>
+        </section>
+
+        <section v-else-if="(onTasksPage() || onJobsPage())">
+
+            <div v-if="!isCustomer()">
+                <header-job-toggle
+                    ref="headerJobToggle"
+                ></header-job-toggle>
             </div>
-        </div>
-        <div v-else-if="(page === '/bids' || page === '/home/') && !isCustomer()" class="row bg-white bids-row ">
-            <div class="col-12 pt-3" style="height: 40px;">
-                <i class="fas fa-search text-primary float-left sm-icon"></i>
-                <i class="fas fa-plus text-primary float-right sm-icon"></i>
+
+            <div v-else="">
+                <header-bio
+                        ref="homePage2"
+                        :first-name="user.first_name"
+                        :last-name="user.last_name"
+                ></header-bio>
             </div>
-            <div ref="toggle_contractors" @click.prevent="toggleBidsContractor(true)"
-                 class="col pr-0 pl-0 text-center text-uppercase align-self-end"
-                 :class="bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                <p class="bids-toggle text-primary">
-                    Contractor
-                </p>
-            </div>
-            <div ref="toggle_subContractors" @click.prevent="toggleBidsContractor(false)"
-                 class="col pr-0 pl-0 text-center text-uppercase align-self-end"
-                 :class="!bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                <p class="bids-toggle text-primary">
-                    Subcontractor
-                </p>
-            </div>
-        </div>
-        <div v-else-if="page.split('/')[1] === 'bid'" class="row bg-white bid-row mb-4">
-            <div class="col-12 d-flex align-items-center">
-                <i class="fas fa-chevron-left text-primary float-left sm-icon align-self-center"></i>
-                <span ref="job_name" class="page-header-title mx-auto align-middle" style="font-weight: 700;">
-                    {{$store.state.job.model !== null ? $store.state.job.model.job_name : 'No Job Name'}}
-                </span>
-            </div>
-        </div>
-    </div>
+
+        </section>
+
+        <section v-else-if="(onAddTaskPage() || onAddSubPage()) && !isCustomer()">
+            <header-back-button
+                ref="headerBackButton"
+            ></header-back-button>
+        </section>
+
+        <section v-else-if="onInitiateBidPage()
+                        && !isCustomer()">
+            <header-bio
+                    ref="homePage3"
+                    :first-name="user.first_name"
+                    :last-name="user.last_name">
+            </header-bio>
+        </section>
+
+
+<!--        <section v-else-if="onPublicHomePage() ||-->
+<!--                            onRegisterPage() ||-->
+<!--                            onFurtherInfoPage()"></section>-->
+
+    </nav>
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex'
+  import { mapState } from 'vuex'
+  import HeaderBio from '../header/HeaderBio'
+  import HeaderBackButton from '../header/HeaderBackButton'
+  import HeaderJobNameSettingsLogout from '../header/HeaderJobNameSettingsLogout'
+  import HeaderJobToggle from '../header/HeaderJobToggle'
+  import HeaderNameSettingsLogout from '../header/HeaderNameSettingsLogout'
 
   export default {
+    name: 'Header',
+    components: {
+      HeaderBio,
+      HeaderBackButton,
+      HeaderJobNameSettingsLogout,
+      HeaderJobToggle,
+      HeaderNameSettingsLogout
+    },
     props: ['user'],
-    data(){
+    data() {
       return {
         currentUser: ''
       }
@@ -73,14 +96,14 @@
     computed: {
       ...mapState({
         page: state => state.page,
-        userFromState: state => state.user.user,
-        userType: (state) => {
-          if (state.user.user !== undefined && state.user.user !== null) {
-            return state.user.user.usertype;
-          }
-          return null;
-        },
-        bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
+        // userFromState: state => state.user.user,
+        // userType: (state) => {
+        //   if (state.user.user !== undefined && state.user.user !== null) {
+        //     return state.user.user.usertype
+        //   }
+        //   return null
+        // },
+        // bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
       }),
       getCompanyName() {
         if (this.user.contractor) {
@@ -89,25 +112,68 @@
       }
     },
     methods: {
-      ...mapMutations([
-        'toggleBidsContractor'
-      ]),
+      onHomePage() {
+        return this.page === '/home' || this.page === '/home/'
+      },
+      onJobsPage() {
+        return this.page === '/bids' || this.page === '/bids/'
+      },
+      onParticularJobPage() {
+        return this.page.split('/')[1] === 'bid'
+      },
+      onJobTaskPage() {
+        return this.page === '/job/tasks' || this.page === '/job/tasks/'
+      },
+      onTasksPage() {
+        return this.page === '/tasks' || this.page === '/tasks/'
+      },
+      onInvoicesPage() {
+        return this.page === '/invoices' || this.page === '/invoices/'
+      },
+      onParticularInvoicePage() {
+        return this.page.split('/')[1] === 'invoice' ||
+          this.page.split('/')[2] === 'invoice'
+      },
+      onSettingsPage() {
+        return this.page === '/settings' || this.page === '/settings/'
+      },
+      onAddTaskPage() {
+        return this.page === '/job/add/task' || this.page === '/job/add/task/'
+      },
+      onAddSubPage() {
+        return false
+        // return this.page === '/home' || this.page === '/home/'
+      },
+      onInitiateBidPage() {
+        return this.page === '/initiate-bid' || this.page === '/initiate-bid/'
+      },
+      onRegisterPage() {
+        return this.page === '/register' || this.page === '/register/'
+      },
+      onFurtherInfoPage() {
+        return this.page === '/furtherInfo' || this.page === '/furtherInfo/'
+      },
+      onRegisterQuickbooksPage() {
+        return this.page === '/registerQuickBooks' || this.page === '/registerQuickBooks/'
+      },
+      onImagesPage() {
+        return this.page.split('/')[3] === 'images'
+      },
+      onPublicHomePage() {
+        return this.page === '/home' || this.page === '/home/'
+      },
       isCustomer() {
-        return User.isCustomer()
+        return this.user.usertype === 'customer'
       },
     },
     mounted() {
       if (
         this.user.user !== undefined &&
         this.user.user !== null &&
-        this.userFromState !== '' ) {
+        this.userFromState !== '') {
         this.$store.commit('setUser', this.user)
-        this.currentUser = this.user;
-      } else {
+        this.currentUser = this.user
       }
-
-      console.log('header', this.page)
-
     },
   }
 </script>
@@ -146,7 +212,7 @@
 
     p {
         font-size: 12px;
-        font-weight: 600px;
+        font-weight: 600;
         margin-top: -3px;
         color: #ffffff;
         padding-left: 1rem;
