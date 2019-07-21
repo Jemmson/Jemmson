@@ -25,11 +25,15 @@
                                 <label :class="getLabelClass(bid)">
                                     {{ status(bid) }}
                                 </label>
-<!--                                <span class="float-right list-card-info">2 Subs-->
-<!--                                <i class="fas fa-users"></i></span>-->
+                                <span ref="total_number_of_subs"
+                                      class="float-right list-card-info">
+                                    {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
+                                    <i class="fas fa-users"></i></span>
 
-<!--                                <span class="float-right mr-2 list-card-info" ref="show_number_of_job_tasks">Tasks-->
-<!--                                <i class="far fa-check-square"></i>-->
+                                <span class="float-right mr-2 list-card-info"
+                                      ref="show_number_of_job_tasks">
+                                    {{ bid.job_tasks.length }} Tasks
+                                    <i class="far fa-check-square"></i>
                             </span>
                             </div>
                         </section>
@@ -89,6 +93,13 @@
       })
     },
     methods: {
+      totalNumberOfSubsBiddingForTheJob(jobTasks){
+        let total = 0;
+        for (let i = 0; i < jobTasks.length; i++) {
+          total = total + jobTasks[i].bid_contractor_job_tasks.length
+        }
+        return total
+      },
       search() {
         this.sBids = this.bids.filter((bid) => {
           if (this.searchTerm === '' || this.searchTerm.length <= 1) {

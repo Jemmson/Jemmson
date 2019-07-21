@@ -49,7 +49,7 @@ describe('Jobs', () => {
     store = new Vuex.Store(storeOptions)
   })
 
-  it('Should contain the name Fix Sink', () => {
+  it('Should contain the name Clear up Green Pool', () => {
 
     wrapper = shallowMount(Jobs, {
       localVue,
@@ -67,7 +67,8 @@ describe('Jobs', () => {
             name: 'Laurel Ailie'
           },
           job_name: 'Clear up Green Pool',
-          status: 'bid.sent'
+          status: 'bid.sent',
+          job_tasks: []
         },
         {
           bid_price: 245,
@@ -75,49 +76,56 @@ describe('Jobs', () => {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
-          status: 'bid.sent'
+          status: 'bid.sent',
+          job_tasks: []
         }, {
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
-          status: 'bid.sent'
+          status: 'bid.sent',
+          job_tasks: []
         }, {
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
-          status: 'bid.sent'
+          status: 'bid.sent',
+          job_tasks: []
         }, {
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
-          status: 'bid.sent'
+          status: 'bid.sent',
+          job_tasks: []
         }, {
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
-          status: 'bid.sent'
+          status: 'bid.sent',
+          job_tasks: []
         }, {
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
-          status: 'bid.sent'
+          status: 'bid.sent',
+          job_tasks: []
         }, {
           bid_price: 245,
           customer: {
             name: 'John Doe'
           },
           job_name: 'Fix Pool',
-          status: 'job.completed'
+          status: 'job.completed',
+          job_tasks: []
         }],
       showBid: false,
       bidIndex: 0,
@@ -132,7 +140,7 @@ describe('Jobs', () => {
 
   it('should show number of tasks for a given job if that job has tasks', function() {
 
-    let w = shallowMount(Jobs, {
+    let w = mount(Jobs, {
       store,
       localVue,
       router,
@@ -140,24 +148,28 @@ describe('Jobs', () => {
         'search-bar',
       ]
     })
+
+    w.setData({
+      sBids: [
+        {
+          job_tasks: [
+            {task_id: 1},
+            {task_id: 2},
+            {task_id: 3}
+          ]
+        }]
+    })
+
 
     w.setProps({
-      isCustomer: true,
-      bid: {
-        job_tasks: [
-          {task_id: 1},
-          {task_id: 2},
-          {task_id: 3}
-        ]
-      }
+      isCustomer: true
     })
 
-    expect(wrapper.find({ref: 'show_number_of_job_tasks'}).text()).toBe('3')
+    expect(w.find({ref: 'show_number_of_job_tasks'}).text()).toBe('3 Tasks')
   })
 
-  it('should show test html', function() {
-
-    let w = shallowMount(Jobs, {
+  it.only('should show number the total number of subs bidding on all tasks for the job', function() {
+    let w = mount(Jobs, {
       store,
       localVue,
       router,
@@ -166,13 +178,34 @@ describe('Jobs', () => {
       ]
     })
 
-    console.log(w.html())
+    w.setData({
+      sBids: [
+        {
+          job_tasks: [
+            {task_id: 1,
+              bid_contractor_job_tasks: [
+                {id: 1},
+                {id: 2},
+                {id: 3}
+              ]
+            },
+            {task_id: 2,
+              bid_contractor_job_tasks: [
+                {id: 1},
+                {id: 2},
+                {id: 3}
+              ]},
+            {task_id: 3,
+              bid_contractor_job_tasks: [
+                {id: 1},
+                {id: 2},
+                {id: 3}
+              ]}
+          ]
+        }]
+    })
 
-    console.log(w.find({
-      ref: 'test'
-    }).html())
-
-
+    expect(w.find({ref: 'total_number_of_subs'}).text()).toBe('9 Subs')
 
   })
 
