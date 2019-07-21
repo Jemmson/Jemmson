@@ -53,21 +53,28 @@
         return 'Stripe'
       },
       notSignedUp() {
-        return !User.hasStripeId()
+        return !User.hasStripeId
       },
       isContractor() {
-        return User.isContractor()
+        return User.isContractor
       },
       isCustomer() {
-        return User.isCustomer()
+        return User.isCustomer
       },
       showStripeExpress() {
-        if (this.user.contractor === null)
+        if (User.contractor === null)
           return false
 
-        return this.user.contractor.stripe_express === null
+        return Spark.state.user.contractor.stripe_express === null
       }
     },
-    methods: {}
+    methods: {},
+    mounted() {
+      axios.get('/user/current')
+        .then(response => {
+          this.$store.commit('setUser', response.data)
+          window.User.user = response.data
+        })
+    }
   }
 </script>
