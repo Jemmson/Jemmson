@@ -93,12 +93,16 @@
       })
     },
     methods: {
-      totalNumberOfSubsBiddingForTheJob(jobTasks){
-        let total = 0;
-        for (let i = 0; i < jobTasks.length; i++) {
-          total = total + jobTasks[i].bid_contractor_job_tasks.length
+      totalNumberOfSubsBiddingForTheJob(jobTasks) {
+        if (jobTasks) {
+          let total = 0
+          for (let i = 0; i < jobTasks.length; i++) {
+            if (jobTasks[i].bid_contractor_job_tasks) {
+              total = total + jobTasks[i].bid_contractor_job_tasks.length
+            }
+          }
+          return total
         }
-        return total
       },
       search() {
         this.sBids = this.bids.filter((bid) => {
@@ -112,13 +116,21 @@
         }
       },
       getLabelClass(bid) {
-        return Format.statusLabel(bid.status, User.isCustomer, User.isGeneral(bid))
+        return Format.statusLabel(bid.status, User.isCustomer, this.isGeneral(bid))
       },
       jobName(name) {
         return Format.jobName(name)
       },
+      isGeneral(bid) {
+        if (bid !== null && this.user) {
+          return bid.contractor_id === this.user.id
+        }
+        return false
+      },
       status(bid) {
-        return User.status(bid.status, bid)
+        if (bid !== null && this.user !== undefined) {
+          return User.status(bid.status, bid, this.user)
+        }
       },
       prettyDate(date) {
         if (date == null)

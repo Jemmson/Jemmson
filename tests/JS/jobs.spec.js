@@ -28,8 +28,8 @@ const $on = {
 
 describe('Jobs', () => {
   const search = sinon.stub()
-  let store;
-  let storeOptions;
+  let store
+  let storeOptions
 
   const router = new VueRouter({})
 
@@ -51,7 +51,7 @@ describe('Jobs', () => {
 
   it('Should contain the name Clear up Green Pool', () => {
 
-    wrapper = shallowMount(Jobs, {
+    wrapper = mount(Jobs, {
       localVue,
       store,
       router,
@@ -62,75 +62,98 @@ describe('Jobs', () => {
       bids: [],
       sBids: [
         {
+          id: 1,
           bid_price: 245,
           customer: {
             name: 'Laurel Ailie'
           },
           job_name: 'Clear up Green Pool',
           status: 'bid.sent',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         },
         {
+          id: 2,
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
           status: 'bid.sent',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         }, {
+          id: 3,
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
           status: 'bid.sent',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         }, {
+          id: 4,
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
           status: 'bid.sent',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         }, {
+          id: 5,
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
           status: 'bid.sent',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         }, {
+          id: 6,
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
           status: 'bid.sent',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         }, {
+          id: 7,
           bid_price: 245,
           customer: {
             name: 'Jane Doe'
           },
           job_name: 'Fix Sink',
           status: 'bid.sent',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         }, {
+          id: 8,
           bid_price: 245,
           customer: {
             name: 'John Doe'
           },
           job_name: 'Fix Pool',
           status: 'job.completed',
-          job_tasks: []
+          job_tasks: [],
+          contractor_id: 1
         }],
       showBid: false,
       bidIndex: 0,
       searchTerm: '',
       paginate: ['sBids']
+    })
+
+    wrapper.setProps({
+      user: {
+        id: 1,
+        usertype: 'contractor'
+      }
     })
 
     expect(wrapper.findAll({ref: 'job'}).length).toBe(8)
@@ -160,7 +183,6 @@ describe('Jobs', () => {
         }]
     })
 
-
     w.setProps({
       isCustomer: true
     })
@@ -168,7 +190,7 @@ describe('Jobs', () => {
     expect(w.find({ref: 'show_number_of_job_tasks'}).text()).toBe('3 Tasks')
   })
 
-  it.only('should show number the total number of subs bidding on all tasks for the job', function() {
+  it('should show number the total number of subs bidding on all tasks for the job', function() {
     let w = mount(Jobs, {
       store,
       localVue,
@@ -182,25 +204,30 @@ describe('Jobs', () => {
       sBids: [
         {
           job_tasks: [
-            {task_id: 1,
+            {
+              task_id: 1,
               bid_contractor_job_tasks: [
                 {id: 1},
                 {id: 2},
                 {id: 3}
               ]
             },
-            {task_id: 2,
+            {
+              task_id: 2,
               bid_contractor_job_tasks: [
                 {id: 1},
                 {id: 2},
                 {id: 3}
-              ]},
-            {task_id: 3,
+              ]
+            },
+            {
+              task_id: 3,
               bid_contractor_job_tasks: [
                 {id: 1},
                 {id: 2},
                 {id: 3}
-              ]}
+              ]
+            }
           ]
         }]
     })

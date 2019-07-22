@@ -85,7 +85,7 @@ export default class User {
   }
 
   getAllPayableTasks(jobTasks) {
-  // static getAllPayableTasks(jobTasks) {
+    // static getAllPayableTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {
         return jobTask.status === 'bid_task.approved_by_general' || jobTask.status === 'bid_task.finished_by_general'
@@ -163,12 +163,12 @@ export default class User {
   }
 
   isContractor() {
-  // static isContractor() {
+    // static isContractor() {
     return this.user.usertype === 'contractor'
   }
 
   isCustomer() {
-  // static isCustomer() {
+    // static isCustomer() {
     return this.user.usertype === 'customer'
   }
 
@@ -189,8 +189,8 @@ export default class User {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
   }
 
-  // static isSub(bid, usertype) {
-  isSub(bid, usertype) {
+  static isSub(bid, usertype) {
+  // isSub(bid, usertype) {
     return bid !== null &&
       (usertype === 'contractor' &&
         bid.contractor_id !== this.id)
@@ -259,20 +259,20 @@ export default class User {
       })
       Vue.toasted.success('info updated')
       // debugger;
-      console.log(JSON.stringify(data.data));
-      router.push(data.data);
+      console.log(JSON.stringify(data.data))
+      router.push(data.data)
       Bus.$emit('updateUser')
       // location.href = data
     } catch (error) {
-      let data = error.response.data;
-      let message = '';
+      let data = error.response.data
+      let message = ''
 
       if (data.errors['form.email'] !== undefined && data.errors['form.email'] !== null) {
-        message += data.errors['form.email'][0];
+        message += data.errors['form.email'][0]
       }
-      
+
       form.errors.errors = error.errors
-      Vue.toasted.error(message);
+      Vue.toasted.error(message)
     }
   }
 
@@ -299,12 +299,9 @@ export default class User {
     this.user = user
   }
 
-  status(status, bid) {
-  // static status(status, bid) {
+  static status(status, bid, user = Spark.state.user) {
+    // static status(status, bid) {
     // debugger;
-
-
-
 
     if (status === null) {
       status = 'bid_task.initiated'
@@ -316,15 +313,14 @@ export default class User {
       return ''
     }
 
-    if (this.user.usertype === 'contractor') {
+    if (user.usertype === 'contractor') {
 
       // if (this.user.isSub(bid, Spark.state.user.usertype) !== undefined && this.user.isSub(bid, Spark.state.user.usertype))
 
       if (
-        this.isSub(bid, Spark.state.user.usertype) !== undefined &&
-        this.isSub(bid, Spark.state.user.usertype)
-        )
-      {
+        this.isSub(bid, user.usertype) !== undefined &&
+        this.isSub(bid, user.usertype)
+      ) {
         return status.sub
       }
 
@@ -385,7 +381,7 @@ export default class User {
     form.phone_number = Format.numbersOnly(form.phone_number)
     try {
       const data = await Spark.post('/home', form)
-      
+
       Vue.toasted.success('info updated')
       Bus.$emit('updateUser')
       disabled.submit = false
@@ -462,4 +458,4 @@ export default class User {
   }
 }
 
-export var __useDefault = true;
+export var __useDefault = true
