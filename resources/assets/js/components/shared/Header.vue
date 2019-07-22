@@ -76,7 +76,6 @@
   import HeaderBackButton from '../header/HeaderBackButton'
   import HeaderJobNameSettingsLogout from '../header/HeaderJobNameSettingsLogout'
   import HeaderJobToggle from '../header/HeaderJobToggle'
-  import HeaderNameSettingsLogout from '../header/HeaderNameSettingsLogout'
 
   export default {
     name: 'Header',
@@ -84,8 +83,7 @@
       HeaderBio,
       HeaderBackButton,
       HeaderJobNameSettingsLogout,
-      HeaderJobToggle,
-      HeaderNameSettingsLogout
+      HeaderJobToggle
     },
     props: ['user'],
     data() {
