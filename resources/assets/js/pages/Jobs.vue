@@ -25,16 +25,19 @@
                                 <label :class="getLabelClass(bid)">
                                     {{ status(bid) }}
                                 </label>
-                                <span ref="total_number_of_subs"
-                                      class="float-right list-card-info">
+
+                                <div v-if="user.usertype === 'contractor'">
+                                     <span ref="total_number_of_subs"
+                                           class="float-right list-card-info">
                                     {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
                                     <i class="fas fa-users"></i></span>
 
-                                <span class="float-right mr-2 list-card-info"
-                                      ref="show_number_of_job_tasks">
+                                    <span class="float-right mr-2 list-card-info"
+                                          ref="show_number_of_job_tasks">
                                     {{ bid.job_tasks.length }} Tasks
                                     <i class="far fa-check-square"></i>
                             </span>
+                                </div>
                             </div>
                         </section>
                     </div>
@@ -143,7 +146,7 @@
         this.$router.push('/bid/' + id)
       },
       getBids() {
-        axios.post('/jobs').then((response) => {
+        axios.get('/jobsPage').then((response) => {
           if (Array.isArray(response.data)) {
             this.bids = response.data
             this.sBids = this.bids

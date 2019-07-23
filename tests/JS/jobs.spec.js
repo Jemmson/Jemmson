@@ -236,6 +236,47 @@ describe('Jobs', () => {
 
   })
 
+  it('should not show job tasks for a customer', function() {
+
+    wrapper = mount(Jobs, {
+      localVue,
+      store,
+      router,
+      mocks: {}
+    })
+
+    wrapper.setData({
+      bids: [],
+      sBids: [
+        {
+          id: 1,
+          bid_price: 245,
+          customer: {
+            name: 'Laurel Ailie'
+          },
+          job_name: 'Clear up Green Pool',
+          status: 'bid.sent',
+          contractor_id: 1
+        }],
+      showBid: false,
+      bidIndex: 0,
+      searchTerm: '',
+      paginate: ['sBids']
+    })
+
+    wrapper.setProps({
+      user:
+        {
+          id: 1,
+          usertype: 'customer'
+        }
+    })
+
+    expect(wrapper.find({ref: 'total_number_of_subs'}).exists()).toBe(false)
+    expect(wrapper.find({ref: 'show_number_of_job_tasks'}).exists()).toBe(false)
+
+  })
+
   // it('Should have rendered 6 job items', () => {
   //   expect(wrapper.findAll('section')).toHaveLength(6)
   // })

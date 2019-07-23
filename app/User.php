@@ -201,6 +201,7 @@ class User extends SparkUser
      */
     public function jobs()
     {
+//        dd($this->usertype);
         if ($this->usertype === 'contractor') {
             return $this->hasMany(Job::class, 'contractor_id');
         } else {

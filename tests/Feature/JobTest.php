@@ -17,7 +17,7 @@ use App\JobTask;
 class JobTest extends TestCase
 {
 
-//    use RefreshDatabase;
+    use RefreshDatabase;
 
     /**  @test */
     function create_a_job_name_from_an_empty_job() {
@@ -102,6 +102,9 @@ class JobTest extends TestCase
     /**  @test */
     function that_i_get_the_correct_payload_when_querying_existing_jobs() {
         //
+
+        $this->withExceptionHandling();
+
         $contractor = factory(User::class)->create([
             'usertype' => 'contractor',
             'password_updated' => 1
@@ -115,7 +118,8 @@ class JobTest extends TestCase
         ]);
 
         $customer = factory(User::class)->create([
-            'usertype' => 'customer'
+            'usertype' => 'customer',
+            'password_updated' => 1
         ]);
 
         $location1 = factory(Location::class)->create();
@@ -143,7 +147,7 @@ class JobTest extends TestCase
         ]);
 
 
-        $response = $this->actingAs($contractor)->json('POST', '/jobs');
+        $response = $this->actingAs($contractor)->json('GET', '/jobs');
 
 
         $response->assertJson([

@@ -372,14 +372,16 @@ class JobController extends Controller
         return response()->json($job->jobActions(), 200);
     }
 
+
     /**
      * Get all jobs associated with user
      *
      * @return void
      */
-    public function jobs(Request $request)
+    public function jobs()
     {
         // load jobs and all their tasks along with those tasks relationships
+
         if ($this->isCustomer()) {
             // only load tasks on jobs that are approved or need approval
             $jobsWithTasks = Auth::user()->jobs()
@@ -413,6 +415,9 @@ class JobController extends Controller
             $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
 
+//            dd(Auth::user()->usertype);
+//            $jobs = Auth::user()->jobs();
+
             $jobs = Auth::user()
                 ->jobs()
                 ->with(
@@ -422,7 +427,7 @@ class JobController extends Controller
                         'jobTasks.bidContractorJobTasks.contractor.contractor',
                         // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
                         'jobTasks.location',
-                        'customer'
+                        'customer:id'
 //                        'customer' => function ($query) {
 //                            $query->select('id', 'name');
 //                        }
@@ -430,8 +435,90 @@ class JobController extends Controller
                 )->where('status', '!=', __('job.completed'))->get();
         }
 
+//        return $jobs;
         return response()->json($jobs, 200);
+//        return response()->json(collect($jobs)->toArray(), 200);
     }
+
+
+
+    /**
+     * Get all jobs associated with user
+     *
+     * @return void
+     */
+    public function jobsPage()
+    {
+        // load jobs and all their tasks along with those tasks relationships
+
+        if ($this->isCustomer()) {
+            // only load tasks on jobs that are approved or need approval
+            $jobsWithTasks = Auth::user()->jobs()
+                ->where(function ($query) {
+                    $query->where('status', __('bid.sent'))
+                        ->orwhere('status', __('job.approved'))
+                        ->orwhere('status', __('bid.declined'))
+                        ->Where('status', '!=', __('job.completed'));
+                })
+                ->with(
+                    [
+                        'jobTasks' => function ($query) {
+                            //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
+                            $query->with(
+                                [
+                                    'task' => function ($q) {
+                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
+                                    }
+                                ]);
+                        },
+                        'jobTasks.location'
+                        // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
+                    ])->get();
+
+            $jobsWithoutTasks = Auth::user()->jobs()
+                ->where('status', '!=', __('bid.sent'))
+                ->where('status', '!=', __('job.approved'))
+                ->Where('status', '!=', __('bid.declined'))
+                ->Where('status', '!=', __('job.completed'))
+                ->get();
+            $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
+        } else {
+
+//            dd(Auth::user()->usertype);
+//            $jobs = Auth::user()->jobs();
+
+
+            $jobs = User::with('jobs')->get();
+
+//            $jobs = Auth::user()->jobs()->
+//                with('jobTasks:id,status')->get();
+
+
+//            $jobs = Auth::user()
+//                ->jobs()
+//                ->with(
+//                    [
+//                        'jobTasks',
+//                        'jobTasks.bidContractorJobTasks',
+//                        // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
+//                        'jobTasks.location',
+//                        'customer:id'
+////                        'customer' => function ($query) {
+////                            $query->select('id', 'name');
+////                        }
+//                    ]
+//                )->where('status', '!=', __('job.completed'))->get();
+        }
+
+//        return $jobs;
+        return response()->json($jobs, 200);
+//        return response()->json(collect($jobs)->toArray(), 200);
+    }
+
+
+
+
+
 
     /**
      * Customer did not approve of the job bid

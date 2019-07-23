@@ -1,8 +1,7 @@
-import {
-  shallowMount
-} from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import BidDetails from '../../resources/assets/js/components/job/BidDetails'
 // import Customer from '../../../../resources/assets/js/classes/Customer'
+// import GeneralContractor from '../../resources/assets/js/classes/GeneralContractor'
 import User from '../../resources/assets/js/classes/User'
 
 import sinon from 'sinon'
@@ -15,11 +14,16 @@ describe('BidDetails', () => {
   const initializePayWithCashMessageValueStub = sinon.stub()
   const updateGeneralContractorNotesStub = sinon.stub()
   const submitPayWithCashMessageStub = sinon.stub()
+  const GeneralContractorStub = sinon.stub()
   // const User.status = sinon.stub()
 
   const wrapper = shallowMount(BidDetails, {
     // methods: {
     //   status: sinon.stub()
+    // },
+    // methods: {
+    //   GeneralContractor:
+    //     {notifyCustomerOfFinishedBid: GeneralContractorStub}
     // },
     propsData: {
       isCustomer: false,
@@ -269,7 +273,7 @@ describe('BidDetails', () => {
       ref: 'update_customer_notes_button'
     })
 
-    btn.trigger('click');
+    btn.trigger('click')
 
     expect(updateGeneralContractorNotesStub.called).toBe(true)
 
@@ -288,7 +292,7 @@ describe('BidDetails', () => {
       }
     })
 
-    expect(wrapper.find({ref: 'job_task_length'}).text()).toBe('3')
+    expect(wrapper.find({ref: 'job_task_length_customer'}).text()).toBe('3')
 
   })
 
@@ -296,12 +300,11 @@ describe('BidDetails', () => {
 
     wrapper.setProps({isCustomer: true})
 
-    expect(wrapper.find({ref: 'add_new_task'}).exists()).toBe(false);
+    expect(wrapper.find({ref: 'add_new_task'}).exists()).toBe(false)
 
     wrapper.setProps({isCustomer: false})
 
-    expect(wrapper.find({ref: 'add_new_task'}).exists()).toBe(true);
-
+    expect(wrapper.find({ref: 'add_new_task'}).exists()).toBe(true)
 
   })
 
@@ -310,11 +313,11 @@ describe('BidDetails', () => {
       customerNotesMessage: ''
     })
 
-    let textarea = wrapper.find({ ref: 'message_text_area'})
+    let textarea = wrapper.find({ref: 'message_text_area'})
 
     textarea.setValue('my message')
 
-    expect(wrapper.vm.$data.customerNotesMessage).toBe('my message');
+    expect(wrapper.vm.$data.customerNotesMessage).toBe('my message')
 
   })
 
@@ -334,10 +337,11 @@ describe('BidDetails', () => {
 
   })
 
-  it('should not see job tasks when the bid is initiated', function() {
+  it('should not see job tasks when the bid is initiated and the user is a customer', function() {
     wrapper.setProps({
       bid: {
         status: 'bid.initiated',
+        isCustomer: true,
         job_tasks: [
           {task_id: 1},
           {task_id: 2},
@@ -346,7 +350,7 @@ describe('BidDetails', () => {
       }
     })
 
-    expect(wrapper.find({ref: 'job_tasks'}).exists()).toBe(false)
+    expect(wrapper.find({ref: 'job_task_length_customer'}).exists()).toBe(false)
 
   })
 
@@ -354,6 +358,7 @@ describe('BidDetails', () => {
     wrapper.setProps({
       bid: {
         status: 'bid.in_progress',
+        isCustomer: true,
         job_tasks: [
           {task_id: 1},
           {task_id: 2},
@@ -362,11 +367,9 @@ describe('BidDetails', () => {
       }
     })
 
-    expect(wrapper.find({ref: 'job_tasks'}).exists()).toBe(false)
+    expect(wrapper.find({ref: 'job_task_length_customer'}).exists()).toBe(false)
 
   })
-
-
 
   it('should not see job tasks if job tasks are undefined', function() {
     wrapper.setProps({
@@ -382,6 +385,229 @@ describe('BidDetails', () => {
 
   })
 
+
+  it.skip('[NOT WORKING FOR SOME REASON BUT IT WORKS VISUALLY] should show submission card when showDialogSubmission is clicked', function() {
+
+    const showSubmissionCardStub = sinon.stub()
+
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        contractor_id: 1,
+        job_tasks: [
+          {id: 1},
+          {id: 2},
+          {id: 3}
+        ]
+      },
+    })
+
+    wrapper.setData({
+      submissionCard: false,
+      contractor_id: 1,
+      disabled: {
+        submitBid: false
+      }
+    })
+
+    wrapper.setMethods({
+      showSubmissionCard: showSubmissionCardStub
+    })
+
+    console.log(wrapper.vm.bid.job_tasks.length <= 0)
+    console.log(wrapper.vm.disabled.submitBid)
+    console.log(wrapper.vm.bid.status === 'bid.sent')
+    console.log((wrapper.vm.bid.job_tasks.length <= 0 || wrapper.vm.disabled.submitBid) || wrapper.vm.bid.status === 'bid.sent')
+    console.log('----------------------------------')
+
+
+
+
+    const showDialogSubmission = wrapper.find({ref: 'show_submission_card'})
+    showDialogSubmission.trigger('click')
+    expect(wrapper.find({ref: 'submissionCard'}).exists()).toBe(true)
+
+
+
+
+    console.log(wrapper.vm.bid.job_tasks.length <= 0)
+    console.log(wrapper.vm.disabled.submitBid)
+    console.log(wrapper.vm.bid.status === 'bid.sent')
+    console.log((wrapper.vm.bid.job_tasks.length <= 0 || wrapper.vm.disabled.submitBid) || wrapper.vm.bid.status === 'bid.sent')
+
+    console.log(expect(showSubmissionCardStub.called).toBe(true))
+
+    // expect(showSubmissionStub.called).toBe(true)
+
+
+    // expect(showDialogSubmission.attributes().disabled).toBe('disabled')
+
+  })
+
+  it('should close dialog submission when submit bid is clicked', function() {
+    wrapper.setData({
+      submissionCard: true
+    })
+
+    wrapper.setData({
+        disabled: {
+          submitBid: false
+        }
+    })
+
+    const notifyCustomerOfFinishedBidStub = sinon.stub()
+
+    wrapper.setMethods({
+      notifyCustomerOfFinishedBid : notifyCustomerOfFinishedBidStub
+    })
+
+
+    const submitBid = wrapper.find({ref: 'submitBid'})
+    submitBid.trigger('click')
+
+    expect(wrapper.find({ref: 'submissionCard'}).exists()).toBe(false)
+    expect(notifyCustomerOfFinishedBidStub.called).toBe(true)
+
+    expect(submitBid.attributes().disabled).toBe(undefined)
+
+  })
+
+  it('should show buttons for bid submission only if the job is approved or completed and the user is the general contractor', function() {
+
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        contractor_id: 1,
+        job_tasks: [
+          {id: 1},
+          {id: 2},
+          {id: 3}
+        ]
+      },
+    })
+
+    // global.Spark.state.user.id = 1
+
+    expect(wrapper.find({ref: 'show_approved_actions'}).exists()).toBe(true)
+
+  })
+
+  it('should not show buttons for bid submission only if the job is approved or completed and the user is not the general contractor', function() {
+
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        contractor_id: 2
+      },
+    })
+
+    // global.Spark.state.user.id = 3
+
+    expect(wrapper.find({ref: 'show_approved_actions'}).exists()).toBe(false)
+
+  })
+
+  it('should show the bid buttons if there is one or more tasks', function() {
+
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        contractor_id: 1,
+        job_tasks: [
+          {id: 1},
+          {id: 2},
+          {id: 3}
+        ]
+      }
+    })
+
+    expect(wrapper.find({ref: 'bidButtons'}).exists()).toBe(true)
+
+  })
+
+  it('should not show the bid buttons if there are no tasks', function() {
+
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        contractor_id: 1,
+        job_tasks: []
+      }
+    })
+
+    expect(wrapper.find({ref: 'bidButtons'}).exists()).toBe(false)
+
+
+  })
+
+  it('should open the cancel dialog card if the cancel button is clicked and should hide the other dialog cards', function() {
+
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        contractor_id: 1,
+        job_tasks: [
+          {id: 1},
+          {id: 2},
+          {id: 3}
+        ]
+      }
+    })
+
+    wrapper.setData({
+      disabled: {
+        cancelBid: false
+      }
+    })
+
+    const cancelBtn = wrapper.find({ref: 'cancelBtn'})
+    cancelBtn.trigger('click')
+
+    // expect(cancelBtn.attributes().disabled).toBe('disabled')
+    expect(wrapper.find({ref: 'cancel_dialog_box'}).exists()).toBe(true)
+    expect(wrapper.find({ref: 'submissionCard'}).exists()).toBe(false)
+
+  })
+
+  it('should close the cancel dialog when the cancel dialog box is clicked', function() {
+
+    wrapper.setProps({
+      bid: {
+        status: 'bid.initiated',
+        contractor_id: 1,
+        job_tasks: [
+          {id: 1},
+          {id: 2},
+          {id: 3}
+        ]
+      }
+    })
+
+    wrapper.setData({
+      disabled: {
+        cancelBid: true
+      }
+    })
+
+    const cancelBid = wrapper.find({ref: 'cancel_bid'})
+    cancelBid.trigger('click')
+
+    const cancelBtn = wrapper.find({ref: 'cancelBtn'})
+    expect(cancelBtn.attributes().disabled).toBe(undefined)
+
+    expect(wrapper.find({ref: 'cancel_dialog_box'}).exists()).toBe(false)
+    expect(wrapper.find({ref: 'submissionCard'}).exists()).toBe(false)
+
+  })
+
+  it('should ', function() {
+
+  })
+
+  it('the submit button should be disabled if the number of job tasks equals 0 or the submission dialog is open', function() {
+
+  })
+
   it.skip('should not be able to submit customer notes if the notes are blank', function() {
 
   })
@@ -390,7 +616,7 @@ describe('BidDetails', () => {
 
   })
 
-  // it.only('should hide one item', function() {
+  // it('should hide one item', function() {
   //
   //   wrapper.setData({
   //     customerNotes: false

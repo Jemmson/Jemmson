@@ -29,6 +29,61 @@
                   </info> -->
         </div>
 
+
+        <section ref="submissionCard" class="col-12" v-if="submissionCard">
+
+            <card>
+                <main class="row">
+
+                    <header>Bid Finished</header>
+
+                    <article>You are about to submit this job bid to the customer,
+                        you will not be able to edit this bid after its been approved by the customer
+                        Please also make sure to check whether you have accepted the subcontractors you wanted for each task.
+                        Click yes to submit or no to cancel.
+                    </article>
+
+                    <footer>
+
+                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="cancelDialog()">No</button>
+                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="submitTheBid()">Yes</button>
+
+                    </footer>
+
+                </main>
+            </card>
+
+
+        </section>
+
+
+        <section ref="cancel_dialog_box" class="col-12" v-if="cancelBidCard">
+
+            <card>
+                <main class="row">
+
+
+                    <header>Confirm Cancellation</header>
+
+                    <article>You are about to cancel this job,
+                        Click delete job to cancel and delete the job or back to cancel this action.
+                        confirmJobCancellation
+                    </article>
+
+                    <footer>
+
+                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="cancelDialog()">No</button>
+                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="cancelTheBid()">Yes</button>
+
+                    </footer>
+
+                </main>
+            </card>
+
+
+        </section>
+
+
         <section class="col-12">
             <h1 class="card-title">Details</h1>
             <card>
@@ -43,8 +98,9 @@
 
                     <section class="col-12 mb-3" v-else>
                         <label for="customerName" class="">Customer Name:</label>
-                        <strong id="customerName" ref="details_customer_name" class="float-right">{{ customerName
-                            }}</strong>
+                        <strong
+                                id="customerName" ref="details_customer_name" class="float-right">
+                            {{ customerName }}</strong>
                     </section>
 
 
@@ -59,6 +115,51 @@
                         <strong id="totalBidPrice" ref="details_total_bid_price" class="float-right">{{ bidPrice
                             }}</strong>
                     </section>
+
+                    <hr>
+
+
+                    <section>
+
+                        <div ref="show_approved_actions" v-if="showPreApprovedActions()">
+
+                            <div ref="bidButtons" v-if="bid.job_tasks.length > 0" class="flex w-full justify-around">
+                                <button class="btn btn-red flex-1" @click.prevent="showCancelCard()"
+                                        :disabled="disabled.cancelBid" ref="cancelBtn">
+                                      <span v-if="disabled.cancelBid">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                      </span>
+                                    Cancel Job
+                                </button>
+
+                                <!--                                <button class="btn btn-blue flex-1 mr-6 ml-6" name="addTaskToBid" id="addTaskToBid" @click="openAddTask"-->
+                                <!--                                        v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">-->
+                                <!--                                    Add A Task-->
+                                <!--                                </button>-->
+
+                                <button
+                                        ref="show_submission_card"
+                                        class="btn btn-green flex-1"
+                                        @click="showSubmissionCard()"
+                                        :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"
+                                        >
+                                      <span v-if="disabled.submitBid">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                      </span>
+                                    <span>Submit Bid</span>
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!--                    <general-contractor-bid-actions-->
+                    <!--                        v-on:open-bid-submission="$event ? openBidSubmissionDialog = $event : openBidSubmissionDialog = false"-->
+                    <!--                        :submit-the-bid="submitBid"-->
+                    <!--                    >-->
+                    <!--                    </general-contractor-bid-actions>-->
 
                 </main>
             </card>
@@ -121,7 +222,7 @@
 
                         <textarea ref="message_text_area"
                                   v-model="customerNotesMessage"
-                                  name="notes" id="" cols="30" rows="10"
+                                  name="notes" id="notes" cols="30" rows="10"
                                   class="form-control">
 
                         </textarea>
@@ -141,40 +242,39 @@
         <!-- / tasks -->
 
 
-            <section ref="job_tasks" class="col-12"
-                    v-if="bid.job_tasks !== undefined"
-            >
-                <div v-if="!isCustomer">
-                    <h1 class="card-title mt-4">Job Tasks</h1>
-                    <card>
+        <section ref="job_tasks" class="col-12"
+                 v-if="bid.job_tasks !== undefined"
+        >
+            <div v-if="!isCustomer">
+                <h1 class="card-title mt-4">Job Tasks</h1>
+                <card>
 
                         <span class="">
                         (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
                         </span> Total
 
-                        <button class="btn btn-primary btn-sm float-right"
-                                @click.prevent="viewTasks()">View Tasks
-                        </button>
+                    <button class="btn btn-primary btn-sm float-right"
+                            @click.prevent="viewTasks()">View Tasks
+                    </button>
 
-                    </card>
-                </div>
+                </card>
+            </div>
 
-                <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">
-                    <h1 class="card-title mt-4">Job Tasks</h1>
-                    <card>
+            <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">
+                <h1 class="card-title mt-4">Job Tasks</h1>
+                <card>
 
                         <span class="">
-                        (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
+                        (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
                         </span> Total
 
-                        <button class="btn btn-primary btn-sm float-right"
-                                @click.prevent="viewTasks()">View Tasks
-                        </button>
+                    <button class="btn btn-primary btn-sm float-right"
+                            @click.prevent="viewTasks()">View Tasks
+                    </button>
+                </card>
+            </div>
 
-                    </card>
-                </div>
-
-            </section>
+        </section>
 
         <section class="col-12" v-if="!isCustomer" ref="add_new_task">
             <card class="mt-4" @click.native="$router.push('/job/add/task')">
@@ -211,14 +311,16 @@
   import Info from '../shared/Info'
   import Format from '../../classes/Format'
   import Card from '../shared/Card'
+  import GeneralContractorBidActions from './GeneralContractorBidActions'
 
-  // import Customer from '../../classes/Customer'
+  // import GeneralContractor from '../../classes/GeneralContractor'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
     components: {
       Card,
-      Info
+      Info,
+      GeneralContractorBidActions
     },
     props: {
       bid: Object,
@@ -261,27 +363,6 @@
             description:
               'The Customer has paid for the job and the job is completed'
           }
-          //   ,
-          //   {
-          //       type: '',
-          //       description: ''
-          //   },
-          //   {
-          //       type: '',
-          //       description: ''
-          //   },
-          //   {
-          //       type: '',
-          //       description: ''
-          //   },
-          //   {
-          //       type: '',
-          //       description: ''
-          //   },
-          //   {
-          //       type: '',
-          //       description: ''
-          //   }
         ],
         customerNotesMessage: '',
         showPaidWithCashNotes: false,
@@ -294,7 +375,14 @@
         customerInfo: false,
         paymentTypeCash: false,
         paymentTypeStripe: true,
-        selectedPayment: 'creditCard'
+        selectedPayment: 'creditCard',
+        submissionCard: false,
+        cancelBidCard: false,
+        disabled: {
+          cancelBid: false,
+          jobCompleted: false,
+          submitBid: false
+        }
       }
     },
     computed: {
@@ -336,6 +424,11 @@
           this.bid.status === 'bid.declined'
         )
       },
+
+      disableSubmitBid() {
+        return this.bid.status === 'bid.sent'
+      },
+
       showAddress() {
         return (
           this.bid.location_id !== undefined &&
@@ -346,7 +439,71 @@
       }
     },
     methods: {
-      viewTasks(){
+      cancelDialog(){
+        this.cancelBidCard = false
+        this.submissionCard = false
+        this.disabled.cancelBid = false
+        this.disabled.submitBid = false
+      },
+      openCancelDialogCard() {
+        this.cancelBidCard = true
+        this.disabled.cancelBid = true
+      },
+      showPreApprovedActions() {
+        return this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed' && this.isGeneral(this.bid.contractor_id, Spark.state.user.id)
+      },
+      cancelTheBid() {
+        this.disabled.cancelBid = true
+        this.cancelBidCard = false
+        this.disabled.cancelBid = false
+      },
+      submitTheBid() {
+        this.submissionCard = false
+        this.disabled.submitBid = false
+        this.notifyCustomerOfFinishedBid()
+      },
+      showSubmissionCard() {
+        console.log('hello')
+        this.cancelBidCard = false
+        this.submissionCard = true
+        this.disabled.submitBid = true
+      },
+
+      showCancelCard () {
+        this.disabled.cancelBid = true
+        this.submissionCard = false
+        this.cancelBidCard = true
+      },
+
+      notifyCustomerOfFinishedBid() {
+
+        // go through each job task and compare the sub price to the contractor task price
+        // first check if there is a sub.
+        // check if the sub price is an accepted price
+        // compare the the accepted sub price to the contractor price
+        // if the accepted sub price is higher then throw an error
+
+        this.subTaskWarning = false
+        for (let i = 0; i < this.bid.job_tasks.length; i++) {
+          if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+            this.subTaskWarning = true
+          }
+        }
+
+        if (!this.subTaskWarning) {
+          GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)
+        }
+
+      },
+
+
+      isGeneral(contractor_id, user_id) {
+        if (this.bid !== null) {
+          return contractor_id === user_id
+        }
+        return false
+      },
+      viewTasks() {
         this.$router.push('/job/tasks')
       },
       paymentMethod(paymentType) {
