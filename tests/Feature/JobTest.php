@@ -147,7 +147,7 @@ class JobTest extends TestCase
         ]);
 
 
-        $response = $this->actingAs($contractor)->json('GET', '/jobs');
+        $response = $this->actingAs($contractor)->json('GET', '/jobsPage');
 
 
         $response->assertJson([
