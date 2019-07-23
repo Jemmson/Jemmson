@@ -13,6 +13,7 @@ COPY docker/config/php/php.ini /usr/local/etc/php/php.ini
 
 RUN chown -R www-data:www-data /var/www/html \
     && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install bcmath \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug opcache \
     && a2enmod rewrite negotiation \

@@ -21,6 +21,7 @@
     "laravel/nova": "*",
     "laravel/spark": "*@dev",
     "laravel/tinker": "~1.0",
+    "moontoast/math": "^1.1",
     "nexmo/laravel": "^1.0",
     "predis/predis": "^1.1",
     "pusher/pusher-php-server": "~3.0",
@@ -29,6 +30,7 @@
     "stripe/stripe-php": "^5.9"
   },
   "require-dev": {
+    "laravel/telescope": "^2.0",
     "filp/whoops": "~2.0",
     "fzaninotto/faker": "~1.4",
     "laravel/dusk": "^3.0",
