@@ -24,3 +24,4 @@ redis-stable.tar.gz
 composer.phar
 .docker.env
 nova_old
+nova/
