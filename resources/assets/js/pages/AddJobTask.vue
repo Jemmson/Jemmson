@@ -205,7 +205,7 @@
                 <!--</button>-->
                 <!--</div>-->
                 <!--<label for="taskResultsChange"></label>-->
-                <div id="taskResultsChange" class="mb-4" v-show="this.addNewTaskForm.taskName !== ''">
+                <div id="taskResultsChange" class="mb-4">
 
                     <!-- Name in task name is different than a task name in the database-->
                     <!--<button v-if="!nameExistsInDB && !taskExistsInJob"-->
@@ -345,7 +345,10 @@
         return this.addNewTaskForm.taskName !== this.result.taskName
       },
       checkErrors() {
-        return this.addNewTaskForm.hasQtyUnitError || this.addNewTaskForm.hasStartDateError
+
+        return this.addNewTaskForm.taskName === '' ||
+          this.addNewTaskForm.hasQtyUnitError ||
+          this.addNewTaskForm.hasStartDateError
       }
     },
     methods: {
@@ -490,29 +493,31 @@
         }
       },
       checkIfNameExistsInDB(taskName) {
-        // need to check if the task that is being typed is in the job already
-        // if it is in the job then disable all inputs and show the error
-        this.taskExistsInJob = false
-        // debugger;
-        for (let i = 0; i < this.bid.job_tasks.length; i++) {
-          if (this.bid.job_tasks[i].task.name === taskName) {
-            this.taskExistsInJob = true
-          }
-        }
+       if (this.bid.job_tasks) {
+         // need to check if the task that is being typed is in the job already
+         // if it is in the job then disable all inputs and show the error
+         this.taskExistsInJob = false
+         // debugger;
+         for (let i = 0; i < this.bid.job_tasks.length; i++) {
+           if (this.bid.job_tasks[i].task.name === taskName) {
+             this.taskExistsInJob = true
+           }
+         }
 
-        // check if the name is in the database already so that I can show the
-        // correct buttons on the footer of the modal window
-        this.nameExistsInDB = false
-        // debugger;
-        for (let i = 0; i < this.currentTasks.length; i++) {
-          if (
-            this.currentTasks[i].name === taskName ||
-            this.currentTasks[i].name === this.addNewTaskForm.taskName
-          ) {
-            this.nameExistsInDB = true
-          }
-        }
-        this.showTaskResults = true
+         // check if the name is in the database already so that I can show the
+         // correct buttons on the footer of the modal window
+         this.nameExistsInDB = false
+         // debugger;
+         for (let i = 0; i < this.currentTasks.length; i++) {
+           if (
+             this.currentTasks[i].name === taskName ||
+             this.currentTasks[i].name === this.addNewTaskForm.taskName
+           ) {
+             this.nameExistsInDB = true
+           }
+         }
+         this.showTaskResults = true
+       }
 
       },
       getExistingTask(message) {
@@ -709,7 +714,7 @@
         ) {
           this.addNewTaskForm.customer_id = this.bid.customer_id;
           this.addNewTaskForm.jobId = this.bid.id;
-          this.addNewTaskForm.area = this.bid.location.city;
+          // this.addNewTaskForm.area = this.bid.location.city;
           GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
           // console.log (newTask);
           // debugger;
