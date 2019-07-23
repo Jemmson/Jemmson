@@ -39,7 +39,8 @@
 
                     <article>You are about to submit this job bid to the customer,
                         you will not be able to edit this bid after its been approved by the customer
-                        Please also make sure to check whether you have accepted the subcontractors you wanted for each task.
+                        Please also make sure to check whether you have accepted the subcontractors you wanted for each
+                        task.
                         Click yes to submit or no to cancel.
                     </article>
 
@@ -118,7 +119,6 @@
 
                     <hr>
 
-
                     <section>
 
                         <div ref="show_approved_actions" v-if="showPreApprovedActions()">
@@ -132,23 +132,27 @@
                                     Cancel Job
                                 </button>
 
-                                <!--                                <button class="btn btn-blue flex-1 mr-6 ml-6" name="addTaskToBid" id="addTaskToBid" @click="openAddTask"-->
-                                <!--                                        v-if="bid.job_tasks.length > 0 || bid.job_tasks.length <= 0">-->
-                                <!--                                    Add A Task-->
-                                <!--                                </button>-->
-
                                 <button
                                         ref="show_submission_card"
                                         class="btn btn-green flex-1"
                                         @click="showSubmissionCard()"
                                         :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"
-                                        >
+                                >
                                       <span v-if="disabled.submitBid">
                                         <i class="fa fa-btn fa-spinner fa-spin"></i>
                                       </span>
                                     <span>Submit Bid</span>
                                 </button>
                             </div>
+
+                        </div>
+                        <div v-if="bidHasNoTasks() && !this.isCustomer">
+                            <button class="btn btn-blue flex-1 mr-6 ml-6"
+                                    name="addTaskToBid" id="addTaskToBid"
+                                    @click="$router.push('/job/add/task')"
+                                    >
+                                Add A Task
+                            </button>
 
                         </div>
 
@@ -304,6 +308,10 @@
                 </div>
             </card>
         </div>
+
+        <stripe :user="getCurrentUser()">
+        </stripe>
+
     </div>
 </template>
 
@@ -311,6 +319,7 @@
   import Info from '../shared/Info'
   import Format from '../../classes/Format'
   import Card from '../shared/Card'
+  import Stripe from '../stripe/Stripe'
   import GeneralContractorBidActions from './GeneralContractorBidActions'
 
   // import GeneralContractor from '../../classes/GeneralContractor'
@@ -319,6 +328,7 @@
   export default {
     components: {
       Card,
+      Stripe,
       Info,
       GeneralContractorBidActions
     },
@@ -326,6 +336,13 @@
       bid: Object,
       isCustomer: Boolean,
       customerName: String
+    },
+    created: function() {
+
+      Bus.$on('needsStripe', () => {
+        $('#stripe-modal').modal()
+      })
+
     },
     data() {
       return {
@@ -439,7 +456,17 @@
       }
     },
     methods: {
-      cancelDialog(){
+      bidHasNoTasks(){
+        if(this.bid.job_tasks){
+          return this.bid.job_tasks.length === 0
+        }
+      },
+      getCurrentUser() {
+        if (Spark.state) {
+          return Spark.state.user
+        }
+      },
+      cancelDialog() {
         this.cancelBidCard = false
         this.submissionCard = false
         this.disabled.cancelBid = false
@@ -469,7 +496,7 @@
         this.disabled.submitBid = true
       },
 
-      showCancelCard () {
+      showCancelCard() {
         this.disabled.cancelBid = true
         this.submissionCard = false
         this.cancelBidCard = true
@@ -491,11 +518,14 @@
         }
 
         if (!this.subTaskWarning) {
-          GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)
+
+          if (GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)) {
+
+          }
+
         }
 
       },
-
 
       isGeneral(contractor_id, user_id) {
         if (this.bid !== null) {
