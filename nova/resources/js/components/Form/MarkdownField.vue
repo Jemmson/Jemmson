@@ -1,100 +1,122 @@
 <template>
-    <field-wrapper>
-        <div class="w-1/5 px-8 py-6">
-            <slot>
-                <form-label :for="field.name">
-                    {{ field.name }}
-                </form-label>
-
-                <help-text>
-                    {{ field.helpText }}
-                </help-text>
-            </slot>
-        </div>
-        <div class="w-4/5 px-8 py-6">
-            <div class="bg-white rounded-lg" :class="{
-                'fixed pin z-50': fullScreen,
-                'form-input form-input-bordered px-0': ! fullScreen,
-                'border-danger': errors.has('body'),
-            }">
-                <header class="flex items-center content-center justify-between border-b border-60">
+    <default-field :field="field" :errors="errors" :full-width-content="true">
+        <template slot="field">
+            <div
+                class="bg-white rounded-lg overflow-hidden"
+                :class="{
+                    'markdown-fullscreen fixed pin z-50': isFullScreen,
+                    'form-input form-input-bordered px-0': !isFullScreen,
+                    'form-control-focus': isFocused,
+                    'border-danger': errors.has('body'),
+                }"
+            >
+                <header
+                    class="flex items-center content-center justify-between border-b border-60"
+                    :class="{ 'bg-30': isReadonly }"
+                >
                     <ul class="w-full flex items-center content-center list-reset">
-                        <button :class="{'text-primary font-bold' : this.mode == 'write'}" @click.prevent="write" class="ml-1 text-90 px-3 py-2">{{__('Write')}}</button>
-                        <button :class="{'text-primary font-bold' : this.mode == 'preview'}" @click.prevent="preview" class="text-90 px-3 py-2">{{__('Preview')}}</button>
+                        <button
+                            :class="{ 'text-primary font-bold': this.mode == 'write' }"
+                            @click.prevent="write"
+                            class="ml-1 text-90 px-3 py-2"
+                        >
+                            {{ __('Write') }}
+                        </button>
+                        <button
+                            :class="{ 'text-primary font-bold': this.mode == 'preview' }"
+                            @click.prevent="preview"
+                            class="text-90 px-3 py-2"
+                        >
+                            {{ __('Preview') }}
+                        </button>
                     </ul>
-                    <ul class="flex items-center list-reset">
-                        <button :key="tool.action" @click.prevent="callAction(tool.action)" v-for="tool in tools" class="rounded-none ico-button inline-flex justify-center px-2 text-sm text-80 border-l border-60">
-                            <component :is="tool.icon" class="fill-80 w-editor-icon h-editor-icon" />
+
+                    <ul v-if="!isReadonly" class="flex items-center list-reset">
+                        <button
+                            :key="tool.action"
+                            @click.prevent="callAction(tool.action)"
+                            v-for="tool in tools"
+                            class="rounded-none ico-button inline-flex items-center justify-center px-2 text-sm text-80 border-l border-60"
+                        >
+                            <component
+                                :is="tool.icon"
+                                class="fill-80 w-editor-icon h-editor-icon"
+                            />
                         </button>
                     </ul>
                 </header>
 
-                <div class="p-4">
-                    <div v-show="mode == 'write'">
-                        <textarea ref="theTextarea"></textarea>
-                    </div>
-                    <div class="markdown" v-if="mode == 'preview'" v-html="previewContent"></div>
+                <div
+                    v-show="mode == 'write'"
+                    class="flex markdown-content relative p-4"
+                    :class="{ 'readonly bg-30': isReadonly }"
+                >
+                    <textarea ref="theTextarea" :class="{ 'bg-30': isReadonly }" />
                 </div>
-            </div>
 
-            <p v-if="hasError" class="my-2 text-danger">
-                {{ firstError }}
-            </p>
-        </div>
-    </field-wrapper>
+                <div
+                    v-if="mode == 'preview'"
+                    class="markdown overflow-scroll p-4"
+                    v-html="previewContent"
+                ></div>
+            </div>
+        </template>
+    </default-field>
 </template>
 
 <script>
-    import _ from 'lodash'
-    import marked from 'marked'
-    import CodeMirror from 'codemirror'
-    import 'codemirror/mode/markdown/markdown'
-    import { FormField, HandlesValidationErrors } from 'laravel-nova'
+import _ from 'lodash'
+import marked from 'marked'
+import CodeMirror from 'codemirror'
+import 'codemirror/mode/markdown/markdown'
+import { FormField, HandlesValidationErrors } from 'laravel-nova'
 
-    const actions = {
-        bold() {
-            this.insertAround('**', '**')
-        },
+const actions = {
+    bold() {
+        this.insertAround('**', '**')
+    },
 
-        italicize() {
-            this.insertAround('*', '*')
-        },
+    italicize() {
+        this.insertAround('*', '*')
+    },
 
-        image() {
-            this.insertBefore('![](http://)', 2)
-        },
+    image() {
+        this.insertBefore('![](http://)', 2)
+    },
 
-        link() {
-            this.insertAround('[', '](http://)')
-        },
+    link() {
+        this.insertAround('[', '](http://)')
+    },
 
-        toggleFullScreen() {
-            this.fullScreen = !this.fullScreen
-        },
+    toggleFullScreen() {
+        this.fullScreen = !this.fullScreen
+        this.$nextTick(() => this.codemirror.refresh())
+    },
 
-        fullScreen() {
-            this.fullScreen = true
-        },
+    fullScreen() {
+        this.fullScreen = true
+    },
 
-        exitFullScreen() {
-            this.fullScreen = false
-        },
-    }
+    exitFullScreen() {
+        this.fullScreen = false
+    },
+}
 
-    const keyMaps = {
-        'Cmd-B': 'bold',
-        'Cmd-I': 'italicize',
-        'Cmd-Alt-I': 'image',
-        'Cmd-K': 'link',
-        F11: 'fullScreen',
-        Esc: 'exitFullScreen',
-    }
+const keyMaps = {
+    'Cmd-B': 'bold',
+    'Cmd-I': 'italicize',
+    'Cmd-Alt-I': 'image',
+    'Cmd-K': 'link',
+    F11: 'fullScreen',
+    Esc: 'exitFullScreen',
+}
 
-    export default {
-        mixins: [HandlesValidationErrors, FormField],
+export default {
+    mixins: [HandlesValidationErrors, FormField],
 
-        data: () => ({
+    data: () => ({
         fullScreen: false,
+        isFocused: false,
         codemirror: null,
         mode: 'write',
         tools: [
@@ -122,13 +144,15 @@
             indentWithTabs: true,
             lineWrapping: true,
             mode: 'markdown',
+            viewportMargin: Infinity,
             extraKeys: {
                 Enter: 'newlineAndIndentContinueMarkdownList',
                 ..._.map(this.tools, tool => {
-                return tool.action
-            }),
-    },
-    })
+                    return tool.action
+                }),
+            },
+            ...{ readOnly: this.isReadonly },
+        })
 
         _.each(keyMaps, (action, map) => {
             const realMap = map.replace(
@@ -136,15 +160,20 @@
                 CodeMirror.keyMap['default'] == CodeMirror.keyMap.macDefault ? 'Cmd-' : 'Ctrl-'
             )
             this.codemirror.options.extraKeys[realMap] = actions[keyMaps[map]].bind(this)
-    })
+        })
 
         this.doc.on('change', (cm, changeObj) => {
             this.value = cm.getValue()
-    })
+        })
+
+        this.codemirror.on('focus', () => (this.isFocused = true))
+        this.codemirror.on('blur', () => (this.isFocused = false))
 
         if (this.field.value) {
             this.doc.setValue(this.field.value)
         }
+
+        this.$nextTick(() => this.codemirror.refresh())
     },
 
     methods: {
@@ -191,11 +220,11 @@
                     const pos = [selection.head.line, selection.anchor.line].sort()
 
                     for (let i = pos[0]; i <= pos[1]; i++) {
-                    this.doc.replaceRange(insertion, { line: i, ch: 0 })
-                }
+                        this.doc.replaceRange(insertion, { line: i, ch: 0 })
+                    }
 
-                this.doc.setCursor({ line: pos[0], ch: cursorOffset || 0 })
-            })
+                    this.doc.setCursor({ line: pos[0], ch: cursorOffset || 0 })
+                })
             } else {
                 this.doc.replaceRange(insertion, {
                     line: this.cursor.line,
@@ -209,14 +238,20 @@
         },
 
         callAction(action) {
-            this.focus()
-            actions[action].call(this)
+            if (!this.isReadonly) {
+                this.focus()
+                actions[action].call(this)
+            }
         },
     },
 
     computed: {
         doc() {
             return this.codemirror.getDoc()
+        },
+
+        isFullScreen() {
+            return this.fullScreen == true
         },
 
         cursor() {
@@ -231,7 +266,7 @@
             return marked(this.rawContent)
         },
     },
-    }
+}
 </script>
 
 <style src="codemirror/lib/codemirror.css" />
@@ -281,34 +316,20 @@
 
 .CodeMirror {
     height: auto;
-    min-height: 50px;
     font: 14px/1.5 Menlo, Consolas, Monaco, 'Andale Mono', monospace;
     box-sizing: border-box;
-    height: auto;
-    margin: auto;
-    position: relative;
-    z-index: 0;
-}
-
-.CodeMirror-scroll {
-    height: auto;
-    overflow: visible;
-    box-sizing: border-box;
-}
-
-/* Fullscreen Mode */
-:-webkit-full-screen {
     width: 100%;
-    height: 100%;
 }
 
-:-moz-full-screen .CodeMirror-scroll {
-    height: 100%;
-    overflow: scroll;
+.readonly > .CodeMirror {
+    background-color: var(--30) !important;
 }
 
-:-webkit-full-screen .CodeMirror-scroll {
+.markdown-fullscreen .markdown-content {
+    height: calc(100vh - 30px);
+}
+
+.markdown-fullscreen .CodeMirror {
     height: 100%;
-    overflow: scroll;
 }
 </style>

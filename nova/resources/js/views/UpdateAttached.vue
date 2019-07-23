@@ -1,44 +1,31 @@
 <template>
     <loading-view :loading="loading">
-        <heading class="mb-3">{{__('Update')}} {{ relatedResourceLabel }}</heading>
+        <heading class="mb-3">{{
+            __('Update :resource', { resource: relatedResourceLabel })
+        }}</heading>
 
-        <card class="overflow-hidden">
-            <form v-if="field" @submit.prevent="updateAttachedResource">
+        <form v-if="field" @submit.prevent="updateAttachedResource" autocomplete="off">
+            <card class="overflow-hidden mb-8">
                 <!-- Related Resource -->
-                <field-wrapper>
-                    <div class="w-1/5 px-8 py-6">
-                        <slot>
-                            <form-label>
-                                {{ relatedResourceLabel }}
-                            </form-label>
-                        </slot>
-                    </div>
-                    <div class="w-1/2 px-8 py-6">
-                        <select
+                <default-field :field="field" :errors="validationErrors">
+                    <template slot="field">
+                        <select-control
                             class="form-control form-select mb-3 w-full"
                             dusk="attachable-select"
                             :class="{ 'border-danger': validationErrors.has(field.attribute) }"
                             :data-testid="`${field.resourceName}-select`"
                             @change="selectResourceFromSelectControl"
                             disabled
+                            :options="availableResources"
+                            :label="'display'"
+                            :selected="selectedResourceId"
                         >
-                            <option value="" disabled selected>{{__('Choose')}} {{ field.name }}</option>
-
-                            <option
-                                v-for="resource in availableResources"
-                                :key="resource.value"
-                                :value="resource.value"
-                                :selected="selectedResourceId == resource.value"
-                            >
-                                {{ resource.display}}
-                            </option>
-                        </select>
-
-                        <p v-if="true" class="my-2 text-danger">
-                            {{ validationErrors.first(relatedResourceName) }}
-                        </p>
-                    </div>
-                </field-wrapper>
+                            <option value="" disabled selected>{{
+                                __('Choose :field', { field: field.name })
+                            }}</option>
+                        </select-control>
+                    </template>
+                </default-field>
 
                 <!-- Pivot Fields -->
                 <div v-for="field in fields">
@@ -55,19 +42,31 @@
                         :via-relationship="viaRelationship"
                     />
                 </div>
+            </card>
+            <!-- Attach Button -->
+            <div class="flex">
+                <cancel-button />
 
-                <!-- Attach Button -->
-                <div class="bg-30 flex px-8 py-4">
-                    <button dusk="update-and-continue-editing-button" type="button" @click="updateAndContinueEditing" class="ml-auto btn btn-default btn-primary mr-3">
-                        {{__('Update &amp; Continue Editing')}}
-                    </button>
+                <progress-button
+                    class="mr-3"
+                    dusk="update-and-continue-editing-button"
+                    @click.native="updateAndContinueEditing"
+                    :disabled="isWorking"
+                    :processing="submittedViaUpdateAndContinueEditing"
+                >
+                    {{ __('Update & Continue Editing') }}
+                </progress-button>
 
-                    <button dusk="update-button" class="btn btn-default btn-primary">
-                        {{__('Update')}} {{ relatedResourceLabel }}
-                    </button>
-                </div>
-            </form>
-        </card>
+                <progress-button
+                    dusk="update-button"
+                    type="submit"
+                    :disabled="isWorking"
+                    :processing="submittedViaUpdateAttachedResource"
+                >
+                    {{ __('Update :resource', { resource: relatedResourceLabel }) }}
+                </progress-button>
+            </div>
+        </form>
     </loading-view>
 </template>
 
@@ -109,6 +108,8 @@ export default {
 
     data: () => ({
         loading: true,
+        submittedViaUpdateAndContinueEditing: false,
+        submittedViaUpdateAttachedResource: false,
         field: null,
         softDeletes: false,
         fields: [],
@@ -117,6 +118,10 @@ export default {
         selectedResourceId: null,
         lastRetrievedAt: null,
     }),
+
+    created() {
+        if (Nova.missingResource(this.resourceName)) return this.$router.push({ name: '404' })
+    },
 
     /**
      * Mount the component.
@@ -170,17 +175,23 @@ export default {
         async getPivotFields() {
             this.fields = []
 
-            const { data } = await Nova.request().get(
-                `/nova-api/${this.resourceName}/${this.resourceId}/update-pivot-fields/${
-                    this.relatedResourceName
-                }/${this.relatedResourceId}`,
-                { params: { viaRelationship: this.viaRelationship } }
-            ).catch(error => {
-                if (error.response.status == 404) {
-                    this.$router.push({ name: '404' })
-                    return
-                }
-            })
+            const { data } = await Nova.request()
+                .get(
+                    `/nova-api/${this.resourceName}/${this.resourceId}/update-pivot-fields/${this.relatedResourceName}/${this.relatedResourceId}`,
+                    {
+                        params: {
+                            editing: true,
+                            editMode: 'update-attached',
+                            viaRelationship: this.viaRelationship,
+                        },
+                    }
+                )
+                .catch(error => {
+                    if (error.response.status == 404) {
+                        this.$router.push({ name: '404' })
+                        return
+                    }
+                })
 
             this.fields = data
 
@@ -195,9 +206,7 @@ export default {
         async getAvailableResources(search = '') {
             try {
                 const response = await Nova.request().get(
-                    `/nova-api/${this.resourceName}/${this.resourceId}/attachable/${
-                        this.relatedResourceName
-                    }`,
+                    `/nova-api/${this.resourceName}/${this.resourceId}/attachable/${this.relatedResourceName}`,
                     {
                         params: {
                             search,
@@ -231,8 +240,12 @@ export default {
          * Update the attached resource.
          */
         async updateAttachedResource() {
+            this.submittedViaUpdateAttachedResource = true
+
             try {
                 await this.updateRequest()
+
+                this.submittedViaUpdateAttachedResource = false
 
                 this.$toasted.show(this.__('The resource was updated!'), { type: 'success' })
 
@@ -244,14 +257,17 @@ export default {
                     },
                 })
             } catch (error) {
-                console.log(error)
+                this.submittedViaUpdateAttachedResource = false
+
                 if (error.response.status == 422) {
                     this.validationErrors = new Errors(error.response.data.errors)
                 }
 
                 if (error.response.status == 409) {
                     this.$toasted.show(
-                        this.__('Another user has updated this resource since this page was loaded. Please refresh the page and try again.'),
+                        this.__(
+                            'Another user has updated this resource since this page was loaded. Please refresh the page and try again.'
+                        ),
                         { type: 'error' }
                     )
                 }
@@ -262,22 +278,29 @@ export default {
          * Update the resource and reset the form
          */
         async updateAndContinueEditing() {
+            this.submittedViaUpdateAndContinueEditing = true
+
             try {
                 await this.updateRequest()
+
+                this.submittedViaUpdateAndContinueEditing = false
 
                 this.$toasted.show(this.__('The resource was updated!'), { type: 'success' })
 
                 // Reset the form by refetching the fields
                 this.initializeComponent()
             } catch (error) {
-                console.log(error)
+                this.submittedViaUpdateAndContinueEditing = false
+
                 if (error.response.status == 422) {
                     this.validationErrors = new Errors(error.response.data.errors)
                 }
 
                 if (error.response.status == 409) {
                     this.$toasted.show(
-                        this.__('Another user has updated this resource since this page was loaded. Please refresh the page and try again.'),
+                        this.__(
+                            'Another user has updated this resource since this page was loaded. Please refresh the page and try again.'
+                        ),
                         { type: 'error' }
                     )
                 }
@@ -289,9 +312,7 @@ export default {
          */
         updateRequest() {
             return Nova.request().post(
-                `/nova-api/${this.resourceName}/${this.resourceId}/update-attached/${
-                    this.relatedResourceName
-                }/${this.relatedResourceId}`,
+                `/nova-api/${this.resourceName}/${this.resourceId}/update-attached/${this.relatedResourceName}/${this.relatedResourceId}`,
                 this.updateAttachmentFormData
             )
         },
@@ -381,9 +402,9 @@ export default {
          * Get the label for the related resource.
          */
         relatedResourceLabel() {
-            return _.find(Nova.config.resources, resource => {
-                return resource.uriKey == this.relatedResourceName
-            }).singularLabel
+            if (this.field) {
+                return this.field.singularLabel
+            }
         },
 
         /**
@@ -391,6 +412,15 @@ export default {
          */
         isSearchable() {
             return this.field.searchable
+        },
+
+        /**
+         * Determine if the form is being processed
+         */
+        isWorking() {
+            return (
+                this.submittedViaUpdateAttachedResource || this.submittedViaUpdateAndContinueEditing
+            )
         },
     },
 }

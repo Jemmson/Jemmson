@@ -1,10 +1,18 @@
 <template>
     <loading-view :loading="initialLoading">
+        <custom-detail-header
+            class="mb-3"
+            :resource="resource"
+            :resource-id="resourceId"
+            :resource-name="resourceName"
+        />
+
         <div v-if="shouldShowCards">
             <cards
                 v-if="smallCards.length > 0"
                 :cards="smallCards"
                 class="mb-3"
+                :resource="resource"
                 :resource-id="resourceId"
                 :resource-name="resourceName"
                 :only-on-detail="true"
@@ -14,6 +22,7 @@
                 v-if="largeCards.length > 0"
                 :cards="largeCards"
                 size="large"
+                :resource="resource"
                 :resource-id="resourceId"
                 :resource-name="resourceName"
                 :only-on-detail="true"
@@ -21,7 +30,12 @@
         </div>
 
         <!-- Resource Detail -->
-        <div :dusk="resourceName + '-detail-component'" class="mb-8" :key="panel.id" v-for="panel in availablePanels">
+        <div
+            v-for="panel in availablePanels"
+            :dusk="resourceName + '-detail-component'"
+            class="mb-8"
+            :key="panel.id"
+        >
             <component
                 :is="panel.component"
                 :resource-name="resourceName"
@@ -29,10 +43,15 @@
                 :resource="resource"
                 :panel="panel"
             >
-                <div v-if="panel.name.includes('Details')" class="flex items-center mb-3">
-                    <h4 class="text-90 font-normal text-2xl">{{ panel.name }}</h4>
+                <div v-if="panel.showToolbar" class="flex items-center mb-3">
+                    <heading :level="1" class="flex-no-shrink">{{ panel.name }}</heading>
 
-                    <div class="ml-auto flex">
+                    <div class="ml-3 w-full flex items-center">
+                        <custom-detail-toolbar
+                            :resource="resource"
+                            :resource-name="resourceName"
+                            :resource-id="resourceId"
+                        />
 
                         <!-- Actions -->
                         <action-selector
@@ -40,7 +59,6 @@
                             :resource-name="resourceName"
                             :actions="actions"
                             :pivot-actions="{ actions: [] }"
-                            :errors="actionValidationErrors"
                             :selected-resources="selectedResources"
                             :query-string="{
                                 currentSearch,
@@ -48,18 +66,19 @@
                                 currentTrashed,
                                 viaResource,
                                 viaResourceId,
-                                viaRelationship
+                                viaRelationship,
                             }"
                             @actionExecuted="actionExecuted"
+                            class="ml-3"
                         />
 
                         <button
-                            v-if="resource.authorizedToDelete && ! resource.softDeleted"
+                            v-if="resource.authorizedToDelete && !resource.softDeleted"
                             data-testid="open-delete-modal"
                             dusk="open-delete-modal-button"
                             @click="openDeleteModal"
                             class="btn btn-default btn-icon btn-white mr-3"
-                            title="Delete"
+                            :title="__('Delete')"
                         >
                             <icon type="delete" class="text-80" />
                         </button>
@@ -70,7 +89,7 @@
                             dusk="open-restore-modal-button"
                             @click="openRestoreModal"
                             class="btn btn-default btn-icon btn-white mr-3"
-                            title="Restore"
+                            :title="__('Restore')"
                         >
                             <icon type="restore" class="text-80" />
                         </button>
@@ -81,7 +100,7 @@
                             dusk="open-force-delete-modal-button"
                             @click="openForceDeleteModal"
                             class="btn btn-default btn-icon btn-white mr-3"
-                            title="Force Delete"
+                            :title="__('Force Delete')"
                         >
                             <icon type="force-delete" class="text-80" />
                         </button>
@@ -122,11 +141,15 @@
                             v-if="resource.authorizedToUpdate"
                             data-testid="edit-resource"
                             dusk="edit-resource-button"
-                            :to="{ name: 'edit', params: {id: resource.id} }"
+                            :to="{ name: 'edit', params: { id: resource.id } }"
                             class="btn btn-default btn-icon bg-primary"
-                            title="Edit"
+                            :title="__('Edit')"
                         >
-                            <icon type="edit" class="text-white" style="margin-top: -2px; margin-left: 3px" />
+                            <icon
+                                type="edit"
+                                class="text-white"
+                                style="margin-top: -2px; margin-left: 3px"
+                            />
                         </router-link>
                     </div>
                 </div>
@@ -174,6 +197,8 @@ export default {
      * Bind the keydown even listener when the component is created
      */
     created() {
+        if (Nova.missingResource(this.resourceName)) return this.$router.push({ name: '404' })
+
         document.addEventListener('keydown', this.handleKeydown)
     },
 
@@ -196,7 +221,16 @@ export default {
          * Handle the keydown event
          */
         handleKeydown(e) {
-            if (!e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey && e.keyCode == 69) {
+            if (
+                this.resource.authorizedToUpdate &&
+                !e.ctrlKey &&
+                !e.altKey &&
+                !e.metaKey &&
+                !e.shiftKey &&
+                e.keyCode == 69 &&
+                e.target.tagName != 'INPUT' &&
+                e.target.tagName != 'TEXTAREA'
+            ) {
                 this.$router.push({ name: 'edit', params: { id: this.resource.id } })
             }
         },
@@ -257,9 +291,15 @@ export default {
             this.actions = []
 
             return Nova.request()
-                .get('/nova-api/' + this.resourceName + '/actions')
+                .get('/nova-api/' + this.resourceName + '/actions', {
+                    params: {
+                        resourceId: this.resourceId,
+                    },
+                })
                 .then(response => {
-                    this.actions = response.data.actions
+                    this.actions = _.filter(response.data.actions, action => {
+                        return !action.onlyOnIndex
+                    })
                 })
         },
 
@@ -268,6 +308,7 @@ export default {
          */
         async actionExecuted() {
             await this.getResource()
+            await this.getActions()
         },
 
         /**
@@ -297,7 +338,9 @@ export default {
         async confirmDelete() {
             this.deleteResources([this.resource], () => {
                 this.$toasted.show(
-                    this.__('The :resource was deleted!', {resource: this.resourceInformation.singularLabel.toLowerCase()}),
+                    this.__('The :resource was deleted!', {
+                        resource: this.resourceInformation.singularLabel.toLowerCase(),
+                    }),
                     { type: 'success' }
                 )
 
@@ -334,7 +377,9 @@ export default {
         async confirmRestore() {
             this.restoreResources([this.resource], () => {
                 this.$toasted.show(
-                     this.__('The :resource was restored!', {resource: this.resourceInformation.singularLabel.toLowerCase()}),
+                    this.__('The :resource was restored!', {
+                        resource: this.resourceInformation.singularLabel.toLowerCase(),
+                    }),
                     { type: 'success' }
                 )
 
@@ -363,7 +408,9 @@ export default {
         async confirmForceDelete() {
             this.forceDeleteResources([this.resource], () => {
                 this.$toasted.show(
-                    this.__('The :resource was deleted!', {resource: this.resourceInformation.singularLabel.toLowerCase()}),
+                    this.__('The :resource was deleted!', {
+                        resource: this.resourceInformation.singularLabel.toLowerCase(),
+                    }),
                     { type: 'success' }
                 )
 
@@ -453,6 +500,15 @@ export default {
          */
         cardsEndpoint() {
             return `/nova-api/${this.resourceName}/cards`
+        },
+
+        /**
+         * Get the extra card params to pass to the endpoint.
+         */
+        extraCardParams() {
+            return {
+                resourceId: this.resourceId,
+            }
         },
     },
 }

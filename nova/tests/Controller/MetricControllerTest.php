@@ -10,11 +10,10 @@ use Laravel\Nova\Tests\Fixtures\User;
 use Laravel\Nova\Tests\IntegrationTest;
 use Laravel\Nova\Tests\Fixtures\TotalUsers;
 use Laravel\Nova\Tests\Fixtures\UserGrowth;
-use Laravel\Nova\Tests\Fixtures\CustomerRevenue;
 
 class MetricControllerTest extends IntegrationTest
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -152,6 +151,26 @@ class MetricControllerTest extends IntegrationTest
 
         $response = $this->withExceptionHandling()
                         ->get('/nova-api/users/metrics/user-growth?range=30');
+
+        $response->assertStatus(200);
+        $this->assertEquals(1, $response->original['value']->value);
+        $this->assertEquals(1, $response->original['value']->previous);
+    }
+
+    public function test_can_retrieve_custom_column_count_calculations()
+    {
+        factory(User::class, 2)->create();
+
+        $user = User::find(2);
+        $user->updated_at = now()->subDays(31);
+        $user->save();
+
+        $_SERVER['__nova.userGrowthColumn'] = 'updated_at';
+
+        $response = $this->withExceptionHandling()
+                        ->get('/nova-api/users/metrics/user-growth?range=30');
+
+        unset($_SERVER['__nova.userGrowthColumn']);
 
         $response->assertStatus(200);
         $this->assertEquals(1, $response->original['value']->value);

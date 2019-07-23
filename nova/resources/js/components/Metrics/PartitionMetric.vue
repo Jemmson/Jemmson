@@ -1,9 +1,5 @@
 <template>
-    <BasePartitionMetric
-        :title="card.name"
-        :chart-data="chartData"
-        :loading="loading"
-    />
+    <BasePartitionMetric :title="card.name" :chart-data="chartData" :loading="loading" />
 </template>
 
 <script>
@@ -20,12 +16,19 @@ export default {
             type: Object,
             required: true,
         },
+
         resourceName: {
             type: String,
             default: '',
         },
+
         resourceId: {
             type: [Number, String],
+            default: '',
+        },
+
+        lens: {
+            type: String,
             default: '',
         },
     },
@@ -35,6 +38,12 @@ export default {
         chartData: [],
     }),
 
+    watch: {
+        resourceId() {
+            this.fetch()
+        },
+    },
+
     created() {
         this.fetch()
     },
@@ -43,20 +52,19 @@ export default {
         fetch() {
             this.loading = true
 
-            Minimum(Nova.request(this.cardEndpoint)).then(({ data: { value: { value } } }) => {
+            Minimum(Nova.request(this.metricEndpoint)).then(({ data: { value: { value } } }) => {
                 this.chartData = value
                 this.loading = false
             })
         },
     },
     computed: {
-        cardEndpoint() {
+        metricEndpoint() {
+            const lens = this.lens !== '' ? `/lens/${this.lens}` : ''
             if (this.resourceName && this.resourceId) {
-                return `/nova-api/${this.resourceName}/${this.resourceId}/metrics/${
-                    this.card.uriKey
-                }`
+                return `/nova-api/${this.resourceName}${lens}/${this.resourceId}/metrics/${this.card.uriKey}`
             } else if (this.resourceName) {
-                return `/nova-api/${this.resourceName}/metrics/${this.card.uriKey}`
+                return `/nova-api/${this.resourceName}${lens}/metrics/${this.card.uriKey}`
             } else {
                 return `/nova-api/metrics/${this.card.uriKey}`
             }

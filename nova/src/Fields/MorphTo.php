@@ -11,9 +11,12 @@ use Laravel\Nova\TrashedStatus;
 use Laravel\Nova\Rules\Relatable;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Laravel\Nova\Http\Requests\ResourceIndexRequest;
 
 class MorphTo extends Field
 {
+    use ResolvesReverseRelation;
+
     /**
      * The field's component.
      *
@@ -129,8 +132,7 @@ class MorphTo extends Field
      */
     public function isNotRedundant(Request $request)
     {
-        return (! $request->isMethod('GET') || ! $request->viaResource) ||
-               ($this->resourceName !== $request->viaResource);
+        return ! $request instanceof ResourceIndexRequest || ! $this->isReverseRelation($request);
     }
 
     /**
@@ -142,7 +144,15 @@ class MorphTo extends Field
      */
     public function resolve($resource, $attribute = null)
     {
-        $value = $resource->{$this->attribute}()->withoutGlobalScopes()->getResults();
+        $value = null;
+
+        if ($resource->relationLoaded($this->attribute)) {
+            $value = $resource->getRelation($this->attribute);
+        }
+
+        if (! $value) {
+            $value = $resource->{$this->attribute}()->withoutGlobalScopes()->getResults();
+        }
 
         [$this->morphToId, $this->morphToType] = [
             optional($value)->getKey(),
@@ -161,6 +171,18 @@ class MorphTo extends Field
     }
 
     /**
+     * Resolve the field's value for display.
+     *
+     * @param  mixed  $resource
+     * @param  string|null  $attribute
+     * @return void
+     */
+    public function resolveForDisplay($resource, $attribute = null)
+    {
+        //
+    }
+
+    /**
      * Resolve the current resource key for the resource's morph type.
      *
      * @param  mixed  $resource
@@ -172,7 +194,9 @@ class MorphTo extends Field
             return;
         }
 
-        if ($morphResource = Nova::resourceForModel($resource->{$type})) {
+        $value = $resource->{$type};
+
+        if ($morphResource = Nova::resourceForModel(Relation::getMorphedModel($value) ?? $value)) {
             return $morphResource::uriKey();
         }
     }
@@ -199,8 +223,8 @@ class MorphTo extends Field
         $possibleTypes = collect($this->morphToTypes)->map->value->values();
 
         return array_merge_recursive(parent::getRules($request), [
-            $this->attribute.'_type' => ['required', 'in:'.$possibleTypes->implode(',')],
-            $this->attribute => array_filter(['required', $this->getRelatableRule($request)]),
+            $this->attribute.'_type' => [$this->nullable ? 'nullable' : 'required', 'in:'.$possibleTypes->implode(',')],
+            $this->attribute => array_filter([$this->nullable ? 'nullable' : 'required', $this->getRelatableRule($request)]),
         ]);
     }
 
@@ -228,11 +252,22 @@ class MorphTo extends Field
      */
     public function fill(NovaRequest $request, $model)
     {
-        $model->{$model->{$this->attribute}()->getMorphType()} = $this->getMorphAliasForClass(
-            get_class(Nova::modelInstanceForKey($request->{$this->attribute.'_type'}))
-        );
+        $instance = Nova::modelInstanceForKey($request->{$this->attribute.'_type'});
 
-        parent::fillInto($request, $model, $model->{$this->attribute}()->getForeignKey());
+        $morphType = $model->{$this->attribute}()->getMorphType();
+        if ($instance) {
+            $model->{$morphType} = $this->getMorphAliasForClass(
+                get_class($instance)
+            );
+        }
+
+        $foreignKey = $this->getRelationForeignKeyName($model->{$this->attribute}());
+
+        if ($model->isDirty([$morphType, $foreignKey])) {
+            $model->unsetRelation($this->attribute);
+        }
+
+        parent::fillInto($request, $model, $foreignKey);
     }
 
     /**
@@ -356,6 +391,7 @@ class MorphTo extends Field
         $this->morphToTypes = collect($types)->map(function ($display, $key) {
             return [
                 'type' => is_numeric($key) ? $display : $key,
+                'singularLabel' => is_numeric($key) ? $display::singularLabel() : $key::singularLabel(),
                 'display' => (is_string($display) && is_numeric($key)) ? $display::singularLabel() : $display,
                 'value' => is_numeric($key) ? $display::uriKey() : $key::uriKey(),
             ];
@@ -456,6 +492,7 @@ class MorphTo extends Field
             'morphToType' => $this->morphToType,
             'morphToId' => $this->morphToId,
             'searchable' => $this->searchable,
+            'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
         ], $this->meta);
     }
 }

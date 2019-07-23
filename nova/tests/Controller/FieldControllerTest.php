@@ -4,6 +4,7 @@ namespace Laravel\Nova\Tests\Controller;
 
 use Laravel\Nova\Fields\Text;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Tests\Fixtures\Post;
 use Laravel\Nova\Tests\Fixtures\Role;
 use Laravel\Nova\Tests\Fixtures\User;
 use Laravel\Nova\Tests\IntegrationTest;
@@ -11,7 +12,7 @@ use Laravel\Nova\Tests\Fixtures\UserPolicy;
 
 class FieldControllerTest extends IntegrationTest
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -41,7 +42,7 @@ class FieldControllerTest extends IntegrationTest
         $response = $this->withExceptionHandling()
                         ->get('/nova-api/users/creation-fields');
 
-        $fields = collect($response->original);
+        $fields = collect($response->original['fields']);
 
         $response->assertStatus(200);
         $this->assertCount(0, $fields->where('attribute', 'id'));
@@ -73,11 +74,10 @@ class FieldControllerTest extends IntegrationTest
         $user = factory(User::class)->create();
 
         $response = $this->withExceptionHandling()
-                        ->get('/nova-api/users/'.$user->id.'/update-fields');
+                        ->get('/nova-api/users/'.$user->id.'/update-fields')
+                        ->assertOk();
 
-        $fields = collect($response->original);
-
-        $response->assertStatus(200);
+        $fields = collect($response->original['fields']);
         $this->assertCount(0, $fields->where('attribute', 'id'));
         $this->assertCount(1, $fields->where('attribute', 'name'));
         $this->assertCount(1, $fields->where('attribute', 'email'));
@@ -129,5 +129,63 @@ class FieldControllerTest extends IntegrationTest
 
         $response->assertStatus(200);
         $this->assertCount(1, $fields->where('attribute', 'pivot-update'));
+    }
+
+    public function test_can_return_viewable_property_authorized()
+    {
+        Gate::policy(User::class, UserPolicy::class);
+
+        $user = factory(User::class)->create();
+        $post = factory(Post::class)->create(['user_id' => $user->id]);
+
+        $response = $this->withExceptionHandling()
+            ->get("/nova-api/posts/{$post->id}");
+
+        $response->assertStatus(200);
+
+        $fields = collect(json_decode(json_encode($response->original['resource']['fields']), true));
+
+        $this->assertTrue($fields->firstWhere('attribute', 'user')['viewable']);
+    }
+
+    public function test_can_return_viewable_property_denied()
+    {
+        Gate::policy(User::class, UserPolicy::class);
+
+        $user = factory(User::class)->create();
+        $post = factory(Post::class)->create(['user_id' => $user->id]);
+
+        $_SERVER['nova.user.authorizable'] = true;
+        $_SERVER['nova.user.viewable'] = false;
+
+        $response = $this->withExceptionHandling()
+            ->get("/nova-api/posts/{$post->id}");
+
+        $response->assertStatus(200);
+
+        $fields = collect(json_decode(json_encode($response->original['resource']['fields']), true));
+
+        unset($_SERVER['nova.user.viewable'], $_SERVER['nova.user.authorizable']);
+
+        $this->assertFalse($fields->firstWhere('attribute', 'user')['viewable']);
+    }
+
+    public function test_can_return_viewable_property_hidden()
+    {
+        $user = factory(User::class)->create();
+        $post = factory(Post::class)->create(['user_id' => $user->id]);
+
+        $_SERVER['nova.user.viewable-field'] = false;
+
+        $response = $this->withExceptionHandling()
+            ->get("/nova-api/posts/{$post->id}");
+
+        $response->assertStatus(200);
+
+        $fields = collect(json_decode(json_encode($response->original['resource']['fields']), true));
+
+        unset($_SERVER['nova.user.viewable-field']);
+
+        $this->assertFalse($fields->firstWhere('attribute', 'user')['viewable']);
     }
 }

@@ -37,6 +37,13 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     public $resource;
 
     /**
+     * The logical group associated with the resource.
+     *
+     * @var string
+     */
+    public static $group = 'Other';
+
+    /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
@@ -70,6 +77,13 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
      * @var bool
      */
     public static $globallySearchable = true;
+
+    /**
+     * The per-page options used the resource index.
+     *
+     * @var array
+     */
+    public static $perPageOptions = [25, 50, 100];
 
     /**
      * The number of resources to show per page via relationships.
@@ -119,6 +133,16 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     public function model()
     {
         return $this->resource;
+    }
+
+    /**
+     * Get the logical group associated with the resource.
+     *
+     * @return string
+     */
+    public static function group()
+    {
+        return static::$group;
     }
 
     /**
@@ -187,7 +211,7 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
      */
     public static function label()
     {
-        return Str::plural(class_basename(get_called_class()));
+        return Str::plural(Str::title(Str::snake(class_basename(get_called_class()), ' ')));
     }
 
     /**
@@ -213,11 +237,11 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     /**
      * Get the search result subtitle for the resource.
      *
-     * @return string
+     * @return string|null
      */
     public function subtitle()
     {
-        return null;
+        //
     }
 
     /**
@@ -239,7 +263,28 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
      */
     public static function uriKey()
     {
-        return Str::plural(Str::snake(class_basename(get_called_class()), '-'));
+        return Str::plural(Str::kebab(class_basename(get_called_class())));
+    }
+
+    /**
+     * Get meta information about this resource for client side comsumption.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public static function additionalInformation(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * The pagination per-page options configured for this resource.
+     *
+     * @return array
+     */
+    public static function perPageOptions()
+    {
+        return static::$perPageOptions;
     }
 
     /**
@@ -284,7 +329,7 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
      */
     public function serializeForDetail(NovaRequest $request)
     {
-        return array_merge($this->serializeWithId($this->detailFields($request)), [
+        return array_merge($this->serializeWithId($this->detailFieldsWithinPanels($request)), [
             'authorizedToUpdate' => $this->authorizedToUpdate($request),
             'authorizedToDelete' => $this->authorizedToDelete($request),
             'authorizedToRestore' => static::softDeletes() && $this->authorizedToRestore($request),
@@ -347,7 +392,7 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
     public function jsonSerialize()
     {
         $this->serializeWithId($this->resolveFields(
-            resolve(Request::class)
+            resolve(NovaRequest::class)
         ));
     }
 
@@ -363,5 +408,29 @@ abstract class Resource implements ArrayAccess, JsonSerializable, UrlRoutable
             'id' => $fields->whereInstanceOf(ID::class)->first() ?: ID::forModel($this->resource),
             'fields' => $fields->all(),
         ];
+    }
+
+    /**
+     * Return the location to redirect the user after creation.
+     *
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
+     * @param \App\Nova\Resource $resource
+     * @return string
+     */
+    public static function redirectAfterCreate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey().'/'.$resource->getKey();
+    }
+
+    /**
+     * Return the location to redirect the user after update.
+     *
+     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
+     * @param \App\Nova\Resource $resource
+     * @return string
+     */
+    public static function redirectAfterUpdate(NovaRequest $request, $resource)
+    {
+        return '/resources/'.static::uriKey().'/'.$resource->getKey();
     }
 }

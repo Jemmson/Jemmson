@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Status;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\MorphToActionTarget;
 
@@ -63,19 +65,29 @@ class ActionResource extends Resource
     {
         return [
             ID::make('ID', 'id'),
-            Text::make('Name', 'name'),
+            Text::make(__('Action Name'), 'name'),
 
-            Text::make('Initiated By', function () {
-                return $this->user->name ?? $this->user->getKey;
+            Text::make(__('Action Initiated By'), function () {
+                return $this->user->name ?? $this->user->email ?? __('Nova User');
             }),
 
-            MorphToActionTarget::make('Target', 'target'),
+            MorphToActionTarget::make(__('Action Target'), 'target'),
 
-            Status::make('Status', 'status', function ($value) {
+            Status::make(__('Action Status'), 'status', function ($value) {
                 return ucfirst($value);
             })->loadingWhen(['Waiting', 'Running'])->failedWhen(['Failed']),
 
-            DateTime::make('Happened At', 'created_at')->exceptOnForms(),
+            $this->when(isset($this->original), function () {
+                return KeyValue::make(__('Original'));
+            }),
+
+            $this->when(isset($this->changes), function () {
+                return KeyValue::make(__('Changes'));
+            }),
+
+            Textarea::make('Exception'),
+
+            DateTime::make(__('Action Happened At'), 'created_at')->exceptOnForms(),
         ];
     }
 
@@ -120,6 +132,16 @@ class ActionResource extends Resource
     public static function label()
     {
         return __('Actions');
+    }
+
+    /**
+     * Get the displayable singular label of the resource.
+     *
+     * @return string
+     */
+    public static function singularLabel()
+    {
+        return __('Action');
     }
 
     /**

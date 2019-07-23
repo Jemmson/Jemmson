@@ -3,6 +3,11 @@ import router from '@/router'
 
 const instance = axios.create()
 
+instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+instance.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector(
+    'meta[name="csrf-token"]'
+).content
+
 instance.interceptors.response.use(
     response => response,
     error => {
@@ -21,6 +26,11 @@ instance.interceptors.response.use(
         // Handle Forbidden
         if (status === 403) {
             router.push({ name: '403' })
+        }
+
+        // Handle Token Timeouts
+        if (status === 419) {
+            Nova.$emit('token-expired')
         }
 
         return Promise.reject(error)

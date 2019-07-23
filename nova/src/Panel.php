@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\MergeValue;
 
 class Panel extends MergeValue implements JsonSerializable
 {
+    use Metable;
+
     /**
      * The name of the panel.
      *
@@ -20,6 +22,18 @@ class Panel extends MergeValue implements JsonSerializable
      * @var array
      */
     public $data;
+
+    /**
+     * The panel's component.
+     */
+    public $component = 'panel';
+
+    /**
+     * Indicates whether the detail toolbar should be visible on this panel.
+     *
+     * @var bool
+     */
+    public $showToolbar = false;
 
     /**
      * Create a new panel instance.
@@ -54,9 +68,66 @@ class Panel extends MergeValue implements JsonSerializable
      * @param  \Laravel\Nova\Resource  $resource
      * @return string
      */
-    public static function defaultNameFor(Resource $resource)
+    public static function defaultNameForDetail(Resource $resource)
     {
-        return $resource->singularLabel().' '.__('Details');
+        return __(':resource Details', [
+            'resource' => $resource->singularLabel(),
+        ]);
+    }
+
+    /**
+     * Get the default panel name for a create panel.
+     */
+    public static function defaultNameForCreate(Resource $resource)
+    {
+        return __('Create :resource', [
+            'resource' => $resource->singularLabel(),
+        ]);
+    }
+
+    /**
+     * Get the default panel name for the update panel.
+     */
+    public static function defaultNameForUpdate(Resource $resource)
+    {
+        return __('Update :resource', [
+            'resource' => $resource->singularLabel(),
+        ]);
+    }
+
+    /**
+     * Display the toolbar when showing this panel.
+     *
+     * @return $this
+     */
+    public function withToolbar()
+    {
+        $this->showToolbar = true;
+
+        return $this;
+    }
+
+    /**
+     * Set the Vue component key for the panel.
+     *
+     * @param string $component
+     * @return $this
+     */
+    public function withComponent($component)
+    {
+        $this->component = $component;
+
+        return $this;
+    }
+
+    /**
+     * Get the Vue component key for the panel.
+     *
+     * @return string
+     */
+    public function component()
+    {
+        return $this->component;
     }
 
     /**
@@ -66,9 +137,10 @@ class Panel extends MergeValue implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return [
-            'component' => 'panel',
+        return array_merge([
+            'component' => $this->component(),
             'name' => $this->name,
-        ];
+            'showToolbar' => $this->showToolbar,
+        ], $this->meta());
     }
 }

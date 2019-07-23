@@ -47,7 +47,7 @@ class NovaServiceProvider extends ServiceProvider
         ], 'nova-config');
 
         $this->publishes([
-            __DIR__.'/../public' => public_path('nova-assets'),
+            __DIR__.'/../public' => public_path('vendor/nova'),
         ], 'nova-assets');
 
         $this->publishes([
@@ -102,6 +102,7 @@ class NovaServiceProvider extends ServiceProvider
     {
         return [
             'namespace' => 'Laravel\Nova\Http\Controllers',
+            'domain' => config('nova.domain', null),
             'as' => 'nova.api.',
             'prefix' => 'nova-api',
             'middleware' => 'nova',
@@ -144,6 +145,7 @@ class NovaServiceProvider extends ServiceProvider
                 'timezone' => config('app.timezone', 'UTC'),
                 'translations' => $this->getTranslations(),
                 'userTimezone' => Nova::resolveUserTimezone($event->request),
+                'pagination' => config('nova.pagination', 'links'),
             ]);
         });
     }
@@ -157,8 +159,10 @@ class NovaServiceProvider extends ServiceProvider
     {
         $this->commands([
             Console\ActionCommand::class,
+            Console\AssetCommand::class,
             Console\BaseResourceCommand::class,
             Console\CardCommand::class,
+            Console\CustomFilterCommand::class,
             Console\FilterCommand::class,
             Console\FieldCommand::class,
             Console\InstallCommand::class,
@@ -167,6 +171,7 @@ class NovaServiceProvider extends ServiceProvider
             Console\PublishCommand::class,
             Console\ResourceCommand::class,
             Console\ResourceToolCommand::class,
+            Console\ThemeCommand::class,
             Console\ToolCommand::class,
             Console\TrendCommand::class,
             Console\UserCommand::class,

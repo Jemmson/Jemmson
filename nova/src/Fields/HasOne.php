@@ -29,6 +29,13 @@ class HasOne extends Field implements ListableField
     public $resourceName;
 
     /**
+     * The displayable singular label of the relation.
+     *
+     * @var string
+     */
+    public $singularLabel;
+
+    /**
      * The name of the Eloquent "has one" relationship.
      *
      * @var string
@@ -80,6 +87,18 @@ class HasOne extends Field implements ListableField
     }
 
     /**
+     * Set the displayable singular label of the resource.
+     *
+     * @return string
+     */
+    public function singularLabel($singularLabel)
+    {
+        $this->singularLabel = $singularLabel;
+
+        return $this;
+    }
+
+    /**
      * Get additional meta information to merge with the field payload.
      *
      * @return array
@@ -90,6 +109,7 @@ class HasOne extends Field implements ListableField
             'resourceName' => $this->resourceName,
             'hasOneRelationship' => $this->hasOneRelationship,
             'listable' => true,
+            'singularLabel' => $this->name,
         ], $this->meta);
     }
 }

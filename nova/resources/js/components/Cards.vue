@@ -4,9 +4,11 @@
             v-for="card in filteredCards"
             :card="card"
             :size="size"
+            :resource="resource"
             :resource-name="resourceName"
             :resource-id="resourceId"
             :key="`${card.component}.${card.name}`"
+            :lens="lens"
         />
     </div>
 </template>
@@ -21,6 +23,10 @@ export default {
             default: '',
         },
 
+        resource: {
+            type: Object,
+        },
+
         resourceName: {
             type: String,
         },
@@ -32,6 +38,11 @@ export default {
         onlyOnDetail: {
             type: Boolean,
             default: false,
+        },
+
+        lens: {
+            lens: String,
+            default: '',
         },
     },
 

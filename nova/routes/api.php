@@ -11,6 +11,9 @@ Route::get('/search', 'SearchController@index');
 
 // Fields...
 Route::get('/{resource}/field/{field}', 'FieldController@show');
+Route::post('/{resource}/trix-attachment/{field}', 'TrixAttachmentController@store');
+Route::delete('/{resource}/trix-attachment/{field}', 'TrixAttachmentController@destroyAttachment');
+Route::delete('/{resource}/trix-attachment/{field}/{draftId}', 'TrixAttachmentController@destroyPending');
 Route::get('/{resource}/creation-fields', 'CreationFieldController@index');
 Route::get('/{resource}/{resourceId}/update-fields', 'UpdateFieldController@index');
 Route::get('/{resource}/creation-pivot-fields/{relatedResource}', 'CreationPivotFieldController@index');
@@ -33,6 +36,7 @@ Route::get('/{resource}/lens/{lens}/count', 'LensResourceCountController@show');
 Route::delete('/{resource}/lens/{lens}', 'LensResourceDestroyController@handle');
 Route::delete('/{resource}/lens/{lens}/force', 'LensResourceForceDeleteController@handle');
 Route::put('/{resource}/lens/{lens}/restore', 'LensResourceRestoreController@handle');
+Route::get('/{resource}/lens/{lens}/actions', 'LensActionController@index');
 Route::post('/{resource}/lens/{lens}/action', 'LensActionController@store');
 Route::get('/{resource}/lens/{lens}/filters', 'LensFilterController@index');
 
@@ -43,8 +47,12 @@ Route::get('/{resource}/metrics', 'MetricController@index');
 Route::get('/{resource}/metrics/{metric}', 'MetricController@show');
 Route::get('/{resource}/{resourceId}/metrics/{metric}', 'DetailMetricController@show');
 
+Route::get('/{resource}/lens/{lens}/metrics', 'LensMetricController@index');
+Route::get('/{resource}/lens/{lens}/metrics/{metric}', 'LensMetricController@show');
+
 Route::get('/cards', 'DashboardCardController@index');
 Route::get('/{resource}/cards', 'CardController@index');
+Route::get('/{resource}/lens/{lens}/cards', 'LensCardController@index');
 
 // Authorization Information...
 Route::get('/{resource}/relate-authorization', 'RelatableAuthorizationController@show');

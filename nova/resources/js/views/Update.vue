@@ -1,37 +1,48 @@
 <template>
-    <div v-if="!loading">
-        <heading class="mb-3">{{__('Edit')}} {{ singularName }}</heading>
+    <loading-view :loading="loading">
+        <form v-if="panels" @submit.prevent="updateResource" autocomplete="off">
+            <form-panel
+                v-for="panel in panelsWithFields"
+                @update-last-retrieved-at-timestamp="updateLastRetrievedAtTimestamp"
+                :panel="panel"
+                :name="panel.name"
+                :key="panel.name"
+                :resource-id="resourceId"
+                :resource-name="resourceName"
+                :fields="panel.fields"
+                mode="form"
+                class="mb-6"
+                :validation-errors="validationErrors"
+                :via-resource="viaResource"
+                :via-resource-id="viaResourceId"
+                :via-relationship="viaRelationship"
+            />
 
-        <card class="overflow-hidden">
-            <form v-if="fields" @submit.prevent="updateResource">
-                <!-- Validation Errors -->
-                <validation-errors :errors="validationErrors" />
+            <!-- Update Button -->
+            <div class="flex items-center">
+                <cancel-button />
 
-                <!-- Fields -->
-                <div v-for="field in fields">
-                    <component
-                        @file-deleted="updateLastRetrievedAtTimestamp"
-                        :is="'form-' + field.component"
-                        :errors="validationErrors"
-                        :resource-id="resourceId"
-                        :resource-name="resourceName"
-                        :field="field"
-                    />
-                </div>
+                <progress-button
+                    class="mr-3"
+                    dusk="update-and-continue-editing-button"
+                    @click.native="updateAndContinueEditing"
+                    :disabled="isWorking"
+                    :processing="submittedViaUpdateAndContinueEditing"
+                >
+                    {{ __('Update & Continue Editing') }}
+                </progress-button>
 
-                <!-- Update Button -->
-                <div class="bg-30 flex px-8 py-4">
-                    <button type="button" dusk="update-and-continue-editing-button" @click="updateAndContinueEditing" class="ml-auto btn btn-default btn-primary mr-3">
-                        {{__('Update &amp; Continue Editing')}}
-                    </button>
-
-                    <button dusk="update-button" class="btn btn-default btn-primary">
-                        {{__('Update')}} {{ singularName }}
-                    </button>
-                </div>
-            </form>
-        </card>
-    </div>
+                <progress-button
+                    dusk="update-button"
+                    type="submit"
+                    :disabled="isWorking"
+                    :processing="submittedViaUpdateResource"
+                >
+                    {{ __('Update :resource', { resource: singularName }) }}
+                </progress-button>
+            </div>
+        </form>
+    </loading-view>
 </template>
 
 <script>
@@ -48,18 +59,41 @@ export default {
         resourceId: {
             required: true,
         },
+        viaResource: {
+            default: '',
+        },
+        viaResourceId: {
+            default: '',
+        },
+        viaRelationship: {
+            default: '',
+        },
     },
 
     data: () => ({
+        relationResponse: null,
         loading: true,
+        submittedViaUpdateAndContinueEditing: false,
+        submittedViaUpdateResource: false,
         fields: [],
+        panels: [],
         validationErrors: new Errors(),
         lastRetrievedAt: null,
     }),
 
-    created() {
-        this.getFields()
+    async created() {
+        if (Nova.missingResource(this.resourceName)) return this.$router.push({ name: '404' })
 
+        // If this update is via a relation index, then let's grab the field
+        // and use the label for that as the one we use for the title and buttons
+        if (this.isRelation) {
+            const { data } = await Nova.request(
+                `/nova-api/${this.viaResource}/field/${this.viaRelationship}`
+            )
+            this.relationResponse = data
+        }
+
+        this.getFields()
         this.updateLastRetrievedAtTimestamp()
     },
 
@@ -70,10 +104,21 @@ export default {
         async getFields() {
             this.loading = true
 
+            this.panels = []
             this.fields = []
 
-            const { data: fields } = await Nova.request()
-                .get(`/nova-api/${this.resourceName}/${this.resourceId}/update-fields`)
+            const {
+                data: { panels, fields },
+            } = await Nova.request()
+                .get(`/nova-api/${this.resourceName}/${this.resourceId}/update-fields`, {
+                    params: {
+                        editing: true,
+                        editMode: 'update',
+                        viaResource: this.viaResource,
+                        viaResourceId: this.viaResourceId,
+                        viaRelationship: this.viaRelationship,
+                    },
+                })
                 .catch(error => {
                     if (error.response.status == 404) {
                         this.$router.push({ name: '404' })
@@ -81,8 +126,8 @@ export default {
                     }
                 })
 
+            this.panels = panels
             this.fields = fields
-
             this.loading = false
         },
 
@@ -90,8 +135,14 @@ export default {
          * Update the resource using the provided data.
          */
         async updateResource() {
+            this.submittedViaUpdateResource = true
+
             try {
-                const response = await this.updateRequest()
+                const {
+                    data: { redirect },
+                } = await this.updateRequest()
+
+                this.submittedViaUpdateResource = false
 
                 this.$toasted.show(
                     this.__('The :resource was updated!', {
@@ -100,14 +151,10 @@ export default {
                     { type: 'success' }
                 )
 
-                this.$router.push({
-                    name: 'detail',
-                    params: {
-                        resourceName: this.resourceName,
-                        resourceId: this.resourceId,
-                    },
-                })
+                this.$router.push({ path: redirect })
             } catch (error) {
+                this.submittedViaUpdateResource = false
+
                 if (error.response.status == 422) {
                     this.validationErrors = new Errors(error.response.data.errors)
                 }
@@ -127,8 +174,12 @@ export default {
          * Update the resource and reset the form
          */
         async updateAndContinueEditing() {
+            this.submittedViaUpdateAndContinueEditing = true
+
             try {
                 const response = await this.updateRequest()
+
+                this.submittedViaUpdateAndContinueEditing = false
 
                 this.$toasted.show(
                     this.__('The :resource was updated!', {
@@ -139,8 +190,13 @@ export default {
 
                 // Reset the form by refetching the fields
                 this.getFields()
+
+                this.validationErrors = new Errors()
+
                 this.updateLastRetrievedAtTimestamp()
             } catch (error) {
+                this.submittedViaUpdateAndContinueEditing = false
+
                 if (error.response.status == 422) {
                     this.validationErrors = new Errors(error.response.data.errors)
                 }
@@ -162,7 +218,14 @@ export default {
         updateRequest() {
             return Nova.request().post(
                 `/nova-api/${this.resourceName}/${this.resourceId}`,
-                this.updateResourceFormData
+                this.updateResourceFormData,
+                {
+                    params: {
+                        viaResource: this.viaResource,
+                        viaResourceId: this.viaResourceId,
+                        viaRelationship: this.viaRelationship,
+                    },
+                }
             )
         },
 
@@ -190,7 +253,31 @@ export default {
         },
 
         singularName() {
+            if (this.relationResponse) {
+                return this.relationResponse.singularLabel
+            }
+
             return this.resourceInformation.singularLabel
+        },
+
+        isRelation() {
+            return Boolean(this.viaResourceId && this.viaRelationship)
+        },
+
+        /**
+         * Determine if the form is being processed
+         */
+        isWorking() {
+            return this.submittedViaUpdateResource || this.submittedViaUpdateAndContinueEditing
+        },
+
+        panelsWithFields() {
+            return _.map(this.panels, panel => {
+                return {
+                    name: panel.name,
+                    fields: _.filter(this.fields, field => field.panel == panel.name),
+                }
+            })
         },
     },
 }

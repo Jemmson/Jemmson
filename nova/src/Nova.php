@@ -110,7 +110,7 @@ class Nova
      */
     public static function version()
     {
-        return '1.0.8';
+        return '2.0.9';
     }
 
     /**
@@ -136,7 +136,7 @@ class Nova
     /**
      * Register the Nova routes.
      *
-     * @return void
+     * @return \Laravel\Nova\PendingRouteRegistration
      */
     public static function routes()
     {
@@ -165,13 +165,13 @@ class Nova
     public static function resourceInformation(Request $request)
     {
         return collect(static::$resources)->map(function ($resource) use ($request) {
-            return [
+            return array_merge([
                 'uriKey' => $resource::uriKey(),
                 'label' => $resource::label(),
                 'singularLabel' => $resource::singularLabel(),
                 'authorizedToCreate' => $resource::authorizedToCreate($request),
                 'searchable' => $resource::searchable(),
-            ];
+            ], $resource::additionalInformation($request));
         })->values()->all();
     }
 
@@ -214,6 +214,34 @@ class Nova
         static::$resources = array_merge(static::$resources, $resources);
 
         return new static;
+    }
+
+    /**
+     * Get the available resource groups for the given request.
+     *
+     * @param  Request $request
+     * @return array
+     */
+    public static function groups(Request $request)
+    {
+        return collect(static::availableResources($request))
+                    ->map(function ($item, $key) {
+                        return $item::group();
+                    })->unique()->values();
+    }
+
+    /**
+     * Get the grouped resources available for the given request.
+     *
+     * @param  Request $request
+     * @return array
+     */
+    public static function groupedResources(Request $request)
+    {
+        return collect(static::availableResources($request))
+                    ->groupBy(function ($item, $key) {
+                        return $item::group();
+                    })->sortKeys()->all();
     }
 
     /**
@@ -383,7 +411,7 @@ class Nova
         return function ($command) {
             return [
                 $command->ask('Name'),
-                $command->ask('Username / Email Address'),
+                $command->ask('Email Address'),
                 $command->secret('Password'),
             ];
         };
@@ -397,7 +425,11 @@ class Nova
     protected static function defaultCreateUserCallback()
     {
         return function ($name, $email, $password) {
-            $model = config('auth.providers.users.model');
+            $guard = config('nova.guard') ?: config('auth.defaults.guard');
+
+            $provider = config("auth.guards.{$guard}.provider");
+
+            $model = config("auth.providers.{$provider}.model");
 
             return tap((new $model)->forceFill([
                 'name' => $name,
@@ -424,15 +456,13 @@ class Nova
      * Resolve the user's preferred timezone.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return string
+     * @return string|null
      */
     public static function resolveUserTimezone(Request $request)
     {
         if (static::$userTimezoneCallback) {
             return call_user_func(static::$userTimezoneCallback, $request);
         }
-
-        return null;
     }
 
     /**
@@ -658,9 +688,9 @@ class Nova
     {
         if (is_object($value)) {
             return static::humanize(class_basename(get_class($value)));
-        } else {
-            return Str::title(Str::snake($value, ' '));
         }
+
+        return Str::title(Str::snake($value, ' '));
     }
 
     /**

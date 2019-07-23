@@ -1,5 +1,6 @@
 <template>
     <resource-index
+        :field="field"
         :resource-name="field.resourceName"
         :via-resource="resourceName"
         :via-resource-id="resourceId"
@@ -7,6 +8,7 @@
         :relationship-type="'morphToMany'"
         @actionExecuted="actionExecuted"
         :load-cards="false"
+        :initialPerPage="field.perPage || 5"
     />
 </template>
 

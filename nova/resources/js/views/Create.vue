@@ -1,37 +1,45 @@
 <template>
     <loading-view :loading="loading">
-        <heading class="mb-3">{{__('New')}} {{ singularName }}</heading>
+        <form v-if="panels" @submit.prevent="createResource" autocomplete="off">
+            <form-panel
+                class="mb-8"
+                v-for="panel in panelsWithFields"
+                :panel="panel"
+                :name="panel.name"
+                :key="panel.name"
+                :resource-name="resourceName"
+                :fields="panel.fields"
+                mode="form"
+                :validation-errors="validationErrors"
+                :via-resource="viaResource"
+                :via-resource-id="viaResourceId"
+                :via-relationship="viaRelationship"
+            />
 
-        <card class="overflow-hidden">
-            <form v-if="fields" @submit.prevent="createResource">
-                <!-- Validation Errors -->
-                <validation-errors :errors="validationErrors"/>
+            <!-- Create Button -->
+            <div class="flex items-center">
+                <cancel-button />
 
-                <!-- Fields -->
-                <div v-for="field in fields">
-                    <component
-                        :is="'form-' + field.component"
-                        :errors="validationErrors"
-                        :resource-name="resourceName"
-                        :field="field"
-                        :via-resource="viaResource"
-                        :via-resource-id="viaResourceId"
-                        :via-relationship="viaRelationship"
-                    />
-                </div>
+                <progress-button
+                    class="mr-3"
+                    dusk="create-and-add-another-button"
+                    @click.native="createAndAddAnother"
+                    :disabled="isWorking"
+                    :processing="submittedViaCreateAndAddAnother"
+                >
+                    {{ __('Create & Add Another') }}
+                </progress-button>
 
-                <!-- Create Button -->
-                <div class="bg-30 flex px-8 py-4">
-                    <button dusk="create-and-add-another-button" type="button" @click="createAndAddAnother" class="ml-auto btn btn-default btn-primary mr-3">
-                        {{__('Create &amp; Add Another')}}
-                    </button>
-
-                    <button dusk="create-button" class="btn btn-default btn-primary">
-                        {{__('Create')}} {{ singularName }}
-                    </button>
-                </div>
-            </form>
-        </card>
+                <progress-button
+                    dusk="create-button"
+                    type="submit"
+                    :disabled="isWorking"
+                    :processing="submittedViaCreateResource"
+                >
+                    {{ __('Create :resource', { resource: singularName }) }}
+                </progress-button>
+            </div>
+        </form>
     </loading-view>
 </template>
 
@@ -58,12 +66,27 @@ export default {
     },
 
     data: () => ({
+        relationResponse: null,
         loading: true,
+        submittedViaCreateAndAddAnother: false,
+        submittedViaCreateResource: false,
         fields: [],
+        panels: [],
         validationErrors: new Errors(),
     }),
 
-    created() {
+    async created() {
+        if (Nova.missingResource(this.resourceName)) return this.$router.push({ name: '404' })
+
+        // If this create is via a relation index, then let's grab the field
+        // and use the label for that as the one we use for the title and buttons
+        if (this.isRelation) {
+            const { data } = await Nova.request(
+                '/nova-api/' + this.viaResource + '/field/' + this.viaRelationship
+            )
+            this.relationResponse = data
+        }
+
         this.getFields()
     },
 
@@ -72,12 +95,22 @@ export default {
          * Get the available fields for the resource.
          */
         async getFields() {
+            this.panels = []
             this.fields = []
 
-            const { data: fields } = await Nova.request().get(
-                `/nova-api/${this.resourceName}/creation-fields`
-            )
+            const {
+                data: { panels, fields },
+            } = await Nova.request().get(`/nova-api/${this.resourceName}/creation-fields`, {
+                params: {
+                    editing: true,
+                    editMode: 'create',
+                    viaResource: this.viaResource,
+                    viaResourceId: this.viaResourceId,
+                    viaRelationship: this.viaRelationship,
+                },
+            })
 
+            this.panels = panels
             this.fields = fields
             this.loading = false
         },
@@ -86,8 +119,14 @@ export default {
          * Create a new resource instance using the provided data.
          */
         async createResource() {
+            this.submittedViaCreateResource = true
+
             try {
-                const response = await this.createRequest()
+                const {
+                    data: { redirect },
+                } = await this.createRequest()
+
+                this.submittedViaCreateResource = false
 
                 this.$toasted.show(
                     this.__('The :resource was created!', {
@@ -96,14 +135,10 @@ export default {
                     { type: 'success' }
                 )
 
-                this.$router.push({
-                    name: 'detail',
-                    params: {
-                        resourceName: this.resourceName,
-                        resourceId: response.data.id,
-                    },
-                })
+                this.$router.push({ path: redirect })
             } catch (error) {
+                this.submittedViaCreateResource = false
+
                 if (error.response.status == 422) {
                     this.validationErrors = new Errors(error.response.data.errors)
                 }
@@ -114,8 +149,12 @@ export default {
          * Create a new resource and reset the form
          */
         async createAndAddAnother() {
+            this.submittedViaCreateAndAddAnother = true
+
             try {
                 const response = await this.createRequest()
+
+                this.submittedViaCreateAndAddAnother = false
 
                 this.$toasted.show(
                     this.__('The :resource was created!', {
@@ -129,6 +168,8 @@ export default {
 
                 this.validationErrors = new Errors()
             } catch (error) {
+                this.submittedViaCreateAndAddAnother = false
+
                 if (error.response.status == 422) {
                     this.validationErrors = new Errors(error.response.data.errors)
                 }
@@ -150,9 +191,11 @@ export default {
          */
         createResourceFormData() {
             return _.tap(new FormData(), formData => {
+                // _.each(this.panels, panel => {
                 _.each(this.fields, field => {
                     field.fill(formData)
                 })
+                // })
 
                 formData.append('viaResource', this.viaResource)
                 formData.append('viaResourceId', this.viaResourceId)
@@ -163,7 +206,31 @@ export default {
 
     computed: {
         singularName() {
+            if (this.relationResponse) {
+                return this.relationResponse.singularLabel
+            }
+
             return this.resourceInformation.singularLabel
+        },
+
+        isRelation() {
+            return Boolean(this.viaResourceId && this.viaRelationship)
+        },
+
+        /**
+         * Determine if the form is being processed
+         */
+        isWorking() {
+            return this.submittedViaCreateResource || this.submittedViaCreateAndAddAnother
+        },
+
+        panelsWithFields() {
+            return _.map(this.panels, panel => {
+                return {
+                    name: panel.name,
+                    fields: _.filter(this.fields, field => field.panel == panel.name),
+                }
+            })
         },
     },
 }
