@@ -246,7 +246,6 @@ class JobTask extends Model
         return true;
     }
 
-
     public function updateStatus($status)
     {
         if (!$this->updatable($status)) {

@@ -257,7 +257,7 @@ require('./bootstrap')
 function checkThatCurrentJobExistsForRoutesThatNeedIt(route) {
   console.log('checking that job exists in store', route)
 
-  if (route == '/job/tasks' || route == '/job/add/task') {
+  if (route == '/job/tasks' || route == '/job/add/task' || route == '/job/task/' + route.split('/')[3]) {
     if (store.state.job.model === null) {
       router.push('/bids')
     }
