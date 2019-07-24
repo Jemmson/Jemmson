@@ -703,4 +703,23 @@ class JobController extends Controller
         $job->save();
     }
 
+    public function paidWithCashMessage(Request $request)
+    {
+        $job = Job::find($request->jobId);
+        $job->paid_with_cash_message = $request->paidWithCashMessage;
+
+        try {
+            $job->save();
+            return response()->json([
+                'message' => true
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+    }
+
 }

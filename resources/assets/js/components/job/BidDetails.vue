@@ -150,7 +150,7 @@
                             <button class="btn btn-blue flex-1 mr-6 ml-6"
                                     name="addTaskToBid" id="addTaskToBid"
                                     @click="$router.push('/job/add/task')"
-                                    >
+                            >
                                 Add A Task
                             </button>
 
@@ -192,6 +192,16 @@
                                 @click="submitPayWithCashMessage"
                         >Submit
                         </button>
+
+                        <div v-if="successfulUpdate === 'true'">
+                            Your message has been updated
+                        </div>
+
+                        <div v-if="successfulUpdate === 'false'">
+                            Your message was not updated. please try again
+                        </div>
+
+
                     </section>
                 </main>
             </card>
@@ -388,6 +398,7 @@
         customerNotes_contractor: false,
         areaError: '',
         payWithCashMessage: '',
+        successfulUpdate: '',
         locationExists: false,
         customerInfo: false,
         paymentTypeCash: false,
@@ -456,8 +467,8 @@
       }
     },
     methods: {
-      bidHasNoTasks(){
-        if(this.bid.job_tasks){
+      bidHasNoTasks() {
+        if (this.bid.job_tasks) {
           return this.bid.job_tasks.length === 0
         }
       },
@@ -547,8 +558,28 @@
           this.paymentTypeStripe = true
         }
       },
-      submitPayWithCashMessage() {
-        // TODO: update pay this method to update the pay with cash message in the back end
+      async submitPayWithCashMessage() {
+        try {
+          const data = await axios.post('/paidWithCashMessage', {
+            jobId: this.bid.id,
+            paidWithCashMessage: this.payWithCashMessage
+          })
+
+          if (data.data.message) {
+            this.successfulUpdate = 'true'
+            setTimeout(function() {
+              this.successfulUpdate = ''
+            }.bind(this), 2000)
+          } else {
+            this.successfulUpdate = 'false'
+            setTimeout(function() {
+              this.successfulUpdate = ''
+            }.bind(this), 2000)
+          }
+
+        } catch (error) {
+          console.log('error')
+        }
       },
       getLabelClass(status) {
         return Format.statusLabel(status,)

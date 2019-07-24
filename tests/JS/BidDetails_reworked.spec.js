@@ -472,7 +472,7 @@ describe('BidDetails', () => {
 
   })
 
-  it('should show buttons for bid submission only if the job is approved or completed and the user is the general contractor', function() {
+  it('should show buttons for bid submission only if the job is not approved or completed and the user is the general contractor', function() {
 
     wrapper.setProps({
       bid: {
