@@ -245,10 +245,11 @@ export default class GeneralContractor {
 
     notifyCustomerOfFinishedBid(bid, disabled) {
         disabled.submitBid = true
-        if (User.needsStripe()) {
-            disabled.submitBid = false
-            return false
-        }
+        // TODO: implement the code below
+        // if (User.needsStripe()) {
+        //     disabled.submitBid = false
+        //     return false
+        // }
         console.log('notifyCustomerOfFinishedBid', bid);
         axios.post('/api/task/finishedBidNotification', {
             jobId: bid.id,

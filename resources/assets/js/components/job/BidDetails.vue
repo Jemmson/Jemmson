@@ -443,7 +443,7 @@
         return true
       },
       status() {
-        return User.status(this.bid.status, this.bid)
+        return User.status(this.bid.status, this.bid, Spark.state.user)
       },
       showDeclinedMessage() {
         return (

@@ -23,13 +23,13 @@
                             <label>Task Start Date</label>
                             <!-- <i class="fas fa-clock icon m-r-2"></i> -->
                             <input type="date" class="form-control" style="" v-if="showTaskStartDate()"
-                                :value="prettyDate(jobTask.start_date)"
-                                @blur="updateTaskStartDate($event.target.value, jobTask.id)">
+                                   :value="prettyDate(jobTask.start_date)"
+                                   @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                             <div v-else>
                                 {{ prettyDate(jobTask.start_date) }}
                             </div>
                             <span :class="{ error: hasStartDateError }"
-                                v-show="hasStartDateError">{{ startDateErrorMessage }}
+                                  v-show="hasStartDateError">{{ startDateErrorMessage }}
                             </span>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                                         <span class="float-right">
                                             <i class="fas fa-money-bill-alt icon"></i>
                                             <span class="totalCost"
-                                                v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
+                                                  v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
                                         </span>
                                     </div>
                                     <div class="form-group" v-if="isContractor()">
@@ -59,7 +59,7 @@
                                         <span class="float-right">
                                             <i class="fas fa-user icon"></i>
                                             <span
-                                                class="totalCost">{{taskCustFinalPrice(jobTask.sub_final_price)}}</span>
+                                                    class="totalCost">{{taskCustFinalPrice(jobTask.sub_final_price)}}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@
                                     <div class="form-group" v-if="isContractor()">
                                         <label class="">Quantity:</label>
                                         <input v-if="showTaskPriceInput()" type="text" ref="quantity"
-                                            class="form-control" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
+                                               class="form-control" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
@@ -81,8 +81,8 @@
                                     <div class="form-group" v-if="isContractor()">
                                         <label class="">Price:</label>
                                         <input v-if="showTaskPriceInput()" type="text" ref="price" class="form-control"
-                                            :value="taskCustFinalPrice(jobTask.unit_price)"
-                                            @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id, jobTask)">
+                                               :value="taskCustFinalPrice(jobTask.unit_price)"
+                                               @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id, jobTask)">
                                         <div v-else class="mt-1">
                                             {{ taskCustFinalPrice(jobTask.unit_price) }}
                                         </div>
@@ -122,7 +122,7 @@
                             </div>
                             <div v-else class="flex flex-col">
                                 <a target="_blank"
-                                    :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, job)">
+                                   :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, job)">
                                     <i class="fas fa-map-marker icon"></i>
                                     {{ location(jobTask, job) }}
                                 </a>
@@ -159,20 +159,20 @@
                             <div class="flex flex-col">
                                 <div class="flex flex-col mb-3" v-if="!isCustomer">
                                     <message label="Notes for Subcontractor" :jobId="jobTask.id"
-                                        :server-message="jobTask.sub_message" actor='sub'
-                                        :disable-messages="disableMessages">
+                                             :server-message="jobTask.sub_message" actor='sub'
+                                             :disable-messages="disableMessages">
                                     </message>
                                 </div>
                                 <div class="flex flex-col" v-if="isContractor()">
                                     <message label="Notes For Customer" :jobId="jobTask.id"
-                                        :server-message="jobTask.customer_message" actor='customer'
-                                        :disable-messages="disableMessages"></message>
+                                             :server-message="jobTask.customer_message" actor='customer'
+                                             :disable-messages="disableMessages"></message>
                                 </div>
 
                                 <div class="flex flex-col" v-if="isCustomer">
                                     <span class="label mb-2">Notes from Contractor</span>
                                     <textarea cols="0" rows="0" class="form-control" disabled
-                                        :value="jobTask.customer_message" style="color: black;"></textarea>
+                                              :value="jobTask.customer_message" style="color: black;"></textarea>
                                 </div>
 
                             </div>
@@ -197,8 +197,8 @@
                                 <div :id="'task-divider-' + jobTask.id" :key="1"></div>
 
                                 <div :id="'task-subs-' + jobTask.id"
-                                    v-if="isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0"
-                                    :key="3">
+                                     v-if="isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0"
+                                     :key="3">
                                     <div class="flex flex-col">
                                         <div class="table-header">
                                             <div class="flex-1">Sub</div>
@@ -207,16 +207,16 @@
                                             <div class="flex-1">Action</div>
                                         </div>
                                         <div class="flex pl-2 mb-2" v-for="bid in jobTask.bid_contractor_job_tasks"
-                                            :key="bid.id">
+                                             :key="bid.id">
                                             <div class="flex-1">{{ bid.contractor.name }}</div>
                                             <div class="flex-1 uppercase">{{ bid.payment_type }}</div>
                                             <div class="flex-1">${{ bid.bid_price }}</div>
                                             <div class="flex-1">
                                                 <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
                                                 <button
-                                                    v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
-                                                    @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
-                                                    :disabled="disabled.accept">
+                                                        v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
+                                                        @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
+                                                        :disabled="disabled.accept">
                                                     <span v-if="disabled.accept">
                                                         <i class="fa fa-btn fa-spinner fa-spin"></i>
                                                     </span>
@@ -226,7 +226,7 @@
                                                     <h5>Bid Has Been Accepted</h5>
                                                 </div>
                                                 <div
-                                                    v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                                        v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
                                                     <h5>Pending</h5>
                                                 </div>
                                             </div>
@@ -242,24 +242,24 @@
             <!-- Task Actions -->
             <div class="col-12 mb-4">
                 <h1 class="card-title mt-4"></h1>
-                
+
                 <div v-if="isContractor()">
                     <button class="btn btn-block btn-primary mb-2" @click.prevent="openSubInvite(jobTask.id)"
-                        v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
+                            v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
                         Add A Sub
                     </button>
                 </div>
 
                 <div v-if="showFinishedBtn(jobTask) || showApproveBtn(jobTask)">
                     <button class="btn btn-block btn-success mb-2" v-if="showFinishedBtn(jobTask)"
-                        @click="finishedTask(jobTask)" :disabled="disabled.finished">
+                            @click="finishedTask(jobTask)" :disabled="disabled.finished">
                         <span v-if="disabled.finished">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                         Finished
                     </button>
                     <button class="btn btn-block btn-success mb-2" v-if="showApproveBtn(jobTask)"
-                        @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
+                            @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
                         <span v-if="disabled.approve">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
@@ -268,11 +268,11 @@
                 </div>
 
                 <button class="btn btn-block btn-danger mb-2" v-if="showDenyBtn(jobTask)"
-                    @click="openDenyTaskForm(jobTask.id)">
+                        @click="openDenyTaskForm(jobTask.id)">
                     Deny
                 </button>
                 <button class="btn btn-block btn-danger" v-if="showDeleteBtn(jobTask)"
-                    @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
+                        @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
                     <span v-if="disabled.deleteTask">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>
                     </span>
@@ -281,7 +281,7 @@
             </div>
         </div>
         <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
-            :job-task-task="jobTask.task" :job-task-name="jobTask.task.name" :id="jobTask.id">
+                          :job-task-task="jobTask.task" :job-task-name="jobTask.task.name" :id="jobTask.id">
         </sub-invite-modal>
         <deny-task-modal v-if="isContractor()" :job-task="jobTask" :id="jobTask.id">
         </deny-task-modal>
@@ -297,12 +297,11 @@
   import UpdateTaskLocationModal from '../components/task/UpdateTaskLocationModal'
   import Message from '../components/job/Message.vue'
   import TaskImages from '../components/task/UploadTaskImages'
-  import {mapState} from 'vuex'
-  
+  import { mapState } from 'vuex'
 
   export default {
-      components: {
-          SubInviteModal,
+    components: {
+      SubInviteModal,
       DenyTaskModal,
       Message,
       TaskImages,
@@ -338,8 +337,8 @@
     },
     computed: {
       ...mapState({
-          job: state => state.job.model,
-          jobStatus: state => state.job.model.status
+        job: state => state.job.model,
+        jobStatus: state => state.job.model.status
       }),
       taskApproved() {
         return this.jobTask.status === 'bid_task.approved_by_customer'
@@ -574,7 +573,7 @@
         // }
       },
       isGeneral() {
-        return User.isGeneral(this.job, this.user.id)
+        return User.isGeneral(this.job, User.id)
       },
       prettyDate(date) {
         if (date == null)
@@ -682,6 +681,13 @@
 
         return price
       },
+      async getJobTasks() {
+        try {
+          const data = await axios.get('getAllJobs/')
+        } catch (error) {
+          console.log('error')
+        }
+      }
       // showReopenBtn(jobTask) {
       //   if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
       //       'bid_task.approved_by_general')) {
@@ -699,8 +705,18 @@
       // },
     },
     mounted() {
-        this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index];
-        console.log(this.jobTaskIndex);
+
+
+
+      this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
+
+      // if (this.$store.state.job.model){
+      //     this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index];
+      //   } else {
+      //     this.getJobTasks();
+      //   }
+
+      console.log(this.jobTaskIndex)
     },
   }
 </script>

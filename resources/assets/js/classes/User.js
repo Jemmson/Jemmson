@@ -84,8 +84,8 @@ export default class User {
     })
   }
 
-    static getAllPayableTasks(jobTasks) {
-  // getAllPayableTasks(jobTasks) {
+    // static getAllPayableTasks(jobTasks) {
+  getAllPayableTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {
         return jobTask.status === 'bid_task.approved_by_general' || jobTask.status === 'bid_task.finished_by_general'
@@ -162,13 +162,13 @@ export default class User {
     return this.user.id === jobTask.contractor_id
   }
 
-    static isContractor() {
-  // isContractor() {
+    // static isContractor() {
+  isContractor() {
     return this.user.usertype === 'contractor'
   }
 
-    static isCustomer() {
-  // isCustomer() {
+    // static isCustomer() {
+  isCustomer() {
     return this.user.usertype === 'customer'
   }
 
@@ -176,8 +176,8 @@ export default class User {
    *
    * @param {JobTask} bid //
    */
-  static isGeneral(bid, userId) {
-  // isGeneral(bid, userId) {
+  // static isGeneral(bid, userId) {
+  isGeneral(bid, userId) {
     if (bid !== null) {
       return bid.contractor_id === userId
     }
@@ -189,8 +189,8 @@ export default class User {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
   }
 
-  static isSub(bid, usertype, userId = null) {
-  // isSub(bid, usertype, userId = null) {
+  // static isSub(bid, usertype, userId = null) {
+  isSub(bid, usertype, userId = null) {
     return bid !== null &&
       (usertype === 'contractor' &&
         bid.contractor_id !== userId)
@@ -299,8 +299,8 @@ export default class User {
     this.user = user
   }
 
-  static status(status, bid, user = Spark.state.user) {
-  // status(status, bid, user = Spark.state.user) {
+  // static status(status, bid, user = Spark.state.user) {
+  status(status, bid, user = Spark.state.user) {
     // debugger;
 
     if (status === null) {
