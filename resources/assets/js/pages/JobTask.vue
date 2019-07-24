@@ -574,7 +574,7 @@
         // }
       },
       isGeneral() {
-        return User.isGeneral(this.job)
+        return User.isGeneral(this.job, this.user.id)
       },
       prettyDate(date) {
         if (date == null)

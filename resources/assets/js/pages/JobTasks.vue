@@ -98,7 +98,7 @@
         this.$router.push('/job/task/' + index);
       },
       getLabelClass(bid) {
-        return Format.statusLabel(bid.status, User.isCustomer, User.isGeneral(bid))
+        return Format.statusLabel(bid.status, User.isCustomer, User.isGeneral(bid, this.user.id))
       },
       status(bid) {
         return User.status(bid.status, bid)

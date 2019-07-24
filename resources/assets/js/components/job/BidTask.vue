@@ -607,7 +607,7 @@
         // }
       },
       isGeneral() {
-        return User.isGeneral(this.bid)
+        return User.isGeneral(this.bid, this.user.id)
       },
       prettyDate(date) {
         if (date == null)

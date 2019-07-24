@@ -418,11 +418,13 @@
 
   import { mapGetters, mapMutations, mapActions } from 'vuex'
   import VueElementLoading from 'vue-element-loading'
+  import Card from '../components/shared/Card'
 
   export default {
     name: 'RegisterQuickBooks',
     components: {
-      VueElementLoading
+      VueElementLoading,
+      Card
     },
     data() {
       return {
@@ -701,7 +703,6 @@
       getTheCompanyInfo() {
         axios.get('/quickbooks/getCachedCompanyInfo')
           .then(function(response) {
-            console.log('no error')
             // debugger
             this.companyInfo = response.data
 
@@ -727,7 +728,7 @@
 
           }.bind(this))
           .catch(function(error) {
-            console.log(error)
+            // TODO: do something with this error
           })
       },
       confirmPassword() {
@@ -769,7 +770,6 @@
           if (
             this.getMobileValidResponse[1] !== 'mobile' || this.getMobileValidResponse[2] !== 'mobile'
           ) {
-            debugger
             this.errors.phone = true
             return false
           } else {
@@ -777,7 +777,6 @@
             return true
           }
         } else {
-          debugger
           this.errors.phone = true
           return false
         }
@@ -799,6 +798,9 @@
           this.errors.first_name = false
           return true
         }
+
+        // TODO: this code needs to be refactored
+
         if (this.form.last_name === '') {
           this.errors.last_name = true
           return false
@@ -948,7 +950,6 @@
         }
       },
       unformatNumber(number) {
-        console.log(number)
         if (number !== undefined && number !== '' && number !== null) {
           let unformattedNumber = ''
           for (let i = 0; i < number.length; i++) {
@@ -961,9 +962,7 @@
           if (numberLength < 10) {
             this.emptyPhoneNumberInStore()
           }
-          // debugger;
           this.phoneNumberLength = numberLength
-          console.log(numberLength)
           return numberLength
         }
       },
@@ -1095,7 +1094,6 @@
             this.checkMobileNumber(phone)
           }
         } else {
-          debugger
           this.errors.phone = true
         }
       },

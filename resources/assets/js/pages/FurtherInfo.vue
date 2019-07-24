@@ -183,6 +183,8 @@
 <script>
 
   import JemmsonFooter from '../components/shared/JemmsonFooter'
+  import Card from '../components/shared/Card'
+  import IconHeader from '../components/shared/IconHeader'
 
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 
@@ -191,7 +193,9 @@
       user: Object
     },
     components: {
-      JemmsonFooter
+      JemmsonFooter,
+      Card,
+      IconHeader
     },
     data() {
       return {
@@ -318,14 +322,12 @@
       checkValidData() {
         // debugger
         let phone = this.unformatNumber(this.form.phone_number)
-        if ((this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile') &&
-          this.form.customerName !== '' && (phone === 10)
-        ) {
-          return false
-        } else {
-          return true
-        }
+
+        return (this.getMobileValidResponse[1] === 'mobile' ||
+                this.getMobileValidResponse[2] === 'mobile') &&
+                this.form.customerName !== '' && (phone === 10)
+
+
       },
       validateMobileNumber(phone) {
         if (phone !== '') {
@@ -333,20 +335,12 @@
         }
       },
       checkThatNumberIsMobile() {
-        if (this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile') {
-          return true
-        } else {
-          return false
-        }
+        return this.getMobileValidResponse[1] === 'mobile' ||
+                this.getMobileValidResponse[2] === 'mobile'
       },
       checkLandLineNumber() {
-        if (this.getMobileValidResponse[1] === 'landline' ||
-          this.getMobileValidResponse[2] === 'landline') {
-          return true
-        } else {
-          return false
-        }
+        return this.getMobileValidResponse[1] === 'landline' ||
+                this.getMobileValidResponse[2] === 'landline'
       },
       updateFormLocation(location) {
         this.form.address_line_1 = location.route
