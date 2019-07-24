@@ -49,6 +49,7 @@
   import Task from '../components/task/Task'
 
   export default {
+    name: "Tasks",
     props: {
       user: Object
     },
@@ -154,15 +155,6 @@
 
     },
     mounted() {
-
-      console.log(this.tasks)
-
-      let i = -1
-
-      // this.showTasks = this.tasks.map(function(task) {
-      //   i++
-      //   return this.showTasks[i]
-      // }, i)
 
       for (let j = 0; j < this.tasks.length; j++) {
         this.showTasks[j] = false

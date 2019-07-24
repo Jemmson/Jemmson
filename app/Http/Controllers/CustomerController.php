@@ -140,14 +140,11 @@ class CustomerController extends Controller
     {
         $location = DB::select("select address_line_1, address_line_2, city, state, zip from locations where id = $request->locationId");
 
-        $address = $location[0]->address_line_1 . " " .
+        return $location[0]->address_line_1 . " " .
             $location[0]->address_line_2 . " " .
             $location[0]->city . " " .
             $location[0]->state . " " .
             $location[0]->zip;
-//            dd($address);
-//        dd($location[0]);
-        return $address;
     }
 
     /**
@@ -163,8 +160,7 @@ class CustomerController extends Controller
 
     public function getName(Request $request)
     {
-        $customer = User::select()->where("id", "=", $request->id)->get()->first();
-        return $customer;
+        return User::select()->where("id", "=", $request->id)->get()->first();
     }
 
     public function getCustomerAssociatedToContractor(Request $request)

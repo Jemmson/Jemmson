@@ -34,11 +34,6 @@ class JobTask extends Model
         'unit_price'
     ];
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Get the task this bid belongs to
      *
@@ -93,10 +88,6 @@ class JobTask extends Model
         $this->qty = (int)$request->qty;
         $this->unit_price = (int)$request->taskPrice;
 
-//        Log::message($task);
-
-//        dd($this);
-
         try {
             $this->save();
         } catch (\Exception $e) {
@@ -134,10 +125,6 @@ class JobTask extends Model
         $this->stripe = $request->useStripe;
         $this->qty = (int)$request->qty;
         $this->unit_price = (int)$request->taskPrice;
-
-//        Log::message($task);
-
-//        dd($this);
 
         try {
             $this->save();
@@ -248,7 +235,7 @@ class JobTask extends Model
 
     public function toggleStripe()
     {
-        $this->stripe = $this->stripe ? false : true;
+        $this->stripe = !$this->stripe;
 
         try {
             $this->save();

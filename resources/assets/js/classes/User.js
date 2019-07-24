@@ -84,6 +84,7 @@ export default class User {
     })
   }
 
+    // static getAllPayableTasks(jobTasks) {
   getAllPayableTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {
@@ -161,11 +162,12 @@ export default class User {
     return this.user.id === jobTask.contractor_id
   }
 
+    // static isContractor() {
   isContractor() {
-  // static isContractor() {
     return this.user.usertype === 'contractor'
   }
 
+    // static isCustomer() {
   isCustomer() {
     return this.user.usertype === 'customer'
   }
@@ -174,10 +176,10 @@ export default class User {
    *
    * @param {JobTask} bid //
    */
-  isGeneral(bid) {
   // static isGeneral(bid) {
+  isGeneral(bid) {
     if (bid !== null) {
-      return bid.contractor_id === User.id
+      return bid.contractor_id === this.id
     }
 
     return false
@@ -189,7 +191,9 @@ export default class User {
 
   // static isSub(bid, usertype) {
   isSub(bid, usertype) {
-    return bid !== null && (usertype === 'contractor' && bid.contractor_id !== User.id)
+    return bid !== null &&
+      (usertype === 'contractor' &&
+        bid.contractor_id !== this.id)
   }
 
   /**
@@ -255,20 +259,20 @@ export default class User {
       })
       Vue.toasted.success('info updated')
       // debugger;
-      console.log(JSON.stringify(data.data));
-      router.push(data.data);
+      console.log(JSON.stringify(data.data))
+      router.push(data.data)
       Bus.$emit('updateUser')
       // location.href = data
     } catch (error) {
-      let data = error.response.data;
-      let message = '';
+      let data = error.response.data
+      let message = ''
 
       if (data.errors['form.email'] !== undefined && data.errors['form.email'] !== null) {
-        message += data.errors['form.email'][0];
+        message += data.errors['form.email'][0]
       }
-      
+
       form.errors.errors = error.errors
-      Vue.toasted.error(message);
+      Vue.toasted.error(message)
     }
   }
 
@@ -295,8 +299,8 @@ export default class User {
     this.user = user
   }
 
-  static status(status, bid) {
-  // static status(status, bid) {
+  // static status(status, bid, user = Spark.state.user) {
+  status(status, bid, user = Spark.state.user) {
     // debugger;
 
     if (status === null) {
@@ -309,12 +313,18 @@ export default class User {
       return ''
     }
 
-    if (User.isContractor) {
-      if (User.isSub(bid, Spark.state.user.usertype) !== undefined && User.isSub(bid, Spark.state.user.usertype))
-        return status.sub
+    if (user.usertype === 'contractor') {
 
-      if (User.isGeneral(bid))
-        return status.general
+      // if (this.user.isSub(bid, Spark.state.user.usertype) !== undefined && this.user.isSub(bid, Spark.state.user.usertype))
+
+      if (
+        this.isSub(bid, user.usertype) !== undefined &&
+        this.isSub(bid, user.usertype)
+      ) {
+        return status.sub
+      }
+
+      if (this.isGeneral(bid)) {return status.general}
     }
 
     return status.customer
@@ -324,7 +334,7 @@ export default class User {
    * User has a stripe express account connected
    */
   stripeExpressConnected() {
-    if (!User.isContractor) {
+    if (!this.user.isContractor) {
       return false
     }
 
@@ -337,7 +347,6 @@ export default class User {
     for (let jobTask of jobTasks) {
       if (jobTask.stripe) {
         return true
-        break
       }
     }
     return false
@@ -348,7 +357,7 @@ export default class User {
     let page_url = window.location.href
     let user_id = this.user.id
     try {
-      const data = await
+      await
         axios.post('/api/feedback', {
           user_id: user_id,
           page_url: page_url,
@@ -372,7 +381,7 @@ export default class User {
     form.phone_number = Format.numbersOnly(form.phone_number)
     try {
       const data = await Spark.post('/home', form)
-      
+
       Vue.toasted.success('info updated')
       Bus.$emit('updateUser')
       disabled.submit = false
@@ -398,7 +407,7 @@ export default class User {
   async updateTaskLocation(form, disabled) {
     disabled.update = true
     try {
-      const data = await axios.post('/api/location', form)
+      await axios.post('/api/location', form)
       Bus.$emit('bidUpdated')
       Vue.toasted.success('Location Updated')
       disabled.update = false
@@ -449,4 +458,4 @@ export default class User {
   }
 }
 
-export var __useDefault = true;
+export var __useDefault = true

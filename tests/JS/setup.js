@@ -45,78 +45,86 @@ if (global.$ === undefined || global.jQuery === undefined) {
     global.$ = global.jQuery = require('jquery');
 }
 
+// global.Spark = {
+//     "braintreeMerchantId": null,
+//     "braintreeToken": null,
+//     "cardUpFront": false,
+//     "collectsBillingAddress": false,
+//     "collectsEuropeanVat": false,
+//     "createsAdditionalTeams": true,
+//     "csrfToken": "UtdusVdhK7OgJwiNwhj4K4Cf0cJ1m9TZmK1WaQGa",
+//     "currencySymbol": "$",
+//     "env": "local",
+//     "roles": [],
+//     "state": {
+//         "user": {
+//             "id": 2,
+//             "location_id": null,
+//             "name": "John Smith",
+//             "email": "john@example.com",
+//             "usertype": "contractor",
+//             "password_updated": 1,
+//             "photo_url": "https:\/\/www.gravatar.com\/avatar\/64823ac710ad3108143fd0eeda8d32cc.jpg?s=200&d=mm",
+//             "logo_url": null,
+//             "uses_two_factor_auth": false,
+//             "phone": "4901113333",
+//             "two_factor_reset_code": null,
+//             "current_team_id": null,
+//             "stripe_id": null,
+//             "current_billing_plan": null,
+//             "billing_state": null,
+//             "trial_ends_at": null,
+//             "last_read_announcements_at": null,
+//             "created_at": "2018-08-08 11:48:10",
+//             "updated_at": "2018-08-08 11:48:10",
+//             "subscriptions": [],
+//             "contractor": {
+//                 "id": 2,
+//                 "user_id": 2,
+//                 "location_id": 2,
+//                 "free_jobs": 5,
+//                 "company_name": "autem",
+//                 "company_logo_name": "inventore",
+//                 "email_method_of_contact": 1,
+//                 "sms_method_of_contact": 1,
+//                 "phone_method_of_contact": 1,
+//                 "created_at": "2018-08-08 11:48:10",
+//                 "updated_at": "2018-08-08 11:48:10",
+//                 "stripe_express": {
+//                     "id": 2,
+//                     "contractor_id": 2,
+//                     "access_token": "sk_test_2DL5LXhimtvvVfbhZNOaEYOG",
+//                     "refresh_token": "rt_CMkY01KB2aW0XM0Q2XCKw8fNbH8kI3y1EnqfJ2mQ8LzfbbgC",
+//                     "stripe_user_id": "acct_1By13dFOSJzZ3wkC",
+//                     "created_at": "2018-08-08 11:48:10",
+//                     "updated_at": "2018-08-08 11:48:10"
+//                 },
+//                 "location": null
+//             },
+//             "customer": null,
+//             "tax_rate": 0
+//         },
+//         "teams": [],
+//         "currentTeam": null
+//     },
+//     "stripeKey": "pk_test_XoNo7nhrt0YIuNCO8LQO9TBM",
+//     "stripeClientId": "ca_CEwm3Rx977zh3SbKTRmewKg40tMEserh",
+//     "teamString": "team",
+//     "pluralTeamString": "teams",
+//     "userId": 2,
+//     "usesApi": true,
+//     "usesBraintree": false,
+//     "usesTeams": false,
+//     "usesStripe": true
+// };
+
 global.Spark = {
-    "braintreeMerchantId": null,
-    "braintreeToken": null,
-    "cardUpFront": false,
-    "collectsBillingAddress": false,
-    "collectsEuropeanVat": false,
-    "createsAdditionalTeams": true,
-    "csrfToken": "UtdusVdhK7OgJwiNwhj4K4Cf0cJ1m9TZmK1WaQGa",
-    "currencySymbol": "$",
-    "env": "local",
-    "roles": [],
-    "state": {
-        "user": {
-            "id": 2,
-            "location_id": null,
-            "name": "John Smith",
-            "email": "john@example.com",
-            "usertype": "contractor",
-            "password_updated": 1,
-            "photo_url": "https:\/\/www.gravatar.com\/avatar\/64823ac710ad3108143fd0eeda8d32cc.jpg?s=200&d=mm",
-            "logo_url": null,
-            "uses_two_factor_auth": false,
-            "phone": "4901113333",
-            "two_factor_reset_code": null,
-            "current_team_id": null,
-            "stripe_id": null,
-            "current_billing_plan": null,
-            "billing_state": null,
-            "trial_ends_at": null,
-            "last_read_announcements_at": null,
-            "created_at": "2018-08-08 11:48:10",
-            "updated_at": "2018-08-08 11:48:10",
-            "subscriptions": [],
-            "contractor": {
-                "id": 2,
-                "user_id": 2,
-                "location_id": 2,
-                "free_jobs": 5,
-                "company_name": "autem",
-                "company_logo_name": "inventore",
-                "email_method_of_contact": 1,
-                "sms_method_of_contact": 1,
-                "phone_method_of_contact": 1,
-                "created_at": "2018-08-08 11:48:10",
-                "updated_at": "2018-08-08 11:48:10",
-                "stripe_express": {
-                    "id": 2,
-                    "contractor_id": 2,
-                    "access_token": "sk_test_2DL5LXhimtvvVfbhZNOaEYOG",
-                    "refresh_token": "rt_CMkY01KB2aW0XM0Q2XCKw8fNbH8kI3y1EnqfJ2mQ8LzfbbgC",
-                    "stripe_user_id": "acct_1By13dFOSJzZ3wkC",
-                    "created_at": "2018-08-08 11:48:10",
-                    "updated_at": "2018-08-08 11:48:10"
-                },
-                "location": null
-            },
-            "customer": null,
-            "tax_rate": 0
-        },
-        "teams": [],
-        "currentTeam": null
-    },
-    "stripeKey": "pk_test_XoNo7nhrt0YIuNCO8LQO9TBM",
-    "stripeClientId": "ca_CEwm3Rx977zh3SbKTRmewKg40tMEserh",
-    "teamString": "team",
-    "pluralTeamString": "teams",
-    "userId": 2,
-    "usesApi": true,
-    "usesBraintree": false,
-    "usesTeams": false,
-    "usesStripe": true
-};
+    state: {
+        user: {
+            id: 1
+        }
+    }
+}
 
 /**
  * Initialize the Spark form extension points.

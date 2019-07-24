@@ -345,7 +345,7 @@
         return this.jobTask.status === 'bid_task.approved_by_customer'
       },
       isCustomer() {
-        return User.isCustomer()
+        return User.isCustomer
       },
       // isContractor() {
       //   return this.user.isContractor()
@@ -640,7 +640,7 @@
         }
       },
       isContractor() {
-        return User.isContractor()
+        return User.isContractor
       },
       showTheJobTaskDetails(value) {
         if (value === 'show') {

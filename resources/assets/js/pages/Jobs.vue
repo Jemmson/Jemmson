@@ -1,6 +1,7 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
     <div class="container-fluid">
+
         <div v-if="bidsContractorSectionPicked" ref="jobs">
             <search-bar>
                 <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
@@ -8,29 +9,38 @@
 
             <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
 
-            <div class="mt-4 mb-1" ref="all_bids">
+            <div class="mt-4 mb-1">
 
                 <card class="list-card"
                       v-for="bid in sBids" v-bind:key="bid.id"
                       @click.native="goToJob(bid.id)">
 
-                    <section class="row">
-                        <header class="col-12 page-header-title">
-                            {{ jobName(bid.job_name) }}
-                        </header>
-                        <div class="col-12">
-                            <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
-                            <label :class="getLabelClass(bid)">
-                                {{ status(bid) }}
-                            </label>
-                            <span class="float-right list-card-info">2 Subs
-                                <i class="fas fa-users"></i></span>
+                    <div class="job">
+                        <section ref="job" class="row">
+                            <header ref="job_name" class="col-12 page-header-title">
+                                {{ jobName(bid.job_name) }}
+                            </header>
+                            <div class="col-12">
+                                <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
+                                <label :class="getLabelClass(bid)">
+                                    {{ status(bid) }}
+                                </label>
 
-                            <span class="float-right mr-2 list-card-info" ref="show_number_of_job_tasks">Tasks
-                <i class="far fa-check-square"></i>
-              </span>
-                        </div>
-                    </section>
+                                <div v-if="user.usertype === 'contractor'">
+                                     <span ref="total_number_of_subs"
+                                           class="float-right list-card-info">
+                                    {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
+                                    <i class="fas fa-users"></i></span>
+
+                                    <span class="float-right mr-2 list-card-info"
+                                          ref="show_number_of_job_tasks">
+                                    {{ bid.job_tasks.length }} Tasks
+                                    <i class="far fa-check-square"></i>
+                            </span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </card>
             </div>
             <!-- </paginate> -->
@@ -48,15 +58,18 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex'
+  import { mapState } from 'vuex'
   import Tasks from './Tasks'
-
-
+  import SearchBar from '../components/shared/SearchBar'
+  import Card from '../components/shared/Card'
 
   export default {
-    components: [
-      Tasks
-    ],
+    name: 'Jobs',
+    components: {
+      Tasks,
+      Card,
+      SearchBar,
+    },
     props: {
       user: Object
     },
@@ -83,6 +96,17 @@
       })
     },
     methods: {
+      totalNumberOfSubsBiddingForTheJob(jobTasks) {
+        if (jobTasks) {
+          let total = 0
+          for (let i = 0; i < jobTasks.length; i++) {
+            if (jobTasks[i].bid_contractor_job_tasks) {
+              total = total + jobTasks[i].bid_contractor_job_tasks.length
+            }
+          }
+          return total
+        }
+      },
       search() {
         this.sBids = this.bids.filter((bid) => {
           if (this.searchTerm === '' || this.searchTerm.length <= 1) {
@@ -95,13 +119,21 @@
         }
       },
       getLabelClass(bid) {
-        return Format.statusLabel(bid.status, User.isCustomer(), User.isGeneral(bid))
+        return Format.statusLabel(bid.status, User.isCustomer, this.isGeneral(bid))
       },
       jobName(name) {
         return Format.jobName(name)
       },
+      isGeneral(bid) {
+        if (bid !== null && this.user) {
+          return bid.contractor_id === this.user.id
+        }
+        return false
+      },
       status(bid) {
-        return User.status(bid.status, bid)
+        if (bid !== null && this.user !== undefined) {
+          return User.status(bid.status, bid, this.user)
+        }
       },
       prettyDate(date) {
         if (date == null)
@@ -114,8 +146,7 @@
         this.$router.push('/bid/' + id)
       },
       getBids() {
-        console.log('getBids')
-        axios.post('/jobs').then((response) => {
+        axios.get('/jobsPage').then((response) => {
           if (Array.isArray(response.data)) {
             this.bids = response.data
             this.sBids = this.bids

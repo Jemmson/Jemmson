@@ -76,13 +76,11 @@
       },
       getAuthURL() {
         // only get authUrl once
+        this.isContractor = !this.isContractor
         if (this.quickbooks.auth_url === '') {
           axios.get('/quickbooks/getAuthUrl/getCompany').then(function(response) {
             this.quickbooks.auth_url = response.data
-            this.isContractor = !this.isContractor
           }.bind(this))
-        } else {
-          this.isContractor = !this.isContractor
         }
 
       }

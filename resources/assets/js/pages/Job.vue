@@ -104,7 +104,7 @@
         }
       },
       showTasks() {
-        if (User.isCustomer()) {
+        if (this.isCustomer) {
           const status = this.bid.status
           if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
             return true
@@ -128,7 +128,7 @@
         return this.bid.status === 'bid.sent'
       },
       isCustomer() {
-        return User.isCustomer()
+        return this.user.usertype === 'customer'
       },
       isGeneralContractor() {
         // General contractor is the one who created the bid

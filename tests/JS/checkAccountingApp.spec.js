@@ -9,12 +9,8 @@ require('./bootstrap');
 
 describe ('CheckAccountingApp', () => {
   let wrapper;
-  const getAuthURL = sinon.spy();
 
   wrapper = mount(CheckAccountingApp, {
-    methods: {
-      getAuthURL
-    },
     data () {
       return {
         isContractor: false,
@@ -28,11 +24,11 @@ describe ('CheckAccountingApp', () => {
   // beforeEach (() => {
   // });
 
-  it.only('should show Customer button', function() {
+  it('should show Customer button', function() {
     expect(wrapper.find({ref: 'customer'}).text()).toBe('Customer')
   });
 
-  it.only('should should not show accounting buttons if isContractor is false', function() {
+  it('should should not show accounting buttons if isContractor is false', function() {
     wrapper.setData({
       isContractor: false
     })
@@ -41,7 +37,26 @@ describe ('CheckAccountingApp', () => {
 
   })
 
-  it.only('should show quickbooks button after contractor button is clicked', function() {
+  it('should call the getauthurl method when the contractor button is clicked', function() {
+
+    const getAuthURLstub = sinon.stub()
+
+    let contractorButton = wrapper.find({
+      ref: 'contractor'
+    });
+
+    contractorButton.trigger('click');
+
+    wrapper.setMethods({
+      getAuthURL: getAuthURLstub
+    })
+
+    expect(getAuthURLstub.called).toBe(true)
+
+
+  })
+
+  it('should show quickbooks button after contractor button is clicked', function() {
 
     wrapper.setData({
       isContractor: false
@@ -51,60 +66,42 @@ describe ('CheckAccountingApp', () => {
       ref: 'contractor'
     });
 
-    // let qb = wrapper.find({ref: 'quickbooks'});
-
-    // expect(qb.isVisible()).toBe(false);
-
     contractorButton.trigger('click');
-    //
-    let qbs = wrapper.find({ref: 'xero'});
-    //
-    // console.log(qbs);
-    //
+
+    let qbs = wrapper.find({ref: 'quickbooks'});
+
     expect(qbs.isVisible()).toBe(true);
 
   })
 
-  it.only('should trigger the auth URL on click', function() {
-
-    let btn = wrapper.find({
-      ref: 'contractor'
-    })
-
-    btn.trigger('click');
-
-    expect(getAuthURL.calledOnce).toBe(true);
-
-  })
-
-  it('should only get auth url once. each successive clicks will only show and hide the contractor buttons', function() {
+  it.skip('should only get auth url once. each successive clicks will only show and hide the contractor buttons', function() {
     //manually verified
 
   })
 
-  it('should check whether the quickbooks feature is turned on', function() {
+  it.skip('should check whether the quickbooks feature is turned on', function() {
     //manually verified
 
   })
 
-  it('should be routed to the registration page if the quickbooks feature is turned off', function() {
+  it.skip('should be routed to the registration page if the quickbooks feature is turned off', function() {
     // manually verified
 
   })
 
-  it('should should show and hide accounting buttons when the contractor button is clicked', function() {
+  it.skip('should should show and hide accounting buttons when the contractor button is clicked', function() {
     // manually verified
 
   })
 
-  it('should always show accounting page for registration if if quickbooks feature is turned on. ' +
+  it.skip('should always show accounting page for registration if if quickbooks feature is turned on. ' +
     'refreshing the page should not show registration page if quickbooks feature is turned on', function() {
 
     // manually verified
 
   })
 
-  it('should route to the register page if "dont use" is clicked', function() {
+  it.skip('should route to the register page if "dont use" is clicked', function() {
     //visually  verified
   })
 
