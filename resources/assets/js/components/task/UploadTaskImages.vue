@@ -1,7 +1,6 @@
 <template>
-    <div class="flex flex-col">
-        <div class="flex justify-between">
-            <div class="" v-if="showTaskImage1(jobTask)">
+    <div class="row">
+            <div class="col-4" v-if="showTaskImage1(jobTask)">
                 <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
                     <img :src="jobTask.images[jobTask.images.length - 1].url" alt="">
                 </a>
@@ -12,7 +11,7 @@
                 </a>
             </div>
 
-            <div class="" v-if="showTaskImage2(jobTask)">
+            <div class="col-4" v-if="showTaskImage2(jobTask)">
                 <a class="lightbox" @click.prevent="openImage(jobTask.images[jobTask.images.length - 1].id)">
                     <img :src="jobTask.images[jobTask.images.length - 2].url" alt="">
                 </a>
@@ -23,12 +22,11 @@
                 </a>
             </div>
 
-            <div class="" v-if="showMoreImagesBtn(jobTask)">
+            <div class="col-4" v-if="showMoreImagesBtn(jobTask)">
                 <a class="lightbox" :href="'/#/task/' + jobTask.id + '/images'">
                     <img :src="'/img/more.png'" alt="">
                 </a>
             </div>
-        </div>
         <!-- / end task images preview -->
 
         <!-- upload images -->
@@ -39,7 +37,7 @@
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
             </span>
             <span v-if="!disabled.uploadTaskImageBtn"> -->
-        <input :ref="'task_photo_' + jobTask.id" class="mt-4" :id="'task_photo_' + jobTask.id" type="file" @change="uploadTaskImage(jobTask.id)">
+        <input :ref="'task_photo_' + jobTask.id" class="btn btn-primary ml-2 mt-4" :id="'task_photo_' + jobTask.id" type="file" @change="uploadTaskImage(jobTask.id)">
             <!-- </span>
         </button> -->
         <!-- / end upload task images-->
