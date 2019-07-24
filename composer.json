@@ -19,7 +19,6 @@
         "laravel/cashier": "^9.0.1",
         "laravel/framework": "5.8.*",
         "laravel/nexmo-notification-channel": "^2.0",
-        "laravel/nova": "*",
         "laravel/spark": "*@dev",
         "laravel/tinker": "~1.0",
         "moontoast/math": "^1.1",
@@ -87,10 +86,6 @@
         {
             "type": "path",
             "url": "./spark"
-        },
-        {
-            "type": "path",
-            "url": "./nova"
         }
     ]
 }
