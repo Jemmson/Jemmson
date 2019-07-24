@@ -17,7 +17,7 @@ use App\JobTask;
 class JobTest extends TestCase
 {
 
-    use RefreshDatabase;
+//    use RefreshDatabase;
 
     /**  @test */
     function create_a_job_name_from_an_empty_job() {
@@ -138,7 +138,8 @@ class JobTest extends TestCase
         $task = factory(Task::class)->create([
             "name" => "pool work",
             "sub_instructions" => "sub Instruction",
-            "customer_instructions" => "customer instructions"
+            "customer_instructions" => "customer instructions",
+            "contractor_id" => $contractor->id
         ]);
 
         factory(JobTask::class)->create([

@@ -31,9 +31,9 @@
           </bid-add-task>
         </transition> -->
 
-        <!-- / stripe testing delete after -->
-        <!-- <stripe :user='user'>
-        </stripe> -->
+<!--         / stripe testing delete afte -->
+<!--        <stripe :user='user'>-->
+<!--        </stripe>-->
     </div>
 </template>
 
@@ -132,7 +132,7 @@
       },
       isGeneralContractor() {
         // General contractor is the one who created the bid
-        return User.isGeneral(this.bid)
+        return User.isGeneral(this.bid, this.user.id)
       },
     },
     methods: {

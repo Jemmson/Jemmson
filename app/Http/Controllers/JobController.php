@@ -487,8 +487,11 @@ class JobController extends Controller
 //            dd(Auth::user()->usertype);
 //            $jobs = Auth::user()->jobs();
 
+//            $jobs = Auth::user()->jobs()->select(['id']);
 
-            $jobs = User::with('jobs')->get();
+//            dd(Auth::user()->getAuthIdentifier());
+            $jobs = Auth::user()->jobs()->get();
+//            $jobs = User::with('jobs')->get();
 
 //            $jobs = Auth::user()->jobs()->
 //                with('jobTasks:id,status')->get();

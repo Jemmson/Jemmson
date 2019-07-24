@@ -26,17 +26,18 @@
                                     {{ status(bid) }}
                                 </label>
 
-                                <div v-if="user.usertype === 'contractor'">
+                                <div v-if="isContractor()">
                                      <span ref="total_number_of_subs"
                                            class="float-right list-card-info">
-                                    {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
-                                    <i class="fas fa-users"></i></span>
+                                            {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
+                                        <i class="fas fa-users"></i>
+                                     </span>
 
                                     <span class="float-right mr-2 list-card-info"
                                           ref="show_number_of_job_tasks">
-                                    {{ bid.job_tasks.length }} Tasks
-                                    <i class="far fa-check-square"></i>
-                            </span>
+                                            {{ bid.job_tasks.length }} Tasks
+                                        <i class="far fa-check-square"></i>
+                                    </span>
                                 </div>
                             </div>
                         </section>
@@ -96,6 +97,13 @@
       })
     },
     methods: {
+      isContractor(){
+
+        if (this.user) {
+          return this.user.usertype === 'contractor'
+        }
+
+      },
       totalNumberOfSubsBiddingForTheJob(jobTasks) {
         if (jobTasks) {
           let total = 0
@@ -146,7 +154,7 @@
         this.$router.push('/bid/' + id)
       },
       getBids() {
-        axios.get('/jobsPage').then((response) => {
+        axios.get('/jobs').then((response) => {
           if (Array.isArray(response.data)) {
             this.bids = response.data
             this.sBids = this.bids

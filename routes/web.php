@@ -81,6 +81,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::resource('/job', 'JobController');
     Route::get('/jobtask/{jobTaskId}', 'TaskController@getJobTask');
     Route::get('/jobsPage', 'JobController@jobsPage');
+    Route::get('/jobs', 'JobController@jobs');
     Route::post('/bid/job/decline', 'JobController@declineJobBid');
     Route::post('job/approve/{job}', 'JobController@approveJob');
     Route::get('invoices', 'JobController@getInvoices');
@@ -103,6 +104,9 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
 
     // Tasks
     Route::post('/task/notify', 'TaskController@notify')->middleware('quickbook.token');
+
+
+    Route::post('/paidWithCashMessage', 'JobController@paidWithCashMessage');
 
 }
 );

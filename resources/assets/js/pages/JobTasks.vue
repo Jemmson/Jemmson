@@ -21,11 +21,11 @@
               {{ status(jTask) }}
             </span>
 
-            <span class="float-right list-card-info">2 Subs
+            <span class="float-right list-card-info">{{ getTotalSubsForTasks() }} Subs
               <i class="fas fa-users"></i>
             </span>
 
-            <span class="float-right mr-2 list-card-info">3 Tasks
+            <span class="float-right mr-2 list-card-info">{{ jobTasks.length }} Tasks
               <i class="far fa-check-square"></i>
             </span>
           </div>
@@ -86,6 +86,17 @@
       })
     },
     methods: {
+      getTotalSubsForTasks() {
+        
+        let length = 0
+
+        for (let i = 0; i < this.jobTasks; i++) {
+          length = length + this.jobTasks[i].bid_contractor_job_tasks.length
+        }
+
+        return length
+
+      },
       setCurrentJobTaskToBidOn (jobTask) {
         this.jobTask = jobTask;
         $('#job-task-bid-modal').modal();
