@@ -40,8 +40,6 @@ use Illuminate\Support\Facades\Storage;
 class TaskController extends Controller
 {
 
-    //    use Notifiable;
-
     /**
      * Display a listing of the resource.
      * NOTICE:
@@ -90,8 +88,6 @@ class TaskController extends Controller
      */
     public function getJobTask($jobTaskId)
     {
-//        Log::debug($jobTask);
-//        dd($jobTask);
 
         Log::debug("Job Task Id: $jobTaskId");
 
@@ -120,7 +116,6 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //$task->bid_price = $request->bid_price;
 
         try {
             $task->save();
@@ -182,9 +177,6 @@ class TaskController extends Controller
         $bidContractorJobTask->payment_type = $request->paymentType;
         $jobTask = $bidContractorJobTask->jobTask()->first();
 
-        // doesn't work since no default 'id' found
-        // $jobTask->status = 'bid_task.sent';
-
         try {
             $bidContractorJobTask->save();
         } catch (\Exception $e) {
@@ -219,7 +211,6 @@ class TaskController extends Controller
             return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
         }
 
-//        $job->subtractPrice(($jobTask->cust_final_price * $jobTask->qty));
         $job->jobTotal();
         return response()->json(["message" => "Success"], 200);
 
@@ -229,7 +220,6 @@ class TaskController extends Controller
     {
         $user = User::where('email', $email)->orWhere('phone', $phone)->first();
         $result = count($user);
-        $userExists = false;
 
         if ($result !== 1) {
             $user = $this->createNewUser($name, $email, $phone);
@@ -238,9 +228,8 @@ class TaskController extends Controller
             $userExists = true;
         }
 
-        $userData = [$user, $userExists];
+        return [$user, $userExists];
 
-        return $userData;
     }
 
     public function createNewUser($name, $email, $phone)
@@ -280,8 +269,7 @@ class TaskController extends Controller
     public function addBidEntryForTheSubContractor($subcontractor, $jobTaskId, $taskId)
     {
         if ($subcontractor->checkIfContractorSetBidForATask($subcontractor->user_id, $jobTaskId)) {
-            $sub = $subcontractor->addContractorToBidForJobTable($subcontractor->user_id, $jobTaskId, $taskId);
-            return $sub;
+            return $subcontractor->addContractorToBidForJobTable($subcontractor->user_id, $jobTaskId, $taskId);
         } else {
             return false;
         }
@@ -292,11 +280,8 @@ class TaskController extends Controller
         $n = DB::select("select name from users where name = ?", [$name]);
         $e = DB::select("select email from users where email = ?", [$email]);
         $p = DB::select("select phone from users where phone = ?", [$phone]);
-        if (empty($n) && (!empty($e) || !empty($p))) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return empty($n) && (!empty($e) || !empty($p));
     }
 
     public function validateRequest($email, $phone)
@@ -350,7 +335,7 @@ class TaskController extends Controller
             // if no user found create one
             if ($qb->isContractorThatUsesQuickbooks()) {
                 $qbc = QuickbooksContractor::ContractorExists($request);
-                if ($qbc != false) {
+                if ($qbc) {
                     if ($qbc->phone !== $phone) {
                         $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
                     }
@@ -394,7 +379,7 @@ class TaskController extends Controller
         $contractor = $user_sub->contractor()->first();
         $jobTask = JobTask::find($jobTaskId);
         $subBid = $this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id);
-        if ($subBid == false) {
+        if (!$subBid) {
             return response()->json(["message" => "Task Already Exists.", "errors" => ["error" => "Task Already Exists."]], 422);
         }
 
@@ -421,9 +406,7 @@ class TaskController extends Controller
         // if so then send a notification to that contractor
         $user_sub->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user_sub));
 
-        $bidPrices = Task::getBidPrices($jobTask->job_id);
-
-        return $bidPrices;
+        return Task::getBidPrices($jobTask->job_id);
     }
 
     public function notifyAcceptedBid(Request $request)
@@ -440,8 +423,6 @@ class TaskController extends Controller
             ->user_id;
         $user = User::where('id', $user_id)->get()->first();
 
-        //        return $user;
-
         $user->notify(new NotifySubOfAcceptedBid());
     }
 
@@ -455,7 +436,6 @@ class TaskController extends Controller
     {
         $bidId = $request->bidId;
         $jobTaskId = $request->jobTaskId;
-        $jobId = $request->jobId;
         $price = $request->price;
         $contractorId = $request->contractorId;
 
@@ -481,13 +461,12 @@ class TaskController extends Controller
         });
 
         // set the sub price in the job task table
-//        $job = Job::find($jobId);
         $jobTask = JobTask::find($jobTaskId);
         $task = $jobTask->task()->first();
 
         $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
 
-        $allContractorsForJobTask->map(function ($con) use ($bidId, $contractorId, $task) {
+        $allContractorsForJobTask->map(function ($con) use ($bidId, $task) {
             if ($con->id != $bidId) {
                 $con->accepted = 0;
                 $con->save();
@@ -498,8 +477,6 @@ class TaskController extends Controller
                 $con->save();
             }
         });
-
-//        dd($allContractorsForJobTask);
 
         $jobTask->sub_final_price = $price;
         $jobTask->contractor_id = $contractorId;
@@ -637,7 +614,6 @@ class TaskController extends Controller
         $sub_contractor_id = $jobTask->contractor_id;
         $general_contractor_id = $task->contractor_id;
 
-        $general_contractor = User::find($general_contractor_id);
         $customer = $jobTask->job()->first()->customer()->first();
 
         if ($sub_contractor_id != $general_contractor_id) {
@@ -670,12 +646,6 @@ class TaskController extends Controller
         $jobTask = JobTask::find($jobTaskId);
         $job = Job::find($jobTask->job_id);
         $customer = Customer::find($job->customer_id);
-
-
-//        $jobTask = JobTask::find(12);
-//        $job = Job::find($jobTask->job_id);
-//        $user = Customer::select()->where("user_id", "=", $job->customer_id)->get()->first();
-
 
         // are there subs for this task?
 
@@ -768,7 +738,6 @@ class TaskController extends Controller
         $jobId = $request->jobId;
         $job = Job::find($jobId);
         $jobTask = JobTask::find($request->jobTaskId);
-        $oldPrice = $jobTask->cust_final_price;
 
         try {
             $jobTask->unit_price = $price * 100;
@@ -780,11 +749,8 @@ class TaskController extends Controller
 
         $job->jobTotal();
 
-//        $job->addPrice($price - $oldPrice);
-
         $data = ["price" => $price, "taskId" => $taskId];
-        $data = json_encode($data);
-        return $data;
+        return json_encode($data);
     }
 
     public function updateTaskName(Request $request)
@@ -801,11 +767,10 @@ class TaskController extends Controller
     public function getTasks(Request $request)
     {
 
-        $tasks = Task::select()->
+        return Task::select()->
         where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
         where('name', 'like', $request->taskname . '%')->get();
 
-        return $tasks;
     }
 
     public function addTask(Request $request)
@@ -917,23 +882,10 @@ class TaskController extends Controller
         return $task;
     }
 
-//    public function switchJobStatusToInProgress($job, $message)
-//    {
-//        $job->status = $message;
-//        $job->save();
-//    }
-
     public function updateJobTask($request, $task_id, $jobTask)
     {
 
         Log::info('quantity unit: ' . $request->qtyUnit);
-
-//        if (!$request->sub_sets_own_price_for_job) {
-//            $jobTask->sub_sets_own_price_for_job = 0;
-//        } else {
-//            $jobTask->sub_sets_own_price_for_job = 1;
-//        }
-
 
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;
@@ -965,6 +917,8 @@ class TaskController extends Controller
         // $this->validate($request, [
         //         'photo' => 'required|max:4012',
         //     ]);
+
+        dd($request);
 
         $file = $request->photo;
 
@@ -1000,13 +954,11 @@ class TaskController extends Controller
         $contractor = $job->contractor()->first();
 
 
-        if (Auth::user()->id !== $customer->id) {
-
-            if ($job->status != 'bid.in_progress' && $job->status != 'bid.initiated') {
-                $job->customer()->first()->notify(new UploadedTaskImage());
-            }
-
-
+        if (
+            (Auth::user()->id !== $customer->id) &&
+            ($job->status != 'bid.in_progress' && $job->status != 'bid.initiated')
+        ) {
+            $job->customer()->first()->notify(new UploadedTaskImage());
         }
         if (Auth::user()->id !== $contractor->id) {
             $job->contractor()->first()->notify(new UploadedTaskImage());
@@ -1045,11 +997,11 @@ class TaskController extends Controller
 
         $customer = $job->customer()->first();
         $contractor = $job->contractor()->first();
-        if (Auth::user()->id !== $customer->id) {
-
-            if ($job->status != 'bid.in_progress' && $job->status != 'bid.initiated') {
-                $job->customer()->first()->notify(new TaskImageDeleted());
-            }
+        if (
+            (Auth::user()->id !== $customer->id) &&
+            ($job->status != 'bid.in_progress' && $job->status != 'bid.initiated')
+        ) {
+            $job->customer()->first()->notify(new TaskImageDeleted());
 
         }
         if (Auth::user()->id !== $contractor->id) {

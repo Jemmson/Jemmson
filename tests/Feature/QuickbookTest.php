@@ -22,14 +22,14 @@ class QuickbookTest extends TestCase
 
      private $quickbooksGateway = '';
 
-         protected function setUp()
-         {
-             parent::setUp();
-
-             $this->quickbooksGateway = new FakeQuickbooksGateway();
-             $this->app->instance(QuickbooksGateway::class, $this->quickbooksGateway);
-
-         }
+//         protected function setUp()
+//         {
+//             parent::setUp();
+//
+//             $this->quickbooksGateway = new FakeQuickbooksGateway();
+//             $this->app->instance(QuickbooksGateway::class, $this->quickbooksGateway);
+//
+//         }
 
     /**  @test */
     function will_generate_csrf_token()
