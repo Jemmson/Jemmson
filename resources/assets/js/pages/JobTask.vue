@@ -36,6 +36,7 @@
                 </card>
             </div>
 
+
             <!-- prices -->
             <div class="col-12">
                 <h1 class="card-title mt-4">Prices</h1>
@@ -50,16 +51,18 @@
                                         Total Task Price
                                         <span class="float-right">
                                             <i class="fas fa-money-bill-alt icon"></i>
-                                            <span class="totalCost"
-                                                  v-if="jobTask.task.qty !== null">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
+                                            <span ref="contractor_total_cost" class="totalCost"
+                                                  v-if="parseInt(jobTask.cust_final_price) > 0">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
+                                            <span ref="contractor_total_cost_error" class="totalCost"
+                                                  v-else>Price Has Not Been Set</span>
                                         </span>
                                     </div>
                                     <div class="form-group" v-if="isContractor()">
                                         Total Task Sub Price
                                         <span class="float-right">
                                             <i class="fas fa-user icon"></i>
-                                            <span
-                                                    class="totalCost">{{taskCustFinalPrice(jobTask.sub_final_price)}}</span>
+                                            <span ref="sub_total_cost" v-if="parseInt(jobTask.sub_final_price) > 0" class="totalCost">{{taskCustFinalPrice(jobTask.sub_final_price)}}</span>
+                                            <span ref="sub_total_cost_error" v-else class="totalCost">Price Has Not Been Set</span>
                                         </span>
                                     </div>
                                 </div>
@@ -78,7 +81,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" v-if="isContractor()">
+                                    <div class="form-group" v-if="isContractor">
+
                                         <label class="">Price:</label>
                                         <input v-if="showTaskPriceInput()" type="text" ref="price" class="form-control"
                                                :value="taskCustFinalPrice(jobTask.unit_price)"
@@ -298,7 +302,6 @@
   import Message from '../components/job/Message.vue'
   import TaskImages from '../components/task/UploadTaskImages'
   import Format from '../classes/Format'
-  import User from '../classes/User'
   import Card from '../components/shared/Card'
 
   import { mapState } from 'vuex'
@@ -314,6 +317,7 @@
     },
     data() {
       return {
+        user: {},
         jobTask: null,
         currentJobTask: {},
         showDetails: false,
@@ -451,7 +455,7 @@
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled)
       },
       showStripeToggle(jobTask) {
-        return User.isAssignedToMe(jobTask, Spark.state.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
+        return User.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
           'bid.in_progress')
       },
       updateMessage(jobTaskId, currentMessage, actor) {
@@ -482,7 +486,7 @@
       },
       showFinishedBtn(jobTask) {
         if (this.isContractor() &&
-          User.isAssignedToMe(jobTask, Spark.state.user.id) && (jobTask.status === 'bid_task.approved_by_customer' ||
+          User.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.approved_by_customer' ||
             jobTask.status === 'bid_task.reopened' ||
             jobTask.status === 'bid_task.denied'
           )) {
@@ -492,7 +496,7 @@
       },
       showApproveBtn(jobTask) {
         if (this.isGeneral() &&
-          !User.isAssignedToMe(jobTask, Spark.state.user.id) &&
+          !User.isAssignedToMe(jobTask, this.user.id) &&
           (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
         ) {
           return true
@@ -574,7 +578,10 @@
         // }
       },
       isGeneral() {
-        return User.isGeneral(this.job, User.id)
+        if (this.jobTask !== null) {
+          return this.jobTask.contractor_id === this.user.id
+        }
+        return false
       },
       prettyDate(date) {
         if (date == null)
@@ -632,13 +639,16 @@
         price = price.replace(/[^0-9.]/g, '')
         let taskPrice = jobTask.unit_price
         taskPrice = taskPrice.toString()
-        // debugger
+        this.jobTask.cust_final_price = price
+        this.jobTask.unit_price = price
         if ((taskPrice !== price)) {
+
           GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
+
         }
       },
       isContractor() {
-        return User.isContractor
+        return this.user.usertype === 'contractor'
       },
       showTheJobTaskDetails(value) {
         if (value === 'show') {
@@ -672,13 +682,11 @@
 
         if (price) {
           let priceString = price.toString()
-
           if (priceString.indexOf('.') === -1) {
             price = '$' + price + '.00'
           } else {
             price = '$' + price
           }
-
           return price
         }
       }
@@ -702,7 +710,11 @@
 
       this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
 
-      console.log(this.jobTaskIndex)
+      this.jobTask.cust_final_price = this.jobTask.cust_final_price / 100
+      this.jobTask.sub_final_price = this.jobTask.sub_final_price / 100
+      this.jobTask.unit_price = this.jobTask.unit_price / 100
+
+      this.user = Spark.state.user
     },
   }
 </script>

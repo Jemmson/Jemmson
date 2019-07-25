@@ -1,7 +1,8 @@
 import Language from './Language'
-import {router} from '../app'
+import {router} from '../router.js'
 
 export default class GeneralContractor {
+
     acceptSubBidForTask(jobTask, bid, disabled) {
         console.log('acceptSubBidForTask', jobTask)
         disabled.accept = true
@@ -301,12 +302,14 @@ export default class GeneralContractor {
         }).then((response) => {
             User.emitChange('bidUpdated')
             Vue.toasted.success(Language.lang().bid_task.price_updated.general)
+            return true;
             // console.log(response.data)
             // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
         }).catch(error => {
             console.error(error)
             // show a toast notification
             Vue.toasted.error('Error: ' + error.message)
+            return false
         })
     }
 
@@ -350,8 +353,8 @@ export default class GeneralContractor {
         }
     }
 
-    constructor() {
-        this.user = Spark.state.user
+    constructor(user) {
+        this.user = user
     }
 
     // async updateJobStartDate (date, jobId) {
@@ -367,3 +370,5 @@ export default class GeneralContractor {
     //   }
     // }
 }
+
+export var __useDefault = true

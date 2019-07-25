@@ -6,7 +6,7 @@ import Vuex from 'vuex'
 
 import VueRouter from 'vue-router'
 
-// require('./bootstrap')
+require('./bootstrap')
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -14,12 +14,6 @@ localVue.use(VueRouter)
 
 describe('JobTask', () => {
   const router = new VueRouter()
-
-  // const $route = {
-  //   params: {
-  //     index: 0
-  //   }
-  // }
 
   beforeEach(() => {
 
@@ -31,8 +25,6 @@ describe('JobTask', () => {
 
   it('should update the total cust price final price when the Price is updated', function() {
 
-    const index = '0'
-
     const wrapper = shallowMount(JobTask, {
       router,
       mocks: {
@@ -42,7 +34,8 @@ describe('JobTask', () => {
               model: {
                 job_tasks: [
                   {task: {name: 'sarah'}}
-                ]
+                ],
+                status: 'bid.initiated'
               }
             }
           }
@@ -52,6 +45,8 @@ describe('JobTask', () => {
 
     wrapper.setData({
       jobTask: {
+        unit_price: 15,
+        contractor_id: 1,
         bid_contractor_job_tasks: [
           {
             name: '',
@@ -66,15 +61,71 @@ describe('JobTask', () => {
         task: {
           name: 'sarah',
         }
+      },
+      user: {
+        id: 1,
+        usertype: 'contractor'
       }
     })
 
-    const price = wrapper.find({ref: 'price'})
 
+    expect(wrapper.vm.isContractor()).toBe(true)
+    expect(wrapper.vm.isGeneral()).toBe(true)
+    expect(wrapper.vm.jobStatus).toBe('bid.initiated')
+    expect(wrapper.vm.showTaskPriceInput()).toBe(true)
+
+    let price = wrapper.find({ref: 'price'})
+    //
     price.setValue(100)
     price.trigger('blur')
+    //
+    expect(wrapper.find({ref: 'contractor_total_cost'}).text()).toBe(100)
 
-    expect(wrapper.find({ref: 'contractor_total_cost'})).toBe(100)
+  })
+
+  it('is General should evaluate to true if jobTask is not null and the contractor and the user id are the same', function() {
+
+    const wrapper = shallowMount(JobTask, {
+      router,
+      mocks: {
+        $store: {
+          state: {
+            job: {
+              model: {
+                job_tasks: [
+                  {task: {name: 'sarah'}}
+                ],
+                status: 'bid.initiated'
+              }
+            }
+          }
+        }
+      }
+    })
+
+    wrapper.setData({
+      jobTask: {
+        contractor_id: 1,
+        bid_contractor_job_tasks: [
+          {
+            name: '',
+            payment_type: '',
+            id: '',
+            contractor: {
+              name: ""
+            },
+            bid_price: ""
+          },
+        ],
+        task: {
+          name: 'sarah',
+        }
+      },
+      user: {
+        id: 1,
+        usertype: 'contractor'
+      }
+    })
 
   })
 

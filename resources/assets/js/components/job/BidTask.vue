@@ -669,7 +669,9 @@
         taskPrice = taskPrice.toString()
         // debugger
         if ((taskPrice !== price)) {
-          GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
+          if (GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)) {
+            this.jobTask.cust_final_price = price
+          }
         }
       },
       isContractor() {

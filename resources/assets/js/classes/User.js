@@ -1,4 +1,5 @@
 import { router } from '../router.js'
+import Language from './Language'
 
 export default class User {
 
@@ -19,7 +20,7 @@ export default class User {
     }
   }
 
-  // TODO: /NOTICE: need to fix the error handling since it doesn't work
+  // TODO: NOTICE: need to fix the error handling since it doesn't work
   async createToken() {
     // create stripe token
     const {
@@ -84,7 +85,6 @@ export default class User {
     })
   }
 
-    // static getAllPayableTasks(jobTasks) {
   getAllPayableTasks(jobTasks) {
     if (jobTasks !== undefined) {
       return jobTasks.filter((jobTask) => {
@@ -158,16 +158,14 @@ export default class User {
   }
 
   // is the task assigned to the currently logged in user
-  isAssignedToMe(jobTask) {
-    return this.user.id === jobTask.contractor_id
+  isAssignedToMe(jobTask, userId) {
+    return userId === jobTask.contractor_id
   }
 
-    // static isContractor() {
   isContractor() {
     return this.user.usertype === 'contractor'
   }
 
-    // static isCustomer() {
   isCustomer() {
     return this.user.usertype === 'customer'
   }
@@ -176,7 +174,6 @@ export default class User {
    *
    * @param {JobTask} bid //
    */
-  // static isGeneral(bid, userId) {
   isGeneral(bid, userId) {
     if (bid !== null) {
       return bid.contractor_id === userId
@@ -189,7 +186,6 @@ export default class User {
     return this.user.stripe_id !== undefined && this.user.stripe_id !== null
   }
 
-  // static isSub(bid, usertype, userId = null) {
   isSub(bid, usertype, userId = null) {
     return bid !== null &&
       (usertype === 'contractor' &&
@@ -299,9 +295,7 @@ export default class User {
     this.user = user
   }
 
-  // static status(status, bid, user = Spark.state.user) {
   status(status, bid, user = Spark.state.user) {
-    // debugger;
 
     if (status === null) {
       status = 'bid_task.initiated'
