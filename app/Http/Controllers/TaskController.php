@@ -232,6 +232,45 @@ class TaskController extends Controller
 
     }
 
+
+    public function createNewUserFirstNameAndLastName($first_name, $last_name, $email, $phone, $companyName)
+    {
+        if (empty($email)) {
+            $email = null;
+        }
+
+        if (empty($phone)) {
+            $phone = null;
+        }
+
+        $pass = RandomPasswordService::randomPassword();
+
+        $user = User::create(
+            [
+                'name' => $first_name . " " . $last_name,
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'email' => $email,
+                'phone' => $phone,
+                'usertype' => 'contractor',
+                'password_updated' => false,
+                'password' => bcrypt($pass),
+            ]
+        );
+
+        Contractor::create(
+            [
+                'user_id' => $user->id,
+                'company_name' => $companyName
+            ]
+        );
+
+        return $user;
+
+    }
+
+
+
     public function createNewUser($name, $email, $phone)
     {
         if (empty($email)) {
@@ -317,7 +356,7 @@ class TaskController extends Controller
         $jobTaskId = $request->jobTaskId;
         $name = $request;
 
-        if ($request->id == '') {
+        if (!empty($request->id)) {
             $user_sub = User::getUserByPhoneOrEmail($phone, $email);
         } else {
             $user_sub = User::find($request->id);
@@ -331,7 +370,7 @@ class TaskController extends Controller
 //           in QB becuase more than one person can have the same name. Can
 //           take into account middle name maybe. Can check that name is not
 //           in the QB customer table for that contractor. Needs to be fixed though.
-        if ($user_sub === null) {
+        if (empty($user_sub)) {
             // if no user found create one
             if ($qb->isContractorThatUsesQuickbooks()) {
                 $qbc = QuickbooksContractor::ContractorExists($request);
@@ -348,9 +387,10 @@ class TaskController extends Controller
                     $user_sub = $user->addNewContractorToJemTable($request, $resultingCustomerObj->Id);
                 }
             } else {
-                $user_sub = $this->createNewUser($name, $email, $phone);
+                $user_sub = $this->createNewUserFirstNameAndLastName(
+                    $request->firstName, $request->lastName, $email, $phone, $request->companyName
+                );
             }
-
         } else if ($user_sub->usertype === 'customer') {
             // return if the user is a customer
             return response()->json(["message" => "This person is a customer in the system and can not also be a contractor", "errors" => ["error" => "No valid user."]], 422);
@@ -387,8 +427,12 @@ class TaskController extends Controller
         $ccspp = ContractorSubcontractorPreferredPayment::where('bid_contractor_job_task_id', '=', $subBid->id);
         if (empty($ccspp->id)) {
             $ccspp = new ContractorSubcontractorPreferredPayment();
-            $ccspp->bid_contractor_job_task_id = $subBid->id;
+
+            $ccspp->job_task_id = $jobTask->id;
+            $ccspp->contractor_id = Auth::user()->getAuthIdentifier();
+            $ccspp->sub_id = $user_sub->id;
             $ccspp->contractor_preferred_payment_type = $request->paymentType;
+
         } else {
             $ccspp->contractor_preferred_payment_type = $request->paymentType;
         }
@@ -914,11 +958,6 @@ class TaskController extends Controller
      */
     public function uploadTaskImage(Request $request)
     {
-        // $this->validate($request, [
-        //         'photo' => 'required|max:4012',
-        //     ]);
-
-
         // get the file
         $file = $request->photo;
 

@@ -271,6 +271,9 @@ export default class GeneralContractor {
         disabled.invite = true;
         // debugger;
         form.jobTaskId = jobTaskId;
+
+        form.phone = form.phone.replace(/[^0-9]/g, '');
+
         Spark.post('/task/notify', form)
             .then((response) => {
                 console.log(response)

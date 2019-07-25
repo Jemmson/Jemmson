@@ -172,7 +172,6 @@
         this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
       },
       sendSubInviteToBidOnTask() {
-        // debugger;
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
         this.companyName = ''
       },
