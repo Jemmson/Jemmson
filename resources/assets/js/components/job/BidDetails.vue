@@ -107,14 +107,16 @@
 
                     <section class="col-12 mb-3">
                         <label for="startDate" class="">Start Date:</label>
-                        <strong id="startDate" ref="details_start_date" class="float-right">{{ agreedStartDate
-                            }}</strong>
+                        <strong id="startDate"
+                                ref="details_start_date"
+                                class="float-right">{{ agreedStartDate }}</strong>
                     </section>
 
                     <section class="col-12 mb-3">
                         <label for="totalBidPrice" class="">Total Bid Price:</label>
-                        <strong id="totalBidPrice" ref="details_total_bid_price" class="float-right">{{ bidPrice
-                            }}</strong>
+                        <strong id="totalBidPrice"
+                                ref="details_total_bid_price"
+                                class="float-right">{{ bidPrice }}</strong>
                     </section>
 
                     <hr>
@@ -426,8 +428,11 @@
         }
       },
       bidPrice() {
-        if (this.bid.status !== 'bid.initiated' && this.bid.status !== 'bid.in_progress') {
-          return '$ ' + Format.decimal(this.bid.bid_price)
+        if (
+          this.bid.bid_price &&
+          (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress')
+        ) {
+          return '$ ' + Format.decimal(this.bid.bid_price/100)
         } else {
           return 'In Process'
         }

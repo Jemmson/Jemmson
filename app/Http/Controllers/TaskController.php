@@ -172,7 +172,7 @@ class TaskController extends Controller
             return response()->json(["message" => "Price needs to be greater than 0.", "errors" => ["error" => [""]]], 412);
         }
 
-        $bidContractorJobTask->bid_price = $request->bid_price;
+        $bidContractorJobTask->bid_price = $request->bid_price * 100;
         $bidContractorJobTask->status = 'bid_task.bid_sent';
         $bidContractorJobTask->payment_type = $request->paymentType;
         $jobTask = $bidContractorJobTask->jobTask()->first();
@@ -478,7 +478,7 @@ class TaskController extends Controller
             }
         });
 
-        $jobTask->sub_final_price = $price;
+        $jobTask->sub_final_price = $price * 100;
         $jobTask->contractor_id = $contractorId;
         $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
         $jobTask->stripe = false;
@@ -890,7 +890,7 @@ class TaskController extends Controller
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;
         $jobTask->status = __('bid_task.initiated');
-        $jobTask->cust_final_price = $request->taskPrice;
+        $jobTask->cust_final_price = $request->taskPrice * 100;
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
         $jobTask->sub_message = $request->sub_message;

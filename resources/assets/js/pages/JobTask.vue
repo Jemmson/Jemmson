@@ -52,7 +52,7 @@
                                         <span class="float-right">
                                             <i class="fas fa-money-bill-alt icon"></i>
                                             <span ref="contractor_total_cost" class="totalCost"
-                                                  v-if="parseInt(cust_final_price) > -1">{{taskCustFinalPrice(cust_final_price)}}</span>
+                                                  v-if="parseInt(cust_final_price) * 10 > 0">{{taskCustFinalPrice(cust_final_price)}}</span>
                                             <span ref="contractor_total_cost_error" class="totalCost"
                                                   v-else>Price Has Not Been Set</span>
                                         </span>
@@ -61,7 +61,7 @@
                                         Total Task Sub Price
                                         <span class="float-right">
                                             <i class="fas fa-user icon"></i>
-                                            <span ref="sub_total_cost" v-if="parseInt(sub_final_price) > -1" class="totalCost">{{taskCustFinalPrice(sub_final_price)}}</span>
+                                            <span ref="sub_total_cost" v-if="parseInt(sub_final_price) * 10 > 0" class="totalCost">{{taskCustFinalPrice(sub_final_price)}}</span>
                                             <span ref="sub_total_cost_error" v-else class="totalCost">Price Has Not Been Set</span>
                                         </span>
                                     </div>

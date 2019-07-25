@@ -75,7 +75,7 @@ class JobTask extends Model
         $this->task_id = $request->taskId;
         $this->status = 'bid_task.initiated';
         $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $request->qty * $request->taskPrice;
+        $this->cust_final_price = $request->qty * $request->taskPrice * 100;
         $this->sub_final_price = 0;
         if (empty($request->start_date)) {
             $this->start_date = \Carbon\Carbon::now();
@@ -86,7 +86,7 @@ class JobTask extends Model
         $this->sub_message = $request->sub_message;
         $this->stripe = $request->useStripe;
         $this->qty = (int)$request->qty;
-        $this->unit_price = (int)$request->taskPrice;
+        $this->unit_price = (int)$request->taskPrice * 100;
 
         try {
             $this->save();
@@ -113,7 +113,7 @@ class JobTask extends Model
         $this->task_id = $taskId;
         $this->status = 'bid_task.initiated';
         $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $request->qty * $request->taskPrice;
+        $this->cust_final_price = $request->qty * $request->taskPrice * 100;
         $this->sub_final_price = 0;
         if (empty($request->start_date)) {
             $this->start_date = \Carbon\Carbon::now();
@@ -124,7 +124,7 @@ class JobTask extends Model
         $this->sub_message = $request->sub_message;
         $this->stripe = $request->useStripe;
         $this->qty = (int)$request->qty;
-        $this->unit_price = (int)$request->taskPrice;
+        $this->unit_price = (int)$request->taskPrice * 100;
 
         try {
             $this->save();
@@ -306,7 +306,7 @@ class JobTask extends Model
         $this->job_id = $request->jobId;
         $this->task_id = $request->taskId;
         $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $request->qty * $request->taskPrice;
+        $this->cust_final_price = $request->qty * $request->taskPrice * 100;
         $this->sub_final_price = 0;
         $this->start_when_accepted = $request->customer_message;
         if (empty($request->start_date)) {
@@ -317,7 +317,7 @@ class JobTask extends Model
         $this->customer_message = $request->customer_message;
         $this->sub_message = $request->sub_message;
         $this->qty = $request->qty;
-        $this->unit_price = $request->taskPrice;
+        $this->unit_price = $request->taskPrice * 100;
 
         try {
             $this->save();

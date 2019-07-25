@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -61,6 +62,33 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
         return [
             //
         ];
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param  mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+
+        $text = "$this->user has finished your bid. Please log into Jemmson.com to take a look at your bid.";
+
+//        $text = 'Welcome To Jemmson ' .
+//            $this->contractor .
+//            ' has initated a bid ' .
+//            '- Job Name: ' .
+//            $this->bid->job_name .
+//            ' The link below will expire in one week.' .
+//            ' Login Link: ' .
+//            url('/login/' .
+//                'customer/' .
+//                $this->bid->id .
+//                '/' .
+//                $this->pwLink);
+        return (new NexmoMessage)
+            ->content($text);
     }
 
     public function toBroadcast($notifiable)

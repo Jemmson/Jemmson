@@ -451,7 +451,7 @@ class Job extends Model
             $bid_price = $bid_price + ($j->qty * $j->unit_price);
         }
 
-        $this->bid_price = $bid_price;
+        $this->bid_price = $bid_price * 100;
 
         try {
             $this->save();

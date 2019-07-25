@@ -38,8 +38,8 @@ class Task extends Model
     {
         $this->name = strtolower($request->taskName);
         $this->contractor_id = $request->contractorId;
-        $this->proposed_cust_price = $request->taskPrice;
-        $this->proposed_sub_price = $request->subTaskPrice;
+        $this->proposed_cust_price = $request->taskPrice * 100;
+        $this->proposed_sub_price = $request->subTaskPrice * 100;
         $this->qtyUnit = $request->qtyUnit;
         $this->sub_instructions = $request->sub_message;
         $this->customer_instructions = $request->customer_message;
@@ -141,7 +141,7 @@ class Task extends Model
         $this->name = $request->taskName;
         $this->contractor_id = $request->contractorId;
         $this->proposed_cust_price = $request->taskPrice;
-        $this->proposed_sub_price = $request->subTaskPrice;
+        $this->proposed_sub_price = $request->subTaskPrice * 100;
         $this->qtyUnit = $request->qtyUnit;
         $this->sub_instructions = $request->sub_message;
         $this->customer_instructions = $request->customer_message;

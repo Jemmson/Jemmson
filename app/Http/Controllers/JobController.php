@@ -298,7 +298,7 @@ class JobController extends Controller
 
         $location_id = Auth::user()->customer()->first()->location_id;
 
-        $result = DB::transaction(function () use ($job, $request, $location_id) {
+        DB::transaction(function () use ($job, $request, $location_id) {
             if ($request->job_location_same_as_home) {
                 $job->location_id = $location_id;
             } else {
@@ -606,7 +606,6 @@ class JobController extends Controller
      */
     public function finishedBidNotification(Request $request)
     {
-        Log::debug('wtf');
         $jobId = $request->jobId;
         $customerId = $request->customerId;
 
