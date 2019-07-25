@@ -17,7 +17,7 @@ use App\JobTask;
 class JobTest extends TestCase
 {
 
-//    use RefreshDatabase;
+    use RefreshDatabase;
 
     /**  @test */
     function create_a_job_name_from_an_empty_job() {

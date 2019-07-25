@@ -918,20 +918,19 @@ class TaskController extends Controller
         //         'photo' => 'required|max:4012',
         //     ]);
 
-        dd($request);
 
+        // get the file
         $file = $request->photo;
 
+        // create a hash name for storage and retrieval
         $path = $file->hashName('tasks');
 
+        // store the file
         $disk = Storage::disk('public');
-
         $disk->put(
             $path, $this->formatImage($file)
         );
-
         $url = $disk->url($path);
-
         $taskImage = new TaskImage;
         $taskImage->job_id = $request->jobId;
         $taskImage->job_task_id = $request->jobTaskId;
@@ -947,12 +946,14 @@ class TaskController extends Controller
             return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
         }
 
+
+
+        // notify the customers and the contractors of the uploaded file
         $job = Job::find($taskImage->job_id);
         $jobTask = JobTask::find($taskImage->job_task_id);
 
         $customer = $job->customer()->first();
         $contractor = $job->contractor()->first();
-
 
         if (
             (Auth::user()->id !== $customer->id) &&

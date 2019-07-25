@@ -2,8 +2,7 @@
     <div class="flex flex-col">
         <card>
             <h2 class="self-center uppercase">Task Images</h2>
-            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name
-                }}</label>
+            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name }}</label>
         </card>
         <div class="flex flex-col card">
             <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id"
@@ -50,7 +49,8 @@
       '$route'(to, from) {
         // get the bid
         this.getJobTask(this.jobTaskId)
-      }
+      },
+
     },
     computed: {},
     methods: {
@@ -95,10 +95,13 @@
       }
     },
     created: function() {
-
       // get the bid
       this.getJobTask(this.jobTaskId)
     },
-    mounted: function() {},
+    mounted: function() {
+      Bus.$on('bidUpdated', (payload) => {
+        this.getJobTask()
+      })
+    },
   }
 </script>
