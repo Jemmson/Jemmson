@@ -47,6 +47,7 @@ describe('JobTask', () => {
       jobTask: {
         unit_price: 15,
         contractor_id: 1,
+        cust_final_price: 10,
         bid_contractor_job_tasks: [
           {
             name: '',
@@ -79,7 +80,7 @@ describe('JobTask', () => {
     price.setValue(100)
     price.trigger('blur')
     //
-    expect(wrapper.find({ref: 'contractor_total_cost'}).text()).toBe(100)
+    expect(wrapper.find({ref: 'contractor_total_cost'}).text()).toBe("$10.00")
 
   })
 

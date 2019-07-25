@@ -710,9 +710,13 @@
 
       this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
 
-      this.jobTask.cust_final_price = this.jobTask.cust_final_price / 100
-      this.jobTask.sub_final_price = this.jobTask.sub_final_price / 100
-      this.jobTask.unit_price = this.jobTask.unit_price / 100
+      if (this.jobTask) {
+        this.jobTask.cust_final_price = this.jobTask.cust_final_price / 100
+        this.jobTask.sub_final_price = this.jobTask.sub_final_price / 100
+        this.jobTask.unit_price = this.jobTask.unit_price / 100
+      }
+
+
 
       this.user = Spark.state.user
     },

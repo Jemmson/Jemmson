@@ -985,7 +985,7 @@ class TaskController extends Controller
 
         try {
             $taskImage->save();
-        } catch (\Excpetion $e) {
+        } catch (\Exception $e) {
             Log::error('Saving Task Image: ' . $e->getMessage());
             if (preg_match('/logos\/(.*)$/', $url, $matches)) {
                 $disk->delete('tasks/' . $matches[1]);
