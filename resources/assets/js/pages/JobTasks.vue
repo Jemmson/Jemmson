@@ -24,10 +24,7 @@
             <span class="float-right list-card-info">{{ getTotalSubsForTasks() }} Subs
               <i class="fas fa-users"></i>
             </span>
-
-            <span class="float-right mr-2 list-card-info">{{ jobTasks.length }} Tasks
-              <i class="far fa-check-square"></i>
-            </span>
+            
           </div>
         </div>
       </card>
