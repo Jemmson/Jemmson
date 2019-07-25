@@ -52,7 +52,7 @@
                                         <span class="float-right">
                                             <i class="fas fa-money-bill-alt icon"></i>
                                             <span ref="contractor_total_cost" class="totalCost"
-                                                  v-if="parseInt(jobTask.cust_final_price) > 0">{{taskCustFinalPrice(jobTask.cust_final_price)}}</span>
+                                                  v-if="parseInt(cust_final_price) > -1">{{taskCustFinalPrice(cust_final_price)}}</span>
                                             <span ref="contractor_total_cost_error" class="totalCost"
                                                   v-else>Price Has Not Been Set</span>
                                         </span>
@@ -61,7 +61,7 @@
                                         Total Task Sub Price
                                         <span class="float-right">
                                             <i class="fas fa-user icon"></i>
-                                            <span ref="sub_total_cost" v-if="parseInt(jobTask.sub_final_price) > 0" class="totalCost">{{taskCustFinalPrice(jobTask.sub_final_price)}}</span>
+                                            <span ref="sub_total_cost" v-if="parseInt(sub_final_price) > -1" class="totalCost">{{taskCustFinalPrice(sub_final_price)}}</span>
                                             <span ref="sub_total_cost_error" v-else class="totalCost">Price Has Not Been Set</span>
                                         </span>
                                     </div>
@@ -85,10 +85,11 @@
 
                                         <label class="">Price:</label>
                                         <input v-if="showTaskPriceInput()" type="text" ref="price" class="form-control"
-                                               :value="taskCustFinalPrice(jobTask.unit_price)"
-                                               @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id, jobTask)">
+                                               :value="taskCustFinalPrice(unit_price)"
+                                               @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
+                                        >
                                         <div v-else class="mt-1">
-                                            {{ taskCustFinalPrice(jobTask.unit_price) }}
+                                            {{ taskCustFinalPrice(unit_price) }}
                                         </div>
                                     </div>
                                     <!-- <button v-if="isContractor()" class="btn btn-green btn-large m-t-3" v-show="
@@ -142,6 +143,7 @@
             <!-- images -->
             <div class="col-12">
                 <h1 class="card-title mt-4">Images</h1>
+                <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>
                 <card>
                     <div class="row">
 
@@ -331,6 +333,9 @@
         sendSubMessage: true,
         sendCustomerMessage: true,
         customerMessage: '',
+        cust_final_price: -1,
+        unit_price: -1,
+        sub_final_price: -1,
         disabled: {
           showDenyForm: false,
           pay: false,
@@ -372,7 +377,7 @@
         let total = 0
         for (const jobTask of this.job.job_tasks) {
           if (jobTask !== null) {
-            total += jobTask.cust_final_price
+            total += cust_final_price
           }
         }
         return total
@@ -635,16 +640,13 @@
           return bid.location.address_line_1
         }
       },
-      updateCustomerTaskPrice(price, jobTaskId, bidId, jobTask) {
+      updateCustomerTaskPrice(price, jobTaskId, bidId) {
         price = price.replace(/[^0-9.]/g, '')
-        let taskPrice = jobTask.unit_price
+        let taskPrice = this.unit_price
         taskPrice = taskPrice.toString()
-        this.jobTask.cust_final_price = price
-        this.jobTask.unit_price = price
+        this.cust_final_price = price
         if ((taskPrice !== price)) {
-
           GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
-
         }
       },
       isContractor() {
@@ -711,9 +713,9 @@
       this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
 
       if (this.jobTask) {
-        this.jobTask.cust_final_price = this.jobTask.cust_final_price / 100
-        this.jobTask.sub_final_price = this.jobTask.sub_final_price / 100
-        this.jobTask.unit_price = this.jobTask.unit_price / 100
+        this.cust_final_price = this.jobTask.cust_final_price / 100
+        this.sub_final_price = this.jobTask.sub_final_price / 100
+        this.unit_price = this.jobTask.unit_price / 100
       }
 
 
