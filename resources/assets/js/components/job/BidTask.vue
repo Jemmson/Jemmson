@@ -484,7 +484,7 @@
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled)
       },
       showStripeToggle(jobTask) {
-        return User.isAssignedToMe(jobTask) && (this.bid.status === 'bid.initiated' || this.bid.status ===
+        return User.isAssignedToMe(jobTask, Spark.state.user.id) && (this.bid.status === 'bid.initiated' || this.bid.status ===
           'bid.in_progress')
       },
       updateMessage(jobTaskId, currentMessage, actor) {
@@ -515,7 +515,7 @@
       },
       showFinishedBtn(jobTask) {
         if (this.isContractor() &&
-          User.isAssignedToMe(jobTask) && (jobTask.status === 'bid_task.approved_by_customer' ||
+          User.isAssignedToMe(jobTask, Spark.state.user.id) && (jobTask.status === 'bid_task.approved_by_customer' ||
             jobTask.status === 'bid_task.reopened' ||
             jobTask.status === 'bid_task.denied'
           )) {
@@ -525,7 +525,7 @@
       },
       showApproveBtn(jobTask) {
         if (this.isGeneral() &&
-          !User.isAssignedToMe(jobTask) &&
+          !User.isAssignedToMe(jobTask, Spark.state.user.id) &&
           (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
         ) {
           return true

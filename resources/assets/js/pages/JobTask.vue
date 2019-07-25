@@ -297,12 +297,17 @@
   import UpdateTaskLocationModal from '../components/task/UpdateTaskLocationModal'
   import Message from '../components/job/Message.vue'
   import TaskImages from '../components/task/UploadTaskImages'
+  import Format from '../classes/Format'
+  import User from '../classes/User'
+  import Card from '../components/shared/Card'
+
   import { mapState } from 'vuex'
 
   export default {
     components: {
       SubInviteModal,
       DenyTaskModal,
+      Card,
       Message,
       TaskImages,
       UpdateTaskLocationModal
@@ -392,11 +397,7 @@
         }
       },
       checkIfBidHasBeenSent(bid) {
-        if (bid.updated_at !== null && bid.status === 'bid_task.bid_sent') {
-          return true
-        } else {
-          return false
-        }
+        return bid.updated_at !== null && bid.status === 'bid_task.bid_sent'
       },
       showSubMessage(msg) {
         return (msg !== null &&
@@ -450,7 +451,7 @@
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled)
       },
       showStripeToggle(jobTask) {
-        return User.isAssignedToMe(jobTask) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
+        return User.isAssignedToMe(jobTask, Spark.state.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
           'bid.in_progress')
       },
       updateMessage(jobTaskId, currentMessage, actor) {
@@ -481,7 +482,7 @@
       },
       showFinishedBtn(jobTask) {
         if (this.isContractor() &&
-          User.isAssignedToMe(jobTask) && (jobTask.status === 'bid_task.approved_by_customer' ||
+          User.isAssignedToMe(jobTask, Spark.state.user.id) && (jobTask.status === 'bid_task.approved_by_customer' ||
             jobTask.status === 'bid_task.reopened' ||
             jobTask.status === 'bid_task.denied'
           )) {
@@ -491,7 +492,7 @@
       },
       showApproveBtn(jobTask) {
         if (this.isGeneral() &&
-          !User.isAssignedToMe(jobTask) &&
+          !User.isAssignedToMe(jobTask, Spark.state.user.id) &&
           (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
         ) {
           return true
@@ -596,8 +597,6 @@
         this.startDateErrorMessage = dateArray[0]
         this.hasStartDateError = dateArray[1]
 
-        let bidStartDate = new Date
-
         if (!this.hasStartDateError) {
           GeneralContractor.updateTaskStartDate(date, jobTaskId)
         } else {
@@ -625,7 +624,7 @@
           return 'Same as Job Location'
         } else if (task_location !== null) {
           return jobTask.location.address_line_1
-        } else if (job_location !== null) {
+        } else if (job_location) {
           return bid.location.address_line_1
         }
       },
@@ -671,21 +670,16 @@
       },
       taskCustFinalPrice(price) {
 
-        let priceString = price.toString()
+        if (price) {
+          let priceString = price.toString()
 
-        if (priceString.indexOf('.') === -1) {
-          price = '$' + price + '.00'
-        } else {
-          price = '$' + price
-        }
+          if (priceString.indexOf('.') === -1) {
+            price = '$' + price + '.00'
+          } else {
+            price = '$' + price
+          }
 
-        return price
-      },
-      async getJobTasks() {
-        try {
-          const data = await axios.get('getAllJobs/')
-        } catch (error) {
-          console.log('error')
+          return price
         }
       }
       // showReopenBtn(jobTask) {
@@ -706,15 +700,7 @@
     },
     mounted() {
 
-
-
       this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
-
-      // if (this.$store.state.job.model){
-      //     this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index];
-      //   } else {
-      //     this.getJobTasks();
-      //   }
 
       console.log(this.jobTaskIndex)
     },
