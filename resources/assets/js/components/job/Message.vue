@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "",
+  name: "Message",
   data() {
     return {
       sendMessage: true,

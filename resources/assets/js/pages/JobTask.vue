@@ -61,7 +61,8 @@
                                         Total Task Sub Price
                                         <span class="float-right">
                                             <i class="fas fa-user icon"></i>
-                                            <span ref="sub_total_cost" v-if="parseInt(sub_final_price) * 10 > 0" class="totalCost">{{taskCustFinalPrice(sub_final_price)}}</span>
+                                            <span ref="sub_total_cost" v-if="parseInt(sub_final_price) * 10 > 0"
+                                                  class="totalCost">{{taskCustFinalPrice(sub_final_price)}}</span>
                                             <span ref="sub_total_cost_error" v-else class="totalCost">Price Has Not Been Set</span>
                                         </span>
                                     </div>
@@ -208,14 +209,14 @@
                                     <div class="flex flex-col">
                                         <div class="table-header">
                                             <div class="flex-1">Sub</div>
-                                            <div class="flex-1">Payment Type</div>
+<!--                                            <div class="flex-1">Payment Type</div>-->
                                             <div class="flex-1">Bid</div>
                                             <div class="flex-1">Action</div>
                                         </div>
-                                        <div class="flex pl-2 mb-2" v-for="bid in jobTask.bid_contractor_job_tasks"
+                                        <div class="flex mb-2" v-for="bid in jobTask.bid_contractor_job_tasks"
                                              :key="bid.id">
                                             <div class="flex-1">{{ bid.contractor.name }}</div>
-                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>
+<!--                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>-->
                                             <div class="flex-1">${{ bid.bid_price }}</div>
                                             <div class="flex-1">
                                                 <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
@@ -703,13 +704,13 @@
           return price
         }
       },
-      async getTask () {
-          try {
-              const data = await axios.get ('/getJobTaskForGeneral/' + this.jobTask.id);
-              this.jobTask = data.data[0];
-          } catch (error) {
-              console.log('error');
-          }
+      async getTask() {
+        try {
+          const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id)
+          this.jobTask = data.data[0]
+        } catch (error) {
+          console.log('error')
+        }
       }
       // showReopenBtn(jobTask) {
       //   if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
@@ -730,7 +731,7 @@
     mounted() {
 
       Bus.$on('bidUpdated', () => {
-        this.getTask();
+        this.getTask()
       })
 
       this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
@@ -746,6 +747,20 @@
 </script>
 
 <style scoped>
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .flex-col {
+        flex-direction: column;
+    }
+
+    .flex {
+        display: flex;
+        justify-content: space-between;
+    }
 
     .bid-task-wrapper {
         display: grid;
