@@ -109,6 +109,7 @@
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
+    name:"SubInviteModal",
     props: {
       jobTask: Object,
       jobTaskTask: Object,

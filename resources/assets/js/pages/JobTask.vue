@@ -286,13 +286,24 @@
                 </button>
             </div>
         </div>
+
         <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
-                          :job-task-task="jobTask.task" :job-task-name="jobTask.task.name" :id="jobTask.id">
+                          :job-task-task="jobTask.task"
+                          :job-task-name="jobTask.task.name"
+                          :id="jobTask.id">
         </sub-invite-modal>
-        <deny-task-modal v-if="isContractor()" :job-task="jobTask" :id="jobTask.id">
+
+        <deny-task-modal v-if="isContractor()"
+                         :job-task="jobTask"
+                         :id="jobTask.id">
         </deny-task-modal>
-        <update-task-location-modal :job-task="jobTask" :id="jobTask.id">
+
+        <update-task-location-modal
+                :job-task="jobTask"
+                :id="jobTask.id">
         </update-task-location-modal>
+
+
     </div>
 </template>
 
@@ -691,6 +702,14 @@
           }
           return price
         }
+      },
+      async getTask () {
+          try {
+              const data = await axios.get ('/getJobTaskForGeneral/' + this.jobTask.id);
+              this.jobTask = data.data[0];
+          } catch (error) {
+              console.log('error');
+          }
       }
       // showReopenBtn(jobTask) {
       //   if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
@@ -709,6 +728,10 @@
       // },
     },
     mounted() {
+
+      Bus.$on('bidUpdated', () => {
+        this.getTask();
+      })
 
       this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
 

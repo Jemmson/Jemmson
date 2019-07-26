@@ -47,7 +47,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        echo 'hello world';
+
     }
 
     public function bidContractorJobTasks()
@@ -94,6 +94,31 @@ class TaskController extends Controller
         $jobTask = JobTask::find($jobTaskId);
 
         return $jobTask->load(['images', 'task']);
+
+//        return $jobTask->with(
+//            [
+//                'task:id,name',
+//                'images:id',
+//                'bidContractorJobTasks:id,contractor_id,job_task_id,status',
+//                'bidContractorJobTasks.contractor:id,email'
+//            ])->where('id', '=', 1)->get();
+
+
+    }
+
+    public function getJobTaskForGeneral($jobTaskId)
+    {
+//        Log::debug("Job Task Id: $jobTaskId");
+
+//        $jobTask = JobTask::find($jobTaskId);
+
+        return JobTask::with(
+            [
+                'task',
+                'images',
+                'bidContractorJobTasks',
+                'bidContractorJobTasks.contractor'
+            ])->where('id', '=', $jobTaskId)->get();
     }
 
     /**
@@ -268,7 +293,6 @@ class TaskController extends Controller
         return $user;
 
     }
-
 
 
     public function createNewUser($name, $email, $phone)
@@ -808,6 +832,26 @@ class TaskController extends Controller
 
     }
 
+    public function getOneTask(Task $task)
+    {
+        $job = Job::find(1)->select(['id', 'job_name'])->get()->first();
+        $job_tasks = JobTask::select(['id', 'cust_final_price', 'sub_final_price', 'qty', 'customer_message', 'sub_message'])->where('job_id', $job->id)->get()->first();
+        $bcjt = BidContractorJobTask::select()->where('job_task_id', $job_tasks[0]->id)->get()->first();
+        $images = TaskImage::select()->where('job_task_id', $job_tasks[0]->id)->get()->first();
+
+        $ja = $job->toArray();
+        $ja['job_tasks'] = $job_tasks->toArray();
+
+        foreach ($job_tasks as $job_task) {
+            foreach ($bcjt as $bc) {
+                if ($job_task->id === $bc->job_task_id) {
+
+                }
+            }
+        }
+
+    }
+
     public function getTasks(Request $request)
     {
 
@@ -816,6 +860,7 @@ class TaskController extends Controller
         where('name', 'like', $request->taskname . '%')->get();
 
     }
+
 
     public function addTask(Request $request)
     {
@@ -984,7 +1029,6 @@ class TaskController extends Controller
             }
             return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
         }
-
 
 
         // notify the customers and the contractors of the uploaded file

@@ -443,7 +443,6 @@ class JobController extends Controller
 //                $jobs = Job::with(['jobTasks:id,job_id','jobTasks.bidContractorJobTasks:id,job_task_id','jobTasks.images:id,job_task_id','location.jobTask:id,location_id'])->where('id','=',1)->get()
 
 
-
         }
 
 //        return $jobs;
