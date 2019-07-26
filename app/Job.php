@@ -45,6 +45,12 @@ class Job extends Model
         'zip',
     ];
 
+
+    /*
+ * *********************************
+ * Relationships
+ * **********************************/
+
     public function customer()
     {
         return $this->belongsTo(User::class)->with('customer');
@@ -55,19 +61,29 @@ class Job extends Model
         return $this->belongsTo(User::class)->with('contractor');
     }
 
-    /**
-     * All subs who have a job task on this job
-     *
-     * @return void
-     */
-    public function subs()
+    public function jobStatuses()
     {
-        $jobTasks = $this->jobTasks()->get();
-        $subs = [];
-        foreach ($jobTasks as $jobTask) {
-            $subs[] = $jobTask->contractor();
-        }
-        return $subs;
+        return $this->hasMany(JobStatus::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+
+
+
+
+
+//        use App\Job;
+//        Job::find(1)->
+//        with(
+//            [
+//                'jobTasks:id,job_id',
+//                'jobTasks.bidContractorJobTasks:id,job_task_id',
+//                'jobTasks.images:id,job_task_id',
+//                'location:id,location_id'
+//            ])->
+//            select(['id', 'bid_price'])->where('id', 1)->get()->first();
     }
 
     public function tasks()
@@ -84,6 +100,24 @@ class Job extends Model
     public function images()
     {
         return $this->hasMany(TaskImage::class, 'job_id');
+    }
+
+
+
+
+    /**
+     * All subs who have a job task on this job
+     *
+     * @return void
+     */
+    public function subs()
+    {
+        $jobTasks = $this->jobTasks()->get();
+        $subs = [];
+        foreach ($jobTasks as $jobTask) {
+            $subs[] = $jobTask->contractor();
+        }
+        return $subs;
     }
 
     /**
@@ -103,11 +137,6 @@ class Job extends Model
         }
 
         return $jobActions;
-    }
-
-    public function location()
-    {
-        return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
     public static function jobName($jobName = '')

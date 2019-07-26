@@ -39,10 +39,49 @@ class JobTask extends Model
      *
      * @return Task
      */
+
+    /*
+     * *********************************
+     * Relationships
+     * **********************************/
+
     public function task()
     {
         return $this->belongsTo(Task::class);
     }
+
+    public function job()
+    {
+        return $this->belongsTo(Job::class);
+    }
+
+    public function contractor()
+    {
+        return $this->belongsTo(User::class)->with('contractor');
+    }
+
+
+    public function bidContractorJobTasks()
+    {
+        return $this->hasMany(BidContractorJobTask::class, 'job_task_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(TaskImage::class, 'job_task_id');
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+
+    /*
+ * *********************************
+ * Methods
+ * **********************************/
+
 
     public function updateTaskStartDate($date)
     {
@@ -134,31 +173,6 @@ class JobTask extends Model
                 "message" => "Couldn't add Job Task.",
                 "errors" => ["error" => [$e->getMessage()]]], 404);
         }
-    }
-
-    public function job()
-    {
-        return $this->belongsTo(Job::class);
-    }
-
-    public function contractor()
-    {
-        return $this->belongsTo(User::class)->with('contractor');
-    }
-
-    public function location()
-    {
-        return $this->hasOne(Location::class, 'id', 'location_id');
-    }
-
-    public function bidContractorJobTasks()
-    {
-        return $this->hasMany(BidContractorJobTask::class, 'job_task_id');
-    }
-
-    public function images()
-    {
-        return $this->hasMany(TaskImage::class, 'job_task_id');
     }
 
     /**

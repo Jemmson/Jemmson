@@ -717,9 +717,6 @@
         this.sub_final_price = this.jobTask.sub_final_price / 100
         this.unit_price = this.jobTask.unit_price / 100
       }
-
-
-
       this.user = Spark.state.user
     },
   }

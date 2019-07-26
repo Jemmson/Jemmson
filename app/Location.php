@@ -22,6 +22,11 @@ class Location extends Model
 
     public function job()
     {
-        $this->belongsTo(Job::class, 'location_id', 'id');
+        $this->hasMany(Job::class, 'location_id', 'id');
+    }
+
+    public function jobTask()
+    {
+        return $this->hasMany(JobTask::class, 'location_id', 'id');
     }
 }

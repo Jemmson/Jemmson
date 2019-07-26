@@ -13,6 +13,13 @@ class JobStatus extends Model
         'status'
     ];
 
+
+    public function job()
+    {
+        return $this->belongsTo(Job ::class);
+    }
+
+
     public function setStatus($jobId, $status)
     {
         $statusNumber = $this->getStatusNumber($status);
