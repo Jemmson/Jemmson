@@ -4,16 +4,21 @@
         <section v-if="onHomePage()">
             <header-bio
                     ref="homePage"
-                    :first-name="user.first_name"
-                    :last-name="user.last_name"
+                    :name="user.first_name + ' ' + user.last_name"
             ></header-bio>
         </section>
 
         <section v-else-if="onParticularJobPage()">
-            <header-job-name-settings-logout
-                ref="headerJobNameSettingsLogout"
-                :job-name=getCompanyName
-            ></header-job-name-settings-logout>
+<!--            <header-job-name-settings-logout-->
+<!--                ref="headerJobNameSettingsLogout"-->
+<!--                :job-name=getCompanyName-->
+<!--            ></header-job-name-settings-logout>-->
+
+            <header-bio
+                    ref="homePage4"
+                    :name="user.first_name + ' ' + user.last_name"
+            ></header-bio>
+
         </section>
 
         <section v-else-if="onInvoicesPage() ||
@@ -24,8 +29,7 @@
 
             <header-bio
                     ref="homePage1"
-                    :first-name="user.first_name"
-                    :last-name="user.last_name"
+                    :name="user.first_name + ' ' + user.last_name"
             ></header-bio>
         </section>
 
@@ -40,8 +44,7 @@
             <div v-else="">
                 <header-bio
                         ref="homePage2"
-                        :first-name="user.first_name"
-                        :last-name="user.last_name"
+                        :name="user.first_name + ' ' + user.last_name"
                 ></header-bio>
             </div>
 
@@ -55,10 +58,9 @@
 
         <section v-else-if="onInitiateBidPage()
                         && !isCustomer()">
-            <header-bio
+            <header-bio>
                     ref="homePage3"
-                    :first-name="user.first_name"
-                    :last-name="user.last_name">
+                    :name="user.first_name + ' ' + user.last_name"
             </header-bio>
         </section>
 

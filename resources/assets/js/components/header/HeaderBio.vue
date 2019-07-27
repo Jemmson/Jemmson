@@ -10,7 +10,7 @@
                 <!--                     src="https://www.skylightsearch.co.uk/wp-content/uploads/2017/01/Hadie-profile-pic-circle-1.png"-->
                 <!--                     alt="profile pic">-->
                 <div class="profile-details">
-                    <h4 class="text-center mt-half-rem" ref="name">{{ firstName }} {{ lastName }}</h4>
+                    <h4 class="text-center mt-half-rem" ref="name">{{ name }}</h4>
 
                     <div>
 
@@ -39,8 +39,7 @@
   export default {
     name: 'HeaderBio',
     props: {
-      firstName: String,
-      lastName: String,
+      name: String
     },
     methods:{
       logout(){

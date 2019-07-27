@@ -309,23 +309,23 @@
             </card>
         </section>
 
-        <div class="col-12">
-            <h1 class="card-title ml-4 mt-4">Attachments</h1>
-            <div class="mb-4">
-                <img src="img/test.jpg" style="height: 100px;" alt="Attachments">
-            </div>
-        </div>
+<!--        <div class="col-12">-->
+<!--            <h1 class="card-title ml-4 mt-4">Attachments</h1>-->
+<!--            <div class="mb-4">-->
+<!--                <img src="img/test.jpg" style="height: 100px;" alt="Attachments">-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <div class="col-12 mb-4">
-            <card>
-                <div class="row">
-                    <div class="col">
-                        <p class="d-inline">Upload Attachment</p>
-                        <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>
-                    </div>
-                </div>
-            </card>
-        </div>
+<!--        <div class="col-12 mb-4">-->
+<!--            <card>-->
+<!--                <div class="row">-->
+<!--                    <div class="col">-->
+<!--                        <p class="d-inline">Upload Attachment</p>-->
+<!--                        <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </card>-->
+<!--        </div>-->
 
         <stripe :user="getCurrentUser()">
         </stripe>
