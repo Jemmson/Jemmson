@@ -371,7 +371,6 @@ class TaskController extends Controller
 
         $this->validate($request, [
             'phone' => 'required|string|min:10|max:14',
-            'email' => 'required|unique:users',
         ]);
 
         //
