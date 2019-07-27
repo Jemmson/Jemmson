@@ -3,7 +3,7 @@
         <div class="card-header" v-if="header !== undefined && header">
             {{ header }}
         </div>
-        <div class="card-body">
+        <div class="card-body" :class="classes">
             <h5 class="card-title" v-if="title !== undefined && title">{{ title }}</h5>
             <slot></slot>
         </div>
@@ -12,6 +12,6 @@
 
 <script>
     export default {
-        props: ['header', 'title']
+        props: ['header', 'title', 'classes']
     }
 </script>

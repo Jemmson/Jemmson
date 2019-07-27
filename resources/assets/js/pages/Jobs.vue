@@ -13,18 +13,21 @@
 
                 <card class="list-card"
                       v-for="bid in sBids" v-bind:key="bid.id"
+                      classes="pt-half-rem pb-half-rem"
                       @click.native="goToJob(bid.id)">
 
                     <div class="job">
                         <section ref="job" class="row">
-                            <header ref="job_name" class="col-12 page-header-title">
+                            <header ref="job_name" class="col-12 page-header-title text-center">
                                 {{ jobName(bid.job_name) }}
                             </header>
-                            <div class="col-12">
-                                <span class="dot" :class="'bg-' + getLabelClass(bid)"></span>
-                                <label :class="getLabelClass(bid)">
-                                    {{ status(bid) }}
-                                </label>
+                            <div class="flex flex-col w-full ">
+                                <div class="flex align-content-baseline status-height justify-items-center">
+<!--                                    <span class="dot ml-half-rem" :class="'bg-' + getLabelClass(bid)"></span>-->
+                                    <div class="fs-1rem ml-half-rem text-center w-full" :class="getLabelClass(bid)">
+                                        {{ status(bid) }}
+                                    </div>
+                                </div>
 
                                 <div v-if="isContractor()">
                                      <span ref="total_number_of_subs"
