@@ -172,7 +172,8 @@
         </section>
 
         <section class="col-12">
-            <h1 class="card-title mt-4">Payment Details</h1>
+            <h1 v-if="isCustomer" class="card-title mt-4">Payment Details For Contractor</h1>
+            <h1 v-else class="card-title mt-4">Payment Details For Customer</h1>
             <card>
                 <main class="row">
                     <section class="col-12 mb-3">
@@ -231,24 +232,29 @@
         </section>
 
         <section class="col-12">
-            <h1 class="card-title mt-4">Special Instructions</h1>
+            <h1 v-if="isCustomer" class="card-title mt-4">Special Instructions For Contractor</h1>
+            <h1 v-else class="card-title mt-4">Special Instructions From Customer</h1>
             <card>
                 <main class="row">
                     <section class="col-12">
 
-                        <textarea ref="message_text_area"
-                                  v-model="customerNotesMessage"
-                                  name="notes" id="notes" cols="30" rows="10"
-                                  class="form-control">
 
-                        </textarea>
+                            <textarea ref="message_text_area"
+                                      v-model="customerNotesMessage"
+                                      name="notes" id="notes" cols="30" rows="10"
+                                      class="form-control"
+                                      :disabled="!isCustomer"
 
-                        <button class="btn btn-primary btn-sm"
-                                style="margin-top: .5rem"
-                                ref="update_customer_notes_button"
-                                @click="updateGeneralContractorNotes"
-                        >Submit
-                        </button>
+                            >
+
+                            </textarea>
+
+                            <button v-if="isCustomer" class="btn btn-primary btn-sm"
+                                    style="margin-top: .5rem"
+                                    ref="update_customer_notes_button"
+                                    @click="updateGeneralContractorNotes"
+                            >Submit
+                            </button>
 
                     </section>
                 </main>
@@ -471,6 +477,11 @@
         )
       }
     },
+    watch:{
+      bid: function () {
+        this.bid = this.bid
+      }
+    },
     methods: {
       bidHasNoTasks() {
         if (this.bid.job_tasks) {
@@ -608,15 +619,19 @@
         return this.area.area !== '' && !this.isCustomer
       },
       initializePayWithCashMessageValue() {
-        console.log(this.bid.paid_with_cash_message)
-
-        if (this.bid.paid_with_cash_message !== '') {
-
+        if (this.bid.paid_with_cash_message) {
           console.log('I am true')
           console.log(this.bid.paid_with_cash_message)
-
           this.payWithCashMessage = this.bid.paid_with_cash_message
+          this.customerNotesMessage = this.bid.customer.customer.notes
         }
+
+        if (this.bid.customer) {
+          console.log(this.bid.customer.customer.notes)
+          this.customerNotesMessage = this.bid.customer.customer.notes
+        }
+        console.log(this.bid.paid_with_cash_message)
+        console.log(this.bid.customer)
       }
     },
     mounted() {

@@ -131,7 +131,7 @@
 
             <!-- Notes -->
             <div class="form-group" v-if="!isContractor">
-              <label for="notes">Contractor Instructions</label>
+              <label for="notes">General Instructions For All Contractors</label>
               <div class="">
                 <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10"
                   class="form-control"></textarea>
@@ -320,12 +320,15 @@
         return numberLength
       },
       checkValidData() {
-        // debugger
         let phone = this.unformatNumber(this.form.phone_number)
 
-        return (this.getMobileValidResponse[1] === 'mobile' ||
+        if ((this.getMobileValidResponse[1] === 'mobile' ||
                 this.getMobileValidResponse[2] === 'mobile') &&
-                this.form.customerName !== '' && (phone === 10)
+                (this.form.first_name !== '' && this.form.last_name !== '') && (phone === 10)){
+          return false
+        } else {
+          return true
+        }
 
 
       },
