@@ -13,8 +13,6 @@ module.exports = {
             showingYearlyPlans: false
         };
     },
-
-
     methods: {
         /**
          * Switch to showing monthly plans.
