@@ -46,13 +46,13 @@
                                 type="quantity"></content-section>
                         <content-section
                                 v-if="bidTask.job_task.sub_final_price !== 0"
-                                label="Contractor Suggested Price:"
+                                label="Contractor Base Price:"
                                 :content="convertNumToString(bidTask.job_task.sub_final_price)"
                                 :dollar-sign=true
                                 type="subFinalPrice"></content-section>
                         <content-section
                                 v-else
-                                label="Contractor Suggested Price:"
+                                label="Contractor Base Price:"
                                 :content="zero()"
                                 :dollar-sign=true
                                 type="subFinalPrice"></content-section>
@@ -75,7 +75,7 @@
                             <label v-if="!isBidOpen(bidTask)" class="ml-1rem">
                                 Accepted Bid Price:
                             </label>
-                            <label v-if="!isBidOpen(bidTask)" class=""><strong>${{ bidTask.bid_price }}</strong></label>
+                            <label v-if="!isBidOpen(bidTask)" class=""><strong>$ {{ bidTask.bid_price }}</strong></label>
                         </div>
                     </main>
                 </card>
@@ -246,7 +246,17 @@
     },
     methods: {
       convertNumToString(num) {
-        return num.toString()
+        let initialVal = num.toString()
+        num = num / 100
+        let finalVal = num.toString()
+
+        if (finalVal.length === initialVal.length - 1) {
+          finalVal = finalVal + "0"
+        } else if (finalVal.length === initialVal.length - 2) {
+          finalVal = finalVal + ".00"
+
+        }
+        return finalVal
       },
       zero() {
         let zero = 0
