@@ -3,33 +3,36 @@
         <div>
             <div class="search-bar shadow-md">
                 <search-bar>
-                    <input type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
+                    <input class="form-control" type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
                 </search-bar>
             </div>
 
-            <paginate ref="paginator"
-                      name="sTasks"
-                      :list="sTasks"
-                      :per="8"
-                      class="paginated"
-                      v-show="sTasks.length > 0">
-                <div class=""
-                     v-for="bidTask in paginated('sTasks')"
-                     v-bind:key="bidTask.id"
-                     :id="'task_' + bidTask.task_id"
-                     style="z-index:2;">
-                    <task
-                            :bidTask="bidTask"
-                    ></task>
+            <footer
+                class="paginate">
+                <paginate ref="paginator"
+                          name="sTasks"
+                          :list="sTasks"
+                          :per="8"
+                          class="paginated"
+                          v-show="sTasks.length > 0">
+                    <div class=""
+                         v-for="bidTask in paginated('sTasks')"
+                         v-bind:key="bidTask.id"
+                         :id="'task_' + bidTask.task_id"
+                         style="z-index:2;">
+                        <task
+                                :bidTask="bidTask"
+                        ></task>
+                    </div>
+                </paginate>
+                <div class="card card-body justify-center">
+                    <paginate-links for="sTasks" :limit="2" :show-step-links="true" class="m-center">
+                    </paginate-links>
                 </div>
-            </paginate>
+            </footer>
 
         </div>
 
-        <div class="card p-5 card-body justify-center">
-            <paginate-links for="sTasks" :limit="2" :show-step-links="true">
-            </paginate-links>
-        </div>
         <!-- / end tasks -->
         <stripe :user='user'>
         </stripe>
@@ -176,6 +179,10 @@
 </script>
 
 <style scoped>
+
+    .paginate {
+        height: 1rem;
+    }
 
     .main {
         background-color: white;

@@ -19,12 +19,39 @@
 // @import "../../../node_modules/@fortawesome/fontawesome-free/less/fontawesome";
 //@import "./../../../vendor/laravel/spark/resources/assets/less/spark";
 
+.border-bottom-thick-black {
+  border-bottom: thin grey solid;
+  padding-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+.m-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ml-one-quarter-negative {
+  margin-left: -.25rem !important;
+}
+
+.mt-one-and-one-quarter-rem {
+  margin-top: 1.25rem;
+}
+
 .ml-half-rem {
   margin-left: .5rem;
 }
 
+.mr-1rem {
+  margin-right: 1rem;
+}
+
 .mt-half-rem {
   margin-top: .5rem;
+}
+
+.mb-half-rem-negative {
+  margin-bottom: -.5rem;
 }
 
 .mb-1rem {
@@ -43,12 +70,12 @@
   display: flex;
 }
 
-.justify-content-around{
-  justify-content:space-around!important
+.justify-content-around {
+  justify-content: space-around !important
 }
 
-.justify-items-center{
-  justify-items:center !important
+.justify-items-center {
+  justify-items: center !important
 }
 
 .header-link {
@@ -57,6 +84,10 @@
 
 section {
   margin-top: .5rem;
+}
+
+.ml-1rem {
+  margin-left: 1rem;
 }
 
 .header-border {
@@ -68,7 +99,7 @@ section {
 }
 
 .w-full {
-  width:100%
+  width: 100%
 }
 
 .align-content-baseline {
@@ -80,11 +111,15 @@ section {
 }
 
 
-.status-height{
+.status-height {
   height: 29px;
 }
 
-.list-card-no-margin{
+.uppercase {
+  text-transform: uppercase;
+}
+
+.list-card-no-margin {
   border-bottom-width: 0;
   border-left-width: 0;
   border-right-width: 0;
@@ -208,25 +243,25 @@ section {
 //   .bg-grey-dark;
 // }
 
-// .card {
-//   .flex;
-//   background: #fff;
-//   border-radius: 4px;
-//   height: auto;
-//   margin-bottom: 1rem;
-//   position: relative;
-//   width: 100%;
-// }
+.card {
+  .flex;
+  background: #fff;
+  border-radius: 4px;
+  height: auto;
+  margin-bottom: 1rem;
+  position: relative;
+  width: 100%;
+}
 
-// .card-header > h2 {
-//   .text-center;
-// }
+//.card-header > h2 {
+//  .text-center;
+//}
 
-// .search-bar {
-//   .card;
-//   .flex-row;
-//   .bg-grey-lighter;
-// }
+//.search-bar {
+//  .card;
+//  .flex-row;
+//  .bg-grey-lighter;
+//}
 
 // .search-bar > input {
 //   .h-auto;
@@ -280,25 +315,25 @@ section {
 //   .rounded-sm;
 // }
 
-// .card-h2 {
-//   //font-size: 12pt;
-//   font-weight: bold;
-//   font-family: Roboto, serif;
-//   text-align: center;
-// }
+.card-h2 {
+  //font-size: 12pt;
+  font-weight: bold;
+  font-family: Roboto, serif;
+  text-align: center;
+}
 
-// .card-1 {
-//   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-//   transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
-// }
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+}
 
-// .card-1:hover {
-//   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-// }
+.card-1:hover {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
 
-// .card-2 {
-//   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-// }
+.card-2 {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
 
 // .icon {
 //   color: rgb(116, 116, 116);
@@ -518,38 +553,44 @@ section {
 //   font-size: 2.5rem;
 // }
 
-// .paginate-links {
-//   padding-left: 0px;
-//   li {
-//     list-style-type: none;
-//     display: inline-block;
-//     margin: 0 10px;
-//   }
-//   user-select: none;
-//   a {
-//     cursor: pointer;
-//   }
-//   li.active a {
-//     font-weight: bold;
-//   }
-//   li.next:before {
-//     content: ' | ';
-//     margin-right: 13px;
-//     color: #ddd;
-//   }
-//   li.disabled a {
-//     color: #ccc;
-//     cursor: no-drop;
-//   }
-// }
+.paginate-links {
+  padding-left: 0px;
 
-// .paginated {
-//   padding-left: 0;
-// }
+  li {
+    list-style-type: none;
+    display: inline-block;
+    margin: 0 10px;
+  }
 
-// .navbar {
-//   //height: 55px
-// }
+  user-select: none;
+
+  a {
+    cursor: pointer;
+  }
+
+  li.active a {
+    font-weight: bold;
+  }
+
+  li.next:before {
+    content: ' | ';
+    margin-right: 13px;
+    color: #ddd;
+  }
+
+  li.disabled a {
+    color: #ccc;
+    cursor: no-drop;
+  }
+}
+
+.paginated {
+  padding-left: 0;
+}
+
+.navbar {
+  //height: 55px
+}
 
 img {
   margin-bottom: auto;
