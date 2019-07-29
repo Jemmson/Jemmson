@@ -14,13 +14,13 @@
 
                 <div class="flex mt-1 w-full">
                     <button
-                            class="btn btn-sm btn-primary w-full"
+                            class="btn btn-sm btn-normal w-full"
                             @click="showTheTask = true"
                             v-show="!showTheTask">
                         Show
                     </button>
                     <button
-                            class="btn btn-sm btn-primary w-full"
+                            class="btn btn-sm btn-normal w-full"
                             @click="showTheTask = false"
                             v-show="showTheTask">
                         Hide
@@ -191,14 +191,14 @@
                                 :input-classes="getLabelClass(bidTask.status)"
                                 :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
                                 type="startOn"></content-section>
-                        <button v-if="isBidOpen(bidTask)" class="btn btn-green mt-one-and-one-quarter-rem" @click.prevent="update"
+                        <button v-if="isBidOpen(bidTask)" class="btn btn-normal mt-one-and-one-quarter-rem" @click.prevent="update"
                                 v-bind:id="bidTask.id" :disabled="disabled.submit">
                                         <span v-if="disabled.submit">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
                             Submit
                         </button>
-                        <button v-if="showFinishedBtn(bidTask)" class="btn btn-green"
+                        <button v-if="showFinishedBtn(bidTask)" class="btn btn-normal"
                                 @click="finished(bidTask)"
                                 :disabled="disabled.finished">
                                         <span v-if="disabled.finished">

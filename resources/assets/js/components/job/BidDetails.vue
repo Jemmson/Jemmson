@@ -283,7 +283,7 @@
                         (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
                         </span> Total
 
-                    <button class="btn btn-primary btn-sm float-right"
+                    <button class="btn btn-normal btn-sm float-right"
                             @click.prevent="viewTasks()">View Tasks
                     </button>
 
@@ -625,7 +625,7 @@
         }
       },
       getLabelClass(status) {
-        return Format.statusLabel(status,)
+        return Format.statusLabel(status)
       },
       showNotes() {
         this.customerNotes = !this.customerNotes
