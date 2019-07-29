@@ -376,17 +376,6 @@
         /*background-color: #1c3d5a;*/
     }
 
-    .btn-active {
-        background-color: blue;
-        color: white;
-    }
-
-    .btn-inactive {
-        background-color: white;
-        color: blue;
-        border: thin blue solid;
-    }
-
     .images {
         margin: 1rem;
     }

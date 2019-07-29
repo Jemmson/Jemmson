@@ -35,7 +35,7 @@
             <card>
                 <main class="row">
 
-                    <header>Bid Finished</header>
+                    <header class="w-full text-center f-bold mb-1rem">Bid Finished</header>
 
                     <article>You are about to submit this job bid to the customer,
                         you will not be able to edit this bid after its been approved by the customer
@@ -44,10 +44,10 @@
                         Click yes to submit or no to cancel.
                     </article>
 
-                    <footer>
+                    <footer class="w-full mt-1rem flex justify-content-around">
 
-                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="cancelDialog()">No</button>
-                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="submitTheBid()">Yes</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md" @click="cancelDialog()">No</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md" @click="submitTheBid()">Yes</button>
 
                     </footer>
 
@@ -64,17 +64,17 @@
                 <main class="row">
 
 
-                    <header>Confirm Cancellation</header>
+                    <header class="w-full text-center f-bold mb-1rem">Confirm Cancellation</header>
 
                     <article>You are about to cancel this job,
                         Click delete job to cancel and delete the job or back to cancel this action.
                         confirmJobCancellation
                     </article>
 
-                    <footer>
+                    <footer class="w-full mt-1rem flex justify-content-around">
 
-                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="cancelDialog()">No</button>
-                        <button ref="submitBid" class="btn btn-primary btn-sm" @click="cancelTheBid()">Yes</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md" @click="cancelDialog()">No</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md" @click="cancelTheBid()">Yes</button>
 
                     </footer>
 
@@ -121,12 +121,13 @@
 
                     <hr>
 
-                    <section>
+                    <section class="w-full">
 
                         <div ref="show_approved_actions" v-if="showPreApprovedActions()">
 
-                            <div ref="bidButtons" v-if="bid.job_tasks.length > 0" class="flex w-full justify-around">
-                                <button class="btn btn-red flex-1" @click.prevent="showCancelCard()"
+                            <div ref="bidButtons" v-if="bid.job_tasks.length > 0"
+                                 class="flex w-full justify-content-around">
+                                <button class="btn btn-normal flex-1" @click.prevent="showCancelCard()"
                                         :disabled="disabled.cancelBid" ref="cancelBtn">
                                       <span v-if="disabled.cancelBid">
                                         <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -136,7 +137,7 @@
 
                                 <button
                                         ref="show_submission_card"
-                                        class="btn btn-green flex-1"
+                                        class="btn btn-normal flex-1"
                                         @click="showSubmissionCard()"
                                         :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"
                                 >
@@ -238,23 +239,26 @@
                 <main class="row">
                     <section class="col-12">
 
+                        <div style="display: none;">{{ messageFromCustomer }}</div>
+                        <div style="display: none;">{{ getPaidWithCashMessage }}</div>
 
-                            <textarea ref="message_text_area"
-                                      v-model="customerNotesMessage"
-                                      name="notes" id="notes" cols="30" rows="10"
-                                      class="form-control"
-                                      :disabled="!isCustomer"
 
-                            >
+                        <textarea ref="message_text_area"
+                                  v-model="customerNotesMessage"
+                                  name="notes" id="notes" cols="30" rows="10"
+                                  class="form-control"
+                                  :disabled="!isCustomer"
+
+                        >
 
                             </textarea>
 
-                            <button v-if="isCustomer" class="btn btn-primary btn-sm"
-                                    style="margin-top: .5rem"
-                                    ref="update_customer_notes_button"
-                                    @click="updateGeneralContractorNotes"
-                            >Submit
-                            </button>
+                        <button v-if="isCustomer" class="btn btn-primary btn-sm"
+                                style="margin-top: .5rem"
+                                ref="update_customer_notes_button"
+                                @click="updateGeneralContractorNotes"
+                        >Submit
+                        </button>
 
                     </section>
                 </main>
@@ -309,23 +313,23 @@
             </card>
         </section>
 
-<!--        <div class="col-12">-->
-<!--            <h1 class="card-title ml-4 mt-4">Attachments</h1>-->
-<!--            <div class="mb-4">-->
-<!--                <img src="img/test.jpg" style="height: 100px;" alt="Attachments">-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <div class="col-12">-->
+        <!--            <h1 class="card-title ml-4 mt-4">Attachments</h1>-->
+        <!--            <div class="mb-4">-->
+        <!--                <img src="img/test.jpg" style="height: 100px;" alt="Attachments">-->
+        <!--            </div>-->
+        <!--        </div>-->
 
-<!--        <div class="col-12 mb-4">-->
-<!--            <card>-->
-<!--                <div class="row">-->
-<!--                    <div class="col">-->
-<!--                        <p class="d-inline">Upload Attachment</p>-->
-<!--                        <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </card>-->
-<!--        </div>-->
+        <!--        <div class="col-12 mb-4">-->
+        <!--            <card>-->
+        <!--                <div class="row">-->
+        <!--                    <div class="col">-->
+        <!--                        <p class="d-inline">Upload Attachment</p>-->
+        <!--                        <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </card>-->
+        <!--        </div>-->
 
         <stripe :user="getCurrentUser()">
         </stripe>
@@ -433,12 +437,27 @@
           return 'Not Set'
         }
       },
+      messageFromCustomer() {
+        if (this.bid.customer) {
+          this.customerNotesMessage = this.bid.customer.customer.notes
+          return this.bid.customer.customer.notes
+        }
+      },
+      getPaidWithCashMessage() {
+        if (this.bid) {
+          if (this.bid.paid_with_cash_message) {
+            this.payWithCashMessage = this.bid.paid_with_cash_message
+            this.selectedPayment = 'cash'
+            return this.bid.paid_with_cash_message
+          }
+        }
+      },
       bidPrice() {
         if (
           this.bid.bid_price &&
           (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress')
         ) {
-          return '$ ' + Format.decimal(this.bid.bid_price/100)
+          return '$ ' + Format.decimal(this.bid.bid_price)
         } else {
           return 'In Process'
         }
@@ -477,8 +496,8 @@
         )
       }
     },
-    watch:{
-      bid: function () {
+    watch: {
+      bid: function() {
         this.bid = this.bid
       }
     },
