@@ -92,8 +92,7 @@
 
                     <section class="col-12 mb-3" v-if="isCustomer">
                         <label for="contractorName">Contractor Name:</label>
-                        <strong id="contractorName" ref="details_contractor_name" class="float-right">Contractor
-                            Joe</strong>
+                        <strong id="contractorName" ref="details_contractor_name" class="float-right">{{ this.user.contractor.company_name }}</strong>
                         <!--            <span ref="details_contractor_name" class="float-right">{{ contractorName }}</span>-->
                     </section>
 
@@ -191,10 +190,15 @@
                                id="paymentInstructions"
                                class="float-right form-control"
                                v-model="payWithCashMessage">
-                        <button class="btn btn-sm btn-primary float-right"
+                        <button class="btn btn-sm btn-normal float-right mt-half-rem"
                                 ref="paywithCashButton"
+                                :disabled="disabled.submitMessage"
                                 @click="submitPayWithCashMessage"
-                        >Submit
+                        >
+                            <span v-if="disabled.submitMessage">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                      </span>
+                            Submit
                         </button>
 
                         <div v-if="successfulUpdate === 'true'">
@@ -421,7 +425,8 @@
         disabled: {
           cancelBid: false,
           jobCompleted: false,
-          submitBid: false
+          submitBid: false,
+          submitMessage: false
         }
       }
     },
@@ -594,6 +599,7 @@
         }
       },
       async submitPayWithCashMessage() {
+        this.disabled.submitMessage = true
         try {
           const data = await axios.post('/paidWithCashMessage', {
             jobId: this.bid.id,
@@ -604,11 +610,13 @@
             this.successfulUpdate = 'true'
             setTimeout(function() {
               this.successfulUpdate = ''
+              this.disabled.submitMessage = false
             }.bind(this), 2000)
           } else {
             this.successfulUpdate = 'false'
             setTimeout(function() {
               this.successfulUpdate = ''
+              this.disabled.submitMessage = false
             }.bind(this), 2000)
           }
 
