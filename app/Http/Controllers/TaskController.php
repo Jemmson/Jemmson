@@ -106,7 +106,7 @@ class TaskController extends Controller
 
     }
 
-    public function getJobTaskForGeneral($jobTaskId)
+    public function getJobTaskForGeneral($jobTaskId, $userId)
     {
 //        Log::debug("Job Task Id: $jobTaskId");
 
@@ -117,7 +117,8 @@ class TaskController extends Controller
                 'task',
                 'images',
                 'bidContractorJobTasks',
-                'bidContractorJobTasks.contractor'
+                'bidContractorJobTasks.contractor',
+                'bidContractorJobTasks.contractor.contractor'
             ])->where('id', '=', $jobTaskId)->get();
     }
 

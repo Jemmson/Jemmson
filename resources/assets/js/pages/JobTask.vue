@@ -20,13 +20,15 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <label>Task Start Date</label>
-                            <!-- <i class="fas fa-clock icon m-r-2"></i> -->
-                            <input type="date" class="form-control" style="" v-if="showTaskStartDate()"
-                                   :value="prettyDate(jobTask.start_date)"
-                                   @blur="updateTaskStartDate($event.target.value, jobTask.id)">
-                            <div v-else>
-                                {{ prettyDate(jobTask.start_date) }}
+                            <div class="flex justify-content-between">
+                                <label>Task Start Date</label>
+                                <!-- <i class="fas fa-clock icon m-r-2"></i> -->
+                                <input type="date" class="form-control" style="" v-if="showTaskStartDate()"
+                                       :value="prettyDate(jobTask.start_date)"
+                                       @blur="updateTaskStartDate($event.target.value, jobTask.id)">
+                                <!--                                <div v-else>-->
+                                <!--                                    <strong>{{ prettyDate(jobTask.start_date) }}</strong>-->
+                                <!--                                </div>-->
                             </div>
                             <span :class="{ error: hasStartDateError }"
                                   v-show="hasStartDateError">{{ startDateErrorMessage }}
@@ -52,9 +54,9 @@
                                         <span class="float-right">
                                             <i class="fas fa-money-bill-alt icon"></i>
                                             <span ref="contractor_total_cost" class="totalCost"
-                                                  v-if="parseInt(cust_final_price) * 10 > 0">{{taskCustFinalPrice(cust_final_price)}}</span>
+                                                  v-if="parseInt(cust_final_price) * 10 > 0"><strong>{{taskCustFinalPrice(cust_final_price)}}</strong></span>
                                             <span ref="contractor_total_cost_error" class="totalCost"
-                                                  v-else>Price Has Not Been Set</span>
+                                                  v-else><strong>Price Has Not Been Set</strong></span>
                                         </span>
                                     </div>
                                     <div class="form-group" v-if="isContractor()">
@@ -62,8 +64,8 @@
                                         <span class="float-right">
                                             <i class="fas fa-user icon"></i>
                                             <span ref="sub_total_cost" v-if="parseInt(sub_final_price) * 10 > 0"
-                                                  class="totalCost">{{taskCustFinalPrice(sub_final_price)}}</span>
-                                            <span ref="sub_total_cost_error" v-else class="totalCost">Price Has Not Been Set</span>
+                                                  class="totalCost"><strong>{{taskCustFinalPrice(sub_final_price)}}</strong></span>
+                                            <span ref="sub_total_cost_error" v-else class="totalCost"><strong>Price Has Not Been Set</strong></span>
                                         </span>
                                     </div>
                                 </div>
@@ -71,26 +73,31 @@
                                 <div class="col-12">
 
                                     <div class="form-group" v-if="isContractor()">
-                                        <label class="">Quantity:</label>
-                                        <input v-if="showTaskPriceInput()" type="text" ref="quantity"
-                                               class="form-control" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
+                                        <div class="flex justify-content-between">
+                                            <label class="">Quantity:</label>
+                                            <input v-if="showTaskPriceInput()" type="text" ref="quantity"
+                                                   class="form-control" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
-                                        <div v-else class="mt-1">
-                                            {{ jobTask.qty }}
+                                            <div v-else class="mt-1">
+                                                <strong>{{ jobTask.qty }}</strong>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="form-group" v-if="isContractor">
 
-                                        <label class="">Price:</label>
-                                        <input v-if="showTaskPriceInput()" type="text" ref="price" class="form-control"
-                                               :value="taskCustFinalPrice(unit_price)"
-                                               @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
-                                        >
-                                        <div v-else class="mt-1">
-                                            {{ taskCustFinalPrice(unit_price) }}
+                                        <div class="flex justify-content-between">
+                                            <label class="">Price:</label>
+                                            <input v-if="showTaskPriceInput()" type="text" ref="price"
+                                                   class="form-control"
+                                                   :value="taskCustFinalPrice(unit_price)"
+                                                   @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
+                                            >
+                                            <div v-else class="mt-1">
+                                                <strong>{{ taskCustFinalPrice(unit_price) }}</strong>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- <button v-if="isContractor()" class="btn btn-green btn-large m-t-3" v-show="
@@ -122,7 +129,7 @@
                             </div>
                             <div class="flex flex-col" v-else-if="location(jobTask, job) === 'Same as Job Location'">
                                 <span class="label mb-2">Change Task Location</span>
-                                <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask.id)">
+                                <button class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
                                     <i class="fas fa-edit"></i>
                                 </button>
                             </div>
@@ -132,7 +139,7 @@
                                     <i class="fas fa-map-marker icon"></i>
                                     {{ location(jobTask, job) }}
                                 </a>
-                                <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask.id)">
+                                <button class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
                                     <i class="fas fa-edit"></i>
                                 </button>
                             </div>
@@ -177,7 +184,7 @@
                                 </div>
 
                                 <div class="flex flex-col" v-if="isCustomer">
-                                    <span class="label mb-2">Notes from Contractor</span>
+                                    <span class="label mb-2">Notes from Customer</span>
                                     <textarea cols="0" rows="0" class="form-control" disabled
                                               :value="jobTask.customer_message" style="color: black;"></textarea>
                                 </div>
@@ -209,33 +216,32 @@
                                     <div class="flex flex-col">
                                         <div class="table-header">
                                             <div class="flex-1">Sub</div>
-<!--                                            <div class="flex-1">Payment Type</div>-->
+                                            <!--                                            <div class="flex-1">Payment Type</div>-->
                                             <div class="flex-1">Bid</div>
                                             <div class="flex-1">Action</div>
                                         </div>
-                                        <div class="flex mb-2" v-for="bid in jobTask.bid_contractor_job_tasks"
+                                        <div class="flex mb-2 justify-content-between"
+                                             v-for="bid in jobTask.bid_contractor_job_tasks"
                                              :key="bid.id">
-                                            <div class="flex-1">{{ bid.contractor.name }}</div>
-<!--                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>-->
+                                            <div class="flex-1">{{ getCompanyName(bid) }}</div>
+                                            <!--                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>-->
                                             <div class="flex-1">${{ bid.bid_price }}</div>
                                             <div class="flex-1">
                                                 <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
                                                 <button
                                                         v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
-                                                        @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
+                                                        @click="acceptSubBidForTask(bid, jobTask)"
+                                                        class="btn btn-normal"
                                                         :disabled="disabled.accept">
                                                     <span v-if="disabled.accept">
                                                         <i class="fa fa-btn fa-spinner fa-spin"></i>
                                                     </span>
                                                     Accept
                                                 </button>
-                                                <div v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
-                                                    <h5>Bid Has Been Accepted</h5>
+                                                <div v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)"><strong>Accepted</strong>
                                                 </div>
-                                                <div
-                                                        v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
-                                                    <h5>Pending</h5>
-                                                </div>
+                                                <div v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                                    <strong>Pending</strong></div>
                                             </div>
                                         </div>
                                     </div>
@@ -258,14 +264,14 @@
                 </div>
 
                 <div v-if="showFinishedBtn(jobTask) || showApproveBtn(jobTask)">
-                    <button class="btn btn-block btn-success mb-2" v-if="showFinishedBtn(jobTask)"
+                    <button class="btn btn-block btn-normal mb-2" v-if="showFinishedBtn(jobTask)"
                             @click="finishedTask(jobTask)" :disabled="disabled.finished">
                         <span v-if="disabled.finished">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                         Finished
                     </button>
-                    <button class="btn btn-block btn-success mb-2" v-if="showApproveBtn(jobTask)"
+                    <button class="btn btn-block btn-normal mb-2" v-if="showApproveBtn(jobTask)"
                             @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
                         <span v-if="disabled.approve">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -274,11 +280,11 @@
                     </button>
                 </div>
 
-                <button class="btn btn-block btn-danger mb-2" v-if="showDenyBtn(jobTask)"
+                <button class="btn btn-block btn-normal mb-2" v-if="showDenyBtn(jobTask)"
                         @click="openDenyTaskForm(jobTask.id)">
                     Deny
                 </button>
-                <button class="btn btn-block btn-danger" v-if="showDeleteBtn(jobTask)"
+                <button class="btn btn-block btn-normal" v-if="showDeleteBtn(jobTask)"
                         @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
                     <span v-if="disabled.deleteTask">
                         <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -406,6 +412,13 @@
       }
     },
     methods: {
+      getCompanyName (bid) {
+        if (bid.contractor.contractor) {
+          return bid.contractor.contractor.company_name
+        } else {
+          return bid.contractor.first_name + " " + bid.contractor.last_name
+        }
+      },
       checkIfAnyBidHasBeenAccepted(jobTask) {
         if (jobTask.bid_contractor_job_tasks.length > 0) {
           for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
@@ -596,7 +609,7 @@
       },
       isGeneral() {
         if (this.jobTask !== null) {
-          return this.jobTask.contractor_id === this.user.id
+          return this.jobTask.task.contractor_id === this.user.id
         }
         return false
       },
@@ -706,7 +719,7 @@
       },
       async getTask() {
         try {
-          const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id)
+          const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id + '/' + this.user.id)
           this.jobTask = data.data[0]
         } catch (error) {
           console.log('error')
