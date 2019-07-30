@@ -189,6 +189,10 @@
 
 <style lang="less" scoped>
 
+    .list-card {
+        margin-left: 0px;
+    }
+
     .v-height {
         height: 125vh;
     }
