@@ -60,7 +60,7 @@
                                     type="text"
                                     name="fname"
                                     autocomplete="on"
-                                    class="form-control "
+                                    class="form-control"
                                     v-model="registerForm.first_name">
                             <!--                <span class="help-block" v-show="registerForm.errors.has('first_name')"></span>-->
                             <span class="help-block" v-show="registerForm.errors.first_name !== ''">{{registerForm.errors.first_name}}</span>
@@ -239,7 +239,7 @@
                                     style="align-self: center;"
                                     v-model="registerForm.terms">I Accept The
                             <a href="/terms" target="_blank">Terms Of Service *</a>
-                            <span class="help-block" v-show="registerForm.errors.terms !== ''">{{registerForm.errors.terms}}</span>
+                            <span class="help-block" v-show="registerForm.errors.terms">You Must Accept The Terms Of Service</span>
                         </div>
 
                         <button id="register" name=register
@@ -294,7 +294,7 @@
           country: '',
           password: '',
           password_confirmation: '',
-          terms: '',
+          terms: false,
           errors: {
             first_name: '',
             last_name: '',
@@ -309,7 +309,7 @@
             country: '',
             password: '',
             password_confirmation: '',
-            terms: '',
+            terms: false,
           },
           usertype: '',
           busy: false,
@@ -785,37 +785,42 @@
         }
       },
       async register() {
-        this.registerForm.busy = true
-        if (this.getMobileValidResponse[1] === 'mobile') {
-          if (this.registerForm.usertype === 'contractor') {
-            try {
-              let {data} = await axios.post('/registerContractor', this.registerForm)
-              console.log(data)
-              this.registerForm.busy = false
-              this.$store.commit('setUser', data.user)
-              Bus.$emit('updateUser')
-              this.$router.push('/home')
-            } catch (error) {
-              let {errors} = error.response.data
-              this.setErrors(errors)
-              this.registerForm.busy = false
-            }
-          } else {
-            try {
-              let {data} = await axios.post('/registerCustomer', this.registerForm)
-              console.log(data)
-              this.registerForm.busy = false
-              this.$store.commit('setUser', data.user)
-              Bus.$emit('updateUser')
-              this.$router.push('/home')
-            } catch (error) {
-              let {errors} = error.response.data
-              this.setErrors(errors)
-              this.registerForm.disabled = false
-            }
-          }
+
+        if (!this.registerForm.terms) {
+          this.registerForm.errors.terms = true
         } else {
           this.registerForm.busy = true
+          if (this.getMobileValidResponse[1] === 'mobile') {
+            if (this.registerForm.usertype === 'contractor') {
+              try {
+                let {data} = await axios.post('/registerContractor', this.registerForm)
+                console.log(data)
+                this.registerForm.busy = false
+                this.$store.commit('setUser', data.user)
+                Bus.$emit('updateUser')
+                this.$router.push('/home')
+              } catch (error) {
+                let {errors} = error.response.data
+                this.setErrors(errors)
+                this.registerForm.busy = false
+              }
+            } else {
+              try {
+                let {data} = await axios.post('/registerCustomer', this.registerForm)
+                console.log(data)
+                this.registerForm.busy = false
+                this.$store.commit('setUser', data.user)
+                Bus.$emit('updateUser')
+                this.$router.push('/home')
+              } catch (error) {
+                let {errors} = error.response.data
+                this.setErrors(errors)
+                this.registerForm.disabled = false
+              }
+            }
+          } else {
+            this.registerForm.busy = true
+          }
         }
       },
       setErrors(errors) {
@@ -843,10 +848,10 @@
           this.registerForm.errors.password = ''
         }
 
-        if (errors.terms !== undefined) {
+        if (errors.terms) {
           this.registerForm.errors.terms = errors.terms[0]
         } else {
-          this.registerForm.errors.terms = ''
+          this.registerForm.errors.terms = false
         }
 
         if (errors.companyName !== undefined) {
@@ -952,8 +957,6 @@
         font-weight: bolder;
     }
 
-    input {
-        padding-left: 2rem;
-    }
+    input {}
 
 </style>

@@ -250,11 +250,10 @@ $router->group(['middleware' => 'web'], function ($router) {
             ], 200);
         }
 
-
         $contractor = new \App\Contractor();
         $contractor->user_id = $user->id;
         $contractor->location_id = $location->id;
-        $contractor->company_name = $user->companyName;
+        $contractor->company_name = $request->companyName;
 
         try {
             $contractor->save();
