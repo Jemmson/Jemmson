@@ -59,6 +59,7 @@
 
                         <label v-if="isBidOpen(bidTask)" class="w-full ml-1rem mt-half-rem">Task Price:</label>
 
+                        <div style="display:none;">{{ getStoredBidPrice }}</div>
 
                         <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
                                type="text"
@@ -75,7 +76,8 @@
                             <label v-if="!isBidOpen(bidTask)" class="ml-1rem">
                                 Accepted Bid Price:
                             </label>
-                            <label v-if="!isBidOpen(bidTask)" class=""><strong>$ {{ bidTask.bid_price }}</strong></label>
+                            <label v-if="!isBidOpen(bidTask)" class=""><strong>$ {{ bidTask.bid_price
+                                }}</strong></label>
                         </div>
                     </main>
                 </card>
@@ -104,7 +106,8 @@
                                     type="paymentType"></content-section>
                         </div>
                         <div v-else class="w-full">
-                            <div class="text-center m-2 w-full pb-half-rem"><strong>Preferred Payment Method?</strong></div>
+                            <div class="text-center m-2 w-full pb-half-rem"><strong>Preferred Payment Method?</strong>
+                            </div>
                             <div class="flex justify-content-around w-full">
                                 <button class="btn btn-sm flex-1"
                                         :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'"
@@ -116,7 +119,7 @@
                                 </button>
                                 <button class="btn btn-sm blue flex-1"
                                         :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'"
-                                        @click="setPaymentType('other')">other
+                                        @click="setPaymentType('other')">Other
                                 </button>
                             </div>
                         </div>
@@ -175,7 +178,8 @@
                 <h1 class="card-title">Images</h1>
                 <card>
                     <main class="row">
-                        <task-images class="images w-full ml-one-quarter-negative" :jobTask="bidTask.job_task" type="sub">
+                        <task-images class="images w-full ml-one-quarter-negative" :jobTask="bidTask.job_task"
+                                     type="sub">
                         </task-images>
                     </main>
                 </card>
@@ -191,7 +195,8 @@
                                 :input-classes="getLabelClass(bidTask.status)"
                                 :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
                                 type="startOn"></content-section>
-                        <button v-if="isBidOpen(bidTask)" class="btn btn-normal mt-one-and-one-quarter-rem" @click.prevent="update"
+                        <button v-if="isBidOpen(bidTask)" class="btn btn-normal mt-one-and-one-quarter-rem"
+                                @click.prevent="update"
                                 v-bind:id="bidTask.id" :disabled="disabled.submit">
                                         <span v-if="disabled.submit">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -227,7 +232,16 @@
       ContentSection,
       Card
     },
-    computed: {},
+    updated() {
+      this.getStoredBidPrice;
+    },
+    computed: {
+      getStoredBidPrice() {
+        if (localStorage.getItem('bidPrice' + this.bidTask.id )) {
+          this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id )
+        }
+      }
+    },
     mounted() {
       this.paymentType = this.bidTask.payment_type
     },
@@ -251,9 +265,9 @@
         let finalVal = num.toString()
 
         if (finalVal.length === initialVal.length - 1) {
-          finalVal = finalVal + "0"
+          finalVal = finalVal + '0'
         } else if (finalVal.length === initialVal.length - 2) {
-          finalVal = finalVal + ".00"
+          finalVal = finalVal + '.00'
 
         }
         return finalVal
@@ -325,6 +339,7 @@
         return false
       },
       bidPrice(target) {
+        localStorage.setItem('bidPrice' + this.bidTask.id, this.bidTask.bid_price)
         let price = $('#' + target).val().replace(/[^0-9.]/g, '')
         $('#' + target).val(price)
       },

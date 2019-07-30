@@ -55,6 +55,7 @@
 
 
   export default {
+    name: 'Tasks',
     data() {
       return {
         showTasks: {},

@@ -87,7 +87,7 @@
         
         let length = 0
 
-        for (let i = 0; i < this.jobTasks; i++) {
+        for (let i = 0; i < this.jobTasks.length; i++) {
           length = length + this.jobTasks[i].bid_contractor_job_tasks.length
         }
 
