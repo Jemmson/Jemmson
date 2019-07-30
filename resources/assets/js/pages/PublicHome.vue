@@ -4,7 +4,7 @@
             <div class="col-12">
                 <div class="flex flex-col items-center header-content-left">
                     <button name="login" @click.prevent="route('register')"
-                        style="margin-top: 1rem; margin-bottom: 1rem;" class="btn btn-sm btn-yellow">
+                        style="margin-top: 1rem; margin-bottom: 1rem;" class="btn btn-md btn-normal">
                         <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Register Now
                     </button>
                     <div class="slogan text-center">Subbin' <br> Made Easy!</div>
@@ -52,7 +52,7 @@
                             <div class="flex form-submit form-item">
                                 <!-- Login Button -->
                                 <button @click.prevent="login(form)" :disabled="form.busy" name="login" type="submit"
-                                    class="btn btn-sm btn-blue">
+                                    class="btn btn-md btn-normal">
                                     <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Login
                                 </button>
                                 <a class="" :href="currentWindow + '/password/reset'">Forgot Your

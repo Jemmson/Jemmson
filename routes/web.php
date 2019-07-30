@@ -76,7 +76,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/task/deny', 'TaskController@denyTask');
     Route::post('/task/image', 'TaskController@uploadTaskImage');
     Route::delete('/task/image/{taskImage}', 'TaskController@deleteImage');
-    Route::get('/getJobTaskForGeneral/{task}', 'TaskController@getJobTaskForGeneral');
+    Route::get('/getJobTaskForGeneral/{task}/{userId}', 'TaskController@getJobTaskForGeneral');
 
     // JobController
     Route::resource('/job', 'JobController');

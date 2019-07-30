@@ -18,11 +18,11 @@
 
 
                     <nav class="flex justify-content-around header-border">
-                        <section class="flex-1" @click="settings()">
+                        <section class="" @click="settings()">
 <!--                            <img class="float-left img" src="/img/edit.svg" alt="">-->
                             <label>Edit Profile</label>
                         </section>
-                        <section class="flex-1" @click="logout()">
+                        <section class="" @click="logout()">
 <!--                            <img id="logout" class="float-left img" src="/img/Logout.svg" alt="">-->
                             <label for="logout">Log Out</label>
                         </section>

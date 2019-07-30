@@ -5,23 +5,19 @@
             <div class="col-12">
                 <card>
                     <h3 class="text-center">Who Are You?</h3>
-                    <div class="row">
-                        <div class="col-6">
-                            <button
-                                    class="btn btn-lg btn-primary jem-width"
-                                    ref="customerButton"
-                                    style="margin-left: -.65rem;"
-                                    :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
-                                    v-on:click="userSelected('customer')">Customer
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-lg btn-primary jem-width"
-                                    ref="contractorButton"
-                                    :class="userTypeSelected === 'contractor' ? 'selected-button' : ''"
-                                    v-on:click="userSelected('contractor')">Contractor
-                            </button>
-                        </div>
+                    <div class="row w-full justify-content-between">
+                        <button
+                                class="btn btn-md btn-normal flex-1 mr-1rem"
+                                ref="customerButton"
+                                :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
+                                v-on:click="userSelected('customer')">Customer
+                        </button>
+
+                        <button class="btn btn-md btn-normal flex-1 ml-1rem"
+                                ref="contractorButton"
+                                :class="userTypeSelected === 'contractor' ? 'selected-button' : ''"
+                                v-on:click="userSelected('contractor')">Contractor
+                        </button>
                     </div>
 
 
@@ -30,25 +26,27 @@
                         v-if="usesQuickbooks"
                         style="margin-top: 1.5rem">Do You Use Quickbooks?</h4>
 
-                    <div class="row" v-if="usesQuickbooks">
-                        <div class="col-9">
+                    <div class="row w-full justify-content-between" v-if="usesQuickbooks">
+                        <button class="btn btn-md btn-normal-green flex-1 mr-1rem">
                             <a
                                     :href="quickbooks.auth_url"
                                     ref="quickbooks"
                             >
-                                <img
-                                        alt="qbo/docs/develop/authentication-and-authorization/C2QB_auth.png"
-                                        src="https://static.developer.intuit.com/images/C2QB_auth.png"
-                                        style="height: 100%; width: 100%"
-                                        class="w-full"
-                                >
+                                <span style="color: green;">Quickbooks</span>
                             </a>
-                        </div>
+                        </button>
 
-                        <button class="btn btn-lg btn-primary col-3"
+                        <button class="btn btn-md btn-normal flex-1 ml-1rem"
                                 v-on:click="doesNotUseQuickbooks()"><span class="uppercase">no</span>
                         </button>
                     </div>
+
+                    <!--                    <img-->
+                    <!--                            alt="qbo/docs/develop/authentication-and-authorization/C2QB_auth.png"-->
+                    <!--                            src="https://static.developer.intuit.com/images/C2QB_auth.png"-->
+                    <!--                            style="height: 100%; width: 100%"-->
+                    <!--                            class="w-full"-->
+                    <!--                    >-->
 
                     <div v-if="showRegistration">
 
@@ -245,7 +243,7 @@
                         </div>
 
                         <button id="register" name=register
-                                class="register border shadow uppercase"
+                                class="register border shadow uppercase btn-normal"
                                 @click.prevent="register"
                                 :disabled="registerForm.disabled">
                             <span v-if="registerForm.busy">
@@ -791,28 +789,28 @@
         if (this.getMobileValidResponse[1] === 'mobile') {
           if (this.registerForm.usertype === 'contractor') {
             try {
-                let {data} = await axios.post('/registerContractor', this.registerForm);
-                console.log(data)
-                this.registerForm.busy = false;
-                this.$store.commit('setUser', data.user);
-                Bus.$emit('updateUser')
-                this.$router.push('/home');
+              let {data} = await axios.post('/registerContractor', this.registerForm)
+              console.log(data)
+              this.registerForm.busy = false
+              this.$store.commit('setUser', data.user)
+              Bus.$emit('updateUser')
+              this.$router.push('/home')
             } catch (error) {
-                let {errors} = error.response.data;
-                this.setErrors(errors);
-                this.registerForm.busy = false;
+              let {errors} = error.response.data
+              this.setErrors(errors)
+              this.registerForm.busy = false
             }
           } else {
             try {
-                let {data} = await axios.post('/registerCustomer', this.registerForm);
-                console.log(data)
-                this.registerForm.busy = false;
-                this.$store.commit('setUser', data.user);
-                Bus.$emit('updateUser')
-                this.$router.push('/home');
+              let {data} = await axios.post('/registerCustomer', this.registerForm)
+              console.log(data)
+              this.registerForm.busy = false
+              this.$store.commit('setUser', data.user)
+              Bus.$emit('updateUser')
+              this.$router.push('/home')
             } catch (error) {
-              let {errors} = error.response.data;
-              this.setErrors(errors);
+              let {errors} = error.response.data
+              this.setErrors(errors)
               this.registerForm.disabled = false
             }
           }
@@ -822,76 +820,81 @@
       },
       setErrors(errors) {
         if (errors.first_name !== undefined) {
-                  this.registerForm.errors.first_name = errors.first_name[0]
-                } else {
-                  this.registerForm.errors.first_name = ''
-                }
+          this.registerForm.errors.first_name = errors.first_name[0]
+        } else {
+          this.registerForm.errors.first_name = ''
+        }
 
-                if (errors.last_name !== undefined) {
-                  this.registerForm.errors.last_name = errors.last_name[0]
-                } else {
-                  this.registerForm.errors.last_name = ''
-                }
+        if (errors.last_name !== undefined) {
+          this.registerForm.errors.last_name = errors.last_name[0]
+        } else {
+          this.registerForm.errors.last_name = ''
+        }
 
-                if (errors.email !== undefined) {
-                  this.registerForm.errors.email = errors.email[0]
-                } else {
-                  this.registerForm.errors.email = ''
-                }
+        if (errors.email !== undefined) {
+          this.registerForm.errors.email = errors.email[0]
+        } else {
+          this.registerForm.errors.email = ''
+        }
 
-                if (errors.password !== undefined) {
-                  this.registerForm.errors.password = errors.password[0]
-                } else {
-                  this.registerForm.errors.password = ''
-                }
+        if (errors.password !== undefined) {
+          this.registerForm.errors.password = errors.password[0]
+        } else {
+          this.registerForm.errors.password = ''
+        }
 
-                if (errors.terms !== undefined) {
-                  this.registerForm.errors.terms = errors.terms[0]
-                } else {
-                  this.registerForm.errors.terms = ''
-                }
+        if (errors.terms !== undefined) {
+          this.registerForm.errors.terms = errors.terms[0]
+        } else {
+          this.registerForm.errors.terms = ''
+        }
 
-                if (errors.companyName !== undefined) {
-                  this.registerForm.errors.companyName = errors.companyName[0]
-                } else {
-                  this.registerForm.errors.companyName = ''
-                }
+        if (errors.companyName !== undefined) {
+          this.registerForm.errors.companyName = errors.companyName[0]
+        } else {
+          this.registerForm.errors.companyName = ''
+        }
 
-                if (errors.phoneNumber !== undefined) {
-                  this.registerForm.errors.phoneNumber = errors.phoneNumber[0]
-                } else {
-                  this.registerForm.errors.phoneNumber = ''
-                }
+        if (errors.phoneNumber !== undefined) {
+          this.registerForm.errors.phoneNumber = errors.phoneNumber[0]
+        } else {
+          this.registerForm.errors.phoneNumber = ''
+        }
 
-                if (errors.addressLine1 !== undefined) {
-                  this.registerForm.errors.addressLine1 = errors.addressLine1[0]
-                } else {
-                  this.registerForm.errors.addressLine1 = ''
-                }
+        if (errors.addressLine1 !== undefined) {
+          this.registerForm.errors.addressLine1 = errors.addressLine1[0]
+        } else {
+          this.registerForm.errors.addressLine1 = ''
+        }
 
-                if (errors.city !== undefined) {
-                  this.registerForm.errors.city = errors.city[0]
-                } else {
-                  this.registerForm.errors.city = ''
-                }
+        if (errors.city !== undefined) {
+          this.registerForm.errors.city = errors.city[0]
+        } else {
+          this.registerForm.errors.city = ''
+        }
 
-                if (errors.state !== undefined) {
-                  this.registerForm.errors.state = errors.state[0]
-                } else {
-                  this.registerForm.errors.state = ''
-                }
+        if (errors.state !== undefined) {
+          this.registerForm.errors.state = errors.state[0]
+        } else {
+          this.registerForm.errors.state = ''
+        }
 
-                if (errors.zip !== undefined) {
-                  this.registerForm.errors.zip = errors.zip[0]
-                } else {
-                  this.registerForm.errors.zip = ''
-                }
+        if (errors.zip !== undefined) {
+          this.registerForm.errors.zip = errors.zip[0]
+        } else {
+          this.registerForm.errors.zip = ''
+        }
       }
     },
   }
 </script>
 
 <style scoped>
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
 
     .jem-width {
         width: 100%
