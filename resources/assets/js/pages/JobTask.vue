@@ -23,7 +23,7 @@
                             <div class="flex justify-content-between">
                                 <label>Task Start Date</label>
                                 <!-- <i class="fas fa-clock icon m-r-2"></i> -->
-                                <input type="date" class="form-control" style="" v-if="showTaskStartDate()"
+                                <input type="date" class="form-control form-control-sm w-40" style="" v-if="showTaskStartDate()"
                                        :value="prettyDate(jobTask.start_date)"
                                        @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                                 <!--                                <div v-else>-->
@@ -76,7 +76,7 @@
                                         <div class="flex justify-content-between">
                                             <label class="">Quantity:</label>
                                             <input v-if="showTaskPriceInput()" type="text" ref="quantity"
-                                                   class="form-control" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
+                                                   class="form-control form-control-sm w-40" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
                                    $event.target.value,
                                    jobTask.id,
                                    jobTask.qty)">
@@ -91,7 +91,7 @@
                                         <div class="flex justify-content-between">
                                             <label class="">Price:</label>
                                             <input v-if="showTaskPriceInput()" type="text" ref="price"
-                                                   class="form-control"
+                                                   class="form-control form-control-sm w-40"
                                                    :value="taskCustFinalPrice(unit_price)"
                                                    @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
                                             >
