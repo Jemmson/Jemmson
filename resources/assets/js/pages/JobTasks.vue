@@ -120,7 +120,7 @@
 </script>
 
 <style lang="less" scoped>
-    
+
     .list-card {
         margin-left: 0px;
     }

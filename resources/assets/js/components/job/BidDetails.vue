@@ -46,8 +46,8 @@
 
                     <footer class="w-full mt-1rem flex justify-content-around">
 
-                        <button ref="submitBid" class="btn btn-normal btn-md" @click="cancelDialog()">No</button>
-                        <button ref="submitBid" class="btn btn-normal btn-md" @click="submitTheBid()">Yes</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="submitTheBid()">Yes</button>
 
                     </footer>
 
@@ -73,8 +73,8 @@
 
                     <footer class="w-full mt-1rem flex justify-content-around">
 
-                        <button ref="submitBid" class="btn btn-normal btn-md" @click="cancelDialog()">No</button>
-                        <button ref="submitBid" class="btn btn-normal btn-md" @click="cancelTheBid()">Yes</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>
+                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="cancelTheBid()">Yes</button>
 
                     </footer>
 
@@ -90,33 +90,36 @@
             <card>
                 <main class="row">
 
-                    <section class="col-12 mb-3" v-if="isCustomer">
-                        <label for="contractorName">Contractor Name:</label>
-                        <strong id="contractorName" ref="details_contractor_name" class="float-right">{{ this.user.contractor.company_name }}</strong>
-                        <!--            <span ref="details_contractor_name" class="float-right">{{ contractorName }}</span>-->
-                    </section>
+                    <content-section
+                            input-classes="uppercase"
+                            label="Job Name:"
+                            :content="bid.job_name"
+                            type="paymentType"></content-section>
 
-                    <section class="col-12 mb-3" v-else>
-                        <label for="customerName" class="">Customer Name:</label>
-                        <strong
-                                id="customerName" ref="details_customer_name" class="float-right">
-                            {{ customerName }}</strong>
-                    </section>
+                    <content-section
+                            v-if="isCustomer"
+                            label="Contractor Name:"
+                            input-classes="uppercase"
+                            :content="getCompanyName()"
+                            type="contractorName"></content-section>
 
+                    <content-section
+                            v-if="!isCustomer"
+                            input-classes="capitalize"
+                            label="Customer Name:"
+                            :content="customerName"
+                            type="customerName"></content-section>
 
-                    <section class="col-12 mb-3">
-                        <label for="startDate" class="">Start Date:</label>
-                        <strong id="startDate"
-                                ref="details_start_date"
-                                class="float-right">{{ agreedStartDate }}</strong>
-                    </section>
+                    <content-section
+                            label="Start Date:"
+                            :content="agreedStartDate"
+                            type="startDate"></content-section>
 
-                    <section class="col-12 mb-3">
-                        <label for="totalBidPrice" class="">Total Bid Price:</label>
-                        <strong id="totalBidPrice"
-                                ref="details_total_bid_price"
-                                class="float-right">{{ bidPrice }}</strong>
-                    </section>
+                    <content-section
+                            label="Total Bid Price:"
+                            :content="bidPrice"
+                            type="totalBidPrice"></content-section>
+
 
                     <hr>
 
@@ -129,14 +132,14 @@
                                 <button class="btn btn-normal flex-1" @click.prevent="showCancelCard()"
                                         :disabled="disabled.cancelBid" ref="cancelBtn">
                                       <span v-if="disabled.cancelBid">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                        <i class="fa fa-btn fa-spinner fa-spin mr-half-rem"></i>
                                       </span>
                                     Cancel Job
                                 </button>
 
                                 <button
                                         ref="show_submission_card"
-                                        class="btn btn-normal flex-1"
+                                        class="btn btn-normal flex-1 ml-half-rem"
                                         @click="showSubmissionCard()"
                                         :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"
                                 >
@@ -149,7 +152,7 @@
 
                         </div>
                         <div v-if="bidHasNoTasks() && !this.isCustomer">
-                            <button class="btn btn-blue flex-1 mr-6 ml-6"
+                            <button class="btn btn-normal flex-1 mr-6 ml-6"
                                     name="addTaskToBid" id="addTaskToBid"
                                     @click="$router.push('/job/add/task')"
                             >
@@ -350,12 +353,14 @@
 
   // import GeneralContractor from '../../classes/GeneralContractor'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import ContentSection from '../shared/ContentSection'
 
   export default {
     components: {
       Card,
       Stripe,
       Info,
+      ContentSection,
       GeneralContractorBidActions
     },
     props: {
@@ -507,6 +512,11 @@
       }
     },
     methods: {
+      getCompanyName() {
+        if (this.user) {
+          return this.user.contractor.company_name
+        }
+      },
       bidHasNoTasks() {
         if (this.bid.job_tasks) {
           return this.bid.job_tasks.length === 0
