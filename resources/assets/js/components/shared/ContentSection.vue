@@ -1,9 +1,15 @@
 <template>
-    <section class="col-12 mb-half-rem-negative flex justify-content-between" :class="sectionClasses">
-        <label :for="type">{{ label }}</label>
-        <strong :id="type" :class="inputClasses">
-            <span v-if="dollarSign">$</span>
-            {{ content }}</strong>
+    <section :class="totalSectionClasses" class="col-12 mb-half-rem-negative flex flex-col">
+        <div class="flex justify-content-between">
+            <label :for="type">{{ label }}</label>
+            <strong :id="type" :class="inputClasses">
+                <span v-if="warning"><i class="fas fa-exclamation mr-half-rem"></i></span>
+                <i :class="icon" class="mr-half-rem"></i>
+                <span v-if="dollarSign">$</span>
+                {{ content }}
+            </strong>
+        </div>
+        <aside class="red uppercase ml-1rem mr-1rem" v-if="warning">{{ warningMessage }}</aside>
         <!--            <span ref="details_contractor_name" class="float-right">{{ contractorName }}</span>-->
     </section>
 </template>
@@ -23,9 +29,30 @@
           type: String,
           default: ""
         },
+        warningMessage: {
+          type: String,
+          default: ""
+        },
         sectionClasses: {
           type: String,
           default: ""
+        },
+        warning: {
+          type: Boolean,
+          default: false
+        },
+        icon: {
+          type: String,
+          default: ''
+        }
+      },
+      computed: {
+        totalSectionClasses(){
+          if (this.warning) {
+            return 'red ' + this.sectionClasses;
+          } else {
+            return this.sectionClasses;
+          }
         }
       }
     }

@@ -314,7 +314,7 @@
         return Format.statusLabel(status)
       },
       status(bid_task) {
-        return User.status(bid_task.status, bid_task.job_task, true)
+        return User.status(bid_task.status, bid_task.job_task, false)
       },
       jobName(name) {
         return Format.jobName(name)

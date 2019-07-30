@@ -49,25 +49,40 @@
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="form-group">
-                                        Total Task Price
-                                        <span class="float-right">
-                                            <i class="fas fa-money-bill-alt icon"></i>
-                                            <span ref="contractor_total_cost" class="totalCost"
-                                                  v-if="parseInt(cust_final_price) * 10 > 0"><strong>{{taskCustFinalPrice(cust_final_price)}}</strong></span>
-                                            <span ref="contractor_total_cost_error" class="totalCost"
-                                                  v-else><strong>Price Has Not Been Set</strong></span>
-                                        </span>
-                                    </div>
-                                    <div class="form-group" v-if="isContractor()">
-                                        Total Task Sub Price
-                                        <span class="float-right">
-                                            <i class="fas fa-user icon"></i>
-                                            <span ref="sub_total_cost" v-if="parseInt(sub_final_price) * 10 > 0"
-                                                  class="totalCost"><strong>{{taskCustFinalPrice(sub_final_price)}}</strong></span>
-                                            <span ref="sub_total_cost_error" v-else class="totalCost"><strong>Price Has Not Been Set</strong></span>
-                                        </span>
-                                    </div>
+
+                                    <content-section
+                                            v-if="parseInt(cust_final_price) * 10 > 0"
+                                            label="Total Task Price:"
+                                            :content="taskCustFinalPrice(cust_final_price)"
+                                            input-classes="totalCost"
+                                            icon="fas fa-money-bill-alt icon"
+                                            :warning="cust_final_price < sub_final_price"
+                                            warning-message="Sub Price is Lower than your price"
+                                            type="totalTaskPrice"></content-section>
+
+                                    <content-section
+                                            v-if="parseInt(cust_final_price) * 10 <= 0"
+                                            label="Total Task Price:"
+                                            content="Price Has Not Been Set"
+                                            input-classes="totalCost"
+                                            icon="fas fa-money-bill-alt icon"
+                                            type="totalTaskPrice"></content-section>
+
+                                    <content-section
+                                            v-if="isContractor() && parseInt(sub_final_price) * 10 > 0"
+                                            label="Total Task Sub Price:"
+                                            :content="taskCustFinalPrice(sub_final_price)"
+                                            input-classes="totalCost"
+                                            icon="fas fa-user icon"
+                                            type="totalTaskPrice"></content-section>
+
+                                    <content-section
+                                            v-if="isContractor() && parseInt(sub_final_price) * 10 <= 0"
+                                            label="Total Task Sub Price:"
+                                            content="Price Has Not Been Set"
+                                            input-classes="totalCost"
+                                            icon="fas fa-user icon"
+                                            type="totalTaskPrice"></content-section>
                                 </div>
 
                                 <div class="col-12">
@@ -323,6 +338,7 @@
   import TaskImages from '../components/task/UploadTaskImages'
   import Format from '../classes/Format'
   import Card from '../components/shared/Card'
+  import ContentSection from '../components/shared/ContentSection'
 
   import { mapState } from 'vuex'
 
@@ -332,6 +348,7 @@
       DenyTaskModal,
       Card,
       Message,
+      ContentSection,
       TaskImages,
       UpdateTaskLocationModal
     },
@@ -667,6 +684,7 @@
       },
       updateCustomerTaskPrice(price, jobTaskId, bidId) {
         price = price.replace(/[^0-9.]/g, '')
+        this.unit_price = price;
         let taskPrice = this.unit_price
         taskPrice = taskPrice.toString()
         this.cust_final_price = price

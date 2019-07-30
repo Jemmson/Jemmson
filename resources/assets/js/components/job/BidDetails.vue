@@ -90,6 +90,8 @@
             <card>
                 <main class="row">
 
+                    <strong v-if="subTaskWarning" class="uppercase red ml-1rem mr-1rem">bid price less than the sum of your subs bids</strong>
+
                     <content-section
                             input-classes="uppercase"
                             label="Job Name:"
@@ -412,6 +414,7 @@
               'The Customer has paid for the job and the job is completed'
           }
         ],
+        subTaskWarning: false,
         customerNotesMessage: '',
         showPaidWithCashNotes: false,
         disableCustomerNotesButton: false,
@@ -467,7 +470,10 @@
           this.bid.bid_price &&
           (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress')
         ) {
-          return '$ ' + Format.decimal(this.bid.bid_price)
+
+          let theBidPrice = this.bid.bid_price / 100
+
+          return '$ ' + Format.decimal(theBidPrice)
         } else {
           return 'In Process'
         }
@@ -571,19 +577,19 @@
         // compare the the accepted sub price to the contractor price
         // if the accepted sub price is higher then throw an error
 
-        this.subTaskWarning = false
+        let subTaskWarning = false
         for (let i = 0; i < this.bid.job_tasks.length; i++) {
           if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
-            this.subTaskWarning = true
+            subTaskWarning = true
           }
         }
 
-        if (!this.subTaskWarning) {
-
-          if (GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)) {
-
-          }
-
+        if (!subTaskWarning) {
+          this.subTaskWarning = false
+          GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)
+        } else {
+          console.log('subs price is higher than contractor price')
+          this.subTaskWarning = true
         }
 
       },

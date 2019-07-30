@@ -187,9 +187,16 @@ export default class User {
   }
 
   isSub(bid, usertype, userId = null) {
-    return bid !== null &&
-      (usertype === 'contractor' &&
-        bid.contractor_id !== userId)
+
+    if (bid.task) {
+      return bid !== null &&
+        (usertype === 'contractor' &&
+          bid.task.contractor_id !== userId)
+    } else {
+      return bid !== null &&
+        (usertype === 'contractor' &&
+          bid.contractor_id !== userId)
+    }
   }
 
   /**
@@ -295,7 +302,11 @@ export default class User {
     this.user = user
   }
 
-  status(status, bid, user = Spark.state.user) {
+  status(status, bid, user) {
+
+    if(!user){
+      user = Spark.state.user
+    }
 
     if (status === null) {
       status = 'bid_task.initiated'
