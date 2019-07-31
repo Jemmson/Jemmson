@@ -55,7 +55,8 @@ class TaskController extends Controller
         $bidTasks = Auth::user()->contractor()->first()->bidContractorJobTasks()->
         with([
             'jobTask.job',
-            'jobTask.task'
+            'jobTask.task',
+            'jobTask.task.contractor'
         ])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
@@ -73,6 +74,7 @@ class TaskController extends Controller
             bidContractorJobTasks()->with([
                 'jobTask.job',
                 'jobTask.task',
+                'jobTask.task.contractor',
                 'jobTask.images',
                 'jobTask.location'
             ])->get();

@@ -519,8 +519,8 @@
     },
     methods: {
       getCompanyName() {
-        if (this.user) {
-          return this.user.contractor.company_name
+        if (this.bid) {
+          return this.bid.job_tasks[0].task.contractor.company_name
         }
       },
       bidHasNoTasks() {

@@ -23,7 +23,6 @@ use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\JobCanceled;
 
 
-
 class JobController extends Controller
 {
     /**
@@ -62,6 +61,8 @@ class JobController extends Controller
                                     }
                                 ]);
                         },
+                        'jobTasks.task',
+                        'jobTasks.task.contractor',
                         'jobTasks.location'
                         // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
                     ])->get();
@@ -80,6 +81,7 @@ class JobController extends Controller
                 ->with(
                     [
                         'jobTasks.task',
+                        'jobTasks.task.contractor',
                         'jobTasks.bidContractorJobTasks.contractor',
                         'jobTasks.bidContractorJobTasks.contractor.contractor',
                         // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
@@ -154,7 +156,7 @@ class JobController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -177,7 +179,7 @@ class JobController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Job $job
+     * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function show(Job $job)
@@ -185,10 +187,11 @@ class JobController extends Controller
         if (
             Auth::user()->id == $job->contractor_id ||
             Auth::user()->id == $job->customer_id
-            ) {
+        ) {
             $job->load(
                 [
                     'jobTasks.task',
+                    'jobTasks.task.contractor',
                     'jobTasks.bidContractorJobTasks.contractor',
                     'jobTasks.bidContractorJobTasks.contractor.contractor',
                     // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
@@ -200,7 +203,7 @@ class JobController extends Controller
                     }
                 ]
             );
-    
+
             return $job;
         } else {
             return response()->json([
@@ -212,7 +215,7 @@ class JobController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Job $job
+     * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function edit(Job $job)
@@ -245,8 +248,8 @@ class JobController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Job $job
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Job $job)
@@ -259,7 +262,7 @@ class JobController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Job $job
+     * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
     public function destroy(Job $job)
@@ -402,7 +405,9 @@ class JobController extends Controller
                                     }
                                 ]);
                         },
-                        'jobTasks.location'
+                        'jobTasks.location',
+                        'jobTasks.task',
+                        'jobTasks.task.contractor'
                         // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
                     ])->get();
 
@@ -423,6 +428,7 @@ class JobController extends Controller
                 ->with(
                     [
                         'jobTasks.task',
+                        'jobTasks.task.contractor',
                         'jobTasks.bidContractorJobTasks.contractor',
                         'jobTasks.bidContractorJobTasks.contractor.contractor',
                         // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
@@ -449,7 +455,6 @@ class JobController extends Controller
         return response()->json($jobs, 200);
 //        return response()->json(collect($jobs)->toArray(), 200);
     }
-
 
 
     /**
@@ -527,10 +532,6 @@ class JobController extends Controller
         return response()->json($jobs, 200);
 //        return response()->json(collect($jobs)->toArray(), 200);
     }
-
-
-
-
 
 
     /**

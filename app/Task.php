@@ -113,6 +113,11 @@ class Task extends Model
             ->withTimestamps();
     }
 
+    public function contractor()
+    {
+        return $this->belongsTo(Contractor::class);
+    }
+
     public function bidContractorJobTasks()
     {
         return $this->hasMany(BidContractorJobTask::class);
