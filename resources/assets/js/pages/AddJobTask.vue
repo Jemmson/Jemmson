@@ -22,7 +22,7 @@
                             {{ addNewTaskForm.errors.get('taskName') }}
                         </span>
                         <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
-                            <button class="btn btn-blue w-full mb-1" v-for="result in taskResults"
+                            <button class="btn btn-normal w-full mb-1" v-for="result in taskResults"
                                 v-bind:key="result.id" @click.prevent="fillTaskValues(result)">
                                 {{ result.name }}
                             </button>
@@ -209,7 +209,7 @@
 
                     <!-- Name in task name is different than a task name in the database-->
                     <!--<button v-if="!nameExistsInDB && !taskExistsInJob"-->
-                    <button class="btn btn-block btn-lg btn-success text-uppercase font-weight-bold" :disabled="checkErrors" @click.prevent="changeTask('Add')">
+                    <button class="btn btn-block btn-lg btn-normal text-uppercase font-weight-bold" :disabled="checkErrors" @click.prevent="changeTask('Add')">
                         Add Task
                     </button>
 

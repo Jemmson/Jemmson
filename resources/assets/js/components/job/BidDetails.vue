@@ -262,7 +262,7 @@
 
                             </textarea>
 
-                        <button v-if="isCustomer" class="btn btn-primary btn-sm"
+                        <button v-if="isCustomer" class="btn btn-normal btn-sm"
                                 style="margin-top: .5rem"
                                 ref="update_customer_notes_button"
                                 @click="updateGeneralContractorNotes"
@@ -303,7 +303,7 @@
                         (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
                         </span> Total
 
-                    <button class="btn btn-primary btn-sm float-right"
+                    <button class="btn btn-normal btn-sm float-right"
                             @click.prevent="viewTasks()">View Tasks
                     </button>
                 </card>

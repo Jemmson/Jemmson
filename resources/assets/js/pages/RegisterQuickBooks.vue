@@ -116,23 +116,23 @@
                 <h4 class="text-center mt-2">General Info</h4>
                 <div class="row" style="justify-content: center" v-show="!sections.editGeneralInfo">
                     <div class="flex-1 w-full"></div>
-                    <button class="flex-1 w-full btn btn-small btn-primary"
+                    <button class="flex-1 w-full btn btn-sm btn-normal"
                             ref="edit_btn"
                             @click="sections.editGeneralInfo = true">Edit
                     </button>
                     <div class="flex-1 w-full"></div>
                 </div>
                 <div class="row" style="justify-content: space-evenly" v-show="sections.editGeneralInfo">
-                    <button class="flex-1 w-full btn btn-small btn-primary"
+                    <button class="flex-1 w-full btn btn-sm btn-normal"
                             id="cancel_btn"
                             ref="cancel_btn"
                             @click="cancel()">Cancel
                     </button>
-                    <button class="flex-1 w-full btn btn-small btn-primary"
+                    <button class="flex-1 w-full btn btn-sm btn-normal"
                             ref="reset_btn"
                             @click="reset()">Reset
                     </button>
-                    <button class="flex-1 w-full btn btn-small btn-primary"
+                    <button class="flex-1 w-full btn btn-sm btn-normal"
                             ref="save_btn"
                             @click="save()">Save
                     </button>
@@ -395,7 +395,7 @@
                     <div class="row pt-2" style="flex-direction: column;">
                         <div class="col-md-6 col-md-offset-4">
                             <button id="register" name=register
-                                    class="register form-control shadow uppercase"
+                                    class="register form-control btn-normal shadow uppercase"
                                     @click.prevent="register"
                                     ref="register"
                                     :disabled="registerForm.busy">

@@ -165,7 +165,7 @@
                   </div>
                 </div>
             </div>
-            <button type="submit" name="submit" class="uppercase btn btn-primary btn-block"
+            <button type="submit" name="submit" class="uppercase btn btn-normal btn-block"
               @click.prevent="submitFurtherInfo()" :disabled="checkValidData()">
               <span v-if="disabled.submit">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>

@@ -54,7 +54,7 @@
             <!-- Zip Code -->
             <div class="flex form-group" :class="{'has-error': form.errors.has('zip')}">
                 <label for="">ZipCode</label>
-                <input type="text" class="form-control" name="zip" v-model="form.zip">
+                <input type="text" class="form-control btn-normal" name="zip" v-model="form.zip">
                 <span class="help-block" v-show="form.errors.has('zip')">
                     {{ form.errors.get('zip') }}
                 </span>
@@ -62,21 +62,21 @@
         </div>
         <!-- / buttons -->
         <div class="flex w-full justify-between">
-            <button class="btn btn-green flex-1" @click.prevent="openModal('approveBid')" :disabled="disabled.approve"
+            <button class="btn btn-normal flex-1" @click.prevent="openModal('approveBid')" :disabled="disabled.approve"
                     ref="approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Approve
             </button>
-            <button class="btn btn-red flex-1 mr-6 ml-6" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid"
+            <button class="btn btn-normal flex-1 mr-6 ml-6" @click.prevent="openModal('cancelBid')" :disabled="disabled.cancelBid"
                     ref="cancel">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Cancel
             </button>
-            <button class="btn btn-red flex-1" @click.prevent="openDeclineForm" ref="decline">
+            <button class="btn btn-normal flex-1" @click.prevent="openDeclineForm" ref="decline">
                 Change Bid
             </button>
         </div>
@@ -93,7 +93,7 @@
                     </span>
                 </div>
                 <div class="form-group col-md-12">
-                    <button class="btn btn-red" @click.prevent="declineBid" :disabled="disabled.declineBid"
+                    <button class="btn btn-normal" @click.prevent="declineBid" :disabled="disabled.declineBid"
                             ref="declineBid">
                         <span v-if="disabled.declineBid">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>

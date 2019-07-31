@@ -1,7 +1,7 @@
 <template>
 <div>
     <div id="feedback" style="position:fixed; bottom: 0; right: 0; margin-bottom: 4rem">
-        <button class="btn btn-blue" @click="open">
+        <button class="btn btn-normal" @click="open">
             <i class="fas fa-comment fa-2x"></i>
         </button>
     </div>
@@ -10,7 +10,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="btn btn-normal" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title">App Feedback</h4>
@@ -25,7 +25,7 @@
                 <div class="modal-footer">
                     <span>
                         <slot name="button"></slot>
-                        <button type="submit" class="btn btn-green btn-model-yes" @click.prevent="submit">Submit</button>
+                        <button type="submit" class="btn btn-normal btn-model-yes" @click.prevent="submit">Submit</button>
                     </span>
                 </div>
             </div>

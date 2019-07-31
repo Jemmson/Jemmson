@@ -14,9 +14,9 @@
       <div id="card-errors" role="alert"></div>
     </div>
     <br>
-    <button class="btn btn-green" v-if="!hasStripe">Sign Up & Pay $0.{{amount}}</button>
+    <button class="btn btn-normal" v-if="!hasStripe">Sign Up & Pay $0.{{amount}}</button>
   </form>
-  <button class="btn btn-green" v-if="hasStripe" @click="submit">Submit Payment $0.{{amount}}</button>
+  <button class="btn btn-normal" v-if="hasStripe" @click="submit">Submit Payment $0.{{amount}}</button>
 </div>
 </template>
 

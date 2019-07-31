@@ -109,15 +109,15 @@
                             <div class="text-center m-2 w-full pb-half-rem"><strong>Preferred Payment Method?</strong>
                             </div>
                             <div class="flex justify-content-around w-full">
-                                <button class="btn btn-sm flex-1"
+                                <button class="btn btn-sm btn-normal flex-1"
                                         :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'"
                                         @click="setPaymentType('stripe')">Stripe
                                 </button>
-                                <button class="btn btn-sm blue flex-1 mr-6 ml-6"
+                                <button class="btn btn-sm btn-normal flex-1 mr-6 ml-6"
                                         :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'"
                                         @click="setPaymentType('cash')">Cash
                                 </button>
-                                <button class="btn btn-sm blue flex-1"
+                                <button class="btn btn-sm btn-normal flex-1"
                                         :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'"
                                         @click="setPaymentType('other')">Other
                                 </button>

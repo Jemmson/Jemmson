@@ -1,5 +1,5 @@
 <template>
-      <button type="button" class="stripe-connect" @click="connectWithStripe"><span>Connect With Stripe</span></button>
+      <button type="button" class="btn-normal stripe-connect" @click="connectWithStripe"><span>Connect With Stripe</span></button>
 </template>
 
 <script>

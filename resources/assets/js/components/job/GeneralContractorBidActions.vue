@@ -6,7 +6,7 @@
             SUB PRICES HIGHER THAN CONTRACTOR PRICE
         </div>
 
-        <button ref="submitBid" class="btn btn-primary btn-sm" @click="openBidSubmissionDialog()">Submit Bid</button>
+        <button ref="submitBid" class="btn btn-normal btn-sm" @click="openBidSubmissionDialog()">Submit Bid</button>
 
     </div>
 

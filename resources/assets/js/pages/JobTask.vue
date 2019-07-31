@@ -272,7 +272,7 @@
                 <h1 class="card-title mt-4"></h1>
 
                 <div v-if="isContractor()">
-                    <button class="btn btn-block btn-primary mb-2" @click.prevent="openSubInvite(jobTask.id)"
+                    <button class="btn btn-block btn-normal mb-2" @click.prevent="openSubInvite(jobTask.id)"
                             v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
                         Add A Sub
                     </button>

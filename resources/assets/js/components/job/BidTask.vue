@@ -101,7 +101,7 @@
                     </div>
                     <div class="flex flex-col" v-else-if="location(jobTask, bid) === 'Same as Job Location'">
                         <span class="label mb-2">Change Task Location</span>
-                        <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask.id)">
+                        <button class="btn btn-normal btn-small" @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -111,7 +111,7 @@
                             <i class="fas fa-map-marker icon"></i>
                             {{ location(jobTask, bid) }}
                         </a>
-                        <button class="btn btn-blue btn-small" @click="openUpdateTaskLocation(jobTask.id)">
+                        <button class="btn btn-normal btn-small" @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
                         </button>
                     </div>
@@ -244,11 +244,11 @@
         <div class="box shadow-md" v-show="showDetails">
             <h4 class="text-center">Action Buttons</h4>
             <div class="flex w-full justify-between">
-                <button class="btn btn-red" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask.id)">
+                <button class="btn btn-normal" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask.id)">
                     Deny
                 </button>
 
-                <button class="btn btn-red" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
+                <button class="btn btn-normal" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                         :disabled="disabled.deleteTask">
                   <span v-if="disabled.deleteTask">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -262,14 +262,14 @@
                       v-if="isGeneral">
                       Show Subs
                     </button> -->
-                    <button class="btn btn-blue" @click.prevent="openSubInvite(jobTask.id)"
+                    <button class="btn btn-normal" @click.prevent="openSubInvite(jobTask.id)"
                             v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
                         Add A Sub
                     </button>
                 </div>
 
                 <div v-if="showFinishedBtn(jobTask) || showApproveBtn(jobTask)" class=" justify-between">
-                    <button class="btn btn-green" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
+                    <button class="btn btn-normal" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                             :disabled="disabled.finished">
                               <span v-if="disabled.finished">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -277,7 +277,7 @@
                         Finished
                     </button>
 
-                    <button class="btn btn-green" v-if="showApproveBtn(jobTask)"
+                    <button class="btn btn-normal" v-if="showApproveBtn(jobTask)"
                             @click="approveTaskHasBeenFinished(jobTask)"
                             :disabled="disabled.approve">
                               <span v-if="disabled.approve">

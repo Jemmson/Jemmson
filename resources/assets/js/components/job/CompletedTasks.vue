@@ -28,7 +28,7 @@
                            @click="addJobTaskToExcludedList(jobTask)">
                 </div>
                 <div class="flex-1 pl-1" v-if="showReopenBtn(jobTask)">
-                    <button class="btn bg-yellow" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
+                    <button class="btn btn-normal" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
                             <span v-if="disabled.reopen">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
@@ -36,7 +36,7 @@
                     </button>
                 </div>
                 <div class="flex-1 pl-1" v-else>
-                    <button class="btn bg-blue" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                    <button class="btn btn-normal" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                         Deny
                     </button>
                 </div>
@@ -65,13 +65,13 @@
 
         <template slot="card-footer">
             <div v-if="isCustomer" class="text-right">
-                <button class="btn bg-green" @click.prevent="paidCash = true" :disabled="disabled.payCash">
+                <button class="btn btn-normal" @click.prevent="paidCash = true" :disabled="disabled.payCash">
                         <span v-if="disabled.payCash">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                     Paid With Cash
                 </button>
-                <button class="btn bg-green" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+                <button class="btn btn-normal" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
@@ -88,7 +88,7 @@
                                placeholder="Optional Message">
                     </div>
                     <div class="form-group col-md-12">
-                        <button class="btn btn-red" @click.prevent="paidWithCash()" :disabled="disableCashMessageButton" ref="cashMessage">
+                        <button class="btn btn-normal" @click.prevent="paidWithCash()" :disabled="disableCashMessageButton" ref="cashMessage">
                         <span v-if="disableCashMessageButton">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
