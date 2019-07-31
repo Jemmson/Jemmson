@@ -176,6 +176,56 @@
             </card>
         </section>
 
+
+        <!-- / tasks -->
+
+
+        <section ref="job_tasks" class="col-12"
+                 v-if="bid.job_tasks !== undefined"
+        >
+            <div v-if="!isCustomer">
+                <h1 class="card-title mt-4">Job Tasks</h1>
+                <card>
+
+                        <span class="">
+                        (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
+                        </span> Total
+
+                    <button class="btn btn-normal btn-sm float-right"
+                            @click.prevent="viewTasks()">View Tasks
+                    </button>
+
+                </card>
+            </div>
+
+            <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">
+                <h1 class="card-title mt-4">Job Tasks</h1>
+                <card>
+
+                        <span class="">
+                        (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
+                        </span> Total
+
+                    <button class="btn btn-normal btn-sm float-right"
+                            @click.prevent="viewTasks()">View Tasks
+                    </button>
+                </card>
+            </div>
+
+        </section>
+
+        <section class="col-12" v-if="!isCustomer" ref="add_new_task">
+            <card class="mt-4" @click.native="$router.push('/job/add/task')">
+                <main class="row">
+                    <div class="col">
+                        <p class="d-inline">Add New Task</p>
+                        <i class="fas fa-chevron-right text-primary float-right sm-icon"></i>
+                    </div>
+                </main>
+            </card>
+        </section>
+
+
         <section class="col-12">
             <h1 v-if="isCustomer" class="card-title mt-4">Payment Details For Contractor</h1>
             <h1 v-else class="card-title mt-4">Payment Details For Customer</h1>
@@ -270,54 +320,6 @@
                         </button>
 
                     </section>
-                </main>
-            </card>
-        </section>
-
-        <!-- / tasks -->
-
-
-        <section ref="job_tasks" class="col-12"
-                 v-if="bid.job_tasks !== undefined"
-        >
-            <div v-if="!isCustomer">
-                <h1 class="card-title mt-4">Job Tasks</h1>
-                <card>
-
-                        <span class="">
-                        (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
-                        </span> Total
-
-                    <button class="btn btn-normal btn-sm float-right"
-                            @click.prevent="viewTasks()">View Tasks
-                    </button>
-
-                </card>
-            </div>
-
-            <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">
-                <h1 class="card-title mt-4">Job Tasks</h1>
-                <card>
-
-                        <span class="">
-                        (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
-                        </span> Total
-
-                    <button class="btn btn-normal btn-sm float-right"
-                            @click.prevent="viewTasks()">View Tasks
-                    </button>
-                </card>
-            </div>
-
-        </section>
-
-        <section class="col-12" v-if="!isCustomer" ref="add_new_task">
-            <card class="mt-4" @click.native="$router.push('/job/add/task')">
-                <main class="row">
-                    <div class="col">
-                        <p class="d-inline">Add New Task</p>
-                        <i class="fas fa-chevron-right text-primary float-right sm-icon"></i>
-                    </div>
                 </main>
             </card>
         </section>
