@@ -1,10 +1,10 @@
 <template>
     <section :class="totalSectionClasses" class="col-12 mb-half-rem-negative flex flex-col">
         <div class="flex justify-content-between">
-            <label :for="type">{{ label }}</label>
-            <strong :id="type" :class="inputClasses">
+            <label class="flex-1" :for="type">{{ label }}</label>
+            <strong class="flex-1 ta-right" :id="type" :class="inputClasses">
                 <span v-if="warning"><i class="fas fa-exclamation mr-half-rem"></i></span>
-                <i :class="icon" class="mr-half-rem"></i>
+                <i v-if="icon" :class="icon" class="mr-half-rem"></i>
                 <span v-if="dollarSign">$</span>
                 {{ content }}
             </strong>

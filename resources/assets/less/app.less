@@ -19,6 +19,11 @@
 // @import "../../../node_modules/@fortawesome/fontawesome-free/less/fontawesome";
 //@import "./../../../vendor/laravel/spark/resources/assets/less/spark";
 
+.modal-backdrop {
+  /* bug fix - no overlay */
+  display: none;
+}
+
 article {
   padding: .75rem;
   text-indent: 1.5rem;
@@ -167,6 +172,10 @@ section {
   height: 29px;
 }
 
+.ta-right{
+  text-align: right;
+}
+
 .uppercase {
   text-transform: uppercase;
 }
@@ -184,6 +193,10 @@ section {
 
 .w-40 {
   width: 40%
+}
+
+.w-inherit {
+ width: inherit;
 }
 
 .red {

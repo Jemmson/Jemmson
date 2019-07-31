@@ -63,12 +63,12 @@
 
                         <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
                                type="text"
-                               class="form-control form-control-input space" v-bind:id="'price-' + bidTask.id"
+                               class="form-control form-control-sm w-40" v-bind:id="'price-' + bidTask.id"
                                v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
 
 
                         <input v-else-if="!bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
-                               type="text" class="form-control form-control-input space"
+                               type="text" class="form-control form-control-sm w-40"
                                v-bind:id="'price-' + bidTask.id"
                                v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
 
@@ -202,7 +202,7 @@
                                         </span>
                             Submit
                         </button>
-                        <button v-if="showFinishedBtn(bidTask)" class="btn btn-normal"
+                        <button v-if="showFinishedBtn(bidTask)" class="btn btn-normal mt-1rem"
                                 @click="finished(bidTask)"
                                 :disabled="disabled.finished">
                                         <span v-if="disabled.finished">
