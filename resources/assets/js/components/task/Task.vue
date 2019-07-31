@@ -4,7 +4,7 @@
             <section class="flex flex-col">
                 <div class="flex justify-content-around text-center">
                     <header ref="" class="page-header-title w-full"
-                            :class="getLabelClass(bidTask.status)">
+                            :class="getLabelClass(bidTask.job_task.status)">
                         {{ status(bidTask) }}
                     </header>
                     <header ref="" class="text-size w-full uppercase text-center">
@@ -76,8 +76,7 @@
                             <label v-if="!isBidOpen(bidTask)" class="ml-1rem">
                                 Accepted Bid Price:
                             </label>
-                            <label v-if="!isBidOpen(bidTask)" class=""><strong>$ {{ bidTask.bid_price
-                                }}</strong></label>
+                            <label v-if="!isBidOpen(bidTask)" class=""><strong>$ {{ getSubFinalPrice(bidTask.job_task.sub_final_price) }}</strong></label>
                         </div>
                     </main>
                 </card>
@@ -192,7 +191,7 @@
                         <content-section
                                 label="Job Status:"
                                 :content="status(bidTask)"
-                                :input-classes="getLabelClass(bidTask.status)"
+                                :input-classes="getLabelClass(bidTask.job_task.status)"
                                 :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
                                 type="startOn"></content-section>
                         <button v-if="isBidOpen(bidTask)" class="btn btn-normal mt-one-and-one-quarter-rem"
@@ -259,6 +258,9 @@
       bidTask: Object
     },
     methods: {
+      getSubFinalPrice(num){
+        return this.convertNumToString(num)
+      },
       convertNumToString(num) {
         let initialVal = num.toString()
         num = num / 100
@@ -314,7 +316,7 @@
         return Format.statusLabel(status)
       },
       status(bid_task) {
-        return User.status(bid_task.status, bid_task.job_task, false)
+        return User.status(bid_task.job_task.status, bid_task.job_task, false)
       },
       jobName(name) {
         return Format.jobName(name)
