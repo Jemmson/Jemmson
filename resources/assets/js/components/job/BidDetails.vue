@@ -163,6 +163,8 @@
 
                         </div>
 
+
+
                     </section>
 
 
@@ -307,7 +309,6 @@
                                   name="notes" id="notes" cols="30" rows="10"
                                   class="form-control"
                                   :disabled="!isCustomer"
-
                         >
 
                             </textarea>
@@ -522,7 +523,9 @@
     methods: {
       getCompanyName() {
         if (this.bid) {
-          return this.bid.job_tasks[0].task.contractor.company_name
+          if(this.bid.job_tasks){
+            return this.bid.job_tasks[0].task.contractor.company_name
+          }
         }
       },
       bidHasNoTasks() {
