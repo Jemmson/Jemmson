@@ -1,6 +1,14 @@
 <template>
     <div class="main flex flex-col justify-between">
         <div>
+
+            <div class="flex mb-1rem">
+                <button class="btn btn-md btn-normal text-uppercase flex-1"
+                        @click.prevent="goBack()">
+                    Back
+                </button>
+            </div>
+
             <div class="search-bar shadow-md">
                 <search-bar>
                     <input class="form-control" type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
@@ -83,6 +91,9 @@
       }
     },
     methods: {
+      goBack() {
+        this.$router.go(-1)
+      },
       showTheTask(index, action) {
 
         if (action === 'show') {

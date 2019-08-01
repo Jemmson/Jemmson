@@ -2,34 +2,46 @@
     <!-- Modal -->
     <div class="container">
         <icon-header icon="tasks" mainHeader="Add New Task"
-            :subHeader="'This adds a new task to the job so you can sub out a portion of the job.'">
+                     :subHeader="'This adds a new task to the job so you can sub out a portion of the job.'">
         </icon-header>
         <card class="mb-4">
+
+            <div class="flex mb-1rem">
+                <button class="btn btn-md btn-normal text-uppercase mr-1rem flex-1"
+                        @click.prevent="goBack()">
+                    Back
+                </button>
+                <button class="btn btn-md btn-normal text-uppercase ml-1rem flex-1" :disabled="checkErrors"
+                        @click.prevent="changeTask('Add')">
+                    Add Task
+                </button>
+            </div>
+
             <form role="form" class="wrapper">
-                    <h1 class="text-center error-lg" v-show="errors.general.errorExists">{{ errors.general.message
-                            }}</h1>
-                    <!--Task Name-->
-                    <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
-                        <label for="taskName">Task Description *</label>
+                <h1 class="text-center error-lg" v-show="errors.general.errorExists">{{ errors.general.message
+                    }}</h1>
+                <!--Task Name-->
+                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
+                    <label for="taskName">Task Description *</label>
 
-                        <input type="text" class="form-control bat-input mb-1" id="taskName" name="taskName" autofocus
-                            v-model="addNewTaskForm.taskName" autocomplete="off"
-                            @blur="checkIfNameExistsInDB($event.target.value)"
-                            @focus="checkIfNameExistsInDB($event.target.value)"
-                            @keyup="getExistingTask($event.target.value)">
+                    <input type="text" class="form-control bat-input mb-1" id="taskName" name="taskName" autofocus
+                           v-model="addNewTaskForm.taskName" autocomplete="off"
+                           @blur="checkIfNameExistsInDB($event.target.value)"
+                           @focus="checkIfNameExistsInDB($event.target.value)"
+                           @keyup="getExistingTask($event.target.value)">
 
-                        <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
+                    <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
                             {{ addNewTaskForm.errors.get('taskName') }}
                         </span>
-                        <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
-                            <button class="btn btn-normal w-full mb-1" v-for="result in taskResults"
+                    <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
+                        <button class="btn btn-normal w-full mb-1" v-for="result in taskResults"
                                 v-bind:key="result.id" @click.prevent="fillTaskValues(result)">
-                                {{ result.name }}
-                            </button>
-                        </div>
+                            {{ result.name }}
+                        </button>
                     </div>
+                </div>
 
-                    <div class="form-row">
+                <div class="form-row">
 
                     <!--Task Price-->
                     <div class="form-group col-6" :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
@@ -37,9 +49,9 @@
                         <div class="flex items-center">
                             <!-- <span class="dollarSign">$</span> -->
                             <input type="text" class="form-control bat-input" id="custTaskPrice" name="taskPrice"
-                                autocomplete="text" :disabled="taskExistsInJob" v-model="addNewTaskForm.taskPrice"
-                                @keyup="checkIfPriceChanged($event.target.value)" @focus="hideTaskResults"
-                                @blur="verifyInputIsANumber($event.target.value, 'price')">
+                                   autocomplete="text" :disabled="taskExistsInJob" v-model="addNewTaskForm.taskPrice"
+                                   @keyup="checkIfPriceChanged($event.target.value)" @focus="hideTaskResults"
+                                   @blur="verifyInputIsANumber($event.target.value, 'price')">
                         </div>
                         <span :class="{ error: errors.notANumber.price }" v-show="errors.notANumber.price">Customer
                             Price
@@ -51,201 +63,205 @@
                     </div>
 
 
-
-
                     <!--Quantity-->
                     <div class="form-group col-6" :class="{'has-error': addNewTaskForm.errors.has('qty')}">
                         <label for="qty">Quantity</label>
                         <input type="number" class="form-control bat-input" min="1" id="qty" name="qty" required
-                            :disabled="taskExistsInJob" @focus="hideTaskResults"
-                            @blur="verifyInputIsANumber($event.target.value, 'quantity')" v-model="addNewTaskForm.qty">
+                               :disabled="taskExistsInJob" @focus="hideTaskResults"
+                               @blur="verifyInputIsANumber($event.target.value, 'quantity')"
+                               v-model="addNewTaskForm.qty">
                         <span :class="{ error: errors.notANumber.quantity }"
-                            v-show="errors.notANumber.quantity">Quantity
+                              v-show="errors.notANumber.quantity">Quantity
                             {{ errors.notANumber.message }}
                         </span>
                         <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
                             {{ addNewTaskForm.errors.get('qty') }}
                         </span>
                     </div>
-                    </div>
+                </div>
 
 
-                    <!--Quantity Unit-->
-                    <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
-                        <label for="qtyUnit">Quantity Description</label>
-                        <input type="text" class="form-control bat-input" min="1" id="qtyUnit"
-                            placeholder="ex. ft, sq. ft, etc." name="qtyUnit" v-model="addNewTaskForm.qtyUnit"
-                            :disabled="taskExistsInJob" @blur="validateInput()" @focus="hideTaskResults"
-                            @keyup="checkIfQuantityUnitHasChanged($event.target.value)">
-                        <span :class="{ error: addNewTaskForm.hasQtyUnitError }"
-                            v-show="addNewTaskForm.hasQtyUnitError">{{ addNewTaskForm.qtyUnitErrorMessage }}
+                <!--Quantity Unit-->
+                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
+                    <label for="qtyUnit">Quantity Description</label>
+                    <input type="text" class="form-control bat-input" min="1" id="qtyUnit"
+                           placeholder="ex. ft, sq. ft, etc." name="qtyUnit" v-model="addNewTaskForm.qtyUnit"
+                           :disabled="taskExistsInJob" @blur="validateInput()" @focus="hideTaskResults"
+                           @keyup="checkIfQuantityUnitHasChanged($event.target.value)">
+                    <span :class="{ error: addNewTaskForm.hasQtyUnitError }"
+                          v-show="addNewTaskForm.hasQtyUnitError">{{ addNewTaskForm.qtyUnitErrorMessage }}
                         </span>
-                        <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
+                    <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
                             {{ addNewTaskForm.errors.get('qtyUnit') }}
                         </span>
+                </div>
+
+
+                <!--Sub Task Price-->
+                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
+                    <label for="subTaskPrice">Subcontractor Price</label>
+                    <div class="flex items-center">
+                        <input type="text" autocomplete="text" class="form-control bat-input" id="subTaskPrice"
+                               name="subTaskPrice" v-model="addNewTaskForm.subTaskPrice" @focus="hideTaskResults"
+                               :disabled="taskExistsInJob" @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
+                               @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')">
                     </div>
-
-
-                    <!--Sub Task Price-->
-                    <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
-                        <label for="subTaskPrice">Subcontractor Price</label>
-                        <div class="flex items-center">
-                            <input type="text" autocomplete="text" class="form-control bat-input" id="subTaskPrice"
-                                name="subTaskPrice" v-model="addNewTaskForm.subTaskPrice" @focus="hideTaskResults"
-                                :disabled="taskExistsInJob" @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
-                                @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')">
-                        </div>
-                        <span :class="{ error: errors.notANumber.subTaskPrice }"
-                            v-show="errors.notANumber.subTaskPrice">Sub
+                    <span :class="{ error: errors.notANumber.subTaskPrice }"
+                          v-show="errors.notANumber.subTaskPrice">Sub
                             Price {{ errors.notANumber.message }}
                         </span>
-                        <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
+                    <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
                             {{ addNewTaskForm.errors.get('subTaskPrice') }}
                         </span>
-                    </div>
+                </div>
 
-                    <!--Start Date-->
-                    <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
-                        <label for="start_date">Start Date</label>
-                        <input type="date" class="form-control bat-input" id="start_date" name="start_date" required
-                            :disabled="taskExistsInJob" @focus="hideTaskResults" v-model="addNewTaskForm.start_date"
-                            @blur="checkDateIsTodayorLater($event.target.value)">
-                        <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
-                        <!--{{ addNewTaskForm.errors.get('start_date') }}-->
-                        <!--</span>-->
+                <!--Start Date-->
+                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
+                    <label for="start_date">Start Date</label>
+                    <input type="date" class="form-control bat-input" id="start_date" name="start_date" required
+                           :disabled="taskExistsInJob" @focus="hideTaskResults" v-model="addNewTaskForm.start_date"
+                           @blur="checkDateIsTodayorLater($event.target.value)">
+                    <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
+                    <!--{{ addNewTaskForm.errors.get('start_date') }}-->
+                    <!--</span>-->
 
-                        <span :class="{ error: addNewTaskForm.hasStartDateError }"
-                            v-show="addNewTaskForm.hasStartDateError">{{ addNewTaskForm.startDateErrorMessage }}
+                    <span :class="{ error: addNewTaskForm.hasStartDateError }"
+                          v-show="addNewTaskForm.hasStartDateError">{{ addNewTaskForm.startDateErrorMessage }}
                         </span>
-                        <!--<span class="help-block" v-show="addNewTaskForm.errors.has('startDate')">-->
-                        <!--{{ addNewTaskForm.errors.get('startDate') }}-->
-                        <!--</span>-->
+                    <!--<span class="help-block" v-show="addNewTaskForm.errors.has('startDate')">-->
+                    <!--{{ addNewTaskForm.errors.get('startDate') }}-->
+                    <!--</span>-->
 
-                    </div>
-                    <!-- <div class="flex flex-col ml-2 items-center">
-                              <label>Start Date <br> To Be Determined</label>
-                              <input type="checkbox" :checked="checked">
-                            </div> -->
+                </div>
+                <!-- <div class="flex flex-col ml-2 items-center">
+                          <label>Start Date <br> To Be Determined</label>
+                          <input type="checkbox" :checked="checked">
+                        </div> -->
 
+                <!--                 <div v-if="user.contractor.accounting_software === 'quickbooks'">-->
+                <div v-if="checkIfUserUsesQuickbooks()">
+                    <!--                <div>-->
                     <!--<div class="m-auto">Income Account Ref</div>-->
                     <div class="form-group">
                         <input type="text" class="form-control bat-input "
-                            v-model="addNewTaskForm.incomeAccountRef.name" placeholder="Income Account name">
+                               v-model="addNewTaskForm.incomeAccountRef.name" placeholder="Income Account name">
                         <input type="text" class="form-control bat-input "
-                            v-model="addNewTaskForm.incomeAccountRef.value" placeholder="Income Account value">
+                               v-model="addNewTaskForm.incomeAccountRef.value" placeholder="Income Account value">
                     </div>
 
                     <!--<div class="m-auto">Expense Account Ref</div>-->
                     <div class="form-group">
                         <input type="text" class="form-control bat-input "
-                            v-model="addNewTaskForm.expenseAccountRef.name" placeholder="Expense Account name">
+                               v-model="addNewTaskForm.expenseAccountRef.name" placeholder="Expense Account name">
                         <input type="text" class="form-control bat-input "
-                            v-model="addNewTaskForm.expenseAccountRef.value" placeholder="Expense Account value">
+                               v-model="addNewTaskForm.expenseAccountRef.value" placeholder="Expense Account value">
                     </div>
 
                     <!--<div class="m-auto">Asset Account Ref</div>-->
                     <div class="form-group">
                         <input type="text" class="form-control bat-input "
-                            v-model="addNewTaskForm.assetAccountRef.name" placeholder="Asset Account name">
+                               v-model="addNewTaskForm.assetAccountRef.name" placeholder="Asset Account name">
                         <input type="text" class="form-control bat-input "
-                            v-model="addNewTaskForm.assetAccountRef.value" placeholder="Asset Account value">
+                               v-model="addNewTaskForm.assetAccountRef.value" placeholder="Asset Account value">
                     </div>
 
                     <div class="form-group">
                         <input type="text" class="form-control bat-input " v-model="addNewTaskForm.type"
-                            placeholder="Type">
+                               placeholder="Type">
                         <input type="text" class="form-control bat-input " v-model="addNewTaskForm.invStartDate"
-                            placeholder="Item Added Date">
+                               placeholder="Item Added Date">
                     </div>
 
                     <div class="form-group">
                         <div class="flex">
                             <div class="small mr-2">Track Qty On Hand</div>
                             <input type="checkbox" class="bat-input ml-2" :checked="addNewTaskForm.trackQtyOnHand"
-                                v-model="addNewTaskForm.trackQtyOnHand">
+                                   v-model="addNewTaskForm.trackQtyOnHand">
                         </div>
                         <input type="text" class="form-control w-1/4 bat-input ml-2" v-model="addNewTaskForm.qtyOnHand"
-                            placeholder="Quantity On Hand">
+                               placeholder="Quantity On Hand">
                     </div>
+                </div>
 
 
-
-                        <!--Customer Message-->
-                        <div class="form-group customer-notes"
-                            :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
-                            <label for="customer_message">Instructions For The Customer</label>
-                            <textarea class="form-control bat-input" id="customer_message" name="customer_message"
-                                :disabled="taskExistsInJob" v-model="addNewTaskForm.customer_message"
-                                @focus="hideTaskResults" @keyup="checkIfCustomerMessageHasChanged($event.target.value)">
+                <!--Customer Message-->
+                <div class="form-group customer-notes"
+                     :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
+                    <label for="customer_message">Instructions For The Customer</label>
+                    <textarea class="form-control bat-input" id="customer_message" name="customer_message"
+                              :disabled="taskExistsInJob" v-model="addNewTaskForm.customer_message"
+                              @focus="hideTaskResults" @keyup="checkIfCustomerMessageHasChanged($event.target.value)">
                                 </textarea>
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('customer_message')">
+                    <span class="help-block" v-show="addNewTaskForm.errors.has('customer_message')">
                                 {{ addNewTaskForm.errors.get('customer_message') }}
                             </span>
-                        </div>
+                </div>
 
-                        <!--Sub Message-->
-                        <div class="form-group sub-notes"
-                            :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
-                            <label for="sub_message">Subcontractor Instructions</label>
-                            <textarea class="form-control bat-input" id="sub_message" name="sub_message"
-                                :disabled="taskExistsInJob" v-model="addNewTaskForm.sub_message"
-                                @focus="hideTaskResults" @keyup="checkIfSubMessageHasChanged($event.target.value)">
+                <!--Sub Message-->
+                <div class="form-group sub-notes"
+                     :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
+                    <label for="sub_message">Subcontractor Instructions</label>
+                    <textarea class="form-control bat-input" id="sub_message" name="sub_message"
+                              :disabled="taskExistsInJob" v-model="addNewTaskForm.sub_message"
+                              @focus="hideTaskResults" @keyup="checkIfSubMessageHasChanged($event.target.value)">
                                 </textarea>
-                            <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
+                    <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
                                 {{ addNewTaskForm.errors.get('sub_message') }}
                             </span>
-                        </div>
+                </div>
             </form>
             <!-- /end col-md-6 -->
         </card>
-                <!--<div class="form-group ">-->
-                <!--<button id="addTaskToInvoice" class="btn btn-success"-->
-                <!--@click.prevent="checkForExistingTaskChanges()">-->
-                <!--Add Task-->
-                <!--</button>-->
-                <!--</div>-->
-                <!--<label for="taskResultsChange"></label>-->
-                <div id="taskResultsChange" class="mb-4">
+        <!--<div class="form-group ">-->
+        <!--<button id="addTaskToInvoice" class="btn btn-success"-->
+        <!--@click.prevent="checkForExistingTaskChanges()">-->
+        <!--Add Task-->
+        <!--</button>-->
+        <!--</div>-->
+        <!--<label for="taskResultsChange"></label>-->
+<!--        <div id="taskResultsChange" class="mb-4">-->
 
-                    <!-- Name in task name is different than a task name in the database-->
-                    <!--<button v-if="!nameExistsInDB && !taskExistsInJob"-->
-                    <button class="btn btn-block btn-lg btn-normal text-uppercase font-weight-bold" :disabled="checkErrors" @click.prevent="changeTask('Add')">
-                        Add Task
-                    </button>
+<!--            &lt;!&ndash; Name in task name is different than a task name in the database&ndash;&gt;-->
+<!--            &lt;!&ndash;<button v-if="!nameExistsInDB && !taskExistsInJob"&ndash;&gt;-->
+<!--            <button class="btn btn-block btn-lg btn-normal text-uppercase font-weight-bold" :disabled="checkErrors"-->
+<!--                    @click.prevent="changeTask('Add')">-->
+<!--                Add Task-->
+<!--            </button>-->
 
-                    <!--Name is the same as one in the database-->
-                    <!--<button v-if="nameExistsInDB" class="btn btn-green"-->
-                    <!--:disabled="checkErrors"-->
-                    <!--@click.prevent="changeTask('Update')">Update and Add Task-->
-                    <!--</button>-->
+<!--            &lt;!&ndash;Name is the same as one in the database&ndash;&gt;-->
+<!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
+<!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
+<!--            &lt;!&ndash;@click.prevent="changeTask('Update')">Update and Add Task&ndash;&gt;-->
+<!--            &lt;!&ndash;</button>&ndash;&gt;-->
 
-                    <!--<button v-if="nameExistsInDB" class="btn btn-green"-->
-                    <!--:disabled="checkErrors"-->
-                    <!--@click.prevent="changeTask('Ignore')">Dont Update and Add Task-->
-                    <!--</button>-->
-
-
-                    <!--&lt;!&ndash; show if-->
-                    <!--drop down is selected and-->
-                    <!--any of the values have changed &ndash;&gt;-->
+<!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
+<!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
+<!--            &lt;!&ndash;@click.prevent="changeTask('Ignore')">Dont Update and Add Task&ndash;&gt;-->
+<!--            &lt;!&ndash;</button>&ndash;&gt;-->
 
 
-                    <!--&lt;!&ndash; show if-->
-                    <!--drop down is selected-->
-                    <!--drop down name is changed -> gives option to create a new task based on an existing one &ndash;&gt;-->
-                    <!--<button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"-->
-                    <!--class="btn btn-green" :disabled="checkErrors"-->
-                    <!--@click.prevent="changeTask('New')">-->
-                    <!--Create New and Add-->
-                    <!--</button>-->
-                </div>
+<!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
+<!--            &lt;!&ndash;drop down is selected and&ndash;&gt;-->
+<!--            &lt;!&ndash;any of the values have changed &ndash;&gt;&ndash;&gt;-->
+
+
+<!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
+<!--            &lt;!&ndash;drop down is selected&ndash;&gt;-->
+<!--            &lt;!&ndash;drop down name is changed -> gives option to create a new task based on an existing one &ndash;&gt;&ndash;&gt;-->
+<!--            &lt;!&ndash;<button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"&ndash;&gt;-->
+<!--            &lt;!&ndash;class="btn btn-green" :disabled="checkErrors"&ndash;&gt;-->
+<!--            &lt;!&ndash;@click.prevent="changeTask('New')">&ndash;&gt;-->
+<!--            &lt;!&ndash;Create New and Add&ndash;&gt;-->
+<!--            &lt;!&ndash;</button>&ndash;&gt;-->
+<!--        </div>-->
     </div>
 </template>
 
 <script>
+
   export default {
     data() {
-      return{
+      return {
         addNewTaskForm: new SparkForm({
           // one to one
           taskId: 0,  // if -1 then the task did not come from the drop down
@@ -267,21 +283,21 @@
           start_when_accepted: true,
 
           incomeAccountRef: {
-            value: '79',
+            value: '0',
             name: 'Sales of Product Income'
           },
           expenseAccountRef: {
-            value: '80',
+            value: '0',
             name: 'Cost of Goods Sold'
           },
           assetAccountRef: {
-            value: '81',
+            value: '0',
             name: 'Inventory Asset'
           },
           type: 'Inventory',
           trackQtyOnHand: true,
-          qtyOnHand: '10',
-          invStartDate: '2015-01-01',
+          qtyOnHand: '0',
+          invStartDate: '',
 
           // sub_sets_own_price_for_job: true,
           useStripe: false,
@@ -352,33 +368,40 @@
       }
     },
     methods: {
-
+      goBack() {
+        this.$router.go(-1)
+      },
+      checkIfUserUsesQuickbooks() {
+        if (Spark) {
+          return Spark.state.user.contractor.accounting_software === 'quickbooks'
+        }
+      },
       // TODO:: move this to vuex action
       async getBid(id) {
         try {
           const {
             data
             // } = await axios.get('/job/' + id);
-          } = await axios.get('/job/' + id);
+          } = await axios.get('/job/' + id)
           // debugger
-          this.bid = data;
+          this.bid = data
 
-          this.addNewTaskForm.customer_id = data.customer_id;
-          this.addNewTaskForm.contractorId = data.contractor_id;
-          this.addNewTaskForm.jobId = data.id;
+          this.addNewTaskForm.customer_id = data.customer_id
+          this.addNewTaskForm.contractorId = data.contractor_id
+          this.addNewTaskForm.jobId = data.id
 
         } catch (error) {
-          console.log(error);
+          console.log(error)
           // debugger;
           if (
             error.message === 'Not Authorized to access this resource/api' ||
             error.response.status === 403
           ) {
-            this.$router.push('/bids');
+            this.$router.push('/bids')
           }
           // error = error.response.data;
           // Vue.toasted.error(error.message);
-          Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.');
+          Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
         }
       },
 
@@ -493,31 +516,31 @@
         }
       },
       checkIfNameExistsInDB(taskName) {
-       if (this.bid.job_tasks) {
-         // need to check if the task that is being typed is in the job already
-         // if it is in the job then disable all inputs and show the error
-         this.taskExistsInJob = false
-         // debugger;
-         for (let i = 0; i < this.bid.job_tasks.length; i++) {
-           if (this.bid.job_tasks[i].task.name === taskName) {
-             this.taskExistsInJob = true
-           }
-         }
+        if (this.bid.job_tasks) {
+          // need to check if the task that is being typed is in the job already
+          // if it is in the job then disable all inputs and show the error
+          this.taskExistsInJob = false
+          // debugger;
+          for (let i = 0; i < this.bid.job_tasks.length; i++) {
+            if (this.bid.job_tasks[i].task.name === taskName) {
+              this.taskExistsInJob = true
+            }
+          }
 
-         // check if the name is in the database already so that I can show the
-         // correct buttons on the footer of the modal window
-         this.nameExistsInDB = false
-         // debugger;
-         for (let i = 0; i < this.currentTasks.length; i++) {
-           if (
-             this.currentTasks[i].name === taskName ||
-             this.currentTasks[i].name === this.addNewTaskForm.taskName
-           ) {
-             this.nameExistsInDB = true
-           }
-         }
-         this.showTaskResults = true
-       }
+          // check if the name is in the database already so that I can show the
+          // correct buttons on the footer of the modal window
+          this.nameExistsInDB = false
+          // debugger;
+          for (let i = 0; i < this.currentTasks.length; i++) {
+            if (
+              this.currentTasks[i].name === taskName ||
+              this.currentTasks[i].name === this.addNewTaskForm.taskName
+            ) {
+              this.nameExistsInDB = true
+            }
+          }
+          this.showTaskResults = true
+        }
 
       },
       getExistingTask(message) {
@@ -712,8 +735,8 @@
           !this.errors.notANumber.quantity &&
           !this.errors.notANumber.subTaskPrice
         ) {
-          this.addNewTaskForm.customer_id = this.bid.customer_id;
-          this.addNewTaskForm.jobId = this.bid.id;
+          this.addNewTaskForm.customer_id = this.bid.customer_id
+          this.addNewTaskForm.jobId = this.bid.id
           // this.addNewTaskForm.area = this.bid.location.city;
           GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
           // console.log (newTask);
@@ -728,7 +751,7 @@
       },
     },
     mounted: function() {
-      this.getBid(this.$store.state.job.model.id);
+      this.getBid(this.$store.state.job.model.id)
     }
   }
 </script>

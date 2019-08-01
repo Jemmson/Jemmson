@@ -1,6 +1,14 @@
 <template>
     <!-- /all tasks of a bid -->
     <div class="container-fluid">
+
+        <div class="flex mb-1rem">
+            <button class="btn btn-md btn-normal text-uppercase flex-1"
+                    @click.prevent="goBack()">
+                Back
+            </button>
+        </div>
+
         <search-bar>
             <input type="text" class="form-control" placeholder="Search Job Tasks" v-model="searchTerm" @keyup="search">
         </search-bar>
@@ -84,6 +92,9 @@
       })
     },
     methods: {
+      goBack() {
+        this.$router.go(-1)
+      },
       getTotalSubsForTasks() {
 
         let length = 0
