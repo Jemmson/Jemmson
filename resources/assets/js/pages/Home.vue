@@ -1,41 +1,55 @@
 <template>
     <div class="container">
-        <icon-header icon="jobs"
-                      mainHeader="My Jobs"
-                      subHeader="Includes jobs with tasks assigned to subcontractors">
-        </icon-header>
+
+        <div v-if="isContractor()">
+            <icon-header icon="jobs"
+                         mainHeader="My Jobs"
+                         subHeader="Includes jobs with tasks assigned to subcontractors">
+            </icon-header>
+        </div>
+        <div v-else>
+            <icon-header icon="jobs"
+                         mainHeader="My Jobs"
+                         subHeader="Please click on a the card below to go to Jobs">
+            </icon-header>
+        </div>
+
         <card>
           <list>
-            <list-item :left="'Initiated'" :right="bidData('bid.initiated')"></list-item>
+            <list-item v-if="isContractor()" :left="'Initiated'" :right="bidData('bid.initiated')"></list-item>
             <list-item :left="'In Progress'" :right="bidData('bid.in_progress')"></list-item>
-            <list-item :left="'Sent'" :right="bidData('bid.sent')"></list-item>
-            <list-item :left="'Declined'" :right="bidData('bid.declined')"></list-item>
+            <list-item v-if="isContractor()" :left="'Sent'" :right="bidData('bid.sent')"></list-item>
+            <list-item v-if="isContractor()" :left="'Declined'" :right="bidData('bid.declined')"></list-item>
             <list-item :left="'Approved'" :right="bidData('bid.approved')"></list-item>
             <list-item :left="'Completed'" :right="bidData('bid.completed')" noDivider="true"></list-item>
           </list>
         </card>
         <br>
+
+
         <!-- / end jobs -->
 
-        <icon-header v-if="checkIfUserIsAContractor" icon="tasks"
-                      mainHeader="My Tasks"
-                      subHeader="Tasks you've accepted or subbed out to subs">
-        </icon-header>
-        <card v-if="checkIfUserIsAContractor">
-          <list>
-            <list-item :left="'Initiated'" :right="bidData('bid_task.initiated')"></list-item>
-            <list-item :left="'Sent'" :right="bidData('bid_task.bid_sent')"></list-item>
-            <list-item :left="'Accepted'" :right="bidData('bid_task.accepted')"></list-item>
-            <list-item :left="'Finished By Sub'" :right="bidData('bid_task.finished_by_sub')"></list-item>
-            <list-item :left="'Approved'" :right="bidData('bid_task.approved_by_general')"></list-item>
-            <list-item :left="'Finished By General'" :right="bidData('bid_task.finished_by_general')"></list-item>
-            <list-item :left="'Approved By Customer'" :right="bidData('bid_task.approved_by_customer')"></list-item>
-            <list-item :left="'Payment Sent'" :right="bidData('bid_task.customer_sent_payment')"></list-item>
-            <list-item :left="'Reopened'" :right="bidData('bid_task.reopened')"></list-item>
-            <list-item :left="'Denied'" :right="bidData('bid_task.denied')" noDivider="true"></list-item>
+        <div v-if="isContractor()">
+            <icon-header icon="tasks"
+                         mainHeader="My Tasks"
+                         subHeader="Tasks you've accepted or subbed out to subs">
+            </icon-header>
+            <card>
+                <list>
+                    <list-item :left="'Initiated'" :right="bidData('bid_task.initiated')"></list-item>
+                    <list-item :left="'Sent'" :right="bidData('bid_task.bid_sent')"></list-item>
+                    <list-item :left="'Accepted'" :right="bidData('bid_task.accepted')"></list-item>
+                    <list-item :left="'Finished By Sub'" :right="bidData('bid_task.finished_by_sub')"></list-item>
+                    <list-item :left="'Approved'" :right="bidData('bid_task.approved_by_general')"></list-item>
+                    <list-item :left="'Finished By General'" :right="bidData('bid_task.finished_by_general')"></list-item>
+                    <list-item :left="'Approved By Customer'" :right="bidData('bid_task.approved_by_customer')"></list-item>
+                    <list-item :left="'Payment Sent'" :right="bidData('bid_task.customer_sent_payment')"></list-item>
+                    <list-item :left="'Reopened'" :right="bidData('bid_task.reopened')"></list-item>
+                    <list-item :left="'Denied'" :right="bidData('bid_task.denied')" noDivider="true"></list-item>
 
-          </list>
-        </card>
+                </list>
+            </card>
+        </div>
         <br>
         <!-- / end tasks -->
 
@@ -88,7 +102,7 @@
           return this.theUser.name
         }
       },
-      checkIfUserIsAContractor() {
+      isContractor() {
         return this.theUser.usertype === 'contractor'
       },
       checkContractorStripeIsValid() {
