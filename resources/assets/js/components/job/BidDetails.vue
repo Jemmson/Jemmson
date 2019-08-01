@@ -168,12 +168,6 @@
                     </section>
 
 
-                    <!--                    <general-contractor-bid-actions-->
-                    <!--                        v-on:open-bid-submission="$event ? openBidSubmissionDialog = $event : openBidSubmissionDialog = false"-->
-                    <!--                        :submit-the-bid="submitBid"-->
-                    <!--                    >-->
-                    <!--                    </general-contractor-bid-actions>-->
-
                 </main>
             </card>
         </section>
@@ -355,8 +349,6 @@
   import Card from '../shared/Card'
   import Stripe from '../stripe/Stripe'
   import GeneralContractorBidActions from './GeneralContractorBidActions'
-
-  // import GeneralContractor from '../../classes/GeneralContractor'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
   import ContentSection from '../shared/ContentSection'
 
@@ -523,7 +515,7 @@
     methods: {
       getCompanyName() {
         if (this.bid) {
-          if(this.bid.job_tasks){
+          if(this.bid.job_tasks && (this.bid.job_tasks.length !== 0)){
             return this.bid.job_tasks[0].task.contractor.company_name
           }
         }
