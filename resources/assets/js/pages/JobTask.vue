@@ -3,6 +3,15 @@
         <div class="row">
             <!-- details -->
             <div class="col-12">
+
+                <div class="flex mb-1rem">
+                    <button class="btn btn-md btn-normal text-uppercase flex-1"
+                            @click.prevent="goBack()">
+                        Back
+                    </button>
+                </div>
+
+
                 <h1 class="card-title">Details</h1>
                 <card>
                     <div class="row">
@@ -429,6 +438,9 @@
       }
     },
     methods: {
+      goBack() {
+        this.$router.go(-1)
+      },
       getCompanyName (bid) {
         if (bid.contractor.contractor) {
           return bid.contractor.contractor.company_name
