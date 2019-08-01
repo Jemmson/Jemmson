@@ -112,12 +112,32 @@
                             :content="customerName"
                             type="customerName"></content-section>
 
+
+
+
                     <content-section
+                            v-if="isCustomer && !bidHasBeenSubmitted"
+                            label="Start Date:"
+                            content="Bid Not Complete"
+                            type="startDate"></content-section>
+
+                    <content-section
+                            v-if="!isCustomer || (isCustomer && bidHasBeenSubmitted)"
                             label="Start Date:"
                             :content="agreedStartDate"
                             type="startDate"></content-section>
 
+
+
+
                     <content-section
+                            v-if="isCustomer && !bidHasBeenSubmitted"
+                            label="Total Bid Price:"
+                            content="Bid Not Complete"
+                            type="totalBidPrice"></content-section>
+
+                    <content-section
+                            v-if="!isCustomer || (isCustomer && bidHasBeenSubmitted)"
                             label="Total Bid Price:"
                             :content="bidPrice"
                             type="totalBidPrice"></content-section>
@@ -439,7 +459,13 @@
           let format_date = date[0].split('-')
           return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
         } else {
-          return 'Add A Task'
+
+          if (this.isCustomer) {
+            return ''
+          } else{
+            return 'Add A Task'
+          }
+          
         }
       },
       messageFromCustomer() {
@@ -467,7 +493,13 @@
 
           return '$ ' + Format.decimal(theBidPrice)
         } else {
-          return 'Add A Task'
+
+          if (this.isCustomer) {
+            return ''
+          } else{
+            return 'Add A Task'
+          }
+
         }
       },
       showBidPrice() {
@@ -482,6 +514,10 @@
       },
       status() {
         return User.status(this.bid.status, this.bid, Spark.state.user)
+      },
+      bidHasBeenSubmitted () {
+        return this.bid.status !== 'bid.initiated' &&
+          this.bid.status !== 'bid.in_progress';
       },
       showDeclinedMessage() {
         return (
