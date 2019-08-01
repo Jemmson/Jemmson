@@ -41,7 +41,7 @@
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
             </span>
             <span v-if="!disabled.uploadTaskImageBtn"> -->
-        <input :ref="'task_photo_' + jobTask.id" class="btn btn-primary ml-2 mt-4" :id="'task_photo_' + jobTask.id"
+        <input :ref="'task_photo_' + jobTask.id" class="btn btn-normal ml-2 mt-4 w-inherit" :id="'task_photo_' + jobTask.id"
                type="file" @change="uploadTaskImage(jobTask.id)">
         <!-- </span>
     </button> -->
