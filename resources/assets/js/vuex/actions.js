@@ -30,18 +30,21 @@ function unformatNumber (number) {
 
 export const checkMobileNumber = ({commit}, phone) => {
 
-  // let validNumber = User.validateMobileNumber (phone);
+    commit('busy');
+    // commit('clearMobileResponse');
 
     let unformattedNumber = unformatNumber (phone);
     try {
       axios.post ('/api/user/validatePhoneNumber', {
         num: unformattedNumber,
       }).then ((response) => {
+        commit('busy');
         console.log (response);
         console.log (response.data);
         commit ('setMobileResponse', response.data);
       }).catch ((error) => {
         console.log (error);
+        commit('busy');
       });
     } catch (error) {
       Vue.toasted.error ('Error: ' + error.message);

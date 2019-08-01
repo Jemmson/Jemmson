@@ -38,4 +38,13 @@ export default {
   // setUser (state, payload) {
   //   state.user = payload;
   // }
+  
+  busy (state) {
+    state.busy = !state.busy
+  },
+
+  clearMobileResponse (state) {
+    state.mobile.response = [];
+  }
+  
 }

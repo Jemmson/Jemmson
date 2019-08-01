@@ -59,6 +59,9 @@
                     </div>
                     <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                 </div>
+                <div v-if="busy">
+            <i class="fa fa-btn fa-spinner fa-spin"></i>
+          </div>
                 <span class="help-block" v-show="form.errors.has('phone')">
           {{ form.errors.get('phone') }}
         </span>
@@ -93,7 +96,7 @@
   import Card from '../components/shared/Card'
   import Feedback from '../components/shared/Feedback'
   import IconHeader from '../components/shared/IconHeader'
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import { mapGetters, mapMutations, mapActions, mapState } from 'vuex'
   import Format from '../classes/Format'
 
   export default {
@@ -125,13 +128,17 @@
         },
         disabled: {
           submit: false,
-          validData: true
+          validData: true,
+          searchingMobileNumber: true
         },
         numberType: ''
       }
     },
     computed: {
-      ...mapGetters(['getMobileValidResponse'])
+      ...mapGetters(['getMobileValidResponse']),
+      ...mapState({
+        busy: state => state.busy
+      })
     },
     methods: {
       ...mapMutations(['setMobileResponse']),
@@ -181,6 +188,7 @@
       validateMobileNumber(phone) {
         this.phoneFormatError = false
         if (this.unformatNumber(this.form.phone) === 10) {
+          // this.$store.commit('clearMobileResponse')
           this.checkMobileNumber(phone)
         } else {
           this.phoneFormatError = true
@@ -230,7 +238,7 @@
         }
       },
       autoComplete() {
-        this.results = []
+        // this.results = []
         this.createName()
         if (this.form.customerName.length > 2) {
           axios.get('/customer/search', {
@@ -280,7 +288,7 @@
             this.filterPhone()
           }
         }
-        this.results = []
+        // this.results = []
       }
     },
     mounted() {

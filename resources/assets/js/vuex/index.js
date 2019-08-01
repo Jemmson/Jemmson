@@ -26,7 +26,8 @@ export const store = new Vuex.Store({
     },
     features: {
       quickbooks: 0
-    }
+    },
+    busy: false
   },
   actions: actions,
   getters: getters,
