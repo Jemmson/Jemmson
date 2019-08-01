@@ -30,59 +30,59 @@
         </div>
 
 
-        <section ref="submissionCard" class="col-12" v-if="submissionCard">
+<!--        <section ref="submissionCard" class="col-12" v-if="submissionCard">-->
 
-            <card>
-                <main class="row">
+<!--            <card>-->
+<!--                <main class="row">-->
 
-                    <header class="w-full text-center f-bold mb-1rem">Bid Finished</header>
+<!--                    <header class="w-full text-center f-bold mb-1rem">Bid Finished</header>-->
 
-                    <article>You are about to submit this job bid to the customer,
-                        you will not be able to edit this bid after its been approved by the customer
-                        Please also make sure to check whether you have accepted the subcontractors you wanted for each
-                        task.
-                        Click yes to submit or no to cancel.
-                    </article>
+<!--                    <article>You are about to submit this job bid to the customer,-->
+<!--                        you will not be able to edit this bid after its been approved by the customer-->
+<!--                        Please also make sure to check whether you have accepted the subcontractors you wanted for each-->
+<!--                        task.-->
+<!--                        Click yes to submit or no to cancel.-->
+<!--                    </article>-->
 
-                    <footer class="w-full mt-1rem flex justify-content-around">
+<!--                    <footer class="w-full mt-1rem flex justify-content-around">-->
 
-                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>
-                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="submitTheBid()">Yes</button>
+<!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>-->
+<!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="submitTheBid()">Yes</button>-->
 
-                    </footer>
+<!--                    </footer>-->
 
-                </main>
-            </card>
-
-
-        </section>
+<!--                </main>-->
+<!--            </card>-->
 
 
-        <section ref="cancel_dialog_box" class="col-12" v-if="cancelBidCard">
-
-            <card>
-                <main class="row">
+<!--        </section>-->
 
 
-                    <header class="w-full text-center f-bold mb-1rem">Confirm Cancellation</header>
+<!--        <section ref="cancel_dialog_box" class="col-12" v-if="cancelBidCard">-->
 
-                    <article>You are about to cancel this job,
-                        Click delete job to cancel and delete the job or back to cancel this action.
-                        confirmJobCancellation
-                    </article>
-
-                    <footer class="w-full mt-1rem flex justify-content-around">
-
-                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>
-                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="cancelTheBid()">Yes</button>
-
-                    </footer>
-
-                </main>
-            </card>
+<!--            <card>-->
+<!--                <main class="row">-->
 
 
-        </section>
+<!--                    <header class="w-full text-center f-bold mb-1rem">Confirm Cancellation</header>-->
+
+<!--                    <article>You are about to cancel this job,-->
+<!--                        Click delete job to cancel and delete the job or back to cancel this action.-->
+<!--                        confirmJobCancellation-->
+<!--                    </article>-->
+
+<!--                    <footer class="w-full mt-1rem flex justify-content-around">-->
+
+<!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>-->
+<!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="cancelTheBid()">Yes</button>-->
+
+<!--                    </footer>-->
+
+<!--                </main>-->
+<!--            </card>-->
+
+
+<!--        </section>-->
 
 
         <section class="col-12">
@@ -127,46 +127,43 @@
 
                     <section class="w-full">
 
-                        <div ref="show_approved_actions" v-if="showPreApprovedActions()">
+<!--                        <div ref="show_approved_actions" v-if="showPreApprovedActions()">-->
 
-                            <div ref="bidButtons" v-if="bid.job_tasks.length > 0"
-                                 class="flex w-full justify-content-around">
-                                <button class="btn btn-normal flex-1" @click.prevent="showCancelCard()"
-                                        :disabled="disabled.cancelBid" ref="cancelBtn">
-                                      <span v-if="disabled.cancelBid">
-                                        <i class="fa fa-btn fa-spinner fa-spin mr-half-rem"></i>
-                                      </span>
-                                    Cancel Job
-                                </button>
+<!--                            <div ref="bidButtons" v-if="bid.job_tasks.length > 0"-->
+<!--                                 class="flex w-full justify-content-around">-->
+<!--                                <button class="btn btn-normal flex-1" @click.prevent="showCancelCard()"-->
+<!--                                        :disabled="disabled.cancelBid" ref="cancelBtn">-->
+<!--                                      <span v-if="disabled.cancelBid">-->
+<!--                                        <i class="fa fa-btn fa-spinner fa-spin mr-half-rem"></i>-->
+<!--                                      </span>-->
+<!--                                    Cancel Job-->
+<!--                                </button>-->
 
-                                <button
-                                        ref="show_submission_card"
-                                        class="btn btn-normal flex-1 ml-half-rem"
-                                        @click="showSubmissionCard()"
-                                        :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"
-                                >
-                                      <span v-if="disabled.submitBid">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                      </span>
-                                    <span>Submit Bid</span>
-                                </button>
-                            </div>
+<!--                                <button-->
+<!--                                        ref="show_submission_card"-->
+<!--                                        class="btn btn-normal flex-1 ml-half-rem"-->
+<!--                                        @click="showSubmissionCard()"-->
+<!--                                        :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"-->
+<!--                                >-->
+<!--                                      <span v-if="disabled.submitBid">-->
+<!--                                        <i class="fa fa-btn fa-spinner fa-spin"></i>-->
+<!--                                      </span>-->
+<!--                                    <span>Submit Bid</span>-->
+<!--                                </button>-->
+<!--                            </div>-->
 
-                        </div>
-                        <div v-if="bidHasNoTasks() && !this.isCustomer">
-                            <button class="btn btn-normal flex-1 mr-6 ml-6"
+<!--                        </div>-->
+
+                        <div v-if="!this.isCustomer">
+                            <button class="btn btn-sm btn-normal flex-1 ml-1rem"
                                     name="addTaskToBid" id="addTaskToBid"
                                     @click="$router.push('/job/add/task')"
                             >
-                                Add A Task
+                                Add Task
                             </button>
 
                         </div>
-
-
-
                     </section>
-
 
                 </main>
             </card>
@@ -442,7 +439,7 @@
           let format_date = date[0].split('-')
           return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
         } else {
-          return 'Not Set'
+          return 'Add A Task'
         }
       },
       messageFromCustomer() {
@@ -470,7 +467,7 @@
 
           return '$ ' + Format.decimal(theBidPrice)
         } else {
-          return 'In Process'
+          return 'Add A Task'
         }
       },
       showBidPrice() {
