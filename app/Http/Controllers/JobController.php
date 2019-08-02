@@ -198,6 +198,7 @@ class JobController extends Controller
                     'location',
                     'jobTasks.location',
                     'jobTasks.images',
+                    'contractor',
                     'customer' => function ($query) {
                         $query->select('id', 'name');
                     }

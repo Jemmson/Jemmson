@@ -465,7 +465,7 @@
           } else{
             return 'Add A Task'
           }
-          
+
         }
       },
       messageFromCustomer() {
@@ -550,6 +550,8 @@
         if (this.bid) {
           if(this.bid.job_tasks && (this.bid.job_tasks.length !== 0)){
             return this.bid.job_tasks[0].task.contractor.company_name
+          } else if (this.bid.contractor) {
+            return this.bid.contractor.contractor.company_name
           }
         }
       },
