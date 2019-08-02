@@ -12,7 +12,6 @@
   "require": {
     "php": ">=7.0.0",
     "barryvdh/laravel-debugbar": "dev-master",
-    "bugsnag/bugsnag-laravel": "^2.0",
     "doctrine/dbal": "^2.9",
     "fideloper/proxy": "~4.0",
     "guzzlehttp/guzzle": "^6.3",

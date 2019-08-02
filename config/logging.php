@@ -30,7 +30,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily', 'bugsnag', 'slack'],
+            'channels' => ['daily'],
         ],
         'single' => [
             'driver' => 'single',
