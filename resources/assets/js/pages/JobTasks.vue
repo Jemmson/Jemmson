@@ -150,7 +150,7 @@
     }
 
     .totalCost {
-        padding-left: .5rem;
+        /*padding-left: .5rem;*/
     }
 
     .task-status {
@@ -160,6 +160,6 @@
     }
 
     .pr-1 {
-        padding-right: .25rem;
+        /*padding-right: .25rem;*/
     }
 </style>

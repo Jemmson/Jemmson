@@ -63,7 +63,7 @@
                                             v-if="parseInt(cust_final_price) * 10 > 0"
                                             label="Total Task Price:"
                                             :content="taskCustFinalPrice(cust_final_price)"
-                                            input-classes="totalCost"
+                                            section-classes="ph-zero"
                                             icon="fas fa-money-bill-alt icon"
                                             :warning="cust_final_price < sub_final_price"
                                             warning-message="Sub Price is Lower than your price"
@@ -72,8 +72,8 @@
                                     <content-section
                                             v-if="parseInt(cust_final_price) * 10 <= 0"
                                             label="Total Task Price:"
-                                            content="Price Has Not Been Set"
-                                            input-classes="totalCost"
+                                            content="Price Not Set"
+                                            section-classes="ph-zero"
                                             icon="fas fa-money-bill-alt icon"
                                             type="totalTaskPrice"></content-section>
 
@@ -81,15 +81,15 @@
                                             v-if="isContractor() && parseInt(sub_final_price) * 10 > 0"
                                             label="Total Task Sub Price:"
                                             :content="taskCustFinalPrice(sub_final_price)"
-                                            input-classes="totalCost"
+                                            section-classes="ph-zero"
                                             icon="fas fa-user icon"
                                             type="totalTaskPrice"></content-section>
 
                                     <content-section
                                             v-if="isContractor() && parseInt(sub_final_price) * 10 <= 0"
                                             label="Total Task Sub Price:"
-                                            content="Price Has Not Been Set"
-                                            input-classes="totalCost"
+                                            content="Price Not Set"
+                                            section-classes="ph-zero"
                                             icon="fas fa-user icon"
                                             type="totalTaskPrice"></content-section>
                                 </div>
@@ -97,7 +97,7 @@
                                 <div class="col-12">
 
                                     <div class="form-group" v-if="isContractor()">
-                                        <div class="flex justify-content-between">
+                                        <div class="flex justify-content-between mt-1rem">
                                             <label class="">Quantity:</label>
                                             <input v-if="showTaskPriceInput()" type="text" ref="quantity"
                                                    class="form-control form-control-sm w-40" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
