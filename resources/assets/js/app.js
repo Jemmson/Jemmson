@@ -113,92 +113,96 @@ function doAuthRouting(to, from, next) {
 
 router.beforeEach((to, from, next) => {
 
-  axios.get('/checkAuth')
-    .then(response => {
+ if (to.fullPath !== '/' && to.fullPath !== '/register') {
+   axios.get('/checkAuth')
+     .then(response => {
 
-        if (response.data.auth) {
-          checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
+         if (response.data.auth) {
+           checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
 
-          if (isUserInVuexStore()) {
+           if (isUserInVuexStore()) {
 
-            // doAuthRouting(to, from, next)
+             // doAuthRouting(to, from, next)
 
-            if (store.state.user.user.password_updated === 0) {
-              if (to.fullPath === '/furtherInfo') {
-                next()
-              } else {
-                next('/furtherInfo')
-              }
-            } else {
-              next()
-            }
+             if (store.state.user.user.password_updated === 0) {
+               if (to.fullPath === '/furtherInfo') {
+                 next()
+               } else {
+                 next('/furtherInfo')
+               }
+             } else {
+               next()
+             }
 
-          } else {
+           } else {
 
-            if (isUserInSparkState()) {
+             if (isUserInSparkState()) {
 
-              updateStoreWithSparkState()
+               updateStoreWithSparkState()
 
-              // doAuthRouting(to, from, next)
+               // doAuthRouting(to, from, next)
 
-              if (store.state.user.user.password_updated === 0) {
-                if (to.fullPath === '/furtherInfo') {
-                  next()
-                } else {
-                  next('/furtherInfo')
-                }
-              } else {
-                next()
-              }
+               if (store.state.user.user.password_updated === 0) {
+                 if (to.fullPath === '/furtherInfo') {
+                   next()
+                 } else {
+                   next('/furtherInfo')
+                 }
+               } else {
+                 next()
+               }
 
-            } else {
+             } else {
 
-              axios.get('/user/current')
-                .then(response => {
-                  this.user = response.data
-                  console.log(JSON.stringify(this.user))
-                  Spark.state.user = this.user
+               axios.get('/user/current')
+                 .then(response => {
+                   this.user = response.data
+                   console.log(JSON.stringify(this.user))
+                   Spark.state.user = this.user
 
-                  this.$store.commit('setUser', this.user)
-                  window.User.user = this.user
-                  window.GeneralContractor.user = this.user
-                  window.SubContractor.user = this.user
-                  window.Customer.user = this.user
+                   this.$store.commit('setUser', this.user)
+                   window.User.user = this.user
+                   window.GeneralContractor.user = this.user
+                   window.SubContractor.user = this.user
+                   window.Customer.user = this.user
 
-                  // doAuthRouting(to, from, next)
+                   // doAuthRouting(to, from, next)
 
-                  if (store.state.user.user.password_updated === 0) {
-                    if (to.fullPath === '/furtherInfo') {
-                      next()
-                    } else {
-                      next('/furtherInfo')
-                    }
-                  } else {
-                    next()
-                  }
+                   if (store.state.user.user.password_updated === 0) {
+                     if (to.fullPath === '/furtherInfo') {
+                       next()
+                     } else {
+                       next('/furtherInfo')
+                     }
+                   } else {
+                     next()
+                   }
 
-                })
+                 })
 
-            }
+             }
 
-          }
+           }
 
-          // need to send a user to further info if the user does not have
-          // their password updated
+           // need to send a user to further info if the user does not have
+           // their password updated
 
-          // a customer should not be able to initiate a bid or look at tasks
-          // page
+           // a customer should not be able to initiate a bid or look at tasks
+           // page
 
-        } else {
-          if (goingToANonAuthorizedPage(to.path)) {
-            next()
-          }
-        }
-      }
-    )
-    .catch(error => {
-      console.log(JSON.stringify(error))
-    })
+         } else {
+           if (goingToANonAuthorizedPage(to.path)) {
+             next()
+           }
+         }
+       }
+     )
+     .catch(error => {
+       console.log(JSON.stringify(error))
+     })
+ } else {
+   next()
+ }
 
 })
 
@@ -228,27 +232,27 @@ var app = new Vue({
       protocol: window.location.protocol
     }
 
-    axios.post('/loadFeatures', {
-      hello: 'world',
-      location: location
-    }).then((response) => {
-
-      if (response.data.redirect) {
-        if (response.data.redirect !== window.location.pathname) {
-          window.location = response.data.redirect
-        }
-      } else {
-        if (response.data.state[0]) {
-          this.$store.commit('loadFeatures', response.data.state[0])
-        }
-        if (this.$store.state.user.user === '') {
-          this.$store.commit('setUser', response.data.state[1])
-        }
-      }
-
-    }).catch(function(error) {
-      console.log(JSON.stringify(error))
-    })
+    // axios.post('/loadFeatures', {
+    //   hello: 'world',
+    //   location: location
+    // }).then((response) => {
+    //
+    //   if (response.data.redirect) {
+    //     if (response.data.redirect !== window.location.pathname) {
+    //       window.location = response.data.redirect
+    //     }
+    //   } else {
+    //     if (response.data.state[0]) {
+    //       this.$store.commit('loadFeatures', response.data.state[0])
+    //     }
+    //     if (this.$store.state.user.user === '') {
+    //       this.$store.commit('setUser', response.data.state[1])
+    //     }
+    //   }
+    //
+    // }).catch(function(error) {
+    //   console.log(JSON.stringify(error))
+    // })
   }
 })
 

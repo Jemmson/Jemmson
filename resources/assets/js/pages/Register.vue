@@ -634,19 +634,19 @@
     },
     mounted() {
       // TODO: Feature Not Working
-      axios.get('/loadFeatures').then((response) => {
-          console.log(JSON.stringify(response.data))
-          for (let i = 0; i < response.data.length; i++) {
-            if (response.data[i].name === 'quickbooks') {
-              if (response.data[i].on === 1) {
-                this.$router.push('check_accounting')
-              } else {
-                window.location = '/register'
-              }
-            }
-          }
-        }
-      )
+      // axios.get('/loadFeatures').then((response) => {
+      //     console.log(JSON.stringify(response.data))
+      //     for (let i = 0; i < response.data.length; i++) {
+      //       if (response.data[i].name === 'quickbooks') {
+      //         if (response.data[i].on === 1) {
+      //           this.$router.push('check_accounting')
+      //         } else {
+      //           window.location = '/register'
+      //         }
+      //       }
+      //     }
+      //   }
+      // )
     },
     computed: {
       ...mapGetters([
