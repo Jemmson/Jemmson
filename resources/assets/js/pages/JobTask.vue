@@ -249,7 +249,7 @@
                                              :key="bid.id">
                                             <div class="flex-1">{{ getCompanyName(bid) }}</div>
                                             <!--                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>-->
-                                            <div class="flex-1">${{ bid.bid_price }}</div>
+                                            <div class="flex-1">${{ getBidPrice(bid) }}</div>
                                             <div class="flex-1">
                                                 <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
                                                 <button
@@ -438,6 +438,10 @@
       }
     },
     methods: {
+      getBidPrice(bid) {
+        if (bid) {
+          return bid.bid_price / 100
+        }      },
       goBack() {
         this.$router.go(-1)
       },

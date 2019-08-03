@@ -1,12 +1,16 @@
 <template>
     <div>
 
-        <div ref="subTaskWarning" class="text-white btn-red rounded p-3 mt-2 mb-2 text-center" style="font-weight: 700" v-if="subTaskWarning">PLEASE CHECK TASKS. SOME
-            TASKS HAVE
-            SUB PRICES HIGHER THAN CONTRACTOR PRICE
+        <div ref="subTaskWarning"
+             class="text-white btn-red rounded p-3 mt-2 mb-2 text-center"
+             style="font-weight: 700"
+             v-if="subTaskWarning">
+            PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
         </div>
 
-        <button ref="submitBid" class="btn btn-normal btn-sm" @click="openBidSubmissionDialog()">Submit Bid</button>
+        <button ref="submitBid"
+                class="btn btn-normal btn-sm"
+                @click="openBidSubmissionDialog()">Submit Bid</button>
 
     </div>
 

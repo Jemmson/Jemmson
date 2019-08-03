@@ -9,7 +9,10 @@
                     <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
                     </approve-bid>
                     <!-- /buttons  -->
-                    <general-contractor-bid-actions v-if="!isCustomer" :bid="bid" @openAddTask="openAddTask">
+                    <general-contractor-bid-actions
+                            v-if="!isCustomer"
+                            :bid="bid"
+                            @openAddTask="openAddTask">
                     </general-contractor-bid-actions>
                 </template>
             </card>

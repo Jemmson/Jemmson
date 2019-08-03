@@ -113,8 +113,6 @@
                             type="customerName"></content-section>
 
 
-
-
                     <content-section
                             v-if="isCustomer && !bidHasBeenSubmitted"
                             label="Start Date:"
@@ -126,9 +124,6 @@
                             label="Start Date:"
                             :content="agreedStartDate"
                             type="startDate"></content-section>
-
-
-
 
                     <content-section
                             v-if="isCustomer && !bidHasBeenSubmitted"
