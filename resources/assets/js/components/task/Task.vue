@@ -57,26 +57,31 @@
                                 :dollar-sign=true
                                 type="subFinalPrice"></content-section>
 
-                        <label v-if="isBidOpen(bidTask)" class="w-full ml-1rem mt-half-rem">Task Price:</label>
-
                         <div style="display:none;">{{ getStoredBidPrice }}</div>
 
-                        <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
-                               type="text"
-                               class="form-control form-control-sm w-40" v-bind:id="'price-' + bidTask.id"
-                               v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
+
+                        <div class="flex justify-content-between w-full mr-1rem mt-half-rem">
+
+                            <label v-if="isBidOpen(bidTask)" class="w-full ml-1rem mt-half-rem">Task Price:</label>
+
+                            <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
+                                   type="text"
+                                   class="form-control form-control-sm w-40" v-bind:id="'price-' + bidTask.id"
+                                   v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
 
 
-                        <input v-else-if="!bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
-                               type="text" class="form-control form-control-sm w-40"
-                               v-bind:id="'price-' + bidTask.id"
-                               v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
+                            <input v-else-if="!bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
+                                   type="text" class="form-control form-control-sm w-40"
+                                   v-bind:id="'price-' + bidTask.id"
+                                   v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
+                        </div>
 
                         <div class="flex justify-content-between w-full mr-1rem mt-half-rem">
                             <label v-if="!isBidOpen(bidTask)" class="ml-1rem">
                                 Accepted Bid Price:
                             </label>
-                            <label v-if="!isBidOpen(bidTask)" class=""><strong>$ {{ getSubFinalPrice(bidTask.job_task.sub_final_price) }}</strong></label>
+                            <label v-if="!isBidOpen(bidTask)" class=""><strong>$
+                                {{ getSubFinalPrice(bidTask.job_task.sub_final_price) }}</strong></label>
                         </div>
                     </main>
                 </card>
@@ -86,52 +91,53 @@
             <!--<div v-if="isBidOpen(bidTask)" class="flex-1 flex-col">-->
 
 
-            <section class="col-12">
-                <h1 class="card-title">Payment Method</h1>
-                <card>
-                    <main class="row">
+<!--            <section class="col-12">-->
+<!--                <h1 class="card-title">Payment Method</h1>-->
+<!--                <card>-->
+<!--                    <main class="row">-->
 
-                        <div class="w-full" v-if="bidTask.accepted === 1">
+<!--                        <div class="w-full" v-if="bidTask.accepted === 1">-->
 
-                            <content-section
-                                    label="Selected Payment Method:"
-                                    :content="bidTask.payment_type"
-                                    type="paymentType"></content-section>
+<!--                            <content-section-->
+<!--                                    label="Selected Payment Method:"-->
+<!--                                    :content="bidTask.payment_type"-->
+<!--                                    type="paymentType"></content-section>-->
 
-                            <content-section
-                                    v-if="bidTask.payment_type === 'cash'"
-                                    label="Payment Instructions:"
-                                    :content="bidTask.job_task.job.paid_with_cash_message"
-                                    type="paymentType"></content-section>
-                        </div>
-                        <div v-else class="w-full">
-                            <div class="text-center m-2 w-full pb-half-rem"><strong>Preferred Payment Method?</strong>
-                            </div>
-                            <div class="flex justify-content-around w-full">
-                                <button class="btn btn-sm btn-normal flex-1"
-                                        :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'"
-                                        @click="setPaymentType('stripe')">Stripe
-                                </button>
-                                <button class="btn btn-sm btn-normal flex-1 mr-6 ml-6"
-                                        :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'"
-                                        @click="setPaymentType('cash')">Cash
-                                </button>
-                                <button class="btn btn-sm btn-normal flex-1"
-                                        :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'"
-                                        @click="setPaymentType('other')">Other
-                                </button>
-                            </div>
-                        </div>
+<!--                            <content-section-->
+<!--                                    v-if="bidTask.payment_type === 'cash'"-->
+<!--                                    label="Payment Instructions:"-->
+<!--                                    :content="bidTask.job_task.job.paid_with_cash_message"-->
+<!--                                    type="paymentType"></content-section>-->
+<!--                        </div>-->
+<!--                        <div v-else class="w-full">-->
+<!--                            <div class="text-center m-2 w-full pb-half-rem"><strong>Preferred Payment Method?</strong>-->
+<!--                            </div>-->
+<!--                            <div class="flex justify-content-around w-full">-->
+<!--                                <button class="btn btn-sm btn-normal flex-1"-->
+<!--                                        :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'"-->
+<!--                                        @click="setPaymentType('stripe')">Stripe-->
+<!--                                </button>-->
+<!--                                <button class="btn btn-sm btn-normal flex-1 mr-6 ml-6"-->
+<!--                                        :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'"-->
+<!--                                        @click="setPaymentType('cash')">Cash-->
+<!--                                </button>-->
+<!--                                <button class="btn btn-sm btn-normal flex-1"-->
+<!--                                        :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'"-->
+<!--                                        @click="setPaymentType('other')">Other-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
-                        <!--                        <content-section-->
-                        <!--                                label="asassa"-->
-                        <!--                                :content="saassaas"-->
-                        <!--                                type="sasaasas"></content-section>-->
+<!--                        &lt;!&ndash;                        <content-section&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                label="asassa"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                :content="saassaas"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                type="sasaasas"></content-section>&ndash;&gt;-->
 
 
-                    </main>
-                </card>
-            </section>
+<!--                    </main>-->
+<!--                </card>-->
+<!--            </section>-->
+            
 
             <section class="col-12">
                 <h1 class="card-title">Job Address</h1>
@@ -232,12 +238,12 @@
       Card
     },
     updated() {
-      this.getStoredBidPrice;
+      this.getStoredBidPrice
     },
     computed: {
       getStoredBidPrice() {
-        if (localStorage.getItem('bidPrice' + this.bidTask.id )) {
-          this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id )
+        if (localStorage.getItem('bidPrice' + this.bidTask.id)) {
+          this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id)
         }
       }
     },
@@ -258,7 +264,7 @@
       bidTask: Object
     },
     methods: {
-      getSubFinalPrice(num){
+      getSubFinalPrice(num) {
         return this.convertNumToString(num)
       },
       convertNumToString(num) {
