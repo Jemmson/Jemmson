@@ -200,10 +200,20 @@
         this.initiateBidForSubForm.phone = result.phone
         this.initiateBidForSubForm.name = result.name
         if (result.first_name !== null && result.last_name !== null) {
-          this.initiateBidForSubForm.firstName = result.given_name
-          this.initiateBidForSubForm.lastName = result.family_name
-          this.initiateBidForSubForm.givenName = result.given_name
-          this.initiateBidForSubForm.familyName = result.family_name
+
+          if (result.given_name) {
+            this.initiateBidForSubForm.firstName = result.given_name
+            this.initiateBidForSubForm.lastName = result.family_name
+            this.initiateBidForSubForm.givenName = result.given_name
+            this.initiateBidForSubForm.familyName = result.family_name
+          } else if (result.first_name) {
+            this.initiateBidForSubForm.firstName = result.first_name
+            this.initiateBidForSubForm.lastName = result.last_name
+            this.initiateBidForSubForm.givenName = result.first_name
+            this.initiateBidForSubForm.familyName = result.last_name
+          }
+
+
         }
         if (this.initiateBidForSubForm.quickbooksId !== null) {
           this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
