@@ -7,11 +7,14 @@
             <h5 class="card-title" v-if="title !== undefined && title">{{ title }}</h5>
             <slot></slot>
         </div>
+        <div class="card-footer" v-if="footer !== undefined && footer">
+            <slot slot="card-footer"></slot>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
-        props: ['header', 'title', 'classes']
+        props: ['header', 'title', 'footer', 'classes']
     }
 </script>
