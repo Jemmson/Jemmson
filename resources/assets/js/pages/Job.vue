@@ -4,14 +4,12 @@
         <div class="container">
 
             <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">
-                <template slot="card-body">
-                    <!-- /customer approve bid form -->
-                    <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-                    </approve-bid>
-                    <!-- /buttons  -->
-                    <general-contractor-bid-actions v-if="!isCustomer" :bid="bid" @openAddTask="openAddTask">
-                    </general-contractor-bid-actions>
-                </template>
+              <!-- /customer approve bid form -->
+              <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
+              </approve-bid>
+              <!-- /buttons  -->
+              <general-contractor-bid-actions v-if="!isCustomer">
+              </general-contractor-bid-actions>
             </card>
 
             <!-- /show all bid information -->

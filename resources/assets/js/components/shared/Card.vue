@@ -7,6 +7,9 @@
             <h5 class="card-title" v-if="title !== undefined && title">{{ title }}</h5>
             <slot></slot>
         </div>
+        <div class="card-footer">
+            <slot slot="card-footer"></slot>
+        </div>
     </div>
 </template>
 
