@@ -37,6 +37,7 @@ return [
             'driver' => 'sqlite',
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true)
         ],
 
         'mysql' => [
@@ -57,7 +58,7 @@ return [
         'mysqlTest' => [
             'driver' => 'mysql',
             'host' => env('', '127.0.0.1'),
-            'port' => env('', '23306'),
+            'port' => env('', '3306'),
             'database' => env('', 'testDB'),
             'username' => env('', 'root'),
             'password' => env('', 'root'),
