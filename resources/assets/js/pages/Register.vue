@@ -21,25 +21,25 @@
                     </div>
 
 
-                    <h4 data-v-24a44010=""
-                        class="text-center"
-                        v-if="usesQuickbooks"
-                        style="margin-top: 1.5rem">Do You Use Quickbooks?</h4>
+<!--                    <h4 data-v-24a44010=""-->
+<!--                        class="text-center"-->
+<!--                        v-if="usesQuickbooks"-->
+<!--                        style="margin-top: 1.5rem">Do You Use Quickbooks?</h4>-->
 
-                    <div class="row w-full justify-content-between" v-if="usesQuickbooks">
-                        <button class="btn btn-md btn-normal-green flex-1 mr-1rem">
-                            <a
-                                    :href="quickbooks.auth_url"
-                                    ref="quickbooks"
-                            >
-                                <span style="color: green;">Quickbooks</span>
-                            </a>
-                        </button>
+<!--                    <div class="row w-full justify-content-between" v-if="usesQuickbooks">-->
+<!--                        <button class="btn btn-md btn-normal-green flex-1 mr-1rem">-->
+<!--                            <a-->
+<!--                                    :href="quickbooks.auth_url"-->
+<!--                                    ref="quickbooks"-->
+<!--                            >-->
+<!--                                <span style="color: green;">Quickbooks</span>-->
+<!--                            </a>-->
+<!--                        </button>-->
 
-                        <button class="btn btn-md btn-normal flex-1 ml-1rem"
-                                v-on:click="doesNotUseQuickbooks()"><span class="uppercase">no</span>
-                        </button>
-                    </div>
+<!--                        <button class="btn btn-md btn-normal flex-1 ml-1rem"-->
+<!--                                v-on:click="doesNotUseQuickbooks()"><span class="uppercase">no</span>-->
+<!--                        </button>-->
+<!--                    </div>-->
 
                     <!--                    <img-->
                     <!--                            alt="qbo/docs/develop/authentication-and-authorization/C2QB_auth.png"-->
@@ -771,6 +771,7 @@
           this.usesQuickbooks = true
           this.getAuthURL()
           this.registerForm.usertype = 'contractor'
+          this.doesNotUseQuickbooks()
         }
       },
       goToRegistration() {
