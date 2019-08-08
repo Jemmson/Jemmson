@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Log;
+use \App\Traits\ConvertPrices;
 
 
 class JobTask extends Model
 {
+    use ConvertPrices;
     use SoftDeletes;
+
     protected $table = "job_task";
     protected $fillable = [
         'job_id',
@@ -116,8 +119,8 @@ class JobTask extends Model
         $this->task_id = $request->taskId;
         $this->status = 'bid_task.initiated';
         $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $request->qty * $request->taskPrice * 100;
-        $this->sub_final_price = 0;
+        $this->cust_final_price = $this->convertToCents($request->qty * $request->taskPrice);
+        $this->sub_final_price = $this->convertToCents($request->subTaskPrice);
         if (empty($request->start_date)) {
             $this->start_date = \Carbon\Carbon::now();
         } else {
@@ -127,7 +130,7 @@ class JobTask extends Model
         $this->sub_message = $request->sub_message;
         $this->stripe = $request->useStripe;
         $this->qty = (int)$request->qty;
-        $this->unit_price = (int)$request->taskPrice * 100;
+        $this->unit_price = $this->convertToCents($request->taskPrice);
 
         try {
             $this->save();
@@ -154,8 +157,8 @@ class JobTask extends Model
         $this->task_id = $taskId;
         $this->status = 'bid_task.initiated';
         $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $request->qty * $request->taskPrice * 100;
-        $this->sub_final_price = 0;
+        $this->cust_final_price = $this->convertToCents($request->qty * $request->taskPrice);
+        $this->sub_final_price = $this->convertToCents($request->subTaskPrice);
         if (empty($request->start_date)) {
             $this->start_date = \Carbon\Carbon::now();
         } else {
@@ -165,7 +168,7 @@ class JobTask extends Model
         $this->sub_message = $request->sub_message;
         $this->stripe = $request->useStripe;
         $this->qty = (int)$request->qty;
-        $this->unit_price = (int)$request->taskPrice * 100;
+        $this->unit_price = $this->convertToCents($request->taskPrice);
 
         try {
             $this->save();

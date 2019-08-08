@@ -10,7 +10,8 @@
 
         <button ref="submitBid"
                 class="btn btn-normal btn-sm"
-                @click="openBidSubmissionDialog()">Submit Bid</button>
+                @click="notifyCustomerOfFinishedBid()">Submit Bid</button>
+<!--                @click="openBidSubmissionDialog()">Submit Bid</button>-->
 
     </div>
 
@@ -20,7 +21,8 @@
     export default {
       name: 'GeneralContractorBidActions',
       props: {
-        submitTheBid: Boolean
+        submitTheBid: Boolean,
+        bid: Object
       },
       watch: {
         submitTheBid: this.notifyCustomerOfFinishedBid
@@ -41,9 +43,14 @@
           // compare the the accepted sub price to the contractor price
           // if the accepted sub price is higher then throw an error
 
+
           this.subTaskWarning = false
           for (let i = 0; i < this.bid.job_tasks.length; i++) {
             if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+              console.log('sub final price')
+              console.log(this.bid.job_tasks[i].sub_final_price)
+              console.log('cust final price')
+              console.log(this.bid.job_tasks[i].cust_final_price)
               this.subTaskWarning = true
             }
           }

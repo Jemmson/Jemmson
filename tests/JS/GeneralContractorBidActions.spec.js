@@ -57,6 +57,35 @@ describe('GeneralContractorBidActions', () => {
     it('should show warning when sub price is higher than the generals price', function() {
 
         const wrapper = shallowMount(GeneralContractorBidActions)
+
+        wrapper.setData({
+            subTaskWarning: false
+        })
+
+        wrapper.setProps({
+            bid: {
+                job_tasks: [
+                    {
+                        sub_final_price: 100,
+                        cust_final_price: 90
+                    }
+                ]
+            }
+        })
+
+
+
+        let btn = wrapper.find({ref: 'submitBid'})
+
+        btn.trigger('click');
+
+        expect(wrapper.find({ref:'subTaskWarning'}).exists()).toBe(true)
+
+    })
+
+    it('should call notifyCustomerOfFinishedBid method when the submit button is hit', function() {
+
+        const wrapper = shallowMount(GeneralContractorBidActions)
         const openBidSubmissionDialogStub = sinon.stub();
         const notifyCustomerOfFinishedBidStub = sinon.stub();
 
@@ -80,18 +109,16 @@ describe('GeneralContractorBidActions', () => {
             notifyCustomerOfFinishedBid: notifyCustomerOfFinishedBidStub
         })
 
+
         let btn = wrapper.find({ref: 'submitBid'})
 
         btn.trigger('click');
 
-        expect(openBidSubmissionDialogStub.called).toBe(true)
+
+        // expect(openBidSubmissionDialogStub.called).toBe(true)
         expect(notifyCustomerOfFinishedBidStub.called).toBe(true)
 
-        expect(wrapper.find({ref:'subTaskWarning'}).exists()).toBe(true)
-
     })
-
-
 
     // it('Should render preapproved actions - contractor', () => {
     //     expect(wrapper.vm.showPreApprovedActions).toBe(true);

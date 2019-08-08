@@ -15,10 +15,13 @@ use QuickBooksOnline\API\Facades\Item;
 use QuickBooksOnline\API\DataService\DataService;
 //use Carbon\Carbon;
 //\Illuminate\Support\Carbon::
+use App\Traits\ConvertPrices;
+
 
 class Task extends Model
 {
 
+    use ConvertPrices;
     use Notifiable;
 
     protected $fillable = [
@@ -38,8 +41,8 @@ class Task extends Model
     {
         $this->name = strtolower($request->taskName);
         $this->contractor_id = $request->contractorId;
-        $this->proposed_cust_price = $request->taskPrice * 100;
-        $this->proposed_sub_price = $request->subTaskPrice * 100;
+        $this->proposed_cust_price = $this->convertToCents($request->taskPrice);
+        $this->proposed_sub_price = $this->convertToCents($request->subTaskPrice);
         $this->qtyUnit = $request->qtyUnit;
         $this->sub_instructions = $request->sub_message;
         $this->customer_instructions = $request->customer_message;

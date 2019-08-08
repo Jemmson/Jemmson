@@ -62,6 +62,7 @@
                                     <content-section
                                             v-if="parseInt(cust_final_price) * 10 > 0"
                                             label="Total Task Price:"
+                                            ref="totalTaskPrice"
                                             :content="taskCustFinalPrice(cust_final_price)"
                                             section-classes="ph-zero"
                                             icon="fas fa-money-bill-alt icon"
