@@ -6,7 +6,7 @@
                 <span v-if="warning"><i class="fas fa-exclamation mr-half-rem"></i></span>
                 <i v-if="icon" :class="icon" class="mr-half-rem"></i>
                 <span v-if="dollarSign">$</span>
-                {{ content }}
+                <span :ref="inputRef">{{ content }}</span>
             </strong>
         </div>
         <aside class="red uppercase ml-1rem mr-1rem" v-if="warning">{{ warningMessage }}</aside>
@@ -42,6 +42,10 @@
           default: false
         },
         icon: {
+          type: String,
+          default: ''
+        },
+        inputRef: {
           type: String,
           default: ''
         }
