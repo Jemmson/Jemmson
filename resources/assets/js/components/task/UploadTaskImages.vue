@@ -94,16 +94,23 @@
       },
       showTaskImage1(jobTask) {
         // first most recent
-        const length = jobTask.images.length
-        return length > 0 && jobTask.images[length - 1] !== undefined
+        if (jobTask.images) {
+          const length = jobTask.images.length
+          return length > 0 && jobTask.images[length - 1] !== undefined
+        }
       },
       showTaskImage2(jobTask) {
         // second most recent
-        const length = jobTask.images.length
-        return length > 1 && jobTask.images[length - 2] !== undefined
+        if (jobTask.images) {
+          const length = jobTask.images.length
+          return length > 1 && jobTask.images[length - 2] !== undefined
+        }
+
       },
       showMoreImagesBtn(jobTask) {
-        return jobTask.images.length > 0
+        if (jobTask.images) {
+          return jobTask.images.length > 0
+        }
       },
       uploadTaskImage(jobTaskId) {
         const data = new FormData()
