@@ -36,9 +36,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ConvertPrices;
 
 class TaskController extends Controller
 {
+
+    use ConvertPrices;
 
     /**
      * Display a listing of the resource.
@@ -803,24 +806,25 @@ class TaskController extends Controller
             'jobId' => 'required|numeric'
         ]);
 
-        $price = $request->price;
+        $price = $this->convertToCents($request->price);
         $taskId = $request->taskId;
-        $jobId = $request->jobId;
-        $job = Job::find($jobId);
-        $jobTask = JobTask::find($request->jobTaskId);
 
+        $jobTask = JobTask::find($request->jobTaskId);
         try {
-            $jobTask->unit_price = $price * 100;
-            $jobTask->cust_final_price = $price * $jobTask->qty * 100;
+            $jobTask->unit_price = $price;
+            $jobTask->cust_final_price = $price * $jobTask->qty;
             $jobTask->save();
-        } catch (\Excpetion $e) {
+        } catch (\ExceptionWithThrowable $e) {
             Log::error('Updating JobTask: ' . $e->getMessage);
         }
 
+        $jobId = $request->jobId;
+        $job = Job::find($jobId);
         $job->jobTotal();
 
         $data = ["price" => $price, "taskId" => $taskId];
         return json_encode($data);
+
     }
 
     public function updateTaskName(Request $request)
@@ -857,10 +861,23 @@ class TaskController extends Controller
     public function getTasks(Request $request)
     {
 
-        return Task::select()->
-        where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
-        where('name', 'like', $request->taskname . '%')->get();
+        $tasks = Task::select()->
+            where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+            where('name', 'like', $request->taskname . '%')->get();
 
+        return response()->json([
+            $this->convertTasksCentsToDollars($tasks)
+        ]);
+
+    }
+
+    private function convertTasksCentsToDollars($tasks)
+    {
+        foreach ($tasks as $task){
+            $task->proposed_cust_price = $this->convertToDollars($task->proposed_cust_price);
+        }
+
+        return $tasks;
     }
 
 
