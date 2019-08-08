@@ -8,7 +8,7 @@
               <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
               </approve-bid>
               <!-- /buttons  -->
-              <general-contractor-bid-actions v-if="!isCustomer">
+              <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
               </general-contractor-bid-actions>
             </card>
 
