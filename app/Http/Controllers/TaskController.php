@@ -865,9 +865,11 @@ class TaskController extends Controller
             where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
             where('name', 'like', $request->taskname . '%')->get();
 
-        return response()->json([
-            $this->convertTasksCentsToDollars($tasks)
-        ]);
+        return $this->convertTasksCentsToDollars($tasks);
+
+//        return response()->json([
+//            $this->convertTasksCentsToDollars($tasks)
+//        ]);
 
     }
 
@@ -875,6 +877,7 @@ class TaskController extends Controller
     {
         foreach ($tasks as $task){
             $task->proposed_cust_price = $this->convertToDollars($task->proposed_cust_price);
+            $task->proposed_sub_price = $this->convertToDollars($task->proposed_sub_price);
         }
 
         return $tasks;

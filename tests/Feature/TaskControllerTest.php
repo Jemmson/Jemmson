@@ -32,32 +32,27 @@ class TaskControllerTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $userTask = $this->createAUserAndATask();
+        $user = $this->createAUser('contractor', 1, 1);
 
-        $response = $this->actingAs($userTask['user'])->json('POST', '/search/task', [
+        $this->createATask('hello', 1000, $user->id, [
+            "proposed_sub_price" => 500
+        ]);
+
+        $response = $this->actingAs($user)->json('POST', '/search/task', [
             "taskname" => "hello",
 
         ]);
 
         $response->assertJson([
-            [[
+            [
                 "id" => 1,
                 "name" => "hello",
-                "proposed_cust_price" => 100
-            ]]
+                "proposed_cust_price" => 10,
+                "proposed_sub_price" => 5
+            ]
         ]);
 
     }
-
-
-
-    /**  @test */
-    function () {
-        // 
-        
-    }
-
-
 
 
     /************************************
@@ -65,13 +60,18 @@ class TaskControllerTest extends TestCase
      ***********************************/
 
 
-    private function createAUser()
+    private function createAUser($usertype, $passwordUpdated, $locationId, $array = [])
     {
-        $user = factory(User::class)->create([
-            "usertype" => "contractor",
-            "password_updated" => 1,
-            "location_id" => 1
-        ]);
+
+        $payload = [
+            "usertype" => $usertype,
+            "password_updated" => $passwordUpdated,
+            "location_id" => $locationId
+        ];
+
+        $payload = $this->mergeArrays($payload, $array);
+
+        $user = factory(User::class)->create($payload);
 
         factory(Contractor::class)->create([
             "id" => $user->id
@@ -80,14 +80,29 @@ class TaskControllerTest extends TestCase
         return $user;
     }
 
-    private function createATask($userId)
+    private function createATask($name, $price, $userId, $array = [])
     {
-        return factory(Task::class)->create([
-            "name" => "hello",
-            "proposed_cust_price" => 10000,
+        $payload = [
+            "name" => $name,
+            "proposed_cust_price" => $price,
             "contractor_id" => $userId
-        ]);
+        ];
 
+        $payload = $this->mergeArrays($payload, $array);
+
+        return factory(Task::class)->create($payload);
+
+    }
+
+    private function mergeArrays($payload, $array)
+    {
+        if (!empty($array)) {
+            foreach ($array as $k => $a) {
+                $payload[$k] = $a;
+            }
+        }
+
+        return $payload;
     }
 
     private function createAUserAndATask()

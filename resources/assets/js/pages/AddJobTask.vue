@@ -613,8 +613,8 @@
           this.addNewTaskForm.taskPrice = 0
           this.result.standardCustomerTaskPrice = 0
         } else {
-          this.addNewTaskForm.taskPrice = result.proposed_cust_price / 100
-          this.result.standardCustomerTaskPrice = result.proposed_cust_price / 100
+          this.addNewTaskForm.taskPrice = result.proposed_cust_price
+          this.result.standardCustomerTaskPrice = result.proposed_cust_price
         }
 
         this.addNewTaskForm.qty = 1
@@ -634,8 +634,8 @@
           this.addNewTaskForm.subTaskPrice = 0
           this.result.standardSubTaskPrice = 0
         } else {
-          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price / 100
-          this.result.standardSubTaskPrice = result.proposed_sub_price / 100
+          this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
+          this.result.standardSubTaskPrice = result.proposed_sub_price
         }
 
         // Sub Instructions
