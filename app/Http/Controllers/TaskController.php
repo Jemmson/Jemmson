@@ -81,6 +81,24 @@ class TaskController extends Controller
                 'jobTask.images',
                 'jobTask.location'
             ])->get();
+
+
+            foreach ($bidTasks as $bt) {
+                $bt->bid_price = $this->convertToDollars($bt->bid_price);
+                if (!empty($bt->job_task)) {
+                    $bt->job_task->cust_final_price = $this->convertToDollars($bt->job_task->cust_final_price);
+                    $bt->job_task->sub_final_price = $this->convertToDollars($bt->job_task->sub_final_price);
+                    $bt->job_task->unit_price = $this->convertToDollars($bt->job_task->unit_price);
+                }
+                if (!empty($bt->job)) {
+                    $bt->job->unit_price = $this->convertToDollars($bt->job->unit_price);
+                }
+                if (!empty($bt->task)) {
+                    $bt->task->proposed_cust_price = $this->convertToDollars($bt->task->proposed_cust_price);
+                    $bt->task->proposed_sub_price = $this->convertToDollars($bt->task->proposed_sub_price);
+                }
+            }
+
             return response()->json($bidTasks, 200);
         }
     }
