@@ -385,30 +385,49 @@ class Contractor extends Model
             ->where('company_name', '!=', "$generalContractorsCompanyName")->get();
     }
 
+    public function getAllSubContractorsInQBThatAreAssociatedToTheGeneralContractor($contractor)
+    {
+        return QuickbooksContractor::where('given_name', '=', $contractor->first_name)->
+        where('family_name', '=', $contractor->last_name)->
+        where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+        get()->first();
+    }
+
+    public function getUserInfoAssociatedToTheSub($sub)
+    {
+        return $sub->user()->get(['id', 'name', 'email', 'phone', 'first_name', 'last_name'])->first();
+    }
+
+    public function getAllSubsRegardlessOfGeneralContractorAssociation($contractor)
+    {
+        return QuickbooksContractor::where('given_name', '=', $contractor->first_name)->
+        where('family_name', '=', $contractor->last_name)->
+        get()->first();
+    }
+
+    public function getSubContractorState($sub)
+    {
+        if (!empty($sub->location()->get()->first())) {
+            return $sub->location()->get()->first()->state;
+        }
+        return '';
+    }
+
     public function subsWithPhoneNumberAndEmail($subs)
     {
         $subsArray = [];
 //        $subInfo = '';
         foreach ($subs as $sub) {
 
-            $c = $sub->user()->get(['id', 'name', 'email', 'phone', 'first_name', 'last_name'])->first();
+            $c = $this->getUserInfoAssociatedToTheSub($sub);
 
-            $qbc = QuickbooksContractor::where('given_name', '=', $c->first_name)->
-            where('family_name', '=', $c->last_name)->
-            where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
-            get()->first();
-
+            $qbc = $this->getAllSubContractorsInQBThatAreAssociatedToTheGeneralContractor($c);
 
             if (empty($qbc)) {
-                $qbc = QuickbooksContractor::where('given_name', '=', $c->first_name)->
-                where('family_name', '=', $c->last_name)->
-                get()->first();
+                $qbc = $this->getAllSubsRegardlessOfGeneralContractorAssociation($c);
             }
 
-            $state = '';
-            if (!empty($sub->location()->get()->first())) {
-                $state = $sub->location()->get()->first()->state;
-            }
+            $state = $this->getSubContractorState($sub);
 
             if (empty($qbc)) {
                 $subInfo = [
@@ -427,7 +446,6 @@ class Contractor extends Model
                     'first_name' => $c->first_name,
                     'last_name' => $c->last_name
                 ];
-                array_push($subsArray, $subInfo);
             } else {
                 $subInfo = [
                     'id' => $sub->user_id,
@@ -470,7 +488,7 @@ class Contractor extends Model
     public
     function getAllQuickbookCompaniesAndFormattedSubs($companyName, $formattedSubs, $contractorId)
     {
-//        TODO:: pull back unique contractors from the quickbooks table becuase different general contractors can have
+//        TODO:: pull back unique contractors from the quickbooks table because different general contractors can have
         // TODO:: the same subs that they have worked with. I would like for this to be sorted
         // TODO:: by company name
         // TODO:: by state and city of where job is located

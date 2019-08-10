@@ -7,12 +7,14 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Contractor;
 use App\User;
 use App\QuickbooksContractor;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
 class ContractorTest extends TestCase
 {
 
-    use DatabaseMigrations;
+    use Setup;
+    use RefreshDatabase;
 
     /**  @test */
     function sustract_one_free_job_from_a_contractor_if_the_contractor_has_a_postive_number_of_free_jobs_left()
@@ -857,6 +859,27 @@ class ContractorTest extends TestCase
     {
         // 
 
+    }
+
+    /**  @test */
+    function shouldReturnNonDuplicatedContractors()
+    {
+        //
+
+        $user = $this->createAUser('contractor', 1, 1, [], [
+            'company_name' => 'Albertsons'
+        ]);
+
+        echo $user->contractor()->get()->first()->company_name;
+
+        $response = $this->actingAs($user)->
+            json('GET', '/search/' . $user->contractor()->get()->first()->company_name);
+
+        $response->assertJson([
+            'hello' => "world"
+        ]);
+
+//        $this->assertEquals(1, count($response->json()));
     }
 
 }

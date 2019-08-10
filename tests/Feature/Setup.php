@@ -3,12 +3,17 @@
 namespace Tests\Feature;
 
 use App\Contractor;
+use App\Customer;
 use App\Task;
 use App\User;
 
-trait Setup {
-    
-    public function createAUser($usertype, $passwordUpdated, $locationId, $array = [])
+trait Setup
+{
+
+    public function createAUser(
+        $usertype, $passwordUpdated, $locationId,
+        $userArray = [], $contractorArray = [], $customerArray = []
+    )
     {
 
         $payload = [
@@ -17,13 +22,24 @@ trait Setup {
             "location_id" => $locationId
         ];
 
-        $payload = $this->mergeArrays($payload, $array);
-
+        $payload = $this->mergeArrays($payload, $userArray);
         $user = factory(User::class)->create($payload);
 
-        factory(Contractor::class)->create([
-            "id" => $user->id
-        ]);
+        if ($usertype == 'contractor') {
+            $contractorPayload = [
+                "user_id" => $user->id,
+                "location_id" => $user->location_id
+            ];
+            $contractorPayload = $this->mergeArrays($contractorPayload, $contractorArray);
+            factory(Contractor::class)->create($contractorPayload);
+        } else {
+            $customerPayload = [
+                "user_id" => $user->id,
+                "location_id" => $user->location_id
+            ];
+            $customerPayload = $this->mergeArrays($customerPayload, $customerArray);
+            factory(Customer::class)->create($customerPayload);
+        }
 
         return $user;
     }
