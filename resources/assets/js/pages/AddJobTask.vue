@@ -219,47 +219,55 @@
         <!--</button>-->
         <!--</div>-->
         <!--<label for="taskResultsChange"></label>-->
-<!--        <div id="taskResultsChange" class="mb-4">-->
+        <!--        <div id="taskResultsChange" class="mb-4">-->
 
-<!--            &lt;!&ndash; Name in task name is different than a task name in the database&ndash;&gt;-->
-<!--            &lt;!&ndash;<button v-if="!nameExistsInDB && !taskExistsInJob"&ndash;&gt;-->
-<!--            <button class="btn btn-block btn-lg btn-normal text-uppercase font-weight-bold" :disabled="checkErrors"-->
-<!--                    @click.prevent="changeTask('Add')">-->
-<!--                Add Task-->
-<!--            </button>-->
+        <!--            &lt;!&ndash; Name in task name is different than a task name in the database&ndash;&gt;-->
+        <!--            &lt;!&ndash;<button v-if="!nameExistsInDB && !taskExistsInJob"&ndash;&gt;-->
+        <!--            <button class="btn btn-block btn-lg btn-normal text-uppercase font-weight-bold" :disabled="checkErrors"-->
+        <!--                    @click.prevent="changeTask('Add')">-->
+        <!--                Add Task-->
+        <!--            </button>-->
 
-<!--            &lt;!&ndash;Name is the same as one in the database&ndash;&gt;-->
-<!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
-<!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
-<!--            &lt;!&ndash;@click.prevent="changeTask('Update')">Update and Add Task&ndash;&gt;-->
-<!--            &lt;!&ndash;</button>&ndash;&gt;-->
+        <!--            &lt;!&ndash;Name is the same as one in the database&ndash;&gt;-->
+        <!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
+        <!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
+        <!--            &lt;!&ndash;@click.prevent="changeTask('Update')">Update and Add Task&ndash;&gt;-->
+        <!--            &lt;!&ndash;</button>&ndash;&gt;-->
 
-<!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
-<!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
-<!--            &lt;!&ndash;@click.prevent="changeTask('Ignore')">Dont Update and Add Task&ndash;&gt;-->
-<!--            &lt;!&ndash;</button>&ndash;&gt;-->
-
-
-<!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
-<!--            &lt;!&ndash;drop down is selected and&ndash;&gt;-->
-<!--            &lt;!&ndash;any of the values have changed &ndash;&gt;&ndash;&gt;-->
+        <!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
+        <!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
+        <!--            &lt;!&ndash;@click.prevent="changeTask('Ignore')">Dont Update and Add Task&ndash;&gt;-->
+        <!--            &lt;!&ndash;</button>&ndash;&gt;-->
 
 
-<!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
-<!--            &lt;!&ndash;drop down is selected&ndash;&gt;-->
-<!--            &lt;!&ndash;drop down name is changed -> gives option to create a new task based on an existing one &ndash;&gt;&ndash;&gt;-->
-<!--            &lt;!&ndash;<button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"&ndash;&gt;-->
-<!--            &lt;!&ndash;class="btn btn-green" :disabled="checkErrors"&ndash;&gt;-->
-<!--            &lt;!&ndash;@click.prevent="changeTask('New')">&ndash;&gt;-->
-<!--            &lt;!&ndash;Create New and Add&ndash;&gt;-->
-<!--            &lt;!&ndash;</button>&ndash;&gt;-->
-<!--        </div>-->
+        <!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
+        <!--            &lt;!&ndash;drop down is selected and&ndash;&gt;-->
+        <!--            &lt;!&ndash;any of the values have changed &ndash;&gt;&ndash;&gt;-->
+
+
+        <!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
+        <!--            &lt;!&ndash;drop down is selected&ndash;&gt;-->
+        <!--            &lt;!&ndash;drop down name is changed -> gives option to create a new task based on an existing one &ndash;&gt;&ndash;&gt;-->
+        <!--            &lt;!&ndash;<button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"&ndash;&gt;-->
+        <!--            &lt;!&ndash;class="btn btn-green" :disabled="checkErrors"&ndash;&gt;-->
+        <!--            &lt;!&ndash;@click.prevent="changeTask('New')">&ndash;&gt;-->
+        <!--            &lt;!&ndash;Create New and Add&ndash;&gt;-->
+        <!--            &lt;!&ndash;</button>&ndash;&gt;-->
+        <!--        </div>-->
     </div>
 </template>
 
 <script>
 
+  import IconHeader from '../components/shared/IconHeader'
+  import Card from '../components/shared/Card'
+
   export default {
+    name: 'AddJobTask',
+    components: {
+      Card,
+      IconHeader
+    },
     data() {
       return {
         addNewTaskForm: new SparkForm({
@@ -373,7 +381,9 @@
       },
       checkIfUserUsesQuickbooks() {
         if (Spark) {
-          return Spark.state.user.contractor.accounting_software === 'quickbooks'
+          if (Spark.state) {
+            return Spark.state.user.contractor.accounting_software === 'quickbooks'
+          }
         }
       },
       // TODO:: move this to vuex action
@@ -751,7 +761,9 @@
       },
     },
     mounted: function() {
-      this.getBid(this.$store.state.job.model.id)
+      if (this.$store) {
+        this.getBid(this.$store.state.job.model.id)
+      }
     }
   }
 </script>
