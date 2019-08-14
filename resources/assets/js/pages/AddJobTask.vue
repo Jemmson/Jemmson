@@ -117,10 +117,19 @@
 
                 <!--Start Date-->
                 <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
+                    <input
+                            @blur="checkDateIsTodayorLater($event.target.value)"
+                            class="form-control bat-input"
+                            :disabled="taskExistsInJob"
+                            @focus="hideTaskResults"
+                            id="start_date"
+                            name="start_date"
+                            ref="start_date"
+                            required
+                            type="date"
+                            v-model="addNewTaskForm.start_date">
+
                     <label for="start_date">Start Date</label>
-                    <input type="date" class="form-control bat-input" id="start_date" name="start_date" required
-                           :disabled="taskExistsInJob" @focus="hideTaskResults" v-model="addNewTaskForm.start_date"
-                           @blur="checkDateIsTodayorLater($event.target.value)">
                     <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
                     <!--{{ addNewTaskForm.errors.get('start_date') }}-->
                     <!--</span>-->
@@ -188,7 +197,7 @@
                 <div class="form-group customer-notes"
                      :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
                     <label for="customer_message">Instructions For The Customer</label>
-                    <textarea class="form-control bat-input" id="customer_message" name="customer_message"
+                    <textarea cols="5" rows="10" class="form-control ta-input" id="customer_message" name="customer_message"
                               :disabled="taskExistsInJob" v-model="addNewTaskForm.customer_message"
                               @focus="hideTaskResults" @keyup="checkIfCustomerMessageHasChanged($event.target.value)">
                                 </textarea>
@@ -201,7 +210,7 @@
                 <div class="form-group sub-notes"
                      :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
                     <label for="sub_message">Subcontractor Instructions</label>
-                    <textarea class="form-control bat-input" id="sub_message" name="sub_message"
+                    <textarea cols="30" rows="10" class="form-control ta-input" id="sub_message" name="sub_message"
                               :disabled="taskExistsInJob" v-model="addNewTaskForm.sub_message"
                               @focus="hideTaskResults" @keyup="checkIfSubMessageHasChanged($event.target.value)">
                                 </textarea>
@@ -759,8 +768,33 @@
       toggleStripePaymentOption() {
         this.addNewTaskForm.useStripe = !this.addNewTaskForm.useStripe
       },
+      getYear() {
+        let date = new Date()
+        return date.getFullYear()
+      },
+      getMonth() {
+        let date = new Date()
+        let month = date.getMonth()
+        if (month < 10) {
+          month = month + 1
+          month = '0' + month
+        }
+        return month
+      },
+      getDay() {
+        let date = new Date()
+        let day = date.getDate()
+        if (day < 10) {
+          day = '0' + day
+        }
+        return day
+      },
+      setDefaultStartDate() {
+        this.addNewTaskForm.start_date = this.getYear() + '-' + this.getMonth() + '-' + this.getDay()
+      }
     },
     mounted: function() {
+      this.setDefaultStartDate()
       if (this.$store) {
         this.getBid(this.$store.state.job.model.id)
       }
@@ -772,6 +806,10 @@
 
     .bat-input {
         height: 2.25rem;
+    }
+
+    .ta-input {
+        height: 5.25rem;
     }
 
     .error {

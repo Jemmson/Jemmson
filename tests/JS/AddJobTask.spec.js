@@ -27,6 +27,16 @@ describe('AddJobTask', () => {
         expect(wrapper.isEmpty()).toBe(false);
     });
 
+    it('should show the current date in the start date on mount', function() {
+        wrapper.setData({
+            addNewTaskForm: {
+                start_date: ''
+            }
+        })
+        wrapper.vm.setDefaultStartDate();
+        expect(wrapper.find({ref: 'start_date'}).element.value).toBe('2019-08-13');
+    })
+
     it.skip('should show drop down of tasks once the substring has two letters of a task in the database', function() {
 
     })

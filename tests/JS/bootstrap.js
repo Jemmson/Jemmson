@@ -31,6 +31,14 @@ global.Customer = new Customer;
 global.TaskUtil = TaskUtil;
 global.User = User;
 
+// global.Spark = {
+//     state: {
+//         user: {
+//             accounting_software: ''
+//         }
+//     }
+// }
+
 // Vue.use(Toasted, {
 //     duration: 5000,
 //     theme: 'bubble',

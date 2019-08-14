@@ -121,7 +121,10 @@ if (global.$ === undefined || global.jQuery === undefined) {
 global.Spark = {
     state: {
         user: {
-            id: 1
+            id: 1,
+            contractor: {
+                accounting_software: ''
+            }
         }
     }
 }
