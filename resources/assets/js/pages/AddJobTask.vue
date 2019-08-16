@@ -49,10 +49,18 @@
                         <label for="custTaskPrice">Price</label>
                         <div class="flex items-center">
                             <!-- <span class="dollarSign">$</span> -->
-                            <input type="text" class="form-control bat-input" id="custTaskPrice" name="taskPrice"
-                                   autocomplete="text" :disabled="taskExistsInJob" v-model="addNewTaskForm.taskPrice"
-                                   @keyup="checkIfPriceChanged($event.target.value)" @focus="hideTaskResults"
-                                   @blur="verifyInputIsANumber($event.target.value, 'price')">
+                            <input
+                                    @blur="verifyInputIsANumber($event.target.value, 'price')"
+                                    @focus="hideTaskResults"
+                                    @keyup="checkIfPriceChanged($event.target.value)"
+                                    autocomplete="text"
+                                    class="form-control bat-input"
+                                    :class="errors.subPriceTooHigh.exists ? 'sub-price-too-high-error': ''"
+                                    :disabled="taskExistsInJob"
+                                    id="custTaskPrice" name="taskPrice"
+                                    type="text"
+                                    v-model="addNewTaskForm.taskPrice"
+                            >
                         </div>
                         <span :class="{ error: errors.notANumber.price }" v-show="errors.notANumber.price">Customer
                             Price
@@ -126,16 +134,20 @@
                             {{ addNewTaskForm.errors.get('subTaskPrice') }}
                         </span>
                     <div v-if="errors.subPriceTooHigh.exists"
-                          ref="sub_price_too_high"
-                          class="help-block"
+                         ref="sub_price_too_high"
+                         class="help-block"
                          style="color: red; margin-top: .25rem"
                     >
-                            {{ errors.subPriceTooHigh.message }}
-                        </div>
+                        {{ errors.subPriceTooHigh.message }}
+                    </div>
                 </div>
 
                 <!--Start Date-->
                 <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
+                    <label for="start_date">Start Date</label>
+                    <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
+                    <!--{{ addNewTaskForm.errors.get('start_date') }}-->
+                    <!--</span>-->
                     <input
                             @blur="checkDateIsTodayorLater($event.target.value)"
                             class="form-control bat-input"
@@ -147,11 +159,6 @@
                             required
                             type="date"
                             v-model="addNewTaskForm.start_date">
-
-                    <label for="start_date">Start Date</label>
-                    <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
-                    <!--{{ addNewTaskForm.errors.get('start_date') }}-->
-                    <!--</span>-->
 
                     <span :class="{ error: addNewTaskForm.hasStartDateError }"
                           v-show="addNewTaskForm.hasStartDateError">{{ addNewTaskForm.startDateErrorMessage }}
@@ -397,22 +404,6 @@
         return this.addNewTaskForm.taskName !== this.result.taskName
       },
       checkErrors() {
-        // return this.addNewTaskForm.taskName === '' ||
-        //   this.addNewTaskForm.hasQtyUnitError ||
-        //   this.addNewTaskForm.hasStartDateError ||
-        //   this.addNewTaskForm.taskPrice < this.addNewTaskForm.subTaskPrice
-        //
-        // if (this.addNewTaskForm.taskName !== '') {
-        //   if (!this.addNewTaskForm.hasQtyUnitError) {
-        //     if (this.addNewTaskForm.hasStartDateError) {
-        //       if (this.addNewTaskForm.taskPrice > this.addNewTaskForm.subTaskPrice) {
-        //         return true
-        //       }
-        //     }
-        //   }
-        // } else {
-        //   return false
-        // }
 
         if (this.addNewTaskForm.taskName === '') {
           return true
@@ -431,28 +422,6 @@
         }
 
         return false
-          // if (
-        //   true &&
-        //   true &&
-        //   true &&
-        //   true
-        // ) {
-        //   return true
-        // } else {
-        //   return false
-        // }
-        //
-        // if (true) {
-        //   if (true) {
-        //     if (true) {
-        //       if (true) {
-        //         return true
-        //       }
-        //     }
-        //   }
-        // } else {
-        //   return false
-        // }
 
       }
     },
@@ -528,6 +497,7 @@
             this.errors.notANumber.subTaskPrice = false
           }
         }
+        this.checkErrors
       },
       strippedTaskPrice(taskPrice) {
         if (taskPrice.charAt(0) === '$') {
@@ -537,6 +507,9 @@
         }
       },
       checkIfPriceChanged(value) {
+        this.checkThatSubPriceIsHigherThanContractorPrice()
+        this.checkErrors
+
         if (this.dropdownSelected) {
           value = parseInt(value)
           if (this.result.standardCustomerTaskPrice !== value) {
@@ -557,12 +530,14 @@
           this.checkIfValuesChanged()
         }
       },
-      checkIfSubTaskPriceHasChanged(value) {
-
+      checkThatSubPriceIsHigherThanContractorPrice(){
         this.errors.subPriceTooHigh.exists =
           this.addNewTaskForm.taskPrice < this.addNewTaskForm.subTaskPrice
+      },
+      checkIfSubTaskPriceHasChanged(value) {
 
-        this.checkErrors;
+        this.checkThatSubPriceIsHigherThanContractorPrice()
+        this.checkErrors
 
         if (this.dropdownSelected) {
           value = parseInt(value)
