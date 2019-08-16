@@ -11,7 +11,8 @@
                         @click.prevent="goBack()">
                     Back
                 </button>
-                <button class="btn btn-md btn-normal text-uppercase ml-1rem flex-1" :disabled="checkErrors"
+                <button ref="add_task" class="btn btn-md btn-normal text-uppercase ml-1rem flex-1"
+                        :disabled="checkErrors"
                         @click.prevent="changeTask('Add')">
                     Add Task
                 </button>
@@ -101,18 +102,36 @@
                 <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
                     <label for="subTaskPrice">Subcontractor Price</label>
                     <div class="flex items-center">
-                        <input type="text" autocomplete="text" class="form-control bat-input" id="subTaskPrice"
-                               name="subTaskPrice" v-model="addNewTaskForm.subTaskPrice" @focus="hideTaskResults"
-                               :disabled="taskExistsInJob" @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
-                               @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')">
+                        <input
+                                @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')"
+                                @focus="hideTaskResults"
+                                @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
+                                autocomplete="text"
+                                class="form-control bat-input"
+                                :class="errors.subPriceTooHigh.exists ? 'sub-price-too-high-error': ''"
+                                :disabled="taskExistsInJob"
+                                id="subTaskPrice"
+                                name="subTaskPrice"
+                                ref="sub_task_price"
+                                type="text"
+                                v-model="addNewTaskForm.subTaskPrice"
+                        >
                     </div>
                     <span :class="{ error: errors.notANumber.subTaskPrice }"
-                          v-show="errors.notANumber.subTaskPrice">Sub
-                            Price {{ errors.notANumber.message }}
+                          v-show="errors.notANumber.subTaskPrice">
+                        Sub Price {{ errors.notANumber.message }}
                         </span>
-                    <span class="help-block" v-show="addNewTaskForm.errors.has('subTaskPrice')">
+                    <span class="help-block"
+                          v-show="addNewTaskForm.errors.has('subTaskPrice')">
                             {{ addNewTaskForm.errors.get('subTaskPrice') }}
                         </span>
+                    <div v-if="errors.subPriceTooHigh.exists"
+                          ref="sub_price_too_high"
+                          class="help-block"
+                         style="color: red; margin-top: .25rem"
+                    >
+                            {{ errors.subPriceTooHigh.message }}
+                        </div>
                 </div>
 
                 <!--Start Date-->
@@ -197,7 +216,8 @@
                 <div class="form-group customer-notes"
                      :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
                     <label for="customer_message">Instructions For The Customer</label>
-                    <textarea cols="5" rows="10" class="form-control ta-input" id="customer_message" name="customer_message"
+                    <textarea cols="5" rows="10" class="form-control ta-input" id="customer_message"
+                              name="customer_message"
                               :disabled="taskExistsInJob" v-model="addNewTaskForm.customer_message"
                               @focus="hideTaskResults" @keyup="checkIfCustomerMessageHasChanged($event.target.value)">
                                 </textarea>
@@ -280,50 +300,45 @@
     data() {
       return {
         addNewTaskForm: new SparkForm({
-          // one to one
-          taskId: 0,  // if -1 then the task did not come from the drop down
-          taskName: '',
-          contractorId: '',
-          taskPrice: 0,
-          item_id: '',
-          customer_id: '',
-          // not apart of the api
-          subTaskPrice: 0,
-          qtyUnit: '',
-          sub_message: '',
-          customer_message: '',
-          jobId: '',
-          createNew: false,
           area: '',
-          start_date: '',
-          taskExists: '',
-          start_when_accepted: true,
-
-          incomeAccountRef: {
-            value: '0',
-            name: 'Sales of Product Income'
-          },
-          expenseAccountRef: {
-            value: '0',
-            name: 'Cost of Goods Sold'
-          },
           assetAccountRef: {
             value: '0',
             name: 'Inventory Asset'
           },
-          type: 'Inventory',
-          trackQtyOnHand: true,
-          qtyOnHand: '0',
-          invStartDate: '',
-
-          // sub_sets_own_price_for_job: true,
-          useStripe: false,
-          qty: 1,
-          updateTask: false,
-          qtyUnitErrorMessage: '',
+          contractorId: '',
+          createNew: false,
+          customer_id: '',
+          customer_message: '',
+          expenseAccountRef: {
+            value: '0',
+            name: 'Cost of Goods Sold'
+          },
           hasQtyUnitError: false,
+          hasStartDateError: false,
+          incomeAccountRef: {
+            value: '0',
+            name: 'Sales of Product Income'
+          },
+          item_id: '',
+          invStartDate: '',
+          jobId: '',
+          qty: 1,
+          qtyOnHand: '0',
+          qtyUnit: '',
+          qtyUnitErrorMessage: '',
+          start_date: '',
+          start_when_accepted: true,
           startDateErrorMessage: '',
-          hasStartDateError: false
+          sub_message: '',
+          subTaskPrice: 0,
+          taskExists: '',
+          taskId: 0,  // if -1 then the task did not come from the drop down
+          taskPrice: 0,
+          taskName: '',
+          trackQtyOnHand: true,
+          type: 'Inventory',
+          updateTask: false,
+          useStripe: false
         }),
         checked: 'checked',
         result: {
@@ -338,6 +353,10 @@
           sub_instructions: ''
         },
         errors: {
+          subPriceTooHigh: {
+            exists: false,
+            message: 'Sub Price Can Not Be Higher Than Contractor Price'
+          },
           general: {
             errorExists: false,
             message: 'Errors exist on page. Please review'
@@ -378,10 +397,63 @@
         return this.addNewTaskForm.taskName !== this.result.taskName
       },
       checkErrors() {
+        // return this.addNewTaskForm.taskName === '' ||
+        //   this.addNewTaskForm.hasQtyUnitError ||
+        //   this.addNewTaskForm.hasStartDateError ||
+        //   this.addNewTaskForm.taskPrice < this.addNewTaskForm.subTaskPrice
+        //
+        // if (this.addNewTaskForm.taskName !== '') {
+        //   if (!this.addNewTaskForm.hasQtyUnitError) {
+        //     if (this.addNewTaskForm.hasStartDateError) {
+        //       if (this.addNewTaskForm.taskPrice > this.addNewTaskForm.subTaskPrice) {
+        //         return true
+        //       }
+        //     }
+        //   }
+        // } else {
+        //   return false
+        // }
 
-        return this.addNewTaskForm.taskName === '' ||
-          this.addNewTaskForm.hasQtyUnitError ||
-          this.addNewTaskForm.hasStartDateError
+        if (this.addNewTaskForm.taskName === '') {
+          return true
+        }
+
+        if (this.addNewTaskForm.hasQtyUnitError) {
+          return true
+        }
+
+        if (this.addNewTaskForm.hasStartDateError) {
+          return true
+        }
+
+        if (this.errors.subPriceTooHigh.exists) {
+          return true
+        }
+
+        return false
+          // if (
+        //   true &&
+        //   true &&
+        //   true &&
+        //   true
+        // ) {
+        //   return true
+        // } else {
+        //   return false
+        // }
+        //
+        // if (true) {
+        //   if (true) {
+        //     if (true) {
+        //       if (true) {
+        //         return true
+        //       }
+        //     }
+        //   }
+        // } else {
+        //   return false
+        // }
+
       }
     },
     methods: {
@@ -486,6 +558,12 @@
         }
       },
       checkIfSubTaskPriceHasChanged(value) {
+
+        this.errors.subPriceTooHigh.exists =
+          this.addNewTaskForm.taskPrice < this.addNewTaskForm.subTaskPrice
+
+        this.checkErrors;
+
         if (this.dropdownSelected) {
           value = parseInt(value)
           if (this.result.standardSubTaskPrice !== value) {
@@ -803,6 +881,11 @@
 </script>
 
 <style scoped>
+
+    .sub-price-too-high-error {
+        border: solid red thin;
+        background-color: #f39fae;
+    }
 
     .bat-input {
         height: 2.25rem;

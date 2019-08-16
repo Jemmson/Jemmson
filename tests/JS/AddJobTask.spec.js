@@ -34,7 +34,38 @@ describe('AddJobTask', () => {
             }
         })
         wrapper.vm.setDefaultStartDate();
-        expect(wrapper.find({ref: 'start_date'}).element.value).toBe('2019-08-13');
+        expect(wrapper.find({ref: 'start_date'}).element.value).toBe('2019-08-14');
+    })
+
+    it('the add task button should be disabled and there should be an error shown if the sub price is higher than the general contractor price', function() {
+
+        wrapper.setData({
+            addNewTaskForm: {
+                taskPrice: 0,
+                subTaskPrice: 0,
+                taskName: 'new Task',
+                hasQtyUnitError: false,
+                hasStartDateError: false,
+                errors: {
+                    subPriceTooHigh: {
+                        exists: false,
+                        message: "Sub Price Can Not Be Higher Than Contractor Price"
+                    }
+                }
+            }
+        })
+
+        expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe('disabled')
+
+        let subPrice = wrapper.find({ref: 'sub_task_price'})
+        subPrice.setValue(12)
+        subPrice.trigger('keyup')
+
+        // expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe(true)
+
+        // expect(wrapper.find({ref: 'sub_price_too_high'}).visible()).toBe(true)
+
+
     })
 
     it.skip('should show drop down of tasks once the substring has two letters of a task in the database', function() {
