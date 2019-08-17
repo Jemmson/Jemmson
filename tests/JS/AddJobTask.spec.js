@@ -34,7 +34,7 @@ describe('AddJobTask', () => {
             }
         })
         wrapper.vm.setDefaultStartDate();
-        expect(wrapper.find({ref: 'start_date'}).element.value).toBe('2019-08-14');
+        expect(wrapper.find({ref: 'start_date'}).element.value).toBe('2019-08-17');
     })
 
     it('the add task button should be disabled and there should be an error shown if the sub price is higher than the general contractor price', function() {
@@ -55,16 +55,41 @@ describe('AddJobTask', () => {
             }
         })
 
+        let addTask = wrapper.find({ref: 'add_task'}).html();
+        console.log(addTask);
+
         expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe('disabled')
 
         let subPrice = wrapper.find({ref: 'sub_task_price'})
         subPrice.setValue(12)
         subPrice.trigger('keyup')
 
+        console.log(addTask);
+
         // expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe(true)
 
         // expect(wrapper.find({ref: 'sub_price_too_high'}).visible()).toBe(true)
 
+
+    })
+
+    it('should show error if the task price input is not a number and the add task button should be disabled', function() {
+        wrapper.setData({
+            errors: {
+                notANumber: {
+                    price: false
+                }
+            }
+        })
+
+        let taskPrice = wrapper.find({ref: 'task_price'})
+        taskPrice.setValue('12a');
+        taskPrice.trigger('blur');
+
+        expect(taskPrice.attributes('class')).toBe('form-control bat-input sub-price-too-high-error');
+        console.log(wrapper.find({ref: 'add_task'}).attributes())
+        console.log(wrapper.find({ref: 'add_task'}).html())
+        expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe('disabled')
 
     })
 

@@ -11,21 +11,28 @@
                         @click.prevent="goBack()">
                     Back
                 </button>
-                <button ref="add_task" class="btn btn-md btn-normal text-uppercase ml-1rem flex-1"
+                <button
+                        @click.prevent="changeTask('Add')"
+                        class="btn btn-md btn-normal text-uppercase ml-1rem flex-1"
                         :disabled="checkErrors"
-                        @click.prevent="changeTask('Add')">
+                        ref="add_task"
+                >
                     Add Task
                 </button>
             </div>
 
             <form role="form" class="wrapper">
-                <h1 class="text-center error-lg" v-show="errors.general.errorExists">{{ errors.general.message
-                    }}</h1>
+                <h1 class="text-center error-lg" v-show="errors.general.errorExists">
+                    {{ errors.general.message }}
+                </h1>
                 <!--Task Name-->
                 <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
                     <label for="taskName">Task Description *</label>
 
-                    <input type="text" class="form-control bat-input mb-1" id="taskName" name="taskName" autofocus
+                    <input type="text"
+                           class="form-control bat-input mb-1"
+                           id="taskName" name="taskName"
+                           autofocus
                            v-model="addNewTaskForm.taskName" autocomplete="off"
                            @blur="checkIfNameExistsInDB($event.target.value)"
                            @focus="checkIfNameExistsInDB($event.target.value)"
@@ -55,9 +62,10 @@
                                     @keyup="checkIfPriceChanged($event.target.value)"
                                     autocomplete="text"
                                     class="form-control bat-input"
-                                    :class="errors.subPriceTooHigh.exists ? 'sub-price-too-high-error': ''"
+                                    :class="(errors.subPriceTooHigh.exists || errors.notANumber.price) ? 'sub-price-too-high-error': ''"
                                     :disabled="taskExistsInJob"
                                     id="custTaskPrice" name="taskPrice"
+                                    ref="task_price"
                                     type="text"
                                     v-model="addNewTaskForm.taskPrice"
                             >
@@ -418,6 +426,10 @@
         }
 
         if (this.errors.subPriceTooHigh.exists) {
+          return true
+        }
+
+        if (this.errors.notANumber.price) {
           return true
         }
 
@@ -873,7 +885,7 @@
     .error {
         color: red;
         font-size: 12pt;
-        font-weight: 900;
+        /*font-weight: 900;*/
     }
 
     .error-lg {
