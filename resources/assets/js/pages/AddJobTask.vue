@@ -62,7 +62,7 @@
                                     @keyup="checkIfPriceChanged($event.target.value)"
                                     autocomplete="text"
                                     class="form-control bat-input"
-                                    :class="(errors.subPriceTooHigh.exists || errors.notANumber.price) ? 'sub-price-too-high-error': ''"
+                                    :class="(errors.subPriceTooHigh.exists || errors.notANumber.price) ? 'box-error': ''"
                                     :disabled="taskExistsInJob"
                                     id="custTaskPrice" name="taskPrice"
                                     ref="task_price"
@@ -124,7 +124,7 @@
                                 @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
                                 autocomplete="text"
                                 class="form-control bat-input"
-                                :class="errors.subPriceTooHigh.exists ? 'sub-price-too-high-error': ''"
+                                :class="errors.subPriceTooHigh.exists ? 'box-error': ''"
                                 :disabled="taskExistsInJob"
                                 id="subTaskPrice"
                                 name="subTaskPrice"
@@ -869,23 +869,12 @@
 
 <style scoped>
 
-    .sub-price-too-high-error {
-        border: solid red thin;
-        background-color: #f39fae;
-    }
-
     .bat-input {
         height: 2.25rem;
     }
 
     .ta-input {
         height: 5.25rem;
-    }
-
-    .error {
-        color: red;
-        font-size: 12pt;
-        /*font-weight: 900;*/
     }
 
     .error-lg {

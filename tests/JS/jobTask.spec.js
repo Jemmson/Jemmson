@@ -33,6 +33,30 @@ describe('JobTask', () => {
 
   })
 
+  it.only('should convert Price To a Number', function() {
+    const wrapper = shallowMount(JobTask, {
+      router,
+      store,
+      mocks: {
+        $store: {
+          state: {
+            job: {
+              model: {
+                job_tasks: [
+                  {task: {name: 'sarah'}}
+                ],
+                status: 'bid.initiated'
+              }
+            }
+          }
+        }
+      }
+    })
+    let price = "12"
+    let newPrice = wrapper.vm.convertPriceToNumber(price)
+    expect(typeof newPrice).toBe("number");
+  })
+
   it('should update the total cust price final price when the Price is updated', function() {
 
     const wrapper = shallowMount(JobTask, {

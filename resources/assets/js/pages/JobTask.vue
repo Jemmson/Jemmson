@@ -32,7 +32,8 @@
                             <div class="flex justify-content-between">
                                 <label>Task Start Date</label>
                                 <!-- <i class="fas fa-clock icon m-r-2"></i> -->
-                                <input type="date" class="form-control form-control-sm w-40" style="" v-if="showTaskStartDate()"
+                                <input type="date" class="form-control form-control-sm w-40" style=""
+                                       v-if="showTaskStartDate()"
                                        :value="prettyDate(jobTask.start_date)"
                                        @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                                 <!--                                <div v-else>-->
@@ -60,7 +61,7 @@
                                 <div class="col-12">
 
                                     <content-section
-                                            v-if="parseInt(cust_final_price) * 10 > 0"
+                                            v-if="parseInt(cust_final_price) > 0"
                                             label="Total Task Price:"
                                             ref="totalTaskPrice"
                                             :content="taskCustFinalPrice(cust_final_price)"
@@ -71,7 +72,7 @@
                                             type="totalTaskPrice"></content-section>
 
                                     <content-section
-                                            v-if="parseInt(cust_final_price) * 10 <= 0"
+                                            v-if="parseInt(cust_final_price) <= 0"
                                             label="Total Task Price:"
                                             content="Price Not Set"
                                             section-classes="ph-zero"
@@ -79,7 +80,7 @@
                                             type="totalTaskPrice"></content-section>
 
                                     <content-section
-                                            v-if="isContractor() && parseInt(sub_final_price) * 10 > 0"
+                                            v-if="isContractor() && parseInt(sub_final_price) > 0"
                                             label="Total Task Sub Price:"
                                             :content="taskCustFinalPrice(sub_final_price)"
                                             section-classes="ph-zero"
@@ -87,7 +88,7 @@
                                             type="totalTaskPrice"></content-section>
 
                                     <content-section
-                                            v-if="isContractor() && parseInt(sub_final_price) * 10 <= 0"
+                                            v-if="isContractor() && parseInt(sub_final_price) <= 0"
                                             label="Total Task Sub Price:"
                                             content="Price Not Set"
                                             section-classes="ph-zero"
@@ -100,11 +101,16 @@
                                     <div class="form-group" v-if="isContractor()">
                                         <div class="flex justify-content-between mt-1rem">
                                             <label class="">Quantity:</label>
-                                            <input v-if="showTaskPriceInput()" type="text" ref="quantity"
-                                                   class="form-control form-control-sm w-40" :value="jobTask.qty" @blur="updateCustomerTaskQuantity(
-                                   $event.target.value,
-                                   jobTask.id,
-                                   jobTask.qty)">
+                                            <input v-if="showTaskPriceInput()"
+                                                   type="text"
+                                                   ref="quantity"
+                                                   class="form-control form-control-sm w-40"
+                                                   :value="jobTask.qty"
+                                                   @blur="updateCustomerTaskQuantity(
+                                                           $event.target.value,
+                                                           jobTask.id,
+                                                           jobTask.qty)"
+                                            >
                                             <div v-else class="mt-1">
                                                 <strong>{{ jobTask.qty }}</strong>
                                             </div>
@@ -114,15 +120,22 @@
                                     <div class="form-group" v-if="isContractor">
 
                                         <div class="flex justify-content-between">
-                                            <label class="">Price:</label>
+                                            <label class="">Unit Price:</label>
                                             <input v-if="showTaskPriceInput()" type="text" ref="price"
                                                    class="form-control form-control-sm w-40"
                                                    :value="taskCustFinalPrice(unit_price)"
+                                                   :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
                                                    @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
                                             >
                                             <div v-else class="mt-1">
                                                 <strong>{{ taskCustFinalPrice(unit_price) }}</strong>
                                             </div>
+                                        </div>
+                                        <div class="error" v-if="errors.unit_price">Your Contractor Task Price Must Be
+                                            Higher The Sub Price
+                                        </div>
+                                        <div class="error" v-if="errors.priceMustBeANumber">Your Input Must Be A
+                                            Number
                                         </div>
                                     </div>
                                     <!-- <button v-if="isContractor()" class="btn btn-green btn-large m-t-3" v-show="
@@ -381,6 +394,10 @@
         cust_final_price: -1,
         unit_price: -1,
         sub_final_price: -1,
+        errors: {
+          unit_price: false,
+          priceMustBeANumber: false
+        },
         disabled: {
           showDenyForm: false,
           pay: false,
@@ -442,15 +459,16 @@
       getBidPrice(bid) {
         if (bid) {
           return bid.bid_price / 100
-        }      },
+        }
+      },
       goBack() {
         this.$router.go(-1)
       },
-      getCompanyName (bid) {
+      getCompanyName(bid) {
         if (bid.contractor.contractor) {
           return bid.contractor.contractor.company_name
         } else {
-          return bid.contractor.first_name + " " + bid.contractor.last_name
+          return bid.contractor.first_name + ' ' + bid.contractor.last_name
         }
       },
       checkIfAnyBidHasBeenAccepted(jobTask) {
@@ -699,14 +717,25 @@
           return bid.location.address_line_1
         }
       },
+
       updateCustomerTaskPrice(price, jobTaskId, bidId) {
-        price = price.replace(/[^0-9.]/g, '')
-        this.unit_price = price;
-        let taskPrice = this.unit_price
-        taskPrice = taskPrice.toString()
-        this.cust_final_price = price
-        if ((taskPrice !== price)) {
-          GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
+
+        price = this.removeDollarSigns(price)
+
+        if (this.unit_price !== parseFloat(price)) {
+
+          this.errors.priceMustBeANumber = price !== '' && isNaN(price)
+          this.errors.unit_price = this.sub_final_price > price
+
+          this.unit_price = price
+          this.cust_final_price = price * this.jobTask.qty
+
+          if ((this.sub_final_price <= price && !this.errors.priceMustBeANumber)) {
+            GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
+          }
+        } else {
+          this.errors.priceMustBeANumber = price !== '' && isNaN(price)
+          this.errors.unit_price = this.sub_final_price > price
         }
       },
       isContractor() {
@@ -735,12 +764,27 @@
 
         quantity = Number(quantity)
 
+        this.jobTask.qty = quantity
+
         if (quantity != currentQuantityValue) {
           GeneralContractor.updateCustomerTaskQuantity(quantity, taskId)
+
+          let totalPrice = this.unit_price * quantity
+
+          this.cust_final_price = totalPrice.toFixed(2)
         }
 
       },
+      removeDollarSigns(price) {
+        return price.replace(/[$]+/g, '')
+      },
       taskCustFinalPrice(price) {
+
+        if (typeof price === 'string') {
+          price = this.removeDollarSigns(price)
+        }
+
+        price = parseFloat(price)
 
         if (price) {
           let priceString = price.toString()
