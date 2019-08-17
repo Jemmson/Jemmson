@@ -67,7 +67,7 @@
                                             section-classes="ph-zero"
                                             icon="fas fa-money-bill-alt icon"
                                             :warning="cust_final_price < sub_final_price"
-                                            warning-message="Sub Price is Lower than your price"
+                                            warning-message="Sub price is higher than your price"
                                             type="totalTaskPrice"></content-section>
 
                                     <content-section
