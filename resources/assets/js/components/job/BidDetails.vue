@@ -484,7 +484,7 @@
           (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress')
         ) {
 
-          let theBidPrice = this.bid.bid_price / 100
+          let theBidPrice = this.bid.bid_price
 
           return '$ ' + Format.decimal(theBidPrice)
         } else {

@@ -80,21 +80,21 @@
               </span>
                         </div>
 
-                        <div class="flex flex-col" id="preferredPaymentMethod">
-                            <label class="text-center mb-3">Preferred Payment Method</label>
-                            <div class="flex justify-between">
-                                <div class="flex">
-                                    <label for="cash" class="mr-6">Cash</label>
-                                    <input type="checkbox" :checked="paymentTypeCash" @click="paymentMethod('cash')"
-                                           id="cash">
-                                </div>
-                                <div class="flex">
-                                    <label for="stripe" class="mr-6">Credit Card</label>
-                                    <input type="checkbox" :checked="paymentTypeStripe" @click="paymentMethod('stripe')"
-                                           id="stripe">
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="flex flex-col" id="preferredPaymentMethod">-->
+<!--                            <label class="text-center mb-3">Preferred Payment Method</label>-->
+<!--                            <div class="flex justify-between">-->
+<!--                                <div class="flex">-->
+<!--                                    <label for="cash" class="mr-6">Cash</label>-->
+<!--                                    <input type="checkbox" :checked="paymentTypeCash" @click="paymentMethod('cash')"-->
+<!--                                           id="cash">-->
+<!--                                </div>-->
+<!--                                <div class="flex">-->
+<!--                                    <label for="stripe" class="mr-6">Credit Card</label>-->
+<!--                                    <input type="checkbox" :checked="paymentTypeStripe" @click="paymentMethod('stripe')"-->
+<!--                                           id="stripe">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </form>
                     <!-- /end col-md6ss -->
                 </div>
