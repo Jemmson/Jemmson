@@ -73,7 +73,9 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
     public function toNexmo($notifiable)
     {
 
-        $text = "$this->user has finished your bid. Please log into Jemmson.com to take a look at your bid.";
+        $text = "$this->user has finished your bid. 
+            Please log into Jemmson.com to take a look at 
+            your bid.";
 
 //        $text = 'Welcome To Jemmson ' .
 //            $this->contractor .

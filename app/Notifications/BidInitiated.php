@@ -99,6 +99,7 @@ class BidInitiated extends Notification implements ShouldQueue
                 $this->pwLink);
         return (new NexmoMessage)
             ->content($text);
+//            ->from('15554443333');
     }
 
     public function toBroadcast($notifiable)
