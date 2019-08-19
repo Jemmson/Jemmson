@@ -210,6 +210,7 @@ class JobController extends Controller
             );
 
             foreach($job->jobTasks as $jt){
+                $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
                 $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
                 $jt->unit_price = $this->convertToDollars($jt->unit_price);
                 $jt->task->proposed_cust_price = $this->convertToDollars($jt->task->proposed_cust_price);

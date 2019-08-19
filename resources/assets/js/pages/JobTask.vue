@@ -801,7 +801,9 @@
 
         price = parseFloat(price)
 
-        if (!sub && (this.cust_final_price !== this.unit_price * this.jobTask.qty)) {
+        let priceCheck = this.unit_price * this.jobTask.qty
+
+        if (!sub && (this.cust_final_price !== priceCheck)) {
           this.cust_final_price = this.unit_price * this.jobTask.qty
           GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id)
         } else if (sub && total) {
