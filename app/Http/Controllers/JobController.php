@@ -21,10 +21,14 @@ use App\Notifications\JobBidDeclined;
 use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\JobCanceled;
+use App\Traits\ConvertPrices;
 
 
 class JobController extends Controller
 {
+
+    use ConvertPrices;
+
     /**
      * Construct
      */
@@ -204,6 +208,13 @@ class JobController extends Controller
                     }
                 ]
             );
+
+            foreach($job->jobTasks as $jt){
+                $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
+                $jt->unit_price = $this->convertToDollars($jt->unit_price);
+                $jt->task->proposed_cust_price = $this->convertToDollars($jt->task->proposed_cust_price);
+                $jt->task->proposed_sub_price = $this->convertToDollars($jt->task->proposed_sub_price);
+            }
 
             return $job;
         } else {

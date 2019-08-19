@@ -131,11 +131,8 @@ class TaskController extends Controller
 
     public function getJobTaskForGeneral($jobTaskId, $userId)
     {
-//        Log::debug("Job Task Id: $jobTaskId");
 
-//        $jobTask = JobTask::find($jobTaskId);
-
-        return JobTask::with(
+        $jobTasks = JobTask::with(
             [
                 'task',
                 'images',
@@ -143,6 +140,15 @@ class TaskController extends Controller
                 'bidContractorJobTasks.contractor',
                 'bidContractorJobTasks.contractor.contractor'
             ])->where('id', '=', $jobTaskId)->get();
+
+        foreach ($jobTasks as $jt) {
+            $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
+            $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
+            $jt->unit_price = $this->convertToDollars($jt->unit_price);
+        }
+
+        return $jobTasks;
+
     }
 
     /**
@@ -221,7 +227,7 @@ class TaskController extends Controller
             return response()->json(["message" => "Price needs to be greater than 0.", "errors" => ["error" => [""]]], 412);
         }
 
-        $bidContractorJobTask->bid_price = $request->bid_price * 100;
+        $bidContractorJobTask->bid_price = $this->convertToCents($request->bid_price);
         $bidContractorJobTask->status = 'bid_task.bid_sent';
         $bidContractorJobTask->payment_type = $request->paymentType;
         $jobTask = $bidContractorJobTask->jobTask()->first();
@@ -791,7 +797,6 @@ class TaskController extends Controller
     public function updateTaskQuantity(Request $request)
     {
 
-
         $this->validateRequest($request, [
             'quantity' => 'required|numeric',
             'taskId' => 'required|numeric'
@@ -803,9 +808,11 @@ class TaskController extends Controller
         $jobTask = JobTask::find($taskId);
         $job = Job::find($jobTask->job_id);
 
+        $unit_price = $this->convertToCents($request->unit_price);
+
         try {
             $jobTask->qty = $quantity;
-            $jobTask->cust_final_price = $quantity * $jobTask->unit_price;
+            $jobTask->cust_final_price = $quantity * $unit_price;
             $jobTask->save();
         } catch (\Excpetion $e) {
             Log::error('Updating JobTask: ' . $e->getMessage);

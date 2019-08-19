@@ -60,40 +60,40 @@
                             <div class="row">
                                 <div class="col-12">
 
+<!--                                    v-if="parseInt(cust_final_price) > 0"-->
                                     <content-section
-                                            v-if="parseInt(cust_final_price) > 0"
                                             label="Total Task Price:"
                                             ref="totalTaskPrice"
-                                            :content="taskCustFinalPrice(cust_final_price)"
+                                            :content="taskCustFinalPrice(cust_final_price, false)"
                                             section-classes="ph-zero"
                                             icon="fas fa-money-bill-alt icon"
                                             :warning="cust_final_price < sub_final_price"
                                             warning-message="Sub price is higher than your price"
                                             type="totalTaskPrice"></content-section>
 
-                                    <content-section
-                                            v-if="parseInt(cust_final_price) <= 0"
-                                            label="Total Task Price:"
-                                            content="Price Not Set"
-                                            section-classes="ph-zero"
-                                            icon="fas fa-money-bill-alt icon"
-                                            type="totalTaskPrice"></content-section>
+<!--                                    <content-section-->
+<!--                                            v-if="parseInt(this.cust_final_price) <= 0"-->
+<!--                                            label="Total Task Price:"-->
+<!--                                            content="Price Not Set"-->
+<!--                                            section-classes="ph-zero"-->
+<!--                                            icon="fas fa-money-bill-alt icon"-->
+<!--                                            type="totalTaskPrice"></content-section>-->
 
+<!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
                                     <content-section
-                                            v-if="isContractor() && parseInt(sub_final_price) > 0"
                                             label="Total Task Sub Price:"
-                                            :content="taskCustFinalPrice(sub_final_price)"
+                                            :content="taskCustFinalPrice(sub_final_price, true)"
                                             section-classes="ph-zero"
                                             icon="fas fa-user icon"
                                             type="totalTaskPrice"></content-section>
 
-                                    <content-section
-                                            v-if="isContractor() && parseInt(sub_final_price) <= 0"
-                                            label="Total Task Sub Price:"
-                                            content="Price Not Set"
-                                            section-classes="ph-zero"
-                                            icon="fas fa-user icon"
-                                            type="totalTaskPrice"></content-section>
+<!--                                    <content-section-->
+<!--                                            v-if="isContractor() && parseInt(sub_final_price) <= 0"-->
+<!--                                            label="Total Task Sub Price:"-->
+<!--                                            content="Price Not Set"-->
+<!--                                            section-classes="ph-zero"-->
+<!--                                            icon="fas fa-user icon"-->
+<!--                                            type="totalTaskPrice"></content-section>-->
                                 </div>
 
                                 <div class="col-12">
@@ -101,7 +101,7 @@
                                     <div class="form-group" v-if="isContractor()">
                                         <div class="flex justify-content-between mt-1rem">
                                             <label class="">Quantity:</label>
-                                            <input v-if="showTaskPriceInput()"
+                                            <input v-if="showTaskQuantityInput()"
                                                    type="text"
                                                    ref="quantity"
                                                    class="form-control form-control-sm w-40"
@@ -720,7 +720,9 @@
 
       updateCustomerTaskPrice(price, jobTaskId, bidId) {
 
-        price = this.removeDollarSigns(price)
+        if (isNaN(price)) {
+          price = this.removeDollarSigns(price)
+        }
 
         if (this.unit_price !== parseFloat(price)) {
 
@@ -760,6 +762,12 @@
             this.jobStatus === 'bid.initiated' ||
             this.jobStatus === 'bid.declined')
       },
+      showTaskQuantityInput() {
+        return this.isGeneral() &&
+          (this.jobTask.status === 'bid.in_progress' ||
+            this.jobTask.status === 'bid.initiated' ||
+            this.jobTask.status === 'bid.declined')
+      },
       updateCustomerTaskQuantity(quantity, taskId, currentQuantityValue) {
 
         quantity = Number(quantity)
@@ -778,13 +786,22 @@
       removeDollarSigns(price) {
         return price.replace(/[$]+/g, '')
       },
-      taskCustFinalPrice(price) {
+      taskCustFinalPrice(price, sub) {
 
         if (typeof price === 'string') {
           price = this.removeDollarSigns(price)
         }
 
         price = parseFloat(price)
+
+        if (!sub && (this.cust_final_price !== this.unit_price * this.jobTask.qty)) {
+          this.cust_final_price = this.unit_price * this.jobTask.qty
+          GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id)
+        }
+
+        if (price === 0) {
+          return '$0.00'
+        }
 
         if (price) {
           let priceString = price.toString()
@@ -800,9 +817,23 @@
         try {
           const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id + '/' + this.user.id)
           this.jobTask = data.data[0]
+
         } catch (error) {
-          console.log('error')
+          console.log(error.message)
         }
+      },
+      checkThatThereIsAContractorPrice() {
+
+        if (
+          parseInt(this.cust_final_price) <= 0 &&
+          this.jobTask.qty > 0 &&
+          this.unit_price > 0
+        ) {
+          this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.job.id)
+          return false
+        }
+
+        return true
       }
       // showReopenBtn(jobTask) {
       //   if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
@@ -829,11 +860,20 @@
       this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
 
       if (this.jobTask) {
-        this.cust_final_price = this.jobTask.cust_final_price / 100
-        this.sub_final_price = this.jobTask.sub_final_price / 100
-        this.unit_price = this.jobTask.unit_price / 100
+        this.cust_final_price = this.jobTask.cust_final_price
+        this.sub_final_price = this.jobTask.sub_final_price
+        this.unit_price = this.jobTask.unit_price
+
+        if (
+          parseInt(this.cust_final_price) <= 0 &&
+          this.jobTask.qty > 0 &&
+          this.unit_price > 0
+        ) {
+          this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
+        }
       }
       this.user = Spark.state.user
+
     },
   }
 </script>

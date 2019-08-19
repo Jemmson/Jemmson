@@ -24,9 +24,12 @@ use QuickBooksOnline\API\PlatformService\PlatformService;
 use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
 use QuickBooksOnline\API\Facades\Customer;
 use QuickBooksOnline\API\Facades\Estimate;
+use App\Traits\ConvertPrices;
 
 class Quickbook extends Model
 {
+
+    use ConvertPrices;
     //
     protected $fillable = [
         'access_token',
@@ -1043,8 +1046,8 @@ class Quickbook extends Model
             'baseUrl' => "development"
         ));
 
-        $unitPrice = $task->unit_price / 100;
-        $bidPrice = $job->bid_price / 100;
+        $unitPrice = $this->convertToDollars($task->unit_price);
+        $bidPrice = $this->convertToDollars($job->bid_price);
 
         $theResourceObj = Estimate::create([
             "Line" => [

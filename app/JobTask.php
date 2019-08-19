@@ -336,7 +336,7 @@ class JobTask extends Model
         $this->customer_message = $request->customer_message;
         $this->sub_message = $request->sub_message;
         $this->qty = $request->qty;
-        $this->unit_price = $request->taskPrice * 100;
+        $this->unit_price = $this->convertToCents($request->taskPrice);
 
         try {
             $this->save();

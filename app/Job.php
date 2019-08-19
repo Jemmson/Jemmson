@@ -15,9 +15,12 @@ use QuickBooksOnline\API\Core\OAuth\OAuth2\OAuth2LoginHelper;
 use QuickBooksOnline\API\Exception\SdkException;
 
 use App\JobActions;
+use App\Traits\ConvertPrices;
+
 
 class Job extends Model
 {
+    use ConvertPrices;
     use SoftDeletes;
     /**
      * The attributes that are mass assignable.
@@ -173,8 +176,8 @@ class Job extends Model
             'baseUrl' => "development"
         ));
 
-        $unitPrice = $task->unit_price / 100;
-        $bidPrice = $job->bid_price / 100;
+        $unitPrice = $this->convertToDollars($task->unit_price);
+        $bidPrice = $this->convertToDollars($job->bid_price);
 
         $estimate = $dataService->FindbyId('estimate', $job->qb_estimate_id);
         $theResourceObj = Estimate::update($estimate, [
@@ -480,7 +483,7 @@ class Job extends Model
             $bid_price = $bid_price + ($j->qty * $j->unit_price);
         }
 
-        $this->bid_price = $bid_price * 100;
+        $this->bid_price = $bid_price;
 
         try {
             $this->save();
