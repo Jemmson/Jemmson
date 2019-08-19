@@ -1026,7 +1026,7 @@ class TaskController extends Controller
         $jobTask->job_id = $request->jobId;
         $jobTask->task_id = $task_id;
         $jobTask->status = __('bid_task.initiated');
-        $jobTask->cust_final_price = $request->taskPrice * 100;
+        $jobTask->cust_final_price = $this->convertToCents($request->taskPrice);
         $jobTask->sub_final_price = 0;
         $jobTask->contractor_id = $request->contractorId;
         $jobTask->sub_message = $request->sub_message;

@@ -81,7 +81,14 @@
 
 <!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
                                     <content-section
-                                            label="Total Task Sub Price:"
+                                            label="Total Sub Price:"
+                                            :content="taskCustFinalPrice(sub_final_price, true, true)"
+                                            section-classes="ph-zero"
+                                            icon="fas fa-user icon"
+                                            type="totalTaskPrice"></content-section>
+
+                                    <content-section
+                                            label="Sub Unit Price:"
                                             :content="taskCustFinalPrice(sub_final_price, true)"
                                             section-classes="ph-zero"
                                             icon="fas fa-user icon"
@@ -786,7 +793,7 @@
       removeDollarSigns(price) {
         return price.replace(/[$]+/g, '')
       },
-      taskCustFinalPrice(price, sub) {
+      taskCustFinalPrice(price, sub, total = false) {
 
         if (typeof price === 'string') {
           price = this.removeDollarSigns(price)
@@ -797,6 +804,8 @@
         if (!sub && (this.cust_final_price !== this.unit_price * this.jobTask.qty)) {
           this.cust_final_price = this.unit_price * this.jobTask.qty
           GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id)
+        } else if (sub && total) {
+          price = price * this.jobTask.qty
         }
 
         if (price === 0) {

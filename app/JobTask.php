@@ -325,7 +325,7 @@ class JobTask extends Model
         $this->job_id = $request->jobId;
         $this->task_id = $request->taskId;
         $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $request->qty * $request->taskPrice * 100;
+        $this->cust_final_price = $this->convertToCents($request->qty * $request->taskPrice);
         $this->sub_final_price = 0;
         $this->start_when_accepted = $request->customer_message;
         if (empty($request->start_date)) {
