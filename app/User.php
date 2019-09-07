@@ -11,12 +11,14 @@ use Illuminate\Notifications\Messages\NexmoMessage;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Doctrine\DBAL\Driver\PDOException;
+use App\Traits\Utilities;
 
 
 class User extends SparkUser
 {
     use Traits\Passwordless;
     use Notifiable;
+    use Utilities;
     /**
      * The attributes that are mass assignable.
      *
@@ -340,7 +342,7 @@ class User extends SparkUser
     public function updatePhoneNumber($newPhone)
     {
 
-        $this->phone = $newPhone;
+        $this->phone = $this->digitsOnly($newPhone);
         try {
             $this->save();
         } catch (\Exception $e) {
@@ -360,7 +362,7 @@ class User extends SparkUser
         $user = new User();
         $user->email = $request->email;
         $user->name = $request->name;
-        $user->phone = $phone;
+        $user->phone = $this->digitsOnly($phone);
         $user->password_updated = 0;
         $user->password = bcrypt('random'.rand(0,9999));
         $user->usertype = 'contractor';

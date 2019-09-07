@@ -16,10 +16,14 @@ use Log;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use App\Services\SanatizeService;
+use App\Traits\Utilities;
 
 
 class HomeController extends Controller
 {
+
+    use Utilities;
+
     /**
      * Create a new controller instance.
      *
@@ -164,7 +168,7 @@ class HomeController extends Controller
             $user->first_name = $splitName[0];
             $user->last_name = $splitName[1];
         }
-        $user->phone = $phone;
+        $user->phone = $this->digitsOnly($phone);
         $user->save();
 
         $cnu = new CustomerNeedsUpdating();
@@ -264,7 +268,7 @@ class HomeController extends Controller
         }
 
         $user = User::find($userId);
-        $user->phone = $phoneNumber;
+        $user->phone = $this->digitsOnly($phoneNumber);
         Log::debug('saving phone');
         try {
             $user->save();

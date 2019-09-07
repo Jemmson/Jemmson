@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Log;
 use App\Quickbook;
 use App\Http\Controllers\QuickBooksController;
 use Laravel\Spark\User;
+use App\Traits\Utilities;
 
 class RegisterController extends Controller
 {
     use RedirectsUsers;
+    use Utilities;
 
     /**
      * Create a new authentication controller instance.
@@ -51,7 +53,6 @@ class RegisterController extends Controller
         return view('spark::auth.register');
     }
 
-
     public function registerUser(Request $request)
     {
 
@@ -62,7 +63,7 @@ class RegisterController extends Controller
         $user->email = $request['form']['email'];
         $user->usertype = 'contractor';
         $user->password = bcrypt($request['form']['password']);
-        $user->phone = $request['form']['phone_number'];
+        $user->phone = $this->digitsOnly($request['form']['phone_number']);
 //        $user->first_name = '';
 //        $user->last_name = '';
         try {
@@ -126,7 +127,7 @@ class RegisterController extends Controller
         $user->email = $request->email;
         $user->usertype = $request->usertype;
         $user->password = bcrypt($request->password);
-        $user->phone = $request->phone;
+        $user->phone = $this->digitsOnly($request->phone);
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         try {

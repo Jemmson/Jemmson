@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Spark\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Traits\Utilities;
 
 $router->group(['middleware' => 'web'], function ($router) {
     $teamString = Spark::teamString();
@@ -214,10 +215,10 @@ $router->group(['middleware' => 'web'], function ($router) {
         $user->email = $request->email;
         $user->usertype = $request->usertype;
         $user->password = bcrypt($request->password);
-        $user->phone = $request->phone;
+        $user->phone = Utilities::digitsOnlyStatic($request->phone);
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-        $user->phone = $request->phoneNumber;
+        $user->phone = Utilities::digitsOnlyStatic($request->phoneNumber);
         $user->billing_address = $request->addressLine1;
         $user->billing_address_line_2 = $request->addressLine2;
         $user->billing_city = $request->city;
@@ -313,10 +314,10 @@ $router->group(['middleware' => 'web'], function ($router) {
         $user->email = $request->email;
         $user->usertype = $request->usertype;
         $user->password = bcrypt($request->password);
-        $user->phone = $request->phone;
+        $user->phone = Utilities::digitsOnlyStatic($request->phone);
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-        $user->phone = $request->phoneNumber;
+        $user->phone = Utilities::digitsOnlyStatic($request->phoneNumber);
         $user->billing_address = $request->addressLine1;
         $user->billing_address_line_2 = $request->addressLine2;
         $user->billing_city = $request->city;
