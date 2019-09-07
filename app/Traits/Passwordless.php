@@ -45,7 +45,7 @@ trait Passwordless
      */
     public function generateToken($save = false)
     {
-        $now = Carbon::now('America/Phoenix');
+        $now = Carbon::now();
         $attributes = [
             'token'      => str_random(16),
             'is_used'    => false,
