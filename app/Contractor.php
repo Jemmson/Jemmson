@@ -9,9 +9,12 @@ use App\Customer;
 use App\ContractorCustomer;
 use App\Location;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\Utilities;
 
 class Contractor extends Model
 {
+    use Utilities;
+
 //    protected $fillable = [
 //        'user_id',
 //        'company_name',
@@ -247,7 +250,7 @@ class Contractor extends Model
         }
 
         $customer->usertype = 'customer';
-        $customer->phone = $phone;
+        $customer->phone = $this->digitsOnly($phone);
 
         $customer->first_name = $qbCustomerData[0]->GivenName;
         $customer->last_name = $qbCustomerData[0]->FamilyName;
