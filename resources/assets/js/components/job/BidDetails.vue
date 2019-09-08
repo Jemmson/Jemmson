@@ -122,6 +122,7 @@
                     <content-section
                             v-if="!isCustomer || (isCustomer && bidHasBeenSubmitted)"
                             label="Start Date:"
+                            :content-classes="addTaskStartDate ? 'redColor' : ''"
                             :content="agreedStartDate"
                             type="startDate"></content-section>
 
@@ -134,6 +135,7 @@
                     <content-section
                             v-if="!isCustomer || (isCustomer && bidHasBeenSubmitted)"
                             label="Total Bid Price:"
+                            :content-classes="addTaskBidPrice ? 'redColor' : ''"
                             :content="bidPrice"
                             type="totalBidPrice"></content-section>
 
@@ -389,6 +391,8 @@
         area: {
           area: ''
         },
+        addTaskStartDate: false,
+        addTaskBidPrice: false,
         statuses: [
           {
             type: 'Bid Initiated',
@@ -449,15 +453,16 @@
       ...mapGetters(['getCustomerName']),
       agreedStartDate() {
         if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
+          this.addTaskStartDate = false
           let d = this.bid.agreed_start_date
           let date = d.split(' ')
           let format_date = date[0].split('-')
           return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
         } else {
-
           if (this.isCustomer) {
             return ''
-          } else{
+          } else {
+            this.addTaskStartDate = true
             return 'Add A Task'
           }
 
@@ -483,15 +488,15 @@
           this.bid.bid_price &&
           (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress')
         ) {
-
+          this.addTaskBidPrice = false
           let theBidPrice = this.bid.bid_price
-
           return '$ ' + Format.decimal(theBidPrice)
         } else {
 
           if (this.isCustomer) {
             return ''
           } else{
+            this.addTaskBidPrice = true
             return 'Add A Task'
           }
 
