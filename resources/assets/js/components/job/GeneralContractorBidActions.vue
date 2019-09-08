@@ -8,19 +8,43 @@
             PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
         </div>
 
-        <button ref="submitBid"
-                class="btn btn-normal btn-sm"
-                @click="notifyCustomerOfFinishedBid()">Submit Bid
-        </button>
-        <!--                @click="openBidSubmissionDialog()">Submit Bid</button>-->
+        <div class="flex justify-content-around">
+            <button ref="submitBid"
+                    class="btn btn-normal btn-sm"
+                    @click="notifyCustomerOfFinishedBid()"
+                    :disabled="checkReqs()"
+            >Submit Bid</button>
+
+            <!--        @click="openBidSubmissionDialog()">Submit Bid</button>-->
+
+            <button
+                    v-if="shouldBeSignedUpForStripe()"
+                    ref="stripeButton"
+                    @click="triggerStripe()"
+                    style="background-image: url('/img/blue-on-light.png'); width: 12rem; height: 2.15rem;"
+            ></button>
+            <button v-else
+                    style="background-image: url('/img/powered_by_stripe.png'); background-repeat: no-repeat; width: 151px; height: 43px;"
+            >
+            </button>
+        </div>
+
+<!--        <stripe :user="getUser">-->
+<!--        </stripe>-->
 
     </div>
 
 </template>
 
 <script>
+
+  import Stripe from '../../components/stripe/Stripe'
+
   export default {
     name: 'GeneralContractorBidActions',
+    components: {
+      Stripe
+    },
     props: {
       submitTheBid: Boolean,
       bid: Object
@@ -36,7 +60,36 @@
         }
       }
     },
+    computed: {
+      getUser () {
+        if (Spark) {
+          return Spark.state.user
+        }
+      }
+    },
     methods: {
+      triggerStripe(){
+        console.log("trying to trigger stripe")
+        Bus.$emit('needsStripe')
+      },
+
+      checkReqs(){
+        return this.shouldHaveAtLeastOneTask() || this.shouldBeSignedUpForStripe()
+      },
+
+      shouldHaveAtLeastOneTask(){
+        if (this.bid && this.bid.job_tasks) {
+          return this.bid.job_tasks.length === 0
+        }
+      },
+
+      shouldBeSignedUpForStripe() {
+        if (this.bid && this.bid.contractor) {
+          // return this.bid.contractor.stripe_id === null
+          return Spark.state.user.contractor.stripe_express === null
+        }
+      },
+
       openBidSubmissionDialog() {
         return this.$emit('open-bid-submission', true)
       },
@@ -47,19 +100,17 @@
         // compare the the accepted sub price to the contractor price
         // if the accepted sub price is higher then throw an error
 
-        this.subTaskWarning = false
-        for (let i = 0; i < this.bid.job_tasks.length; i++) {
-          if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
-            console.log('sub final price')
-            console.log(this.bid.job_tasks[i].sub_final_price)
-            console.log('cust final price')
-            console.log(this.bid.job_tasks[i].cust_final_price)
-            this.subTaskWarning = true
+        if (this.bid) {
+          this.subTaskWarning = false
+          for (let i = 0; i < this.bid.job_tasks.length; i++) {
+            if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+              this.subTaskWarning = true
+            }
           }
-        }
 
-        if (!this.subTaskWarning) {
-          GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)
+          if (!this.subTaskWarning) {
+            GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)
+          }
         }
 
       }

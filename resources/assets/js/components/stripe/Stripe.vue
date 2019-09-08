@@ -1,7 +1,7 @@
 <template>
     <!-- Modal -->
-    <div class="modal fade" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
-         aria-hidden="false" style="z-index: 1000000000;">
+    <div class="modal" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
+         aria-hidden="false" style="z-index: 1;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -11,8 +11,9 @@
                 </div>
                 <div class="modal-body">
                     <div v-if="showStripeExpress">
-                        Before you can continue you will need to connect with Stripe Express.
-                        This is allows you to get paid with a credit or debit card easily.
+                       Use Stripe to handle all of your credit card payments. It is secure and safe.
+                        You will be redirected to Stripe and you just have to follow the prompts and
+                        you will be quickly setup.
                     </div>
                     <div v-if="isCustomer && notSignedUp">
                         Before You can pay with stripe you will need to complete the form below.

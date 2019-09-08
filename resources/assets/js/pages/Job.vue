@@ -31,9 +31,9 @@
               </bid-add-task>
             </transition> -->
 
-            <!--         / stripe testing delete afte -->
-            <!--        <stripe :user='user'>-->
-            <!--        </stripe>-->
+<!--            stripe testing delete after -->
+                    <stripe :user='user'>
+                    </stripe>
         </div>
 
 </template>

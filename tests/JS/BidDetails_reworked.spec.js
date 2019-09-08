@@ -600,11 +600,11 @@ describe('BidDetails', () => {
 
   })
 
-  it('should ', function() {
+  it.skip('if Contractor is not Signed up for stripe then the Customer Can only pay in Cash ', function() {
 
   })
 
-  it('the submit button should be disabled if the number of job tasks equals 0 or the submission dialog is open', function() {
+  it.skip('the submit button should be disabled if the number of job tasks equals 0 or the submission dialog is open', function() {
 
   })
 

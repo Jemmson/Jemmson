@@ -98,7 +98,8 @@ class StripeController extends Controller
             return redirect("/#" . $request->state . "?error=Sorry we couldn't create your express account at this time");
         }
 
-        return redirect("/#" . $request->state . "?success=You may now submit the bid.");
+        return redirect("/#" . $request->state . "?success=Congratulations You Have Successfully Signed Up For Stripe");
+//        return redirect("/#" . $request->state . "?success=You may now submit the bid.");
     }
 
     /**
