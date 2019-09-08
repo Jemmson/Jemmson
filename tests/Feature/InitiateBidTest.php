@@ -17,6 +17,34 @@ class InitiateBidTest extends TestCase
 
     use RefreshDatabase;
     use WithFaker;
+    use Setup;
+
+    public function testThatTheCorrectTokenComesBack()
+    {
+
+        $this->withoutExceptionHandling();
+
+        $general = $this->createAUser('contractor', 1, 1, [], [
+            'company_name' => 'Albertsons'
+        ]);
+
+        $this->actingAs($general)->json('POST', '/initiate-bid',
+            [
+                'customerName' => 'karen willis',
+                'email' => $this->faker->email,
+                'firstName' => 'karen',
+                'lastName' => 'willis',
+                'jobName' => 'pool work',
+                'phone' => '4807034902',
+                'quickbooks_id' => '',
+            ]);
+
+        $newCustomer = User::where('name', '=', 'karen willis')->get()->first();
+
+        $this->assertDatabaseHas('user_tokens', [
+            "user_id" => $newCustomer->id
+        ]);
+    }
 
     public function test_that_I_am_returning_the_correct_json_response()
     {
