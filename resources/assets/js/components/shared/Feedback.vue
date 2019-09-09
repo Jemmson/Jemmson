@@ -6,7 +6,7 @@
         </button>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="feedback-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false" style="margin-top: 7rem">
+    <div class="modal" id="feedback-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false" style="margin-top: 7rem">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
