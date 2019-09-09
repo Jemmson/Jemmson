@@ -37,6 +37,10 @@ const routes = [
     component: Jobs
   },
   {
+    path: '/bids/subs',
+    component: Jobs
+  },
+  {
     path: '/job/tasks',
     component: JobTasks
   },

@@ -62,7 +62,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapMutations } from 'vuex'
   import Tasks from './Tasks'
   import SearchBar from '../components/shared/SearchBar'
   import Card from '../components/shared/Card'
@@ -100,8 +100,10 @@
       })
     },
     methods: {
+      ...mapMutations([
+        'toggleBidsContractor'
+      ]),
       isContractor(){
-
         if (this.user) {
           return this.user.usertype === 'contractor'
         }
@@ -169,6 +171,11 @@
       }
     },
     mounted() {
+
+      if (this.$route.path === '/bids/subs') {
+        this.toggleBidsContractor(false)
+      }
+
       this.$store.commit('setCurrentPage', this.$router.history.current.path)
     },
     created() {

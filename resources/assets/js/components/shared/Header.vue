@@ -116,7 +116,7 @@
         return this.page === '/home' || this.page === '/home/'
       },
       onJobsPage() {
-        return this.page === '/bids' || this.page === '/bids/'
+        return this.page === '/bids' || this.page === '/bids/' || this.page === '/bids/subs'
       },
       onParticularJobPage() {
         return this.page.split('/')[1] === 'bid'

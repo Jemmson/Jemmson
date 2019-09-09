@@ -52,12 +52,16 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
         if ($isGeneral) {
             return (new MailMessage)
                     ->line('Customer has sent you a payment for : '. $this->task->name . '.')
-                    ->action('View Task', url('/login/general/' . $this->task->jobTask()->first()->job_id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Task',
+                        url('/login/general/' . $this->task->jobTask()->first()->job_id . '/'
+                            . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
                     ->line('Customer has sent you a payment for : ' .$this->task->name . '.')
-                    ->action('View Task', url('/login/sub/task/' . $this->task->id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Task',
+                        url('/login/sub/task/' . $this->task->id . '/'
+                            . $this->user->generateToken(true)->token))
                     ->line('Thank you for using our application!');
         }
 

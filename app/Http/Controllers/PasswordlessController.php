@@ -67,8 +67,14 @@ class PasswordlessController {
         } else {
             if ($user->isValidToken($token->token)) {
                 Auth::login($user);
-                session(['task_id' => $task_id, 'prevDestination' => '/#/tasks?taskId=' . $task_id]);
-                return redirect('/#/tasks?taskId=' . $task_id);
+//                session(['task_id' => $task_id, 'prevDestination' => '/#/tasks?taskId=' . $task_id]);
+//                return redirect('/#/tasks?taskId=' . $task_id);
+
+                session(['task_id' => $task_id, 'prevDestination' => '/#/bids']);
+                return redirect('/#/bids/subs');
+
+
+
             } else {
                 return redirect('home')->withErrors(__('passwordless.invalid'));
             }
