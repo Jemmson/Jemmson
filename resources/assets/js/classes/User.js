@@ -304,7 +304,7 @@ export default class User {
 
   status(status, bid, user) {
 
-    if(!user){
+    if (!user) {
       user = Spark.state.user
     }
 
