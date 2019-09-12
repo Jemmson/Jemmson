@@ -4,6 +4,14 @@
             <h2 class="self-center uppercase">Task Images</h2>
             <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name }}</label>
         </card>
+
+        <div class="flex mb-1rem">
+            <button class="btn btn-md btn-normal text-uppercase mr-1rem flex-1"
+                    @click.prevent="goBack()">
+                Back
+            </button>
+        </div>
+
         <div class="flex flex-col card">
             <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id"
                  v-show="jobTask !== undefined && jobTask !== null">
@@ -54,6 +62,9 @@
     },
     computed: {},
     methods: {
+      goBack() {
+        this.$router.go(-1)
+      },
       openImage(imageId) {
         console.log(imageId)
         $('#image' + imageId).addClass('lightbox-open')
