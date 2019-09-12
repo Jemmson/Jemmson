@@ -5,6 +5,7 @@
 /public/mix.js
 /public/css/app.css
 /storage/*.key
+/storage/*
 /vendor
 /.idea
 /.vagrant
