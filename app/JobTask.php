@@ -80,8 +80,6 @@ class JobTask extends Model
     }
 
 
-
-
     /*
  * *********************************
  * Methods
@@ -106,6 +104,13 @@ class JobTask extends Model
     static function findEarliestStartDate($jobId)
     {
 
+
+        if (empty(JobTask::select('start_date')
+            ->where("job_id", "=", $jobId)
+            ->oldest('start_date')->get()->first()->start_date)) {
+            $now = Carbon::now();
+            return $now->date;
+        }
         return JobTask::select('start_date')
             ->where("job_id", "=", $jobId)
             ->oldest('start_date')->get()->first()->start_date;

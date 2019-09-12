@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ConvertPrices;
+use Cloudinary;
+use Cloudinary\Api;
 
 class TaskController extends Controller
 {
@@ -1050,30 +1052,55 @@ class TaskController extends Controller
      */
     public function uploadTaskImage(Request $request)
     {
+
+
+
         // get the file
         $file = $request->photo;
 
         // create a hash name for storage and retrieval
         $path = $file->hashName('tasks');
 
-        // store the file
-        $disk = Storage::disk('public');
-        $disk->put(
-            $path, $this->formatImage($file)
-        );
-        $url = $disk->url($path);
+        $image = Cloudinary\Uploader::upload($file, [
+            "public_id" => $path
+        ]);
+
+        if (empty($image)) {
+            return response()->json(['message' => 'Error Uploading Image. Please Try Again'], 400);
+        }
+
+//         store the file
+//        $disk = Storage::disk('public');
+//        $disk->put(
+//            $path, $this->formatImage($file)
+//        );
+        $url = $image['secure_url'];
         $taskImage = new TaskImage;
         $taskImage->job_id = $request->jobId;
         $taskImage->job_task_id = $request->jobTaskId;
         $taskImage->url = $url;
+        $taskImage->secure_url = $url;
+        $taskImage->public_id = $image['public_id'];
+        $taskImage->version = $image['version'];
+        $taskImage->signature = $image['signature'];
+        $taskImage->width = $image['width'];
+        $taskImage->height = $image['height'];
+        $taskImage->format = $image['format'];
+        $taskImage->resource_type = $image['resource_type'];
+        $taskImage->bytes = $image['bytes'];
+        $taskImage->type = $image['type'];
+        $taskImage->etag = $image['etag'];
+        $taskImage->placeholder = $image['placeholder'];
+//        $taskImage->overwritten = $image['overwritten'];
+        $taskImage->original_filename = $image['original_filename'];
 
         try {
             $taskImage->save();
         } catch (\Exception $e) {
             Log::error('Saving Task Image: ' . $e->getMessage());
-            if (preg_match('/logos\/(.*)$/', $url, $matches)) {
-                $disk->delete('tasks/' . $matches[1]);
-            }
+//            if (preg_match('/logos\/(.*)$/', $url, $matches)) {
+//                $disk->delete('tasks/' . $matches[1]);
+//            }
             return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
         }
 
@@ -1111,17 +1138,20 @@ class TaskController extends Controller
 
     public function deleteImage(TaskImage $taskImage)
     {
-        if (preg_match('/tasks\/(.*)$/', $taskImage->url, $matches)) {
-            $disk = Storage::disk('public');
-            try {
-                $disk->delete('tasks/' . $matches[1]);
-            } catch (\Exception $e) {
-                Log::error('Delete Image: ' . $e->getMessage());
-                return response()->json('Something Went Wrong', 422);
-            }
-
+//        if (preg_match('/tasks\/(.*)$/', $taskImage->url, $matches)) {
+//            $disk = Storage::disk('public');
+//            try {
+//                $disk->delete('tasks/' . $matches[1]);
+//            } catch (\Exception $e) {
+//                Log::error('Delete Image: ' . $e->getMessage());
+//                return response()->json('Something Went Wrong', 422);
+//            }
+//
             $taskImage->delete();
-        }
+//        }
+
+
+
 
         $job = Job::find($taskImage->job_id);
         $jobTask = JobTask::find($taskImage->job_task_id);
@@ -1142,5 +1172,7 @@ class TaskController extends Controller
         if ($job->contractor_id !== $jobTask->contractor_id) {
             $jobTask->contractor()->first()->notify(new TaskImageDeleted());
         }
+
+        $result = Cloudinary\Uploader::destroy($taskImage->public_id, $options = array());
     }
 }
