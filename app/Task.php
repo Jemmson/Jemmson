@@ -16,6 +16,7 @@ use QuickBooksOnline\API\DataService\DataService;
 //use Carbon\Carbon;
 //\Illuminate\Support\Carbon::
 use App\Traits\ConvertPrices;
+use Carbon\Carbon;
 
 
 class Task extends Model
@@ -59,6 +60,10 @@ class Task extends Model
 
     public static function validate_new_task_input(Request $request)
     {
+
+//        $request->start_date = $now->date;
+//        $now = Carbon::now();
+
         $request->validate([
             'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
             'taskPrice' => 'required|numeric',

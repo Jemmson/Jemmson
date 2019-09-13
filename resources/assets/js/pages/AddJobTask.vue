@@ -542,7 +542,7 @@
           this.checkIfValuesChanged()
         }
       },
-      checkThatSubPriceIsHigherThanContractorPrice(){
+      checkThatSubPriceIsHigherThanContractorPrice() {
         this.errors.subPriceTooHigh.exists =
           this.addNewTaskForm.taskPrice < this.addNewTaskForm.subTaskPrice
       },
@@ -822,6 +822,9 @@
           this.addNewTaskForm.customer_id = this.bid.customer_id
           this.addNewTaskForm.jobId = this.bid.id
           // this.addNewTaskForm.area = this.bid.location.city;
+
+          this.setUTCDate()
+
           GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
           // console.log (newTask);
           // debugger;
@@ -856,6 +859,43 @@
       },
       setDefaultStartDate() {
         this.addNewTaskForm.start_date = this.getYear() + '-' + this.getMonth() + '-' + this.getDay()
+      },
+      todaysDate() {
+        return this.getYear() + '-' + this.getMonth() + '-' + this.getDay()
+      },
+      utcDate() {
+        return this.getUTCYear() + '-' + this.getUTCMonth() + '-' + this.getUTCDay()
+      },
+      getUTCYear() {
+        let date = new Date()
+        return date.getUTCFullYear()
+      },
+      getUTCMonth() {
+        let date = new Date()
+        let month = date.getUTCMonth()
+        if (month < 10) {
+          month = month + 1
+          month = '0' + month
+        }
+        return month
+      },
+      getUTCDay() {
+        let date = new Date()
+        let day = date.getUTCDate()
+        if (day < 10) {
+          day = '0' + day
+        }
+        return day
+      },
+      setUTCDate() {
+        if (this.addNewTaskForm.start_date === '') {
+          this.addNewTaskForm.start_date = this.utcDate()
+        } else {
+          let selectedStartDate = this.addNewTaskForm.start_date
+          if (selectedStartDate === this.todaysDate()) {
+            this.addNewTaskForm.start_date = this.utcDate()
+          }
+        }
       }
     },
     mounted: function() {
