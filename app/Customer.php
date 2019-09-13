@@ -54,7 +54,16 @@ class Customer extends Model
             $jobTasks = $job->jobTasks()->get();
             foreach($jobTasks as $jobTask) {
                 $jobTask->location_id = $job->location_id;
-                $jobTask->save();
+
+                try {
+                    $jobTask->save();
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                        'code' => $e->getCode()
+                    ], 200);
+                }
+
             }
         }
     }

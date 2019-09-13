@@ -42,7 +42,16 @@ class CustomerNeedsUpdating extends Model
 
         foreach ($customerEntries as $customer){
             $customer->needs_updating = true;
-            $customer->save();
+
+            try {
+                $customer->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+
         }
     }
 

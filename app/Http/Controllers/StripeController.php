@@ -229,7 +229,16 @@ class StripeController extends Controller
         // get all tasks that havent been paid for 
         $job = Job::find($request->id);
         $job->paid_with_cash_message = $request->cashMessage;
-        $job->save();
+
+        try {
+            $job->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
         $jobTasks = $job->
                         jobTasks()->
                         where('status', 'bid_task.finished_by_general')->

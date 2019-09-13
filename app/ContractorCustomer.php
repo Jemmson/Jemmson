@@ -30,7 +30,16 @@ class ContractorCustomer extends Model
         if ($this->checkIfCustomerCurrentlyExistsForContractor($contractorId, $customerId)) {
             $this->contractor_user_id = $contractorId;
             $this->customer_user_id = $customerId;
-            $this->save();
+
+            try {
+                $this->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+
         }
     }
 
@@ -39,7 +48,16 @@ class ContractorCustomer extends Model
         $cc = ContractorCustomer::where('contractor_user_id', '=', $contractorId)
             ->where('customer_user_id', '=', $customerId)->get()->first();
         $cc->quickbooks_id = $quickbookId;
-        $cc->save();
+
+        try {
+            $cc->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
 //        ContractorCustomer::where('contractor_user_id', '=', 1)->where('customer_user_id', '=', 2)
     }
 

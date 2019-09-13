@@ -130,6 +130,7 @@ class RegisterController extends Controller
         $user->phone = $this->digitsOnly($request->phone);
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
+
         try {
             $user->save();
         } catch (\Exception $error) {

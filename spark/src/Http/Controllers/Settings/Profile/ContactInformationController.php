@@ -46,7 +46,14 @@ class ContactInformationController extends Controller
         $location->state = $request->state;
         $location->zip = $request->zip;
 
-        $location->save();
+        try {
+            $location->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
 
         $cnu = new CustomerNeedsUpdating();
         $cnu->customerHasUpdatedSettings(Auth::user()->getAuthIdentifier());

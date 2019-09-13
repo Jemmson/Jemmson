@@ -124,7 +124,15 @@ class HomeController extends Controller
 
             $updateUserLocationID = User::find($user_id);
             $updateUserLocationID->location_id = $contractor->location_id;
-            $updateUserLocationID->save();
+
+            try {
+                $updateUserLocationID->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
 
             if (!empty($request->qbCompanyId)) {
                 Quickbook::firstOrCreate([
@@ -157,7 +165,16 @@ class HomeController extends Controller
 
             $updateUserLocationID = User::find($user_id);
             $updateUserLocationID->location_id = $customer->location_id;
-            $updateUserLocationID->save();
+
+            try {
+                $updateUserLocationID->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+
         }
 
         $user = Auth::user();
@@ -169,7 +186,15 @@ class HomeController extends Controller
             $user->last_name = $splitName[1];
         }
         $user->phone = $this->digitsOnly($phone);
-        $user->save();
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
 
         $cnu = new CustomerNeedsUpdating();
         $cnu->customerHasUpdatedSettings($user->id);

@@ -590,7 +590,15 @@ class JobController extends Controller
 
         $job = Job::find($jobId);
         $job->status = __('job.accepted');
-        $job->save();                           // TODO: needs try catch here
+
+        try {
+            $job->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
 
         $user = User::find($contractorId);
 

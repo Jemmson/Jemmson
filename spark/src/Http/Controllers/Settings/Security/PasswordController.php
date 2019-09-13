@@ -38,8 +38,16 @@ class PasswordController extends Controller
             ], 422);
         }
 
-        $request->user()->forceFill([
-            'password' => bcrypt($request->password)
-        ])->save();
+        try {
+            $request->user()->forceFill([
+                'password' => bcrypt($request->password)
+            ])->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
     }
 }
