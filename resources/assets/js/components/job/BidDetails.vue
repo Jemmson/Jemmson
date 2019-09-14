@@ -236,50 +236,60 @@
             </card>
         </section>
 
-
         <section class="col-12">
-            <h1 v-if="isCustomer" class="card-title mt-4">Payment Details For Contractor</h1>
-            <h1 v-else class="card-title mt-4">Payment Details For Customer</h1>
+            <h1 v-if="isCustomer" class="card-title mt-4">Completed Tasks</h1>
             <card>
-                <main class="row">
-                    <section class="col-12 mb-3">
-                        <label for="paymentType" class="">Payment Method Selected:</label>
-                        <select v-model="selectedPayment" class="float-right form-control" name="paymentType"
-                                id="paymentType">
-                            <option value="creditCard">Credit Card</option>
-                            <option value="cash">Cash</option>
-                        </select>
-                    </section>
-                    <section ref="paymentInstructions" class="col-12 mb-2" v-if="selectedPayment === 'cash'">
-                        <label for="paymentInstructions" class="">Payment Instructions:</label>
-                        <input ref="paymentInstructionsMessage"
-                               id="paymentInstructions"
-                               class="float-right form-control"
-                               v-model="payWithCashMessage">
-                        <button class="btn btn-sm btn-normal float-right mt-half-rem"
-                                ref="paywithCashButton"
-                                :disabled="disabled.submitMessage"
-                                @click="submitPayWithCashMessage"
-                        >
-                            <span v-if="disabled.submitMessage">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                      </span>
-                            Submit
-                        </button>
-
-                        <div v-if="successfulUpdate === 'true'">
-                            Your message has been updated
-                        </div>
-
-                        <div v-if="successfulUpdate === 'false'">
-                            Your message was not updated. please try again
-                        </div>
-
-
-                    </section>
+                <main class="row w-full ml-0">
+                    <completed-tasks class="w-full" :bid="bid">
+                    </completed-tasks>
                 </main>
             </card>
         </section>
+
+
+        <!--        <section class="col-12">-->
+        <!--            <h1 v-if="isCustomer" class="card-title mt-4">Payment Details For Contractor</h1>-->
+        <!--            <h1 v-else class="card-title mt-4">Payment Details For Customer</h1>-->
+        <!--            <card>-->
+        <!--                <main class="row">-->
+        <!--                    <section class="col-12 mb-3">-->
+        <!--                        <label for="paymentType" class="">Payment Method Selected:</label>-->
+        <!--                        <select v-model="selectedPayment" class="float-right form-control" name="paymentType"-->
+        <!--                                id="paymentType">-->
+        <!--                            <option value="creditCard">Credit Card</option>-->
+        <!--                            <option value="cash">Cash</option>-->
+        <!--                        </select>-->
+        <!--                    </section>-->
+        <!--                    <section ref="paymentInstructions" class="col-12 mb-2" v-if="selectedPayment === 'cash'">-->
+        <!--                        <label for="paymentInstructions" class="">Payment Instructions:</label>-->
+        <!--                        <input ref="paymentInstructionsMessage"-->
+        <!--                               id="paymentInstructions"-->
+        <!--                               class="float-right form-control"-->
+        <!--                               v-model="payWithCashMessage">-->
+        <!--                        <button class="btn btn-sm btn-normal float-right mt-half-rem"-->
+        <!--                                ref="paywithCashButton"-->
+        <!--                                :disabled="disabled.submitMessage"-->
+        <!--                                @click="submitPayWithCashMessage"-->
+        <!--                        >-->
+        <!--                            <span v-if="disabled.submitMessage">-->
+        <!--                                        <i class="fa fa-btn fa-spinner fa-spin"></i>-->
+        <!--                                      </span>-->
+        <!--                            Submit-->
+        <!--                        </button>-->
+
+        <!--                        <div v-if="successfulUpdate === 'true'">-->
+        <!--                            Your message has been updated-->
+        <!--                        </div>-->
+
+        <!--                        <div v-if="successfulUpdate === 'false'">-->
+        <!--                            Your message was not updated. please try again-->
+        <!--                        </div>-->
+
+
+        <!--                    </section>-->
+        <!--                </main>-->
+        <!--            </card>-->
+        <!--        </section>-->
 
         <section ref="job_address" class="col-12" v-if="showAddress">
             <h1 class="card-title mt-4">Job Address</h1>
@@ -366,6 +376,7 @@
   import GeneralContractorBidActions from './GeneralContractorBidActions'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
   import ContentSection from '../shared/ContentSection'
+  import CompletedTasks from './CompletedTasks'
 
   export default {
     components: {
@@ -373,6 +384,7 @@
       Stripe,
       Info,
       ContentSection,
+      CompletedTasks,
       GeneralContractorBidActions
     },
     props: {
@@ -489,6 +501,7 @@
           this.bid.bid_price &&
           (this.bid.status === 'bid.initiated' ||
             this.bid.status === 'bid.in_progress' ||
+            this.bid.status === 'job.approved' ||
             this.bid.status === 'bid.sent'
           )
         ) {
