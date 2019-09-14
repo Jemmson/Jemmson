@@ -2,7 +2,7 @@
 
   <div class="container-fluid">
     <search-bar>
-      <input type="text" class="form-control" placeholder="Search Invoices" v-model="searchTerm" @keyup="search">
+      <input type="text" class="form-control" placeholder="Search Paid Receipts" v-model="searchTerm" @keyup="search">
     </search-bar>
 
     <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->

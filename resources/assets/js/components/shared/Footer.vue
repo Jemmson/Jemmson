@@ -16,7 +16,7 @@
         <div class="col d-flex align-items-center">
             <figure @click.prevent="goTo('/invoices')" class="item mx-auto text-center" :class="isCurrentPage('/invoices', '/invoices/')">
                 <i class="fas fa-file-alt sm-icon"></i>
-                <figcaption class="caption small-header" :class="isCurrentPage('/invoices', '/invoices/')">Invoices</figcaption>
+                <figcaption class="caption small-header" :class="isCurrentPage('/invoices', '/invoices/')">Receipts</figcaption>
             </figure>
         </div>
         <div v-if="userType === 'contractor'" class="col d-flex align-items-center">
