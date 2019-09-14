@@ -1,18 +1,14 @@
 <template>
     <!-- / all tasks ready for payment -->
-    <card v-if="show" header="true" footer="true">
-        <template slot="card-header">
-            Payable Tasks
-        </template>
-
+    <div v-if="show"><!---->
         <div class="flex flex-col">
-            <div class="table-header">
-                <div class="flex-1">Task Name</div>
+            <div class="flex space-between header-completed">
+                <div class="flex-1">Task</div>
                 <div class="flex-1">Qty</div>
-                <div class="flex-1">Qty Unit</div>
-                <div class="flex-1">Total Task Price</div>
+                <div class="flex-1">Price</div>
+                <div class="flex-1">Total</div>
                 <div class="flex-1" v-if="isContractor">Task Price (Sub Contractor)</div>
-                <div class="flex-1" v-else>Exclude From Payment</div>
+                <div class="flex-1" v-else>Exclude</div>
                 <div class="flex-1"></div>
             </div>
             <div class="flex pl-2 mb-2" v-for="jobTask in payableTasks" :key="jobTask.id">
@@ -63,7 +59,7 @@
             </div>
         </div>
 
-        <template slot="card-footer">
+
             <div v-if="isCustomer" class="text-right">
                 <button class="btn btn-normal" @click.prevent="paidCash = true" :disabled="disabled.payCash">
                         <span v-if="disabled.payCash">
@@ -75,7 +71,7 @@
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
-                    Pay With Stripe
+                    Pay With Credit Card
                 </button>
             </div>
             <transition name="slide-fade">
@@ -88,7 +84,11 @@
                                placeholder="Optional Message">
                     </div>
                     <div class="form-group col-md-12">
-                        <button class="btn btn-normal" @click.prevent="paidWithCash()" :disabled="disableCashMessageButton" ref="cashMessage">
+                        <button
+                                class="btn btn-normal"
+                                @click.prevent="paidWithCash()"
+                                :disabled="disableCashMessageButton"
+                                ref="cashMessage">
                         <span v-if="disableCashMessageButton">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
@@ -97,10 +97,10 @@
                     </div>
                 </div>
             </transition>
-        </template>
+
         <deny-task-modal v-if="isCustomer" :jobTask="jTask">
         </deny-task-modal>
-    </card>
+    </div>
 </template>
 
 <script>
@@ -226,3 +226,14 @@
     mounted() {}
   }
 </script>
+
+<style scoped>
+     .header-completed {
+         font-size: 14pt;
+         background-color: #80808054;
+         border-radius: 4px;
+         padding-left: 11px;
+         margin-bottom: 10px;
+         font-weight: bold;
+     }
+</style>
