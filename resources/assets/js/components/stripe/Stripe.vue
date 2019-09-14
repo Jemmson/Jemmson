@@ -54,19 +54,22 @@
         return 'Stripe'
       },
       notSignedUp() {
-        return !User.hasStripeId
+        return !User.hasStripeId()
       },
       isContractor() {
-        return User.isContractor
+        return User.isContractor()
       },
       isCustomer() {
-        return User.isCustomer
+        return User.isCustomer()
       },
       showStripeExpress() {
         if (User.contractor === null)
           return false
 
-        return Spark.state.user.contractor.stripe_express === null
+        if (Spark.state.user.contractor) {
+          return Spark.state.user.contractor.stripe_express === null
+        }
+
       }
     },
     methods: {},
