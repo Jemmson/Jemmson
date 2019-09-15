@@ -4,7 +4,7 @@
             <section class="flex flex-col">
                 <div class="flex justify-content-around text-center">
                     <header ref="" class="page-header-title w-full"
-                            :class="getLabelClass(bidTask.job_task.status)">
+                            :class="getLabelClass(bidTask)">
                         {{ status(bidTask) }}
                     </header>
                     <header ref="" class="text-size w-full uppercase text-center">
@@ -91,53 +91,53 @@
             <!--<div v-if="isBidOpen(bidTask)" class="flex-1 flex-col">-->
 
 
-<!--            <section class="col-12">-->
-<!--                <h1 class="card-title">Payment Method</h1>-->
-<!--                <card>-->
-<!--                    <main class="row">-->
+            <!--            <section class="col-12">-->
+            <!--                <h1 class="card-title">Payment Method</h1>-->
+            <!--                <card>-->
+            <!--                    <main class="row">-->
 
-<!--                        <div class="w-full" v-if="bidTask.accepted === 1">-->
+            <!--                        <div class="w-full" v-if="bidTask.accepted === 1">-->
 
-<!--                            <content-section-->
-<!--                                    label="Selected Payment Method:"-->
-<!--                                    :content="bidTask.payment_type"-->
-<!--                                    type="paymentType"></content-section>-->
+            <!--                            <content-section-->
+            <!--                                    label="Selected Payment Method:"-->
+            <!--                                    :content="bidTask.payment_type"-->
+            <!--                                    type="paymentType"></content-section>-->
 
-<!--                            <content-section-->
-<!--                                    v-if="bidTask.payment_type === 'cash'"-->
-<!--                                    label="Payment Instructions:"-->
-<!--                                    :content="bidTask.job_task.job.paid_with_cash_message"-->
-<!--                                    type="paymentType"></content-section>-->
-<!--                        </div>-->
-<!--                        <div v-else class="w-full">-->
-<!--                            <div class="text-center m-2 w-full pb-half-rem"><strong>Preferred Payment Method?</strong>-->
-<!--                            </div>-->
-<!--                            <div class="flex justify-content-around w-full">-->
-<!--                                <button class="btn btn-sm btn-normal flex-1"-->
-<!--                                        :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'"-->
-<!--                                        @click="setPaymentType('stripe')">Stripe-->
-<!--                                </button>-->
-<!--                                <button class="btn btn-sm btn-normal flex-1 mr-6 ml-6"-->
-<!--                                        :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'"-->
-<!--                                        @click="setPaymentType('cash')">Cash-->
-<!--                                </button>-->
-<!--                                <button class="btn btn-sm btn-normal flex-1"-->
-<!--                                        :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'"-->
-<!--                                        @click="setPaymentType('other')">Other-->
-<!--                                </button>-->
-<!--                            </div>-->
-<!--                        </div>-->
+            <!--                            <content-section-->
+            <!--                                    v-if="bidTask.payment_type === 'cash'"-->
+            <!--                                    label="Payment Instructions:"-->
+            <!--                                    :content="bidTask.job_task.job.paid_with_cash_message"-->
+            <!--                                    type="paymentType"></content-section>-->
+            <!--                        </div>-->
+            <!--                        <div v-else class="w-full">-->
+            <!--                            <div class="text-center m-2 w-full pb-half-rem"><strong>Preferred Payment Method?</strong>-->
+            <!--                            </div>-->
+            <!--                            <div class="flex justify-content-around w-full">-->
+            <!--                                <button class="btn btn-sm btn-normal flex-1"-->
+            <!--                                        :class="paymentType === 'stripe' ? 'btn-active' : 'btn-inactive'"-->
+            <!--                                        @click="setPaymentType('stripe')">Stripe-->
+            <!--                                </button>-->
+            <!--                                <button class="btn btn-sm btn-normal flex-1 mr-6 ml-6"-->
+            <!--                                        :class="paymentType === 'cash' ? 'btn-active' : 'btn-inactive'"-->
+            <!--                                        @click="setPaymentType('cash')">Cash-->
+            <!--                                </button>-->
+            <!--                                <button class="btn btn-sm btn-normal flex-1"-->
+            <!--                                        :class="paymentType === 'other' ? 'btn-active' : 'btn-inactive'"-->
+            <!--                                        @click="setPaymentType('other')">Other-->
+            <!--                                </button>-->
+            <!--                            </div>-->
+            <!--                        </div>-->
 
-<!--                        &lt;!&ndash;                        <content-section&ndash;&gt;-->
-<!--                        &lt;!&ndash;                                label="asassa"&ndash;&gt;-->
-<!--                        &lt;!&ndash;                                :content="saassaas"&ndash;&gt;-->
-<!--                        &lt;!&ndash;                                type="sasaasas"></content-section>&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                        <content-section&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                                label="asassa"&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                                :content="saassaas"&ndash;&gt;-->
+            <!--                        &lt;!&ndash;                                type="sasaasas"></content-section>&ndash;&gt;-->
 
 
-<!--                    </main>-->
-<!--                </card>-->
-<!--            </section>-->
-            
+            <!--                    </main>-->
+            <!--                </card>-->
+            <!--            </section>-->
+
 
             <section class="col-12">
                 <h1 class="card-title">Job Address</h1>
@@ -318,11 +318,42 @@
         return (bid.id === bid.job_task.bid_id && (bid.job_task.job.status === 'job.approved' || bid.job_task.job.status === 'job.completed' || bid.job_task.status === 'bid_task.accepted')) || (bid.job_task.status ===
           'bid_task.bid_sent' || bid.job_task.status === 'bid_task.initiated')
       },
-      getLabelClass(status) {
-        return Format.statusLabel(status)
+      getLabelClass(bidTask) {
+
+        if (bidTask && bidTask.job_task) {
+
+          return Format.statusLabel(
+            bidTask.job_task.status,
+            this.isGeneral(bidTask),
+            this.isCustomer(bidTask),
+            bidTask
+          )
+
+          // if (this.isUserTheGeneral(bidTask)) {
+          //   return Format.statusLabel(
+          //     bidTask.job_task.status,
+          //     this.isGeneral(bidTask),
+          //     this.isCustomer(bidTask),
+          //     bidTask
+          //   )
+          // } else {
+          //   return Format.statusLabel(bidTask.status)
+          // }
+        }
+
+      },
+      isGeneral(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return Spark.state.user.id === bidTask.job_task.contractor_id
+        }
+      },
+      isCustomer(bidTask){
+        if (bidTask && bidTask.job_task) {
+          return Spark.state.user.usertype === "customer"
+        }
       },
       status(bid_task) {
-        return User.status(bid_task.job_task.status, bid_task.job_task, false)
+        return User.status(bid_task.status, bid_task.job_task, false)
       },
       jobName(name) {
         return Format.jobName(name)

@@ -123,7 +123,7 @@ export default class Format {
         return this.generalContractorLabel(status)
       } else {
         // subcontractor labels
-        return this.subContractorLabel()
+        return this.subContractorLabel(status)
       }
 
     } else {

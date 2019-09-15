@@ -553,8 +553,12 @@ class TaskController extends Controller
             $c = BidContractorJobTask::find($contractor->id);
             if ($contractor->id === $bidId) {
                 $c->accepted = true;
+                $c->status = 'bid_task.accepted';
             } else {
                 $c->accepted = false;
+                if ($c->status == 'bid_task.accepted') {
+                    $c->status =  'bid_task.bid_sent';
+                }
             }
             $c->save();
         });
