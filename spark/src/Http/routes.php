@@ -6,6 +6,7 @@ use Laravel\Spark\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Traits\Utilities;
+use Illuminate\Support\Facades\DB;
 
 $router->group(['middleware' => 'web'], function ($router) {
     $teamString = Spark::teamString();
@@ -185,6 +186,7 @@ $router->group(['middleware' => 'web'], function ($router) {
     // Registration...
     $router->get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     $router->post('/register', 'Auth\RegisterController@register');
+
     $router->post('/registerContractor', function (Request $request) {
 
             $validator = Validator::make($request->all(), [
@@ -278,10 +280,31 @@ $router->group(['middleware' => 'web'], function ($router) {
 
         Auth::loginUsingId($user->id);
 
+//        $userData = User::where('id', '=', $user->id)->select('name','first_name','last_name')->get()->first();
+        $userData = $user->select(
+            'name',
+            'email',
+            'usertype',
+            'phone',
+            'first_name',
+            'last_name',
+            'billing_address',
+            'billing_address_line_2',
+            'billing_city',
+            'billing_state',
+            'billing_zip',
+            'billing_country',
+            'password_updated',
+            'id',
+            'location_id'
+        )->get()->first();
+
         return response()->json([
             'redirect' => '/#/home',
-            'user' => $user
+            'user' => $userData
         ]);
+
+
 
     });
 //    $router->post('/registerContractor', 'Auth\RegisterController@registerContractor');
@@ -377,12 +400,16 @@ $router->group(['middleware' => 'web'], function ($router) {
 
         Auth::loginUsingId($user->id);
 
+        $userData = DB::select(['name','first_name','last_name'])->where('id','=',$user->id)->get()->first();
+
         return response()->json([
             'redirect' => '/#/home',
-            'user' => $user
+            'user' => $userData
         ]);
 
     });
+
+
     $router->post('/registerUser', 'Auth\RegisterController@registerUser');
 
 

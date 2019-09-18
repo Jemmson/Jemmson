@@ -801,6 +801,7 @@
                 Bus.$emit('updateUser')
                 this.$router.push('/home')
               } catch (error) {
+                console.log('errors', error)
                 let {errors} = error.response.data
                 this.setErrors(errors)
                 this.registerForm.busy = false

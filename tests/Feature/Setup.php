@@ -44,12 +44,12 @@ trait Setup
         return $user;
     }
 
-    public function createATask($name, $price, $userId, $array = [])
+    public function createATask($name, $price, $contractorId, $array = [])
     {
         $payload = [
             "name" => $name,
             "proposed_cust_price" => $price,
-            "contractor_id" => $userId
+            "contractor_id" => $contractorId
         ];
 
         $payload = $this->mergeArrays($payload, $array);
