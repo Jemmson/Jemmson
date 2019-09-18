@@ -25,10 +25,11 @@ class InitiateBidTest extends TestCase
         $this->withoutExceptionHandling();
 
         $general = $this->createAUser('contractor', 1, 1, [], [
-            'company_name' => 'Albertsons'
+            'company_name' => 'Albertsons',
+            'free_jobs' => 5
         ]);
 
-        $this->actingAs($general)->json('POST', '/initiate-bid',
+        $response = $this->actingAs($general)->json('POST', '/initiate-bid',
             [
                 'customerName' => 'karen willis',
                 'email' => $this->faker->email,
@@ -39,11 +40,63 @@ class InitiateBidTest extends TestCase
                 'quickbooks_id' => '',
             ]);
 
+        $response->assertSeeText('Bid was created');
+
+//        Contractor can create new a new job
+        $this->assertDatabaseHas('contractors', [
+            "user_id" => $general->id
+        ]);
+
+//        dd(json_encode($general->contractor()));
+//        echo json_encode($general->contractor());
+
+        $this->assertGreaterThan(0, $general->contractor()->get()->first()->free_jobs);
+
+//        Check a customer has been added to the database
         $newCustomer = User::where('name', '=', 'karen willis')->get()->first();
 
+        $this->assertDatabaseHas('users', [
+            "id" => $newCustomer->id,
+            "location_id" => null,
+            "usertype" => "customer",
+            "password_updated" => 0,
+            'phone' => '4807034902'
+        ]);
+
+        $this->assertDatabaseHas('customers', [
+            "user_id" => $newCustomer->id
+        ]);
+
+//**    Check that customer and contractor are associated to each other in the database
+        $this->assertDatabaseHas('contractor_customer', [
+            "contractor_user_id" => $general->id,
+            "customer_user_id" => $newCustomer->id
+        ]);
+
+
+//      Check that a job has been created
+        $this->assertDatabaseHas('jobs', [
+                'contractor_id' => $general->id,
+                'customer_id' => $newCustomer->id,
+                'job_name' => "pool work",
+                'status' => "bid.initiated",
+                'location_id' => null
+        ]);
+
+//      Check the customer has been notified
         $this->assertDatabaseHas('user_tokens', [
             "user_id" => $newCustomer->id
         ]);
+
+        $this->assertDatabaseHas('customers', [
+            "user_id" => $newCustomer->id,
+            "location_id" => null,
+            "email_method_of_contact" => null,
+            "phone_method_of_contact" => null,
+            "sms_method_of_contact" => null,
+            "notes" => null
+        ]);
+
     }
 
     public function test_that_I_am_returning_the_correct_json_response()
@@ -137,65 +190,65 @@ class InitiateBidTest extends TestCase
     }
 
 
-    public function test_that_when_a_customer_is_added_and_the_contractor_uses_qb_the_right_fields_in_the_database_are_created()
-    {
-
-        $contractor = $this->addingAContractor();
-
-        $qb = new Quickbook();
-        $qb->user_id = $contractor->id;
-        $qb->company_id = '123146242868259';
-        $qb->refresh_token = 'AB11571185621YRpVrLwAM5cCQZKCc3lif0qZmCKdG3CyODYf3';
-        $qb->refresh_token_expires_at = 1571185621;
-        $qb->refresh_token_validation_period = 8656222;
-        $qb->save();
-
-        $response = $this->actingAs($contractor)->json('POST', '/initiate-bid',
-            [
-                'customerName' => 'karen willis',
-                'email' => $this->faker->email,
-                'firstName' => 'karen',
-                'lastName' => 'willis',
-                'jobName' => 'pool work',
-                'phone' => '4807034902',
-                'quickbooks_id' => '',
-            ]);
-
-        $this->assertEquals('Bid was created', $response->content());
-
-        $this->assertDatabaseHas('users', [
-            'name' => 'karen willis',
-            'first_name' => 'karen',
-            'last_name' => 'willis',
-            'password_updated' => 0,
-            'phone' => '4807034902',
-        ]);
-
-        $user = User::select()->where('name', '=', 'karen willis')->get()->first();
-
-        $this->assertDatabaseHas('customers', [
-            'user_id' => $user->id
-        ]);
-
-        $this->assertDatabaseHas('contractor_customer', [
-            'contractor_user_id' => $contractor->id,
-            'customer_user_id' => $user->id
-        ]);
-
-        $cc = ContractorCustomer::where([
-            'contractor_user_id' => $contractor->id,
-            'customer_user_id' => $user->id
-        ])->get()->first();
-
-        $this->assertEmpty(false, empty($cc->quickbooks_id));
-
-        $this->assertDatabaseHas('jobs', [
-            'customer_id' => $user->id,
-            'contractor_id' => $contractor->id,
-            'job_name' => 'pool work'
-        ]);
-
-    }
+//    public function test_that_when_a_customer_is_added_and_the_contractor_uses_qb_the_right_fields_in_the_database_are_created()
+//    {
+//
+//        $contractor = $this->addingAContractor();
+//
+//        $qb = new Quickbook();
+//        $qb->user_id = $contractor->id;
+//        $qb->company_id = '123146242868259';
+//        $qb->refresh_token = 'AB11571185621YRpVrLwAM5cCQZKCc3lif0qZmCKdG3CyODYf3';
+//        $qb->refresh_token_expires_at = 1571185621;
+//        $qb->refresh_token_validation_period = 8656222;
+//        $qb->save();
+//
+//        $response = $this->actingAs($contractor)->json('POST', '/initiate-bid',
+//            [
+//                'customerName' => 'karen willis',
+//                'email' => $this->faker->email,
+//                'firstName' => 'karen',
+//                'lastName' => 'willis',
+//                'jobName' => 'pool work',
+//                'phone' => '4807034902',
+//                'quickbooks_id' => '',
+//            ]);
+//
+//        $this->assertEquals('Bid was created', $response->content());
+//
+//        $this->assertDatabaseHas('users', [
+//            'name' => 'karen willis',
+//            'first_name' => 'karen',
+//            'last_name' => 'willis',
+//            'password_updated' => 0,
+//            'phone' => '4807034902',
+//        ]);
+//
+//        $user = User::select()->where('name', '=', 'karen willis')->get()->first();
+//
+//        $this->assertDatabaseHas('customers', [
+//            'user_id' => $user->id
+//        ]);
+//
+//        $this->assertDatabaseHas('contractor_customer', [
+//            'contractor_user_id' => $contractor->id,
+//            'customer_user_id' => $user->id
+//        ]);
+//
+//        $cc = ContractorCustomer::where([
+//            'contractor_user_id' => $contractor->id,
+//            'customer_user_id' => $user->id
+//        ])->get()->first();
+//
+//        $this->assertEmpty(false, empty($cc->quickbooks_id));
+//
+//        $this->assertDatabaseHas('jobs', [
+//            'customer_id' => $user->id,
+//            'contractor_id' => $contractor->id,
+//            'job_name' => 'pool work'
+//        ]);
+//
+//    }
 
     private function addingAContractor()
     {
