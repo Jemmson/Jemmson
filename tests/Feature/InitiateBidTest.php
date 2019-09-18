@@ -19,7 +19,7 @@ class InitiateBidTest extends TestCase
     use WithFaker;
     use Setup;
 
-    public function testThatTheCorrectTokenComesBack()
+    public function testThatTheRightResponseIsReturnedAndDBIsPopulatedAppropriately()
     {
 
         $this->withoutExceptionHandling();
@@ -46,9 +46,6 @@ class InitiateBidTest extends TestCase
         $this->assertDatabaseHas('contractors', [
             "user_id" => $general->id
         ]);
-
-//        dd(json_encode($general->contractor()));
-//        echo json_encode($general->contractor());
 
         $this->assertGreaterThan(0, $general->contractor()->get()->first()->free_jobs);
 
@@ -99,7 +96,7 @@ class InitiateBidTest extends TestCase
 
     }
 
-    public function test_that_I_am_returning_the_correct_json_response()
+    public function test_that_I_am_returning_the_correct_json_response_when_searching_for_a_name()
     {
 
         $this->withoutExceptionHandling();
