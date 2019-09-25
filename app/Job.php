@@ -251,7 +251,8 @@ class Job extends Model
                 'contractor_id' => $contractor_id,
                 'customer_id' => $customer_id,
                 'job_name' => $job_name,
-                'status' => __("status.bid.initiated")
+                'status' => __("status.bid.initiated"),
+                'location_id' => null
             ];
         } else {
             $attributes = [

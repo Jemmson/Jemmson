@@ -16,7 +16,10 @@ class Location extends Model
         'city',
         'state',
         'zip',
-        'area'
+        'area',
+        'country',
+        'lat',
+        'long'
     ];
 
 
