@@ -457,7 +457,7 @@
           } = await axios.get('/job/' + id)
           // debugger
           this.bid = data
-
+          this.$store.commit('setJob', data)
           this.addNewTaskForm.customer_id = data.customer_id
           this.addNewTaskForm.contractorId = data.contractor_id
           this.addNewTaskForm.jobId = data.id

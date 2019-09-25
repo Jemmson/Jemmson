@@ -617,10 +617,12 @@
         return date[0]
       },
       showTaskStartDate() {
-        return this.isGeneral() && (
-          this.bid.status === 'bid.in_progress' ||
-          this.bid.status === 'bid.initiated' ||
-          this.bid.status === 'bid.declined')
+        // return this.isGeneral() && (
+        //   this.jobStatus === 'bid.in_progress' ||
+        //   this.jobStatus === 'bid.initiated' ||
+        //   this.jobStatus === 'bid.declined')
+
+        return true
       },
       updateTaskStartDate(date, jobTaskId) {
 

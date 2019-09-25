@@ -581,7 +581,7 @@ class TaskController extends Controller
             }
         });
 
-        $jobTask->sub_final_price = $price * 100;
+        $jobTask->sub_final_price = $price;
         $jobTask->contractor_id = $contractorId;
         $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
         $jobTask->stripe = false;
