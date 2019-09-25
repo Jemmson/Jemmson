@@ -1,51 +1,53 @@
 <template>
 
-  <div class="container-fluid">
-    <search-bar>
-      <input type="text" class="form-control" placeholder="Search Paid Receipts" v-model="searchTerm" @keyup="search">
-    </search-bar>
+    <div class="container-fluid">
+        <search-bar>
+            <input type="text" class="form-control" placeholder="Search Paid Receipts" v-model="searchTerm"
+                   @keyup="search">
+        </search-bar>
 
-    <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
-    <div class="paginated mt-4 mb-1">
+        <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
+        <div class="paginated mt-4 mb-1">
 
-      <card class="list-card" v-for="invoice in sInvoices" v-bind:key="invoice.id" @click.native="invoice.job_id !== undefined ? goToInvoice('/sub/invoice/' + invoice.id) : goToInvoice('/invoice/' + invoice.id)">
-        <div class="row">
-          <div class="col-12 page-header-title">
-            <div v-if="invoice.job_id !== undefined">
-              {{invoice.task.name}}
-            </div>
-            <div v-else>
-              {{invoice.job_name}}
-            </div>
-          </div>
-          <div class="col-12 mt-1">
+            <card class="list-card" v-for="invoice in sInvoices" v-bind:key="invoice.id"
+                  @click.native="invoice.job_id !== undefined ? goToInvoice('/sub/invoice/' + invoice.id) : goToInvoice('/invoice/' + invoice.id)">
+                <div class="row">
+                    <div class="col-12 page-header-title">
+                        <div v-if="invoice.job_id !== undefined">
+                            {{invoice.task.name}}
+                        </div>
+                        <div v-else>
+                            {{invoice.job_name}}
+                        </div>
+                    </div>
+                    <div class="col-12 mt-1">
             <span class="float-left list-card-info">
               Customer Name Here
             </span>
 
-            <span class="float-right mr-2 list-card-info">
-              Completed On: {{invoice.completed_bid_date.split(' ')[0]}}
+                        <span class="float-right mr-2 list-card-info">
+              Completed On: {{completedOn()}}
               <i class="far fa-calendar-check"></i>
             </span>
 
-          </div>
+                    </div>
+                </div>
+            </card>
         </div>
-      </card>
-    </div>
-    <!-- </paginate> -->
+        <!-- </paginate> -->
 
-    <!-- <div class="card mb-4 mt-3">
-      <div class="card-body d-flex justify-content-center">
-        <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
-        </paginate-links>
-      </div>
-    </div> -->
-  </div>
+        <!-- <div class="card mb-4 mt-3">
+          <div class="card-body d-flex justify-content-center">
+            <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
+            </paginate-links>
+          </div>
+        </div> -->
+    </div>
 </template>
 
 <script>
 
-export default {
+  export default {
     props: {
       user: Object,
     },
@@ -75,7 +77,12 @@ export default {
           }
           return invoice.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
         })
-      }
+      },
+      completedOn() {
+        if (this.invoice) {
+          return this.invoice.completed_bid_date.split(' ')[0]
+        }
+      },
     },
     created: function() {
       axios.get('invoices').then((data) => {
@@ -84,7 +91,7 @@ export default {
       })
     },
     mounted() {
-      this.$store.commit('setCurrentPage', this.$router.history.current.path);
+      this.$store.commit('setCurrentPage', this.$router.history.current.path)
     },
   }
 </script>
