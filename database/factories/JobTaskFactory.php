@@ -7,7 +7,7 @@ $factory->define(App\JobTask::class, function (Faker $faker) {
     return [
         'job_id' => 1,
         'task_id' => 1,
-        'bid_id' => 1,
+        'bid_id' => null,
         'location_id' => 1,
         'contractor_id' => 1,
         'status' => 'bid_task.initiated',

@@ -13,150 +13,97 @@ use App\Contractor;
 use App\Location;
 use App\Task;
 use App\JobTask;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class JobTest extends TestCase
 {
 
-    use RefreshDatabase;
+//    use RefreshDatabase;
+    use Setup;
+    use WithFaker;
+
 
     /**  @test */
-    function create_a_job_name_from_an_empty_job() {
-        //
-
-        $j = new Job();
-        $this->assertEquals('1', $j->jobName());
-
-    }
-
-    /**  @test */
-    function return_jobName_when_the_job_Name_exists() {
-        //
-        $j = new Job();
-        $this->assertEquals('customer', $j->jobName('customer'));
-
-    }
-
-    /**  @test */
-    public function create_a_bid()
+    function test_returning_the_correct_json_response_when_going_to_the_jobs_endpoint()
     {
-        $j = new Job();
-        $jobName = $j->jobName();
-
-        $user = factory(User::class)->create([
-            'usertype' => 'customer',
-            'phone' => '0000000000'
-        ]);
-
-        $customer = factory(Customer::class)->create([
-            'user_id' => $user->id,
-            'email_method_of_contact' => 1,
-            'phone_method_of_contact' => 1,
-            'sms_method_of_contact' => 1,
-            'notes' => 'zxccxzccczcxcz'
-        ]);
-
-
-        $user1 = factory(User::class)->create([
-            'usertype' => 'customer',
-            'phone' => '0000000000'
-        ]);
-
-
-        $contractor = factory(Contractor::class)->create([
-            'user_id' => $user1->id,
-            'free_jobs' => 5,
-            'company_name' => 'dlkdfkdfkldf',
-            'company_logo_name' => 'xxxzzzzzzzx',
-            'email_method_of_contact' => 1,
-            'sms_method_of_contact' => 1,
-            'phone_method_of_contact' => 1
-        ]);
-
-        $j->createEstimate($customer->id, $jobName, $contractor->id);
-
-        $this->assertDatabaseHas('jobs',[
-            'customer_id' => $customer->id,
-            'contractor_id' => $contractor->id,
-            'job_name' => $jobName,
-        ]);
-    }
-
-    /**  @test */
-    function the_job_should_set_the_status_to_intiate_bid_once_the_job_is_initiated() {
-
-        $job = factory(Job::class)->create();
-
-        $status = 'initiated';
-
-        $js = new JobStatus();
-        $js->setStatus($job->id, $status);
-
-        $this->assertDatabaseHas('job_status',[
-           'job_id' => $job->id,
-            'status_number' => 1,
-            'status' => $status
-        ]);
-    }
-
-
-    /**  @test */
-    function that_i_get_the_correct_payload_when_querying_existing_jobs() {
         //
 
-        $this->withExceptionHandling();
+        $this->withoutExceptionHandling();
 
-        $contractor = factory(User::class)->create([
-            'usertype' => 'contractor',
-            'password_updated' => 1
-        ]);
+        $contractor = $this->createAUser("contractor", 1, 1);
 
-        $location = factory(Location::class)->create();
-
-        factory(Contractor::class)->create([
+        $contractorLocation = factory(Location::class)->create([
             'user_id' => $contractor->id,
-            'location_id' => $location->id,
         ]);
 
-        $customer = factory(User::class)->create([
-            'usertype' => 'customer',
-            'password_updated' => 1
-        ]);
+        $contractor->location_id = $contractorLocation->id;
+        $contractor->save();
 
-        $location1 = factory(Location::class)->create();
+        $customer = $this->createAUser("customer", 1, 2);
 
-        factory(Customer::class)->create([
+        $customerLocation = factory(Location::class)->create([
             'user_id' => $customer->id,
-            'location_id' => $location1->id,
         ]);
 
+        $customer->location_id = $customerLocation->id;
+        $customer->save();
+
+        $task = $this->createATask("task 1", 100, $contractor->id);
 
         $job = factory(Job::class)->create([
             'customer_id' => $customer->id,
-            'contractor_id' => $contractor->id
+            'contractor_id' => $contractor->id,
+            'location_id' => $customerLocation->id
         ]);
 
-        $task = factory(Task::class)->create([
-            "name" => "pool work",
-            "sub_instructions" => "sub Instruction",
-            "customer_instructions" => "customer instructions",
-            "contractor_id" => $contractor->id
+        $jobTask = factory(JobTask::class)->create([
+            'job_id' => $job->id,
+            'task_id' => $task->id,
+            'bid_id' => 1,
+            'location_id' => $customerLocation->id,
+            'contractor_id' => $contractor->id,
         ]);
 
-        factory(JobTask::class)->create([
-            "job_id" => $job->id,
-            "task_id" => $task->id
-        ]);
-
-
-        $response = $this->actingAs($contractor)->json('GET', '/jobsPage');
-
+        $response = $this->actingAs($contractor)->json('GET', '/jobs');
 
         $response->assertJson([
-            "created" => "true"
+            [
+                "id" => 1,
+                "customer_id" => $customer->id,
+                "contractor_id" => $contractor->id,
+                "location_id" => null,
+                "job_name" => "pool job",
+                "status" => "bid.initiated",
+                "bid_price" => 0,
+                "completed_bid_date" => null,
+                "agreed_start_date" => null,
+                "agreed_end_date" => null,
+                "actual_end_date" => null,
+                "deleted_at" => null,
+                "created_at" => "2019-09-16 23:16:59",
+                "updated_at" => "2019-09-16 23:16:59",
+                "declined_message" => null,
+                "paid_with_cash_message" => null,
+                "qb_estimate_id" => "NULL",
+                "job_tasks" => [],
+                "customer" => [
+                    "id" => 2,
+                    "customer" => [
+                        "id" => 1,
+                        "user_id" => 2,
+                        "location_id" => null,
+                        "email_method_of_contact" => null,
+                        "phone_method_of_contact" => null,
+                        "sms_method_of_contact" => null,
+                        "notes" => null,
+                        "created_at" => "2019-09-16 23:16:59",
+                        "updated_at" => "2019-09-16 23:16:59"
+                    ],
+                    "tax_rate" => 0
+                ]
+            ]
         ]);
 
-
     }
-
 
 }
