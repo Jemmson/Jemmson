@@ -62,13 +62,23 @@
 
 <!--                                    v-if="parseInt(cust_final_price) > 0"-->
                                     <content-section
+                                            v-if="isContractor()"
                                             label="Total Task Price:"
                                             ref="totalTaskPrice"
-                                            :content="taskCustFinalPrice(cust_final_price, false)"
+                                            :content="cust_final_price ? taskCustFinalPrice(cust_final_price, false) : '0'"
                                             section-classes="ph-zero"
                                             icon="fas fa-money-bill-alt icon"
                                             :warning="cust_final_price < sub_final_price"
                                             warning-message="Sub price is higher than your price"
+                                            type="totalTaskPrice"></content-section>
+
+                                    <content-section
+                                            v-if="!isContractor()"
+                                            label="Total Task Price:"
+                                            ref="totalTaskPrice"
+                                            :content="cust_final_price ? taskCustFinalPrice(cust_final_price, false) : '0'"
+                                            section-classes="ph-zero"
+                                            icon="fas fa-money-bill-alt icon"
                                             type="totalTaskPrice"></content-section>
 
 <!--                                    <content-section-->
@@ -81,15 +91,17 @@
 
 <!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
                                     <content-section
+                                            v-if="isContractor()"
                                             label="Total Sub Price:"
-                                            :content="taskCustFinalPrice(sub_final_price, true, true)"
+                                            :content="sub_final_price ? taskCustFinalPrice(sub_final_price, true, true) : '0'"
                                             section-classes="ph-zero"
                                             icon="fas fa-user icon"
                                             type="totalTaskPrice"></content-section>
 
                                     <content-section
+                                            v-if="isContractor()"
                                             label="Sub Unit Price:"
-                                            :content="taskCustFinalPrice(sub_final_price, true)"
+                                            :content="sub_final_price ? taskCustFinalPrice(sub_final_price, true) : '0'"
                                             section-classes="ph-zero"
                                             icon="fas fa-user icon"
                                             type="totalTaskPrice"></content-section>
@@ -130,12 +142,12 @@
                                             <label class="">Unit Price:</label>
                                             <input v-if="showTaskPriceInput()" type="text" ref="price"
                                                    class="form-control form-control-sm w-40"
-                                                   :value="taskCustFinalPrice(unit_price)"
+                                                   :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
                                                    :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
                                                    @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
                                             >
                                             <div v-else class="mt-1">
-                                                <strong>{{ taskCustFinalPrice(unit_price) }}</strong>
+                                                <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price) }}</strong>
                                             </div>
                                         </div>
                                         <div class="error" v-if="errors.unit_price">Your Contractor Task Price Must Be
@@ -540,7 +552,7 @@
           subId
         ])
       },
-      acceptSubBidForTask(bid, jobTask) {
+       acceptSubBidForTask(bid, jobTask) {
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled)
       },
       showStripeToggle(jobTask) {
@@ -680,10 +692,13 @@
         return date[0]
       },
       showTaskStartDate() {
-        return this.isGeneral() && (
-          this.jobStatus === 'bid.in_progress' ||
-          this.jobStatus === 'bid.initiated' ||
-          this.jobStatus === 'bid.declined')
+        // return this.isGeneral() && (
+        //   this.jobStatus === 'bid.in_progress' ||
+        //   this.jobStatus === 'bid.initiated' ||
+        //   this.jobStatus === 'bid.declined')
+
+        return true
+
       },
       updateTaskStartDate(date, jobTaskId) {
 
@@ -764,10 +779,11 @@
         return Format.statusLabel(status)
       },
       showTaskPriceInput() {
-        return this.isGeneral() &&
-          (this.jobStatus === 'bid.in_progress' ||
-            this.jobStatus === 'bid.initiated' ||
-            this.jobStatus === 'bid.declined')
+        return this.isGeneral()
+        // return this.isGeneral() &&
+        //   (this.jobStatus === 'bid.in_progress' ||
+        //     this.jobStatus === 'bid.initiated' ||
+        //     this.jobStatus === 'bid.declined')
       },
       showTaskQuantityInput() {
         return this.isGeneral() &&
@@ -803,11 +819,19 @@
 
         let priceCheck = this.unit_price * this.jobTask.qty
 
-        if (!sub && (this.cust_final_price !== priceCheck)) {
-          this.cust_final_price = this.unit_price * this.jobTask.qty
-          GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id)
-        } else if (sub && total) {
-          price = price * this.jobTask.qty
+        if (!this.isCustomer) {
+          if (!sub && (this.cust_final_price !== priceCheck)) {
+            this.cust_final_price = this.unit_price * this.jobTask.qty
+
+            if (this.job[0].id) {
+              GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job[0].id)
+            } else if (this.job.id) {
+              GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id)
+            }
+
+          } else if (sub && total) {
+            price = price * this.jobTask.qty
+          }
         }
 
         if (price === 0) {
@@ -828,6 +852,10 @@
         try {
           const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id + '/' + this.user.id)
           this.jobTask = data.data[0]
+
+          if (this.isContractor()) {
+            this.sub_final_price = this.jobTask.sub_final_price
+          }
 
         } catch (error) {
           console.log(error.message)
@@ -868,7 +896,11 @@
         this.getTask()
       })
 
-      this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
+      if (this.$store.state.job.model.job_tasks) {
+        this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
+      } else if (this.$store.state.job.model[0].job_tasks) {
+        this.jobTask = this.$store.state.job.model[0].job_tasks[this.$route.params.index]
+      }
 
       if (this.jobTask) {
         this.cust_final_price = this.jobTask.cust_final_price
@@ -880,7 +912,13 @@
           this.jobTask.qty > 0 &&
           this.unit_price > 0
         ) {
-          this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
+
+          if (this.$store.state.job.model[0].id > 0) {
+            this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
+          } else if (this.$store.state.job.id !== "") {
+            this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
+          }
+
         }
       }
       this.user = Spark.state.user

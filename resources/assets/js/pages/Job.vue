@@ -177,7 +177,14 @@
             // } = await axios.get('/job/' + id);
           } = await axios.get('/job/' + id)
           // debugger
-          this.bid = data
+
+          if (data[0]){
+            this.bid = data[0]
+            this.$store.commit('setJob', data[0])
+          } else {
+            this.bid = data
+            this.$store.commit('setJob', data)
+          }
           this.$store.commit('setJob', data)
         } catch (error) {
           console.log(error)

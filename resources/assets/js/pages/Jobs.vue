@@ -159,7 +159,13 @@
         this.$router.push('/bid/' + id)
       },
       getBids() {
-        axios.get('/jobs').then((response) => {
+        let url = ''
+        if (User.isCustomer()) {
+          url = 'getJobsForCustomer'
+        } else {
+          url = 'jobs'
+        }
+        axios.get(url).then((response) => {
           if (Array.isArray(response.data)) {
             this.bids = response.data
             this.sBids = this.bids

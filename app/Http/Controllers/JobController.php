@@ -22,6 +22,7 @@ use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\JobCanceled;
 use App\Traits\ConvertPrices;
+use App\Location;
 
 
 class JobController extends Controller
@@ -180,6 +181,171 @@ class JobController extends Controller
         return response()->json($job, 201);
     }
 
+    private function isAuthorizedToUseResource($job)
+    {
+        return Auth::user()->id == $job->contractor_id || Auth::user()->id == $job->customer_id;
+    }
+
+    private function isCustomerBidNotSent($job)
+    {
+        return Auth::user()->id == $job->customer_id &&
+            ($job->status == 'bid.initiated' || $job->status == 'bid.in_progress');
+    }
+
+    private function isCustomerWithSubmittedBid($job)
+    {
+        return Auth::user()->id == $job->customer_id && $job->status == 'bid.sent';
+    }
+
+    private function getCustomersJobLocation($job)
+    {
+        $locationResults = [];
+        $location = Location::where('user_id', '=', $job->customer_id)->get()->first();
+        array_push($locationResults, [
+            "user_id" => $location->user_id,
+            "default" => $location->default,
+            "address_line_1" => $location->address_line_1,
+            "address_line_2" => $location->address_line_2,
+            "city" => $location->city,
+            "state" => $location->state,
+            "zip" => $location->zip,
+            "area" => $location->area,
+            "country" => $location->country,
+            "created_at" => $location->created_at,
+            "updated_at" => $location->updated_at,
+            "lat" => $location->lat,
+            "long" => $location->long,
+        ]);
+
+        return $locationResults[0];
+    }
+
+    private function getContractorInfoForCustomer($job)
+    {
+        $contractorResults = [];
+        $contractor = Contractor::where('user_id', '=', $job->contractor_id)->get()->first();
+        array_push($contractorResults, [
+            "company_name" => $contractor->company_name
+        ]);
+
+        return $contractorResults[0];
+    }
+
+
+    private function getContractorUserInformation($job, $contractor)
+    {
+        $contractorUserResults = [];
+        $contractorUser = User::where('id', '=', $job->contractor_id)->get()->first();
+        array_push($contractorUserResults, [
+            "id" => $contractorUser->id,
+            "name" => $contractorUser->name,
+            "email" => $contractorUser->email,
+            "photo_url" => $contractorUser->photo_url,
+            "logo_url" => $contractorUser->logo_url,
+            "phone" => $contractorUser->phone,
+            "first_name" => $contractorUser->first_name,
+            "last_name" => $contractorUser->last_name,
+            "contractor" => $contractor
+        ]);
+
+        return $contractorUserResults[0];
+    }
+
+    private function getCustomerTableInformation($job)
+    {
+        $customerResults = [];
+        $customer = customer::where('user_id', '=', $job->customer_id)->get()->first();
+        array_push($customerResults, [
+            "notes" => $customer->notes
+        ]);
+
+        return $customerResults[0];
+
+    }
+
+    private function getCustomerUserInformation($job, $customer)
+    {
+        $customerUserResults = [];
+        $customerUser = User::where('id', '=', $job->customer_id)->get()->first();
+        array_push($customerUserResults, [
+            "id" => $customerUser->id,
+            "name" => $customerUser->name,
+            "email" => $customerUser->email,
+            "photo_url" => $customerUser->photo_url,
+            "logo_url" => $customerUser->logo_url,
+            "phone" => $customerUser->phone,
+            "first_name" => $customerUser->first_name,
+            "last_name" => $customerUser->last_name,
+            "customer" => $customer
+        ]);
+
+        return $customerUserResults[0];
+    }
+
+    private function getJobTasks($job)
+    {
+        $jobTasksResults = [];
+        $jobTasks = JobTask::where('job_id', '=', $job->id)->get();
+
+        foreach ($jobTasks as $jobTask) {
+
+            $taskResults = [];
+            $task = Task::where('id', '=', $jobTask->id)->get()->first();
+            array_push($taskResults, [
+                "name" => $task->name,
+                "description" => $task->description,
+                "fully_qualified_name" => $task->fully_qualified_name,
+                "customer_instructions" => $task->customer_instructions,
+            ]);
+
+            array_push($jobTasksResults, [
+                "id" => $jobTask->id,
+                "task_id" => $jobTask->task_id,
+                "location_id" => $jobTask->location_id,
+                "status" => $jobTask->status,
+                "unit_price" => $this->convertToDollars($jobTask->unit_price),
+                "cust_final_price" => $this->convertToDollars($jobTask->cust_final_price),
+                "start_date" => $jobTask->start_date,
+                "declined_message" => $jobTask->declined_message,
+                "task" => $taskResults[0]
+            ]);
+        }
+
+        return $jobTasksResults;
+    }
+
+    private function customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks = null)
+    {
+        $result = [];
+        array_push($result, [
+            "id" => $job->id,
+            "location_id" => $job->location_id,
+            "job_name" => $job->job_name,
+            "status" => $job->status,
+            "bid_price" => $this->convertToDollars($job->bid_price),
+            "completed_bid_date" => $job->completed_bid_date,
+            "agreed_start_date" => $job->agreed_start_date,
+            "agreed_end_date" => $job->agreed_end_date,
+            "actual_end_date" => $job->actual_end_date,
+            "deleted_at" => $job->deleted_at,
+            "created_at" => $job->created_at,
+            "updated_at" => $job->updated_at,
+            "declined_message" => $job->declined_message,
+            "paid_with_cash_message" => $job->paid_with_cash_message,
+            "location" => $location,
+            "contractor" => $contractorUser,
+            "customer" => $customerUser,
+            "job_tasks" => $jobTasks
+        ]);
+
+        return $result[0];
+    }
+
+    private function isGeneralContractor($job)
+    {
+        return Auth::user()->getAuthIdentifier() == $job->contractor_id;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -188,10 +354,45 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        if (
-            Auth::user()->id == $job->contractor_id ||
-            Auth::user()->id == $job->customer_id
-        ) {
+
+        if ($this->isCustomerBidNotSent($job)) {
+
+
+            $location = $this->getCustomersJobLocation($job);
+
+            $contractor = $this->getContractorInfoForCustomer($job);
+
+            $contractorUser = $this->getContractorUserInformation($job, $contractor);
+
+            $customer = $this->getCustomerTableInformation($job);
+
+            $customerUser = $this->getCustomerUserInformation($job, $customer);
+
+            return response()->json([
+                $this->customerJobInformation($job, $location, $contractorUser, $customerUser)
+            ], 200);
+
+        } else if ($this->isCustomerWithSubmittedBid($job)) {
+
+            $location = $this->getCustomersJobLocation($job);
+
+            $contractor = $this->getContractorInfoForCustomer($job);
+
+            $contractorUser = $this->getContractorUserInformation($job, $contractor);
+
+            $customer = $this->getCustomerTableInformation($job);
+
+            $customerUser = $this->getCustomerUserInformation($job, $customer);
+
+            $jobTasks = $this->getJobTasks($job);
+
+            return response()->json([
+                $this->customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks)
+            ], 200);
+
+        } else if ($this->isGeneralContractor($job)) {
+
+
             $job->load(
                 [
                     'jobTasks.task',
@@ -209,7 +410,7 @@ class JobController extends Controller
                 ]
             );
 
-            foreach($job->jobTasks as $jt){
+            foreach ($job->jobTasks as $jt) {
                 $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
                 $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
                 $jt->unit_price = $this->convertToDollars($jt->unit_price);
@@ -218,7 +419,9 @@ class JobController extends Controller
             }
 
             return $job;
-        } else {
+
+        } //        else if ($this->isSubContractor()) {}
+        else {
             return response()->json([
                 'message' => 'Not Authorized to access this resource/api'
             ], 403);
@@ -386,6 +589,16 @@ class JobController extends Controller
         }
 
         return response()->json($job->jobActions(), 200);
+    }
+
+
+    public function getJobsForCustomer()
+    {
+        return Auth::user()->jobs()->select([
+            'job_name',
+            'id',
+            'status'
+        ])->get();
     }
 
 

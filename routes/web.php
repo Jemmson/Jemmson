@@ -82,6 +82,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::resource('/job', 'JobController');
     Route::get('/jobtask/{jobTaskId}', 'TaskController@getJobTask');
     Route::get('/jobs', 'JobController@jobs');
+    Route::get('/getJobsForCustomer', 'JobController@getJobsForCustomer');
     Route::get('/jobsPage', 'JobController@jobsPage');
     Route::post('/bid/job/decline', 'JobController@declineJobBid');
     Route::post('job/approve/{job}', 'JobController@approveJob');

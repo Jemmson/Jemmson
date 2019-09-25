@@ -30,7 +30,7 @@
               {{ status(jTask) }}
             </span>
 
-                        <span class="float-right list-card-info">{{ getTotalSubsForTasks() }} Subs
+                        <span v-if="isContractor" class="float-right list-card-info">{{ getTotalSubsForTasks() }} Subs
               <i class="fas fa-users"></i>
             </span>
 
@@ -84,8 +84,19 @@
       show() {
         return this.jobTasks.length > 0
       },
+      isContractor() {
+        return Spark.state.user.usertype === 'contractor'
+      },
       jobTasks() {
-        return this.job.job_tasks !== undefined ? this.job.job_tasks : []
+
+        if (this.job[0] && this.job[0].jobTasks) {
+          return this.job[0].job_tasks
+        } else if (this.job && this.job.job_tasks) {
+          return this.job.job_tasks
+        } else {
+          return []
+        }
+
       },
       ...mapState({
         job: state => state.job.model
@@ -96,15 +107,11 @@
         this.$router.go(-1)
       },
       getTotalSubsForTasks() {
-
         let length = 0
-
         for (let i = 0; i < this.jobTasks.length; i++) {
           length = length + this.jobTasks[i].bid_contractor_job_tasks.length
         }
-
         return length
-
       },
       setCurrentJobTaskToBidOn(jobTask) {
         this.jobTask = jobTask
