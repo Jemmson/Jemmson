@@ -438,6 +438,9 @@ class StripeController extends Controller
             $general_contractor_id = $task->contractor_id;
             
             // amounts
+
+            // TODO: make sure the payments that are being transfered to the contractors are the correct amounts
+
             $subAmount = (int) $jobTask->sub_final_price;
             $generalAmount = (int) ($jobTask->cust_final_price) - $subAmount;
 
