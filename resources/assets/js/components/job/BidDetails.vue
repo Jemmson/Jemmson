@@ -213,8 +213,8 @@
 
                     <div class="flex flex-col">
                         <div class="flex space-between" v-for="jt in bid.job_tasks">
-                            <div>{{ jt.task.name }}</div>
-                            <div>{{ jt.cust_final_price }}</div>
+                            <div class="capitalize font-bold-1">{{ jt.task.name }}</div>
+                            <div>{{ formatPrice(jt.cust_final_price) }}</div>
                         </div>
                     </div>
 
@@ -239,8 +239,8 @@
 
                     <div class="flex flex-col">
                         <div class="flex space-between" v-for="jt in bid.job_tasks">
-                            <div>{{ jt.task.name }}</div>
-                            <div>{{ jt.cust_final_price }}</div>
+                            <div class="capitalize font-bold-1">{{ jt.task.name }}</div>
+                            <div>{{ formatPrice(jt.cust_final_price) }}</div>
                         </div>
                     </div>
 
@@ -587,6 +587,9 @@
       }
     },
     methods: {
+      formatPrice(price) {
+        return '$ ' + Format.decimal(price)
+      },
       customerHasCompletedTasks() {
         let taskIsFinished = false
         if (this.bid && this.bid.job_tasks) {

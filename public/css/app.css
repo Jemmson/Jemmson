@@ -316,8 +316,11 @@ section {
 .redColor {
   color: red;
 }
-.captialize {
+.capitalize {
   text-transform: capitalize;
+}
+.font-bold-1 {
+  font-weight: bold;
 }
 .w-40 {
   width: 40%;

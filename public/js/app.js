@@ -35512,6 +35512,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }
   },
   methods: _extends({
+    formatPrice(price) {
+      return '$ ' + __WEBPACK_IMPORTED_MODULE_1__classes_Format__["a" /* default */].decimal(price);
+    },
     customerHasCompletedTasks() {
       let taskIsFinished = false;
       if (this.bid && this.bid.job_tasks) {
@@ -87758,7 +87761,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, _vm._l((_vm.bid.job_tasks), function(jt) {
     return _c('div', {
       staticClass: "flex space-between"
-    }, [_c('div', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(jt.cust_final_price))])])
+    }, [_c('div', {
+      staticClass: "capitalize font-bold-1"
+    }, [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(_vm.formatPrice(jt.cust_final_price)))])])
   }), 0)])], 1) : (_vm.bid.status !== 'bid.initiated' && _vm.bid.status !== 'bid.in_progress') ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
   }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
@@ -87776,7 +87781,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, _vm._l((_vm.bid.job_tasks), function(jt) {
     return _c('div', {
       staticClass: "flex space-between"
-    }, [_c('div', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(jt.cust_final_price))])])
+    }, [_c('div', {
+      staticClass: "capitalize font-bold-1"
+    }, [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(_vm.formatPrice(jt.cust_final_price)))])])
   }), 0)])], 1) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.customerHasCompletedTasks()) ? _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
