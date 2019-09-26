@@ -172,8 +172,8 @@
 
                         <!--                        </div>-->
 
-                        <div v-if="!this.isCustomer">
-                            <button class="btn btn-sm btn-normal flex-1 ml-1rem"
+                        <div v-if="!this.isCustomer" class="mr-1rem ml-1rem">
+                            <button class="w-100 btn btn-sm btn-normal flex-1"
                                     name="addTaskToBid" id="addTaskToBid"
                                     @click="$router.push('/job/add/task')"
                             >
@@ -225,19 +225,8 @@
 
         </section>
 
-        <section class="col-12" v-if="!isCustomer" ref="add_new_task">
-            <card class="mt-4" @click.native="$router.push('/job/add/task')">
-                <main class="row">
-                    <div class="col">
-                        <p class="d-inline">Add New Task</p>
-                        <i class="fas fa-chevron-right text-primary float-right sm-icon"></i>
-                    </div>
-                </main>
-            </card>
-        </section>
-
-        <section class="col-12">
-            <h1 v-if="isCustomer" class="card-title mt-4">Completed Tasks</h1>
+        <section class="col-12" v-if="isCustomer">
+            <h1 class="card-title mt-4">Completed Tasks</h1>
             <card>
                 <main class="row w-full ml-0">
                     <completed-tasks class="w-full" :bid="bid">

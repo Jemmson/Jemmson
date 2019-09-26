@@ -138,6 +138,7 @@ class TaskController extends Controller
             [
                 'task',
                 'images',
+                'location',
                 'bidContractorJobTasks',
                 'bidContractorJobTasks.contractor',
                 'bidContractorJobTasks.contractor.contractor'

@@ -6,21 +6,6 @@
         </icon-header>
         <card class="mb-4">
 
-            <div class="flex mb-1rem">
-                <button class="btn btn-md btn-normal text-uppercase mr-1rem flex-1"
-                        @click.prevent="goBack()">
-                    Back
-                </button>
-                <button
-                        @click.prevent="changeTask('Add')"
-                        class="btn btn-md btn-normal text-uppercase ml-1rem flex-1"
-                        :disabled="checkErrors"
-                        ref="add_task"
-                >
-                    Add Task
-                </button>
-            </div>
-
             <form role="form" class="wrapper">
                 <h1 class="text-center error-lg" v-show="errors.general.errorExists">
                     {{ errors.general.message }}
@@ -255,6 +240,22 @@
                 </div>
             </form>
             <!-- /end col-md-6 -->
+
+            <div class="flex mb-1rem">
+                <button class="btn btn-md btn-normal text-uppercase mr-1rem flex-1"
+                        @click.prevent="goBack()">
+                    Back
+                </button>
+                <button
+                        @click.prevent="changeTask('Add')"
+                        class="btn btn-md btn-normal text-uppercase ml-1rem flex-1"
+                        :disabled="checkErrors"
+                        ref="add_task"
+                >
+                    Add Task
+                </button>
+            </div>
+
         </card>
         <!--<div class="form-group ">-->
         <!--<button id="addTaskToInvoice" class="btn btn-success"-->

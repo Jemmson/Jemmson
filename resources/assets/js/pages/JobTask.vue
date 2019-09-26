@@ -32,7 +32,7 @@
                             <div class="flex justify-content-between">
                                 <label>Task Start Date</label>
                                 <!-- <i class="fas fa-clock icon m-r-2"></i> -->
-                                <input type="date" class="form-control form-control-sm w-40" style=""
+                                <input type="date" class="form-control form-control-sm w-50" style=""
                                        v-if="showTaskStartDate()"
                                        :value="prettyDate(jobTask.start_date)"
                                        @blur="updateTaskStartDate($event.target.value, jobTask.id)">
@@ -180,6 +180,18 @@
 
                         <!-- / location -->
                         <div class="col-12">
+
+                            <div class="flex flex-col">
+                                <div>
+                                    {{ jobTask.location.address_line_1 }}
+                                </div>
+                                <div>
+                                    {{ jobTask.location.city }}, {{ jobTask.location.state }} {{ jobTask.location.zip }}
+                                </div>
+                            </div>
+
+                            <hr>
+
                             <div v-if="location(jobTask, job) === 'No Address Set Yet'">
                                 <i class="fas fa-map-marker icon"></i>
                                 {{ location(jobTask, job) }}
