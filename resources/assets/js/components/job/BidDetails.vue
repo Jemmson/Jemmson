@@ -307,6 +307,18 @@
         <section ref="job_address" class="col-12" v-if="showAddress">
             <h1 class="card-title mt-4">Job Address</h1>
             <card>
+
+                <div class="flex flex-col">
+                    <div>
+                        {{ bid.location.address_line_1 }}
+                    </div>
+                    <div>
+                        {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+                    </div>
+                </div>
+
+                <hr>
+
                 <main class="map-responsive">
                     <iframe width="600" height="450" frameborder="0" style="border:0"
                             :src="'https://www.google.com/maps/embed/v1/search?q='+ bid.location.address_line_1 + ' ' + bid.location.city + ' ' + bid.location.state + ' ' + bid.location.zip +'&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"

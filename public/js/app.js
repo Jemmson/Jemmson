@@ -35339,6 +35339,18 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -87769,7 +87781,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
-  }, [_vm._v("Job Address")]), _vm._v(" "), _c('card', [_c('main', {
+  }, [_vm._v("Job Address")]), _vm._v(" "), _c('card', [_c('div', {
+    staticClass: "flex flex-col"
+  }, [_c('div', [_vm._v("\n                    " + _vm._s(_vm.bid.location.address_line_1) + "\n                ")]), _vm._v(" "), _c('div', [_vm._v("\n                    " + _vm._s(_vm.bid.location.city) + ", " + _vm._s(_vm.bid.location.state) + " " + _vm._s(_vm.bid.location.zip) + "\n                ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('main', {
     staticClass: "map-responsive"
   }, [_c('iframe', {
     staticStyle: {
