@@ -35512,6 +35512,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }
   },
   methods: _extends({
+    customerHasCompletedTasks() {
+      let taskIsFinished = false;
+      if (this.bid && this.bid.job_tasks) {
+        for (let i = 0; i < this.bid.job_tasks.length; i++) {
+          if (this.bid.job_tasks[i].status === 'bid_task.finished_by_general') {
+            taskIsFinished = true;
+          }
+        }
+      }
+      return this.isCustomer && taskIsFinished;
+    },
     getCompanyName() {
       if (this.bid) {
         if (this.bid.job_tasks && this.bid.job_tasks.length !== 0) {
@@ -87766,7 +87777,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     return _c('div', {
       staticClass: "flex space-between"
     }, [_c('div', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(jt.cust_final_price))])])
-  }), 0)])], 1) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.isCustomer) ? _c('section', {
+  }), 0)])], 1) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.customerHasCompletedTasks()) ? _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"

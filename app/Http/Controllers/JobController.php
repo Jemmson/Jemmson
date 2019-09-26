@@ -194,7 +194,7 @@ class JobController extends Controller
 
     private function isCustomerWithSubmittedBid($job)
     {
-        return Auth::user()->id == $job->customer_id && $job->status == 'bid.sent';
+        return Auth::user()->id == $job->customer_id && $job->status != 'bid.initiated' && $job->status != 'bid.in_progress';
     }
 
     private function getCustomersJobLocation($job)

@@ -249,7 +249,7 @@
 
         </section>
 
-        <section class="col-12" v-if="isCustomer">
+        <section class="col-12" v-if="customerHasCompletedTasks()">
             <h1 class="card-title mt-4">Completed Tasks</h1>
             <card>
                 <main class="row w-full ml-0">
@@ -587,6 +587,17 @@
       }
     },
     methods: {
+      customerHasCompletedTasks() {
+        let taskIsFinished = false
+        if (this.bid && this.bid.job_tasks) {
+          for (let i = 0; i < this.bid.job_tasks.length; i++) {
+            if (this.bid.job_tasks[i].status === 'bid_task.finished_by_general') {
+              taskIsFinished = true
+            }
+          }
+        }
+        return this.isCustomer && taskIsFinished
+      },
       getCompanyName() {
         if (this.bid) {
           if (this.bid.job_tasks && (this.bid.job_tasks.length !== 0)) {
