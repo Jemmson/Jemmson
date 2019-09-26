@@ -5,8 +5,9 @@ export default class Format {
   }
 
   static decimal (number) {
-    let num = parseInt(number)/100;
-    return num.toFixed(2);
+    // let num = parseInt(number) * 100;
+    // let num = parseInt(number)/100;
+    return number.toFixed(2);
   }
 
   static addDollarSign(obj, key) {
