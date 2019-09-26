@@ -39490,6 +39490,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'UploadTaskImages',
@@ -83997,7 +84000,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })])]) : _vm._e(), _vm._v(" "), _c('input', {
     ref: 'task_photo_' + _vm.jobTask.id,
-    staticClass: "btn btn-normal ml-2 mt-4 w-inherit",
+    staticClass: "btn btn-normal ml-2 mt-4",
+    staticStyle: {
+      "width": "95%"
+    },
     attrs: {
       "id": 'task_photo_' + _vm.jobTask.id,
       "type": "file"
@@ -91922,15 +91928,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "disabled": ""
     },
     domProps: {
-      "value": _vm.jobTask.customer_message
+      "value": _vm.jobTask.job.customer.customer.notes
     }
   })]) : _vm._e()])])])])], 1), _vm._v(" "), _c('div', {
-    staticClass: "col-12"
-  }, [_c('h1', {
-    staticClass: "card-title mt-4"
-  }, [_vm._v("Bids")]), _vm._v(" "), _c('card', [_c('div', {
-    staticClass: "row"
-  }, [_c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -91942,6 +91942,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           (!_vm.checkIfBidHasBeenAccepted(_vm.jobTask) && !_vm.checkIfBidHasBeenSent(_vm.job)))),
       expression: "\n                                           showSubsPanel &&\n                                           (isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0) &&\n                                           ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(job)) ||\n                                            (checkIfBidHasBeenAccepted(jobTask)) ||\n                                            (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(job)))"
     }],
+    staticClass: "col-12"
+  }, [_c('h1', {
+    staticClass: "card-title mt-4"
+  }, [_vm._v("Bids")]), _vm._v(" "), _c('card', [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
     staticClass: "col-12"
   }, [(_vm.showSubsPanel) ? _c('div', {
     staticClass: "mt-4"

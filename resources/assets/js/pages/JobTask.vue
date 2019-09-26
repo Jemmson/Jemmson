@@ -255,7 +255,7 @@
                                 <div class="flex flex-col" v-if="isCustomer">
                                     <span class="label mb-2">Notes from Customer</span>
                                     <textarea cols="0" rows="0" class="form-control" disabled
-                                              :value="jobTask.customer_message" style="color: black;"></textarea>
+                                              :value="jobTask.job.customer.customer.notes" style="color: black;"></textarea>
                                 </div>
 
                             </div>
@@ -265,17 +265,17 @@
             </div>
 
             <!-- Subcontractor bids -->
-            <div class="col-12">
-                <h1 class="card-title mt-4">Bids</h1>
-                <card>
-                    <div class="row">
-                        <!--show this box if the show button has been selected and if showSubsPanel is selected then show -->
-                        <div class="col-12" v-show="
+            <div class="col-12" v-show="
                                            showSubsPanel &&
                                            (isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0) &&
                                            ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(job)) ||
                                             (checkIfBidHasBeenAccepted(jobTask)) ||
                                             (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(job)))">
+                <h1 class="card-title mt-4">Bids</h1>
+                <card>
+                    <div class="row">
+                        <!--show this box if the show button has been selected and if showSubsPanel is selected then show -->
+                        <div class="col-12">
                             <div v-if="showSubsPanel" class="mt-4">
                                 <div :id="'task-divider-' + jobTask.id" :key="1"></div>
 

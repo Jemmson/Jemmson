@@ -396,6 +396,8 @@ class JobController extends Controller
             $job->load(
                 [
                     'jobTasks.task',
+                    'jobTasks.job',
+                    'jobTasks.job.customer',
                     'jobTasks.task.contractor',
                     'jobTasks.bidContractorJobTasks.contractor',
                     'jobTasks.bidContractorJobTasks.contractor.contractor',
