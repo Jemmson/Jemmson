@@ -1,9 +1,6 @@
 /node_modules
 /public/hot
 /public/storage
-/public/js/app.js
-/public/mix.js
-/public/css/app.css
 /storage/*.key
 /storage/*
 /vendor
@@ -16,8 +13,6 @@ npm-debug.log
 /database/scratch/*
 scratch/*
 public/logs.txt
-public/css/
-public/js/
 public/mix.*
 public/variables.txt
 redis-stable
@@ -26,3 +21,4 @@ composer.phar
 .docker.env
 nova_old/
 nova/
+public/nova-assets
