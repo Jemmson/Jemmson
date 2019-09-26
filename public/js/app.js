@@ -35315,6 +35315,30 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -87695,9 +87719,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12"
   }, [(!_vm.isCustomer) ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
-  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
+  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
     ref: "job_task_length"
-  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                    "), _c('button', {
     staticClass: "btn btn-normal btn-sm float-right",
     on: {
       "click": function($event) {
@@ -87705,11 +87729,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.viewTasks()
       }
     }
-  }, [_vm._v("View Tasks\n                ")])])], 1) : (_vm.bid.status !== 'bid.initiated' && _vm.bid.status !== 'bid.in_progress') ? _c('div', [_c('h1', {
+  }, [_vm._v("View Tasks\n                    ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('div', {
+    staticClass: "flex flex-col"
+  }, _vm._l((_vm.bid.job_tasks), function(jt) {
+    return _c('div', {
+      staticClass: "flex space-between"
+    }, [_c('div', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(jt.cust_final_price))])])
+  }), 0)])], 1) : (_vm.bid.status !== 'bid.initiated' && _vm.bid.status !== 'bid.in_progress') ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
-  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
+  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
     ref: "job_task_length_customer"
-  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                    "), _c('button', {
     staticClass: "btn btn-normal btn-sm float-right",
     on: {
       "click": function($event) {
@@ -87717,7 +87747,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.viewTasks()
       }
     }
-  }, [_vm._v("View Tasks\n                ")])])], 1) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.isCustomer) ? _c('section', {
+  }, [_vm._v("View Tasks\n                    ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('div', {
+    staticClass: "flex flex-col"
+  }, _vm._l((_vm.bid.job_tasks), function(jt) {
+    return _c('div', {
+      staticClass: "flex space-between"
+    }, [_c('div', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(jt.cust_final_price))])])
+  }), 0)])], 1) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.isCustomer) ? _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"

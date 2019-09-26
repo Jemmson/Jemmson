@@ -197,14 +197,26 @@
             <div v-if="!isCustomer">
                 <h1 class="card-title mt-4">Job Tasks</h1>
                 <card>
+                    <div>
 
                         <span class="">
                         (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
                         </span> Total
 
-                    <button class="btn btn-normal btn-sm float-right"
-                            @click.prevent="viewTasks()">View Tasks
-                    </button>
+                        <button class="btn btn-normal btn-sm float-right"
+                                @click.prevent="viewTasks()">View Tasks
+                        </button>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="flex flex-col">
+                        <div class="flex space-between" v-for="jt in bid.job_tasks">
+                            <div>{{ jt.task.name }}</div>
+                            <div>{{ jt.cust_final_price }}</div>
+                        </div>
+                    </div>
 
                 </card>
             </div>
@@ -213,13 +225,25 @@
                 <h1 class="card-title mt-4">Job Tasks</h1>
                 <card>
 
-                        <span class="">
+                    <div>
+                            <span class="">
                         (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
                         </span> Total
 
-                    <button class="btn btn-normal btn-sm float-right"
-                            @click.prevent="viewTasks()">View Tasks
-                    </button>
+                        <button class="btn btn-normal btn-sm float-right"
+                                @click.prevent="viewTasks()">View Tasks
+                        </button>
+                    </div>
+
+                    <hr>
+
+                    <div class="flex flex-col">
+                        <div class="flex space-between" v-for="jt in bid.job_tasks">
+                            <div>{{ jt.task.name }}</div>
+                            <div>{{ jt.cust_final_price }}</div>
+                        </div>
+                    </div>
+
                 </card>
             </div>
 
