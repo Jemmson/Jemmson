@@ -257,7 +257,7 @@
         if (result.given_name !== undefined) {
           return result.fully_qualified_name
         } else {
-          return result.name
+          return result.first_name + " " + result.last_name
         }
       },
       fillFields(result) {
