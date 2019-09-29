@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Traits\Utilities;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 $router->group(['middleware' => 'web'], function ($router) {
     $teamString = Spark::teamString();
