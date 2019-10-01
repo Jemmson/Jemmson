@@ -3,14 +3,14 @@
 
         <div v-if="isContractor()">
             <icon-header icon="jobs"
-                         mainHeader="My Jobs"
-                         subHeader="Includes jobs with tasks assigned to subcontractors">
+                         mainHeader="My Jobs as a General"
+                         subHeader="The statuses of all jobs that you are working on">
             </icon-header>
         </div>
         <div v-else>
             <icon-header icon="jobs"
                          mainHeader="My Jobs"
-                         subHeader="Please click on a the card below to go to Jobs">
+                         subHeader="">
             </icon-header>
         </div>
 
@@ -31,8 +31,8 @@
 
         <div v-if="isContractor()">
             <icon-header icon="tasks"
-                         mainHeader="My Tasks"
-                         subHeader="Tasks you've accepted or subbed out to subs">
+                         mainHeader="My Jobs as a Sub"
+                         subHeader="Jobs that your as a Sub Contractor">
             </icon-header>
             <card>
                 <list>
@@ -46,7 +46,6 @@
                     <list-item :left="'Payment Sent'" :right="bidData('bid_task.customer_sent_payment')"></list-item>
                     <list-item :left="'Reopened'" :right="bidData('bid_task.reopened')"></list-item>
                     <list-item :left="'Denied'" :right="bidData('bid_task.denied')" noDivider="true"></list-item>
-
                 </list>
             </card>
         </div>
@@ -54,8 +53,8 @@
         <!-- / end tasks -->
 
         <icon-header icon="invoices"
-                      mainHeader="My Invoices"
-                      subHeader="All Invoices for completed jobs and tasks">
+                      mainHeader="My Receipts"
+                      subHeader="All Receipts for my Completed Jobs and Tasks">
         </icon-header>
         <card>
           <list>
