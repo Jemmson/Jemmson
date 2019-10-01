@@ -177,7 +177,7 @@
                                     name="addTaskToBid" id="addTaskToBid"
                                     @click="$router.push('/job/add/task')"
                             >
-                                Add Task
+                                Add A Task
                             </button>
 
                         </div>
@@ -204,7 +204,8 @@
                         </span> Total
 
                         <button class="btn btn-normal btn-sm float-right"
-                                @click.prevent="viewTasks()">View Tasks
+                                style="width:75%"
+                                @click.prevent="viewTasks()">Click to View And Edit Tasks
                         </button>
 
                     </div>
