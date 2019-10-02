@@ -9,6 +9,7 @@ class Location extends Model
     //
 
     protected $fillable = [
+        'id',
         'user_id',
         'default',
         'address_line_1',
@@ -21,6 +22,8 @@ class Location extends Model
         'lat',
         'long'
     ];
+
+    protected $guarded = [];
 
 
     public function job()

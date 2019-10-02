@@ -18,6 +18,7 @@ use App\Notifications\NotifyCustomerOfUpdatedMessage;
 use App\Notifications\NotifySubOfUpdatedMessage;
 use App\Quickbook;
 use App\QuickbooksContractor;
+use App\Location;
 use App\QuickbooksItem;
 use App\Task;
 use App\Job;
@@ -66,6 +67,182 @@ class TaskController extends Controller
         return view('tasks.index')->with(['tasks' => $bidTasks]);
     }
 
+    private function getBidContractorJobTasks()
+    {
+        $bidContractorJobTasksResults = [];
+        $bidContractorJobTasks = BidContractorJobTask::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->get();
+
+        foreach ($bidContractorJobTasks as $task) {
+            $jtResults = [];
+            $jt = JobTask::where('id', '=', $task->job_task_id)->get()->first();
+
+            $jobResults = [];
+            $job = Job::where('id', '=', $jt->job_id)->get()->first();
+            array_push($jobResults, [
+                "id" => $job->id,
+                "customer_id" => $job->customer_id,
+                "contractor_id" => $job->contractor_id,
+                "location_id" => $job->location_id,
+                "job_name" => $job->job_name,
+                "status" => $job->status,
+                "completed_bid_date" => $job->completed_bid_date,
+                "agreed_start_date" => $job->agreed_start_date,
+                "agreed_end_date" => $job->agreed_end_date,
+                "actual_end_date" => $job->actual_end_date,
+                "deleted_at" => $job->deleted_at,
+                "created_at" => $job->created_at,
+                "updated_at" => $job->updated_at,
+                "declined_message" => $job->declined_message,
+                "paid_with_cash_message" => $job->paid_with_cash_message
+            ]);
+
+            $taskResults = [];
+            $singleTask = Task::where('id', '=', $jt->task_id)->get()->first();
+
+            $contractorResults = [];
+            $contractor = Contractor::where('id', '=', $singleTask->id)->get()->first();
+            array_push($contractorResults, [
+                "id" => $contractor->id,
+                "user_id" => $contractor->user_id,
+                "location_id" => $contractor->location_id,
+                "company_name" => $contractor->company_name,
+                "company_logo_name" => $contractor->company_logo_name,
+                "email_method_of_contact" => $contractor->email_method_of_contact,
+                "sms_method_of_contact" => $contractor->sms_method_of_contact,
+                "phone_method_of_contact" => $contractor->phone_method_of_contact
+            ]);
+
+            array_push($taskResults, [
+                "id" => $singleTask->id,
+                "name" => $singleTask->name,
+                "contractor_id" => $singleTask->contractor_id,
+                "sub_instructions" => $singleTask->sub_instructions,
+                "customer_instructions" => $singleTask->customer_instructions,
+                "contractor" => $contractorResults[0]
+            ]);
+
+            $imageResults = [];
+            $images = TaskImage::where('job_task_id', '=', $task->job_task_id)->get();
+
+            if (!empty($images->toArray())) {
+                foreach ($images as $image) {
+
+                    array_push($imageResults, [
+                        "id" => $image->id,
+                        "job_id" => $image->job_id,
+                        "job_task_id" => $image->job_task_id,
+                        "public_id" => $image->public_id,
+                        "version" => $image->version,
+                        "signature" => $image->signature,
+                        "width" => $image->width,
+                        "height" => $image->height,
+                        "format" => $image->format,
+                        "resource_type" => $image->resource_type,
+                        "bytes" => $image->bytes,
+                        "type" => $image->type,
+                        "etag" => $image->etag,
+                        "placeholder" => $image->placeholder,
+                        "url" => $image->url,
+                        "secure_url" => $image->secure_url,
+                        "overwritten" => $image->overwritten,
+                        "original_filename" => $image->original_filename,
+                        "created_at" => $image->created_at,
+                        "updated_at" => $image->updated_at,
+                    ]);
+                }
+            }
+
+
+            $locationResults = [];
+            $location = Location::where('user_id', '=', $job->customer_id)->get()->first();
+            array_push($locationResults, [
+                "id" => $location->id,
+                "user_id" => $location->user_id,
+                "default" => $location->default,
+                "address_line_1" => $location->address_line_1,
+                "address_line_2" => $location->address_line_2,
+                "city" => $location->city,
+                "state" => $location->state,
+                "zip" => $location->zip,
+                "area" => $location->area,
+                "country" => $location->country,
+                "created_at" => $location->created_at,
+                "updated_at" => $location->updated_at,
+                "lat" => $location->lat,
+                "long" => $location->long
+            ]);
+
+            array_push($jtResults, [
+                "id" => $jt->id,
+                "job_id" => $jt->job_id,
+                "task_id" => $jt->task_id,
+                "bid_id" => $jt->bid_id,
+                "location_id" => $jt->location_id,
+                "contractor_id" => $jt->contractor_id,
+                "status" => $jt->status,
+                "sub_final_price" => $jt->sub_final_price,
+                "start_when_accepted" => $jt->start_when_accepted,
+                "stripe" => $jt->stripe,
+                "start_date" => $jt->start_date,
+                "deleted_at" => $jt->deleted_at,
+                "created_at" => $jt->created_at,
+                "updated_at" => $jt->updated_at,
+                "stripe_transfer_id" => $jt->stripe_transfer_id,
+                "customer_message" => $jt->customer_message,
+                "sub_message" => $jt->sub_message,
+                "qty" => $jt->qty,
+                "sub_sets_own_price_for_job" => $jt->sub_sets_own_price_for_job,
+                "declined_message" => $jt->declined_message,
+                "unit_price" => $jt->unit_price
+            ]);
+
+
+            if (!empty($jobResults)) {
+                $jtResults[0]["job"] = $jobResults[0];
+            } else {
+                $jtResults[0]["job"] = null;
+            }
+
+            if (!empty($taskResults)) {
+                $jtResults[0]["task"] = $taskResults[0];
+            } else {
+                $jtResults[0]["task"] = null;
+            }
+
+            if (!empty($imageResults)) {
+                $jtResults[0]["images"] = $imageResults;
+            } else {
+                $jtResults[0]["images"] = [];
+            }
+
+            if (!empty($locationResults)) {
+                $jtResults[0]["location"] = $locationResults[0];
+            } else {
+                $jtResults[0]["location"] = null;
+            }
+
+
+
+           array_push($bidContractorJobTasksResults, [
+                "id" => $task->id,
+                "contractor_id" => $task->contractor_id,
+                "job_task_id" => $task->job_task_id,
+                "bid_price" => $task->bid_price,
+                "created_at" => $task->created_at,
+                "updated_at" => $task->updated_at,
+                "status" => $task->status,
+                "proposed_start_date" => $task->proposed_start_date,
+                "bid_description" => $task->bid_description,
+                "accepted" => $task->accepted,
+                "payment_type" => $task->payment_type,
+                "job_task" => $jtResults[0]
+            ]);
+        }
+
+        return $bidContractorJobTasksResults;
+
+    }
+
     /**
      * Get all bid tasks from the currently logged in contractor
      *
@@ -73,20 +250,24 @@ class TaskController extends Controller
      */
     public function bidTasks()
     {
-        if (Auth::user()->usertype == 'contractor') {
-            $bidTasks = Auth::user()->
-            contractor()->first()->
-            bidContractorJobTasks()->with([
-                'jobTask.job',
-                'jobTask.task',
-                'jobTask.task.contractor',
-                'jobTask.images',
-                'jobTask.location'
-            ])->get();
+
+        $bidTasks =  $this->getBidContractorJobTasks();
 
 
-            foreach ($bidTasks as $bt) {
-                $bt->bid_price = $this->convertToDollars($bt->bid_price);
+//        if (Auth::user()->usertype == 'contractor') {
+//            $bidTasks = Auth::user()->
+//            contractor()->first()->
+//            bidContractorJobTasks()->with([
+//                'jobTask.job',
+//                'jobTask.task',
+//                'jobTask.task.contractor',
+//                'jobTask.images',
+//                'jobTask.location'
+//            ])->get();
+//
+//
+            foreach ($bidTasks[0] as $bt) {
+//                $bt->bid_price = $this->convertToDollars($bt->bid_price);
                 if (!empty($bt->job_task)) {
                     $bt->job_task->cust_final_price = $this->convertToDollars($bt->job_task->cust_final_price);
                     $bt->job_task->sub_final_price = $this->convertToDollars($bt->job_task->sub_final_price);
@@ -102,7 +283,7 @@ class TaskController extends Controller
             }
 
             return response()->json($bidTasks, 200);
-        }
+//        }
     }
 
     /**
@@ -113,20 +294,94 @@ class TaskController extends Controller
      */
     public function getJobTask($jobTaskId)
     {
-
         Log::debug("Job Task Id: $jobTaskId");
-
         $jobTask = JobTask::find($jobTaskId);
-
         return $jobTask->load(['images', 'task']);
 
-//        return $jobTask->with(
-//            [
-//                'task:id,name',
-//                'images:id',
-//                'bidContractorJobTasks:id,contractor_id,job_task_id,status',
-//                'bidContractorJobTasks.contractor:id,email'
-//            ])->where('id', '=', 1)->get();
+    }
+
+    private function userIsAContractor($contractor_id)
+    {
+        return Auth::user()->getAuthIdentifier() == $contractor_id;
+    }
+
+    private function userIsACustomer($customer_id)
+    {
+        return Auth::user()->getAuthIdentifier() == $customer_id;
+    }
+
+    private function userIsASubContractor($contractor_id)
+    {
+        return Auth::user()->getAuthIdentifier() != $contractor_id;
+    }
+
+    private function deleteSubContractorTasks($jobTaskId)
+    {
+        $jobTasks = BidContractorJobTask::where('job_task_id', '=', $jobTaskId);
+
+        foreach ($jobTasks as $jt) {
+            try {
+                $jt->delete();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+        }
+    }
+
+    private function deleteSubsBid($contractorId, $jobTaskId)
+    {
+        $subTask = BidContractorJobTask::where('', '', $jobTaskId)->where('', '', $contractorId)->get()->first();
+        try {
+            $subTask->delete();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+    }
+
+    public function deleteJobTask(JobTask $jobTask)
+    {
+
+
+//        as contractor
+//        1. remove from job
+//        2, if there are subs remove bid contractor table
+//        3. update job totals
+
+        $contractor_id = $jobTask->job()->get()->first()->contractor_id;
+        $customer_id = $jobTask->job()->get()->first()->customer_id;
+
+        if ($this->userIsAContractor($contractor_id) || $this->userIsACustomer($customer_id)) {
+            $this->deleteSubContractorTasks($jobTask->id);
+            try {
+                $jobTask->delete();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+        } else if ($this->userIsASubContractor($contractor_id)) {
+            $this->deleteSubsBid();
+        }
+
+
+//
+
+//        as a subcontractor
+//        1. remove from bidcontractor table
+//        2. contractor should be notified that sub does not want the job
+
+
+//        as a customer
+//        1. remove from job
+//        2, if there are subs remove bid contractor table
+//        3. update job totals
 
 
     }
@@ -560,7 +815,7 @@ class TaskController extends Controller
             } else {
                 $c->accepted = false;
                 if ($c->status == 'bid_task.accepted') {
-                    $c->status =  'bid_task.bid_sent';
+                    $c->status = 'bid_task.bid_sent';
                 }
             }
             $c->save();
@@ -896,8 +1151,8 @@ class TaskController extends Controller
     {
 
         $tasks = Task::select()->
-            where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
-            where('name', 'like', $request->taskname . '%')->get();
+        where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
+        where('name', 'like', $request->taskname . '%')->get();
 
         return $this->convertTasksCentsToDollars($tasks);
 
@@ -909,7 +1164,7 @@ class TaskController extends Controller
 
     private function convertTasksCentsToDollars($tasks)
     {
-        foreach ($tasks as $task){
+        foreach ($tasks as $task) {
             $task->proposed_cust_price = $this->convertToDollars($task->proposed_cust_price);
             $task->proposed_sub_price = $this->convertToDollars($task->proposed_sub_price);
         }
@@ -1061,7 +1316,6 @@ class TaskController extends Controller
     {
 
 
-
         // get the file
         $file = $request->photo;
 
@@ -1154,10 +1408,8 @@ class TaskController extends Controller
 //                return response()->json('Something Went Wrong', 422);
 //            }
 //
-            $taskImage->delete();
+        $taskImage->delete();
 //        }
-
-
 
 
         $job = Job::find($taskImage->job_id);
