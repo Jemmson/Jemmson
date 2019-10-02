@@ -8,25 +8,32 @@
             PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
         </div>
 
-        <div class="flex justify-content-around">
+        <div class="flex flex-col">
+
+            <div class="flex flex-center">
+                <button
+                        v-if="shouldBeSignedUpForStripe()"
+                        ref="stripeButton"
+                        @click="triggerStripe()"
+                        class="mt-1rem"
+                        style="background-image: url('/img/blue-on-light.png'); width: 12rem; height: 2.15rem;"
+                ></button>
+                <button v-else
+                        class="mt-1rem"
+                        style="background-image: url('/img/powered_by_stripe.png'); background-repeat: no-repeat; width: 151px; height: 43px;"
+                >
+                </button>
+            </div>
+
+            <hr>
+
             <button ref="submitBid"
-                    class="btn btn-normal btn-sm"
+                    class="btn btn-normal btn-lg w-full"
                     @click="notifyCustomerOfFinishedBid()"
                     :disabled="checkReqs()"
             >Submit Bid</button>
 
             <!--        @click="openBidSubmissionDialog()">Submit Bid</button>-->
-
-            <button
-                    v-if="shouldBeSignedUpForStripe()"
-                    ref="stripeButton"
-                    @click="triggerStripe()"
-                    style="background-image: url('/img/blue-on-light.png'); width: 12rem; height: 2.15rem;"
-            ></button>
-            <button v-else
-                    style="background-image: url('/img/powered_by_stripe.png'); background-repeat: no-repeat; width: 151px; height: 43px;"
-            >
-            </button>
         </div>
 
 <!--        <stripe :user="getUser">-->

@@ -16,10 +16,7 @@
                       v-if="jobTasks.length > 0"> -->
         <!-- / status -->
         <div class="mt-4 mb-1">
-            <card class="list-card" v-for="(jTask, index) of jobTasks" v-bind:key="jTask.id" :id="'task-' + jTask.id"
-                  @click.native="goToJobTask(index)">
-                <!-- <bid-task :job-task="jobTask" :bid="job" :user="globalUser">
-                </bid-task> -->
+            <card class="list-card" v-for="(jTask, index) of jobTasks" v-bind:key="jTask.id" :id="'task-' + jTask.id">
                 <div class="row">
                     <div class="col-12 page-header-title">
                         {{ jTask.task.name }}
@@ -27,13 +24,19 @@
                     <div class="col-12">
                         <span class="dot" :class="'bg-' + getLabelClass(jTask)"></span>
                         <span :class="getLabelClass(jTask)">
-              {{ status(jTask) }}
-            </span>
+                            {{ status(jTask) }}
+                        </span>
 
-                        <span v-if="isContractor" class="float-right list-card-info">{{ getTotalSubsForTasks() }} Subs
-              <i class="fas fa-users"></i>
-            </span>
+                        <span v-if="isContractor"
+                              class="float-right list-card-info">{{ getTotalSubsForTasks() }} Subs
+                      <i class="fas fa-users"></i>
+                    </span>
 
+                    </div>
+                    <div class="flex w-full btn-spacing">
+                        <button class="btn btn-normal btn-sm w-full mr-1rem" @click="showDeleteTaskModal(jTask)">DELETE
+                        </button>
+                        <button class="btn btn-normal btn-sm w-full ml-1rem" @click="goToJobTask(index)">SELECT</button>
                     </div>
                 </div>
             </card>
@@ -44,6 +47,12 @@
                 <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
                 </paginate-links>
             </div> -->
+
+        <delete-task-modal
+                @action="deleteTheTask($event)"
+        >
+        </delete-task-modal>
+
         <job-task-bid-modal :jobTask="jobTask">
         </job-task-bid-modal>
     </div>
@@ -51,11 +60,13 @@
 
 <script>
   import BidTask from '../components/job/BidTask'
+  import DeleteTaskModal from '../components/job/DeleteTaskModal'
   import { mapState } from 'vuex'
 
   export default {
     components: {
       BidTask,
+      DeleteTaskModal
     },
     data() {
       return {
@@ -77,6 +88,9 @@
           deleteTask: false,
           payCash: false,
           accept: false,
+        },
+        deleteTask: {
+          id: ''
         }
       }
     },
@@ -88,7 +102,6 @@
         return Spark.state.user.usertype === 'contractor'
       },
       jobTasks() {
-
         if (this.job[0] && this.job[0].jobTasks) {
           return this.job[0].job_tasks
         } else if (this.job && this.job.job_tasks) {
@@ -103,6 +116,51 @@
       })
     },
     methods: {
+      showDeleteTaskModal(job_task) {
+        this.deleteTask.id = job_task.id
+        this.jobTask = job_task
+        $('#delete-task-modal').modal('show')
+      },
+      deleteTheTask(action) {
+        if (action === 'delete') {
+          this.deleteTheActualTask(this.deleteTask.id)
+        }
+        $('#delete-task-modal').modal('hide')
+      },
+      async deleteTheActualTask(id) {
+        try {
+          const data = await axios.post('/jobTask/delete/', {
+            id: id
+          })
+          this.getBid(this.job_task.job.id)
+        } catch (error) {
+          console.log('error')
+        }
+      },
+      async getBid(id) {
+        try {
+          const {
+            data
+          } = await axios.get('/job/' + id)
+          if (data[0]) {
+            this.bid = data[0]
+            this.$store.commit('setJob', data[0])
+          } else {
+            this.bid = data
+            this.$store.commit('setJob', data)
+          }
+          this.$store.commit('setJob', data)
+        } catch (error) {
+          console.log(error)
+          if (
+            error.message === 'Not Authorized to access this resource/api' ||
+            error.response !== undefined && error.response.status === 403
+          ) {
+            this.$router.push('/bids')
+          }
+          Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
+        }
+      },
       goBack() {
         this.$router.go(-1)
       },
@@ -169,4 +227,12 @@
     .pr-1 {
         /*padding-right: .25rem;*/
     }
+
+    .btn-spacing {
+        margin-top: 1rem;
+        margin-right: .5rem;
+        margin-left: .5rem;
+    }
+
 </style>
+

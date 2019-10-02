@@ -440,7 +440,8 @@
     },
     methods: {
       goBack() {
-        this.$router.go(-1)
+        // this.$router.go(-1)
+        this.$router.push('/bid/' + this.bid.id)
       },
       checkIfUserUsesQuickbooks() {
         if (Spark) {
@@ -829,7 +830,10 @@
           GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
           // console.log (newTask);
           // debugger;
-          this.clearTaskResults()
+          // this.clearTaskResults()
+
+          this.setDefaultStartDate()
+
         } else {
           this.errors.general.errorExists = true
         }
@@ -844,8 +848,8 @@
       getMonth() {
         let date = new Date()
         let month = date.getMonth()
+        month = month + 1;
         if (month < 10) {
-          month = month + 1
           month = '0' + month
         }
         return month
@@ -874,8 +878,8 @@
       getUTCMonth() {
         let date = new Date()
         let month = date.getUTCMonth()
+        month = month + 1
         if (month < 10) {
-          month = month + 1
           month = '0' + month
         }
         return month
