@@ -43455,30 +43455,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         const data = await axios.post('/job/delete/', {
           id: id
         });
-        this.getBid(this.job.id);
+        this.getBids();
       } catch (error) {
         console.log('error');
-      }
-    },
-    async getBid(id) {
-      try {
-        const {
-          data
-        } = await axios.get('/job/' + id);
-        if (data[0]) {
-          this.bid = data[0];
-          this.$store.commit('setJob', data[0]);
-        } else {
-          this.bid = data;
-          this.$store.commit('setJob', data);
-        }
-        this.$store.commit('setJob', data);
-      } catch (error) {
-        console.log(error);
-        if (error.message === 'Not Authorized to access this resource/api' || error.response !== undefined && error.response.status === 403) {
-          this.$router.push('/bids');
-        }
-        Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.');
       }
     },
     isContractor() {
