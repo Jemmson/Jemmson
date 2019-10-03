@@ -1,90 +1,8 @@
 <template>
     <div class="row">
-        <div class="col-12 mb-3">
-            <div class="text-center font-weight-bold" :class="getLabelClass(bid.status)">{{ status }}</div>
-            <!-- <info buttons="false" class="spacing" v-show="!isCustomer" title="Statuses">
-                    <div slot="tldr">
-                      <div class="flex flex-col">
-                        <div v-for="status in statuses" :key="status.type">
-                          <div class="flex justify-between">
-                            <div class="mr-2">
-                              <strong class="status-header uppercase">{{ status.type }}:</strong>
-                              <div class="description">{{ status.description }}</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div slot="full">
-                      <p>As a contractor the job goes through various statuses. The first status is:</p>
-                      <div class="text-center">
-                        <strong>Initiated</strong>
-                      </div>
-                      <p>
-                        This status refers to a job that has just been initiated but there have been no tasks
-                        assigned to the bid.
-                      </p>
-                    </div>
-                  </info> -->
+        <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">
+            <div class="text-center font-weight-bold">{{ status }}</div>
         </div>
-
-
-        <!--        <section ref="submissionCard" class="col-12" v-if="submissionCard">-->
-
-        <!--            <card>-->
-        <!--                <main class="row">-->
-
-        <!--                    <header class="w-full text-center f-bold mb-1rem">Bid Finished</header>-->
-
-        <!--                    <article>You are about to submit this job bid to the customer,-->
-        <!--                        you will not be able to edit this bid after its been approved by the customer-->
-        <!--                        Please also make sure to check whether you have accepted the subcontractors you wanted for each-->
-        <!--                        task.-->
-        <!--                        Click yes to submit or no to cancel.-->
-        <!--                    </article>-->
-
-        <!--                    <footer class="w-full mt-1rem flex justify-content-around">-->
-
-        <!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>-->
-        <!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="submitTheBid()">Yes</button>-->
-
-        <!--                    </footer>-->
-
-        <!--                </main>-->
-        <!--            </card>-->
-
-
-        <!--        </section>-->
-
-
-        <!--        <section ref="cancel_dialog_box" class="col-12" v-if="cancelBidCard">-->
-
-        <!--            <card>-->
-        <!--                <main class="row">-->
-
-
-        <!--                    <header class="w-full text-center f-bold mb-1rem">Confirm Cancellation</header>-->
-
-        <!--                    <article>You are about to cancel this job,-->
-        <!--                        Click delete job to cancel and delete the job or back to cancel this action.-->
-        <!--                        confirmJobCancellation-->
-        <!--                    </article>-->
-
-        <!--                    <footer class="w-full mt-1rem flex justify-content-around">-->
-
-        <!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 mr-half-rem" @click="cancelDialog()">No</button>-->
-        <!--                        <button ref="submitBid" class="btn btn-normal btn-md flex-1 ml-half-rem" @click="cancelTheBid()">Yes</button>-->
-
-        <!--                    </footer>-->
-
-        <!--                </main>-->
-        <!--            </card>-->
-
-
-        <!--        </section>-->
-
-
         <section class="col-12">
             <h1 class="card-title">Details</h1>
             <card>
@@ -139,38 +57,9 @@
                             :content-classes="addTaskBidPrice ? 'redColor' : ''"
                             :content="bidPrice"
                             type="totalBidPrice"></content-section>
-
-
                     <hr>
 
                     <section class="w-full">
-
-                        <!--                        <div ref="show_approved_actions" v-if="showPreApprovedActions()">-->
-
-                        <!--                            <div ref="bidButtons" v-if="bid.job_tasks.length > 0"-->
-                        <!--                                 class="flex w-full justify-content-around">-->
-                        <!--                                <button class="btn btn-normal flex-1" @click.prevent="showCancelCard()"-->
-                        <!--                                        :disabled="disabled.cancelBid" ref="cancelBtn">-->
-                        <!--                                      <span v-if="disabled.cancelBid">-->
-                        <!--                                        <i class="fa fa-btn fa-spinner fa-spin mr-half-rem"></i>-->
-                        <!--                                      </span>-->
-                        <!--                                    Cancel Job-->
-                        <!--                                </button>-->
-
-                        <!--                                <button-->
-                        <!--                                        ref="show_submission_card"-->
-                        <!--                                        class="btn btn-normal flex-1 ml-half-rem"-->
-                        <!--                                        @click="showSubmissionCard()"-->
-                        <!--                                        :disabled="(bid.job_tasks.length <= 0 || disabled.submitBid) || disableSubmitBid"-->
-                        <!--                                >-->
-                        <!--                                      <span v-if="disabled.submitBid">-->
-                        <!--                                        <i class="fa fa-btn fa-spinner fa-spin"></i>-->
-                        <!--                                      </span>-->
-                        <!--                                    <span>Submit Bid</span>-->
-                        <!--                                </button>-->
-                        <!--                            </div>-->
-
-                        <!--                        </div>-->
 
                         <div v-if="!this.isCustomer" class="mr-1rem ml-1rem">
                             <button class="w-100 btn btn-sm btn-normal flex-1"
@@ -205,7 +94,7 @@
 
                         <button class="btn btn-normal btn-sm float-right"
                                 style="width:75%"
-                                @click.prevent="viewTasks()">Click to View And Edit Tasks
+                                @click.prevent="viewTasks()">View, Edit, and Add Subs
                         </button>
 
                     </div>
@@ -777,6 +666,13 @@
 </script>
 
 <style lang="less" scoped>
+
+    .status {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        font-family: auto;
+        font-size: 24pt;
+    }
 
     .no-notes {
         text-align: center;

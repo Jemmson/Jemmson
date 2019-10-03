@@ -13,18 +13,25 @@
                 </div>
 
                 <div class="flex mt-1 w-full">
-                    <button
-                            class="btn btn-sm btn-normal w-full"
-                            @click="showTheTask = true"
-                            v-show="!showTheTask">
-                        Show
-                    </button>
-                    <button
-                            class="btn btn-sm btn-normal w-full"
-                            @click="showTheTask = false"
-                            v-show="showTheTask">
-                        Hide
-                    </button>
+                    <div class="w-full mr-1rem">
+                        <button
+                                class="btn btn-sm btn-normal w-full"
+                                @click="showTheTask = true"
+                                v-show="!showTheTask">
+                            Show
+                        </button>
+                        <button
+                                class="btn btn-sm btn-normal w-full"
+                                @click="showTheTask = false"
+                                v-show="showTheTask">
+                            Hide
+                        </button>
+                    </div>
+                    <div class="w-full ml-1rem">
+                        <button class="btn btn-normal btn-sm w-full mr-1rem"
+                                @click="showDeleteTaskModal(bidTask.job_task)">DELETE
+                        </button>
+                    </div>
                 </div>
             </section>
         </card>
@@ -221,6 +228,12 @@
             </section>
 
         </div>
+
+        <delete-task-modal
+                @action="deleteTheTask($event)"
+        >
+        </delete-task-modal>
+
     </div>
 </template>
 
@@ -228,6 +241,7 @@
 
   import TaskImages from '../../components/task/UploadTaskImages'
   import ContentSection from '../shared/ContentSection'
+  import DeleteTaskModal from '../../components/job/DeleteTaskModal'
   import Card from '../shared/Card'
 
   export default {
@@ -235,6 +249,7 @@
     components: {
       TaskImages,
       ContentSection,
+      DeleteTaskModal,
       Card
     },
     updated() {
@@ -256,7 +271,11 @@
         showTheTask: false,
         disabled: {
           submit: false,
-          finished: false
+          finished: false,
+          deleteTask: false
+        },
+        deleteTask: {
+          id: ''
         }
       }
     },
@@ -264,6 +283,27 @@
       bidTask: Object
     },
     methods: {
+      showDeleteTaskModal(job_task) {
+        this.deleteTask.id = job_task.id
+        this.jobTask = job_task
+        $('#delete-task-modal').modal('show')
+      },
+      deleteTheTask(action) {
+        if (action === 'delete') {
+          this.deleteTheActualTask(this.deleteTask.id)
+        }
+        $('#delete-task-modal').modal('hide')
+      },
+      async deleteTheActualTask(id) {
+        try {
+          const data = await axios.post('/jobTask/delete/', {
+            id: id
+          })
+          this.getBid(this.job_task.job.id)
+        } catch (error) {
+          console.log('error')
+        }
+      },
       getSubFinalPrice(num) {
         return this.convertNumToString(num)
       },

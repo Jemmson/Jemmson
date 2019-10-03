@@ -249,22 +249,23 @@ class TaskController extends Controller
      */
     public function bidTasks()
     {
-
         $bidTasks = $this->getBidContractorJobTasks();
-        foreach ($bidTasks[0] as $bt) {
-            if (!empty($bt->job_task)) {
-                $bt->job_task->sub_final_price = $this->convertToDollars($bt->job_task->sub_final_price);
-                $bt->job_task->unit_price = $this->convertToDollars($bt->job_task->unit_price);
+        if (!empty($bidTasks)) {
+            foreach ($bidTasks[0] as $bt) {
+                if (!empty($bt->job_task)) {
+                    $bt->job_task->sub_final_price = $this->convertToDollars($bt->job_task->sub_final_price);
+                    $bt->job_task->unit_price = $this->convertToDollars($bt->job_task->unit_price);
+                }
+                if (!empty($bt->job)) {
+                    $bt->job->unit_price = $this->convertToDollars($bt->job->unit_price);
+                }
+                if (!empty($bt->task)) {
+                    $bt->task->proposed_cust_price = $this->convertToDollars($bt->task->proposed_cust_price);
+                    $bt->task->proposed_sub_price = $this->convertToDollars($bt->task->proposed_sub_price);
+                }
             }
-            if (!empty($bt->job)) {
-                $bt->job->unit_price = $this->convertToDollars($bt->job->unit_price);
-            }
-            if (!empty($bt->task)) {
-                $bt->task->proposed_cust_price = $this->convertToDollars($bt->task->proposed_cust_price);
-                $bt->task->proposed_sub_price = $this->convertToDollars($bt->task->proposed_sub_price);
-            }
+            return response()->json($bidTasks, 200);
         }
-        return response()->json($bidTasks, 200);
     }
 
     /**
@@ -314,7 +315,8 @@ class TaskController extends Controller
 
     private function deleteSubsBid($contractorId, $jobTaskId)
     {
-        $subTask = BidContractorJobTask::where('', '', $jobTaskId)->where('', '', $contractorId)->get()->first();
+        $subTask = BidContractorJobTask::where('job_task_id', '=', $jobTaskId)->
+                where('contractor_id', '=', $contractorId)->get()->first();
         try {
             $subTask->delete();
         } catch (\Exception $e) {
@@ -325,7 +327,7 @@ class TaskController extends Controller
         }
     }
 
-    public function deleteJobTask(JobTask $jobTask)
+    public function deleteJobTask(Request $request)
     {
 
 
@@ -333,6 +335,10 @@ class TaskController extends Controller
 //        1. remove from job
 //        2, if there are subs remove bid contractor table
 //        3. update job totals
+
+        $jobTask = JobTask::find($request->id);
+
+
 
         $contractor_id = $jobTask->job()->get()->first()->contractor_id;
         $customer_id = $jobTask->job()->get()->first()->customer_id;
@@ -348,7 +354,8 @@ class TaskController extends Controller
                 ], 200);
             }
         } else if ($this->userIsASubContractor($contractor_id)) {
-            $this->deleteSubsBid();
+            $sub_contractor_id = Auth::user()->getAuthIdentifier();
+            $this->deleteSubsBid($sub_contractor_id, $request->id);
         }
 
 

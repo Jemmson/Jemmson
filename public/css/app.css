@@ -279,6 +279,14 @@ section {
   -ms-flex-direction: column;
       flex-direction: column;
 }
+.flex-end {
+  -ms-flex-pack: end;
+      justify-content: flex-end;
+}
+.flex-center {
+  -ms-flex-pack: center;
+      justify-content: center;
+}
 .w-full {
   width: 100%;
 }
@@ -308,13 +316,17 @@ section {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   border: thin blue solid;
 }
-.list-card:active {
-  box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11), 0 5px 15px 0 rgba(0, 0, 0, 0.08);
-  background-color: blue;
-  color: white;
-}
 .redColor {
   color: red;
+}
+.h-100 {
+  height: 100% !important;
+}
+.background-grey {
+  background-color: lightgray;
+}
+.modal-background-gray {
+  background-color: #d3d3d3ad;
 }
 .capitalize {
   text-transform: capitalize;

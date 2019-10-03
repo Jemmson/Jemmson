@@ -37,6 +37,8 @@ class JobTask extends Model
         'unit_price'
     ];
 
+    protected $guarded = [];
+
     /**
      * Get the task this bid belongs to
      *

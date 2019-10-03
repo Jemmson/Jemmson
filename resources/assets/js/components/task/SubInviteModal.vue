@@ -9,7 +9,7 @@
                         taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
                     <h6 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :
                         jobTaskNameForSubInvite.toUpperCase() }} -
-                        would you like to invite another sub to bid on this task?</h6>
+                        <span class="capitalize">would you like to invite another sub to bid on this task?</span></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
