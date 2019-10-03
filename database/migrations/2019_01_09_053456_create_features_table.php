@@ -17,6 +17,7 @@ class CreateFeaturesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->boolean('on');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -18,6 +18,7 @@ class createBidContractorJobTaskTable extends Migration
             $table->integer('contractor_id')->unsigned();
             $table->integer('job_task_id')->unsigned();
             $table->bigInteger('bid_price')->nullable()->default(0.00);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

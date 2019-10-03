@@ -21,7 +21,7 @@ class CreateStripeExpressesTable extends Migration
             $table->string('refresh_token')->nullable();
             $table->string('stripe_user_id')->nullable();
             $table->timestamps();
-
+            $table->softDeletes();
             $table->foreign('contractor_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

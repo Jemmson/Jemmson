@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Services\SanatizeService;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Spark\User as SparkUser;
 use Illuminate\Notifications\Notifiable;
@@ -19,6 +20,7 @@ class User extends SparkUser
     use Traits\Passwordless;
     use Notifiable;
     use Utilities;
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *

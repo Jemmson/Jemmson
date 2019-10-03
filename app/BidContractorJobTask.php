@@ -2,9 +2,11 @@
 namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BidContractorJobTask extends Model
 {
+    use SoftDeletes;
     protected $table = "bid_contractor_job_task";
     protected $fillable = [
         'contractor_id',

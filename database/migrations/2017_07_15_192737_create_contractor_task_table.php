@@ -22,6 +22,7 @@ class CreateContractorTaskTable extends Migration
             $table->integer('task_id');
             $table->bigInteger('base_price')->default(0);
             $table->primary(['contractor_id', 'task_id']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

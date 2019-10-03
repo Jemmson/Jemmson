@@ -22,6 +22,7 @@ class CreateFeedbackTable extends Migration
             $table->string('page_url');
             $table->integer('page_id')->nullable();
             $table->integer('page_from_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

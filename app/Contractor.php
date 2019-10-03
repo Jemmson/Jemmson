@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Customer;
@@ -14,6 +15,7 @@ use App\Traits\Utilities;
 class Contractor extends Model
 {
     use Utilities;
+    use SoftDeletes;
 
 //    protected $fillable = [
 //        'user_id',

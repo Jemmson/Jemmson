@@ -21,6 +21,7 @@ class CreateContractorCustomerTable extends Migration
             $table->integer('contractor_user_id');
             $table->integer('customer_user_id');
 //            $table->primary(['contractor_user_id', 'customer_user_id']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

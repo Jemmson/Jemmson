@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use mysql_xdevapi\Exception;
 use App\Services\RandomPasswordService;
 
 class Customer extends Model
 {
     //
+    use SoftDeletes;
     protected $fillable = [
         'user_id',
         'notes',

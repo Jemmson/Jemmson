@@ -32,6 +32,7 @@ class CreateTaskImagesTable extends Migration
             $table->string('secure_url')->nullable(true);
             $table->boolean('overwritten')->nullable(true);
             $table->string('original_filename')->nullable(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

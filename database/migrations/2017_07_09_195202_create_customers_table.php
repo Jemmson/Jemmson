@@ -24,7 +24,7 @@ class CreateCustomersTable extends Migration
             $table->string('sms_method_of_contact')->nullable();
 
             $table->text('notes')->nullable();
-            
+            $table->softDeletes();
             $table->timestamps();
         });
     }

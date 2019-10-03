@@ -33,6 +33,7 @@ class CreateJobActionsTable extends Migration
                 $table->foreign('job_id')
                         ->references('id')->on('jobs')
                         ->onDelete('cascade');
+                $table->softDeletes();
                 
             }
         );

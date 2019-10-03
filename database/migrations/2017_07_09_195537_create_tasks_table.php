@@ -33,6 +33,7 @@ class CreateTasksTable extends Migration
             $table->string('payment_method_ref')->nullable();
             $table->string('avg_cost')->nullable();
             $table->bigInteger('item_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

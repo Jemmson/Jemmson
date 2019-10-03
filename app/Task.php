@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -24,6 +25,7 @@ class Task extends Model
 
     use ConvertPrices;
     use Notifiable;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',

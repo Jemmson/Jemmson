@@ -3,12 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CustomerNeedsUpdating extends Model
 {
     //
     protected $table = 'customer_needs_updating';
-
+    use SoftDeletes;
 
     public static function addEntryToCustomerNeedsUpdatingIfNeeded(
         $contractorId,

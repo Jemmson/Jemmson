@@ -21,6 +21,7 @@ class CreateContractorSubcontractorPreferredPaymentTable extends Migration
             $table->string('contractor_preferred_payment_type')->nullable();
             $table->string('subcontractor_preferred_payment_type')->nullable();
             $table->string('agreed_upon_preferred_payment_type')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

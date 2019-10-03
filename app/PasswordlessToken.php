@@ -2,9 +2,11 @@
 namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PasswordlessToken extends Model
 {
+    use SoftDeletes;
     protected $table = "user_tokens";
     protected $fillable = [
         'token',

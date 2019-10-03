@@ -4,12 +4,14 @@ namespace App;
 
 use App\Http\Controllers\CustomerController;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ContractorCustomer extends Model
 {
     // This table is used to keep track o which customers are associated to which contractors
     // A contractor should not have knowledge of other contractors customers
 
+    use SoftDeletes;
     protected $table = 'contractor_customer';
 
     public function checkIfCustomerCurrentlyExistsForContractor($contractorId, $customerId)

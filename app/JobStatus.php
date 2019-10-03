@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JobStatus extends Model
 {
@@ -12,6 +13,7 @@ class JobStatus extends Model
         'status_number',
         'status'
     ];
+    use SoftDeletes;
 
 
     public function job()

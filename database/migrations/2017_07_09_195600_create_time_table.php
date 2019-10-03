@@ -22,6 +22,7 @@ class CreateTimeTable extends Migration
             $table->integer('task_id');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -19,6 +19,7 @@ class CreateStandardTasksTable extends Migration
         Schema::create('standardTasks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('task_name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

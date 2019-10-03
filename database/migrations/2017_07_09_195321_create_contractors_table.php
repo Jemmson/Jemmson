@@ -27,6 +27,7 @@ class CreateContractorsTable extends Migration
             $table->boolean('email_method_of_contact')->nullable();
             $table->boolean('sms_method_of_contact')->nullable();
             $table->boolean('phone_method_of_contact')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
