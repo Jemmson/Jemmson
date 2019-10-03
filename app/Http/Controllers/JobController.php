@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BidContractorJobTask;
 use App\Job;
 use App\User;
 use App\Task;
@@ -485,8 +486,48 @@ class JobController extends Controller
      * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Job $job)
+    public function destroy(Request $request)
     {
+
+//        need to delete any bidcontrcontractorrecords
+//        need to delete any job tasks
+
+
+        $job = Job::find($request->id);
+
+//        are there any tasks associated to the job
+        $jobTasks = JobTask::where('job_id', '=', $request->id)->get();
+
+        if (!empty($jobTasks)) {
+            foreach ($jobTasks as $jt){
+//                are there any tasks being bid on
+                $bcjt = BidContractorJobTask::where('job_task_id', '=', $jt->id)->get();
+                if (!empty($bcjt)) {
+                    foreach ($bcjt as $subBid) {
+                        try {
+                            $subBid->delete();
+                        } catch (\Exception $e) {
+                            return response()->json([
+                                'message' => $e->getMessage(),
+                                'code' => $e->getCode()
+                            ], 200);
+                        }
+                    }
+                }
+
+                try {
+                    $jt->delete();
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                        'code' => $e->getCode()
+                    ], 200);
+                }
+            }
+        }
+
+
+
         $job->delete();
 
         return response()->json(null, 204);

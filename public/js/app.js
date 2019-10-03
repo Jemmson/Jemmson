@@ -39138,6 +39138,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     finished(bid) {
       SubContractor.finishedTask(bid, this.disabled);
+    },
+    async getBid(id) {
+      try {
+        const {
+          data
+        } = await axios.get('/job/' + id);
+        if (data[0]) {
+          this.bid = data[0];
+          this.$store.commit('setJob', data[0]);
+        } else {
+          this.bid = data;
+          this.$store.commit('setJob', data);
+        }
+        this.$store.commit('setJob', data);
+      } catch (error) {
+        console.log(error);
+        if (error.message === 'Not Authorized to access this resource/api' || error.response !== undefined && error.response.status === 403) {
+          this.$router.push('/bids');
+        }
+        Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.');
+      }
     }
   }
 });
@@ -43295,6 +43316,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_shared_SearchBar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_shared_SearchBar__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_shared_Card__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_shared_Card__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_job_DeleteTaskModal__ = __webpack_require__(470);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_job_DeleteTaskModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_job_DeleteTaskModal__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -43360,6 +43383,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -43371,7 +43405,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   components: {
     Tasks: __WEBPACK_IMPORTED_MODULE_1__Tasks___default.a,
     Card: __WEBPACK_IMPORTED_MODULE_3__components_shared_Card___default.a,
-    SearchBar: __WEBPACK_IMPORTED_MODULE_2__components_shared_SearchBar___default.a
+    SearchBar: __WEBPACK_IMPORTED_MODULE_2__components_shared_SearchBar___default.a,
+    DeleteTaskModal: __WEBPACK_IMPORTED_MODULE_4__components_job_DeleteTaskModal___default.a
   },
   props: {
     user: Object
@@ -43383,7 +43418,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       showBid: false,
       bidIndex: 0,
       searchTerm: '',
-      paginate: ['sBids']
+      paginate: ['sBids'],
+      disabled: {
+        deleteJob: false
+      },
+      deleteJob: {
+        id: ''
+      },
+      job: {}
     };
   },
   watch: {
@@ -43397,6 +43439,48 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     bidsContractorSectionPicked: state => state.bidsContractorSectionPicked
   })),
   methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['toggleBidsContractor']), {
+    showDeleteJobModal(job) {
+      this.deleteJob.id = job.id;
+      this.job = job;
+      $('#delete-task-modal').modal('show');
+    },
+    deleteTheJob(action) {
+      if (action === 'delete') {
+        this.deleteTheActualJob(this.deleteJob.id);
+      }
+      $('#delete-task-modal').modal('hide');
+    },
+    async deleteTheActualJob(id) {
+      try {
+        const data = await axios.post('/job/delete/', {
+          id: id
+        });
+        this.getBid(this.job.id);
+      } catch (error) {
+        console.log('error');
+      }
+    },
+    async getBid(id) {
+      try {
+        const {
+          data
+        } = await axios.get('/job/' + id);
+        if (data[0]) {
+          this.bid = data[0];
+          this.$store.commit('setJob', data[0]);
+        } else {
+          this.bid = data;
+          this.$store.commit('setJob', data);
+        }
+        this.$store.commit('setJob', data);
+      } catch (error) {
+        console.log(error);
+        if (error.message === 'Not Authorized to access this resource/api' || error.response !== undefined && error.response.status === 403) {
+          this.$router.push('/bids');
+        }
+        Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.');
+      }
+    },
     isContractor() {
       if (this.user) {
         return this.user.usertype === 'contractor';
@@ -87140,11 +87224,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "list-card",
       attrs: {
         "classes": "pt-half-rem pb-half-rem"
-      },
-      nativeOn: {
-        "click": function($event) {
-          _vm.goToJob(bid.id)
-        }
       }
     }, [_c('div', {
       staticClass: "job"
@@ -87175,8 +87254,30 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "float-right mr-2 list-card-info"
     }, [_vm._v("\n                                            " + _vm._s(bid.job_tasks.length) + " Tasks\n                                        "), _c('i', {
       staticClass: "far fa-check-square"
-    })])]) : _vm._e()])])])])
-  }), 1)], 1) : _c('tasks')], 1)
+    })])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+      staticClass: "flex mt-1rem"
+    }, [_c('button', {
+      staticClass: "btn btn-normal btn-sm w-full mr-1rem",
+      on: {
+        "click": function($event) {
+          _vm.showDeleteJobModal(bid)
+        }
+      }
+    }, [_vm._v("DELETE\n                            ")]), _vm._v(" "), _c('button', {
+      staticClass: "btn btn-normal btn-sm w-full ml-1rem",
+      nativeOn: {
+        "click": function($event) {
+          _vm.goToJob(bid.id)
+        }
+      }
+    }, [_vm._v("SELECT")])])])])
+  }), 1)], 1) : _c('tasks'), _vm._v(" "), _c('delete-task-modal', {
+    on: {
+      "action": function($event) {
+        _vm.deleteTheJob($event)
+      }
+    }
+  })], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
