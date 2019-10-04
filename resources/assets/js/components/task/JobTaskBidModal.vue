@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" id="job-task-bid-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
+  <div class="modal h-100 modal-background-gray" id="job-task-bid-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
     aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">

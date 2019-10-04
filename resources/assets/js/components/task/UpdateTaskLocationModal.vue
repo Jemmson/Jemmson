@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal" :id="'update-task-location-modal_'+id" tabindex="-1" role="dialog"
+    <div class="modal h-100 modal-background-gray" :id="'update-task-location-modal_'+id" tabindex="-1" role="dialog"
          aria-labelledby="stripe-modal" aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

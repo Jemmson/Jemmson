@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal" :id="'deny-task-modal_'+id" tabindex="-1" role="dialog" aria-labelledby="deny-task-modal"
+    <div class="modal h-100 modal-background-gray" :id="'deny-task-modal_'+id" tabindex="-1" role="dialog" aria-labelledby="deny-task-modal"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content styled">
