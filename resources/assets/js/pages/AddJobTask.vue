@@ -6,6 +6,18 @@
         </icon-header>
         <card class="mb-4">
 
+            <div v-show="taskSubmitted">
+                <div class="flex flex-col">
+                    <h5>Would You Like To Add Another Task?</h5>
+                    <div class="flex space-between">
+                        <button class="btn btn-normal w-full capitalize mr-1rem" @click="needsNewTask()">yes</button>
+                        <button class="btn btn-normal w-full capitalize ml-1rem" @click="goBack()">no</button>
+                    </div>
+                </div>
+
+                <hr>
+            </div>
+
             <form role="form" class="wrapper">
                 <h1 class="text-center error-lg" v-show="errors.general.errorExists">
                     {{ errors.general.message }}
@@ -405,7 +417,8 @@
         subMessageChanged: false,
         startDateError: false,
         submitted: false,
-        bid: {}
+        taskSubmitted: false,
+        bid: {},
       }
     },
     computed: {
@@ -439,6 +452,10 @@
       }
     },
     methods: {
+      needsNewTask(){
+        this.taskSubmitted = false
+        this.clearTaskResults()
+      },
       goBack() {
         // this.$router.go(-1)
         this.$router.push('/bid/' + this.bid.id)
@@ -831,6 +848,8 @@
           // console.log (newTask);
           // debugger;
           // this.clearTaskResults()
+
+          this.taskSubmitted = true
 
           this.setDefaultStartDate()
 
