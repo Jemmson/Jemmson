@@ -19,6 +19,7 @@ class CreateCustomerNeedsUpdatingTable extends Migration
             $table->bigInteger('customer_id');
             $table->bigInteger('quickbooks_id');
             $table->boolean('needs_updating')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
