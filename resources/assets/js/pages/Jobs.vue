@@ -46,7 +46,7 @@
                         <div class="flex mt-1rem">
                             <button class="btn btn-normal btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">DELETE
                             </button>
-                            <button @click.native="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">SELECT</button>
+                            <button @click="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">SELECT</button>
                         </div>
                     </div>
                 </card>
