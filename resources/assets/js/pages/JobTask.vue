@@ -22,12 +22,6 @@
                                 {{ jobTask.task.name }}
                             </div>
                         </div>
-                        <div class="col-12 mb-2">
-                            Status:
-                            <div class="float-right font-weight-bold" :class="getLabelClass(jobTask.status)">
-                                {{ status(jobTask.status) }}
-                            </div>
-                        </div>
                         <div class="col-12">
                             <div class="flex justify-content-between">
                                 <label>Task Start Date</label>
@@ -46,8 +40,29 @@
                         </div>
                     </div>
                 </card>
-            </div>
 
+                <h1 class="card-title">Job Status</h1>
+                <card>
+                    <div class="row">
+                        <div class="col-12">
+                            Status:
+                            <div class="float-right font-weight-bold" :class="getLabelClass(jobTask.status)">
+                                {{ status(jobTask.status) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div v-show="jobTask.declined_message !== ''">
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                Message:
+                                <div class="float-right font-weight-bold">{{jobTask.declined_message}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </card>
+
+            </div>
 
             <!-- prices -->
             <div class="col-12">
@@ -60,7 +75,7 @@
                             <div class="row">
                                 <div class="col-12">
 
-<!--                                    v-if="parseInt(cust_final_price) > 0"-->
+                                    <!--                                    v-if="parseInt(cust_final_price) > 0"-->
                                     <content-section
                                             v-if="isContractor()"
                                             label="Total Task Price:"
@@ -81,15 +96,15 @@
                                             icon="fas fa-money-bill-alt icon"
                                             type="totalTaskPrice"></content-section>
 
-<!--                                    <content-section-->
-<!--                                            v-if="parseInt(this.cust_final_price) <= 0"-->
-<!--                                            label="Total Task Price:"-->
-<!--                                            content="Price Not Set"-->
-<!--                                            section-classes="ph-zero"-->
-<!--                                            icon="fas fa-money-bill-alt icon"-->
-<!--                                            type="totalTaskPrice"></content-section>-->
+                                    <!--                                    <content-section-->
+                                    <!--                                            v-if="parseInt(this.cust_final_price) <= 0"-->
+                                    <!--                                            label="Total Task Price:"-->
+                                    <!--                                            content="Price Not Set"-->
+                                    <!--                                            section-classes="ph-zero"-->
+                                    <!--                                            icon="fas fa-money-bill-alt icon"-->
+                                    <!--                                            type="totalTaskPrice"></content-section>-->
 
-<!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
+                                    <!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
                                     <content-section
                                             v-if="isContractor()"
                                             label="Total Sub Price:"
@@ -106,13 +121,13 @@
                                             icon="fas fa-user icon"
                                             type="totalTaskPrice"></content-section>
 
-<!--                                    <content-section-->
-<!--                                            v-if="isContractor() && parseInt(sub_final_price) <= 0"-->
-<!--                                            label="Total Task Sub Price:"-->
-<!--                                            content="Price Not Set"-->
-<!--                                            section-classes="ph-zero"-->
-<!--                                            icon="fas fa-user icon"-->
-<!--                                            type="totalTaskPrice"></content-section>-->
+                                    <!--                                    <content-section-->
+                                    <!--                                            v-if="isContractor() && parseInt(sub_final_price) <= 0"-->
+                                    <!--                                            label="Total Task Sub Price:"-->
+                                    <!--                                            content="Price Not Set"-->
+                                    <!--                                            section-classes="ph-zero"-->
+                                    <!--                                            icon="fas fa-user icon"-->
+                                    <!--                                            type="totalTaskPrice"></content-section>-->
                                 </div>
 
                                 <div class="col-12">
@@ -255,7 +270,8 @@
                                 <div class="flex flex-col" v-if="isCustomer">
                                     <span class="label mb-2">Notes from Customer</span>
                                     <textarea cols="0" rows="0" class="form-control" disabled
-                                              :value="jobTask.job.customer.customer.notes" style="color: black;"></textarea>
+                                              :value="jobTask.job.customer.customer.notes"
+                                              style="color: black;"></textarea>
                                 </div>
 
                             </div>
@@ -564,7 +580,7 @@
           subId
         ])
       },
-       acceptSubBidForTask(bid, jobTask) {
+      acceptSubBidForTask(bid, jobTask) {
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled)
       },
       showStripeToggle(jobTask) {
@@ -927,7 +943,7 @@
 
           if (this.$store.state.job.model[0].id > 0) {
             this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
-          } else if (this.$store.state.job.id !== "") {
+          } else if (this.$store.state.job.id !== '') {
             this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
           }
 

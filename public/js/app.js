@@ -36410,6 +36410,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -36516,7 +36517,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     openDenyTaskForm(jobTask) {
       this.jTask = jobTask;
-      $('#deny-task-modal').modal();
+      $('#deny-task-modal_' + jobTask.id).modal();
     },
 
     paidWithCash() {
@@ -42663,6 +42664,22 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -43162,7 +43179,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
         if (this.$store.state.job.model[0].id > 0) {
           this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id);
-        } else if (this.$store.state.job.id !== "") {
+        } else if (this.$store.state.job.id !== '') {
           this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id);
         }
       }
@@ -92033,7 +92050,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "modal h-100 modal-background-gray",
     attrs: {
-      "id": 'deny-task-modal_' + _vm.id,
+      "id": 'deny-task-modal_' + _vm.jobTask.id,
       "tabindex": "-1",
       "role": "dialog",
       "aria-labelledby": "deny-task-modal",
@@ -92143,20 +92160,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.goBack()
       }
     }
-  }, [_vm._v("\n                        Back\n                    ")])]), _vm._v(" "), _c('h1', {
+  }, [_vm._v("\n                    Back\n                ")])]), _vm._v(" "), _c('h1', {
     staticClass: "card-title"
   }, [_vm._v("Details")]), _vm._v(" "), _c('card', [_c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_vm._v("\n                            Job Task Name:\n                            "), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                        Job Task Name:\n                        "), _vm._v(" "), _c('div', {
     staticClass: "float-right font-weight-bold"
-  }, [_vm._v("\n                                " + _vm._s(_vm.jobTask.task.name) + "\n                            ")])]), _vm._v(" "), _c('div', {
-    staticClass: "col-12 mb-2"
-  }, [_vm._v("\n                            Status:\n                            "), _c('div', {
-    staticClass: "float-right font-weight-bold",
-    class: _vm.getLabelClass(_vm.jobTask.status)
-  }, [_vm._v("\n                                " + _vm._s(_vm.status(_vm.jobTask.status)) + "\n                            ")])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                            " + _vm._s(_vm.jobTask.task.name) + "\n                        ")])]), _vm._v(" "), _c('div', {
     staticClass: "col-12"
   }, [_c('div', {
     staticClass: "flex justify-content-between"
@@ -92183,7 +92195,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: {
       error: _vm.hasStartDateError
     }
-  }, [_vm._v(_vm._s(_vm.startDateErrorMessage) + "\n                            ")])])])])], 1), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.startDateErrorMessage) + "\n                        ")])])])]), _vm._v(" "), _c('h1', {
+    staticClass: "card-title"
+  }, [_vm._v("Job Status")]), _vm._v(" "), _c('card', [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-12"
+  }, [_vm._v("\n                        Status:\n                        "), _c('div', {
+    staticClass: "float-right font-weight-bold",
+    class: _vm.getLabelClass(_vm.jobTask.status)
+  }, [_vm._v("\n                            " + _vm._s(_vm.status(_vm.jobTask.status)) + "\n                        ")])])]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.jobTask.declined_message !== ''),
+      expression: "jobTask.declined_message !== ''"
+    }]
+  }, [_c('hr'), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-12"
+  }, [_vm._v("\n                            Message:\n                            "), _c('div', {
+    staticClass: "float-right font-weight-bold"
+  }, [_vm._v(_vm._s(_vm.jobTask.declined_message))])])])])])], 1), _vm._v(" "), _c('div', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
@@ -92279,9 +92313,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "mt-1"
   }, [(_vm.unit_price) ? _c('strong', [_vm._v(_vm._s(_vm.taskCustFinalPrice(_vm.unit_price)))]) : _vm._e()])]), _vm._v(" "), (_vm.errors.unit_price) ? _c('div', {
     staticClass: "error"
-  }, [_vm._v("Your Contractor Task Price Must Be\n                                            Higher The Sub Price\n                                        ")]) : _vm._e(), _vm._v(" "), (_vm.errors.priceMustBeANumber) ? _c('div', {
+  }, [_vm._v("Your Contractor Task Price Must Be\n                                        Higher The Sub Price\n                                    ")]) : _vm._e(), _vm._v(" "), (_vm.errors.priceMustBeANumber) ? _c('div', {
     staticClass: "error"
-  }, [_vm._v("Your Input Must Be A\n                                            Number\n                                        ")]) : _vm._e()]) : _vm._e()])])])])])], 1), _vm._v(" "), _c('div', {
+  }, [_vm._v("Your Input Must Be A\n                                        Number\n                                    ")]) : _vm._e()]) : _vm._e()])])])])])], 1), _vm._v(" "), _c('div', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
@@ -92291,9 +92325,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12"
   }, [_c('div', {
     staticClass: "flex flex-col"
-  }, [_c('div', [_vm._v("\n                                    " + _vm._s(_vm.jobTask.location.address_line_1) + "\n                                ")]), _vm._v(" "), _c('div', [_vm._v("\n                                    " + _vm._s(_vm.jobTask.location.city) + ", " + _vm._s(_vm.jobTask.location.state) + " " + _vm._s(_vm.jobTask.location.zip) + "\n                                ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
+  }, [_c('div', [_vm._v("\n                                " + _vm._s(_vm.jobTask.location.address_line_1) + "\n                            ")]), _vm._v(" "), _c('div', [_vm._v("\n                                " + _vm._s(_vm.jobTask.location.city) + ", " + _vm._s(_vm.jobTask.location.state) + " " + _vm._s(_vm.jobTask.location.zip) + "\n                            ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
     staticClass: "fas fa-map-marker icon"
-  }), _vm._v("\n                                " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                            ")]) : (_vm.location(_vm.jobTask, _vm.job) === 'Same as Job Location') ? _c('div', {
+  }), _vm._v("\n                            " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                        ")]) : (_vm.location(_vm.jobTask, _vm.job) === 'Same as Job Location') ? _c('div', {
     staticClass: "flex flex-col"
   }, [_c('span', {
     staticClass: "label mb-2"
@@ -92315,7 +92349,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "fas fa-map-marker icon"
-  }), _vm._v("\n                                    " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                                ")]), _vm._v(" "), _c('button', {
+  }), _vm._v("\n                                " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                            ")]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-normal btn-md",
     on: {
       "click": function($event) {
@@ -92394,7 +92428,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         ((!_vm.checkIfBidHasBeenAccepted(_vm.jobTask) && _vm.checkIfBidHasBeenSent(_vm.job)) ||
           (_vm.checkIfBidHasBeenAccepted(_vm.jobTask)) ||
           (!_vm.checkIfBidHasBeenAccepted(_vm.jobTask) && !_vm.checkIfBidHasBeenSent(_vm.job)))),
-      expression: "\n                                           showSubsPanel &&\n                                           (isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0) &&\n                                           ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(job)) ||\n                                            (checkIfBidHasBeenAccepted(jobTask)) ||\n                                            (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(job)))"
+      expression: "\n                                       showSubsPanel &&\n                                       (isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0) &&\n                                       ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(job)) ||\n                                        (checkIfBidHasBeenAccepted(jobTask)) ||\n                                        (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(job)))"
     }],
     staticClass: "col-12"
   }, [_c('h1', {
@@ -92447,7 +92481,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [(_vm.disabled.accept) ? _c('span', [_c('i', {
       staticClass: "fa fa-btn fa-spinner fa-spin"
-    })]) : _vm._e(), _vm._v("\n                                                    Accept\n                                                ")]) : (_vm.checkIfBidHasBeenAccepted(_vm.jobTask, bid)) ? _c('div', [_c('strong', [_vm._v("Accepted")])]) : (!_vm.checkIfAnyBidHasBeenAccepted(_vm.jobTask) && !_vm.checkIfBidHasBeenSent(bid)) ? _c('div', [_c('strong', [_vm._v("Pending")])]) : _vm._e()])])
+    })]) : _vm._e(), _vm._v("\n                                                Accept\n                                            ")]) : (_vm.checkIfBidHasBeenAccepted(_vm.jobTask, bid)) ? _c('div', [_c('strong', [_vm._v("Accepted")])]) : (!_vm.checkIfAnyBidHasBeenAccepted(_vm.jobTask) && !_vm.checkIfBidHasBeenSent(bid)) ? _c('div', [_c('strong', [_vm._v("Pending")])]) : _vm._e()])])
   })], 2)]) : _vm._e()]) : _vm._e()])])])], 1), _vm._v(" "), _c('div', {
     staticClass: "col-12 mb-4"
   }, [_c('h1', {
@@ -92460,7 +92494,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.openSubInvite(_vm.jobTask.id)
       }
     }
-  }, [_vm._v("\n                        Add A Sub\n                    ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showFinishedBtn(_vm.jobTask) || _vm.showApproveBtn(_vm.jobTask)) ? _c('div', [(_vm.showFinishedBtn(_vm.jobTask)) ? _c('button', {
+  }, [_vm._v("\n                    Add A Sub\n                ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showFinishedBtn(_vm.jobTask) || _vm.showApproveBtn(_vm.jobTask)) ? _c('div', [(_vm.showFinishedBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal mb-2",
     attrs: {
       "disabled": _vm.disabled.finished
@@ -92472,7 +92506,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.finished) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                        Finished\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
+  })]) : _vm._e(), _vm._v("\n                    Finished\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal mb-2",
     attrs: {
       "disabled": _vm.disabled.approve
@@ -92484,14 +92518,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.approve) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                        Approve\n                    ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showDenyBtn(_vm.jobTask)) ? _c('button', {
+  })]) : _vm._e(), _vm._v("\n                    Approve\n                ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showDenyBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal mb-2",
     on: {
       "click": function($event) {
         _vm.openDenyTaskForm(_vm.jobTask.id)
       }
     }
-  }, [_vm._v("\n                    Deny\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
+  }, [_vm._v("\n                Deny\n            ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal",
     attrs: {
       "disabled": _vm.disabled.deleteTask
@@ -92503,7 +92537,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.deleteTask) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                    Delete\n                ")]) : _vm._e()])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
+  })]) : _vm._e(), _vm._v("\n                Delete\n            ")]) : _vm._e()])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
     attrs: {
       "job-task": _vm.jobTask,
       "job-task-task": _vm.jobTask.task,
