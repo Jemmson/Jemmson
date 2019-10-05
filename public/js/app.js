@@ -35557,7 +35557,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }
   }, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["c" /* mapMutations */])(['setCustomerName']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["d" /* mapActions */])(['actCustomerName']), {
     updateGeneralContractorNotes() {
-      Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer_id);
+      Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer.id);
     },
     updateArea() {
       // Customer.updateArea (this.area.area, this.bid.id);
@@ -91481,7 +91481,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "flex justify-content-between w-full mr-1rem mt-half-rem"
   }, [(_vm.isBidOpen(_vm.bidTask)) ? _c('label', {
     staticClass: "w-full ml-1rem mt-half-rem"
-  }, [_vm._v("Task Price:")]) : _vm._e(), _vm._v(" "), (_vm.bidTask.job_task.sub_sets_own_price_for_job === 1 && _vm.isBidOpen(_vm.bidTask)) ? _c('input', {
+  }, [_vm._v("Enter Your Bid Price:")]) : _vm._e(), _vm._v(" "), (_vm.bidTask.job_task.sub_sets_own_price_for_job === 1 && _vm.isBidOpen(_vm.bidTask)) ? _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",

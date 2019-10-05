@@ -69,7 +69,7 @@
 
                         <div class="flex justify-content-between w-full mr-1rem mt-half-rem">
 
-                            <label v-if="isBidOpen(bidTask)" class="w-full ml-1rem mt-half-rem">Task Price:</label>
+                            <label v-if="isBidOpen(bidTask)" class="w-full ml-1rem mt-half-rem">Enter Your Bid Price:</label>
 
                             <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
                                    type="text"

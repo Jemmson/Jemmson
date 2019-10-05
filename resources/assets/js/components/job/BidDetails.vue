@@ -633,7 +633,7 @@
       updateGeneralContractorNotes() {
         Customer.updateNotesForJob(
           this.customerNotesMessage,
-          this.bid.customer_id
+          this.bid.customer.id
         )
       },
       updateArea() {
