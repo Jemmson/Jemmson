@@ -28,7 +28,7 @@
                         </span>
 
                         <span v-if="isContractor"
-                              class="float-right list-card-info">{{ getTotalSubsForTasks() }} Subs
+                              class="float-right list-card-info">{{ jTask.bid_contractor_job_tasks.length }} Subs
                       <i class="fas fa-users"></i>
                     </span>
 
@@ -164,7 +164,7 @@
       goBack() {
         this.$router.go(-1)
       },
-      getTotalSubsForTasks() {
+      getTotalSubsForTasks(JTask) {
         let length = 0
         for (let i = 0; i < this.jobTasks.length; i++) {
           length = length + this.jobTasks[i].bid_contractor_job_tasks.length
