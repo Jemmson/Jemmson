@@ -38463,6 +38463,39 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -38497,6 +38530,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       phoneFormatError: true,
       companyName: '',
       user: '',
+      subInvited: false,
       results: [],
       disabled: {
         accept: false,
@@ -38505,6 +38539,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
   methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['setMobileResponse']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapActions */])(['checkMobileNumber']), {
+    needsNewTask() {
+      this.subInvited = false;
+      this.clearFields();
+    },
     returnContractorsNotAlreadyAssignedToTask(subs) {
 
       let filteredSubs = [];
@@ -38531,6 +38569,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     sendSubInviteToBidOnTask() {
       GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id);
       this.companyName = '';
+      this.subInvited = true;
     },
     clearFields() {
 
@@ -39932,6 +39971,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -40035,6 +40086,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       subMessageChanged: false,
       startDateError: false,
       submitted: false,
+      taskSubmitted: false,
       bid: {}
     };
   },
@@ -40068,6 +40120,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    needsNewTask() {
+      this.taskSubmitted = false;
+      this.clearTaskResults();
+    },
     goBack() {
       // this.$router.go(-1)
       this.$router.push('/bid/' + this.bid.id);
@@ -40429,6 +40485,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // console.log (newTask);
         // debugger;
         // this.clearTaskResults()
+
+        this.taskSubmitted = true;
 
         this.setDefaultStartDate();
       } else {
@@ -43277,7 +43335,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     goBack() {
       this.$router.go(-1);
     },
-    getTotalSubsForTasks() {
+    getTotalSubsForTasks(JTask) {
       let length = 0;
       for (let i = 0; i < this.jobTasks.length; i++) {
         length = length + this.jobTasks[i].bid_contractor_job_tasks.length;
@@ -84276,7 +84334,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "modal",
+    staticClass: "modal h-100 modal-background-gray",
     attrs: {
       "id": 'update-task-location-modal_' + _vm.id,
       "tabindex": "-1",
@@ -84530,7 +84588,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "modal",
+    staticClass: "modal h-100 modal-background-gray",
     attrs: {
       "id": "job-task-bid-modal",
       "tabindex": "-1",
@@ -84755,7 +84813,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('card', {
     staticClass: "mb-4"
-  }, [_c('form', {
+  }, [_c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.taskSubmitted),
+      expression: "taskSubmitted"
+    }]
+  }, [_c('div', {
+    staticClass: "flex flex-col"
+  }, [_c('h5', [_vm._v("Would You Like To Add Another Task?")]), _vm._v(" "), _c('div', {
+    staticClass: "flex space-between"
+  }, [_c('button', {
+    staticClass: "btn btn-normal w-full capitalize mr-1rem",
+    on: {
+      "click": function($event) {
+        _vm.needsNewTask()
+      }
+    }
+  }, [_vm._v("yes")]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-normal w-full capitalize ml-1rem",
+    on: {
+      "click": function($event) {
+        _vm.goBack()
+      }
+    }
+  }, [_vm._v("no")])])]), _vm._v(" "), _c('hr')]), _vm._v(" "), _c('form', {
     staticClass: "wrapper",
     attrs: {
       "role": "form"
@@ -85713,7 +85796,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       class: _vm.getLabelClass(jTask)
     }, [_vm._v("\n                        " + _vm._s(_vm.status(jTask)) + "\n                    ")]), _vm._v(" "), (_vm.isContractor) ? _c('span', {
       staticClass: "float-right list-card-info"
-    }, [_vm._v(_vm._s(_vm.getTotalSubsForTasks()) + " Subs\n                  "), _c('i', {
+    }, [_vm._v(_vm._s(jTask.bid_contractor_job_tasks.length) + " Subs\n                  "), _c('i', {
       staticClass: "fas fa-users"
     })]) : _vm._e()]), _vm._v(" "), _c('div', {
       staticClass: "flex w-full btn-spacing"
@@ -87244,7 +87327,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("DELETE\n                            ")]), _vm._v(" "), _c('button', {
       staticClass: "btn btn-normal btn-sm w-full ml-1rem",
-      nativeOn: {
+      on: {
         "click": function($event) {
           _vm.goToJob(bid.id)
         }
@@ -87300,7 +87383,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "modal",
+    staticClass: "modal h-100 modal-background-gray",
     staticStyle: {
       "margin-top": "7rem"
     },
@@ -88218,7 +88301,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "modal",
+    staticClass: "modal h-100 modal-background-gray",
     attrs: {
       "id": 'sub-invite-modal_' + _vm.id,
       "tabindex": "-1",
@@ -88235,12 +88318,38 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-content"
   }, [_c('div', {
     staticClass: "modal-header"
+  }, [_c('div', {
+    staticClass: "flex flex-column"
   }, [(_vm.initiateBidForSubForm.counter <= 0) ? _c('h6', {
     staticClass: "modal-title"
-  }, [_vm._v("Invite A Subcontractor - " + _vm._s(_vm.taskForSubInvite === undefined ? '' : _vm.jobTaskNameForSubInvite.toUpperCase()))]) : _c('h6', [_vm._v("Sent Invite - " + _vm._s(_vm.taskForSubInvite === undefined ? '' :
-    _vm.jobTaskNameForSubInvite.toUpperCase()) + " -\n                        "), _c('span', {
+  }, [_vm._v("Invite A Subcontractor - " + _vm._s(_vm.taskForSubInvite === undefined ? '' : _vm.jobTaskNameForSubInvite.toUpperCase()))]) : _vm._e(), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.subInvited),
+      expression: "subInvited"
+    }]
+  }, [_c('hr'), _vm._v(" "), _c('div', {
+    staticClass: "flex flex-column"
+  }, [_c('h6', [_vm._v("Sent Invite - " + _vm._s(_vm.taskForSubInvite === undefined ? '' :
+    _vm.jobTaskNameForSubInvite.toUpperCase()) + " -\n                                    "), _c('span', {
     staticClass: "capitalize"
-  }, [_vm._v("would you like to invite another sub to bid on this task?")])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c('div', {
+  }, [_vm._v("would you like to invite another sub to bid on this task?")])]), _vm._v(" "), _c('div', {
+    staticClass: "flex space-between"
+  }, [_c('button', {
+    staticClass: "btn btn-normal w-full capitalize mr-1rem",
+    on: {
+      "click": function($event) {
+        _vm.needsNewTask()
+      }
+    }
+  }, [_vm._v("Yes")]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-normal w-full capitalize ml-1rem",
+    attrs: {
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_vm._v("No")])])]), _vm._v(" "), _c('hr')])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('form', {
     attrs: {
@@ -91910,7 +92019,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "modal",
+    staticClass: "modal h-100 modal-background-gray",
     attrs: {
       "id": 'deny-task-modal_' + _vm.id,
       "tabindex": "-1",
