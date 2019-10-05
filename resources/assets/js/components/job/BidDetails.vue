@@ -417,6 +417,7 @@
           (this.bid.status === 'bid.initiated' ||
             this.bid.status === 'bid.in_progress' ||
             this.bid.status === 'job.approved' ||
+            this.bid.status === 'bid.declined' ||
             this.bid.status === 'bid.sent'
           )
         ) {

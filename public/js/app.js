@@ -35359,7 +35359,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     },
     bidPrice() {
-      if (this.bid.bid_price && (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status === 'job.approved' || this.bid.status === 'bid.sent')) {
+      if (this.bid.bid_price && (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status === 'job.approved' || this.bid.status === 'bid.declined' || this.bid.status === 'bid.sent')) {
         this.addTaskBidPrice = false;
         let theBidPrice = this.bid.bid_price;
         return '$ ' + __WEBPACK_IMPORTED_MODULE_1__classes_Format__["a" /* default */].decimal(theBidPrice);
