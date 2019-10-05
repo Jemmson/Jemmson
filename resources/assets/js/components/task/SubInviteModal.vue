@@ -5,14 +5,47 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
-                        taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
-                    <h6 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :
-                        jobTaskNameForSubInvite.toUpperCase() }} -
-                        <span class="capitalize">would you like to invite another sub to bid on this task?</span></h6>
+
+
+
+
+                    <div class="flex flex-column">
+                        <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
+                            taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
+
+
+
+                        <!--                    <h6 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :-->
+                        <!--                        jobTaskNameForSubInvite.toUpperCase() }} - -->
+                        <!--                        <span class="capitalize">would you like to invite another sub to bid on this task?</span></h6>-->
+
+
+
+                        <div v-show="subInvited">
+                            <hr>
+                            <div class="flex flex-column">
+                                <h6>Sent Invite - {{ taskForSubInvite === undefined ? '' :
+                                    jobTaskNameForSubInvite.toUpperCase() }} -
+                                    <span class="capitalize">would you like to invite another sub to bid on this task?</span></h6>
+                                <div class="flex space-between">
+                                    <button class="btn btn-normal w-full capitalize mr-1rem" @click="needsNewTask()">Yes</button>
+                                    <button class="btn btn-normal w-full capitalize ml-1rem" data-dismiss="modal" aria-label="Close">No</button>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                    </div>
+
+
+
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
+
+
+
+
                 </div>
                 <div class="modal-body">
                     <form role="form">
@@ -146,6 +179,7 @@
         phoneFormatError: true,
         companyName: '',
         user: '',
+        subInvited: false,
         results: [],
         disabled: {
           accept: false,
@@ -156,6 +190,10 @@
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),
+      needsNewTask(){
+        this.subInvited = false
+        this.clearFields()
+      },
       returnContractorsNotAlreadyAssignedToTask(subs) {
 
         let filteredSubs = []
@@ -183,6 +221,7 @@
       sendSubInviteToBidOnTask() {
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
         this.companyName = ''
+        this.subInvited = true
       },
       clearFields() {
 
