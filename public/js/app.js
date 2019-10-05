@@ -91271,7 +91271,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "modal",
+    staticClass: "modal h-100 modal-background-gray",
     staticStyle: {
       "z-index": "1"
     },

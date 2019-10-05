@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
+    <div class="modal h-100 modal-background-gray" id="stripe-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
          aria-hidden="false" style="z-index: 1;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
