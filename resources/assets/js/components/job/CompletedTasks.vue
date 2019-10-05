@@ -47,8 +47,7 @@
             <div class="flex pl-2 mb-2 mt-4">
                 <div class="flex-1"></div>
                 <div class="flex-1"></div>
-                <div class="flex-1">
-                </div>
+                <div class="flex-1"></div>
                 <div class="flex-1">
 <!--                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - -->
 <!--                        subtractFromTotal}}</label>-->
@@ -99,7 +98,9 @@
             </div>
         </transition>
 
-        <deny-task-modal v-if="isCustomer" :jobTask="jTask">
+        <deny-task-modal
+                v-if="isCustomer"
+                :jobTask="jTask">
         </deny-task-modal>
     </div>
 </template>
@@ -213,7 +214,7 @@
       },
       openDenyTaskForm(jobTask) {
         this.jTask = jobTask
-        $('#deny-task-modal').modal()
+        $('#deny-task-modal_'+jobTask.id).modal()
       },
 
       paidWithCash() {
