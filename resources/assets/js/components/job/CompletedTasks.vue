@@ -50,8 +50,9 @@
                 <div class="flex-1">
                 </div>
                 <div class="flex-1">
-                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) -
-                        subtractFromTotal}}</label>
+<!--                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - -->
+<!--                        subtractFromTotal}}</label>-->
+                    <label v-if="isCustomer">Total: ${{ totalPriceForAllCompletedTasks }}</label>
                 </div>
                 <div class="flex-1" v-if="isContractor">
                     <label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
@@ -60,43 +61,43 @@
         </div>
 
 
-            <div v-if="isCustomer" class="text-right">
-                <button class="btn btn-normal" @click.prevent="paidCash = true" :disabled="disabled.payCash">
+        <div v-if="isCustomer" class="text-right">
+            <button class="btn btn-normal" @click.prevent="paidCash = true" :disabled="disabled.payCash">
                         <span v-if="disabled.payCash">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
-                    Paid With Cash
-                </button>
-                <button class="btn btn-normal" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+                Paid With Cash
+            </button>
+            <button class="btn btn-normal" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
-                    Pay With Credit Card
-                </button>
-            </div>
-            <transition name="slide-fade">
-                <div v-show="paidCash">
-                    <div class="form-group col-md-12">
-                        <label for="">Message</label>
-                        <input type="text" class="form-control"
-                               name="message"
-                               v-model="cashMessage"
-                               placeholder="Optional Message">
-                    </div>
-                    <div class="form-group col-md-12">
-                        <button
-                                class="btn btn-normal"
-                                @click.prevent="paidWithCash()"
-                                :disabled="disableCashMessageButton"
-                                ref="cashMessage">
+                Pay With Credit Card
+            </button>
+        </div>
+        <transition name="slide-fade">
+            <div v-show="paidCash">
+                <div class="form-group col-md-12">
+                    <label for="">Message</label>
+                    <input type="text" class="form-control"
+                           name="message"
+                           v-model="cashMessage"
+                           placeholder="Optional Message">
+                </div>
+                <div class="form-group col-md-12">
+                    <button
+                            class="btn btn-normal"
+                            @click.prevent="paidWithCash()"
+                            :disabled="disableCashMessageButton"
+                            ref="cashMessage">
                         <span v-if="disableCashMessageButton">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
-                            Submit
-                        </button>
-                    </div>
+                        Submit
+                    </button>
                 </div>
-            </transition>
+            </div>
+        </transition>
 
         <deny-task-modal v-if="isCustomer" :jobTask="jTask">
         </deny-task-modal>
@@ -105,8 +106,8 @@
 
 <script>
 
-  import Card from '../shared/Card';
-  import DenyTaskModal from '../task/DenyTaskModal';
+  import Card from '../shared/Card'
+  import DenyTaskModal from '../task/DenyTaskModal'
 
   export default {
     props: {
@@ -133,6 +134,14 @@
       }
     },
     computed: {
+      totalPriceForAllCompletedTasks() {
+        let total = 0
+        let payableT = this.payableTasks
+        for (let i = 0; i < payableT.length; i++) {
+          total = total + payableT[i].cust_final_price
+        }
+        return total
+      },
       totalCustomerPrice() {
         let total = 0
         if (this.payableTasks !== null) {
@@ -228,12 +237,12 @@
 </script>
 
 <style scoped>
-     .header-completed {
-         font-size: 14pt;
-         background-color: #80808054;
-         border-radius: 4px;
-         padding-left: 11px;
-         margin-bottom: 10px;
-         font-weight: bold;
-     }
+    .header-completed {
+        font-size: 14pt;
+        background-color: #80808054;
+        border-radius: 4px;
+        padding-left: 11px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
 </style>

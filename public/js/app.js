@@ -36409,6 +36409,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -36439,6 +36440,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
   },
   computed: {
+    totalPriceForAllCompletedTasks() {
+      let total = 0;
+      let payableT = this.payableTasks;
+      for (let i = 0; i < payableT.length; i++) {
+        total = total + payableT[i].cust_final_price;
+      }
+      return total;
+    },
     totalCustomerPrice() {
       let total = 0;
       if (this.payableTasks !== null) {
@@ -40462,6 +40471,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.addNewTaskForm.createNew = true;
       }
       this.addNewTaskToBid();
+      window.location.href = '#top';
     },
     checkForExistingTaskChanges() {
       if (this.result.resultReturned && (this.result.standardCustomerTaskPrice !== this.addNewTaskForm.taskPrice || this.result.standardSubTaskPrice !== this.addNewTaskForm.subTaskPrice || this.result.sub_instructions !== this.addNewTaskForm.sub_message || this.result.customer_instructions !== this.addNewTaskForm.customer_message || this.result.taskName !== this.addNewTaskForm.taskName)) {
@@ -84804,7 +84814,10 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "container"
+    staticClass: "container",
+    attrs: {
+      "id": "top"
+    }
   }, [_c('icon-header', {
     attrs: {
       "icon": "tasks",
@@ -91070,7 +91083,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "flex-1 pl-1"
     }, [_vm._v("$" + _vm._s(jobTask.unit_price))]), _vm._v(" "), (_vm.isContractor) ? _c('div', {
       staticClass: "flex-1 pl-1"
-    }, [_vm._v("$" + _vm._s(jobTask.cust_final_price - jobTask.sub_final_price) + "\n            ")]) : _c('div', {
+    }, [_vm._v("$" + _vm._s(jobTask.cust_final_price - jobTask.sub_final_price) + "\n                ")]) : _c('div', {
       staticClass: "flex-1 pl-1"
     }, [_vm._v("$" + _vm._s(jobTask.cust_final_price))]), _vm._v(" "), (_vm.isContractor) ? _c('div', {
       staticClass: "flex-1 pl-1"
@@ -91102,7 +91115,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [(_vm.disabled.reopen) ? _c('span', [_c('i', {
       staticClass: "fa fa-btn fa-spinner fa-spin"
-    })]) : _vm._e(), _vm._v("\n                    Reopen\n                ")])]) : _c('div', {
+    })]) : _vm._e(), _vm._v("\n                        Reopen\n                    ")])]) : _c('div', {
       staticClass: "flex-1 pl-1"
     }, [(_vm.showDenyBtn(jobTask)) ? _c('button', {
       staticClass: "btn btn-normal",
@@ -91111,7 +91124,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.openDenyTaskForm(jobTask)
         }
       }
-    }, [_vm._v("\n                    Deny\n                ")]) : _vm._e()])])
+    }, [_vm._v("\n                        Deny\n                    ")]) : _vm._e()])])
   }), _vm._v(" "), (_vm.isContractor) ? _c('div', {
     staticClass: "flex pl-2 mb-2"
   }, [_c('div'), _vm._v(" "), _c('div'), _vm._v(" "), _c('div', [_vm._v("Total: $" + _vm._s(_vm.totalCustomerPrice))]), _vm._v(" "), _c('div', [_vm._v("Total: $" + _vm._s(_vm.totalSubPrice))]), _vm._v(" "), _c('div')]) : _vm._e(), _vm._v(" "), _c('div', {
@@ -91124,8 +91137,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "flex-1"
   }), _vm._v(" "), _c('div', {
     staticClass: "flex-1"
-  }, [(_vm.isCustomer) ? _c('label', [_vm._v("Total: $" + _vm._s((_vm.totalCustomerPrice + _vm.totalSubPrice) -
-    _vm.subtractFromTotal))]) : _vm._e()]), _vm._v(" "), (_vm.isContractor) ? _c('div', {
+  }, [(_vm.isCustomer) ? _c('label', [_vm._v("Total: $" + _vm._s(_vm.totalPriceForAllCompletedTasks))]) : _vm._e()]), _vm._v(" "), (_vm.isContractor) ? _c('div', {
     staticClass: "flex-1"
   }, [_c('label', [_vm._v("Total: $" + _vm._s(_vm.totalCustomerPrice + _vm.totalSubPrice))])]) : _vm._e()])], 2), _vm._v(" "), (_vm.isCustomer) ? _c('div', {
     staticClass: "text-right"

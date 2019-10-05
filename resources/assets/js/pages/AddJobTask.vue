@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="container">
+    <div class="container" id="top">
         <icon-header icon="tasks" mainHeader="Add New Task"
                      :subHeader="'This adds a new task to the job so you can sub out a portion of the job.'">
         </icon-header>
@@ -813,6 +813,7 @@
           this.addNewTaskForm.createNew = true
         }
         this.addNewTaskToBid()
+        window.location.href = '#top'
       },
       checkForExistingTaskChanges() {
         if (this.result.resultReturned && (
