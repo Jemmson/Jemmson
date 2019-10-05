@@ -55581,7 +55581,7 @@ exports.push([module.i, "\n.table-header[data-v-d54be6c6] {\n    display: -ms-fl
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.spacing[data-v-f2ec0dfe] {\n    height: 54px;\n    padding-bottom: 4px;\n}\n", ""]);
 
 /***/ }),
 /* 444 */
@@ -92527,7 +92527,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "container-fluid"
   }, [_c('div', {
     ref: "job_toggle",
-    staticClass: "row bg-white bids-row "
+    staticClass: "row bg-white bids-row spacing"
   }, [_c('div', {
     ref: "toggle_contractors",
     staticClass: "col pr-0 pl-0 text-center text-uppercase align-self-end",
@@ -92539,7 +92539,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('p', {
-    staticClass: "bids-toggle text-primary"
+    staticClass: "bids-toggle text-primary f-size-13pt"
   }, [_vm._v("\n                    Contractor\n                ")])]), _vm._v(" "), _c('div', {
     ref: "toggle_subContractors",
     staticClass: "col pr-0 pl-0 text-center text-uppercase align-self-end",
@@ -92551,7 +92551,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('p', {
-    staticClass: "bids-toggle text-primary"
+    staticClass: "bids-toggle text-primary f-size-13pt"
   }, [_vm._v("\n                    Subcontractor\n                ")])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true

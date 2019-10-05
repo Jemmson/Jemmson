@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div ref="job_toggle"
-             class="row bg-white bids-row ">
+             class="row bg-white bids-row spacing">
 <!--            <div class="col-12 pt-3" style="height: 40px;">-->
 <!--                <i class="fas fa-search text-primary float-left sm-icon"></i>-->
 <!--                <i class="fas fa-plus text-primary float-right sm-icon"></i>-->
@@ -9,14 +9,14 @@
             <div ref="toggle_contractors" @click.prevent="toggleBidsContractor(true)"
                  class="col pr-0 pl-0 text-center text-uppercase align-self-end"
                  :class="bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                <p class="bids-toggle text-primary">
+                <p class="bids-toggle text-primary f-size-13pt">
                     Contractor
                 </p>
             </div>
             <div ref="toggle_subContractors" @click.prevent="toggleBidsContractor(false)"
                  class="col pr-0 pl-0 text-center text-uppercase align-self-end"
                  :class="!bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                <p class="bids-toggle text-primary">
+                <p class="bids-toggle text-primary f-size-13pt">
                     Subcontractor
                 </p>
             </div>
@@ -51,5 +51,8 @@
 </script>
 
 <style scoped>
-
+.spacing {
+    height: 54px;
+    padding-bottom: 4px;
+}
 </style>
