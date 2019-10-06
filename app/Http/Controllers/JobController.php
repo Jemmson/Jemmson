@@ -291,7 +291,7 @@ class JobController extends Controller
         foreach ($jobTasks as $jobTask) {
 
             $taskResults = [];
-            $task = Task::where('id', '=', $jobTask->id)->get()->first();
+            $task = Task::where('id', '=', $jobTask->task()->get()->first()->id)->get()->first();
             array_push($taskResults, [
                 "name" => $task->name,
                 "description" => $task->description,
