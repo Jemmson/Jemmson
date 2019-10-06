@@ -476,8 +476,7 @@
         return this.isContractor() && this.jobStatus !== 'job.approved' && this.jobStatus !== 'job.completed'
       },
       showSendSubInvite() {
-        if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress' || this.jobStatus ===
-          'bid.sent') {
+        if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress') {
           return true
         }
         return false
