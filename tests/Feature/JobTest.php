@@ -103,7 +103,12 @@ class JobTest extends TestCase
                 ]
             ]
         ]);
-
+    }
+    
+    /**  @test */
+    function should_only_pull_back_customer_related_information_if_the_customer_is_selecting_a_bid() {
+        // 
+        
     }
 
 }

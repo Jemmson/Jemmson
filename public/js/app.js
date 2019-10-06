@@ -35246,6 +35246,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -42185,12 +42190,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     },
     async getBid(id) {
       try {
-        const {
-          data
-          // } = await axios.get('/job/' + id);
-        } = await axios.get('/job/' + id);
-        // debugger
-
+        const { data } = await axios.get('/job/' + id);
         if (data[0]) {
           this.bid = data[0];
           this.$store.commit('setJob', data[0]);
@@ -42200,13 +42200,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         }
         this.$store.commit('setJob', data);
       } catch (error) {
-        console.log(error);
-        // debugger;  
         if (error.message === 'Not Authorized to access this resource/api' || error.response !== undefined && error.response.status === 403) {
           this.$router.push('/bids');
         }
-        // error = error.response.data;
-        // Vue.toasted.error(error.message);
         Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.');
       }
     }
@@ -42756,7 +42752,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       return this.isContractor() && this.jobStatus !== 'job.approved' && this.jobStatus !== 'job.completed';
     },
     showSendSubInvite() {
-      if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress' || this.jobStatus === 'bid.sent') {
+      if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress') {
         return true;
       }
       return false;
@@ -88055,7 +88051,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "flex space-between"
     }, [_c('div', {
       staticClass: "capitalize font-bold-1"
-    }, [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(_vm.formatPrice(jt.cust_final_price)))])])
+    }, [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('div', [(jt.bid_contractor_job_tasks.length > 0) ? _c('div', {
+      staticClass: "list-card-info"
+    }, [_vm._v("(Subs)")]) : _c('div')]), _vm._v(" "), (jt.status === 'bid_task.denied') ? _c('div', {
+      staticClass: "list-card-info-red"
+    }, [_vm._v("Declined")]) : _vm._e(), _vm._v(" "), _c('div', [_vm._v(_vm._s(_vm.formatPrice(jt.cust_final_price)))])])
   }), 0)])], 1) : (_vm.bid.status !== 'bid.initiated' && _vm.bid.status !== 'bid.in_progress') ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
   }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {

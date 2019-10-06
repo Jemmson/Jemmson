@@ -172,12 +172,7 @@
       },
       async getBid(id) {
         try {
-          const {
-            data
-            // } = await axios.get('/job/' + id);
-          } = await axios.get('/job/' + id)
-          // debugger
-
+          const { data } = await axios.get('/job/' + id)
           if (data[0]){
             this.bid = data[0]
             this.$store.commit('setJob', data[0])
@@ -187,16 +182,12 @@
           }
           this.$store.commit('setJob', data)
         } catch (error) {
-          console.log(error)
-          // debugger;  
           if (
             error.message === 'Not Authorized to access this resource/api' ||
             error.response !== undefined && error.response.status === 403
           ) {
             this.$router.push('/bids')
           }
-          // error = error.response.data;
-          // Vue.toasted.error(error.message);
           Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
         }
       }

@@ -151,6 +151,11 @@ h4 {
   /* bug fix - no overlay */
   display: none;
 }
+.list-card-info-red {
+  font-size: 14px;
+  font-weight: normal;
+  color: red;
+}
 .f-size-13pt {
   font-size: 13pt;
 }
