@@ -104,6 +104,11 @@
                     <div class="flex flex-col">
                         <div class="flex space-between" v-for="jt in bid.job_tasks">
                             <div class="capitalize font-bold-1">{{ jt.task.name }}</div>
+                            <div>
+                                <div class="list-card-info" v-if="jt.bid_contractor_job_tasks.length > 0">(Subs)</div>
+                                <div v-else></div>
+                            </div>
+                            <div class="list-card-info-red" v-if="jt.status === 'bid_task.denied'">Declined</div>
                             <div>{{ formatPrice(jt.cust_final_price) }}</div>
                         </div>
                     </div>
