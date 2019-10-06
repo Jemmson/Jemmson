@@ -1,40 +1,40 @@
 <template>
 
 
-        <div class="container">
+    <div class="container">
 
-            <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">
-              <!-- /customer approve bid form -->
-              <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-              </approve-bid>
-              <!-- /buttons  -->
-              <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
-              </general-contractor-bid-actions>
-            </card>
+        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">
+            <!-- /customer approve bid form -->
+            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
+            </approve-bid>
+            <!-- /buttons  -->
+            <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
+            </general-contractor-bid-actions>
+        </card>
 
-            <!-- /show all bid information -->
-            <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
-            </bid-details>
+        <!-- /show all bid information -->
+        <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
+        </bid-details>
 
 
-            <!-- / show all completed tasks-->
-            <!-- <completed-tasks :bid="bid">
-            </completed-tasks> -->
+        <!-- / show all completed tasks-->
+        <!-- <completed-tasks :bid="bid">
+        </completed-tasks> -->
 
-            <!-- /show all tasks associated to this bid
-            <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
-            </bid-tasks> -->
+        <!-- /show all tasks associated to this bid
+        <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
+        </bid-tasks> -->
 
-            <!-- /add task to bid -->
-            <!-- <transition name="slide-fade">
-              <bid-add-task :show="showAddTaskPanel" :bid="bid" :bidId="this.$route.params.id" v-if="!jobApproved">
-              </bid-add-task>
-            </transition> -->
+        <!-- /add task to bid -->
+        <!-- <transition name="slide-fade">
+          <bid-add-task :show="showAddTaskPanel" :bid="bid" :bidId="this.$route.params.id" v-if="!jobApproved">
+          </bid-add-task>
+        </transition> -->
 
-<!--            stripe testing delete after -->
-                    <stripe :user='user'>
-                    </stripe>
-        </div>
+        <!--            stripe testing delete after -->
+        <stripe :user='user'>
+        </stripe>
+    </div>
 
 </template>
 
@@ -172,11 +172,13 @@
       },
       async getBid(id) {
         try {
-          const { data } = await axios.get('/job/' + id)
-          if (data[0]){
+          const {data} = await axios.get('/job/' + id)
+          if (data[0]) {
+            console.log('data', data[0])
             this.bid = data[0]
             this.$store.commit('setJob', data[0])
           } else {
+            console.log('data', data)
             this.bid = data
             this.$store.commit('setJob', data)
           }
@@ -225,7 +227,7 @@
       // this.getBid(bidId);
 
       if (!this.user.user) {
-        this.user.user = this.userFromState;
+        this.user.user = this.userFromState
       }
 
       this.bidForm.id = this.bid.id

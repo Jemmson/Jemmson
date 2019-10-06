@@ -190,12 +190,13 @@ class JobController extends Controller
     private function isCustomerBidNotSent($job)
     {
         return Auth::user()->id == $job->customer_id &&
-            ($job->status == 'bid.initiated' || $job->status == 'bid.in_progress');
+            ($job->status != 'bid.sent' && $job->status != 'job.approved');
     }
 
     private function isCustomerWithSubmittedBid($job)
     {
-        return Auth::user()->id == $job->customer_id && $job->status != 'bid.initiated' && $job->status != 'bid.in_progress';
+        return Auth::user()->id == $job->customer_id &&
+            ($job->status == 'bid.sent' || $job->status == 'job.approved');
     }
 
     private function getCustomersJobLocation($job)
@@ -299,6 +300,56 @@ class JobController extends Controller
                 "customer_instructions" => $task->customer_instructions,
             ]);
 
+
+            $customerUser = User::where('id', '=', $job->customer_id)->get()->first();
+
+            $customer = Customer::where('user_id', '=', $job->customer_id)->get()->first();
+
+            $customerUserResults = [];
+            $customerResults = [];
+
+            array_push($customerResults, [
+                "id" => $customer->id,
+                "user_id" => $customer->user_id,
+                "location_id" => $customer->location_id,
+                "email_method_of_contact" => $customer->email_method_of_contact,
+                "phone_method_of_contact" => $customer->phone_method_of_contact,
+                "sms_method_of_contact" => $customer->sms_method_of_contact,
+                "notes" => $customer->notes,
+                "deleted_at" => $customer->deleted_at,
+                "created_at" => $customer->created_at,
+                "updated_at" => $customer->updated_at
+
+            ]);
+            array_push($customerUserResults, [
+                "id" => $customerUser->id,
+                "location_id" => $customerUser->location_id,
+                "name" => $customerUser->name,
+                "email" => $customerUser->email,
+                "usertype" => $customerUser->usertype,
+                "password_updated" => $customerUser->password_updated,
+                "photo_url" => $customerUser->photo_url,
+                "logo_url" => $customerUser->logo_url,
+                "uses_two_factor_auth" => $customerUser->uses_two_factor_auth,
+                "phone" => $customerUser->phone,
+                "two_factor_reset_code" => $customerUser->two_factor_reset_code,
+                "current_team_id" => $customerUser->current_team_id,
+                "stripe_id" => $customerUser->stripe_id,
+                "current_billing_plan" => $customerUser->current_billing_plan,
+                "billing_state" => $customerUser->billing_state,
+                "trial_ends_at" => $customerUser->trial_ends_at,
+                "last_read_announcements_at" => $customerUser->last_read_announcements_at,
+                "deleted_at" => $customerUser->deleted_at,
+                "created_at" => $customerUser->created_at,
+                "updated_at" => $customerUser->updated_at,
+                "first_name" => $customerUser->first_name,
+                "last_name" => $customerUser->last_name,
+                "customer" => $customerUser->customer,
+                "tax_rate" => $customerUser->tax_rate
+            ]);
+
+            $location = Location::where('id', '=', $jobTask->location_id)->get()->first();
+
             array_push($jobTasksResults, [
                 "id" => $jobTask->id,
                 "task_id" => $jobTask->task_id,
@@ -308,14 +359,18 @@ class JobController extends Controller
                 "cust_final_price" => $this->convertToDollars($jobTask->cust_final_price),
                 "start_date" => $jobTask->start_date,
                 "declined_message" => $jobTask->declined_message,
+                "location" => $location,
+                "customer" => $customerUserResults[0],
                 "task" => $taskResults[0]
             ]);
+
         }
 
         return $jobTasksResults;
     }
 
-    private function customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks = null)
+    private
+    function customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks = [])
     {
         $result = [];
         array_push($result, [
@@ -342,7 +397,8 @@ class JobController extends Controller
         return $result[0];
     }
 
-    private function isGeneralContractor($job)
+    private
+    function isGeneralContractor($job)
     {
         return Auth::user()->getAuthIdentifier() == $job->contractor_id;
     }
@@ -353,7 +409,8 @@ class JobController extends Controller
      * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
-    public function show(Job $job)
+    public
+    function show(Job $job)
     {
 
         if ($this->isCustomerBidNotSent($job)) {
@@ -438,7 +495,8 @@ class JobController extends Controller
      * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
-    public function edit(Job $job)
+    public
+    function edit(Job $job)
     {
         //dd($job);
         $bids = Task::getBidPrices($job->id);
@@ -455,7 +513,8 @@ class JobController extends Controller
             compact('job', 'contractor', 'customer', 'tasks', 'userType', 'bids'));
     }
 
-    public function updateJobDate(Request $request)
+    public
+    function updateJobDate(Request $request)
     {
         $dateType = $request->params["dateType"];
         $job = Job::find(intval($request->params["id"]));
@@ -472,7 +531,8 @@ class JobController extends Controller
      * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Job $job)
+    public
+    function update(Request $request, Job $job)
     {
         $job->update($request->all());
 
@@ -485,7 +545,8 @@ class JobController extends Controller
      * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public
+    function destroy(Request $request)
     {
 
 //        need to delete any bidcontrcontractorrecords
@@ -498,7 +559,7 @@ class JobController extends Controller
         $jobTasks = JobTask::where('job_id', '=', $request->id)->get();
 
         if (!empty($jobTasks)) {
-            foreach ($jobTasks as $jt){
+            foreach ($jobTasks as $jt) {
 //                are there any tasks being bid on
                 $bcjt = BidContractorJobTask::where('job_task_id', '=', $jt->id)->get();
                 if (!empty($bcjt)) {
@@ -526,7 +587,6 @@ class JobController extends Controller
         }
 
 
-
         $job->delete();
 
         return response()->json(null, 204);
@@ -539,7 +599,8 @@ class JobController extends Controller
      * @param Job $job
      * @return void
      */
-    public function approveJob(Request $request, Job $job)
+    public
+    function approveJob(Request $request, Job $job)
     {
         $this->validate($request, [
             'agreed_start_date' => 'required|date',
@@ -589,7 +650,8 @@ class JobController extends Controller
      * @param Job $job
      * @return void
      */
-    protected function notifyAll($job)
+    protected
+    function notifyAll($job)
     {
         $generalContractor = $job->contractor()->first();
         $subContractors = $job->subs();
@@ -608,7 +670,8 @@ class JobController extends Controller
         }
     }
 
-    public function action(Request $request)
+    public
+    function action(Request $request)
     {
         $job = Job::find($request->job_id);
 
@@ -636,7 +699,8 @@ class JobController extends Controller
     }
 
 
-    public function getJobsForCustomer()
+    public
+    function getJobsForCustomer()
     {
         return Auth::user()->jobs()->select([
             'job_name',
@@ -651,7 +715,8 @@ class JobController extends Controller
      *
      * @return void
      */
-    public function jobs()
+    public
+    function jobs()
     {
         // load jobs and all their tasks along with those tasks relationships
 
@@ -732,7 +797,8 @@ class JobController extends Controller
      *
      * @return void
      */
-    public function jobsPage()
+    public
+    function jobsPage()
     {
         // load jobs and all their tasks along with those tasks relationships
 
@@ -810,7 +876,8 @@ class JobController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function declineJobBid(Request $request)
+    public
+    function declineJobBid(Request $request)
     {
         $this->validate($request, [
             'id' => 'required',
@@ -840,7 +907,8 @@ class JobController extends Controller
      * @param Request $request
      * @return void
      */
-    public function acceptJob(Request $request)
+    public
+    function acceptJob(Request $request)
     {
         $jobId = $request->jobId;
         $contractorId = $request->contractorId;
@@ -868,7 +936,8 @@ class JobController extends Controller
      * @param Request $request
      * @return void
      */
-    public function declineJob(Request $request)
+    public
+    function declineJob(Request $request)
     {
         $jobId = $request->jobId;
         $contractorId = $request->contractorId;
@@ -893,7 +962,8 @@ class JobController extends Controller
      * @param Request $request
      * @return void
      */
-    public function finishedBidNotification(Request $request)
+    public
+    function finishedBidNotification(Request $request)
     {
         $jobId = $request->jobId;
         $customerId = $request->customerId;
@@ -907,14 +977,16 @@ class JobController extends Controller
         $user->notify(new NotifyCustomerThatBidIsFinished($job, $user));
     }
 
-    public function updateArea(Request $request)
+    public
+    function updateArea(Request $request)
     {
         $job = Job::find($request->job_id);
         $job->updateArea($request->area);
 
     }
 
-    public function getArea(Request $request)
+    public
+    function getArea(Request $request)
     {
         $job = Job::find($request->job_id);
         return $job->getArea();
@@ -926,7 +998,8 @@ class JobController extends Controller
      * @param Request $request
      * @return boolean
      */
-    public function cancelJobBid(Request $request)
+    public
+    function cancelJobBid(Request $request)
     {
         $this->validate($request, [
             'id' => 'required'
@@ -966,7 +1039,8 @@ class JobController extends Controller
      * @param Request $request
      * @return boolean
      */
-    public function jobCompleted(Request $request)
+    public
+    function jobCompleted(Request $request)
     {
         $this->validate($request, [
             'id' => 'required'
@@ -983,18 +1057,21 @@ class JobController extends Controller
         return response()->json(['message' => 'Success'], 200);
     }
 
-    private function isCustomer()
+    private
+    function isCustomer()
     {
         return Auth::user()->usertype === 'customer';
     }
 
-    public function switchJobStatusToInProgress($job, $message)
+    public
+    function switchJobStatusToInProgress($job, $message)
     {
         $job->status = $message;
         $job->save();
     }
 
-    public function paidWithCashMessage(Request $request)
+    public
+    function paidWithCashMessage(Request $request)
     {
         $job = Job::find($request->jobId);
         $job->paid_with_cash_message = $request->paidWithCashMessage;

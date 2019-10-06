@@ -19,6 +19,8 @@ class Customer extends Model
         'sms_method_of_contact',
     ];
 
+    protected $guarded = [];
+
     public function user()
     {
         return $this->belongsTo(User::class);

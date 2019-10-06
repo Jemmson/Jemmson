@@ -35251,6 +35251,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -42192,9 +42202,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       try {
         const { data } = await axios.get('/job/' + id);
         if (data[0]) {
+          console.log('data', data[0]);
           this.bid = data[0];
           this.$store.commit('setJob', data[0]);
         } else {
+          console.log('data', data);
           this.bid = data;
           this.$store.commit('setJob', data);
         }
@@ -42739,6 +42751,39 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     job: state => state.job.model,
     jobStatus: state => state.job.model.status
   }), {
+    getCustomerNotes() {
+      if (this.jobTask) {
+        if (this.jobTask.job) {
+          return this.jobTask.job.customer.customer.notes;
+        }
+        return this.jobTask.customer.customer.notes;
+      }
+    },
+    getAddressLine1() {
+      console.log('jobTask', this.jobTask);
+      if (this.jobTask && this.jobTask.location) {
+        return this.jobTask.location.address_line_1;
+      }
+      return '';
+    },
+    getCity() {
+      if (this.jobTask && this.jobTask.location) {
+        return this.jobTask.location.city;
+      }
+      return '';
+    },
+    getLocationState() {
+      if (this.jobTask && this.jobTask.location) {
+        return this.jobTask.location.state;
+      }
+      return '';
+    },
+    getZip() {
+      if (this.jobTask && this.jobTask.location) {
+        return this.jobTask.location.zip;
+      }
+      return '';
+    },
     taskApproved() {
       return this.jobTask.status === 'bid_task.approved_by_customer';
     },
@@ -43301,7 +43346,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       return Spark.state.user.usertype === 'contractor';
     },
     jobTasks() {
-      if (this.job[0] && this.job[0].jobTasks) {
+      if (this.job[0] && this.job[0].job_tasks) {
         return this.job[0].job_tasks;
       } else if (this.job && this.job.job_tasks) {
         return this.job.job_tasks;
@@ -87964,7 +88009,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [(_vm.subTaskWarning) ? _c('strong', {
     staticClass: "uppercase red ml-1rem mr-1rem"
-  }, [_vm._v("bid price less than the sum of\n                    your subs bids")]) : _vm._e(), _vm._v(" "), _c('content-section', {
+  }, [_vm._v("bid price less than the sum of\n                        your subs bids")]) : _vm._e(), _vm._v(" "), _c('content-section', {
     attrs: {
       "input-classes": "uppercase",
       "label": "Job Name:",
@@ -88026,14 +88071,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.$router.push('/job/add/task')
       }
     }
-  }, [_vm._v("\n                            Add A Task\n                        ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), (_vm.bid.job_tasks !== undefined) ? _c('section', {
+  }, [_vm._v("\n                                Add A Task\n                            ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), (_vm.bid.job_tasks !== undefined) ? _c('section', {
     ref: "job_tasks",
     staticClass: "col-12"
   }, [(!_vm.isCustomer) ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
-  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
+  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                        ("), _c('b', {
     ref: "job_task_length"
-  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                    "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                        ")]), _vm._v(" Total\n\n                        "), _c('button', {
     staticClass: "btn btn-normal btn-sm float-right",
     staticStyle: {
       "width": "75%"
@@ -88044,7 +88089,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.viewTasks()
       }
     }
-  }, [_vm._v("View, Edit, and Add Subs\n                    ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('div', {
+  }, [_vm._v("View, Edit, and Add Subs\n                        ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('div', {
     staticClass: "flex flex-col"
   }, _vm._l((_vm.bid.job_tasks), function(jt) {
     return _c('div', {
@@ -88058,9 +88103,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v("Declined")]) : _vm._e(), _vm._v(" "), _c('div', [_vm._v(_vm._s(_vm.formatPrice(jt.cust_final_price)))])])
   }), 0)])], 1) : (_vm.bid.status !== 'bid.initiated' && _vm.bid.status !== 'bid.in_progress') ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
-  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
+  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                        ("), _c('b', {
     ref: "job_task_length_customer"
-  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                    "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                        ")]), _vm._v(" Total\n\n                        "), _c('button', {
     staticClass: "btn btn-normal btn-sm float-right",
     on: {
       "click": function($event) {
@@ -88068,7 +88113,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.viewTasks()
       }
     }
-  }, [_vm._v("View Tasks\n                    ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('div', {
+  }, [_vm._v("View Tasks\n                        ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('div', {
     staticClass: "flex flex-col"
   }, _vm._l((_vm.bid.job_tasks), function(jt) {
     return _c('div', {
@@ -88094,17 +88139,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card-title mt-4"
   }, [_vm._v("Job Address")]), _vm._v(" "), _c('card', [_c('div', {
     staticClass: "flex flex-col"
-  }, [_c('div', [_vm._v("\n                    " + _vm._s(_vm.bid.location.address_line_1) + "\n                ")]), _vm._v(" "), _c('div', [_vm._v("\n                    " + _vm._s(_vm.bid.location.city) + ", " + _vm._s(_vm.bid.location.state) + " " + _vm._s(_vm.bid.location.zip) + "\n                ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('main', {
+  }, [_c('div', [_vm._v("\n                        " + _vm._s(_vm.bid.location.address_line_1) + "\n                    ")]), _vm._v(" "), _c('div', [_vm._v("\n                        " + _vm._s(_vm.bid.location.city) + ", " + _vm._s(_vm.bid.location.state) + " " + _vm._s(_vm.bid.location.zip) + "\n                    ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('main', {
     staticClass: "map-responsive"
   }, [_c('iframe', {
     staticStyle: {
       "border": "0"
     },
     attrs: {
-      "width": "600",
-      "height": "450",
+      "width": "450",
+      "height": "250",
       "frameborder": "0",
-      "src": 'https://www.google.com/maps/embed/v1/search?q=' + _vm.bid.location.address_line_1 + ' ' + _vm.bid.location.city + ' ' + _vm.bid.location.state + ' ' + _vm.bid.location.zip + '&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs',
+      "src": 'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
+        _vm.bid.location.address_line_1 + ' ' +
+        _vm.bid.location.city + ' ' +
+        _vm.bid.location.state + ' ' +
+        _vm.bid.location.zip,
       "allowfullscreen": ""
     }
   })])])], 1) : _vm._e(), _vm._v(" "), _c('section', {
@@ -88159,7 +88208,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.updateGeneralContractorNotes
     }
-  }, [_vm._v("Submit\n                    ")]) : _vm._e()])])])], 1), _vm._v(" "), _c('stripe', {
+  }, [_vm._v("Submit\n                        ")]) : _vm._e()])])])], 1), _vm._v(" "), _c('stripe', {
     attrs: {
       "user": _vm.getCurrentUser()
     }
@@ -92325,7 +92374,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12"
   }, [_c('div', {
     staticClass: "flex flex-col"
-  }, [_c('div', [_vm._v("\n                                " + _vm._s(_vm.jobTask.location.address_line_1) + "\n                            ")]), _vm._v(" "), _c('div', [_vm._v("\n                                " + _vm._s(_vm.jobTask.location.city) + ", " + _vm._s(_vm.jobTask.location.state) + " " + _vm._s(_vm.jobTask.location.zip) + "\n                            ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
+  }, [_c('div', [_vm._v("\n                                " + _vm._s(_vm.getAddressLine1) + "\n                            ")]), _vm._v(" "), _c('div', [_vm._v("\n                                " + _vm._s(_vm.getCity) + ", " + _vm._s(_vm.getLocationState) + " " + _vm._s(_vm.getZip) + "\n                            ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
     staticClass: "fas fa-map-marker icon"
   }), _vm._v("\n                            " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                        ")]) : (_vm.location(_vm.jobTask, _vm.job) === 'Same as Job Location') ? _c('div', {
     staticClass: "flex flex-col"
@@ -92416,7 +92465,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "disabled": ""
     },
     domProps: {
-      "value": _vm.jobTask.job.customer.customer.notes
+      "value": _vm.getCustomerNotes
     }
   })]) : _vm._e()])])])])], 1), _vm._v(" "), _c('div', {
     directives: [{
