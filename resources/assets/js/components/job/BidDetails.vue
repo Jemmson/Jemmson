@@ -215,10 +215,20 @@
                 <hr>
 
                 <main class="map-responsive">
-                    <iframe width="600" height="450" frameborder="0" style="border:0"
-                            :src="'https://www.google.com/maps/embed/v1/search?q='+ bid.location.address_line_1 + ' ' + bid.location.city + ' ' + bid.location.state + ' ' + bid.location.zip +'&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"
-                            allowfullscreen></iframe>
+                    <iframe
+                            width="450"
+                            height="250"
+                            frameborder="0" style="border:0"
+                            :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
+                            bid.location.address_line_1 + ' ' +
+                            bid.location.city + ' ' +
+                            bid.location.state + ' ' +
+                            bid.location.zip
+                            " allowfullscreen>
+                    </iframe>
                 </main>
+
+<!--                '&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"-->
                 <!-- <a target="_blank"
                       :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
                         {{ bid.location.address_line_1 }}
