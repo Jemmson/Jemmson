@@ -102,7 +102,7 @@
         return Spark.state.user.usertype === 'contractor'
       },
       jobTasks() {
-        if (this.job[0] && this.job[0].jobTasks) {
+        if (this.job[0] && this.job[0].job_tasks) {
           return this.job[0].job_tasks
         } else if (this.job && this.job.job_tasks) {
           return this.job.job_tasks

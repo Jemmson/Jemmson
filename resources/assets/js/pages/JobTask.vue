@@ -198,10 +198,10 @@
 
                             <div class="flex flex-col">
                                 <div>
-                                    {{ jobTask.location.address_line_1 }}
+                                    {{ getAddressLine1 }}
                                 </div>
                                 <div>
-                                    {{ jobTask.location.city }}, {{ jobTask.location.state }} {{ jobTask.location.zip }}
+                                    {{ getCity }}, {{ getLocationState }} {{ getZip }}
                                 </div>
                             </div>
 
@@ -270,7 +270,7 @@
                                 <div class="flex flex-col" v-if="isCustomer">
                                     <span class="label mb-2">Notes from Customer</span>
                                     <textarea cols="0" rows="0" class="form-control" disabled
-                                              :value="jobTask.job.customer.customer.notes"
+                                              :value="getCustomerNotes"
                                               style="color: black;"></textarea>
                                 </div>
 
@@ -463,6 +463,39 @@
         job: state => state.job.model,
         jobStatus: state => state.job.model.status
       }),
+      getCustomerNotes() {
+        if (this.jobTask) {
+          if (this.jobTask.job) {
+            return this.jobTask.job.customer.customer.notes
+          }
+          return this.jobTask.customer.customer.notes
+        }
+      },
+      getAddressLine1 () {
+        console.log('jobTask', this.jobTask)
+        if (this.jobTask && this.jobTask.location) {
+          return this.jobTask.location.address_line_1
+        }
+        return ''
+      },
+      getCity () {
+        if (this.jobTask && this.jobTask.location) {
+          return this.jobTask.location.city
+        }
+        return ''
+      },
+      getLocationState () {
+        if (this.jobTask && this.jobTask.location) {
+          return this.jobTask.location.state
+        }
+        return ''
+      },
+      getZip () {
+        if (this.jobTask && this.jobTask.location) {
+          return this.jobTask.location.zip
+        }
+        return ''
+      },
       taskApproved() {
         return this.jobTask.status === 'bid_task.approved_by_customer'
       },
