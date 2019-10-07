@@ -31,13 +31,14 @@
                     class="btn btn-normal btn-lg w-full"
                     @click="notifyCustomerOfFinishedBid()"
                     :disabled="checkReqs()"
-            >Submit Bid</button>
+            >Submit Bid
+            </button>
 
             <!--        @click="openBidSubmissionDialog()">Submit Bid</button>-->
         </div>
 
-<!--        <stripe :user="getUser">-->
-<!--        </stripe>-->
+        <!--        <stripe :user="getUser">-->
+        <!--        </stripe>-->
 
     </div>
 
@@ -68,35 +69,31 @@
       }
     },
     computed: {
-      getUser () {
+      getUser() {
         if (Spark) {
           return Spark.state.user
         }
       }
     },
     methods: {
-      triggerStripe(){
-        console.log("trying to trigger stripe")
+      triggerStripe() {
+        console.log('trying to trigger stripe')
         Bus.$emit('needsStripe')
       },
-
-      checkReqs(){
-        return this.shouldHaveAtLeastOneTask() || this.shouldBeSignedUpForStripe()
+      checkReqs() {
+        return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent'
       },
-
-      shouldHaveAtLeastOneTask(){
+      shouldHaveAtLeastOneTask() {
         if (this.bid && this.bid.job_tasks) {
-          return this.bid.job_tasks.length === 0
+          return this.bid.job_tasks.length > 0
         }
       },
-
       shouldBeSignedUpForStripe() {
         if (this.bid && this.bid.contractor) {
           // return this.bid.contractor.stripe_id === null
           return Spark.state.user.contractor.stripe_express === null
         }
       },
-
       openBidSubmissionDialog() {
         return this.$emit('open-bid-submission', true)
       },
@@ -106,7 +103,6 @@
         // check if the sub price is an accepted price
         // compare the the accepted sub price to the contractor price
         // if the accepted sub price is higher then throw an error
-
         if (this.bid) {
           this.subTaskWarning = false
           for (let i = 0; i < this.bid.job_tasks.length; i++) {
@@ -114,12 +110,10 @@
               this.subTaskWarning = true
             }
           }
-
           if (!this.subTaskWarning) {
             GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)
           }
         }
-
       }
     }
   }

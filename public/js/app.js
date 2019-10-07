@@ -36652,6 +36652,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -36685,27 +36686,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   methods: {
     triggerStripe() {
-      console.log("trying to trigger stripe");
+      console.log('trying to trigger stripe');
       Bus.$emit('needsStripe');
     },
-
     checkReqs() {
-      return this.shouldHaveAtLeastOneTask() || this.shouldBeSignedUpForStripe();
+      return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent';
     },
-
     shouldHaveAtLeastOneTask() {
       if (this.bid && this.bid.job_tasks) {
-        return this.bid.job_tasks.length === 0;
+        return this.bid.job_tasks.length > 0;
       }
     },
-
     shouldBeSignedUpForStripe() {
       if (this.bid && this.bid.contractor) {
         // return this.bid.contractor.stripe_id === null
         return Spark.state.user.contractor.stripe_express === null;
       }
     },
-
     openBidSubmissionDialog() {
       return this.$emit('open-bid-submission', true);
     },
@@ -36715,7 +36712,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // check if the sub price is an accepted price
       // compare the the accepted sub price to the contractor price
       // if the accepted sub price is higher then throw an error
-
       if (this.bid) {
         this.subTaskWarning = false;
         for (let i = 0; i < this.bid.job_tasks.length; i++) {
@@ -36723,7 +36719,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.subTaskWarning = true;
           }
         }
-
         if (!this.subTaskWarning) {
           GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled);
         }
@@ -55518,7 +55513,7 @@ exports.push([module.i, "\np {\n  margin-bottom: 0rem;\n}\n", ""]);
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 424 */
@@ -88877,7 +88872,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticStyle: {
       "font-weight": "700"
     }
-  }, [_vm._v("\n            PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE\n        ")]) : _vm._e(), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n        PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE\n    ")]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "flex flex-col"
   }, [_c('div', {
     staticClass: "flex flex-center"
@@ -88913,7 +88908,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.notifyCustomerOfFinishedBid()
       }
     }
-  }, [_vm._v("Submit Bid")])])])
+  }, [_vm._v("Submit Bid\n        ")])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
