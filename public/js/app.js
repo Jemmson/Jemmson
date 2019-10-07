@@ -36580,6 +36580,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'DeleteTaskModal',
@@ -36589,6 +36590,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     cancel() {
       this.$emit('action', 'cancel');
+    }
+  },
+  props: {
+    title: {
+      type: String
     }
   }
 });
@@ -38758,6 +38764,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_job_DeleteTaskModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_job_DeleteTaskModal__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_Card__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_Card__);
+//
 //
 //
 //
@@ -43302,6 +43309,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
@@ -43446,6 +43454,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_job_DeleteTaskModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_job_DeleteTaskModal__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
 //
 //
 //
@@ -55460,7 +55469,7 @@ exports.push([module.i, "\n.btn-group[data-v-30d4a261] {\n    margin-bottom: 16p
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n.status[data-v-31ca53f6] {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  font-family: auto;\n  font-size: 24pt;\n}\n.no-notes[data-v-31ca53f6] {\n  text-align: center;\n  margin-right: -9rem;\n}\n.status-header[data-v-31ca53f6] {\n  font-size: 1rem;\n  margin-left: -1rem;\n  margin-right: -2rem;\n  text-align: start;\n  margin-bottom: .15rem;\n  padding: .25rem;\n  margin-top: .15rem;\n}\n.description[data-v-31ca53f6] {\n  font-size: .9rem;\n  margin-left: -1rem;\n  margin-right: -2rem;\n  text-align: start;\n  margin-bottom: .15rem;\n  /*background-color: beige;*/\n  padding: .25rem;\n  margin-top: .15rem;\n  border-radius: 5px;\n}\n/*.spacing {*/\n/*margin-bottom: 10rem;*/\n/*}*/\n.wrapper[data-v-31ca53f6] {\n  display: -ms-grid;\n  display: grid;\n  -ms-grid-columns: 1fr 1fr;\n      grid-template-columns: 1fr 1fr;\n}\n.w-100[data-v-31ca53f6] {\n  width: 100%;\n}\n.status[data-v-31ca53f6] {\n  /*padding: 1rem;*/\n  /*padding-left: 6px;*/\n  /*padding-right: 6px;*/\n  -ms-flex-align: center;\n      align-items: center;\n  -ms-flex-pack: space-evenly;\n      justify-content: space-evenly;\n}\n.btn-width[data-v-31ca53f6] {\n  width: 100%;\n}\n.notes-width[data-v-31ca53f6] {\n  max-width: 75%;\n}\nspan[data-v-31ca53f6] {\n  font-size: 15px;\n}\n/*@media (min-width: 762px) {*/\n/*.btn-width {*/\n/*width: 27%;*/\n/*}*/\n/*}*/\n", ""]);
+exports.push([module.i, "\n.status[data-v-31ca53f6] {\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  font-family: auto;\n  font-size: 20pt;\n}\n.no-notes[data-v-31ca53f6] {\n  text-align: center;\n  margin-right: -9rem;\n}\n.status-header[data-v-31ca53f6] {\n  font-size: 1rem;\n  margin-left: -1rem;\n  margin-right: -2rem;\n  text-align: start;\n  margin-bottom: .15rem;\n  padding: .25rem;\n  margin-top: .15rem;\n}\n.description[data-v-31ca53f6] {\n  font-size: .9rem;\n  margin-left: -1rem;\n  margin-right: -2rem;\n  text-align: start;\n  margin-bottom: .15rem;\n  /*background-color: beige;*/\n  padding: .25rem;\n  margin-top: .15rem;\n  border-radius: 5px;\n}\n/*.spacing {*/\n/*margin-bottom: 10rem;*/\n/*}*/\n.wrapper[data-v-31ca53f6] {\n  display: -ms-grid;\n  display: grid;\n  -ms-grid-columns: 1fr 1fr;\n      grid-template-columns: 1fr 1fr;\n}\n.w-100[data-v-31ca53f6] {\n  width: 100%;\n}\n.status[data-v-31ca53f6] {\n  /*padding: 1rem;*/\n  /*padding-left: 6px;*/\n  /*padding-right: 6px;*/\n  -ms-flex-align: center;\n      align-items: center;\n  -ms-flex-pack: space-evenly;\n      justify-content: space-evenly;\n}\n.btn-width[data-v-31ca53f6] {\n  width: 100%;\n}\n.notes-width[data-v-31ca53f6] {\n  max-width: 75%;\n}\nspan[data-v-31ca53f6] {\n  font-size: 15px;\n}\n/*@media (min-width: 762px) {*/\n/*.btn-width {*/\n/*width: 27%;*/\n/*}*/\n/*}*/\n", ""]);
 
 /***/ }),
 /* 417 */
@@ -55593,7 +55602,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.title[data-v-7b4d411c] {\n    font-size: 17pt;\n}\n.text-center[data-v-7b4d411c] {\n    text-align: center;\n}\n", ""]);
 
 /***/ }),
 /* 436 */
@@ -85872,7 +85881,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     })]) : _vm._e()]), _vm._v(" "), _c('div', {
       staticClass: "flex w-full btn-spacing"
     }, [_c('button', {
-      staticClass: "btn btn-normal btn-sm w-full mr-1rem",
+      staticClass: "btn btn-normal-red btn-sm w-full mr-1rem",
       on: {
         "click": function($event) {
           _vm.showDeleteTaskModal(jTask)
@@ -85887,6 +85896,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("SELECT")])])])])
   }), 1), _vm._v(" "), _c('delete-task-modal', {
+    attrs: {
+      "title": "Do You Wish To Delete This Task?"
+    },
     on: {
       "action": function($event) {
         _vm.deleteTheTask($event)
@@ -86440,7 +86452,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("\n                Deny\n            ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-normal",
+    staticClass: "btn btn-normal-red",
     attrs: {
       "disabled": _vm.disabled.deleteTask
     },
@@ -87390,7 +87402,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     })])]) : _vm._e()])]), _vm._v(" "), _c('div', {
       staticClass: "flex mt-1rem"
     }, [_c('button', {
-      staticClass: "btn btn-normal btn-sm w-full mr-1rem",
+      staticClass: "btn btn-normal-red btn-sm w-full mr-1rem",
       on: {
         "click": function($event) {
           _vm.showDeleteJobModal(bid)
@@ -87405,6 +87417,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("SELECT")])])])])
   }), 1)], 1) : _c('tasks'), _vm._v(" "), _c('delete-task-modal', {
+    attrs: {
+      "title": "Do You Wish To Delete This Job?"
+    },
     on: {
       "action": function($event) {
         _vm.deleteTheJob($event)
@@ -90048,8 +90063,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })], 1)]) : ((_vm.onAddTaskPage() || _vm.onAddSubPage()) && !_vm.isCustomer()) ? _c('section', [_c('header-back-button', {
     ref: "headerBackButton"
-  })], 1) : (_vm.onInitiateBidPage() &&
-    !_vm.isCustomer()) ? _c('section', [_c('header-bio', [_vm._v("\n                    ref=\"homePage3\"\n                    :name=\"user.first_name + ' ' + user.last_name\"\n            ")])], 1) : _vm._e()])
+  })], 1) : (_vm.onInitiateBidPage() && !_vm.isCustomer()) ? _c('section', [_c('header-bio', {
+    ref: "homePage",
+    attrs: {
+      "name": _vm.user.first_name + ' ' + _vm.user.last_name
+    }
+  })], 1) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -91419,32 +91438,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('div', {
     staticClass: "modal-content styled"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_c('div', {
+    staticClass: "title w-full text-center"
+  }, [_vm._v(_vm._s(_vm.title))])]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('div', {
     staticClass: "flex space-between"
   }, [_c('button', {
-    staticClass: "btn btn-normal",
-    on: {
-      "click": function($event) {
-        _vm.confirm()
-      }
-    }
-  }, [_vm._v("Yes")]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-normal",
+    staticClass: "btn btn-normal-red flex-1 mr-1rem ml-1rem",
     on: {
       "click": function($event) {
         _vm.cancel()
       }
     }
-  }, [_vm._v("Cancel")])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Cancel")]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-normal flex-1 mr-1rem ml-1rem",
+    on: {
+      "click": function($event) {
+        _vm.confirm()
+      }
+    }
+  }, [_vm._v("Yes")])])]), _vm._v(" "), _c('div', {
     staticClass: "modal-footer"
   })])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "modal-header"
-  }, [_c('h2', [_vm._v("Do You Want To Delete This Task?")])])
-}]}
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -91506,7 +91525,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("\n                        Hide\n                    ")])]), _vm._v(" "), _c('div', {
     staticClass: "w-full ml-1rem"
   }, [_c('button', {
-    staticClass: "btn btn-normal btn-sm w-full mr-1rem",
+    staticClass: "btn btn-normal-red btn-sm w-full mr-1rem",
     on: {
       "click": function($event) {
         _vm.showDeleteTaskModal(_vm.bidTask.job_task)
@@ -91699,6 +91718,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [(_vm.disabled.finished) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
   })]) : _vm._e(), _vm._v("\n                        Finished\n                    ")]) : _vm._e()], 1)])], 1)]), _vm._v(" "), _c('delete-task-modal', {
+    attrs: {
+      "title": "Do You Wish To Delete This Task?"
+    },
     on: {
       "action": function($event) {
         _vm.deleteTheTask($event)
@@ -92575,7 +92597,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("\n                Deny\n            ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal",
+    staticClass: "btn btn-block btn-normal-red",
     attrs: {
       "disabled": _vm.disabled.deleteTask
     },

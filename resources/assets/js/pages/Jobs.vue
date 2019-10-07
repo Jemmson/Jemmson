@@ -44,7 +44,7 @@
                             </div>
                         </section>
                         <div class="flex mt-1rem">
-                            <button class="btn btn-normal btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">DELETE
+                            <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">DELETE
                             </button>
                             <button @click="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">SELECT</button>
                         </div>
@@ -65,6 +65,7 @@
 
         <delete-task-modal
                 @action="deleteTheJob($event)"
+                title="Do You Wish To Delete This Job?"
         >
         </delete-task-modal>
 

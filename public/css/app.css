@@ -186,6 +186,11 @@ article {
   color: blue;
   border: thin blue solid;
 }
+.btn-normal-red {
+  background-color: white;
+  color: red;
+  border: thin red solid;
+}
 .btn-normal-green {
   background-color: white;
   color: green;

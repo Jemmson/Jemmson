@@ -9,10 +9,10 @@
         </section>
 
         <section v-else-if="onParticularJobPage()">
-<!--            <header-job-name-settings-logout-->
-<!--                ref="headerJobNameSettingsLogout"-->
-<!--                :job-name=getCompanyName-->
-<!--            ></header-job-name-settings-logout>-->
+            <!--            <header-job-name-settings-logout-->
+            <!--                ref="headerJobNameSettingsLogout"-->
+            <!--                :job-name=getCompanyName-->
+            <!--            ></header-job-name-settings-logout>-->
 
             <header-bio
                     ref="homePage4"
@@ -25,7 +25,7 @@
                         onParticularInvoicePage() ||
                         onImagesPage()">
 
-<!--            onSettingsPage() ||-->
+            <!--            onSettingsPage() ||-->
 
             <header-bio
                     ref="homePage1"
@@ -37,7 +37,7 @@
 
             <div v-if="!isCustomer()">
                 <header-job-toggle
-                    ref="headerJobToggle"
+                        ref="headerJobToggle"
                 ></header-job-toggle>
             </div>
 
@@ -52,22 +52,22 @@
 
         <section v-else-if="(onAddTaskPage() || onAddSubPage()) && !isCustomer()">
             <header-back-button
-                ref="headerBackButton"
+                    ref="headerBackButton"
             ></header-back-button>
+
         </section>
 
-        <section v-else-if="onInitiateBidPage()
-                        && !isCustomer()">
-            <header-bio>
-                    ref="homePage3"
+        <section v-else-if="onInitiateBidPage() && !isCustomer()">
+            <header-bio
+                    ref="homePage"
                     :name="user.first_name + ' ' + user.last_name"
-            </header-bio>
+            ></header-bio>
         </section>
 
 
-<!--        <section v-else-if="onPublicHomePage() ||-->
-<!--                            onRegisterPage() ||-->
-<!--                            onFurtherInfoPage()"></section>-->
+        <!--        <section v-else-if="onPublicHomePage() ||-->
+        <!--                            onRegisterPage() ||-->
+        <!--                            onFurtherInfoPage()"></section>-->
 
     </nav>
 </template>

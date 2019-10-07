@@ -248,7 +248,7 @@
                     Deny
                 </button>
 
-                <button class="btn btn-normal" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
+                <button class="btn btn-normal-red" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                         :disabled="disabled.deleteTask">
                   <span v-if="disabled.deleteTask">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>

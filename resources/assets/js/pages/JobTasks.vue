@@ -34,7 +34,7 @@
 
                     </div>
                     <div class="flex w-full btn-spacing">
-                        <button class="btn btn-normal btn-sm w-full mr-1rem" @click="showDeleteTaskModal(jTask)">DELETE
+                        <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteTaskModal(jTask)">DELETE
                         </button>
                         <button class="btn btn-normal btn-sm w-full ml-1rem" @click="goToJobTask(index)">SELECT</button>
                     </div>
@@ -50,6 +50,7 @@
 
         <delete-task-modal
                 @action="deleteTheTask($event)"
+                title="Do You Wish To Delete This Task?"
         >
         </delete-task-modal>
 

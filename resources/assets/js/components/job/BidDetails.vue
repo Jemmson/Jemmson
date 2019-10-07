@@ -687,7 +687,7 @@
         padding-top: 1rem;
         padding-bottom: 1rem;
         font-family: auto;
-        font-size: 24pt;
+        font-size: 20pt;
     }
 
     .no-notes {
