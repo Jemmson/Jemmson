@@ -274,7 +274,7 @@
                               <span v-if="disabled.finished">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                               </span>
-                        Finished
+                        Click Me When Job Is Finished
                     </button>
 
                     <button class="btn btn-normal" v-if="showApproveBtn(jobTask)"

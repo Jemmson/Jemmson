@@ -1,12 +1,14 @@
 import { shallowMount, mount } from "@vue/test-utils";
 import sinon from "sinon";
 import GeneralContractorBidActions from '../../resources/assets/js/components/job/GeneralContractorBidActions';
+import GeneralContractor from '../../resources/assets/js/classes/GeneralContractor';
 
 // require('../../bootstrap');
 
 describe('GeneralContractorBidActions', () => {
     const openModal = sinon.spy();
     const openAddTask = sinon.spy();
+    const notifyCustomerOfFinishedBidStub = sinon.stub();
     const wrapper = shallowMount(GeneralContractorBidActions, {
         methods: {
             // openModal,
@@ -15,6 +17,11 @@ describe('GeneralContractorBidActions', () => {
         stubs: [
             // 'modal'
         ],
+        mocks: {
+          GeneralContractor: {
+              notifyCustomerOfFinishedBid: notifyCustomerOfFinishedBidStub
+          }
+        },
         propsData: {
             bid: {
                 job_name: 'Pool Job',
@@ -87,7 +94,7 @@ describe('GeneralContractorBidActions', () => {
 
         const wrapper = shallowMount(GeneralContractorBidActions)
         const openBidSubmissionDialogStub = sinon.stub();
-        const notifyCustomerOfFinishedBidStub = sinon.stub();
+        const submitBidStub = sinon.stub();
 
         wrapper.setData({
             subTaskWarning: false
@@ -106,7 +113,7 @@ describe('GeneralContractorBidActions', () => {
 
         wrapper.setMethods({
             openBidSubmissionDialog: openBidSubmissionDialogStub,
-            notifyCustomerOfFinishedBid: notifyCustomerOfFinishedBidStub
+            submitBid: submitBidStub
         })
 
 
@@ -116,68 +123,16 @@ describe('GeneralContractorBidActions', () => {
 
 
         // expect(openBidSubmissionDialogStub.called).toBe(true)
-        expect(notifyCustomerOfFinishedBidStub.called).toBe(true)
+        expect(submitBidStub.called).toBe(true)
 
     })
 
     it('the submit button should be disabled if there are no job tasks', function() {
 
-        expect(wrapper.find({ref: "submitBid"}).attributes().disabled).toBe("disabled")
-
-        wrapper.setProps({
-            bid: {
-                job_tasks: [
-                    {
-                        sub_final_price: 100,
-                        cust_final_price: 90
-                    }
-                ],
-                contractor: {
-                    stripe_id: null
-                }
-            }
-        })
-
-        expect(wrapper.find({ref: "submitBid"}).attributes().disabled).toBe("disabled")
-
         wrapper.setProps({
             bid: {
                 job_tasks: [],
-                contractor: {
-                    stripe_id: 1234
-                }
-            }
-        })
-
-        expect(wrapper.find({ref: "submitBid"}).attributes().disabled).toBe("disabled")
-
-        wrapper.setProps({
-            bid: {
-                job_tasks: [
-                    {
-                        sub_final_price: 100,
-                        cust_final_price: 90
-                    }
-                ],
-                contractor: {
-                    stripe_id: 1234
-                }
-            }
-        })
-
-        expect(wrapper.find({ref: "submitBid"}).attributes().disabled).toBe(undefined)
-
-
-    })
-
-    it('the submit button should be disabled if there are no job tasks and stripe_id is null', function() {
-
-        wrapper.setProps({
-            bid: {
-                job_tasks: [],
-                contractor: {
-                    stripe_id: null
-                }
+                status: 'bid.initiated'
             }
         })
 
@@ -185,36 +140,43 @@ describe('GeneralContractorBidActions', () => {
 
     })
 
-    it('the submit button should be disabled if there are no job tasks and stripe_id is not null', function() {
+    it('the submit button should be disabled if there are no job tasks and the status is bid.sent', function() {
 
         wrapper.setProps({
             bid: {
                 job_tasks: [],
-                contractor: {
-                    stripe_id: 1234
-                }
+                status: 'bid.sent'
             }
         })
 
         expect(wrapper.find({ref: "submitBid"}).attributes().disabled).toBe("disabled")
 
-
     })
 
 
-    it('the submit button should be enabled if there are job tasks and stripe_id is not null', function() {
+    it('the submit button should be disabled if there are job tasks and the status is bid.sent', function() {
 
         wrapper.setProps({
             bid: {
                 job_tasks: [
-                    {
-                        sub_final_price: 100,
-                        cust_final_price: 90
-                    }
+                    {}, {}
                 ],
-                contractor: {
-                    stripe_id: 1234
-                }
+                status: 'bid.sent'
+            }
+        })
+
+        expect(wrapper.find({ref: "submitBid"}).attributes().disabled).toBe("disabled")
+
+    })
+
+    it('the submit button should be disabled if there are job tasks and the status is bid.sent', function() {
+
+        wrapper.setProps({
+            bid: {
+                job_tasks: [
+                    {}, {}
+                ],
+                status: 'bid.initiated'
             }
         })
 
@@ -222,17 +184,34 @@ describe('GeneralContractorBidActions', () => {
 
     })
 
-    it('should show the stripe button if stripe has not setup by the contractor', function() {
+
+    it('should call the setupStripe method if the submit button is hit and the contractor has not setup stripe', function() {
+
+        const checkCreditCardSetupStub = sinon.stub();
+        const notifyCustomerOfFinishedBidStub = sinon.stub();
 
         wrapper.setProps({
             bid: {
                 contractor: {
                     stripe_id: null
-                }
+                },
+                job_tasks: [
+                    {}, {}
+                ],
+                status: 'bid.initiated'
             }
         })
 
-        expect(wrapper.find({ref: "stripeButton"}).exists()).toBe(true)
+        wrapper.setMethods({
+            checkCreditCardSetup: checkCreditCardSetupStub,
+            notifyCustomerOfFinishedBid: notifyCustomerOfFinishedBidStub
+        })
+
+        let ccSetup = wrapper.find({ref: "submitBid"});
+
+        ccSetup.trigger('click')
+
+        expect(checkCreditCardSetupStub.called).toBe(true)
 
     })
 

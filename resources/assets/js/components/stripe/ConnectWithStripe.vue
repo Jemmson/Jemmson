@@ -1,5 +1,7 @@
 <template>
-      <button type="button" class="btn-normal stripe-connect" @click="connectWithStripe"><span>Connect With Stripe</span></button>
+      <button
+              style="background-image: url('/img/blue-on-light.png'); width: 12rem; height: 2.15rem;"
+              type="button" class="btn-normal " @click="connectWithStripe"></button>
 </template>
 
 <script>

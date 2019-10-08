@@ -6962,13 +6962,17 @@ module.exports = {
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
+
+/* styles */
+__webpack_require__(620)
+
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(227),
   /* template */
   __webpack_require__(551),
   /* scopeId */
-  null,
+  "data-v-7b291a00",
   /* cssModules */
   null
 )
@@ -36607,6 +36611,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_stripe_Stripe__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_stripe_Stripe___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_stripe_Stripe__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__classes_GeneralContractor__ = __webpack_require__(261);
 //
 //
 //
@@ -36653,6 +36658,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -36690,11 +36696,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       Bus.$emit('needsStripe');
     },
     checkReqs() {
-      return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent';
+
+      // return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent'
+
+      if (this.bid && this.bid.job_tasks && this.bid.status) {
+        if (this.bidHasBeenSent()) {
+          return true;
+        }
+
+        if (!this.bidHasBeenSent() && this.shouldHaveAtLeastOneTask()) {
+          return false;
+        } else {
+          return true;
+        }
+      }
     },
     shouldHaveAtLeastOneTask() {
       if (this.bid && this.bid.job_tasks) {
         return this.bid.job_tasks.length > 0;
+      }
+    },
+    bidHasBeenSent() {
+      if (this.bid && this.bid.status) {
+        return this.bid.status === 'bid.sent';
       }
     },
     shouldBeSignedUpForStripe() {
@@ -36706,7 +36730,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     openBidSubmissionDialog() {
       return this.$emit('open-bid-submission', true);
     },
-    notifyCustomerOfFinishedBid() {
+
+    notifyCustomerOfFinishedBid(bid, disabled) {
+      disabled.submitBid = true;
+      // TODO: implement the code below
+      // if (User.needsStripe()) {
+      //     disabled.submitBid = false
+      //     return false
+      // }
+      console.log('notifyCustomerOfFinishedBid', bid);
+      axios.post('/api/task/finishedBidNotification', {
+        jobId: bid.id,
+        customerId: bid.customer_id
+      }).then(response => {
+        console.log(response);
+        disabled.submitBid = false;
+        User.emitChange('bidUpdated');
+        Vue.toasted.success('Bid has been submitted and notification sent!');
+      }).catch(error => {
+        console.error(error);
+        disabled.submitBid = false;
+        Vue.toasted.error('Whoops! Something went wrong! Please try again.');
+      });
+    },
+    checkCreditCardSetup() {
+      $("#stripe-modal").modal('show');
+    },
+    submitBid() {
+      if (this.shouldBeSignedUpForStripe()) {}
+
       // go through each job task and compare the sub price to the contractor task price
       // first check if there is a sub.
       // check if the sub price is an accepted price
@@ -36720,7 +36772,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           }
         }
         if (!this.subTaskWarning) {
-          GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled);
+          // let gc = new GeneralContractor(Spark.state.user)
+          // gc.notifyCustomerOfFinishedBid(this.bid, this.disabled)
+          this.notifyCustomerOfFinishedBid(this.bid, this.disabled);
         }
       }
     }
@@ -37584,6 +37638,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   // /Set up an express account with our stripe platform
@@ -37909,6 +37965,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -37917,6 +37989,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     user: Object
+  },
+  data() {
+    return {
+      dontShowAgain: false
+    };
   },
   components: {
     SignupWithStripe: __WEBPACK_IMPORTED_MODULE_0__SignupWithStripe___default.a,
@@ -37943,7 +38020,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     }
   },
-  methods: {},
+  methods: {
+    notAtThisTime() {
+      if (this.dontShowAgain) {
+        this.dontShowModalAgain();
+      } else {
+        this.exit();
+      }
+    },
+    exit() {
+      $('#stripe-modal').modal('hide');
+    },
+    async dontShowModalAgain() {
+      try {
+        const data = await axios.get('/stripe/hideModal');
+        this.exit();
+      } catch (error) {
+        console.log('error');
+      }
+    }
+  },
   mounted() {
     axios.get('/user/current').then(response => {
       this.$store.commit('setUser', response.data);
@@ -55513,7 +55609,7 @@ exports.push([module.i, "\np {\n  margin-bottom: 0rem;\n}\n", ""]);
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 424 */
@@ -86482,7 +86578,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.finished) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                    Finished\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
+  })]) : _vm._e(), _vm._v("\n                    Click Me When Job Is Finished\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-normal",
     attrs: {
       "disabled": _vm.disabled.approve
@@ -88872,32 +88968,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticStyle: {
       "font-weight": "700"
     }
-  }, [_vm._v("\n        PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE\n    ")]) : _vm._e(), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n            PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE\n        ")]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "flex flex-col"
-  }, [_c('div', {
-    staticClass: "flex flex-center"
-  }, [(_vm.shouldBeSignedUpForStripe()) ? _c('button', {
-    ref: "stripeButton",
-    staticClass: "mt-1rem",
-    staticStyle: {
-      "background-image": "url('/img/blue-on-light.png')",
-      "width": "12rem",
-      "height": "2.15rem"
-    },
-    on: {
-      "click": function($event) {
-        _vm.triggerStripe()
-      }
-    }
-  }) : _c('button', {
-    staticClass: "mt-1rem",
-    staticStyle: {
-      "background-image": "url('/img/powered_by_stripe.png')",
-      "background-repeat": "no-repeat",
-      "width": "151px",
-      "height": "43px"
-    }
-  })]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('button', {
+  }, [_c('hr'), _vm._v(" "), _c('button', {
     ref: "submitBid",
     staticClass: "btn btn-normal btn-lg w-full",
     attrs: {
@@ -88905,10 +88978,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "click": function($event) {
-        _vm.notifyCustomerOfFinishedBid()
+        _vm.checkCreditCardSetup()
       }
     }
-  }, [_vm._v("Submit Bid\n        ")])])])
+  }, [_vm._v("Submit Bid\n            ")])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -88924,14 +88997,19 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('button', {
-    staticClass: "btn-normal stripe-connect",
+    staticClass: "btn-normal ",
+    staticStyle: {
+      "background-image": "url('/img/blue-on-light.png')",
+      "width": "12rem",
+      "height": "2.15rem"
+    },
     attrs: {
       "type": "button"
     },
     on: {
       "click": _vm.connectWithStripe
     }
-  }, [_c('span', [_vm._v("Connect With Stripe")])])
+  })
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -91383,13 +91461,52 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-content"
   }, [_c('div', {
     staticClass: "modal-header"
-  }, [_vm._m(0), _vm._v(" "), _c('h4', {
-    staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.header))])]), _vm._v(" "), _c('div', {
+  }, [_c('div', {
+    staticClass: "flex flex-col"
+  }, [_vm._m(0), _vm._v(" "), (_vm.showStripeExpress) ? _c('div', {
+    staticClass: "title"
+  }, [_vm._v("Would you like to be able to receive credit card\n                        payments from your customer?\n                    ")]) : _vm._e()])]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
-  }, [(_vm.showStripeExpress) ? _c('div', [_vm._v("\n                   Use Stripe to handle all of your credit card payments. It is secure and safe.\n                    You will be redirected to Stripe and you just have to follow the prompts and\n                    you will be quickly setup.\n                ")]) : _vm._e(), _vm._v(" "), (_vm.isCustomer && _vm.notSignedUp) ? _c('div', [_vm._v("\n                    Before You can pay with stripe you will need to complete the form below.\n                ")]) : _vm._e()]), _vm._v(" "), _c('div', {
+  }, [(_vm.showStripeExpress) ? _c('div', [_vm._v("\n                    Just Sign up with Stripe. It is a safe and secure way to receive all of your credit card\n                    transactions.\n                    You will be redirected to Stripe for a quick one-time setup. "), _c('br'), _vm._v("\n                    (Stripe charges 2% for each credit cared payment made through its service)\n                ")]) : _vm._e(), _vm._v(" "), (_vm.isCustomer && _vm.notSignedUp) ? _c('div', [_vm._v("\n                    Before You can pay with stripe you will need to complete the form below.\n                ")]) : _vm._e()]), _vm._v(" "), (_vm.isContractor && _vm.showStripeExpress) ? _c('div', {
+    staticClass: "modal-footer",
+    staticStyle: {
+      "flex-direction": "column",
+      "justify-content": "space-between",
+      "padding-left": "0rem",
+      "padding-right": "0rem"
+    }
+  }, [_c('div', {
+    staticClass: "flex space-between"
+  }, [_c('button', {
+    staticClass: "btn btn-normal-red btn-md w-38 mr-1rem",
+    on: {
+      "click": function($event) {
+        _vm.notAtThisTime()
+      }
+    }
+  }, [_vm._v("Not At This\n                        Time\n                    ")]), _vm._v(" "), _c('connect-with-stripe', {
+    staticClass: "ml-1rem"
+  })], 1), _vm._v(" "), _c('div', [_c('label', {
+    staticClass: "label",
+    attrs: {
+      "for": "doNotShowAgain"
+    }
+  }, [_vm._v("Do Not Show This Dialog Again")]), _vm._v(" "), _c('input', {
+    attrs: {
+      "type": "checkbox",
+      "id": "doNotShowAgain"
+    },
+    domProps: {
+      "value": _vm.dontShowAgain
+    },
+    on: {
+      "click": function($event) {
+        _vm.dontShowAgain = !_vm.dontShowAgain
+      }
+    }
+  })])]) : (_vm.isCustomer && _vm.notSignedUp) ? _c('div', {
     staticClass: "modal-footer"
-  }, [_c('span', [(_vm.isContractor) ? _c('div', [(_vm.showStripeExpress) ? _c('connect-with-stripe') : _vm._e()], 1) : _vm._e(), _vm._v(" "), (_vm.isCustomer && _vm.notSignedUp) ? _c('div', [_c('signup-with-stripe')], 1) : _vm._e()])])])])])
+  }, [_c('signup-with-stripe')], 1) : _vm._e()])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('button', {
     staticClass: "close",
@@ -91712,7 +91829,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.finished) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                        Finished\n                    ")]) : _vm._e()], 1)])], 1)]), _vm._v(" "), _c('delete-task-modal', {
+  })]) : _vm._e(), _vm._v("\n                        Click Me When Task Is Finished\n                    ")]) : _vm._e()], 1)])], 1)]), _vm._v(" "), _c('delete-task-modal', {
     attrs: {
       "title": "Do You Wish To Delete This Task?"
     },
@@ -92572,7 +92689,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.finished) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                    Finished\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
+  })]) : _vm._e(), _vm._v("\n                    Click Me When Job Is Finished\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal mb-2",
     attrs: {
       "disabled": _vm.disabled.approve
@@ -97188,6 +97305,42 @@ module.exports = function listToStyles (parentId, list) {
 
 module.exports = __webpack_require__(179);
 
+
+/***/ }),
+/* 616 */,
+/* 617 */,
+/* 618 */,
+/* 619 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+exports.push([module.i, "\n.title[data-v-7b291a00] {\n    font-size: 14pt;\n    font-weight: bold;\n    margin-top: 9px;\n}\n.label[data-v-7b291a00] {\n    margin-top: 20px;\n    margin-right: 11px;\n}\n.w-38[data-v-7b291a00] {\n    width: 38%;\n}\n", ""]);
+
+/***/ }),
+/* 620 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(619);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("40dd0531", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-7b291a00\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Stripe.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-7b291a00\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Stripe.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);

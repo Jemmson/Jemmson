@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contractor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ContractorController extends Controller
 {
@@ -31,7 +32,7 @@ class ContractorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,7 +43,7 @@ class ContractorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Contractor  $contractor
+     * @param \App\Contractor $contractor
      * @return \Illuminate\Http\Response
      */
     public function show(Contractor $contractor)
@@ -53,7 +54,7 @@ class ContractorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Contractor  $contractor
+     * @param \App\Contractor $contractor
      * @return \Illuminate\Http\Response
      */
     public function edit(Contractor $contractor)
@@ -64,8 +65,8 @@ class ContractorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Contractor  $contractor
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Contractor $contractor
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Contractor $contractor)
@@ -76,12 +77,31 @@ class ContractorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Contractor  $contractor
+     * @param \App\Contractor $contractor
      * @return \Illuminate\Http\Response
      */
     public function destroy(Contractor $contractor)
     {
         //
+    }
+
+    public function hideStripeModal()
+    {
+
+        if (Auth::user()->usertype == 'contractor') {
+            $contractor = Auth::user()->contractor()->get()->first();
+            $contractor->hide_stripe_modal = true;
+            try {
+                $contractor->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+        }
+
+
     }
 
 

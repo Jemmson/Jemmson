@@ -98,6 +98,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/stripe/express/auth', 'StripeController@expressAuth');
     Route::post('/stripe/express/dashboard', 'StripeController@createExpressDashboardLink');
     Route::post('/stripe/express/task/payment', 'StripeController@sendExpressTaskPayment');
+    Route::get('/stripe/hideModal', 'ContractorController@hideStripeModal');
 
 
     Route::post('/stripe/customer', 'StripeController@saveCustomer');

@@ -221,7 +221,7 @@
                                         <span v-if="disabled.finished">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
-                            Finished
+                            Click Me When Task Is Finished
                         </button>
                     </main>
                 </card>
