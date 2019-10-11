@@ -847,10 +847,7 @@
         //     this.jobStatus === 'bid.declined')
       },
       showTaskQuantityInput() {
-        return this.isGeneral() &&
-          (this.jobTask.status === 'bid.in_progress' ||
-            this.jobTask.status === 'bid.initiated' ||
-            this.jobTask.status === 'bid.declined')
+        return this.isGeneral() && (this.jobTask.status === 'bid_task.initiated')
       },
       updateCustomerTaskQuantity(quantity, taskId, currentQuantityValue) {
 

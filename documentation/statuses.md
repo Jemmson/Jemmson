@@ -1,5 +1,5 @@
 | Action                        | Status |
-|-----------------------------------|---|
+|---|---|
 |Contractor Initiates a bid | job -> bid.initiated |
 |Contractor Adds A Task | job - bid.in_progress <br> job_task - bid_task.initiated |
 |Contractor Invites A Sub | job - bid.in_progress <br> job_task - bid_task.initiated <br> bcjt -> bid.initiated |
