@@ -86,7 +86,6 @@
       showStripeExpress() {
         if (User.contractor === null)
           return false
-
         if (Spark.state.user.contractor) {
           return Spark.state.user.contractor.stripe_express === null
         }
@@ -95,6 +94,7 @@
     },
     methods: {
       notAtThisTime() {
+        this.$emit('sendBid', true);
         if (this.dontShowAgain) {
           this.dontShowModalAgain()
         } else {

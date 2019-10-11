@@ -647,9 +647,10 @@
       },
       showFinishedBtn(jobTask) {
         if (this.isContractor() &&
-          User.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.approved_by_customer' ||
-            jobTask.status === 'bid_task.reopened' ||
-            jobTask.status === 'bid_task.denied'
+          User.isAssignedToMe(jobTask, this.user.id) &&
+          (jobTask.status === 'bid_task.approved_by_customer'
+            || jobTask.status === 'bid_task.reopened'
+            || jobTask.status === 'bid_task.denied'
           )) {
           return true
         }

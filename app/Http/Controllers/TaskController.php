@@ -100,7 +100,11 @@ class TaskController extends Controller
             $singleTask = Task::where('id', '=', $jt->task_id)->get()->first();
 
             $contractorResults = [];
-            $contractor = Contractor::where('id', '=', $singleTask->id)->get()->first();
+
+
+
+
+            $contractor = Contractor::where('user_id', '=', $job->contractor_id)->get()->first();
             array_push($contractorResults, [
                 "id" => $contractor->id,
                 "user_id" => $contractor->user_id,
@@ -111,6 +115,9 @@ class TaskController extends Controller
                 "sms_method_of_contact" => $contractor->sms_method_of_contact,
                 "phone_method_of_contact" => $contractor->phone_method_of_contact
             ]);
+
+
+
 
             array_push($taskResults, [
                 "id" => $singleTask->id,
@@ -123,7 +130,6 @@ class TaskController extends Controller
 
             $imageResults = [];
             $images = TaskImage::where('job_task_id', '=', $task->job_task_id)->get();
-
             if (!empty($images->toArray())) {
                 foreach ($images as $image) {
 
@@ -151,8 +157,6 @@ class TaskController extends Controller
                     ]);
                 }
             }
-
-
             $locationResults = [];
             $location = Location::where('user_id', '=', $job->customer_id)->get()->first();
             array_push($locationResults, [
