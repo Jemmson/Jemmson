@@ -1,17 +1,17 @@
-| Action                        | Status |
-|---|---|
-|Contractor Initiates a bid | job -> bid.initiated |
-|Contractor Adds A Task | job - bid.in_progress <br> job_task - bid_task.initiated |
-|Contractor Invites A Sub | job - bid.in_progress <br> job_task - bid_task.initiated <br> bcjt -> bid.initiated |
-|Sub submits a bid| job - bid.in_progress <br> job_task - bid_task.bid_sent <br> bcjt -> bid_task.bid_sent |
-|Contractor accepts a bid| job - bid.in_progress <br> job_task - bid_task.accepted <br> bcjt -> bid_task.accepted |
-|Contractor submits a bid| job - bid.sent <br> job_task - bid_task.accepted <br> bcjt -> bid_task.accepted |
-|Customer changes a bid| job - bid.declined <br> job_task - bid_task.accepted <br> bcjt -> bid_task.accepted |
-|Contractor submits a bid| job - bid.sent <br> job_task - bid_task.accepted <br> bcjt -> bid_task.accepted |
-|Customer approves a bid| job - bid.in_progress <br> job_task - bid_task.approved_by_customer <br> bcjt -> bid_task.accepted |
-|Sub finishes task| job - job.approved <br> job_task - bid_task.finished_by_sub <br> bcjt -> bid_task.accepted |
-|Contractor approves the task| job - job.approved <br> job_task - bid_task.approved_by_general <br> bcjt -> bid_task.accepted |
-|Customer pays for job| job - bid.sent <br> job_task - bid_task.approved_by_general <br> bcjt -> bid_task.accepted |
+| Action | Job Status | Job Task Status | Bid Contractor Job Task Status |
+|---|---|---|---|
+|Contractor Initiates a bid | bid.initiated |||
+|Contractor Adds A Task | bid.in_progress |  bid_task.initiated ||
+|Contractor Invites A Sub | bid.in_progress | bid_task.initiated | bid.initiated |
+|Sub submits a bid|  bid.in_progress | bid_task.bid_sent | bid_task.bid_sent |
+|Contractor accepts a bid|  bid.in_progress | bid_task.accepted | bid_task.accepted |
+|Contractor submits a bid|  bid.sent | bid_task.accepted | bid_task.accepted |
+|Customer changes a bid|  bid.declined | bid_task.accepted | bid_task.accepted |
+|Contractor submits a bid|  bid.sent | bid_task.accepted | bid_task.accepted |
+|Customer approves a bid|  bid.in_progress | bid_task.approved_by_customer | bid_task.accepted |
+|Sub finishes task|  job.approved | bid_task.finished_by_sub | bid_task.accepted |
+|Contractor approves the task|  job.approved | bid_task.approved_by_general | bid_task.accepted |
+|Customer pays for job|  bid.sent | bid_task.approved_by_general | bid_task.accepted |
 
 
 

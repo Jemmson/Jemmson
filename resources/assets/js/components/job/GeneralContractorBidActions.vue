@@ -25,12 +25,10 @@
             <!--                </button>-->
             <!--            </div>-->
 
-            <hr>
-
             <button ref="submitBid"
                     class="btn btn-normal btn-lg w-full"
                     @click="submitBid()"
-                    :disabled="checkReqs()"
+                    :disabled="disableSubmitBid"
             >Submit Bid
             </button>
 
@@ -69,7 +67,8 @@
         subTaskWarning: false,
         disabled: {
           submitBid: true
-        }
+        },
+        disableSubmitBid: true
       }
     },
     computed: {
@@ -77,6 +76,11 @@
         if (Spark) {
           return Spark.state.user
         }
+      }
+    },
+    watch: {
+      bid: function () {
+        this.checkReqs()
       }
     },
     methods: {
@@ -88,12 +92,12 @@
         // return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent'
         if (this.bid && this.bid.job_tasks && this.bid.status) {
           if (this.bidHasBeenSent()) {
-            return true
+            this.disableSubmitBid = true
           }
           if (!this.bidHasBeenSent() && this.shouldHaveAtLeastOneTask()) {
-            return false
+            this.disableSubmitBid = false
           } else {
-            return true
+            this.disableSubmitBid = true
           }
         }
       },
@@ -161,12 +165,16 @@
         // compare the the accepted sub price to the contractor price
         // if the accepted sub price is higher then throw an error
         if (this.bid) {
-          this.subTaskWarning = false
-          for (let i = 0; i < this.bid.job_tasks.length; i++) {
-            if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
-              this.subTaskWarning = true
-              return true
+          if (this.bid.job_tasks.length) {
+            this.subTaskWarning = false
+            for (let i = 0; i < this.bid.job_tasks.length; i++) {
+              if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+                this.subTaskWarning = true
+                return true
+              }
             }
+          } else {
+            this.checkReqs()
           }
         }
         return false
@@ -187,6 +195,9 @@
           }
         }
       }
+    },
+    mounted() {
+      this.checkReqs()
     }
   }
 </script>

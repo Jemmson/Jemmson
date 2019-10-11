@@ -37073,8 +37073,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -37097,7 +37095,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       subTaskWarning: false,
       disabled: {
         submitBid: true
-      }
+      },
+      disableSubmitBid: true
     };
   },
   computed: {
@@ -37105,6 +37104,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (Spark) {
         return Spark.state.user;
       }
+    }
+  },
+  watch: {
+    bid: function () {
+      this.checkReqs();
     }
   },
   methods: {
@@ -37116,12 +37120,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent'
       if (this.bid && this.bid.job_tasks && this.bid.status) {
         if (this.bidHasBeenSent()) {
-          return true;
+          this.disableSubmitBid = true;
         }
         if (!this.bidHasBeenSent() && this.shouldHaveAtLeastOneTask()) {
-          return false;
+          this.disableSubmitBid = false;
         } else {
-          return true;
+          this.disableSubmitBid = true;
         }
       }
     },
@@ -37189,12 +37193,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // compare the the accepted sub price to the contractor price
       // if the accepted sub price is higher then throw an error
       if (this.bid) {
-        this.subTaskWarning = false;
-        for (let i = 0; i < this.bid.job_tasks.length; i++) {
-          if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
-            this.subTaskWarning = true;
-            return true;
+        if (this.bid.job_tasks.length) {
+          this.subTaskWarning = false;
+          for (let i = 0; i < this.bid.job_tasks.length; i++) {
+            if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+              this.subTaskWarning = true;
+              return true;
+            }
           }
+        } else {
+          this.checkReqs();
         }
       }
       return false;
@@ -37215,6 +37223,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
       }
     }
+  },
+  mounted() {
+    this.checkReqs();
   }
 });
 
@@ -55670,7 +55681,7 @@ exports.push([module.i, "\np {\n  margin-bottom: 0rem;\n}\n", ""]);
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 425 */
@@ -89000,11 +89011,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("\n        PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE\n    ")]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "flex flex-col"
-  }, [_c('hr'), _vm._v(" "), _c('button', {
+  }, [_c('button', {
     ref: "submitBid",
     staticClass: "btn btn-normal btn-lg w-full",
     attrs: {
-      "disabled": _vm.checkReqs()
+      "disabled": _vm.disableSubmitBid
     },
     on: {
       "click": function($event) {
