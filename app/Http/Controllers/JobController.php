@@ -353,6 +353,7 @@ class JobController extends Controller
             array_push($jobTasksResults, [
                 "id" => $jobTask->id,
                 "task_id" => $jobTask->task_id,
+                "qty" => $jobTask->qty,
                 "location_id" => $jobTask->location_id,
                 "status" => $jobTask->status,
                 "unit_price" => $this->convertToDollars($jobTask->unit_price),

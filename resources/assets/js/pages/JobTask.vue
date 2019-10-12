@@ -150,6 +150,12 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div v-else>
+                                        <div class="flex justify-content-between mt-1rem">
+                                            <label class="">Quantity:</label>
+                                            <strong>{{ jobTask.qty }}</strong>
+                                        </div>
+                                    </div>
 
                                     <div class="form-group" v-if="isContractor">
 
@@ -471,26 +477,26 @@
           return this.jobTask.customer.customer.notes
         }
       },
-      getAddressLine1 () {
+      getAddressLine1() {
         console.log('jobTask', this.jobTask)
         if (this.jobTask && this.jobTask.location) {
           return this.jobTask.location.address_line_1
         }
         return ''
       },
-      getCity () {
+      getCity() {
         if (this.jobTask && this.jobTask.location) {
           return this.jobTask.location.city
         }
         return ''
       },
-      getLocationState () {
+      getLocationState() {
         if (this.jobTask && this.jobTask.location) {
           return this.jobTask.location.state
         }
         return ''
       },
-      getZip () {
+      getZip() {
         if (this.jobTask && this.jobTask.location) {
           return this.jobTask.location.zip
         }
