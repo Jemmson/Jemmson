@@ -6737,8 +6737,8 @@ class Language {
       },
       'bid.declined': {
         sub: 'Waiting on Customer Approval - sub',
-        general: 'Bid Change Requested - Please Review',
-        customer: 'Bid Change Requested - Waiting On Contractor'
+        general: 'Bid Change Requested.Please Review',
+        customer: 'Bid Change Requested. Waiting On Contractor'
       },
       'job.approved': {
         sub: 'In Progress',
@@ -35379,6 +35379,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CompletedTasks___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__CompletedTasks__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -88148,7 +88153,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: _vm.getLabelClass(_vm.bid.status)
   }, [_c('div', {
     staticClass: "text-center font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.status))])]), _vm._v(" "), _c('section', {
+  }, [_vm._v(_vm._s(_vm.status))])]), _vm._v(" "), (_vm.showDeclinedMessage) ? _c('card', {
+    staticStyle: {
+      "background-color": "lightcoral"
+    }
+  }, [_vm._v("\n            " + _vm._s(_vm.bid.declined_message) + "\n        ")]) : _vm._e(), _vm._v(" "), _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title"

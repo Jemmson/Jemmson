@@ -3,6 +3,11 @@
         <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">
             <div class="text-center font-weight-bold">{{ status }}</div>
         </div>
+
+        <card v-if="showDeclinedMessage" style="background-color: lightcoral">
+            {{ bid.declined_message }}
+        </card>
+
         <section class="col-12">
             <h1 class="card-title">Details</h1>
             <card>
