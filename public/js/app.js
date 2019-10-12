@@ -46779,7 +46779,7 @@ class Customer {
     try {
       await axios.post('/bid/job/decline', bid);
       User.emitChange('bidUpdated');
-      Vue.toasted.success('Bid Declined & Notification Sent');
+      Vue.toasted.success('Bid Changed & Notification Sent');
       disabled.declineBid = false;
     } catch (error) {
       error = error.response.data;
