@@ -85,7 +85,7 @@ class BidInitiated extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
-        $text = 'Welcome To Jemmson ' .
+        $text = 'Welcome to Jemmson ' .
             $this->contractor .
             ' has initated a bid ' .
             '- Job Name: ' .
