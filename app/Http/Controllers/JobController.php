@@ -362,7 +362,10 @@ class JobController extends Controller
                 "declined_message" => $jobTask->declined_message,
                 "location" => $location,
                 "customer" => $customerUserResults[0],
-                "task" => $taskResults[0]
+                "task" => $taskResults[0],
+                "job" => [
+                    "id" => $job->id
+                ]
             ]);
 
         }

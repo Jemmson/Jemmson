@@ -34,7 +34,9 @@
 
                     </div>
                     <div class="flex w-full btn-spacing">
-                        <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteTaskModal(jTask)">DELETE
+                        <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteTaskModal(jTask, index)">
+                            DELETE
+                            <i v-if="checkSpinner(index)" class="fa fa-btn fa-spinner fa-spin"></i>
                         </button>
                         <button class="btn btn-normal btn-sm w-full ml-1rem" @click="goToJobTask(index)">SELECT</button>
                     </div>
@@ -80,6 +82,7 @@
         customerMessage: '',
         searchTerm: '',
         disabled: {
+          spinner: [],
           showDenyForm: false,
           pay: false,
           finished: false,
@@ -117,7 +120,13 @@
       })
     },
     methods: {
-      showDeleteTaskModal(job_task) {
+      checkSpinner(index) {
+        if (this.disabled.spinner[index]) {
+          return this.disabled.spinner[index].disabled
+        }
+      },
+      showDeleteTaskModal(job_task, index) {
+        this.disabled.spinner[index].disabled = true
         this.deleteTask.id = job_task.id
         this.jobTask = job_task
         $('#delete-task-modal').modal('show')
@@ -133,9 +142,9 @@
           const data = await axios.post('/jobTask/delete/', {
             id: id
           })
-          this.getBid(this.job_task.job.id)
+          this.getBid(this.jobTask.job.id)
         } catch (error) {
-          console.log('error')
+          console.log(error)
         }
       },
       async getBid(id) {
@@ -151,6 +160,7 @@
             this.$store.commit('setJob', data)
           }
           this.$store.commit('setJob', data)
+          this.setSpinnerIndexes()
         } catch (error) {
           console.log(error)
           if (
@@ -189,9 +199,18 @@
       status(bid) {
         return User.status(bid.status, bid)
       },
+      setSpinnerIndexes() {
+        let spinner = []
+        for (let i = 0; i < this.jobTasks.length; i++) {
+          spinner.push({disabled: false})
+        }
+        this.disabled.spinner = spinner
+        // Vue.set(this.disabled.spinner, spinner, false)
+        // Vue.set(this.disabled, 'disable_' + i, false)
+      }
     },
     mounted: function() {
-
+      this.setSpinnerIndexes()
     }
   }
 </script>

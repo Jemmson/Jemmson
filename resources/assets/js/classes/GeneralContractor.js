@@ -51,7 +51,8 @@ export default class GeneralContractor {
                 Bus.$emit('taskAdded', true)
                 User.emitChange('bidUpdated')
                 Vue.toasted.success('New Task Added!')
-                $('#add-task-modal').modal('hide')
+                // $('#add-task-modal').modal('hide')
+                return true
             }).catch(error => {
             console.error(error)
             // NOTICE: lets us do addNewTaskForm.errors.has('errorName') to check if this error exists & addNewTaskForm.errors.get('errorName') to get the error message
@@ -63,6 +64,7 @@ export default class GeneralContractor {
             if (error.message !== undefined && error.message !== null) {
                 Vue.toasted.error(error.message)
             }
+            return false
         })
     }
 

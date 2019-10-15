@@ -261,11 +261,9 @@
                 <button
                         @click.prevent="changeTask('Add')"
                         class="btn btn-md btn-normal text-uppercase ml-1rem flex-1"
-                        :disabled="checkErrors"
+                        :disabled="checkErrors()"
                         ref="add_task"
-                >
-                    Add Task
-                </button>
+                >Add Task</button>
             </div>
 
         </card>
@@ -424,7 +422,9 @@
     computed: {
       newTask() {
         return this.addNewTaskForm.taskName !== this.result.taskName
-      },
+      }
+    },
+    methods: {
       checkErrors() {
 
         if (this.addNewTaskForm.taskName === '') {
@@ -449,9 +449,7 @@
 
         return false
 
-      }
-    },
-    methods: {
+      },
       needsNewTask(){
         this.taskSubmitted = false
         this.clearTaskResults()
@@ -566,10 +564,8 @@
           this.addNewTaskForm.taskPrice < this.addNewTaskForm.subTaskPrice
       },
       checkIfSubTaskPriceHasChanged(value) {
-
         this.checkThatSubPriceIsHigherThanContractorPrice()
         this.checkErrors
-
         if (this.dropdownSelected) {
           value = parseInt(value)
           if (this.result.standardSubTaskPrice !== value) {
@@ -845,18 +841,22 @@
 
           this.setUTCDate()
 
-          GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
-          // console.log (newTask);
-          // debugger;
-          // this.clearTaskResults()
-
-          this.taskSubmitted = true
+          this.addNewTask()
 
           this.setDefaultStartDate()
 
         } else {
           this.errors.general.errorExists = true
         }
+      },
+      async addNewTask () {
+        // TODO:: I want task submitted varaiable to be true after the addNewTaskToBid method is caled
+          try {
+              await GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
+              this.taskSubmitted = true;
+          } catch (error) {
+              console.log('error');
+          }
       },
       toggleStripePaymentOption() {
         this.addNewTaskForm.useStripe = !this.addNewTaskForm.useStripe
