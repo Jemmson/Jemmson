@@ -35,6 +35,9 @@ const routes = [
   {
     path: '/bids',
     component: Jobs
+    // name: 'jobs',
+    // component: () =>
+    //   import(/* webpackChunkName: "about" */ "./pages/Jobs")
   },
   {
     path: '/bids/subs',
@@ -129,6 +132,8 @@ const routes = [
   }
 
 ]
+
+// mode: 'history',
 
 export const router = new VueRouter({
   routes
