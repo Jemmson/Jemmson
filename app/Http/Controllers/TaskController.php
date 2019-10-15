@@ -346,6 +346,7 @@ class TaskController extends Controller
 
         $contractor_id = $jobTask->job()->get()->first()->contractor_id;
         $customer_id = $jobTask->job()->get()->first()->customer_id;
+        $job_id = $jobTask->job()->get()->first()->id;
 
         if ($this->userIsAContractor($contractor_id) || $this->userIsACustomer($customer_id)) {
             $this->deleteSubContractorTasks($jobTask->id);
@@ -362,6 +363,8 @@ class TaskController extends Controller
             $this->deleteSubsBid($sub_contractor_id, $request->id);
         }
 
+        $this->updateJobPrice($job_id);
+
 
 //
 
@@ -375,6 +378,29 @@ class TaskController extends Controller
 //        2, if there are subs remove bid contractor table
 //        3. update job totals
 
+
+    }
+
+    public function updateJobPrice($job_id)
+    {
+        $jobTasks = JobTask::where('job_id', '=', $job_id)->get();
+        $totalPrice = 0;
+
+        foreach ($jobTasks as $jobTask) {
+            $totalPrice = $totalPrice + $jobTask->cust_final_price;
+        }
+
+        $job = Job::find($job_id);
+        $job->bid_price = $totalPrice;
+
+        try {
+            $job->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
 
     }
 
