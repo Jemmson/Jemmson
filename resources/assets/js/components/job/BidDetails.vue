@@ -1,7 +1,11 @@
 <template>
     <div class="row">
         <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">
-            <div class="text-center font-weight-bold">{{ status }}</div>
+            <div v-if="bid.status === 'bid.initiated'">
+                <div class="text-center font-weight-bold">Thank You!</div>
+                <div class="text-center" style="font-size: 14pt">{{ status }}</div>
+            </div>
+            <div v-else class="text-center font-weight-bold">{{ status }}</div>
         </div>
 
         <card v-if="showDeclinedMessage" style="background-color: lightcoral">

@@ -185,8 +185,8 @@
           case 'cancelBid':
             this.updateModal(
               'Confirm Cancellation',
-              'You are about to cancel this job,' +
-              ' Click delete job to cancel and delete the job or back to cancel this action.',
+              'Are you sure you want to cancel this job? ' +
+              ' To confirm please select Delete Job.',
               'cancelBid',
               'Delete Job',
               'back'
