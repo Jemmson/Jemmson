@@ -2,6 +2,7 @@ import {
     shallowMount
 } from "@vue/test-utils";
 import AddJobTask from '../../resources/assets/js/pages/AddJobTask';
+import utility from './Utilities';
 
 require('./bootstrap');
 
@@ -34,7 +35,8 @@ describe('AddJobTask', () => {
             }
         })
         wrapper.vm.setDefaultStartDate();
-        expect(wrapper.find({ref: 'start_date'}).element.value).toBe('2019-08-17');
+        const date = utility.localTime();
+        expect(wrapper.find({ref: 'start_date'}).element.value).toBe(date);
     })
 
     it('the add task button should be disabled and there should be an error shown if the sub price is higher than the general contractor price', function() {
@@ -46,25 +48,20 @@ describe('AddJobTask', () => {
                 taskName: 'new Task',
                 hasQtyUnitError: false,
                 hasStartDateError: false,
-                errors: {
-                    subPriceTooHigh: {
-                        exists: false,
-                        message: "Sub Price Can Not Be Higher Than Contractor Price"
-                    }
+            },
+            errors: {
+                subPriceTooHigh: {
+                    exists: false,
+                    message: "Sub Price Can Not Be Higher Than Contractor Price"
                 }
             }
         })
-
-        let addTask = wrapper.find({ref: 'add_task'}).html();
-        console.log(addTask);
-
-        expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe('disabled')
 
         let subPrice = wrapper.find({ref: 'sub_task_price'})
         subPrice.setValue(12)
         subPrice.trigger('keyup')
 
-        console.log(addTask);
+        expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe('disabled')
 
         // expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe(true)
 
@@ -85,10 +82,7 @@ describe('AddJobTask', () => {
         let taskPrice = wrapper.find({ref: 'task_price'})
         taskPrice.setValue('12a');
         taskPrice.trigger('blur');
-
-        expect(taskPrice.attributes('class')).toBe('form-control bat-input sub-price-too-high-error');
-        console.log(wrapper.find({ref: 'add_task'}).attributes())
-        console.log(wrapper.find({ref: 'add_task'}).html())
+        expect(taskPrice.attributes('class')).toBe('form-control bat-input box-error');
         expect(wrapper.find({ref: 'add_task'}).attributes('disabled')).toBe('disabled')
 
     })
