@@ -41238,6 +41238,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(4);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -41292,6 +41295,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'UploadTaskImages',
@@ -41303,10 +41308,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       disabled: {
         uploadTaskImageBtn: false
-      }
+      },
+      uploading: false
     };
   },
-  computed: {
+  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])({}), {
     closeLink() {
       if (this.type === 'sub') {
         return '#/tasks';
@@ -41314,7 +41320,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       return '#/bid/' + this.jobTask.job_id;
     }
-  },
+  }),
   methods: {
     triggerFileInput(id) {
       console.log('trigger file', id);
@@ -41353,12 +41359,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     uploadTaskImage(jobTaskId) {
+      this.uploading = true;
       const data = new FormData();
       console.log(this.$refs['task_photo_' + jobTaskId]);
-
       data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0]);
       data.append('jobTaskId', jobTaskId);
-      data.append('jobId', this.jobTask.job_id);
+
+      this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id);
       User.uploadTaskImage(data, this.disabled);
     }
   }
@@ -85892,6 +85899,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.uploadTaskImage(_vm.jobTask.id)
       }
     }
+  }), _vm._v(" "), _c('i', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.uploading),
+      expression: "uploading"
+    }],
+    staticClass: "fa fa-btn fa-spinner fa-spin"
   })])
 },staticRenderFns: []}
 module.exports.render._withStripped = true

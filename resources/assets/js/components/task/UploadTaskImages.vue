@@ -46,6 +46,7 @@
                style="width: 95%"
                :id="'task_photo_' + jobTask.id"
                type="file" @change="uploadTaskImage(jobTask.id)">
+        <i v-show="uploading" class="fa fa-btn fa-spinner fa-spin"></i>
         <!-- </span>
     </button> -->
         <!-- / end upload task images-->
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
   export default {
     name: 'UploadTaskImages',
     props: {
@@ -63,10 +65,14 @@
       return {
         disabled: {
           uploadTaskImageBtn: false
-        }
+        },
+        uploading: false
       }
     },
     computed: {
+      ...mapState({
+
+      }),
       closeLink() {
         if (this.type === 'sub') {
           return '#/tasks'
@@ -116,12 +122,13 @@
         }
       },
       uploadTaskImage(jobTaskId) {
+        this.uploading = true
         const data = new FormData()
         console.log(this.$refs['task_photo_' + jobTaskId])
-
         data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0])
         data.append('jobTaskId', jobTaskId)
-        data.append('jobId', this.jobTask.job_id)
+
+        this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id)
         User.uploadTaskImage(data, this.disabled)
       },
     }

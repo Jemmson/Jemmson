@@ -24,6 +24,9 @@ class CreateUserTokens extends Migration
           $table->timestamp('expires_at')
               ->nullable();
           $table->softDeletes();
+          $table->timestamp('updated_at')
+              ->nullable();
+          $table->softDeletes();
       }
       );
   }
