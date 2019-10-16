@@ -337,6 +337,33 @@ Sub wants to type in a sub contractors name so the sub will come down
   
 ### Customer gets a text and clicks on text goes to the Further Info page
 
+- Request URL:
+  Request Method: POST
+  {
+    address_line_1: "705 E Oxford Dr"
+    address_line_2: ""
+       busy: true
+    city: "Tempe"
+    company_name: "Garden Bud"
+    email: "kbattafarano@gmail.com"
+    email_contact: true
+       errors: {errors: {}}
+    first_name: "Kristen"
+    last_name: "Battafarano"
+    name: "Battafarano 6023508801"
+    notes: ""
+    password: "asdasd"
+    password_confirmation: "asdasd"
+    phone_contact: false
+    hone_number: "6023508801"
+    sms_text: false
+    state: "AZ"
+       successful: false
+    zip: "85283"
+  }
+    Response: "\/#\/bids"
+
+
 - Request URL:http://127.0.0.1:9500/checkAuth
   Request method:GET
   {"auth":true}

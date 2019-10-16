@@ -115,7 +115,7 @@ class HomeController extends Controller
 
             $contractor->updateLocation($request);
             $contractor->update([
-                'company_logo_name' => request('file_name'), //
+//                'company_logo_name' => request('file_name'), //
 //                'email_method_of_contact' => request('email_contact'), //
 //                'sms_method_of_contact' => request('sms_text'), //
 //                'phone_method_of_contact' => request('phone_contact'), //
@@ -179,13 +179,10 @@ class HomeController extends Controller
 
         $user = Auth::user();
         $user->email = trim($request->email);
-        $user->name = $request->name;
-        $splitName = explode(" ", $request->name);
-        if (count($splitName) > 1) {
-            $user->first_name = $splitName[0];
-            $user->last_name = $splitName[1];
-        }
-        $user->phone = $this->digitsOnly($phone);
+        $user->first_name = trim($request->email);
+        $user->last_name = trim($request->email);
+        $user->name = "$request->first_name $request->last_name";
+        $user->phone = $this->digitsOnly($request->phone_number);
 
         try {
             $user->save();
