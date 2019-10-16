@@ -17,22 +17,47 @@
         <!-- / status -->
         <div class="mt-4 mb-1">
             <card class="list-card" v-for="(jTask, index) of jobTasks" v-bind:key="jTask.id" :id="'task-' + jTask.id">
-                <div class="row">
-                    <div class="col-12 page-header-title">
-                        {{ jTask.task.name }}
-                    </div>
-                    <div class="col-12">
-                        <span class="dot" :class="'bg-' + getLabelClass(jTask)"></span>
-                        <span :class="getLabelClass(jTask)">
-                            {{ status(jTask) }}
-                        </span>
 
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Status</th>
+                            <th>{{ !isContractor ? 'Contractor' : 'Sub' }}</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ jTask.task.name }}</td>
+                            <td>
+                                <span :class="getLabelClass(jTask)">
+                                    {{ status(jTask) }}
+                                </span>
+                            </td>
+                            <td>{{ jTask.contractor ? jTask.contractor.company_name : "none"}}</td>
+                            <td>{{ jTask.contractor ? jTask.contractor.phone : "none"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="row">
+<!--                    <div class="col-12 page-header-title">-->
+<!--                        {{ jTask.task.name }}-->
+<!--                    </div>-->
+                    <div class="col-12">
+<!--                        <span class="dot" :class="'bg-' + getLabelClass(jTask)"></span>-->
+<!--                        <span :class="getLabelClass(jTask)">-->
+<!--                            {{ status(jTask) }}-->
+<!--                        </span>-->
                         <span v-if="isContractor"
                               class="float-right list-card-info">{{ jTask.bid_contractor_job_tasks.length }} Subs
                       <i class="fas fa-users"></i>
                     </span>
 
                     </div>
+
                     <div class="flex w-full btn-spacing">
                         <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteTaskModal(jTask, index)">
                             DELETE
