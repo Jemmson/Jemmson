@@ -36442,13 +36442,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__shared_Card__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__stripe_Stripe__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__stripe_Stripe___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__stripe_Stripe__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__GeneralContractorBidActions__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__GeneralContractorBidActions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__GeneralContractorBidActions__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuex__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_ContentSection__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_ContentSection___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__shared_ContentSection__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CompletedTasks__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CompletedTasks___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__CompletedTasks__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vuex__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_ContentSection__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_ContentSection___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__shared_ContentSection__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CompletedTasks__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CompletedTasks___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__CompletedTasks__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ApproveBid__ = __webpack_require__(172);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ApproveBid___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__ApproveBid__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -36803,6 +36805,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -36818,9 +36833,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     Card: __WEBPACK_IMPORTED_MODULE_2__shared_Card___default.a,
     Stripe: __WEBPACK_IMPORTED_MODULE_3__stripe_Stripe___default.a,
     Info: __WEBPACK_IMPORTED_MODULE_0__shared_Info___default.a,
-    ContentSection: __WEBPACK_IMPORTED_MODULE_6__shared_ContentSection___default.a,
-    CompletedTasks: __WEBPACK_IMPORTED_MODULE_7__CompletedTasks___default.a,
-    GeneralContractorBidActions: __WEBPACK_IMPORTED_MODULE_4__GeneralContractorBidActions___default.a
+    ContentSection: __WEBPACK_IMPORTED_MODULE_5__shared_ContentSection___default.a,
+    CompletedTasks: __WEBPACK_IMPORTED_MODULE_6__CompletedTasks___default.a,
+    ApproveBid: __WEBPACK_IMPORTED_MODULE_7__ApproveBid___default.a,
+    GeneralContractorBidActions: __WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions___default.a
   },
   props: {
     bid: Object,
@@ -36883,7 +36899,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     };
   },
-  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["a" /* mapGetters */])(['getCustomerName']), {
+  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_vuex__["a" /* mapGetters */])(['getCustomerName']), {
     agreedStartDate() {
       if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
         this.addTaskStartDate = false;
@@ -36963,6 +36979,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }
   },
   methods: _extends({
+    needsApproval() {
+      // TODO: use regular status values to check these
+      return this.bid.status === 'bid.sent';
+    },
     formatPrice(price) {
       return '$ ' + __WEBPACK_IMPORTED_MODULE_1__classes_Format__["a" /* default */].decimal(price);
     },
@@ -37112,7 +37132,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     showNotes() {
       this.customerNotes = !this.customerNotes;
     }
-  }, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["c" /* mapMutations */])(['setCustomerName']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["d" /* mapActions */])(['actCustomerName']), {
+  }, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_vuex__["c" /* mapMutations */])(['setCustomerName']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_vuex__["d" /* mapActions */])(['actCustomerName']), {
     updateGeneralContractorNotes() {
       Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer.id);
     },
@@ -89659,7 +89679,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.$router.push('/job/add/task')
       }
     }
-  }, [_vm._v("\n                                Add A Task\n                            ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), (_vm.bid.job_tasks !== undefined) ? _c('section', {
+  }, [_vm._v("\n                                Add A Task\n                            ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), ((_vm.isCustomer && _vm.needsApproval) || !_vm.isCustomer) ? _c('section', {
+    staticClass: "col-12"
+  }, [_c('h1', {
+    staticClass: "card-title mt-4"
+  }, [_vm._v("Actions")]), _vm._v(" "), _c('card', {
+    staticClass: "mb-4"
+  }, [(_vm.isCustomer && _vm.needsApproval) ? _c('approve-bid', {
+    attrs: {
+      "bid": _vm.bid
+    }
+  }) : _vm._e(), _vm._v(" "), (!_vm.isCustomer) ? _c('general-contractor-bid-actions', {
+    attrs: {
+      "bid": _vm.bid
+    }
+  }) : _vm._e()], 1)], 1) : _vm._e(), _vm._v(" "), (_vm.bid.job_tasks !== undefined) ? _c('section', {
     ref: "job_tasks",
     staticClass: "col-12"
   }, [(!_vm.isCustomer) ? _c('div', [_c('h1', {
@@ -90538,17 +90572,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v(_vm._s(_vm.status))])]) : _c('div', {
     staticClass: "text-center font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.status))])]), _vm._v(" "), ((_vm.isCustomer && _vm.needsApproval) || !_vm.isCustomer) ? _c('card', {
-    staticClass: "mb-4"
-  }, [(_vm.isCustomer && _vm.needsApproval) ? _c('approve-bid', {
-    attrs: {
-      "bid": _vm.bid
-    }
-  }) : _vm._e(), _vm._v(" "), (!_vm.isCustomer) ? _c('general-contractor-bid-actions', {
-    attrs: {
-      "bid": _vm.bid
-    }
-  }) : _vm._e()], 1) : _vm._e(), _vm._v(" "), _c('bid-details', {
+  }, [_vm._v(_vm._s(_vm.status))])]), _vm._v(" "), _c('bid-details', {
     attrs: {
       "customerName": _vm.customerName,
       "bid": _vm.bid,

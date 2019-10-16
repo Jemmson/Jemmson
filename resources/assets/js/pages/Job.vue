@@ -11,14 +11,14 @@
             <div v-else class="text-center font-weight-bold">{{ status }}</div>
         </div>
 
-        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">
-            <!-- /customer approve bid form -->
-            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">
-            </approve-bid>
-            <!-- /buttons  -->
-            <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
-            </general-contractor-bid-actions>
-        </card>
+<!--        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">-->
+<!--            &lt;!&ndash; /customer approve bid form &ndash;&gt;-->
+<!--            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">-->
+<!--            </approve-bid>-->
+<!--            &lt;!&ndash; /buttons  &ndash;&gt;-->
+<!--            <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">-->
+<!--            </general-contractor-bid-actions>-->
+<!--        </card>-->
 
         <!-- /show all bid information -->
         <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
