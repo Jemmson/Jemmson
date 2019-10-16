@@ -274,9 +274,9 @@
                                 </div>
 
                                 <div class="flex flex-col" v-if="isCustomer">
-                                    <span class="label mb-2">Notes from Customer</span>
+                                    <span class="label mb-2">Notes from Contractor</span>
                                     <textarea cols="0" rows="0" class="form-control" disabled
-                                              :value="getCustomerNotes"
+                                              :value="getContractorNotesForCustomer"
                                               style="color: black;"></textarea>
                                 </div>
 
@@ -475,6 +475,11 @@
             return this.jobTask.job.customer.customer.notes
           }
           return this.jobTask.customer.customer.notes
+        }
+      },
+      getContractorNotesForCustomer() {
+        if (this.jobTask) {
+          return this.jobTask.customer_message
         }
       },
       getAddressLine1() {

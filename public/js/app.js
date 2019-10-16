@@ -44475,6 +44475,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         return this.jobTask.customer.customer.notes;
       }
     },
+    getContractorNotesForCustomer() {
+      if (this.jobTask) {
+        return this.jobTask.customer_message;
+      }
+    },
     getAddressLine1() {
       console.log('jobTask', this.jobTask);
       if (this.jobTask && this.jobTask.location) {
@@ -94113,7 +94118,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "flex flex-col"
   }, [_c('span', {
     staticClass: "label mb-2"
-  }, [_vm._v("Notes from Customer")]), _vm._v(" "), _c('textarea', {
+  }, [_vm._v("Notes from Contractor")]), _vm._v(" "), _c('textarea', {
     staticClass: "form-control",
     staticStyle: {
       "color": "black"
@@ -94124,7 +94129,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "disabled": ""
     },
     domProps: {
-      "value": _vm.getCustomerNotes
+      "value": _vm.getContractorNotesForCustomer
     }
   })]) : _vm._e()])])])])], 1), _vm._v(" "), _c('div', {
     directives: [{

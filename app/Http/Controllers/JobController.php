@@ -369,6 +369,7 @@ class JobController extends Controller
                 "cust_final_price" => $this->convertToDollars($jobTask->cust_final_price),
                 "start_date" => $jobTask->start_date,
                 "declined_message" => $jobTask->declined_message,
+                "customer_message" => $jobTask->customer_message,
                 "location" => $location,
                 "customer" => $customerUserResults[0],
                 "task" => $taskResults[0],
