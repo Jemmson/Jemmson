@@ -36803,14 +36803,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -43715,6 +43707,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vuex__ = __webpack_require__(4);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -85429,13 +85429,17 @@ module.exports = Component.exports
 /* 495 */
 /***/ (function(module, exports, __webpack_require__) {
 
+
+/* styles */
+__webpack_require__(627)
+
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(250),
   /* template */
   __webpack_require__(538),
   /* scopeId */
-  null,
+  "data-v-5c122d78",
   /* cssModules */
   null
 )
@@ -89581,19 +89585,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "row"
-  }, [_c('div', {
-    staticClass: "col-12 mb-3 status",
-    class: _vm.getLabelClass(_vm.bid.status)
-  }, [(_vm.bid.status === 'bid.initiated') ? _c('div', [(_vm.isCustomer) ? _c('div', {
-    staticClass: "text-center font-weight-bold"
-  }, [_vm._v("Thank You!")]) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "text-center",
-    staticStyle: {
-      "font-size": "14pt"
-    }
-  }, [_vm._v(_vm._s(_vm.status))])]) : _c('div', {
-    staticClass: "text-center font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.status))])]), _vm._v(" "), (_vm.showDeclinedMessage) ? _c('card', {
+  }, [(_vm.showDeclinedMessage) ? _c('card', {
     staticStyle: {
       "background-color": "lightcoral"
     }
@@ -90534,7 +90526,19 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "container"
-  }, [((_vm.isCustomer && _vm.needsApproval) || !_vm.isCustomer) ? _c('card', {
+  }, [_c('div', {
+    staticClass: "col-12 mb-3 status",
+    class: _vm.getLabelClass(_vm.bid.status)
+  }, [(_vm.bid.status === 'bid.initiated') ? _c('div', [(_vm.isCustomer) ? _c('div', {
+    staticClass: "text-center font-weight-bold"
+  }, [_vm._v("Thank You!")]) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "text-center",
+    staticStyle: {
+      "font-size": "14pt"
+    }
+  }, [_vm._v(_vm._s(_vm.status))])]) : _c('div', {
+    staticClass: "text-center font-weight-bold"
+  }, [_vm._v(_vm._s(_vm.status))])]), _vm._v(" "), ((_vm.isCustomer && _vm.needsApproval) || !_vm.isCustomer) ? _c('card', {
     staticClass: "mb-4"
   }, [(_vm.isCustomer && _vm.needsApproval) ? _c('approve-bid', {
     attrs: {
@@ -99324,6 +99328,39 @@ if(false) {
 
 })));
 
+
+/***/ }),
+/* 626 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+exports.push([module.i, "\n.status[data-v-5c122d78] {\n    padding-top: 1rem;\n    padding-bottom: 1rem;\n    font-family: auto;\n    font-size: 20pt;\n}\n\n", ""]);
+
+/***/ }),
+/* 627 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(626);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("1b2e592e", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-5c122d78\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Job.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-5c122d78\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Job.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);
