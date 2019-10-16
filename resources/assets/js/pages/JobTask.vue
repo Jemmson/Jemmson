@@ -471,7 +471,7 @@
       }),
       getCustomerNotes() {
         if (this.jobTask) {
-          if (this.jobTask.job) {
+          if (this.jobTask.job.customer) {
             return this.jobTask.job.customer.customer.notes
           }
           return this.jobTask.customer.customer.notes

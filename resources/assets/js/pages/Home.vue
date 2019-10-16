@@ -26,7 +26,6 @@
         </card>
         <br>
 
-
         <!-- / end jobs -->
 
         <div v-if="isContractor()">
