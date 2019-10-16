@@ -300,7 +300,6 @@ class JobController extends Controller
                 "customer_instructions" => $task->customer_instructions,
             ]);
 
-
             $customerUser = User::where('id', '=', $job->customer_id)->get()->first();
 
             $customer = Customer::where('user_id', '=', $job->customer_id)->get()->first();
@@ -350,6 +349,16 @@ class JobController extends Controller
 
             $location = Location::where('id', '=', $jobTask->location_id)->get()->first();
 
+            $contractorResults = [];
+            $contractor = Contractor::where('user_id', '=', $jobTask->contractor_id)->get()->first();
+            $contractorUser = User::where('id', '=', $jobTask->contractor_id)->get()->first();
+            array_push($contractorResults, [
+                "company_name" => $contractor->company_name,
+                "first_name" => $contractorUser->first_name,
+                "last_name" => $contractorUser->last_name,
+                "phone" => $contractorUser->phone,
+            ]);
+
             array_push($jobTasksResults, [
                 "id" => $jobTask->id,
                 "task_id" => $jobTask->task_id,
@@ -363,6 +372,7 @@ class JobController extends Controller
                 "location" => $location,
                 "customer" => $customerUserResults[0],
                 "task" => $taskResults[0],
+                "contractor" => $contractorResults[0],
                 "job" => [
                     "id" => $job->id
                 ]
@@ -473,14 +483,28 @@ class JobController extends Controller
                 ]
             );
 
+
             $job->bid_price = $this->convertToDollars($job->bid_price);
 
             foreach ($job->jobTasks as $jt) {
+
+                $contractorResults = [];
+                $contractor = Contractor::where('user_id', '=', $jt->contractor_id)->get()->first();
+                $contractorUser = User::where('id', '=', $jt->contractor_id)->get()->first();
+                array_push($contractorResults, [
+                    "company_name" => $contractor->company_name,
+                    "first_name" => $contractorUser->first_name,
+                    "last_name" => $contractorUser->last_name,
+                    "phone" => $contractorUser->phone,
+                ]);
+
+
                 $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
                 $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
                 $jt->unit_price = $this->convertToDollars($jt->unit_price);
                 $jt->task->proposed_cust_price = $this->convertToDollars($jt->task->proposed_cust_price);
                 $jt->task->proposed_sub_price = $this->convertToDollars($jt->task->proposed_sub_price);
+                $jt->contractor = $contractorResults[0];
             }
 
             return $job;
