@@ -39196,6 +39196,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -89078,9 +89080,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-content"
   }, [_c('div', {
     staticClass: "modal-header"
+  }, [_c('div', {
+    staticClass: "flex flex-col w-full"
   }, [_vm._m(0), _vm._v(" "), _c('h4', {
-    staticClass: "modal-title"
-  }, [_vm._v(_vm._s(_vm.header))])]), _vm._v(" "), _c('div', {
+    staticClass: "modal-title text-center "
+  }, [_vm._v(_vm._s(_vm.header))])])]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('span', {
     staticStyle: {
