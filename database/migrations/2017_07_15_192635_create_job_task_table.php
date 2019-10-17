@@ -24,21 +24,21 @@ class CreateJobTaskTable extends Migration
             $table->integer('bid_id')->unsigned()->nullable();
             $table->integer('location_id')->unsigned()->nullable();
             $table->integer('contractor_id')->nullable();
-            
             $table->string('status')->nullable();
-            $table->text('details')->nullable();
-            
             $table->bigInteger('cust_final_price')->unsigned()->nullable();
             $table->bigInteger('sub_final_price')->unsigned()->nullable();
-            
             $table->boolean('start_when_accepted')->default(false);
-            $table->boolean('stripe')->default(false);            
-            
+            $table->boolean('stripe')->default(false);
             $table->timestamp('start_date')->nullable();
-            
             $table->foreign('job_id')->references('id')->on('jobs');
             $table->foreign('task_id')->references('id')->on('tasks');
-            
+            $table->boolean('sub_sets_own_price_for_job')->default(1);
+            $table->text('customer_message')->nullable();
+            $table->text('sub_message')->nullable();
+            $table->string('stripe_transfer_id')->nullable();
+            $table->tinyInteger('qty')->unsigned()->default(1);
+            $table->text('declined_message')->nullable();
+            $table->bigInteger('unit_price')->unsigned()->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

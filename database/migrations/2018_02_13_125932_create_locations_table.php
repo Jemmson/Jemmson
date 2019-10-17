@@ -24,6 +24,8 @@ class CreateLocationsTable extends Migration
             $table->string('zip')->nullable();
             $table->string('area')->nullable();
             $table->string('country')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

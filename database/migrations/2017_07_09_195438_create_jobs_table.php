@@ -20,16 +20,16 @@ class CreateJobsTable extends Migration
             $table->bigInteger('customer_id');
             $table->bigInteger('contractor_id');
             $table->integer('location_id')->usigned()->nullable();
-
+            $table->text('declined_message')->nullable();
             $table->string('job_name');
             $table->string('status')->nullable();
             $table->bigInteger('bid_price')->default(0.00);
-
+            $table->string('paid_with_cash_message')->nullable();
+            $table->string('qb_estimate_id')->default('NULL');
             $table->dateTime('completed_bid_date')->nullable();
             $table->dateTime('agreed_start_date')->nullable();
             $table->dateTime('agreed_end_date')->nullable();
             $table->dateTime('actual_end_date')->nullable();
-            
             $table->softDeletes();
             $table->timestamps();
         });

@@ -16,16 +16,15 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->integer('location_id')->nullable();
             $table->string('name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('usertype')->default('customer');
-
             $table->string('password', 60);
             $table->boolean('password_updated')->default(1);
             $table->rememberToken();
-            
             $table->text('photo_url')->nullable();
             $table->text('logo_url')->nullable();
-            
             $table->tinyInteger('uses_two_factor_auth')->default(0);
             $table->string('authy_id')->nullable();
             $table->string('country_code', 10)->nullable();

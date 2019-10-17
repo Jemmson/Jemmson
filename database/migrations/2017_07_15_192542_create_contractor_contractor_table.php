@@ -21,8 +21,8 @@ class CreateContractorContractorTable extends Migration
             $table->increments('id');
             $table->integer('contractor_id');
             $table->integer('subcontractor_id');
-//            $table->primary(['contractor_id', 'subcontractor_id']);
             $table->softDeletes();
+            $table->bigInteger('quickbooks_id')->nullable();
             $table->timestamps();
         });
     }

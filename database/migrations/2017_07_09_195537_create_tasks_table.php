@@ -22,6 +22,9 @@ class CreateTasksTable extends Migration
             $table->string('name');
             $table->integer('standard_task_id')->nullable();
             $table->integer('contractor_id')->nullable();
+            $table->string('qtyUnit')->nullable();
+            $table->text('sub_instructions')->nullable();
+            $table->text('customer_instructions')->nullable();
             $table->bigInteger('proposed_cust_price')->nullable();
             $table->bigInteger('average_cust_price')->nullable();
             $table->bigInteger('proposed_sub_price')->nullable();
