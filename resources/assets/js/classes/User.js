@@ -159,7 +159,7 @@ export default class User {
 
   // is the task assigned to the currently logged in user
   isAssignedToMe(jobTask, userId) {
-    return userId === jobTask.contractor_id
+    return jobTask ? userId === jobTask.contractor_id : null
   }
 
   isContractor() {

@@ -41124,6 +41124,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classes_User__ = __webpack_require__(265);
 //
 //
 //
@@ -41202,6 +41203,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     jobTask: Object,
@@ -41220,7 +41224,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }),
       disabled: {
         update: false
-      }
+      },
+      authUser: {}
     };
   },
   methods: {
@@ -41233,10 +41238,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     update() {
       this.form.id = this.jobTask.id;
       this.form.location_id = this.jobTask.location_id;
-      User.updateTaskLocation(this.form, this.disabled);
+      this.authUser.updateTaskLocation(this.form, this.disabled);
     },
     initAutocomplete() {
-      User.initAutocomplete('route2');
+      this.authUser.initAutocomplete('route2');
     }
   },
   computed: {},
@@ -41250,6 +41255,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     Bus.$on('updateFormLocation', payload => {
       this.updateFormLocation(payload);
     });
+  },
+  created() {
+    this.authUser = new __WEBPACK_IMPORTED_MODULE_0__classes_User__["a" /* default */]();
   }
 });
 
@@ -41362,32 +41370,34 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     },
     showTaskImage1(jobTask) {
       // first most recent
-      if (jobTask.images) {
+      if (jobTask) {
         const length = jobTask.images.length;
         return length > 0 && jobTask.images[length - 1] !== undefined;
       }
     },
     showTaskImage2(jobTask) {
       // second most recent
-      if (jobTask.images) {
+      if (jobTask) {
         const length = jobTask.images.length;
         return length > 1 && jobTask.images[length - 2] !== undefined;
       }
     },
     showMoreImagesBtn(jobTask) {
-      if (jobTask.images) {
+      if (jobTask) {
         return jobTask.images.length > 0;
       }
     },
     uploadTaskImage(jobTaskId) {
-      this.uploading = true;
-      const data = new FormData();
-      console.log(this.$refs['task_photo_' + jobTaskId]);
-      data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0]);
-      data.append('jobTaskId', jobTaskId);
+      if (this.jobTask && this.jobTask.job) {
+        this.uploading = true;
+        const data = new FormData();
+        console.log(this.$refs['task_photo_' + jobTaskId]);
+        data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0]);
+        data.append('jobTaskId', jobTaskId);
 
-      this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id);
-      User.uploadTaskImage(data, this.disabled);
+        this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id);
+        User.uploadTaskImage(data, this.disabled);
+      }
     }
   }
 });
@@ -44001,7 +44011,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_shared_Card__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_shared_ContentSection__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_shared_ContentSection___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_shared_ContentSection__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vuex__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__classes_User__ = __webpack_require__(265);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vuex__ = __webpack_require__(4);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -44413,6 +44424,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+
 
 
 
@@ -44438,6 +44454,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
   data() {
     return {
+      authUser: {},
       user: {},
       jobTask: null,
       currentJobTask: {},
@@ -44472,7 +44489,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     };
   },
-  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_8_vuex__["b" /* mapState */])({
+  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_9_vuex__["b" /* mapState */])({
     job: state => state.job.model,
     jobStatus: state => state.job.model.status
   }), {
@@ -44518,7 +44535,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       return this.jobTask.status === 'bid_task.approved_by_customer';
     },
     isCustomer() {
-      return User.isCustomer;
+      return this.authUser.isCustomer;
     },
     // isContractor() {
     //   return this.user.isContractor()
@@ -44616,7 +44633,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled);
     },
     showStripeToggle(jobTask) {
-      return User.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress');
+      return this.authUser.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress');
     },
     updateMessage(jobTaskId, currentMessage, actor) {
       let message = document.getElementById('message-' + actor + '-' + jobTaskId);
@@ -44637,31 +44654,35 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     },
     showDenyBtn(jobTask) {
-      const status = jobTask.status;
-      if (this.isCustomer) {
-        return status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general';
+      if (jobTask) {
+        const status = jobTask.status;
+        if (this.isCustomer) {
+          return status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general';
+        }
+        return status === 'bid_task.finished_by_sub' || status === 'bid_task.reopened';
+        // return (status === 'bid_task.finished_by_sub' || this.jobStatus === 'bid.declined');
       }
-      return status === 'bid_task.finished_by_sub' || status === 'bid_task.reopened';
-      // return (status === 'bid_task.finished_by_sub' || this.jobStatus === 'bid.declined');
     },
     showFinishedBtn(jobTask) {
-      if (this.isContractor() && User.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.approved_by_customer' || jobTask.status === 'bid_task.reopened' || jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.denied')) {
+      if (this.isContractor() && this.authUser.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.approved_by_customer' || jobTask.status === 'bid_task.reopened' || jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.denied')) {
         return true;
       }
       return false;
     },
     showApproveBtn(jobTask) {
-      if (this.isGeneral() && !User.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')) {
+      if (this.isGeneral() && !this.authUser.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')) {
         return true;
       }
       return false;
     },
     showDeleteBtn(jobTask) {
-      const status = jobTask.status;
-      if (this.isGeneral() && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent' || this.jobStatus === 'bid.declined')) {
-        return true;
+      if (jobTask) {
+        const status = jobTask.status;
+        if (this.isGeneral() && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent' || this.jobStatus === 'bid.declined')) {
+          return true;
+        }
+        return false;
       }
-      return false;
     },
     // reopenTask(jobTask) {
     //   SubContractor.reopenTask(jobTask, this.disabled);
@@ -44679,7 +44700,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       if (jobTask.bid_id === null) {
         return 0;
       } else {
-        return User.findTaskBid(jobTask.bid_id, jobTask.bid_contractor_job_tasks)[0].bid_price;
+        return this.authUser.findTaskBid(jobTask.bid_id, jobTask.bid_contractor_job_tasks)[0].bid_price;
       }
     },
     toggleStripePaymentOption(jobTask) {
@@ -44730,7 +44751,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       // }
     },
     isGeneral() {
-      if (this.jobTask !== null) {
+      if (this.jobTask && this.jobTask.task) {
         return this.jobTask.task.contractor_id === this.user.id;
       }
       return false;
@@ -44775,17 +44796,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       $('#sub-invite-modal_' + jobTaskId).modal();
     },
     location(jobTask, bid) {
-      // debugger;
-      const task_location = jobTask.location_id;
-      const job_location = this.job.location_id;
-      if (task_location === null && job_location === null) {
-        return 'No Address Set Yet';
-      } else if (job_location === job_location) {
-        return 'Same as Job Location';
-      } else if (task_location !== null) {
-        return jobTask.location.address_line_1;
-      } else if (job_location) {
-        return bid.location.address_line_1;
+      if (this.job && jobTask) {
+        // debugger;
+        const task_location = jobTask.location_id;
+        const job_location = this.job.location_id;
+        if (task_location === null && job_location === null) {
+          return 'No Address Set Yet';
+        } else if (job_location === job_location) {
+          return 'Same as Job Location';
+        } else if (task_location !== null) {
+          return jobTask.location.address_line_1;
+        } else if (job_location) {
+          return bid.location.address_line_1;
+        }
       }
     },
 
@@ -44822,7 +44845,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     },
     status(status) {
-      return User.status(status, this.job);
+      return this.authUser.status(status, this.job);
     },
     getLabelClass(status) {
       return __WEBPACK_IMPORTED_MODULE_5__classes_Format__["a" /* default */].statusLabel(status);
@@ -44856,40 +44879,42 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     },
     taskCustFinalPrice(price, sub, total = false) {
 
-      if (typeof price === 'string') {
-        price = this.removeDollarSigns(price);
-      }
+      if (this.jobTask) {
+        if (typeof price === 'string') {
+          price = this.removeDollarSigns(price);
+        }
 
-      price = parseFloat(price);
+        price = parseFloat(price);
 
-      let priceCheck = this.unit_price * this.jobTask.qty;
+        let priceCheck = this.unit_price * this.jobTask.qty;
 
-      if (!this.isCustomer) {
-        if (!sub && this.cust_final_price !== priceCheck) {
-          this.cust_final_price = this.unit_price * this.jobTask.qty;
+        if (!this.isCustomer) {
+          if (!sub && this.cust_final_price !== priceCheck) {
+            this.cust_final_price = this.unit_price * this.jobTask.qty;
 
-          if (this.job[0].id) {
-            GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job[0].id);
-          } else if (this.job.id) {
-            GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id);
+            if (this.job[0]) {
+              GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job[0].id);
+            } else if (this.job) {
+              GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id);
+            }
+          } else if (sub && total) {
+            price = price * this.jobTask.qty;
           }
-        } else if (sub && total) {
-          price = price * this.jobTask.qty;
         }
-      }
 
-      if (price === 0) {
-        return '$0.00';
-      }
-
-      if (price) {
-        let priceString = price.toString();
-        if (priceString.indexOf('.') === -1) {
-          price = '$' + price + '.00';
-        } else {
-          price = '$' + price;
+        if (price === 0) {
+          return '$0.00';
         }
-        return price;
+
+        if (price) {
+          let priceString = price.toString();
+          if (priceString.indexOf('.') === -1) {
+            price = '$' + price + '.00';
+          } else {
+            price = '$' + price;
+          }
+          return price;
+        }
       }
     },
     async getTask() {
@@ -44956,6 +44981,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     }
     this.user = Spark.state.user;
+  },
+  created() {
+    this.authUser = new __WEBPACK_IMPORTED_MODULE_8__classes_User__["a" /* default */]();
   }
 });
 
@@ -48510,7 +48538,7 @@ class User {
 
   // is the task assigned to the currently logged in user
   isAssignedToMe(jobTask, userId) {
-    return userId === jobTask.contractor_id;
+    return jobTask ? userId === jobTask.contractor_id : null;
   }
 
   isContractor() {
@@ -85858,7 +85886,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('a', {
     staticClass: "lightbox-target",
     attrs: {
-      "id": 'image' + _vm.jobTask.images[_vm.jobTask.images.length - 1].id
+      "id": _vm.jobTask ? 'image' + _vm.jobTask.images[_vm.jobTask.images.length - 1].id : ''
     }
   }, [_c('img', {
     attrs: {
@@ -85868,7 +85896,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }), _vm._v(" "), _c('a', {
     staticClass: "lightbox-close",
     attrs: {
-      "id": 'image-close' + _vm.jobTask.images[_vm.jobTask.images.length - 1].id
+      "id": _vm.jobTask ? 'image-close' + _vm.jobTask.images[_vm.jobTask.images.length - 1].id : ''
     },
     on: {
       "click": function($event) {
@@ -85894,17 +85922,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('a', {
     staticClass: "lightbox-target",
     attrs: {
-      "id": 'image' + _vm.jobTask.images[_vm.jobTask.images.length - 2].id
+      "id": _vm.jobTask ? 'image' + _vm.jobTask.images[_vm.jobTask.images.length - 2].id : ''
     }
   }, [_c('img', {
     attrs: {
       "src": _vm.jobTask.images[_vm.jobTask.images.length - 2].url,
-      "id": 'image-img' + _vm.jobTask.images[_vm.jobTask.images.length - 2].id
+      "id": _vm.jobTask ? 'image-img' + _vm.jobTask.images[_vm.jobTask.images.length - 2].id : ''
     }
   }), _vm._v(" "), _c('a', {
     staticClass: "lightbox-close",
     attrs: {
-      "id": 'image-close' + _vm.jobTask.images[_vm.jobTask.images.length - 2].id
+      "id": _vm.jobTask ? 'image-close' + _vm.jobTask.images[_vm.jobTask.images.length - 2].id : ''
     },
     on: {
       "click": function($event) {
@@ -85925,13 +85953,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "alt": ""
     }
   })])]) : _vm._e(), _vm._v(" "), _c('input', {
-    ref: 'task_photo_' + _vm.jobTask.id,
+    ref: _vm.jobTask ? 'task_photo_' + _vm.jobTask.id : '',
     staticClass: "btn btn-normal ml-2 mt-4",
     staticStyle: {
       "width": "95%"
     },
     attrs: {
-      "id": 'task_photo_' + _vm.jobTask.id,
+      "id": _vm.jobTask ? 'task_photo_' + _vm.jobTask.id : '',
       "type": "file"
     },
     on: {
@@ -93864,7 +93892,8 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.jobTask !== null) ? _c('div', {
+  return _c('div', [_c('div', {
+    ref: "jobTask",
     staticClass: "container"
   }, [_c('div', {
     staticClass: "row"
@@ -93880,15 +93909,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.goBack()
       }
     }
-  }, [_vm._v("\n                    Back\n                ")])]), _vm._v(" "), _c('h1', {
+  }, [_vm._v("\n                        Back\n                    ")])]), _vm._v(" "), _c('h1', {
     staticClass: "card-title"
   }, [_vm._v("Details")]), _vm._v(" "), _c('card', [_c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_vm._v("\n                        Job Task Name:\n                        "), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                            Job Task Name:\n                            "), _vm._v(" "), _c('div', {
     staticClass: "float-right font-weight-bold"
-  }, [_vm._v("\n                            " + _vm._s(_vm.jobTask.task.name) + "\n                        ")])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                                " + _vm._s(_vm.jobTask ? _vm.jobTask.task.name : '') + "\n                            ")])]), _vm._v(" "), _c('div', {
     staticClass: "col-12"
   }, [_c('div', {
     staticClass: "flex justify-content-between"
@@ -93898,7 +93927,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "type": "date"
     },
     domProps: {
-      "value": _vm.prettyDate(_vm.jobTask.start_date)
+      "value": _vm.jobTask ? _vm.prettyDate(_vm.jobTask.start_date) : 0
     },
     on: {
       "blur": function($event) {
@@ -93921,29 +93950,30 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_vm._v("\n                        Status:\n                        "), _c('div', {
+  }, [_vm._v("\n                            Status:\n                            "), _c('div', {
     staticClass: "float-right font-weight-bold",
-    class: _vm.getLabelClass(_vm.jobTask.status)
-  }, [_vm._v("\n                            " + _vm._s(_vm.status(_vm.jobTask.status)) + "\n                        ")])])]), _vm._v(" "), _c('div', {
+    class: _vm.jobTask ? _vm.getLabelClass(_vm.jobTask.status) : 0
+  }, [_vm._v("\n                                " + _vm._s(_vm.jobTask ? _vm.status(_vm.jobTask.status) : '') + "\n                            ")])])]), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: (_vm.jobTask.declined_message !== ''),
-      expression: "jobTask.declined_message !== ''"
+      value: (_vm.jobTask ? _vm.jobTask.declined_message !== '' : false),
+      expression: "jobTask ? jobTask.declined_message !== '' : false"
     }]
   }, [_c('hr'), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_vm._v("\n                            Message:\n                            "), _c('div', {
+  }, [_vm._v("\n                                Message:\n                                "), _c('div', {
     staticClass: "float-right font-weight-bold"
-  }, [_vm._v(_vm._s(_vm.jobTask.declined_message))])])])])])], 1), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.jobTask ? _vm.jobTask.declined_message : '') + "\n                                ")])])])])])], 1), _vm._v(" "), _c('div', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
   }, [_vm._v("Prices")]), _vm._v(" "), _c('card', [_c('div', {
     staticClass: "row"
   }, [_c('div', {
+    ref: "prices",
     staticClass: "col-12"
   }, [_c('div', {
     staticClass: "row"
@@ -94010,9 +94040,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }) : _c('div', {
     staticClass: "mt-1"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.jobTask.qty))])])])]) : _c('div', [_c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.jobTask ? _vm.jobTask.qty : ''))])])])]) : _c('div', [_c('div', {
     staticClass: "flex justify-content-between mt-1rem"
-  }, [_c('label', {}, [_vm._v("Quantity:")]), _vm._v(" "), _c('strong', [_vm._v(_vm._s(_vm.jobTask.qty))])])]), _vm._v(" "), (_vm.isContractor) ? _c('div', {
+  }, [_c('label', {}, [_vm._v("Quantity:")]), _vm._v(" "), _c('strong', [_vm._v(_vm._s(_vm.jobTask ? _vm.jobTask.qty : ''))])])]), _vm._v(" "), (_vm.isContractor()) ? _c('div', {
+    ref: "unitPrice",
     staticClass: "form-group"
   }, [_c('div', {
     staticClass: "flex justify-content-between"
@@ -94035,9 +94066,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "mt-1"
   }, [(_vm.unit_price) ? _c('strong', [_vm._v(_vm._s(_vm.taskCustFinalPrice(_vm.unit_price)))]) : _vm._e()])]), _vm._v(" "), (_vm.errors.unit_price) ? _c('div', {
     staticClass: "error"
-  }, [_vm._v("Your Contractor Task Price Must Be\n                                        Higher The Sub Price\n                                    ")]) : _vm._e(), _vm._v(" "), (_vm.errors.priceMustBeANumber) ? _c('div', {
+  }, [_vm._v("Your Contractor Task Price Must Be\n                                            Higher The Sub Price\n                                        ")]) : _vm._e(), _vm._v(" "), (_vm.errors.priceMustBeANumber) ? _c('div', {
     staticClass: "error"
-  }, [_vm._v("Your Input Must Be A\n                                        Number\n                                    ")]) : _vm._e()]) : _vm._e()])])])])])], 1), _vm._v(" "), _c('div', {
+  }, [_vm._v("Your Input Must Be A\n                                            Number\n                                        ")]) : _vm._e()]) : _vm._e()])])])])])], 1), _vm._v(" "), _c('div', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
@@ -94047,9 +94078,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12"
   }, [_c('div', {
     staticClass: "flex flex-col"
-  }, [_c('div', [_vm._v("\n                                " + _vm._s(_vm.getAddressLine1) + "\n                            ")]), _vm._v(" "), _c('div', [_vm._v("\n                                " + _vm._s(_vm.getCity) + ", " + _vm._s(_vm.getLocationState) + " " + _vm._s(_vm.getZip) + "\n                            ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
+  }, [_c('div', [_vm._v("\n                                    " + _vm._s(_vm.getAddressLine1) + "\n                                ")]), _vm._v(" "), _c('div', [_vm._v("\n                                    " + _vm._s(_vm.getCity) + ", " + _vm._s(_vm.getLocationState) + " " + _vm._s(_vm.getZip) + "\n                                ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
     staticClass: "fas fa-map-marker icon"
-  }), _vm._v("\n                            " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                        ")]) : (_vm.location(_vm.jobTask, _vm.job) === 'Same as Job Location') ? _c('div', {
+  }), _vm._v("\n                                " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                            ")]) : (_vm.location(_vm.jobTask, _vm.job) === 'Same as Job Location') ? _c('div', {
     staticClass: "flex flex-col"
   }, [_c('span', {
     staticClass: "label mb-2"
@@ -94071,7 +94102,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "fas fa-map-marker icon"
-  }), _vm._v("\n                                " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                            ")]), _vm._v(" "), _c('button', {
+  }), _vm._v("\n                                    " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                                ")]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-normal btn-md",
     on: {
       "click": function($event) {
@@ -94108,7 +94139,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('message', {
     attrs: {
       "label": "Notes for Subcontractor",
-      "jobId": _vm.jobTask.id,
+      "jobId": _vm.jobTask ? _vm.jobTask.id : -1,
       "server-message": _vm.jobTask.sub_message,
       "actor": "sub",
       "disable-messages": _vm.disableMessages
@@ -94118,8 +94149,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('message', {
     attrs: {
       "label": "Notes For Customer",
-      "jobId": _vm.jobTask.id,
-      "server-message": _vm.jobTask.customer_message,
+      "jobId": _vm.jobTask ? _vm.jobTask.id : -1,
+      "server-message": _vm.jobTask ? _vm.jobTask.customer_message : null,
       "actor": "customer",
       "disable-messages": _vm.disableMessages
     }
@@ -94164,12 +94195,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     key: 1,
     attrs: {
-      "id": 'task-divider-' + _vm.jobTask.id
+      "id": _vm.jobTask ? 'task-divider-' + _vm.jobTask.id : 0
     }
   }), _vm._v(" "), (_vm.isGeneral() && !_vm.taskApproved && _vm.jobTask.bid_contractor_job_tasks.length > 0) ? _c('div', {
     key: 3,
     attrs: {
-      "id": 'task-subs-' + _vm.jobTask.id
+      "id": _vm.jobTask ? 'task-subs-' + _vm.jobTask.id : 0
     }
   }, [_c('div', {
     staticClass: "flex flex-col"
@@ -94183,7 +94214,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "flex-1"
   }, [_vm._v("Action")])]), _vm._v(" "), _vm._l((_vm.jobTask.bid_contractor_job_tasks), function(bid) {
     return _c('div', {
-      key: bid.id,
+      key: _vm.jobTask ? bid.id : 0,
       staticClass: "flex mb-2 justify-content-between"
     }, [_c('div', {
       staticClass: "flex-1"
@@ -94203,7 +94234,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [(_vm.disabled.accept) ? _c('span', [_c('i', {
       staticClass: "fa fa-btn fa-spinner fa-spin"
-    })]) : _vm._e(), _vm._v("\n                                                Accept\n                                            ")]) : (_vm.checkIfBidHasBeenAccepted(_vm.jobTask, bid)) ? _c('div', [_c('strong', [_vm._v("Accepted")])]) : (!_vm.checkIfAnyBidHasBeenAccepted(_vm.jobTask) && !_vm.checkIfBidHasBeenSent(bid)) ? _c('div', [_c('strong', [_vm._v("Pending")])]) : _vm._e()])])
+    })]) : _vm._e(), _vm._v("\n                                                    Accept\n                                                ")]) : (_vm.checkIfBidHasBeenAccepted(_vm.jobTask, bid)) ? _c('div', [_c('strong', [_vm._v("Accepted")])]) : (!_vm.checkIfAnyBidHasBeenAccepted(_vm.jobTask) && !_vm.checkIfBidHasBeenSent(bid)) ? _c('div', [_c('strong', [_vm._v("Pending")])]) : _vm._e()])])
   })], 2)]) : _vm._e()]) : _vm._e()])])])], 1), _vm._v(" "), _c('div', {
     staticClass: "col-12 mb-4"
   }, [_c('h1', {
@@ -94216,7 +94247,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.openSubInvite(_vm.jobTask.id)
       }
     }
-  }, [_vm._v("\n                    Add A Sub\n                ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showFinishedBtn(_vm.jobTask) || _vm.showApproveBtn(_vm.jobTask)) ? _c('div', [(_vm.showFinishedBtn(_vm.jobTask)) ? _c('button', {
+  }, [_vm._v("\n                        Add A Sub\n                    ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showFinishedBtn(_vm.jobTask) || _vm.showApproveBtn(_vm.jobTask)) ? _c('div', [(_vm.showFinishedBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal mb-2 w-full",
     attrs: {
       "disabled": _vm.disabled.finished
@@ -94228,7 +94259,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.finished) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                    Click Me When Job Is Finished\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
+  })]) : _vm._e(), _vm._v("\n                        Click Me When Job Is Finished\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal mb-2",
     attrs: {
       "disabled": _vm.disabled.approve
@@ -94240,7 +94271,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.approve) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                    Approve\n                ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
+  })]) : _vm._e(), _vm._v("\n                        Approve\n                    ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "flex w-full"
   }, [(_vm.showDenyBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal mr-1rem w-full",
@@ -94249,7 +94280,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.openDenyTaskForm(_vm.jobTask.id)
       }
     }
-  }, [_vm._v("\n                    Deny\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
+  }, [_vm._v("\n                        Deny\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
     staticClass: "btn btn-block btn-normal-red ml-1rem w-full",
     attrs: {
       "disabled": _vm.disabled.deleteTask
@@ -94261,24 +94292,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.deleteTask) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                    Delete\n                ")]) : _vm._e()])])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
+  })]) : _vm._e(), _vm._v("\n                        Delete\n                    ")]) : _vm._e()])])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
     attrs: {
       "job-task": _vm.jobTask,
-      "job-task-task": _vm.jobTask.task,
-      "job-task-name": _vm.jobTask.task.name,
-      "id": _vm.jobTask.id
+      "job-task-task": _vm.jobTask ? _vm.jobTask.task : null,
+      "job-task-name": _vm.jobTask ? _vm.jobTask.task.name : null,
+      "id": _vm.jobTask ? _vm.jobTask.id : null
     }
   }) : _vm._e(), _vm._v(" "), (_vm.isContractor()) ? _c('deny-task-modal', {
     attrs: {
       "job-task": _vm.jobTask,
-      "id": _vm.jobTask.id
+      "id": _vm.jobTask ? _vm.jobTask.id : null
     }
   }) : _vm._e(), _vm._v(" "), _c('update-task-location-modal', {
     attrs: {
       "job-task": _vm.jobTask,
-      "id": _vm.jobTask.id
+      "id": _vm.jobTask ? _vm.jobTask.id : null
     }
-  })], 1) : _vm._e()
+  })], 1)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

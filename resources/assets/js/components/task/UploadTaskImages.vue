@@ -5,10 +5,10 @@
                 <img :src="jobTask.images[jobTask.images.length - 1].url" alt="">
             </a>
             <!-- lightbox container hidden with CSS -->
-            <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 1].id">
+            <a class="lightbox-target" :id="jobTask ? 'image' + jobTask.images[jobTask.images.length - 1].id : ''">
                 <img :src="jobTask.images[jobTask.images.length - 1].url"
                      :id="'image-img' + jobTask.images[jobTask.images.length - 1].id">
-                <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 1].id"
+                <a class="lightbox-close" :id="jobTask ? 'image-close' + jobTask.images[jobTask.images.length - 1].id : ''"
                    @click.prevent="closeImage(jobTask.images[jobTask.images.length - 1].id)"></a>
             </a>
         </div>
@@ -18,10 +18,10 @@
                 <img :src="jobTask.images[jobTask.images.length - 2].url" alt="">
             </a>
             <!-- lightbox container hidden with CSS -->
-            <a class="lightbox-target" :id="'image' + jobTask.images[jobTask.images.length - 2].id">
+            <a class="lightbox-target" :id="jobTask ? 'image' + jobTask.images[jobTask.images.length - 2].id : ''">
                 <img :src="jobTask.images[jobTask.images.length - 2].url"
-                     :id="'image-img' + jobTask.images[jobTask.images.length - 2].id">
-                <a class="lightbox-close" :id="'image-close' + jobTask.images[jobTask.images.length - 2].id"
+                     :id="jobTask ? 'image-img' + jobTask.images[jobTask.images.length - 2].id : ''">
+                <a class="lightbox-close" :id="jobTask ? 'image-close' + jobTask.images[jobTask.images.length - 2].id : ''"
                    @click.prevent="closeImage(jobTask.images[jobTask.images.length - 2].id)"></a>
             </a>
         </div>
@@ -41,10 +41,10 @@
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
             </span>
             <span v-if="!disabled.uploadTaskImageBtn"> -->
-        <input :ref="'task_photo_' + jobTask.id"
+        <input :ref="jobTask ? 'task_photo_' + jobTask.id : ''"
                class="btn btn-normal ml-2 mt-4"
                style="width: 95%"
-               :id="'task_photo_' + jobTask.id"
+               :id="jobTask ? 'task_photo_' + jobTask.id : ''"
                type="file" @change="uploadTaskImage(jobTask.id)">
         <i v-show="uploading" class="fa fa-btn fa-spinner fa-spin"></i>
         <!-- </span>
@@ -103,33 +103,35 @@
       },
       showTaskImage1(jobTask) {
         // first most recent
-        if (jobTask.images) {
+        if (jobTask) {
           const length = jobTask.images.length
           return length > 0 && jobTask.images[length - 1] !== undefined
         }
       },
       showTaskImage2(jobTask) {
         // second most recent
-        if (jobTask.images) {
+        if (jobTask) {
           const length = jobTask.images.length
           return length > 1 && jobTask.images[length - 2] !== undefined
         }
 
       },
       showMoreImagesBtn(jobTask) {
-        if (jobTask.images) {
+        if (jobTask) {
           return jobTask.images.length > 0
         }
       },
       uploadTaskImage(jobTaskId) {
-        this.uploading = true
-        const data = new FormData()
-        console.log(this.$refs['task_photo_' + jobTaskId])
-        data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0])
-        data.append('jobTaskId', jobTaskId)
+        if (this.jobTask && this.jobTask.job) {
+          this.uploading = true
+          const data = new FormData()
+          console.log(this.$refs['task_photo_' + jobTaskId])
+          data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0])
+          data.append('jobTaskId', jobTaskId)
 
-        this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id)
-        User.uploadTaskImage(data, this.disabled)
+          this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id)
+          User.uploadTaskImage(data, this.disabled)
+        }
       },
     }
   }

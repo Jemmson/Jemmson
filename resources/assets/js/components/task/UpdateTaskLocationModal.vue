@@ -76,6 +76,9 @@
 </template>
 
 <script>
+
+  import User from '../../classes/User'
+
   export default {
     props: {
       jobTask: Object,
@@ -94,7 +97,8 @@
         }),
         disabled: {
           update: false
-        }
+        },
+        authUser: {}
       }
     },
     methods: {
@@ -107,10 +111,10 @@
       update() {
         this.form.id = this.jobTask.id
         this.form.location_id = this.jobTask.location_id
-        User.updateTaskLocation(this.form, this.disabled)
+        this.authUser.updateTaskLocation(this.form, this.disabled)
       },
       initAutocomplete() {
-        User.initAutocomplete('route2')
+        this.authUser.initAutocomplete('route2')
       }
     },
     computed: {},
@@ -124,6 +128,9 @@
       Bus.$on('updateFormLocation', (payload) => {
         this.updateFormLocation(payload)
       })
+    },
+    created() {
+      this.authUser = new User()
     }
   }
 </script>
