@@ -223,7 +223,14 @@
           : (this.showDeclineForm = true)
       },
       approve(data) {
-        Customer.approveBid(this.form, this.disabled)
+
+        if (this.form.id && this.bid.status) {
+          Customer.approveBid(this.form, this.disabled)
+        } else {
+          this.form.id = this.bid.id
+          this.form.status = this.bid.status
+          Customer.approveBid(this.form, this.disabled)
+        }
       },
       declineBid() {
         Customer.declineBid(this.form, this.disabled)

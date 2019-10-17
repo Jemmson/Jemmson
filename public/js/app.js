@@ -36395,7 +36395,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.showDeclineForm ? this.showDeclineForm = false : this.showDeclineForm = true;
     },
     approve(data) {
-      Customer.approveBid(this.form, this.disabled);
+
+      if (this.form.id && this.bid.status) {
+        Customer.approveBid(this.form, this.disabled);
+      } else {
+        this.form.id = this.bid.id;
+        this.form.status = this.bid.status;
+        Customer.approveBid(this.form, this.disabled);
+      }
     },
     declineBid() {
       Customer.declineBid(this.form, this.disabled);
@@ -44404,6 +44411,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
 
 
 
@@ -44636,7 +44645,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       // return (status === 'bid_task.finished_by_sub' || this.jobStatus === 'bid.declined');
     },
     showFinishedBtn(jobTask) {
-      if (this.isContractor() && User.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.approved_by_customer' || jobTask.status === 'bid_task.reopened' || jobTask.status === 'bid_task.denied')) {
+      if (this.isContractor() && User.isAssignedToMe(jobTask, this.user.id) && (jobTask.status === 'bid_task.approved_by_customer' || jobTask.status === 'bid_task.reopened' || jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.denied')) {
         return true;
       }
       return false;
@@ -94208,7 +94217,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("\n                    Add A Sub\n                ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showFinishedBtn(_vm.jobTask) || _vm.showApproveBtn(_vm.jobTask)) ? _c('div', [(_vm.showFinishedBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal mb-2",
+    staticClass: "btn btn-block btn-normal mb-2 w-full",
     attrs: {
       "disabled": _vm.disabled.finished
     },
@@ -94231,15 +94240,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.approve) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                    Approve\n                ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showDenyBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal mb-2",
+  })]) : _vm._e(), _vm._v("\n                    Approve\n                ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "flex w-full"
+  }, [(_vm.showDenyBtn(_vm.jobTask)) ? _c('button', {
+    staticClass: "btn btn-block btn-normal mr-1rem w-full",
     on: {
       "click": function($event) {
         _vm.openDenyTaskForm(_vm.jobTask.id)
       }
     }
-  }, [_vm._v("\n                Deny\n            ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal-red",
+  }, [_vm._v("\n                    Deny\n                ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
+    staticClass: "btn btn-block btn-normal-red ml-1rem w-full",
     attrs: {
       "disabled": _vm.disabled.deleteTask
     },
@@ -94250,7 +94261,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.deleteTask) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                Delete\n            ")]) : _vm._e()])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
+  })]) : _vm._e(), _vm._v("\n                    Delete\n                ")]) : _vm._e()])])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
     attrs: {
       "job-task": _vm.jobTask,
       "job-task-task": _vm.jobTask.task,
