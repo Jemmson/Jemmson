@@ -171,10 +171,12 @@
                                                        @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
                                                 >
                                                 <div v-else class="mt-1">
-                                                    <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price) }}</strong>
+                                                    <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price)
+                                                        }}</strong>
                                                 </div>
                                             </div>
-                                            <div class="error" v-if="errors.unit_price">Your Contractor Task Price Must Be
+                                            <div class="error" v-if="errors.unit_price">Your Contractor Task Price Must
+                                                Be
                                                 Higher The Sub Price
                                             </div>
                                             <div class="error" v-if="errors.priceMustBeANumber">Your Input Must Be A
@@ -205,13 +207,16 @@
                             <!-- / location -->
                             <div class="col-12">
 
-                                <div class="flex flex-col">
+                                <div class="flex flex-col" v-if="jobLocationHasBeenSet">
                                     <div>
                                         {{ getAddressLine1 }}
                                     </div>
                                     <div>
                                         {{ getCity }}, {{ getLocationState }} {{ getZip }}
                                     </div>
+                                </div>
+                                <div v-else>
+                                    Job Location Has Not Been Set
                                 </div>
 
                                 <hr>
@@ -220,7 +225,8 @@
                                     <i class="fas fa-map-marker icon"></i>
                                     {{ location(jobTask, job) }}
                                 </div>
-                                <div class="flex flex-col" v-else-if="location(jobTask, job) === 'Same as Job Location'">
+                                <div class="flex flex-col"
+                                     v-else-if="location(jobTask, job) === 'Same as Job Location'">
                                     <span class="label mb-2">Change Task Location</span>
                                     <button class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
                                         <i class="fas fa-edit"></i>
@@ -272,7 +278,8 @@
                                     </div>
                                     <div class="flex flex-col" v-if="isContractor()">
                                         <message label="Notes For Customer" :jobId="jobTask ? jobTask.id : -1"
-                                                 :server-message="jobTask ? jobTask.customer_message : null" actor='customer'
+                                                 :server-message="jobTask ? jobTask.customer_message : null"
+                                                 actor='customer'
                                                  :disable-messages="disableMessages"></message>
                                     </div>
 
@@ -477,6 +484,13 @@
         job: state => state.job.model,
         jobStatus: state => state.job.model.status
       }),
+      jobLocationHasBeenSet() {
+        if ( this.jobTask && this.jobTask.location ) {
+          return true
+        } else {
+          return false
+        }
+      },
       getCustomerNotes() {
         if (this.jobTask) {
           if (this.jobTask.job.customer) {
@@ -811,7 +825,7 @@
         $('#sub-invite-modal_' + jobTaskId).modal()
       },
       location(jobTask, bid) {
-        if (this.job && jobTask) {
+        if (this.job && jobTask && jobTask.location) {
           // debugger;
           const task_location = jobTask.location_id
           const job_location = this.job.location_id

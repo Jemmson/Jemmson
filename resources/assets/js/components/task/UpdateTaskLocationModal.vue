@@ -103,15 +103,19 @@
     },
     methods: {
       updateFormLocation(location) {
-        this.form.address_line_1 = location.route
-        this.form.city = location.locality
-        this.form.state = location.administrative_area_level_1
-        this.form.zip = location.postal_code
+        if (this.jobTask) {
+          this.form.address_line_1 = location.route
+          this.form.city = location.locality
+          this.form.state = location.administrative_area_level_1
+          this.form.zip = location.postal_code
+        }
       },
       update() {
-        this.form.id = this.jobTask.id
-        this.form.location_id = this.jobTask.location_id
-        this.authUser.updateTaskLocation(this.form, this.disabled)
+        if (this.jobTask) {
+          this.form.id = this.jobTask.id
+          this.form.location_id = this.jobTask.location_id
+          this.authUser.updateTaskLocation(this.form, this.disabled)
+        }
       },
       initAutocomplete() {
         this.authUser.initAutocomplete('route2')
@@ -119,15 +123,17 @@
     },
     computed: {},
     mounted: function() {
-      this.initAutocomplete()
-      this.form.address_line_1 = this.jobTask.address_line_1
-      this.form.address_line_2 = this.jobTask.address_line_2
-      this.form.city = this.jobTask.city
-      this.form.state = this.jobTask.state
-      this.form.zip = this.jobTask.zip
-      Bus.$on('updateFormLocation', (payload) => {
-        this.updateFormLocation(payload)
-      })
+      if (this.jobTask) {
+        this.initAutocomplete()
+        this.form.address_line_1 = this.jobTask.address_line_1
+        this.form.address_line_2 = this.jobTask.address_line_2
+        this.form.city = this.jobTask.city
+        this.form.state = this.jobTask.state
+        this.form.zip = this.jobTask.zip
+        Bus.$on('updateFormLocation', (payload) => {
+          this.updateFormLocation(payload)
+        })
+      }
     },
     created() {
       this.authUser = new User()
