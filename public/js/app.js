@@ -6833,6 +6833,189 @@ function doResolve(fn, promise) {
 class Language {
   static lang() {
     return {
+      estimate: {
+        initiated: {
+          sub: null,
+          general: 'Initiated',
+          customer: null
+        },
+        in_progress: {
+          bid_task: {
+            initiated: {
+              noSub: {
+                sub: null,
+                general: 'Please Finish and Submit your Bid',
+                customer: 'Please Wait for Finished Bid'
+              },
+              sub: {
+                initiated: {
+                  sub: 'Please Review Task and Submit Bid',
+                  general: 'Please Finish and Submit your Bid',
+                  customer: null
+                },
+                task_sent: {
+                  sub: 'Please Wait for General to Complete Bid',
+                  general: 'Please Finish and Submit your Bid',
+                  customer: 'Please Wait for Finished Bid'
+                },
+                accepted: {
+                  sub: 'Congratulations! General has Accepted your Bid',
+                  general: 'Please Finish and Submit your Bid',
+                  customer: 'Please Wait for Finished Bid'
+                },
+                denied: {
+                  sub: '',
+                  general: 'Please Finish and Submit your Bid',
+                  customer: 'Please Wait for Finished Bid'
+                }
+              }
+            }
+          }
+        },
+        sent: {
+          bid_task: {
+            waiting_for_customer_approval: {
+              noSub: {
+                sub: null,
+                general: 'Your Bid has Been Successfully Sent',
+                customer: 'Your Bid is Complete. Please Approve, Change, or Cancel'
+              },
+              sub: {
+                waiting_for_customer_approval: {
+                  sub: 'Your Task has Been Sent. Waiting on Customer Approval',
+                  general: 'Your Bid has Been Successfully Sent',
+                  customer: 'Your Bid is Complete. Please Approve, Change, or Cancel'
+                }
+              }
+            }
+          }
+        },
+        changed: {
+          bid_task: {
+            customer_changes_bid: {
+              sub: {
+                noSub: {
+                  sub: null,
+                  general: 'Customer Requests a Change. Please Review',
+                  customer: 'Waiting on General to Review Changes'
+                },
+                customer_changes_bid: {
+                  sub: 'Customer is Requesting a Change. Please Review',
+                  general: 'Customer Requests a Change. Please Review',
+                  customer: 'Waiting on General to Review Changes'
+                }
+              }
+            }
+          }
+        },
+        canceled_by_customer: {
+          bid_task: {
+            canceled_by_customer: {
+              noSub: {
+                sub: null,
+                general: 'Customer has Canceled Job',
+                customer: 'Thank You. Sorry Job did not Work Out'
+              },
+              sub: {
+                canceled_by_customer: {
+                  sub: 'Customer has Canceled Job',
+                  general: 'Customer has Canceled Job',
+                  customer: 'Thank You. Sorry Job did not Work Out'
+                }
+              }
+            }
+          }
+        },
+        canceled_by_general: {
+          bid_task: {
+            canceled_by_general: {
+              noSub: {
+                sub: null,
+                general: 'General has Canceled Job',
+                customer: 'General has Canceled Job'
+              },
+              sub: {
+                canceled_by_customer: {
+                  sub: 'General has Canceled Job',
+                  general: 'General has Canceled Job',
+                  customer: 'General has Canceled Job'
+                }
+              }
+            }
+          }
+        }
+      },
+      job: {
+        approved: {
+          bid_task: {
+            approved_by_customer: {
+              noSub: {
+                sub: null,
+                general: 'Congratulations! Bid has been Approved. Please Begin Work!',
+                customer: 'Thank You for Approving Work. Contractor will begin work'
+              },
+              sub: {
+                approved_by_customer: {
+                  sub: 'Congratulations! Bid has been Approved. Please Begin Work!',
+                  general: 'Congratulations! Bid has been Approved. Please Begin Work!',
+                  customer: 'Thank You for Approving Work. Contractor will begin work'
+                },
+                finished_job: {
+                  sub: 'Task Completed. Please wait for General to Approve the Work',
+                  general: 'Sub Has finished. Please Approve the job',
+                  customer: 'Sub Has finished. General is reviewing bid'
+                },
+                finished_job_approved_by_contractor: {
+                  sub: 'General Approved',
+                  general: '',
+                  customer: ''
+                },
+                finished_job_denied_by_contractor: {
+                  sub: 'General Requests a Change on Job. Please Review',
+                  general: 'Job Change Sent. Sub is Reviewing',
+                  customer: 'Sub Has finished. General is reviewing bid'
+                }
+              }
+            },
+            general_finished_work: {
+              sub: null,
+              general: 'Please wait for customer to pay for task',
+              customer: 'Task is Finished. Please Pay for task'
+            }
+          }
+        },
+        declines_finished_task: {
+          bid_task: {
+            customer_changes_finished_task: {
+              sub: {
+                customer_changes_finished_task: {
+                  sub: 'Customer Requests a Change. Please Review',
+                  general: 'Customer Requests a Change. Please Review',
+                  customer: 'Change Sent. Contractors are reviewing'
+                }
+              }
+            }
+          }
+        },
+        paid: {
+          bid_task: {
+            paid: {
+              noSub: {
+                sub: null,
+                general: 'Customer Has Sent Payment!',
+                customer: 'Thank You For Your Payment'
+              },
+              sub: {
+                paid: {
+                  sub: 'Customer Has Sent Payment!',
+                  general: 'Customer Has Sent Payment!',
+                  customer: 'Thank You For Your Payment'
+                }
+              }
+            }
+          }
+        }
+      },
       // initiated
       'bid_task.initiated': {
         sub: 'Please Bid',
@@ -41230,15 +41413,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   methods: {
     updateFormLocation(location) {
-      this.form.address_line_1 = location.route;
-      this.form.city = location.locality;
-      this.form.state = location.administrative_area_level_1;
-      this.form.zip = location.postal_code;
+      if (this.jobTask) {
+        this.form.address_line_1 = location.route;
+        this.form.city = location.locality;
+        this.form.state = location.administrative_area_level_1;
+        this.form.zip = location.postal_code;
+      }
     },
     update() {
-      this.form.id = this.jobTask.id;
-      this.form.location_id = this.jobTask.location_id;
-      this.authUser.updateTaskLocation(this.form, this.disabled);
+      if (this.jobTask) {
+        this.form.id = this.jobTask.id;
+        this.form.location_id = this.jobTask.location_id;
+        this.authUser.updateTaskLocation(this.form, this.disabled);
+      }
     },
     initAutocomplete() {
       this.authUser.initAutocomplete('route2');
@@ -41246,15 +41433,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   computed: {},
   mounted: function () {
-    this.initAutocomplete();
-    this.form.address_line_1 = this.jobTask.address_line_1;
-    this.form.address_line_2 = this.jobTask.address_line_2;
-    this.form.city = this.jobTask.city;
-    this.form.state = this.jobTask.state;
-    this.form.zip = this.jobTask.zip;
-    Bus.$on('updateFormLocation', payload => {
-      this.updateFormLocation(payload);
-    });
+    if (this.jobTask) {
+      this.initAutocomplete();
+      this.form.address_line_1 = this.jobTask.address_line_1;
+      this.form.address_line_2 = this.jobTask.address_line_2;
+      this.form.city = this.jobTask.city;
+      this.form.state = this.jobTask.state;
+      this.form.zip = this.jobTask.zip;
+      Bus.$on('updateFormLocation', payload => {
+        this.updateFormLocation(payload);
+      });
+    }
   },
   created() {
     this.authUser = new __WEBPACK_IMPORTED_MODULE_0__classes_User__["a" /* default */]();
@@ -44428,6 +44617,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -44493,6 +44689,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     job: state => state.job.model,
     jobStatus: state => state.job.model.status
   }), {
+    jobLocationHasBeenSet() {
+      if (this.jobTask && this.jobTask.location) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     getCustomerNotes() {
       if (this.jobTask) {
         if (this.jobTask.job.customer) {
@@ -44796,7 +44999,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       $('#sub-invite-modal_' + jobTaskId).modal();
     },
     location(jobTask, bid) {
-      if (this.job && jobTask) {
+      if (this.job && jobTask && jobTask.location) {
         // debugger;
         const task_location = jobTask.location_id;
         const job_location = this.job.location_id;
@@ -94066,7 +94269,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "mt-1"
   }, [(_vm.unit_price) ? _c('strong', [_vm._v(_vm._s(_vm.taskCustFinalPrice(_vm.unit_price)))]) : _vm._e()])]), _vm._v(" "), (_vm.errors.unit_price) ? _c('div', {
     staticClass: "error"
-  }, [_vm._v("Your Contractor Task Price Must Be\n                                            Higher The Sub Price\n                                        ")]) : _vm._e(), _vm._v(" "), (_vm.errors.priceMustBeANumber) ? _c('div', {
+  }, [_vm._v("Your Contractor Task Price Must\n                                            Be\n                                            Higher The Sub Price\n                                        ")]) : _vm._e(), _vm._v(" "), (_vm.errors.priceMustBeANumber) ? _c('div', {
     staticClass: "error"
   }, [_vm._v("Your Input Must Be A\n                                            Number\n                                        ")]) : _vm._e()]) : _vm._e()])])])])])], 1), _vm._v(" "), _c('div', {
     staticClass: "col-12"
@@ -94076,9 +94279,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_c('div', {
+  }, [(_vm.jobLocationHasBeenSet) ? _c('div', {
     staticClass: "flex flex-col"
-  }, [_c('div', [_vm._v("\n                                    " + _vm._s(_vm.getAddressLine1) + "\n                                ")]), _vm._v(" "), _c('div', [_vm._v("\n                                    " + _vm._s(_vm.getCity) + ", " + _vm._s(_vm.getLocationState) + " " + _vm._s(_vm.getZip) + "\n                                ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
+  }, [_c('div', [_vm._v("\n                                    " + _vm._s(_vm.getAddressLine1) + "\n                                ")]), _vm._v(" "), _c('div', [_vm._v("\n                                    " + _vm._s(_vm.getCity) + ", " + _vm._s(_vm.getLocationState) + " " + _vm._s(_vm.getZip) + "\n                                ")])]) : _c('div', [_vm._v("\n                                Job Location Has Not Been Set\n                            ")]), _vm._v(" "), _c('hr'), _vm._v(" "), (_vm.location(_vm.jobTask, _vm.job) === 'No Address Set Yet') ? _c('div', [_c('i', {
     staticClass: "fas fa-map-marker icon"
   }), _vm._v("\n                                " + _vm._s(_vm.location(_vm.jobTask, _vm.job)) + "\n                            ")]) : (_vm.location(_vm.jobTask, _vm.job) === 'Same as Job Location') ? _c('div', {
     staticClass: "flex flex-col"
