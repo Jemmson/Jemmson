@@ -21177,7 +21177,7 @@ class GeneralContractor {
         let errorMessage = '';
         let hasDateError = false;
         if (pickerDate[0] < today[0] || pickerDate[0] === today[0] && pickerDate[1] < today[1] || pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2]) {
-            errorMessage = 'Start Date cannot be before todays date';
+            errorMessage = 'Start Date cannot be before today\'s date';
             hasDateError = true;
         } else {
             hasDateError = false;
@@ -44624,6 +44624,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -44773,6 +44777,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }
   }),
   methods: {
+    approvedByCustomer() {
+      return this.jobTask.status === 'bid_task.approved_by_customer';
+    },
     getBidPrice(bid) {
       if (bid) {
         return bid.bid_price / 100;
@@ -94442,16 +94449,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12 mb-4"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
-  }), _vm._v(" "), (_vm.isContractor()) ? _c('div', [(_vm.isGeneral() && _vm.showSendSubInvite && !_vm.checkIfAnyBidHasBeenAccepted(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal mb-2",
+  }), _vm._v(" "), _c('div', {
+    staticClass: "flex space-between"
+  }, [(_vm.isGeneral() &&
+    !_vm.approvedByCustomer()) ? _c('button', {
+    ref: "addASubButton",
+    staticClass: "btn btn-sm btn-normal w-full",
     on: {
       "click": function($event) {
         $event.preventDefault();
         _vm.openSubInvite(_vm.jobTask.id)
       }
     }
-  }, [_vm._v("\n                        Add A Sub\n                    ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.showFinishedBtn(_vm.jobTask) || _vm.showApproveBtn(_vm.jobTask)) ? _c('div', [(_vm.showFinishedBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal mb-2 w-full",
+  }, [_vm._v("Add A Sub\n\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showFinishedBtn(_vm.jobTask)) ? _c('button', {
+    staticClass: "btn btn-sm btn-normal w-full",
     attrs: {
       "disabled": _vm.disabled.finished
     },
@@ -94462,8 +94473,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.finished) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                        Click Me When Job Is Finished\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal mb-2",
+  })]) : _vm._e(), _vm._v("Click Me When Job Is Finished\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showApproveBtn(_vm.jobTask)) ? _c('button', {
+    staticClass: "btn btn-sm btn-normal w-full",
     attrs: {
       "disabled": _vm.disabled.approve
     },
@@ -94474,17 +94485,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.approve) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                        Approve\n                    ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "flex w-full"
-  }, [(_vm.showDenyBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal mr-1rem w-full",
+  })]) : _vm._e(), _vm._v("Approve\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showDenyBtn(_vm.jobTask)) ? _c('button', {
+    staticClass: "btn btn-sm btn-normal w-full",
     on: {
       "click": function($event) {
         _vm.openDenyTaskForm(_vm.jobTask.id)
       }
     }
-  }, [_vm._v("\n                        Deny\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-block btn-normal-red ml-1rem w-full",
+  }, [_vm._v("Deny\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
+    staticClass: "btn btn-sm btn-normal w-full",
     attrs: {
       "disabled": _vm.disabled.deleteTask
     },
@@ -94495,7 +94504,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.disabled.deleteTask) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                        Delete\n                    ")]) : _vm._e()])])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
+  })]) : _vm._e(), _vm._v("Delete\n                    ")]) : _vm._e()])])]), _vm._v(" "), (_vm.isContractor()) ? _c('sub-invite-modal', {
     attrs: {
       "job-task": _vm.jobTask,
       "job-task-task": _vm.jobTask ? _vm.jobTask.task : null,

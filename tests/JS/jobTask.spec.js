@@ -16,6 +16,7 @@ describe('JobTask', () => {
   const router = new VueRouter()
   let getters
   let store
+  let wrapper
 
   getters = {
     getMobileValidResponse: () => ['phone', 'mobile', 'land'],
@@ -32,6 +33,22 @@ describe('JobTask', () => {
   afterEach(() => {
 
   })
+
+  wrapper = shallowMount(JobTask,
+    {
+      router,
+      mocks: {
+        $store: {
+          state: {
+            job: {
+              model: {
+                job_tasks: []
+              }
+            }
+          }
+        },
+      }
+    })
 
   it.skip('should update the total cust price final price when the Price is updated', function() {
     const isAssignedToMeStub = sinon.stub
@@ -104,7 +121,6 @@ describe('JobTask', () => {
     // console.log('prices', wrapper.find({ref: 'prices'}).html())
     // console.log('unitPrice', wrapper.find({ref: 'unitPrice'}).html())
 
-
     // let price = wrapper.find({ref: 'price'})
 
     //
@@ -160,5 +176,47 @@ describe('JobTask', () => {
     })
 
   })
+
+  it('should show Add Sub button if I am a general contractor, the customer has not approved the job', function() {
+
+    showAddSubButton()
+
+    let btn = wrapper.find({ref: 'addASubButton'})
+    expect(btn.exists()).toBe(true)
+
+  })
+
+  it('should call the openSubInvite Method when the job Add Sub Button is clicked', function() {
+
+    const openSubInviteStub = sinon.stub()
+
+    wrapper.setMethods({
+      openSubInvite: openSubInviteStub
+    })
+
+    showAddSubButton()
+
+    let btn = wrapper.find({ref: 'addASubButton'})
+    btn.trigger('click')
+    
+    expect(openSubInviteStub.called).toBe(true)
+
+  })
+
+
+  function showAddSubButton(){
+    wrapper.setData({
+      user: {
+        id: 1
+      },
+      jobTask: {
+        task: {
+          contractor_id: 1,
+          name: 'Sarah'
+        },
+        status: 'bid_task.initiated'
+      }
+    })
+  }
 
 })

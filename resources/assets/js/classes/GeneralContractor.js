@@ -149,7 +149,7 @@ export default class GeneralContractor {
             (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
             (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
         ) {
-            errorMessage = 'Start Date cannot be before todays date'
+            errorMessage = 'Start Date cannot be before today\'s date'
             hasDateError = true
         } else {
             hasDateError = false

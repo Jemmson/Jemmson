@@ -356,42 +356,46 @@
                 <!-- Task Actions -->
                 <div class="col-12 mb-4">
                     <h1 class="card-title mt-4"></h1>
+                    <div class="flex space-between">
 
-                    <div v-if="isContractor()">
-                        <button class="btn btn-block btn-normal mb-2" @click.prevent="openSubInvite(jobTask.id)"
-                                v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
-                            Add A Sub
+                        <button
+                                class="btn btn-sm btn-normal w-full"
+                                v-if="isGeneral()
+                                       && !approvedByCustomer()"
+                                ref="addASubButton"
+                                @click.prevent="openSubInvite(jobTask.id)"
+                        >Add A Sub
+
                         </button>
-                    </div>
 
-                    <div v-if="showFinishedBtn(jobTask) || showApproveBtn(jobTask)">
-                        <button class="btn btn-block btn-normal mb-2 w-full" v-if="showFinishedBtn(jobTask)"
+                        
+
+                        <button class="btn btn-sm btn-normal w-full" v-if="showFinishedBtn(jobTask)"
                                 @click="finishedTask(jobTask)" :disabled="disabled.finished">
-                        <span v-if="disabled.finished">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                            Click Me When Job Is Finished
+                            <span v-if="disabled.finished">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>Click Me When Job Is Finished
                         </button>
-                        <button class="btn btn-block btn-normal mb-2" v-if="showApproveBtn(jobTask)"
-                                @click="approveTaskHasBeenFinished(jobTask)" :disabled="disabled.approve">
-                        <span v-if="disabled.approve">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
-                            Approve
-                        </button>
-                    </div>
 
-                    <div class="flex w-full">
-                        <button class="btn btn-block btn-normal mr-1rem w-full" v-if="showDenyBtn(jobTask)"
-                                @click="openDenyTaskForm(jobTask.id)">
-                            Deny
+                        <button class="btn btn-sm btn-normal w-full"
+                                v-if="showApproveBtn(jobTask)"
+                                @click="approveTaskHasBeenFinished(jobTask)"
+                                :disabled="disabled.approve">
+                            <span v-if="disabled.approve">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>Approve
                         </button>
-                        <button class="btn btn-block btn-normal-red ml-1rem w-full" v-if="showDeleteBtn(jobTask)"
-                                @click="deleteTask(jobTask)" :disabled="disabled.deleteTask">
-                    <span v-if="disabled.deleteTask">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                    </span>
-                            Delete
+
+                        <button class="btn btn-sm btn-normal w-full" v-if="showDenyBtn(jobTask)"
+                                @click="openDenyTaskForm(jobTask.id)">Deny
+                        </button>
+                        <button class="btn btn-sm btn-normal w-full"
+                                v-if="showDeleteBtn(jobTask)"
+                                @click="deleteTask(jobTask)"
+                                :disabled="disabled.deleteTask">
+                            <span v-if="disabled.deleteTask">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                            </span>Delete
                         </button>
                     </div>
                 </div>
@@ -485,7 +489,7 @@
         jobStatus: state => state.job.model.status
       }),
       jobLocationHasBeenSet() {
-        if ( this.jobTask && this.jobTask.location ) {
+        if (this.jobTask && this.jobTask.location) {
           return true
         } else {
           return false
@@ -568,6 +572,9 @@
       }
     },
     methods: {
+      approvedByCustomer(){
+        return this.jobTask.status === 'bid_task.approved_by_customer'
+      },
       getBidPrice(bid) {
         if (bid) {
           return bid.bid_price / 100

@@ -685,13 +685,13 @@ class TaskController extends Controller
         $phone = SanatizeService::phone($request->phone);
         $email = $request->email;
         $jobTaskId = $request->jobTaskId;
-        $name = $request;
 
         if (!empty($request->id)) {
             $user_sub = User::getUserByPhoneOrEmail($phone, $email);
         } else {
             $user_sub = User::find($request->id);
         }
+
         $qb = new Quickbook();
         // TODO: Not sure about this logic.
         // TODO: Should be if a user is not a contractor then create a contractor.
