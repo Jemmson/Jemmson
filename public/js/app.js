@@ -45849,6 +45849,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_shared_Card__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_shared_Card__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_user_AddLicenseBox__ = __webpack_require__(630);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_user_AddLicenseBox___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_user_AddLicenseBox__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -46122,6 +46124,20 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -46129,7 +46145,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Register',
   components: {
-    Card: __WEBPACK_IMPORTED_MODULE_1__components_shared_Card___default.a
+    Card: __WEBPACK_IMPORTED_MODULE_1__components_shared_Card___default.a,
+    AddLicenseBox: __WEBPACK_IMPORTED_MODULE_2__components_user_AddLicenseBox___default.a
   },
   data() {
     return {
@@ -46141,6 +46158,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         phoneNumber: '',
         addressLine1: '',
         addressLine2: '',
+        licenses: [],
         city: '',
         state: '',
         zip: '',
@@ -46168,6 +46186,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         busy: false,
         disabled: true
       },
+      boxArray: [],
       phoneFormatError: false,
       userTypeSelected: '',
       usesQuickbooks: false,
@@ -46198,8 +46217,40 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   },
   computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* mapGetters */])(['getQuickBooksState', 'getMobileValidResponse']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])({
     quickBooks: state => state.features.quickbooks
-  })),
+  }), {
+    boxes() {
+      return this.boxArray;
+    }
+  }),
   methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['setMobileResponse']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapActions */])(['checkMobileNumber']), {
+    getLicenseElements() {
+      const lb = document.getElementById('licenseBoxes');
+      let lbArray = [];
+      for (let i = 0; i < lb.children.length; i++) {
+        if (this.nameOrValueIsNotEmpty(lb.children[i])) {
+          lbArray.push({
+            name: lb.children[i].children[0].children[1].value,
+            value: lb.children[i].children[0].children[3].value
+          });
+        }
+      }
+      this.registerForm.licenses = lbArray;
+    },
+    addLicenseBox() {
+      this.boxArray.push(this.boxArray.length + 1);
+    },
+    nameOrValueIsNotEmpty(lb) {
+      return lb.children[0].children[1].value !== '' && lb.children[0].children[3].value !== '';
+    },
+    deleteLicense(license) {
+      const lb = document.getElementById('licenseBoxes');
+      for (let i = 0; i < lb.children.length; i++) {
+        if (license.name === lb.children[i].children[0].children[1].value && license.value === lb.children[i].children[0].children[3].value) {
+          lb.removeChild(lb.children[i]);
+          break;
+        }
+      }
+    },
     validateMobileNumber(phone) {
       // debugger
       this.phoneFormatError = false;
@@ -46322,6 +46373,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         this.registerForm.busy = true;
         if (this.getMobileValidResponse[1] === 'mobile') {
           if (this.registerForm.usertype === 'contractor') {
+            this.getLicenseElements();
             try {
               let { data } = await axios.post('/registerContractor', this.registerForm);
               console.log(data);
@@ -88405,7 +88457,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.userSelected('customer')
       }
     }
-  }, [_vm._v("Customer\n                        ")]), _vm._v(" "), _c('button', {
+  }, [_vm._v("Customer\n                    ")]), _vm._v(" "), _c('button', {
     ref: "contractorButton",
     staticClass: "btn btn-md btn-normal flex-1 ml-1rem",
     class: _vm.userTypeSelected === 'contractor' ? 'selected-button' : '',
@@ -88414,7 +88466,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.userSelected('contractor')
       }
     }
-  }, [_vm._v("Contractor\n                        ")])]), _vm._v(" "), (_vm.showRegistration) ? _c('div', [_c('hr', {
+  }, [_vm._v("Contractor\n                    ")])]), _vm._v(" "), (_vm.showRegistration) ? _c('div', [_c('hr', {
     staticStyle: {
       "margin-top": "3rem"
     }
@@ -88432,6 +88484,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.registerForm.first_name),
       expression: "registerForm.first_name"
     }],
+    ref: "first_name",
     staticClass: "form-control",
     attrs: {
       "id": "firstName",
@@ -88452,11 +88505,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: (_vm.registerForm.errors.first_name !== ''),
-      expression: "registerForm.errors.first_name !== ''"
+      value: (_vm.registerForm.errors ? _vm.registerForm.errors.first_name !== '' : ''),
+      expression: "registerForm.errors ? registerForm.errors.first_name !== '' : ''"
     }],
     staticClass: "help-block"
-  }, [_vm._v(_vm._s(_vm.registerForm.errors.first_name))])]), _vm._v(" "), _c('div', {
+  }, [_vm._v(_vm._s(_vm.registerForm.errors ? _vm.registerForm.errors.first_name : ''))])]), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('label', {
     staticClass: " pt-3 pt-2",
@@ -88585,7 +88638,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "phoneFormatError"
     }],
     staticClass: "formatErrorLabel"
-  }, [_vm._v("The phone number must be 10\n                                numbers\n                            ")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("The phone number must be 10\n                            numbers\n                        ")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -88920,7 +88973,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "password_confirmation"
     }
-  }, [_vm._v("Confirm\n                                Password *")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("Confirm\n                            Password *")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -88952,7 +89005,35 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "registerForm.errors.password_confirmation !== ''"
     }],
     staticClass: "help-block"
-  }, [_vm._v(_vm._s(_vm.registerForm.errors.password_confirmation))])]), _vm._v(" "), _c('hr', {
+  }, [_vm._v(_vm._s(_vm.registerForm.errors.password_confirmation))])]), _vm._v(" "), _c('label', {
+    ref: "contractor_label",
+    attrs: {
+      "for": "addContractorLicenseButton"
+    }
+  }, [_vm._v("\n                        Please Click To Add A Contractor License\n                    ")]), _vm._v(" "), _c('button', {
+    ref: "add_contractor_license_button",
+    staticClass: "btn btn-sm btn-normal",
+    attrs: {
+      "id": "addContractorLicenseButton"
+    },
+    on: {
+      "click": function($event) {
+        _vm.addLicenseBox()
+      }
+    }
+  }, [_vm._v("Add A License\n                    ")]), _vm._v(" "), _c('div', {
+    attrs: {
+      "id": "licenseBoxes"
+    }
+  }, _vm._l((_vm.boxes), function(i) {
+    return _c('div', [_c('add-license-box', {
+      on: {
+        "delete": function($event) {
+          _vm.deleteLicense($event)
+        }
+      }
+    })], 1)
+  }), 0), _vm._v(" "), _c('hr', {
     staticStyle: {
       "margin-top": "3rem"
     }
@@ -88994,7 +89075,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }
-  }), _vm._v("I Accept The\n                            "), _c('a', {
+  }), _vm._v("I Accept The\n                        "), _c('a', {
     attrs: {
       "href": "/terms",
       "target": "_blank"
@@ -89022,9 +89103,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [(_vm.registerForm.busy) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin mr-2"
-  }), _vm._v("Registering\n                            ")]) : _c('span', [_c('i', {
+  }), _vm._v("Registering\n                        ")]) : _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-check-circle mr-2"
-  }), _vm._v("Register\n                            ")])]), _vm._v(" "), _c('div', {
+  }), _vm._v("Register\n                        ")])]), _vm._v(" "), _c('div', {
     staticStyle: {
       "height": "10rem",
       "width": "100%"
@@ -99641,6 +99722,179 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-5c122d78\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Job.vue", function() {
      var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-5c122d78\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Job.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 628 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'AddLicenseBox',
+  data() {
+    return {
+      name: '',
+      value: ''
+    };
+  },
+  methods: {
+    deleteLicense() {
+      this.$emit('delete', { name: this.name, value: this.value });
+    }
+  }
+});
+
+/***/ }),
+/* 629 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+/***/ }),
+/* 630 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(632)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(628),
+  /* template */
+  __webpack_require__(631),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/shawnpike/Documents/code/Jemmson/resources/assets/js/components/user/AddLicenseBox.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] AddLicenseBox.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4a3d8e26", Component.options)
+  } else {
+    hotAPI.reload("data-v-4a3d8e26", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 631 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('label', {
+    attrs: {
+      "for": "licenseName"
+    }
+  }, [_vm._v("License Name")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.name),
+      expression: "name"
+    }],
+    attrs: {
+      "id": "licenseName",
+      "type": "text"
+    },
+    domProps: {
+      "value": (_vm.name)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.name = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "licenseNumber"
+    }
+  }, [_vm._v("License Number")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.value),
+      expression: "value"
+    }],
+    attrs: {
+      "id": "licenseNumber",
+      "type": "text"
+    },
+    domProps: {
+      "value": (_vm.value)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.value = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-normal btn-sm",
+    on: {
+      "click": function($event) {
+        _vm.deleteLicense()
+      }
+    }
+  }, [_vm._v("Delete")])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-4a3d8e26", module.exports)
+  }
+}
+
+/***/ }),
+/* 632 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(629);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("ef7598a6", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4a3d8e26\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AddLicenseBox.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4a3d8e26\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AddLicenseBox.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });

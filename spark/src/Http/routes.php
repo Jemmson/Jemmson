@@ -205,7 +205,6 @@ $router->group(['middleware' => 'web'], function ($router) {
                 'country' => 'required'
             ]);
 
-
             if ($validator->fails()) {
                 return response()->json([
                     'errors' => $validator->errors()
@@ -269,6 +268,23 @@ $router->group(['middleware' => 'web'], function ($router) {
         }
 
         $user->location_id = $location->id;
+
+        foreach($request->licenses as $license){
+            $l = new \App\License();
+            $l->contractor_id = $user->id;
+            $l->name = $license['name'];
+            $l->value = $license['value'];
+
+            try {
+                $l->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+
+        }
 
         try {
             $user->save();

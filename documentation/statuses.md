@@ -33,7 +33,8 @@
 |15|General declines the task|  job.approved | bid_task.approved_by_customer | sub.finished_job_denied_by_contractor |
 |16|Customer declines the task|  job.declines_finished_task | bid_task.customer_changes_finished_task | sub.customer_changes_finished_task |
 |17|Contractor approves the task|  job.approved | bid_task.approved_by_customer | sub.finished_job_approved_by_contractor |
-|18|Customer pays for job|  job.paid | bid_task.paid | sub.paid |
+|18|Customer has not paid for finished job | job.approved | bid_task.approved_by_customer | sub.waiting_for_customer_payment |
+|19|Customer pays for job|  job.paid | bid_task.paid | sub.paid |
 
 
 

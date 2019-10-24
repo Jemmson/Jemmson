@@ -368,7 +368,7 @@
 
                         </button>
 
-                        
+
 
                         <button class="btn btn-sm btn-normal w-full" v-if="showFinishedBtn(jobTask)"
                                 @click="finishedTask(jobTask)" :disabled="disabled.finished">

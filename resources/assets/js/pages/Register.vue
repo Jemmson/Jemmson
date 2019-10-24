@@ -21,25 +21,25 @@
                     </div>
 
 
-<!--                    <h4 data-v-24a44010=""-->
-<!--                        class="text-center"-->
-<!--                        v-if="usesQuickbooks"-->
-<!--                        style="margin-top: 1.5rem">Do You Use Quickbooks?</h4>-->
+                    <!--                    <h4 data-v-24a44010=""-->
+                    <!--                        class="text-center"-->
+                    <!--                        v-if="usesQuickbooks"-->
+                    <!--                        style="margin-top: 1.5rem">Do You Use Quickbooks?</h4>-->
 
-<!--                    <div class="row w-full justify-content-between" v-if="usesQuickbooks">-->
-<!--                        <button class="btn btn-md btn-normal-green flex-1 mr-1rem">-->
-<!--                            <a-->
-<!--                                    :href="quickbooks.auth_url"-->
-<!--                                    ref="quickbooks"-->
-<!--                            >-->
-<!--                                <span style="color: green;">Quickbooks</span>-->
-<!--                            </a>-->
-<!--                        </button>-->
+                    <!--                    <div class="row w-full justify-content-between" v-if="usesQuickbooks">-->
+                    <!--                        <button class="btn btn-md btn-normal-green flex-1 mr-1rem">-->
+                    <!--                            <a-->
+                    <!--                                    :href="quickbooks.auth_url"-->
+                    <!--                                    ref="quickbooks"-->
+                    <!--                            >-->
+                    <!--                                <span style="color: green;">Quickbooks</span>-->
+                    <!--                            </a>-->
+                    <!--                        </button>-->
 
-<!--                        <button class="btn btn-md btn-normal flex-1 ml-1rem"-->
-<!--                                v-on:click="doesNotUseQuickbooks()"><span class="uppercase">no</span>-->
-<!--                        </button>-->
-<!--                    </div>-->
+                    <!--                        <button class="btn btn-md btn-normal flex-1 ml-1rem"-->
+                    <!--                                v-on:click="doesNotUseQuickbooks()"><span class="uppercase">no</span>-->
+                    <!--                        </button>-->
+                    <!--                    </div>-->
 
                     <!--                    <img-->
                     <!--                            alt="qbo/docs/develop/authentication-and-authorization/C2QB_auth.png"-->
@@ -61,9 +61,11 @@
                                     name="fname"
                                     autocomplete="on"
                                     class="form-control"
+                                    ref="first_name"
                                     v-model="registerForm.first_name">
                             <!--                <span class="help-block" v-show="registerForm.errors.has('first_name')"></span>-->
-                            <span class="help-block" v-show="registerForm.errors.first_name !== ''">{{registerForm.errors.first_name}}</span>
+                            <span class="help-block"
+                                  v-show="registerForm.errors ? registerForm.errors.first_name !== '' : ''">{{ registerForm.errors ? registerForm.errors.first_name : ''}}</span>
                         </div>
 
                         <div class="row">
@@ -224,9 +226,20 @@
                         </div>
 
 
-                        <!-- Terms And Conditions -->
+                        <label for="addContractorLicenseButton" ref="contractor_label">
+                            Please Click To Add A Contractor License
+                        </label>
+                        <button @click="addLicenseBox()" id="addContractorLicenseButton"
+                                class="btn btn-sm btn-normal" ref="add_contractor_license_button">Add A License
+                        </button>
 
-                        <!--            <div class="input-section" :class="{'has-error': registerForm.errors.has('terms')}">-->
+                        <div id="licenseBoxes">
+                            <div v-for="i in boxes">
+                                <add-license-box
+                                        @delete="deleteLicense($event)">
+                                </add-license-box>
+                            </div>
+                        </div>
 
                         <hr style="margin-top: 3rem">
 
@@ -272,11 +285,13 @@
 <script>
   import { mapGetters, mapState, mapActions, mapMutations } from 'vuex'
   import Card from '../components/shared/Card'
+  import AddLicenseBox from '../components/user/AddLicenseBox'
 
   export default {
     name: 'Register',
     components: {
-      Card
+      Card,
+      AddLicenseBox
     },
     data() {
       return {
@@ -288,6 +303,7 @@
           phoneNumber: '',
           addressLine1: '',
           addressLine2: '',
+          licenses: [],
           city: '',
           state: '',
           zip: '',
@@ -315,6 +331,7 @@
           busy: false,
           disabled: true
         },
+        boxArray: [],
         phoneFormatError: false,
         userTypeSelected: '',
         usesQuickbooks: false,
@@ -656,10 +673,44 @@
       ...mapState({
         quickBooks: state => state.features.quickbooks,
       }),
+      boxes() {
+        return this.boxArray
+      }
     },
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),
+      getLicenseElements() {
+        const lb = document.getElementById('licenseBoxes')
+        let lbArray = []
+        for (let i = 0; i < lb.children.length; i++) {
+          if (this.nameOrValueIsNotEmpty(lb.children[i])) {
+            lbArray.push({
+              name: lb.children[i].children[0].children[1].value,
+              value: lb.children[i].children[0].children[3].value
+            })
+          }
+        }
+        this.registerForm.licenses = lbArray
+      },
+      addLicenseBox() {
+        this.boxArray.push(this.boxArray.length + 1)
+      },
+      nameOrValueIsNotEmpty(lb) {
+        return lb.children[0].children[1].value !== ''
+          && lb.children[0].children[3].value !== ''
+      },
+      deleteLicense(license) {
+        const lb = document.getElementById('licenseBoxes')
+        for (let i = 0; i < lb.children.length; i++) {
+          if (license.name === lb.children[i].children[0].children[1].value &&
+            license.value === lb.children[i].children[0].children[3].value) {
+            lb.removeChild(lb.children[i])
+            break
+          }
+        }
+
+      },
       validateMobileNumber(phone) {
         // debugger
         this.phoneFormatError = false
@@ -793,6 +844,7 @@
           this.registerForm.busy = true
           if (this.getMobileValidResponse[1] === 'mobile') {
             if (this.registerForm.usertype === 'contractor') {
+              this.getLicenseElements()
               try {
                 let {data} = await axios.post('/registerContractor', this.registerForm)
                 console.log(data)
@@ -959,6 +1011,7 @@
         font-weight: bolder;
     }
 
-    input {}
+    input {
+    }
 
 </style>

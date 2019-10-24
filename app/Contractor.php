@@ -45,6 +45,11 @@ class Contractor extends Model
         return $this->hasMany(Time::class, 'contractor_id', 'user_id');
     }
 
+    public function licenses()
+    {
+        return $this->hasMany(License::class, 'contractor_id', 'user_id');
+    }
+
     public function numberOfJobsLeft()
     {
         return $this->free_jobs;
