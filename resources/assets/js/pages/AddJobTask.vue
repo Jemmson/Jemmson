@@ -110,43 +110,6 @@
                         </span>
                 </div>
 
-
-                <!--Sub Task Price-->
-                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('subTaskPrice')}">
-                    <label for="subTaskPrice">Subcontractor Price</label>
-                    <div class="flex items-center">
-                        <input
-                                @blur="verifyInputIsANumber($event.target.value, 'subTaskPrice')"
-                                @focus="hideTaskResults"
-                                @keyup="checkIfSubTaskPriceHasChanged($event.target.value)"
-                                autocomplete="text"
-                                class="form-control bat-input"
-                                :class="errors.subPriceTooHigh.exists ? 'box-error': ''"
-                                :disabled="taskExistsInJob"
-                                id="subTaskPrice"
-                                name="subTaskPrice"
-                                ref="sub_task_price"
-                                type="text"
-                                v-model="addNewTaskForm.subTaskPrice"
-                        >
-                    </div>
-                    <span :class="{ error: errors.notANumber.subTaskPrice }"
-                          v-show="errors.notANumber.subTaskPrice">
-                        Sub Price {{ errors.notANumber.message }}
-                        </span>
-                    <span class="help-block"
-                          v-show="addNewTaskForm.errors.has('subTaskPrice')">
-                            {{ addNewTaskForm.errors.get('subTaskPrice') }}
-                        </span>
-                    <div v-if="errors.subPriceTooHigh.exists"
-                         ref="sub_price_too_high"
-                         class="help-block"
-                         style="color: red; margin-top: .25rem"
-                    >
-                        {{ errors.subPriceTooHigh.message }}
-                    </div>
-                </div>
-
                 <!--Start Date-->
                 <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
                     <label for="start_date">Start Date</label>

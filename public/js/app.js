@@ -41878,43 +41878,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -87080,75 +87043,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     staticClass: "help-block"
   }, [_vm._v("\n                        " + _vm._s(_vm.addNewTaskForm.errors.get('qtyUnit')) + "\n                    ")])]), _vm._v(" "), _c('div', {
-    staticClass: "form-group",
-    class: {
-      'has-error': _vm.addNewTaskForm.errors.has('subTaskPrice')
-    }
-  }, [_c('label', {
-    attrs: {
-      "for": "subTaskPrice"
-    }
-  }, [_vm._v("Subcontractor Price")]), _vm._v(" "), _c('div', {
-    staticClass: "flex items-center"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.addNewTaskForm.subTaskPrice),
-      expression: "addNewTaskForm.subTaskPrice"
-    }],
-    ref: "sub_task_price",
-    staticClass: "form-control bat-input",
-    class: _vm.errors.subPriceTooHigh.exists ? 'box-error' : '',
-    attrs: {
-      "autocomplete": "text",
-      "disabled": _vm.taskExistsInJob,
-      "id": "subTaskPrice",
-      "name": "subTaskPrice",
-      "type": "text"
-    },
-    domProps: {
-      "value": (_vm.addNewTaskForm.subTaskPrice)
-    },
-    on: {
-      "blur": function($event) {
-        _vm.verifyInputIsANumber($event.target.value, 'subTaskPrice')
-      },
-      "focus": _vm.hideTaskResults,
-      "keyup": function($event) {
-        _vm.checkIfSubTaskPriceHasChanged($event.target.value)
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.$set(_vm.addNewTaskForm, "subTaskPrice", $event.target.value)
-      }
-    }
-  })]), _vm._v(" "), _c('span', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.errors.notANumber.subTaskPrice),
-      expression: "errors.notANumber.subTaskPrice"
-    }],
-    class: {
-      error: _vm.errors.notANumber.subTaskPrice
-    }
-  }, [_vm._v("\n                    Sub Price " + _vm._s(_vm.errors.notANumber.message) + "\n                    ")]), _vm._v(" "), _c('span', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.addNewTaskForm.errors.has('subTaskPrice')),
-      expression: "addNewTaskForm.errors.has('subTaskPrice')"
-    }],
-    staticClass: "help-block"
-  }, [_vm._v("\n                        " + _vm._s(_vm.addNewTaskForm.errors.get('subTaskPrice')) + "\n                    ")]), _vm._v(" "), (_vm.errors.subPriceTooHigh.exists) ? _c('div', {
-    ref: "sub_price_too_high",
-    staticClass: "help-block",
-    staticStyle: {
-      "color": "red",
-      "margin-top": ".25rem"
-    }
-  }, [_vm._v("\n                    " + _vm._s(_vm.errors.subPriceTooHigh.message) + "\n                ")]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "form-group",
     class: {
       'has-error': _vm.addNewTaskForm.errors.has('start_date')
