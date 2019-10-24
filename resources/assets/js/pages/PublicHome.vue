@@ -3,10 +3,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="flex flex-col items-center header-content-left">
-                    <button name="login" @click.prevent="route('register')"
-                            style="margin-top: 1rem; margin-bottom: 1rem;" class="btn btn-md btn-normal">
-                        <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Register Now
-                    </button>
                     <div class="slogan text-center">Subbin' <br> Made Easy!</div>
                     <div class="sub-slogan text-center">Register or Login today to sub contract your work and get
                         paid
@@ -60,6 +56,10 @@
                             </div>
                         </div>
                     </form>
+                    <button name="login" @click.prevent="route('register')"
+                            style="margin-top: 1rem; margin-bottom: 1rem;" class="btn btn-md btn-normal">
+                        <i class="fas m-r-xs fa-sign-in-alt mr-2"></i>Register Now
+                    </button>
                 </div>
             </div>
         </div>

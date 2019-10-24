@@ -93884,28 +93884,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_c('div', {
-    staticClass: "flex flex-col items-center header-content-left"
-  }, [_c('button', {
-    staticClass: "btn btn-md btn-normal",
-    staticStyle: {
-      "margin-top": "1rem",
-      "margin-bottom": "1rem"
-    },
-    attrs: {
-      "name": "login"
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.route('register')
-      }
-    }
-  }, [_c('i', {
-    staticClass: "fas m-r-xs fa-sign-in-alt mr-2"
-  }), _vm._v("Register Now\n                ")]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c('div', {
-    staticClass: "sub-slogan text-center"
-  }, [_vm._v("Register or Login today to sub contract your work and get\n                    paid\n                    without all\n                    of the hassle\n                ")])]), _vm._v(" "), _c('div', {
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "login-form place-form-items header-content-right"
   }, [_vm._m(1), _vm._v(" "), _c('form', {
     staticClass: "form form-horizontal",
@@ -94030,11 +94009,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": _vm.currentWindow + '/password/reset'
     }
-  }, [_vm._v("Forgot Your\n                                Password?")])])])])])])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4)])
+  }, [_vm._v("Forgot Your\n                                Password?")])])])]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-md btn-normal",
+    staticStyle: {
+      "margin-top": "1rem",
+      "margin-bottom": "1rem"
+    },
+    attrs: {
+      "name": "login"
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.route('register')
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fas m-r-xs fa-sign-in-alt mr-2"
+  }), _vm._v("Register Now\n                ")])])])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4)])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
+    staticClass: "flex flex-col items-center header-content-left"
+  }, [_c('div', {
     staticClass: "slogan text-center"
-  }, [_vm._v("Subbin' "), _c('br'), _vm._v(" Made Easy!")])
+  }, [_vm._v("Subbin' "), _c('br'), _vm._v(" Made Easy!")]), _vm._v(" "), _c('div', {
+    staticClass: "sub-slogan text-center"
+  }, [_vm._v("Register or Login today to sub contract your work and get\n                    paid\n                    without all\n                    of the hassle\n                ")])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "flex flex-col"
