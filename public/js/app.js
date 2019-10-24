@@ -43160,6 +43160,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -43188,6 +43195,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     userFromState: state => state.user.user
   })),
   methods: {
+    goToNewJob() {
+      this.$router.push('/initiate-bid');
+    },
     contractorName() {
       if (this.theUser !== undefined && this.theUser !== null) {
         return this.theUser.name;
@@ -92014,7 +92024,14 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "container"
-  }, [(_vm.isContractor()) ? _c('div', [_c('icon-header', {
+  }, [_c('button', {
+    staticClass: "btn btn-normal btn-lg w-full mb-1rem",
+    on: {
+      "click": function($event) {
+        _vm.goToNewJob()
+      }
+    }
+  }, [_vm._v("CREATE A NEW JOB")]), _vm._v(" "), (_vm.isContractor()) ? _c('div', [_c('icon-header', {
     attrs: {
       "icon": "jobs",
       "mainHeader": "My Jobs as a General",

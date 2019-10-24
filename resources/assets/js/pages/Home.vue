@@ -1,6 +1,13 @@
 <template>
     <div class="container">
 
+<!--        <figcaption class="caption small-header" :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">New Job</figcaption>-->
+
+        <button
+                class="btn btn-normal btn-lg w-full mb-1rem"
+                @click="goToNewJob()"
+        >CREATE A NEW JOB</button>
+
         <div v-if="isContractor()">
             <icon-header icon="jobs"
                          mainHeader="My Jobs as a General"
@@ -95,6 +102,9 @@
       })
     },
     methods: {
+      goToNewJob(){
+        this.$router.push('/initiate-bid');
+      },
       contractorName() {
         if (this.theUser !== undefined && this.theUser !== null) {
           return this.theUser.name
