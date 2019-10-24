@@ -53,6 +53,9 @@
                         <label for="custTaskPrice">Price</label>
                         <div class="flex items-center">
                             <!-- <span class="dollarSign">$</span> -->
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
                             <input
                                     @blur="verifyInputIsANumber($event.target.value, 'price')"
                                     @focus="hideTaskResults"

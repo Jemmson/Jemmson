@@ -41878,6 +41878,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -86876,7 +86879,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Price")]), _vm._v(" "), _c('div', {
     staticClass: "flex items-center"
-  }, [_c('input', {
+  }, [_c('div', {
+    staticClass: "input-group-prepend"
+  }, [_c('span', {
+    staticClass: "input-group-text"
+  }, [_vm._v("$")])]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
