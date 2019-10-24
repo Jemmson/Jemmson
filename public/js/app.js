@@ -46229,8 +46229,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       for (let i = 0; i < lb.children.length; i++) {
         if (this.nameOrValueIsNotEmpty(lb.children[i])) {
           lbArray.push({
-            name: lb.children[i].children[0].children[1].value,
-            value: lb.children[i].children[0].children[3].value
+            name: lb.children[i].children[0].children[0].children[1].value,
+            value: lb.children[i].children[0].children[1].children[1].value
           });
         }
       }
@@ -46240,12 +46240,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       this.boxArray.push(this.boxArray.length + 1);
     },
     nameOrValueIsNotEmpty(lb) {
-      return lb.children[0].children[1].value !== '' && lb.children[0].children[3].value !== '';
+      return lb.children[0].children[0].children[1].value !== '' && lb.children[0].children[1].children[1].value !== '';
     },
     deleteLicense(license) {
       const lb = document.getElementById('licenseBoxes');
       for (let i = 0; i < lb.children.length; i++) {
-        if (license.name === lb.children[i].children[0].children[1].value && license.value === lb.children[i].children[0].children[3].value) {
+        if (license.name === lb.children[i].children[0].children[0].children[1].value && license.value === lb.children[i].children[0].children[1].children[1].value) {
           lb.removeChild(lb.children[i]);
           break;
         }
@@ -89012,7 +89012,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("\n                        Please Click To Add A Contractor License\n                    ")]), _vm._v(" "), _c('button', {
     ref: "add_contractor_license_button",
-    staticClass: "btn btn-sm btn-normal",
+    staticClass: "btn btn-sm btn-normal mb-1rem",
     attrs: {
       "id": "addContractorLicenseButton"
     },
@@ -99746,6 +99746,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AddLicenseBox',
@@ -99767,7 +99772,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 /***/ }),
 /* 630 */
@@ -99812,7 +99817,12 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('label', {
+  return _c('div', [_c('div', {
+    staticClass: "flex space-between",
+    staticStyle: {
+      "margin-bottom": ".5rem"
+    }
+  }, [_c('label', {
     attrs: {
       "for": "licenseName"
     }
@@ -99823,6 +99833,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.name),
       expression: "name"
     }],
+    staticClass: "form-control-sm",
     attrs: {
       "id": "licenseName",
       "type": "text"
@@ -99836,7 +99847,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.name = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('label', {
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "flex space-between",
+    staticStyle: {
+      "margin-bottom": ".5rem"
+    }
+  }, [_c('label', {
     attrs: {
       "for": "licenseNumber"
     }
@@ -99847,6 +99863,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.value),
       expression: "value"
     }],
+    staticClass: "form-control-sm",
     attrs: {
       "id": "licenseNumber",
       "type": "text"
@@ -99860,14 +99877,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.value = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-normal btn-sm",
+  })]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-normal-red btn-sm w-full",
     on: {
       "click": function($event) {
         _vm.deleteLicense()
       }
     }
-  }, [_vm._v("Delete")])])
+  }, [_vm._v("Delete")]), _vm._v(" "), _c('hr')])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

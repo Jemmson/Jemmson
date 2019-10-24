@@ -1,10 +1,15 @@
 <template>
     <div>
-        <label for="licenseName">License Name</label>
-        <input id="licenseName" type="text" v-model="name">
-        <label for="licenseNumber">License Number</label>
-        <input id="licenseNumber" type="text" v-model="value">
-        <button @click="deleteLicense()" class="btn btn-normal btn-sm">Delete</button>
+        <div class="flex space-between" style="margin-bottom: .5rem">
+            <label for="licenseName">License Name</label>
+            <input id="licenseName" class="form-control-sm" type="text" v-model="name">
+        </div>
+        <div class="flex space-between" style="margin-bottom: .5rem"    >
+            <label for="licenseNumber">License Number</label>
+            <input id="licenseNumber" class="form-control-sm" type="text" v-model="value">
+        </div>
+        <button @click="deleteLicense()" class="btn btn-normal-red btn-sm w-full">Delete</button>
+        <hr>
     </div>
 </template>
 
