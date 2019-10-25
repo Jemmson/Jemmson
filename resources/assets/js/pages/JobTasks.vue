@@ -18,39 +18,44 @@
         <div class="mt-4 mb-1">
             <card class="list-card" v-for="(jTask, index) of jobTasks" v-bind:key="jTask.id" :id="'task-' + jTask.id">
 
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Status</th>
-                            <th>{{ !isContractor ? 'Contractor' : 'Sub' }}</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ jTask.task.name }}</td>
-                            <td>
-                                <span :class="getLabelClass(jTask)">
-                                    {{ status(jTask) }}
-                                </span>
-                            </td>
-                            <td>{{ jTask.contractor ? jTask.contractor.company_name : "none"}}</td>
-                            <td>{{ jTask.contractor ? jTask.contractor.phone : "none"}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <horizontal-table
+                        :data="jobTaskObject(jTask)"
+                ></horizontal-table>
+
+
+<!--                <table class="table">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>Task</th>-->
+<!--                        <th>Status</th>-->
+<!--                        <th>{{ !isContractor ? 'Contractor' : 'Sub' }}</th>-->
+<!--                        <th>Phone</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr>-->
+<!--                        <td>{{ jTask.task.name }}</td>-->
+<!--                        <td>-->
+<!--                                <span :class="getLabelClass(jTask)">-->
+<!--                                    {{ status(jTask) }}-->
+<!--                                </span>-->
+<!--                        </td>-->
+<!--                        <td>{{ jTask.contractor ? jTask.contractor.company_name : 'none'}}</td>-->
+<!--                        <td>{{ jTask.contractor ? jTask.contractor.phone : 'none'}}</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
 
 
                 <div class="row">
-<!--                    <div class="col-12 page-header-title">-->
-<!--                        {{ jTask.task.name }}-->
-<!--                    </div>-->
+                    <!--                    <div class="col-12 page-header-title">-->
+                    <!--                        {{ jTask.task.name }}-->
+                    <!--                    </div>-->
                     <div class="col-12">
-<!--                        <span class="dot" :class="'bg-' + getLabelClass(jTask)"></span>-->
-<!--                        <span :class="getLabelClass(jTask)">-->
-<!--                            {{ status(jTask) }}-->
-<!--                        </span>-->
+                        <!--                        <span class="dot" :class="'bg-' + getLabelClass(jTask)"></span>-->
+                        <!--                        <span :class="getLabelClass(jTask)">-->
+                        <!--                            {{ status(jTask) }}-->
+                        <!--                        </span>-->
                         <span v-if="isContractor"
                               class="float-right list-card-info">{{ jTask.bid_contractor_job_tasks.length }} Subs
                       <i class="fas fa-users"></i>
@@ -59,7 +64,8 @@
                     </div>
 
                     <div class="flex w-full btn-spacing">
-                        <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteTaskModal(jTask, index)">
+                        <button class="btn btn-normal-red btn-sm w-full mr-1rem"
+                                @click="showDeleteTaskModal(jTask, index)">
                             DELETE
                             <i v-if="checkSpinner(index)" class="fa fa-btn fa-spinner fa-spin"></i>
                         </button>
@@ -89,11 +95,13 @@
 <script>
   import BidTask from '../components/job/BidTask'
   import DeleteTaskModal from '../components/job/DeleteTaskModal'
+  import HorizontalTable from '../components/shared/HorizontalTable'
   import { mapState } from 'vuex'
 
   export default {
     components: {
       BidTask,
+      HorizontalTable,
       DeleteTaskModal
     },
     data() {
@@ -145,6 +153,23 @@
       })
     },
     methods: {
+      jobTaskObject(jt) {
+        if (jt && !this.isContractor) {
+          return {
+            Task: jt.task ? jt.task.name : '',
+            Status: jt.status,
+            Contractor: jt.contractor ? jt.contractor.company_name : 'none',
+            Phone: jt.contractor ? jt.contractor.phone : 'none'
+          }
+        } else {
+          return {
+            Task: jt.task ? jt.task.name : '',
+            Status: jt.status,
+            Sub: jt.contractor ? jt.contractor.company_name : 'none',
+            Phone: jt.contractor ? jt.contractor.phone : 'none'
+          }
+        }
+      },
       checkSpinner(index) {
         if (this.disabled.spinner[index]) {
           return this.disabled.spinner[index].disabled

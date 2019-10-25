@@ -45080,7 +45080,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_job_BidTask___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_job_BidTask__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_job_DeleteTaskModal__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_job_DeleteTaskModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_job_DeleteTaskModal__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_shared_HorizontalTable__ = __webpack_require__(635);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_shared_HorizontalTable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_shared_HorizontalTable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuex__ = __webpack_require__(4);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -45171,6 +45173,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -45179,6 +45188,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     BidTask: __WEBPACK_IMPORTED_MODULE_0__components_job_BidTask___default.a,
+    HorizontalTable: __WEBPACK_IMPORTED_MODULE_2__components_shared_HorizontalTable___default.a,
     DeleteTaskModal: __WEBPACK_IMPORTED_MODULE_1__components_job_DeleteTaskModal___default.a
   },
   data() {
@@ -45224,10 +45234,27 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         return [];
       }
     }
-  }, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_vuex__["b" /* mapState */])({
+  }, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])({
     job: state => state.job.model
   })),
   methods: {
+    jobTaskObject(jt) {
+      if (jt && !this.isContractor) {
+        return {
+          Task: jt.task ? jt.task.name : '',
+          Status: jt.status,
+          Contractor: jt.contractor ? jt.contractor.company_name : 'none',
+          Phone: jt.contractor ? jt.contractor.phone : 'none'
+        };
+      } else {
+        return {
+          Task: jt.task ? jt.task.name : '',
+          Status: jt.status,
+          Sub: jt.contractor ? jt.contractor.company_name : 'none',
+          Phone: jt.contractor ? jt.contractor.phone : 'none'
+        };
+      }
+    },
     checkSpinner(index) {
       if (this.disabled.spinner[index]) {
         return this.disabled.spinner[index].disabled;
@@ -87567,11 +87594,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "id": 'task-' + jTask.id
       }
-    }, [_c('table', {
-      staticClass: "table"
-    }, [_c('thead', [_c('tr', [_c('th', [_vm._v("Task")]), _vm._v(" "), _c('th', [_vm._v("Status")]), _vm._v(" "), _c('th', [_vm._v(_vm._s(!_vm.isContractor ? 'Contractor' : 'Sub'))]), _vm._v(" "), _c('th', [_vm._v("Phone")])])]), _vm._v(" "), _c('tbody', [_c('tr', [_c('td', [_vm._v(_vm._s(jTask.task.name))]), _vm._v(" "), _c('td', [_c('span', {
-      class: _vm.getLabelClass(jTask)
-    }, [_vm._v("\n                                    " + _vm._s(_vm.status(jTask)) + "\n                                ")])]), _vm._v(" "), _c('td', [_vm._v(_vm._s(jTask.contractor ? jTask.contractor.company_name : "none"))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(jTask.contractor ? jTask.contractor.phone : "none"))])])])]), _vm._v(" "), _c('div', {
+    }, [_c('horizontal-table', {
+      attrs: {
+        "data": _vm.jobTaskObject(jTask)
+      }
+    }), _vm._v(" "), _c('div', {
       staticClass: "row"
     }, [_c('div', {
       staticClass: "col-12"
@@ -87597,7 +87624,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.goToJobTask(index)
         }
       }
-    }, [_vm._v("SELECT")])])])])
+    }, [_vm._v("SELECT")])])])], 1)
   }), 1), _vm._v(" "), _c('delete-task-modal', {
     attrs: {
       "title": "Do You Wish To Delete This Task?"
