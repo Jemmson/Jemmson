@@ -6,7 +6,7 @@
                     v-model="theServerMessage"
                     id="message">
             </textarea>
-        <button class="btn btn-normal mt-half-rem mb-4"
+        <button class="btn btn-normal-green mt-half-rem mb-4"
                 @click="updateMessage()"
                 :disabled="!shouldSendMessage"
                 >

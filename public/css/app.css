@@ -189,6 +189,7 @@ article {
 .btn-normal-red {
   background-color: white;
   color: red;
+  font-weight: 600;
   border: thin red solid;
 }
 .btn-normal-green {
