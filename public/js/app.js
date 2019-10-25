@@ -36994,7 +36994,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     },
     messageFromCustomer() {
-      if (this.bid.customer) {
+      if (this.bid && this.bid.customer) {
         this.customerNotesMessage = this.bid.customer.customer.notes;
         return this.bid.customer.customer.notes;
       }
@@ -37232,19 +37232,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       return this.area.area !== '' && !this.isCustomer;
     },
     initializePayWithCashMessageValue() {
-      if (this.bid.paid_with_cash_message) {
+      if (this.bid && this.bid.paid_with_cash_message) {
         console.log('I am true');
         console.log(this.bid.paid_with_cash_message);
         this.payWithCashMessage = this.bid.paid_with_cash_message;
         this.customerNotesMessage = this.bid.customer.customer.notes;
       }
-
-      if (this.bid.customer) {
+      if (this.bid && this.bid.customer) {
         console.log(this.bid.customer.customer.notes);
         this.customerNotesMessage = this.bid.customer.customer.notes;
       }
-      console.log(this.bid.paid_with_cash_message);
-      console.log(this.bid.customer);
     }
   }),
   mounted() {
@@ -94267,7 +94264,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12"
   }, [_c('div', {
     staticClass: "flex flex-col"
-  }, [(!_vm.isCustomer) ? _c('div', {
+  }, [(_vm.isContractor()) ? _c('div', {
     staticClass: "flex flex-col mb-3"
   }, [_c('message', {
     attrs: {
@@ -94287,7 +94284,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "actor": "customer",
       "disable-messages": _vm.disableMessages
     }
-  })], 1) : _vm._e(), _vm._v(" "), (_vm.isCustomer) ? _c('div', {
+  })], 1) : _vm._e(), _vm._v(" "), (!_vm.isContractor()) ? _c('div', {
     staticClass: "flex flex-col"
   }, [_c('span', {
     staticClass: "label mb-2"

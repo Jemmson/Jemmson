@@ -270,7 +270,7 @@
 
                             <div class="col-12">
                                 <div class="flex flex-col">
-                                    <div class="flex flex-col mb-3" v-if="!isCustomer">
+                                    <div class="flex flex-col mb-3" v-if="isContractor()">
                                         <message label="Notes for Subcontractor" :jobId="jobTask ? jobTask.id : -1"
                                                  :server-message="jobTask.sub_message" actor='sub'
                                                  :disable-messages="disableMessages">
@@ -283,7 +283,7 @@
                                                  :disable-messages="disableMessages"></message>
                                     </div>
 
-                                    <div class="flex flex-col" v-if="isCustomer">
+                                    <div class="flex flex-col" v-if="!isContractor()">
                                         <span class="label mb-2">Notes from Contractor</span>
                                         <textarea cols="0" rows="0" class="form-control" disabled
                                                   :value="getContractorNotesForCustomer"

@@ -363,7 +363,7 @@
         }
       },
       messageFromCustomer() {
-        if (this.bid.customer) {
+        if (this.bid && this.bid.customer) {
           this.customerNotesMessage = this.bid.customer.customer.notes
           return this.bid.customer.customer.notes
         }
@@ -626,19 +626,16 @@
         return this.area.area !== '' && !this.isCustomer
       },
       initializePayWithCashMessageValue() {
-        if (this.bid.paid_with_cash_message) {
+        if (this.bid && this.bid.paid_with_cash_message) {
           console.log('I am true')
           console.log(this.bid.paid_with_cash_message)
           this.payWithCashMessage = this.bid.paid_with_cash_message
           this.customerNotesMessage = this.bid.customer.customer.notes
         }
-
-        if (this.bid.customer) {
+        if (this.bid && this.bid.customer) {
           console.log(this.bid.customer.customer.notes)
           this.customerNotesMessage = this.bid.customer.customer.notes
         }
-        console.log(this.bid.paid_with_cash_message)
-        console.log(this.bid.customer)
       }
     },
     mounted() {
