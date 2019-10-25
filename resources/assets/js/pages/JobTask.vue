@@ -164,12 +164,16 @@
 
                                             <div class="flex justify-content-between">
                                                 <label class="">Unit Price:</label>
-                                                <input v-if="showTaskPriceInput()" type="text" ref="price"
-                                                       class="form-control form-control-sm w-40"
-                                                       :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
-                                                       :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
-                                                       @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)"
-                                                >
+                                               <div v-if="showTaskPriceInput()" class="flex">
+                                                   <div class="input-group-prepend">
+                                                       <span class="input-group-text">$</span>
+                                                   </div>
+                                                   <input type="text" ref="price"
+                                                          class="form-control form-control-sm w-full"
+                                                          :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
+                                                          :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
+                                                          @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
+                                               </div>
                                                 <div v-else class="mt-1">
                                                     <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price)
                                                         }}</strong>

@@ -43027,6 +43027,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
@@ -44074,6 +44075,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vuex__ = __webpack_require__(4);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
 //
 //
 //
@@ -91846,14 +91851,14 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "container"
-  }, [_c('button', {
+  }, [(_vm.isContractor()) ? _c('button', {
     staticClass: "btn btn-normal btn-lg w-full mb-1rem",
     on: {
       "click": function($event) {
         _vm.goToNewJob()
       }
     }
-  }, [_vm._v("CREATE A NEW JOB")]), _vm._v(" "), (_vm.isContractor()) ? _c('div', [_c('icon-header', {
+  }, [_vm._v("CREATE A NEW JOB")]) : _vm._e(), _vm._v(" "), (_vm.isContractor()) ? _c('div', [_c('icon-header', {
     attrs: {
       "icon": "jobs",
       "mainHeader": "My Jobs as a General",
@@ -94177,9 +94182,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-group"
   }, [_c('div', {
     staticClass: "flex justify-content-between"
-  }, [_c('label', {}, [_vm._v("Unit Price:")]), _vm._v(" "), (_vm.showTaskPriceInput()) ? _c('input', {
+  }, [_c('label', {}, [_vm._v("Unit Price:")]), _vm._v(" "), (_vm.showTaskPriceInput()) ? _c('div', {
+    staticClass: "flex"
+  }, [_c('div', {
+    staticClass: "input-group-prepend"
+  }, [_c('span', {
+    staticClass: "input-group-text"
+  }, [_vm._v("$")])]), _vm._v(" "), _c('input', {
     ref: "price",
-    staticClass: "form-control form-control-sm w-40",
+    staticClass: "form-control form-control-sm w-full",
     class: (_vm.errors.unit_price || _vm.errors.priceMustBeANumber) ? 'box-error' : '',
     attrs: {
       "type": "text"
@@ -94192,7 +94203,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.updateCustomerTaskPrice($event.target.value, _vm.jobTask.id, _vm.job.id)
       }
     }
-  }) : _c('div', {
+  })]) : _c('div', {
     staticClass: "mt-1"
   }, [(_vm.unit_price) ? _c('strong', [_vm._v(_vm._s(_vm.taskCustFinalPrice(_vm.unit_price)))]) : _vm._e()])]), _vm._v(" "), (_vm.errors.unit_price) ? _c('div', {
     staticClass: "error"
