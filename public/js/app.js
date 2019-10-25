@@ -89851,13 +89851,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.$router.push('/job/add/task')
       }
     }
-  }, [_vm._v("\n                            Add A Task\n                        ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), ((_vm.isCustomer && _vm.needsApproval) || !_vm.isCustomer) ? _c('section', {
+  }, [_vm._v("\n                            Add A Task\n                        ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), ((_vm.isCustomer && _vm.needsApproval()) || !_vm.isCustomer) ? _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
   }, [_vm._v("Actions")]), _vm._v(" "), _c('card', {
     staticClass: "mb-4"
-  }, [(_vm.isCustomer && _vm.needsApproval) ? _c('approve-bid', {
+  }, [(_vm.isCustomer && _vm.needsApproval()) ? _c('approve-bid', {
     attrs: {
       "bid": _vm.bid
     }
