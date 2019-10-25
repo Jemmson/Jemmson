@@ -94416,7 +94416,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("Deny\n                    ")]) : _vm._e(), _vm._v(" "), (_vm.showDeleteBtn(_vm.jobTask)) ? _c('button', {
-    staticClass: "btn btn-sm btn-normal w-full",
+    staticClass: "btn btn-sm btn-normal-red w-full",
     attrs: {
       "disabled": _vm.disabled.deleteTask
     },

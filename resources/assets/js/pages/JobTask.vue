@@ -389,7 +389,7 @@
                         <button class="btn btn-sm btn-normal w-full" v-if="showDenyBtn(jobTask)"
                                 @click="openDenyTaskForm(jobTask.id)">Deny
                         </button>
-                        <button class="btn btn-sm btn-normal w-full"
+                        <button class="btn btn-sm btn-normal-red w-full"
                                 v-if="showDeleteBtn(jobTask)"
                                 @click="deleteTask(jobTask)"
                                 :disabled="disabled.deleteTask">
