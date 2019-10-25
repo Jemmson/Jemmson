@@ -112,48 +112,14 @@
 
                     </div>
 
-<!--                    <div class="flex flex-col">-->
-<!--                        <div class="flex space-between" v-for="jt in bid.job_tasks">-->
-<!--                            <div class="capitalize font-bold-1">{{ jt.task.name }}</div>-->
-<!--                            <div>-->
-<!--                                <div class="list-card-info" v-if="jt.bid_contractor_job_tasks.length > 0">(Subs)</div>-->
-<!--                                <div v-else></div>-->
-<!--                            </div>-->
-<!--                            <div class="list-card-info-red" v-if="jt.status === 'bid_task.denied'">Declined</div>-->
-<!--                            <div class="list-card-info-red" v-if="">Declined</div>-->
-<!--                            <div>{{ formatPrice(jt.cust_final_price) }}</div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-                    <table class="table mt-2rem">
-                        <thead>
-                            <tr>
-                                <td>Name</td>
-                                <td>Subs</td>
-                                <td>Status</td>
-                                <td>Qty</td>
-                                <td>Price</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="jt in bid.job_tasks">
-                                <td>{{ jt.task.name }}</td>
-                                <td>
-                                    <div class="list-card-info" v-if="jt.bid_contractor_job_tasks.length > 0">(Subs)</div>
-                                </td>
-                                <td>
-                                    <div class="list-card-info-red" v-if="jt.status === 'bid_task.denied'">Declined</div>
-                                </td>
-                                <td>
-                                    {{ jt.qty }}
-                                </td>
-                                <td>
-                                    {{ formatPrice(jt.cust_final_price) }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                    <div class="mt-1rem">
+                        <div v-for="jt in bid.job_tasks">
+                            <horizontal-table
+                                    :data="jobTaskObject(jt)"
+                            ></horizontal-table>
+                            <hr>
+                        </div>
+                    </div>
                 </card>
             </div>
 
@@ -170,13 +136,6 @@
                                 @click.prevent="viewTasks()">View Tasks
                         </button>
                     </div>
-
-<!--                    <div class="flex flex-col">-->
-<!--                        <div class="flex space-between" v-for="jt in bid.job_tasks">-->
-<!--                            <div class="capitalize font-bold-1">{{ jt.task.name }}</div>-->
-<!--                            <div>{{ formatPrice(jt.cust_final_price) }}</div>-->
-<!--                        </div>-->
-<!--                    </div>-->
 
                     <table class="table mt-2rem">
                         <thead>
@@ -218,51 +177,6 @@
             </card>
         </section>
 
-
-        <!--        <section class="col-12">-->
-        <!--            <h1 v-if="isCustomer" class="card-title mt-4">Payment Details For Contractor</h1>-->
-        <!--            <h1 v-else class="card-title mt-4">Payment Details For Customer</h1>-->
-        <!--            <card>-->
-        <!--                <main class="row">-->
-        <!--                    <section class="col-12 mb-3">-->
-        <!--                        <label for="paymentType" class="">Payment Method Selected:</label>-->
-        <!--                        <select v-model="selectedPayment" class="float-right form-control" name="paymentType"-->
-        <!--                                id="paymentType">-->
-        <!--                            <option value="creditCard">Credit Card</option>-->
-        <!--                            <option value="cash">Cash</option>-->
-        <!--                        </select>-->
-        <!--                    </section>-->
-        <!--                    <section ref="paymentInstructions" class="col-12 mb-2" v-if="selectedPayment === 'cash'">-->
-        <!--                        <label for="paymentInstructions" class="">Payment Instructions:</label>-->
-        <!--                        <input ref="paymentInstructionsMessage"-->
-        <!--                               id="paymentInstructions"-->
-        <!--                               class="float-right form-control"-->
-        <!--                               v-model="payWithCashMessage">-->
-        <!--                        <button class="btn btn-sm btn-normal float-right mt-half-rem"-->
-        <!--                                ref="paywithCashButton"-->
-        <!--                                :disabled="disabled.submitMessage"-->
-        <!--                                @click="submitPayWithCashMessage"-->
-        <!--                        >-->
-        <!--                            <span v-if="disabled.submitMessage">-->
-        <!--                                        <i class="fa fa-btn fa-spinner fa-spin"></i>-->
-        <!--                                      </span>-->
-        <!--                            Submit-->
-        <!--                        </button>-->
-
-        <!--                        <div v-if="successfulUpdate === 'true'">-->
-        <!--                            Your message has been updated-->
-        <!--                        </div>-->
-
-        <!--                        <div v-if="successfulUpdate === 'false'">-->
-        <!--                            Your message was not updated. please try again-->
-        <!--                        </div>-->
-
-
-        <!--                    </section>-->
-        <!--                </main>-->
-        <!--            </card>-->
-        <!--        </section>-->
-
         <section ref="job_address" class="col-12" v-if="showAddress">
             <h1 class="card-title mt-4">Job Address</h1>
             <card>
@@ -291,18 +205,6 @@
                             " allowfullscreen>
                     </iframe>
                 </main>
-
-<!--                '&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"-->
-                <!-- <a target="_blank"
-                      :href="'https://www.google.com/maps/search/?api=1&query=' + bid.location.address_line_1">
-                        {{ bid.location.address_line_1 }}
-                        <br>
-                        {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                    </a> -->
-                <!-- <div class="flex flex-col">
-                              <span class="label mb-4">TOTAL PRICE:</span>
-                              <span>${{ bid.bid_price }}</span>
-                    </div>-->
             </card>
         </section>
 
@@ -337,25 +239,6 @@
                 </main>
             </card>
         </section>
-
-        <!--        <div class="col-12">-->
-        <!--            <h1 class="card-title ml-4 mt-4">Attachments</h1>-->
-        <!--            <div class="mb-4">-->
-        <!--                <img src="img/test.jpg" style="height: 100px;" alt="Attachments">-->
-        <!--            </div>-->
-        <!--        </div>-->
-
-        <!--        <div class="col-12 mb-4">-->
-        <!--            <card>-->
-        <!--                <div class="row">-->
-        <!--                    <div class="col">-->
-        <!--                        <p class="d-inline">Upload Attachment</p>-->
-        <!--                        <i class="fas fa-plus-circle text-primary float-right sm-icon"></i>-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </card>-->
-        <!--        </div>-->
-
         <stripe :user="getCurrentUser()">
         </stripe>
 
@@ -364,6 +247,7 @@
 
 <script>
   import Info from '../shared/Info'
+  import HorizontalTable from '../shared/HorizontalTable'
   import Format from '../../classes/Format'
   import Card from '../shared/Card'
   import Stripe from '../stripe/Stripe'
@@ -380,6 +264,7 @@
       Info,
       ContentSection,
       CompletedTasks,
+      HorizontalTable,
       ApproveBid,
       GeneralContractorBidActions
     },
@@ -559,6 +444,17 @@
       }
     },
     methods: {
+      jobTaskObject(jt){
+        if (jt) {
+          return {
+            Name: jt.task ? jt.task.name : '',
+            Subs: jt.bid_contractor_job_tasks ? jt.bid_contractor_job_tasks.length : '',
+            Status: jt.status,
+            Qty: jt.qty,
+            Price: jt.cust_final_price
+          }
+        }
+      },
       needsApproval() {
         // TODO: use regular status values to check these
         return this.bid.status === 'bid.sent'

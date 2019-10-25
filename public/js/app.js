@@ -36627,20 +36627,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_Info__ = __webpack_require__(475);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shared_Info___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__shared_Info__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__classes_Format__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_Card__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__shared_Card__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__stripe_Stripe__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__stripe_Stripe___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__stripe_Stripe__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vuex__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_ContentSection__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_ContentSection___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__shared_ContentSection__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CompletedTasks__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CompletedTasks___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__CompletedTasks__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ApproveBid__ = __webpack_require__(172);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ApproveBid___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__ApproveBid__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_HorizontalTable__ = __webpack_require__(635);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_HorizontalTable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__shared_HorizontalTable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__classes_Format__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_Card__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__shared_Card__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stripe_Stripe__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__stripe_Stripe___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__stripe_Stripe__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vuex__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_ContentSection__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__shared_ContentSection___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__shared_ContentSection__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CompletedTasks__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CompletedTasks___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__CompletedTasks__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ApproveBid__ = __webpack_require__(172);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ApproveBid___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__ApproveBid__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__GeneralContractorBidActions__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__GeneralContractorBidActions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__GeneralContractorBidActions__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -36890,123 +36892,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
@@ -37020,13 +36906,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Card: __WEBPACK_IMPORTED_MODULE_2__shared_Card___default.a,
-    Stripe: __WEBPACK_IMPORTED_MODULE_3__stripe_Stripe___default.a,
+    Card: __WEBPACK_IMPORTED_MODULE_3__shared_Card___default.a,
+    Stripe: __WEBPACK_IMPORTED_MODULE_4__stripe_Stripe___default.a,
     Info: __WEBPACK_IMPORTED_MODULE_0__shared_Info___default.a,
-    ContentSection: __WEBPACK_IMPORTED_MODULE_5__shared_ContentSection___default.a,
-    CompletedTasks: __WEBPACK_IMPORTED_MODULE_6__CompletedTasks___default.a,
-    ApproveBid: __WEBPACK_IMPORTED_MODULE_7__ApproveBid___default.a,
-    GeneralContractorBidActions: __WEBPACK_IMPORTED_MODULE_8__GeneralContractorBidActions___default.a
+    ContentSection: __WEBPACK_IMPORTED_MODULE_6__shared_ContentSection___default.a,
+    CompletedTasks: __WEBPACK_IMPORTED_MODULE_7__CompletedTasks___default.a,
+    HorizontalTable: __WEBPACK_IMPORTED_MODULE_1__shared_HorizontalTable___default.a,
+    ApproveBid: __WEBPACK_IMPORTED_MODULE_8__ApproveBid___default.a,
+    GeneralContractorBidActions: __WEBPACK_IMPORTED_MODULE_9__GeneralContractorBidActions___default.a
   },
   props: {
     bid: Object,
@@ -37089,7 +36976,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     };
   },
-  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_vuex__["a" /* mapGetters */])(['getCustomerName']), {
+  computed: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["a" /* mapGetters */])(['getCustomerName']), {
     agreedStartDate() {
       if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
         this.addTaskStartDate = false;
@@ -37125,7 +37012,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       if (this.bid.bid_price && (this.bid.status === 'bid.initiated' || this.bid.status === 'bid.in_progress' || this.bid.status === 'job.approved' || this.bid.status === 'bid.declined' || this.bid.status === 'bid.sent')) {
         this.addTaskBidPrice = false;
         let theBidPrice = this.bid.bid_price;
-        return '$ ' + __WEBPACK_IMPORTED_MODULE_1__classes_Format__["a" /* default */].decimal(theBidPrice);
+        return '$ ' + __WEBPACK_IMPORTED_MODULE_2__classes_Format__["a" /* default */].decimal(theBidPrice);
       } else {
         if (this.isCustomer) {
           return '';
@@ -37169,12 +37056,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }
   },
   methods: _extends({
+    jobTaskObject(jt) {
+      if (jt) {
+        return {
+          Name: jt.task ? jt.task.name : '',
+          Subs: jt.bid_contractor_job_tasks ? jt.bid_contractor_job_tasks.length : '',
+          Status: jt.status,
+          Qty: jt.qty,
+          Price: jt.cust_final_price
+        };
+      }
+    },
     needsApproval() {
       // TODO: use regular status values to check these
       return this.bid.status === 'bid.sent';
     },
     formatPrice(price) {
-      return '$ ' + __WEBPACK_IMPORTED_MODULE_1__classes_Format__["a" /* default */].decimal(price);
+      return '$ ' + __WEBPACK_IMPORTED_MODULE_2__classes_Format__["a" /* default */].decimal(price);
     },
     customerHasCompletedTasks() {
       let taskIsFinished = false;
@@ -37317,12 +37215,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       }
     },
     getLabelClass(status) {
-      return __WEBPACK_IMPORTED_MODULE_1__classes_Format__["a" /* default */].statusLabel(status);
+      return __WEBPACK_IMPORTED_MODULE_2__classes_Format__["a" /* default */].statusLabel(status);
     },
     showNotes() {
       this.customerNotes = !this.customerNotes;
     }
-  }, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_vuex__["c" /* mapMutations */])(['setCustomerName']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4_vuex__["d" /* mapActions */])(['actCustomerName']), {
+  }, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["c" /* mapMutations */])(['setCustomerName']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5_vuex__["d" /* mapActions */])(['actCustomerName']), {
     updateGeneralContractorNotes() {
       Customer.updateNotesForJob(this.customerNotesMessage, this.bid.customer.id);
     },
@@ -41601,7 +41499,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_shared_IconHeader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_shared_IconHeader__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_shared_Card__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_shared_Card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_shared_Card__);
-//
 //
 //
 //
@@ -89857,7 +89754,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticStyle: {
       "background-color": "lightcoral"
     }
-  }, [_vm._v("\n            " + _vm._s(_vm.bid.declined_message) + "\n        ")]) : _vm._e(), _vm._v(" "), _c('section', {
+  }, [_vm._v("\n        " + _vm._s(_vm.bid.declined_message) + "\n    ")]) : _vm._e(), _vm._v(" "), _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title"
@@ -89865,7 +89762,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [(_vm.subTaskWarning) ? _c('strong', {
     staticClass: "uppercase red ml-1rem mr-1rem"
-  }, [_vm._v("bid price less than the sum of\n                        your subs bids")]) : _vm._e(), _vm._v(" "), _c('content-section', {
+  }, [_vm._v("bid price less than the sum of\n                    your subs bids")]) : _vm._e(), _vm._v(" "), _c('content-section', {
     attrs: {
       "input-classes": "uppercase",
       "label": "Job Name:",
@@ -89927,7 +89824,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.$router.push('/job/add/task')
       }
     }
-  }, [_vm._v("\n                                Add A Task\n                            ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), ((_vm.isCustomer && _vm.needsApproval) || !_vm.isCustomer) ? _c('section', {
+  }, [_vm._v("\n                            Add A Task\n                        ")])]) : _vm._e()])], 1)])], 1), _vm._v(" "), ((_vm.isCustomer && _vm.needsApproval) || !_vm.isCustomer) ? _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
     staticClass: "card-title mt-4"
@@ -89946,9 +89843,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-12"
   }, [(!_vm.isCustomer) ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
-  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                        ("), _c('b', {
+  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
     ref: "job_task_length"
-  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                        ")]), _vm._v(" Total\n\n                        "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                    "), _c('button', {
     staticClass: "btn btn-normal btn-sm float-right",
     staticStyle: {
       "width": "75%"
@@ -89959,19 +89856,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.viewTasks()
       }
     }
-  }, [_vm._v("View, Edit, and Add Subs\n                        ")])]), _vm._v(" "), _c('table', {
-    staticClass: "table mt-2rem"
-  }, [_c('thead', [_c('tr', [_c('td', [_vm._v("Name")]), _vm._v(" "), _c('td', [_vm._v("Subs")]), _vm._v(" "), _c('td', [_vm._v("Status")]), _vm._v(" "), _c('td', [_vm._v("Qty")]), _vm._v(" "), _c('td', [_vm._v("Price")])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.bid.job_tasks), function(jt) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('td', [(jt.bid_contractor_job_tasks.length > 0) ? _c('div', {
-      staticClass: "list-card-info"
-    }, [_vm._v("(Subs)")]) : _vm._e()]), _vm._v(" "), _c('td', [(jt.status === 'bid_task.denied') ? _c('div', {
-      staticClass: "list-card-info-red"
-    }, [_vm._v("Declined")]) : _vm._e()]), _vm._v(" "), _c('td', [_vm._v("\n                                    " + _vm._s(jt.qty) + "\n                                ")]), _vm._v(" "), _c('td', [_vm._v("\n                                    " + _vm._s(_vm.formatPrice(jt.cust_final_price)) + "\n                                ")])])
-  }), 0)])])], 1) : (_vm.bid.status !== 'bid.initiated' && _vm.bid.status !== 'bid.in_progress') ? _c('div', [_c('h1', {
+  }, [_vm._v("View, Edit, and Add Subs\n                    ")])]), _vm._v(" "), _c('div', {
+    staticClass: "mt-1rem"
+  }, _vm._l((_vm.bid.job_tasks), function(jt) {
+    return _c('div', [_c('horizontal-table', {
+      attrs: {
+        "data": _vm.jobTaskObject(jt)
+      }
+    }), _vm._v(" "), _c('hr')], 1)
+  }), 0)])], 1) : (_vm.bid.status !== 'bid.initiated' && _vm.bid.status !== 'bid.in_progress') ? _c('div', [_c('h1', {
     staticClass: "card-title mt-4"
-  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                        ("), _c('b', {
+  }, [_vm._v("Job Tasks")]), _vm._v(" "), _c('card', [_c('div', [_c('span', {}, [_vm._v("\n                    ("), _c('b', {
     ref: "job_task_length_customer"
-  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                        ")]), _vm._v(" Total\n\n                        "), _c('button', {
+  }, [_vm._v(_vm._s(_vm.bid.job_tasks.length))]), _vm._v(")\n                    ")]), _vm._v(" Total\n\n                    "), _c('button', {
     staticClass: "btn btn-normal btn-sm float-right",
     on: {
       "click": function($event) {
@@ -89979,10 +89876,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.viewTasks()
       }
     }
-  }, [_vm._v("View Tasks\n                        ")])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("View Tasks\n                    ")])]), _vm._v(" "), _c('table', {
     staticClass: "table mt-2rem"
   }, [_c('thead', [_c('tr', [_c('td', [_vm._v("Name")]), _vm._v(" "), _c('td', [_vm._v("Qty")]), _vm._v(" "), _c('td', [_vm._v("Unit Price")]), _vm._v(" "), _c('td', [_vm._v("Price")])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.bid.job_tasks), function(jt) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('td', [_vm._v("\n                                " + _vm._s(jt.qty) + "\n                            ")]), _vm._v(" "), _c('td', [_vm._v("\n                                " + _vm._s(_vm.formatPrice(jt.unit_price)) + "\n                            ")]), _vm._v(" "), _c('td', [_vm._v("\n                                " + _vm._s(_vm.formatPrice(jt.cust_final_price)) + "\n                            ")])])
+    return _c('tr', [_c('td', [_vm._v(_vm._s(jt.task.name))]), _vm._v(" "), _c('td', [_vm._v("\n                            " + _vm._s(jt.qty) + "\n                        ")]), _vm._v(" "), _c('td', [_vm._v("\n                            " + _vm._s(_vm.formatPrice(jt.unit_price)) + "\n                        ")]), _vm._v(" "), _c('td', [_vm._v("\n                            " + _vm._s(_vm.formatPrice(jt.cust_final_price)) + "\n                        ")])])
   }), 0)])])], 1) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.customerHasCompletedTasks()) ? _c('section', {
     staticClass: "col-12"
   }, [_c('h1', {
@@ -90001,7 +89898,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "card-title mt-4"
   }, [_vm._v("Job Address")]), _vm._v(" "), _c('card', [_c('div', {
     staticClass: "flex flex-col"
-  }, [_c('div', [_vm._v("\n                        " + _vm._s(_vm.bid.location.address_line_1) + "\n                    ")]), _vm._v(" "), _c('div', [_vm._v("\n                        " + _vm._s(_vm.bid.location.city) + ", " + _vm._s(_vm.bid.location.state) + " " + _vm._s(_vm.bid.location.zip) + "\n                    ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('main', {
+  }, [_c('div', [_vm._v("\n                    " + _vm._s(_vm.bid.location.address_line_1) + "\n                ")]), _vm._v(" "), _c('div', [_vm._v("\n                    " + _vm._s(_vm.bid.location.city) + ", " + _vm._s(_vm.bid.location.state) + " " + _vm._s(_vm.bid.location.zip) + "\n                ")])]), _vm._v(" "), _c('hr'), _vm._v(" "), _c('main', {
     staticClass: "map-responsive"
   }, [_c('iframe', {
     staticStyle: {
@@ -90070,7 +89967,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.updateGeneralContractorNotes
     }
-  }, [_vm._v("Submit\n                        ")]) : _vm._e()])])])], 1), _vm._v(" "), _c('stripe', {
+  }, [_vm._v("Submit\n                    ")]) : _vm._e()])])])], 1), _vm._v(" "), _c('stripe', {
     attrs: {
       "user": _vm.getCurrentUser()
     }
@@ -99830,6 +99727,124 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4a3d8e26\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AddLicenseBox.vue", function() {
      var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-4a3d8e26\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./AddLicenseBox.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 633 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'HorizontalTable',
+  props: {
+    data: {
+      type: Object
+    }
+  },
+  computed: {}
+});
+
+/***/ }),
+/* 634 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+/***/ }),
+/* 635 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(637)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(633),
+  /* template */
+  __webpack_require__(636),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/shawnpike/Documents/code/Jemmson/resources/assets/js/components/shared/HorizontalTable.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] HorizontalTable.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d02c6702", Component.options)
+  } else {
+    hotAPI.reload("data-v-d02c6702", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 636 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', _vm._l((_vm.data), function(value, name) {
+    return _c('div', [_c('div', {
+      staticClass: "flex space-between"
+    }, [_c('div', [_vm._v(_vm._s(name))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(value))])])])
+  }), 0)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-d02c6702", module.exports)
+  }
+}
+
+/***/ }),
+/* 637 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(634);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("e4cc23c6", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-d02c6702\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./HorizontalTable.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-d02c6702\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./HorizontalTable.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });

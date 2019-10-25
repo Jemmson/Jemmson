@@ -52,7 +52,6 @@
                     <div class="form-group col-6" :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
                         <label for="custTaskPrice">Price</label>
                         <div class="flex items-center">
-                            <!-- <span class="dollarSign">$</span> -->
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
