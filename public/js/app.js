@@ -42864,11 +42864,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     },
     submitFurtherInfo() {
       if (!this.passwordsMatch) {
-        return;
+        return false;
       }
-
       this.form.email = this.form.email.trim();
-
       User.submitFurtherInfo(this.form, this.disabled);
     },
     initAutocomplete() {

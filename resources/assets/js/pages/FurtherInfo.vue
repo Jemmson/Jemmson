@@ -367,11 +367,9 @@
       },
       submitFurtherInfo() {
         if (!this.passwordsMatch) {
-          return
+          return false
         }
-
         this.form.email = this.form.email.trim()
-
         User.submitFurtherInfo(this.form, this.disabled)
       },
       initAutocomplete() {

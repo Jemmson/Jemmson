@@ -115,10 +115,6 @@ class HomeController extends Controller
 
             $contractor->updateLocation($request);
             $contractor->update([
-//                'company_logo_name' => request('file_name'), //
-//                'email_method_of_contact' => request('email_contact'), //
-//                'sms_method_of_contact' => request('sms_text'), //
-//                'phone_method_of_contact' => request('phone_contact'), //
                 'company_name' => request('company_name'), //
             ]);
 
@@ -179,8 +175,8 @@ class HomeController extends Controller
 
         $user = Auth::user();
         $user->email = trim($request->email);
-        $user->first_name = trim($request->email);
-        $user->last_name = trim($request->email);
+        $user->first_name = trim($request->first_name);
+        $user->last_name = trim($request->last_name);
         $user->name = "$request->first_name $request->last_name";
         $user->phone = $this->digitsOnly($request->phone_number);
 
@@ -196,16 +192,23 @@ class HomeController extends Controller
         $cnu = new CustomerNeedsUpdating();
         $cnu->customerHasUpdatedSettings($user->id);
 
-        if (empty(session('prevDestination'))) {
-            Log::info("going to /#/home");
-            Log::info("************Create Method - Home Controller - End****************");
-            return response()->json('/#/home', 200);
+
+        if($user->usertype == 'contractor') {
+            return response()->json('/#/bids', 200);
         } else {
-            $link = session()->pull('prevDestination');
-            Log::info("going to previous destination");
-            Log::info("************Create Method - Home Controller - End****************");
-            return response()->json($link, 200);
+            return response()->json('/#/bids', 200);
         }
+
+
+//        if (empty(session('prevDestination'))) {
+//            Log::info("going to /#/home");
+//            Log::info("************Create Method - Home Controller - End****************");
+//        } else {
+//            $link = session()->pull('prevDestination');
+//            Log::info("going to previous destination");
+//            Log::info("************Create Method - Home Controller - End****************");
+//            return response()->json($link, 200);
+//        }
 
 
     }
