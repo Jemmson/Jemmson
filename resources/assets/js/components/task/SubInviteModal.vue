@@ -1,35 +1,31 @@
 <template>
     <!-- Modal -->
-    <div class="modal h-100 modal-background-gray" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
+    <div class="modal h-100 modal-background-gray" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog"
+         aria-labelledby="stripe-modal"
          aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
 
 
-
-
                     <div class="flex flex-column">
                         <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
                             taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
-
-
-
-                        <!--                    <h6 v-else>Sent Invite - {{ taskForSubInvite === undefined ? '' :-->
-                        <!--                        jobTaskNameForSubInvite.toUpperCase() }} - -->
-                        <!--                        <span class="capitalize">would you like to invite another sub to bid on this task?</span></h6>-->
-
-
 
                         <div v-show="subInvited">
                             <hr>
                             <div class="flex flex-column">
                                 <h6>Sent Invite - {{ taskForSubInvite === undefined ? '' :
                                     jobTaskNameForSubInvite.toUpperCase() }} -
-                                    <span class="capitalize">would you like to invite another sub to bid on this task?</span></h6>
+                                    <span class="capitalize">would you like to invite another sub to bid on this task?</span>
+                                </h6>
                                 <div class="flex space-between">
-                                    <button class="btn btn-normal w-full capitalize mr-1rem" @click="needsNewTask()">Yes</button>
-                                    <button class="btn btn-normal w-full capitalize ml-1rem" data-dismiss="modal" aria-label="Close">No</button>
+                                    <button class="btn btn-normal w-full capitalize mr-1rem" @click="needsNewTask()">
+                                        Yes
+                                    </button>
+                                    <button class="btn btn-normal w-full capitalize ml-1rem" data-dismiss="modal"
+                                            aria-label="Close">No
+                                    </button>
                                 </div>
                             </div>
                             <hr>
@@ -38,12 +34,9 @@
                     </div>
 
 
-
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-
-
 
 
                 </div>
@@ -106,34 +99,25 @@
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
                             <label for="email">Email</label>
-                            <input type="email" placeholder="Email" class="form-control" id="email" name="email"
+                            <input type="email" placeholder="Email" class="form-control"
+                                   @keyup="checkForDuplicateEmail($event.target.value)"
+                                   id="email" name="email"
                                    v-model="initiateBidForSubForm.email">
                             <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
-                {{ initiateBidForSubForm.errors.get('email') }}
-              </span>
+                                {{ initiateBidForSubForm.errors.get('email') }}
+                            </span>
+                            <div v-show="duplicateError" class="capitalize" style="color:red; font-size:10pt;">
+                                this is a duplicate email. please use another email for this account or leave blank for
+                                the
+                                contractor to fill in.
+                            </div>
                         </div>
-
-<!--                        <div class="flex flex-col" id="preferredPaymentMethod">-->
-<!--                            <label class="text-center mb-3">Preferred Payment Method</label>-->
-<!--                            <div class="flex justify-between">-->
-<!--                                <div class="flex">-->
-<!--                                    <label for="cash" class="mr-6">Cash</label>-->
-<!--                                    <input type="checkbox" :checked="paymentTypeCash" @click="paymentMethod('cash')"-->
-<!--                                           id="cash">-->
-<!--                                </div>-->
-<!--                                <div class="flex">-->
-<!--                                    <label for="stripe" class="mr-6">Credit Card</label>-->
-<!--                                    <input type="checkbox" :checked="paymentTypeStripe" @click="paymentMethod('stripe')"-->
-<!--                                           id="stripe">-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </form>
                     <!-- /end col-md6ss -->
                 </div>
                 <div class="modal-footer">
                     <button @click="sendSubInviteToBidOnTask" class="btn btn-normal" type="submit"
-                            :disabled="getMobileValidResponse[1] !== 'mobile'" ref="submit">
+                            :disabled="enableSubmit()" ref="submit">
               <span v-if="disabled.invite">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
@@ -177,6 +161,7 @@
         paymentTypeCash: false,
         paymentTypeStripe: true,
         phoneFormatError: true,
+        duplicateError: false,
         companyName: '',
         user: '',
         subInvited: false,
@@ -190,7 +175,24 @@
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),
-      needsNewTask(){
+      async checkForDuplicateEmail(email) {
+        this.duplicateError = false
+        if (this.emailIsCorrectlyFormatted(email)) {
+          try {
+            const data = await axios.get('/email/duplicate/' + email)
+            if (data.data.exists) {
+              this.duplicateError = true
+            }
+          } catch (error) {
+            console.log('error')
+          }
+        }
+      },
+      emailIsCorrectlyFormatted(email) {
+        const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        return email.match(mailformat) !== null
+      },
+      needsNewTask() {
         this.subInvited = false
         this.clearFields()
       },
@@ -323,6 +325,9 @@
         } else {
           return 0
         }
+      },
+      enableSubmit(){
+        return this.getMobileValidResponse[1] !== 'mobile' ||  this.duplicateError
       },
       checkValidData() {
         let phoneLength = this.unformatNumber(this.initiateBidForSubForm.phone)

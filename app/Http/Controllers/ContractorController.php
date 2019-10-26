@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contractor;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -101,6 +102,22 @@ class ContractorController extends Controller
             }
         }
 
+
+    }
+
+    public function checkDuplicateEmail($email)
+    {
+        $email = User::where('email', '=', $email)->get()->first();
+
+        if (empty($email)) {
+            return response()->json([
+                'exists' => false
+            ]);
+        }
+
+        return response()->json([
+            'exists' => true
+        ]);
 
     }
 

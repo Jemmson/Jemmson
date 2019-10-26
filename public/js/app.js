@@ -41044,22 +41044,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -41092,6 +41076,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       paymentTypeCash: false,
       paymentTypeStripe: true,
       phoneFormatError: true,
+      duplicateError: false,
       companyName: '',
       user: '',
       subInvited: false,
@@ -41103,6 +41088,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   },
   methods: _extends({}, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapMutations */])(['setMobileResponse']), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapActions */])(['checkMobileNumber']), {
+    async checkForDuplicateEmail(email) {
+      this.duplicateError = false;
+      if (this.emailIsCorrectlyFormatted(email)) {
+        try {
+          const data = await axios.get('/email/duplicate/' + email);
+          if (data.data.exists) {
+            this.duplicateError = true;
+          }
+        } catch (error) {
+          console.log('error');
+        }
+      }
+    },
+    emailIsCorrectlyFormatted(email) {
+      const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      return email.match(mailformat) !== null;
+    },
     needsNewTask() {
       this.subInvited = false;
       this.clearFields();
@@ -41232,6 +41234,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       } else {
         return 0;
       }
+    },
+    enableSubmit() {
+      return this.getMobileValidResponse[1] !== 'mobile' || this.duplicateError;
     },
     checkValidData() {
       let phoneLength = this.unformatNumber(this.initiateBidForSubForm.phone);
@@ -90637,7 +90642,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('hr'), _vm._v(" "), _c('div', {
     staticClass: "flex flex-column"
   }, [_c('h6', [_vm._v("Sent Invite - " + _vm._s(_vm.taskForSubInvite === undefined ? '' :
-    _vm.jobTaskNameForSubInvite.toUpperCase()) + " -\n                                    "), _c('span', {
+    _vm.jobTaskNameForSubInvite.toUpperCase()) + " -\n                                "), _c('span', {
     staticClass: "capitalize"
   }, [_vm._v("would you like to invite another sub to bid on this task?")])]), _vm._v(" "), _c('div', {
     staticClass: "flex space-between"
@@ -90648,13 +90653,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         return _vm.needsNewTask()
       }
     }
-  }, [_vm._v("Yes")]), _vm._v(" "), _c('button', {
+  }, [_vm._v("\n                                    Yes\n                                ")]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-normal w-full capitalize ml-1rem",
     attrs: {
       "data-dismiss": "modal",
       "aria-label": "Close"
     }
-  }, [_vm._v("No")])])]), _vm._v(" "), _c('hr')])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c('div', {
+  }, [_vm._v("No\n                                ")])])]), _vm._v(" "), _c('hr')])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c('div', {
     staticClass: "modal-body"
   }, [_c('form', {
     attrs: {
@@ -90675,7 +90680,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     ref: "name",
     staticClass: "validationError"
-  }, [_vm._v("\n                                Please Enter A Name\n                            ")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("\n                            Please Enter A Name\n                        ")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -90727,7 +90732,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "id": 'result' + index
       }
-    }, [_vm._v("\n                                          " + _vm._s(result.name) + " - " + _vm._s(result.contractor.company_name) + "\n                                        ")])])
+    }, [_vm._v("\n                                      " + _vm._s(result.name) + " - " + _vm._s(result.contractor.company_name) + "\n                                    ")])])
   }), 0)]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "flex flex-col"
   }, [_c('div', {
@@ -90832,7 +90837,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "initiateBidForSubForm.errors.has('phone')"
     }],
     staticClass: "help-block"
-  }, [_vm._v("\n                " + _vm._s(_vm.initiateBidForSubForm.errors.get('phone')) + "\n              ")]), _vm._v(" "), (_vm.getMobileValidResponse.length > 0) ? _c('div', [(_vm.getMobileValidResponse[1] === 'mobile') ? _c('div', {
+  }, [_vm._v("\n            " + _vm._s(_vm.initiateBidForSubForm.errors.get('phone')) + "\n          ")]), _vm._v(" "), (_vm.getMobileValidResponse.length > 0) ? _c('div', [(_vm.getMobileValidResponse[1] === 'mobile') ? _c('div', {
     staticClass: "mt-2"
   }, [_c('div', {
     staticStyle: {
@@ -90870,6 +90875,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": (_vm.initiateBidForSubForm.email)
     },
     on: {
+      "keyup": function($event) {
+        return _vm.checkForDuplicateEmail($event.target.value)
+      },
       "input": function($event) {
         if ($event.target.composing) { return; }
         _vm.$set(_vm.initiateBidForSubForm, "email", $event.target.value)
@@ -90883,21 +90891,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "initiateBidForSubForm.errors.has('email')"
     }],
     staticClass: "help-block"
-  }, [_vm._v("\n                " + _vm._s(_vm.initiateBidForSubForm.errors.get('email')) + "\n              ")])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n                            " + _vm._s(_vm.initiateBidForSubForm.errors.get('email')) + "\n                        ")]), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.duplicateError),
+      expression: "duplicateError"
+    }],
+    staticClass: "capitalize",
+    staticStyle: {
+      "color": "red",
+      "font-size": "10pt"
+    }
+  }, [_vm._v("\n                            this is a duplicate email. please use another email for this account or leave blank for\n                            the\n                            contractor to fill in.\n                        ")])])])]), _vm._v(" "), _c('div', {
     staticClass: "modal-footer"
   }, [_c('button', {
     ref: "submit",
     staticClass: "btn btn-normal",
     attrs: {
       "type": "submit",
-      "disabled": _vm.getMobileValidResponse[1] !== 'mobile'
+      "disabled": _vm.enableSubmit()
     },
     on: {
       "click": _vm.sendSubInviteToBidOnTask
     }
   }, [(_vm.disabled.invite) ? _c('span', [_c('i', {
     staticClass: "fa fa-btn fa-spinner fa-spin"
-  })]) : _vm._e(), _vm._v("\n                        Submit\n                    ")])])])])])
+  })]) : _vm._e(), _vm._v("\n                    Submit\n                ")])])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('button', {
     staticClass: "close",
