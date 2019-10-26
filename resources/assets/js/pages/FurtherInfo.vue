@@ -77,9 +77,9 @@
 
             <!-- Address Line 1 -->
             <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
-              <label for="address_line_1">Address Line 1 *</label>
+              <label for="route">Address Line 1 *</label>
               <div class="">
-                <input type="text" class="form-control" name="address_line_1" id="address_line_1"
+                <input type="text" class="form-control" name="address_line_1" id="route"
                   v-model="form.address_line_1">
                 <span ref="addressLine1Error" class="help-block" v-show="form.errors.has('address_line_1')">
                   {{ form.errors.get('address_line_1') }}
@@ -107,14 +107,12 @@
               </div>
             </div>
 
-
             <!-- State -->
+
             <div class="form-group" :class="{'has-error': form.errors.has('state')}">
-              <label for="state" style="font-size: 1rem">State *</label>
-              <select id="state" v-model="form.state" class="form-control">
-                <option v-for="state in states" :value="state">{{ state }}</option>
-              </select>
-              <span ref="stateError" class="help-block" v-show="form.errors.has('zip')">
+              <label for="locality" style="font-size: 1rem">State *</label>
+              <input type="text" class="border input" name="state" id="locality">
+              <span ref="stateError" class="help-block" v-show="form.errors.has('state')">
                 {{ form.errors.get('state') }}
               </span>
             </div>

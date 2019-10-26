@@ -653,16 +653,18 @@
       },
       location(jobTask, bid) {
         // debugger;
-        const task_location = jobTask.location_id
-        const job_location = this.bid.location_id
-        if (task_location === null && job_location === null) {
-          return 'No Address Set Yet'
-        } else if (job_location === job_location) {
-          return 'Same as Job Location'
-        } else if (task_location !== null) {
-          return jobTask.location.address_line_1
-        } else if (job_location !== null) {
-          return bid.location.address_line_1
+        if (this.job && jobTask && jobTask.location) {
+          const task_location = jobTask.location_id
+          const job_location = this.bid.location_id
+          if (task_location === null && job_location === null) {
+            return 'No Address Set Yet'
+          } else if (job_location === job_location) {
+            return 'Same as Job Location'
+          } else if (task_location !== null) {
+            return jobTask.location.address_line_1
+          } else if (job_location !== null) {
+            return bid.location.address_line_1
+          }
         }
       },
       updateCustomerTaskPrice(price, jobTaskId, bidId, jobTask) {

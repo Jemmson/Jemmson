@@ -48,7 +48,7 @@
                     <!--                            class="w-full"-->
                     <!--                    >-->
 
-                    <div v-if="showRegistration">
+                    <div v-show="showRegistration">
 
                         <hr style="margin-top: 3rem">
 
@@ -129,13 +129,15 @@
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
 
+
                         <div class="row">
+                            <input type="hidden" name="street_number" id="street_number">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="addressLine1" class=" pt-3 pt-2">Address Line 1 *</label>
-                            <input id="addressLine1"
+                            <label for="route" class=" pt-3 pt-2">Address Line 1 *</label>
+                            <input id="route"
                                    name="addressLine1"
                                    autocomplete="on"
-                                   type="text" class="form-control "
+                                   type="text" class="form-control"
                                    v-model="registerForm.addressLine1">
                             <span class="help-block" v-show="registerForm.errors.addressLine1 !== ''">{{registerForm.errors.addressLine1}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
@@ -153,8 +155,8 @@
                         </div>
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="city" class=" pt-3 pt-2">City *</label>
-                            <input id="city"
+                            <label for="administrative_area_level_1" class=" pt-3 pt-2">City *</label>
+                            <input id="administrative_area_level_1"
                                    name="city"
                                    autocomplete="on"
                                    type="text" class="form-control "
@@ -164,21 +166,23 @@
                         </div>
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="state" class=" pt-3 pt-2">State *</label>
-                            <select id="state"
-                                    name="state"
-                                    autocomplete="on"
-                                    type="text" class="form-control "
-                                    v-model="registerForm.state">
-                                <option v-for="state in states" :value="state">{{ state.name }}</option>
-                            </select>
+                            <label for="locality" class=" pt-3 pt-2">State *</label>
+                            <input type="text" class="form-control" name="state" id="locality" v-model="registerForm.state">
+                            <!--                            <input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
+                            <!--                            <select id="locality"-->
+                            <!--                                    name="state"-->
+                            <!--                                    autocomplete="on"-->
+                            <!--                                    type="text" class="form-control "-->
+                            <!--                                    v-model="registerForm.state">-->
+                            <!--                                <option v-for="state in states" :value="state">{{ state.name }}</option>-->
+                            <!--                            </select>-->
                             <span class="help-block" v-show="registerForm.errors.state !== ''">{{registerForm.errors.state}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="zip" class=" pt-3 pt-2">Zip Code *</label>
-                            <input id="zip"
+                            <label for="postal_code" class=" pt-3 pt-2">Zip Code *</label>
+                            <input id="postal_code"
                                    name="zip"
                                    autocomplete="on"
                                    type="text" class="form-control "
@@ -187,20 +191,21 @@
                                   v-show="registerForm.errors.zip !== ''">{{registerForm.errors.zip}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
-
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="country" class=" pt-3 pt-2">Country *</label>
-                            <select id="country"
-                                    name="country"
-                                    autocomplete="on"
-                                    type="text" class="form-control "
-                                    v-model="registerForm.country">
-                                <option v-for="country in countries" :value="country">{{ country.name }}</option>
-                            </select>
+                            <input type="text" class="form-control" name="state" id="country" v-model="registerForm.country">
+<!--                            <select id="country"-->
+<!--                                    name="country"-->
+<!--                                    autocomplete="on"-->
+<!--                                    type="text" class="form-control "-->
+<!--                                    v-model="registerForm.country">-->
+<!--                                <option v-for="country in countries" :value="country">{{ country.name }}</option>-->
+<!--                            </select>-->
                             <span class="help-block" v-show="registerForm.errors.country !== ''">{{registerForm.errors.country}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
+
 
 
                         <div class="row">
@@ -650,6 +655,9 @@
       }
     },
     mounted() {
+      Bus.$on('updateFormLocation', (payload) => {
+        this.updateFormLocation(payload)
+      })
       // TODO: Feature Not Working
       // axios.get('/loadFeatures').then((response) => {
       //     console.log(JSON.stringify(response.data))
@@ -680,6 +688,9 @@
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),
+      initAutocomplete() {
+        User.initAutocomplete('route')
+      },
       getLicenseElements() {
         const lb = document.getElementById('licenseBoxes')
         let lbArray = []
@@ -726,6 +737,13 @@
         } else {
           this.registerForm.disabled = true
         }
+      },
+      updateFormLocation(location) {
+        this.registerForm.addressLine1 = location.route
+        this.registerForm.city = location.locality
+        this.registerForm.state = location.administrative_area_level_1
+        this.registerForm.zip = location.postal_code
+        this.registerForm.country = location.country
       },
       unformatNumber(number) {
         let unformattedNumber = ''
@@ -817,12 +835,14 @@
           this.usesQuickbooks = false
           this.registerForm.usertype = 'customer'
           this.showRegistration = true
+          this.initAutocomplete()
         } else {
           this.userTypeSelected = 'contractor'
           this.usesQuickbooks = true
           this.getAuthURL()
           this.registerForm.usertype = 'contractor'
           this.doesNotUseQuickbooks()
+          this.initAutocomplete()
         }
       },
       goToRegistration() {

@@ -16,8 +16,8 @@
                         <input type="hidden" name="country" id="country">
                         <!-- Address Line 1 -->
                         <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
-                            <label class="control-label">Address Line 1</label>
-                            <input type="text" class="form-control" name="address_line_1" id="route2"
+                            <label for="route" class="control-label">Address Line 1</label>
+                            <input type="text" class="form-control" name="address_line_1" id="route"
                                    v-model="form.address_line_1">
                             <span class="help-block" v-show="form.errors.has('address_line_1')">
                                 {{ form.errors.get('address_line_1') }}
@@ -42,7 +42,7 @@
 
                         <!-- State -->
                         <div class="form-group" :class="{'has-error': form.errors.has('state')}">
-                            <label class="control-label">State</label>
+                            <label for="locality" class="control-label">State</label>
                             <input type="text" class="form-control" name="state" id="locality" v-model="form.state">
                             <span class="help-block" v-show="form.errors.has('state')">
                                 {{ form.errors.get('state') }}
@@ -51,7 +51,7 @@
 
                         <!-- Zip Code -->
                         <div class="form-group" :class="{'has-error': form.errors.has('zip')}">
-                            <label class="control-label">ZipCode</label>
+                            <label for="postal_code" class="control-label">ZipCode</label>
                             <input type="text" class="form-control" name="zip" id="postal_code" v-model="form.zip">
                             <span class="help-block" v-show="form.errors.has('zip')">
                                 {{ form.errors.get('zip') }}
@@ -103,37 +103,29 @@
     },
     methods: {
       updateFormLocation(location) {
-        if (this.jobTask) {
-          this.form.address_line_1 = location.route
-          this.form.city = location.locality
-          this.form.state = location.administrative_area_level_1
-          this.form.zip = location.postal_code
-        }
+        this.form.address_line_1 = location.route
+        this.form.city = location.locality
+        this.form.state = location.administrative_area_level_1
+        this.form.zip = location.postal_code
       },
       update() {
         if (this.jobTask) {
           this.form.id = this.jobTask.id
           this.form.location_id = this.jobTask.location_id
           this.authUser.updateTaskLocation(this.form, this.disabled)
+          $('#update-task-location-modal_' + this.id).modal('hide')
         }
       },
       initAutocomplete() {
-        this.authUser.initAutocomplete('route2')
+        this.authUser.initAutocomplete('route')
       }
     },
     computed: {},
     mounted: function() {
-      if (this.jobTask) {
-        this.initAutocomplete()
-        this.form.address_line_1 = this.jobTask.address_line_1
-        this.form.address_line_2 = this.jobTask.address_line_2
-        this.form.city = this.jobTask.city
-        this.form.state = this.jobTask.state
-        this.form.zip = this.jobTask.zip
-        Bus.$on('updateFormLocation', (payload) => {
-          this.updateFormLocation(payload)
-        })
-      }
+      this.initAutocomplete()
+      Bus.$on('updateFormLocation', (payload) => {
+        this.updateFormLocation(payload)
+      })
     },
     created() {
       this.authUser = new User()
