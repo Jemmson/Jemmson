@@ -77,7 +77,7 @@
                             <div class="col-12" ref="prices">
                                 <div class="row">
                                     <div class="col-12">
-
+                                        x
                                         <!--                                    v-if="parseInt(cust_final_price) > 0"-->
                                         <content-section
                                                 v-if="isContractor()"
@@ -106,8 +106,8 @@
                                         <!--                                            section-classes="ph-zero"-->
                                         <!--                                            icon="fas fa-money-bill-alt icon"-->
                                         <!--                                            type="totalTaskPrice"></content-section>-->
-
                                         <!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
+
                                         <content-section
                                                 v-if="isContractor()"
                                                 label="Total Sub Price:"
@@ -164,16 +164,16 @@
 
                                             <div class="flex justify-content-between">
                                                 <label class="">Unit Price:</label>
-                                               <div v-if="showTaskPriceInput()" class="flex">
-                                                   <div class="input-group-prepend">
-                                                       <span class="input-group-text">$</span>
-                                                   </div>
-                                                   <input type="text" ref="price"
-                                                          class="form-control form-control-sm w-full"
-                                                          :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
-                                                          :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
-                                                          @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
-                                               </div>
+                                                <div v-if="showTaskPriceInput()" class="flex">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" ref="price"
+                                                           class="form-control form-control-sm w-full"
+                                                           :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
+                                                           :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
+                                                           @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
+                                                </div>
                                                 <div v-else class="mt-1">
                                                     <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price)
                                                         }}</strong>
@@ -211,15 +211,26 @@
                             <!-- / location -->
                             <div class="col-12">
 
-                                <div class="flex flex-col" v-if="jobLocationHasBeenSet">
-                                    <div>
-                                        {{ getAddressLine1 }}
+                                <!--                                    <a target="_blank"-->
+                                <!--                                       :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, job)">-->
+                                <!--                                        <i class="fas fa-map-marker icon"></i>-->
+                                <!--                                        {{ location(jobTask, job) }}-->
+                                <!--                                    </a>-->
+                                <a
+                                        v-if="getAddress() !== 'Address Not Available'"
+                                        target="_blank"
+                                        :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress()">
+<!--                                    <i class="fas fa-map-marker icon"></i>-->
+                                    <div class="flex flex-col location" v-if="jobLocationHasBeenSet">
+                                        <div>
+                                            {{ getAddressLine1 }}
+                                        </div>
+                                        <div>
+                                            {{ getCity }}, {{ getLocationState }} {{ getZip }}
+                                        </div>
                                     </div>
-                                    <div>
-                                        {{ getCity }}, {{ getLocationState }} {{ getZip }}
-                                    </div>
-                                </div>
-                                <div v-else>
+                                </a>
+                                <div v-else class="location">
                                     Job Location Has Not Been Set
                                 </div>
 
@@ -231,9 +242,8 @@
                                 </div>
                                 <div class="flex flex-col"
                                      v-else-if="location(jobTask, job) === 'Same as Job Location'">
-                                    <span class="label mb-2">Change Task Location</span>
                                     <button class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
-                                        <i class="fas fa-edit"></i>
+                                        <span class="mr-1rem">Change Task Location</span><i class="fas fa-edit"></i>
                                     </button>
                                 </div>
                                 <div v-else class="flex flex-col">
@@ -373,7 +383,6 @@
                         </button>
 
 
-
                         <button class="btn btn-sm btn-normal w-full" v-if="showFinishedBtn(jobTask)"
                                 @click="finishedTask(jobTask)" :disabled="disabled.finished">
                             <span v-if="disabled.finished">
@@ -417,6 +426,7 @@
             </deny-task-modal>
 
             <update-task-location-modal
+                    v-show="isContractor()"
                     :job-task="jobTask"
                     :id="jobTask ? jobTask.id : null">
             </update-task-location-modal>
@@ -576,7 +586,7 @@
       }
     },
     methods: {
-      approvedByCustomer(){
+      approvedByCustomer() {
         return this.jobTask.status === 'bid_task.approved_by_customer'
       },
       getBidPrice(bid) {
@@ -851,7 +861,32 @@
           }
         }
       },
+      getAddress() {
+        if (this.jobTask && this.jobTask.location) {
+          console.log(JSON.stringify(this.jobTask.location))
+          if (this.jobTask.location !== null) {
+            return this.jobTask.location.address_line_1 + ' ' +
+              this.jobTask.location.address_line_2 + ' ' +
+              this.jobTask.location.city + ' ' +
+              this.jobTask.location.state + ' ' +
+              this.jobTask.location.zip
+          } else {
+            return 'Address Not Available'
+          }
+        }
 
+        // return bidTask.job_task.location.address_line_1+" "+
+
+        // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
+        // let location_id = 0;
+        // if (bidTask.job_task.location_id !== null) {
+        //   location_id = bidTask.job_task.location_id;
+        // } else {
+        //   location_id = bidTask.job_task.job.location_id;
+        // }
+        // Customer.getAddress(location_id, this.location)
+        // return this.location.location
+      },
       updateCustomerTaskPrice(price, jobTaskId, bidId) {
 
         if (isNaN(price)) {
@@ -1043,6 +1078,12 @@
 </script>
 
 <style scoped>
+
+    .location {
+        align-items: center;
+        font-weight: bold;
+        font-size: 16pt;
+    }
 
     .table-header {
         display: flex;
