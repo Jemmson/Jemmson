@@ -91194,7 +91194,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "flex flex-col"
   }, [_c('button', {
     ref: "submitBid",
-    staticClass: "btn btn-normal btn-lg w-full",
+    staticClass: "btn btn-normal-green btn-lg w-full",
     attrs: {
       "disabled": _vm.disableSubmitBid
     },

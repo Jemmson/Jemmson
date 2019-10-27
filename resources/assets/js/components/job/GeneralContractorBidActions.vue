@@ -26,7 +26,7 @@
             <!--            </div>-->
 
             <button ref="submitBid"
-                    class="btn btn-normal btn-lg w-full"
+                    class="btn btn-normal-green btn-lg w-full"
                     @click="submitBid()"
                     :disabled="disableSubmitBid"
             >Submit Bid
