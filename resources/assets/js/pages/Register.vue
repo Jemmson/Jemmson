@@ -700,8 +700,8 @@
         for (let i = 0; i < lb.children.length; i++) {
           if (this.nameOrValueIsNotEmpty(lb.children[i])) {
             lbArray.push({
-              name: lb.children[i].children[0].children[0].children[1].value,
-              value: lb.children[i].children[0].children[1].children[1].value
+              name: lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value,
+              value: lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value
             })
           }
         }
@@ -711,19 +711,18 @@
         this.boxArray.push(this.boxArray.length + 1)
       },
       nameOrValueIsNotEmpty(lb) {
-        return lb.children[0].children[0].children[1].value !== ''
-          && lb.children[0].children[1].children[1].value !== ''
+        return lb.children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1] !== ''
+          && lb.children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value !== ''
       },
       deleteLicense(license) {
         const lb = document.getElementById('licenseBoxes')
         for (let i = 0; i < lb.children.length; i++) {
-          if (license.name === lb.children[i].children[0].children[0].children[1].value &&
-            license.value === lb.children[i].children[0].children[1].children[1].value) {
+          if (license.name === lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value &&
+            license.value === lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value) {
             lb.removeChild(lb.children[i])
             break
           }
         }
-
       },
       validateMobileNumber(phone) {
         // debugger

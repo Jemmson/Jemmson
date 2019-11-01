@@ -40,7 +40,9 @@
 <!-- Main Content -->
 <transition name="fade">
     <!-- <router-view :user='user'></router-view> -->
-    <router-view :user='user'></router-view>
+    <v-app>
+        <router-view :user='user'></router-view>
+    </v-app>
 </transition>
 <div style="height: 56px;"></div>
 <main-footer :user="user"></main-footer>

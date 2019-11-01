@@ -1,15 +1,25 @@
 <template>
     <div>
-        <div class="flex space-between" style="margin-bottom: .5rem">
-            <label for="licenseName">License Name</label>
-            <input id="licenseName" class="form-control-sm box-size" type="text" v-model="name">
-        </div>
-        <div class="flex space-between" style="margin-bottom: .5rem">
-            <label for="licenseNumber">License Number</label>
-            <input id="licenseNumber" class="form-control-sm box-size" type="text" v-model="value">
-        </div>
-        <button @click="deleteLicense()" class="btn btn-normal-red btn-sm w-full">Delete</button>
-        <hr>
+        <v-container>
+            <v-row>
+                <v-col>
+                    <v-text-field
+                            label="License Name"
+                            v-model="name"
+                    ></v-text-field>
+                    <v-text-field
+                            label="License Number"
+                            v-model="value"
+                    ></v-text-field>
+                    <v-btn
+                            color="red"
+                            @click="deleteLicense()"
+                    >Delete
+                    </v-btn>
+                    <hr>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>
 
