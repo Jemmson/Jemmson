@@ -111,7 +111,7 @@
 
             <div class="form-group" :class="{'has-error': form.errors.has('state')}">
               <label for="locality" style="font-size: 1rem">State *</label>
-              <input type="text" class="border input" name="state" id="locality">
+              <input type="text" class="form-control" name="state" id="locality" v-model="form.state">
               <span ref="stateError" class="help-block" v-show="form.errors.has('state')">
                 {{ form.errors.get('state') }}
               </span>

@@ -231,12 +231,15 @@
                         </div>
 
 
-                        <label for="addContractorLicenseButton" ref="contractor_label">
-                            Please Click To Add A Contractor License
-                        </label>
-                        <button @click="addLicenseBox()" id="addContractorLicenseButton"
-                                class="btn btn-sm btn-normal mb-1rem" ref="add_contractor_license_button">Add A License
-                        </button>
+                       <div class="flex flex-col">
+                           <hr>
+                           <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
+                               Please Click To Add A Contractor License
+                           </label>
+                           <button @click="addLicenseBox()" id="addContractorLicenseButton"
+                                   class="btn btn-sm btn-normal mb-1rem" ref="add_contractor_license_button">Add A License
+                           </button>
+                       </div>
 
                         <div id="licenseBoxes">
                             <div v-for="i in boxes">

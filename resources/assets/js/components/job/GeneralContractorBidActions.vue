@@ -60,7 +60,9 @@
       bid: Object
     },
     watch: {
-      submitTheBid: this.notifyCustomerOfFinishedBid
+      submitTheBid: function () {
+        this.notifyCustomerOfFinishedBid(this.bid, this.disabled);
+      }
     },
     data() {
       return {

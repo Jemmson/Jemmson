@@ -198,11 +198,22 @@ describe('JobTask', () => {
 
     let btn = wrapper.find({ref: 'addASubButton'})
     btn.trigger('click')
-    
+
     expect(openSubInviteStub.called).toBe(true)
 
   })
 
+  it('should show finished button when ... but not show ...', function() {
+    expect(false).toBe(true)
+  })
+
+  it('should should show approve button when ... but not show ...', function() {
+    expect(false).toBe(true)
+  })
+
+  it('should show deny button when ... but not show ...', function() {
+    expect(false).toBe(true)
+  })
 
   function showAddSubButton(){
     wrapper.setData({

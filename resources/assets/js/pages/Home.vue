@@ -77,13 +77,21 @@
 
   import { mapState } from 'vuex'
   import Feedback from '../components/shared/Feedback'
+  import IconHeader from '../components/shared/IconHeader'
+  import Card from '../components/shared/Card'
+  import List from '../components/shared/List'
+  import ListItem from '../components/shared/ListItem'
 
   export default {
     props: {
       user: Object
     },
     components: {
-      Feedback
+      Feedback,
+      ListItem,
+      List,
+      IconHeader,
+      Card
     },
     data() {
       return {

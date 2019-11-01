@@ -1,6 +1,5 @@
 <template>
     <nav>
-
         <section v-if="onHomePage()">
             <header-bio
                     ref="homePage"

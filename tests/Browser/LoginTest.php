@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class LoginTest extends DuskTestCase
 {
 
-//    use RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * A Dusk test example.
@@ -21,20 +21,20 @@ class LoginTest extends DuskTestCase
      */
     public function testThatLogInElementsAreThere()
     {
-        $contractor = factory(Contractor::class)->create();
+        $user = factory(User::class)->create();
 
-        $user = User::find($contractor->user_id);
-        $user->usertype = "contractor";
-        $user->save();
+//        $user = User::find($contractor->user_id);
+//        $user->usertype = "contractor";
+//        $user->save();
 
         $this->browse(function (Browser $browser) use ($user) {
-            $browser->visit('/login')
-                ->type('username', $user->email)
-                ->type('password', 'secret')
-                ->pause(3000)
-                ->press('login')
-                ->pause(0)
-                ->assertPathIs('/furtherInfo');
+            $browser->visit('/')
+//                ->type('username', $user->email)
+//                ->type('password', 'secret')
+                ->pause(100000);
+//                ->press('login')
+//                ->pause(0)
+//                ->assertPathIs('');
         });
     }
 }

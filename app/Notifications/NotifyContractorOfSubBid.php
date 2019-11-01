@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -39,7 +40,7 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -68,6 +69,22 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return NexmoMessage
+     *
+     */
+    public function toNexmo($notifiable)
+    {
+
+        $text = 'Hello ' . $this->user->name . ' Contractor ' . $this->subName . ' has just submitted a bid for the task you sent him. Please use the following link. ' . url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token);
+
+        return (new NexmoMessage)
+            ->content($text);
     }
 
     public function toBroadcast($notifiable)

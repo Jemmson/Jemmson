@@ -224,9 +224,9 @@ $router->group(['middleware' => 'web'], function ($router) {
         $user->billing_address = $request->addressLine1;
         $user->billing_address_line_2 = $request->addressLine2;
         $user->billing_city = $request->city;
-        $user->billing_state = $request->state['code'];
+        $user->billing_state = $request->state;
         $user->billing_zip = $request->zip;
-        $user->billing_country = $request->country['code'];
+        $user->billing_country = $request->country;
         $user->password_updated = true;
         try {
             $user->save();
@@ -240,9 +240,9 @@ $router->group(['middleware' => 'web'], function ($router) {
         $location->address_line_1 = $request->addressLine1;
         $location->address_line_2 = $request->addressLine2;
         $location->city = $request->city;
-        $location->state = $request->state['code'];
+        $location->state = $request->state;
         $location->zip = $request->zip;
-        $location->country = $request->country['code'];
+        $location->country = $request->country;
 
         try {
             $location->save();
@@ -320,9 +320,6 @@ $router->group(['middleware' => 'web'], function ($router) {
             'redirect' => '/#/home',
             'user' => $userData
         ]);
-
-
-
     });
 //    $router->post('/registerContractor', 'Auth\RegisterController@registerContractor');
     $router->post('/registerCustomer', function (Request $request) {
@@ -361,9 +358,9 @@ $router->group(['middleware' => 'web'], function ($router) {
         $user->billing_address = $request->addressLine1;
         $user->billing_address_line_2 = $request->addressLine2;
         $user->billing_city = $request->city;
-        $user->billing_state = $request->state['code'];
+        $user->billing_state = $request->state;
         $user->billing_zip = $request->zip;
-        $user->billing_country = $request->country['code'];
+        $user->billing_country = $request->country;
         $user->password_updated = true;
         try {
             $user->save();
@@ -377,9 +374,9 @@ $router->group(['middleware' => 'web'], function ($router) {
         $location->address_line_1 = $request->addressLine1;
         $location->address_line_2 = $request->addressLine2;
         $location->city = $request->city;
-        $location->state = $request->state['code'];
+        $location->state = $request->state;
         $location->zip = $request->zip;
-        $location->country = $request->country['code'];
+        $location->country = $request->country;
 
         try {
             $location->save();

@@ -1,6 +1,9 @@
 let mix = require('laravel-mix')
 var path = require('path')
 
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+
+
 // require ('laravel-mix-tailwind');
 
 /*
@@ -28,6 +31,36 @@ var path = require('path')
 //     }
 //   });
 
+mix.extend('vuetify', new class {
+
+    // webpackRules() {
+    //   return {
+    //     test: /\.s(c|a)ss$/,
+    //     use: [
+    //       'vue-style-loader',
+    //       'css-loader',
+    //       {
+    //         loader: 'sass-loader',
+    //         options: {
+    //           implementation: require('sass'),
+    //           sassOptions: {
+    //             fiber: require('fibers'),
+    //             indentedSyntax: true
+    //           },
+    //         },
+    //       },
+    //     ],
+    //   }
+    // }
+
+    webpackPlugins(){
+      return new VuetifyLoaderPlugin()
+    }
+
+  }()
+);
+
+
 mix.less('resources/assets/less/app.less', 'public/css')
   .copy('node_modules/sweetalert/dist/sweetalert.min.js', 'public/js/sweetalert.min.js')
   .copy('node_modules/sweetalert/dist/sweetalert.css', 'public/css/sweetalert.css')
@@ -43,4 +76,4 @@ mix.less('resources/assets/less/app.less', 'public/css')
         'vue$': 'vue/dist/vue.js'
       }
     }
-  });
+  })

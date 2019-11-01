@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -15,7 +16,7 @@ class JobBidDeclined extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $bid, $user, $message;
+    protected $bid, $user, $message, $customer;
 
     /**
      * Create a new notification instance.
@@ -23,12 +24,15 @@ class JobBidDeclined extends Notification implements ShouldQueue
      * @param Job $bid
      * @param User $user
      * @param string $message
+     * @param User $customer
      */
-    public function __construct(Job $bid, User $user, string $message = null)
+    public function __construct(Job $bid, User $user, string $message = null, User $customer)
     {
         $this->bid = $bid;
         $this->user = $user;
         $this->message = $message;
+        $this->customer = $customer;
+
     }
 
     /**
@@ -39,7 +43,7 @@ class JobBidDeclined extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -69,6 +73,22 @@ class JobBidDeclined extends Notification implements ShouldQueue
             //
         ];
     }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+
+        $text = $this->customer->name . " requests a change to your bid. The customer's message is: " . $this->bid->declined_message . ".  Please go to the link below to view the job. " . url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token);
+
+        return (new NexmoMessage)
+            ->content($text);
+    }
+
 
     public function toBroadcast($notifiable)
     {

@@ -29,11 +29,25 @@ require('spark-bootstrap')
 
 // register the plugin on vue
 import Toasted from 'vue-toasted'
+import Vue from 'vue'
 
 Vue.use(Toasted, {
   duration: 5000,
   theme: 'bubble',
 })
+
+import Vuetify from 'vuetify'
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/dist/vuetify.min.css'
+
+const vuetifyOptions = {
+  icons: {
+    iconfont: 'mdi'
+  }
+}
+Vue.use(Vuetify)
+// const opts = {}
+// export default new vuetify(opts)
 
 import VuePaginate from 'vue-paginate'
 
@@ -49,6 +63,7 @@ import SubContractor from './classes/SubContractor'
 import Customer from './classes/Customer'
 import User from './classes/User'
 import TaskUtil from './classes/TaskUtil'
+
 
 import { router } from './router.js'
 
@@ -67,6 +82,44 @@ require('./components/bootstrap')
 Spark.forms.register = {
   usertype: ''
 }
+
+
+const requireComponent = require.context(
+  // The relative path of the components folder
+  './components',
+  // Whether or not to look in subfolders
+  true,
+  // The regular expression used to match base component filenames
+  /Base[A-Z]\w+\.(vue|js)$/
+)
+
+requireComponent.keys().forEach(fileName => {
+  // Get component config
+  const componentConfig = requireComponent(fileName)
+
+  // Get PascalCase name of component
+  const componentName = upperFirst(
+    camelCase(
+      // Gets the file name regardless of folder depth
+      fileName
+        .split('/')
+        .pop()
+        .replace(/\.\w+$/, '')
+    )
+  )
+
+
+  // Register component globally
+  Vue.component(
+    componentName,
+    // Look for the component options on `.default`, which will
+    // exist if the component was exported with `export default`,
+    // otherwise fall back to module's root.
+    componentConfig.default || componentConfig
+  )
+})
+
+
 
 function goingToANonAuthorizedPage(path) {
 
@@ -108,101 +161,100 @@ function doAuthRouting(to, from, next) {
   } else {
     next()
   }
-
 }
 
 router.beforeEach((to, from, next) => {
 
- if (to.fullPath !== '/' && to.fullPath !== '/register') {
-   axios.get('/checkAuth')
-     .then(response => {
+  if (to.fullPath !== '/' && to.fullPath !== '/register') {
+    axios.get('/checkAuth')
+      .then(response => {
 
-         if (response.data.auth) {
-           checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
+          if (response.data.auth) {
+            checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
 
-           if (isUserInVuexStore()) {
+            if (isUserInVuexStore()) {
 
-             // doAuthRouting(to, from, next)
+              // doAuthRouting(to, from, next)
 
-             if (store.state.user.user.password_updated === 0) {
-               if (to.fullPath === '/furtherInfo') {
-                 next()
-               } else {
-                 next('/furtherInfo')
-               }
-             } else {
-               next()
-             }
+              if (store.state.user.user.password_updated === 0) {
+                if (to.fullPath === '/furtherInfo') {
+                  next()
+                } else {
+                  next('/furtherInfo')
+                }
+              } else {
+                next()
+              }
 
-           } else {
+            } else {
 
-             if (isUserInSparkState()) {
+              if (isUserInSparkState()) {
 
-               updateStoreWithSparkState()
+                updateStoreWithSparkState()
 
-               // doAuthRouting(to, from, next)
+                // doAuthRouting(to, from, next)
 
-               if (store.state.user.user.password_updated === 0) {
-                 if (to.fullPath === '/furtherInfo') {
-                   next()
-                 } else {
-                   next('/furtherInfo')
-                 }
-               } else {
-                 next()
-               }
+                if (store.state.user.user.password_updated === 0) {
+                  if (to.fullPath === '/furtherInfo') {
+                    next()
+                  } else {
+                    next('/furtherInfo')
+                  }
+                } else {
+                  next()
+                }
 
-             } else {
+              } else {
 
-               axios.get('/user/current')
-                 .then(response => {
-                   this.user = response.data
-                   console.log(JSON.stringify(this.user))
-                   Spark.state.user = this.user
+                axios.get('/user/current')
+                  .then(response => {
+                    this.user = response.data
+                    console.log(JSON.stringify(this.user))
+                    Spark.state.user = this.user
 
-                   this.$store.commit('setUser', this.user)
-                   window.User.user = this.user
-                   window.GeneralContractor.user = this.user
-                   window.SubContractor.user = this.user
-                   window.Customer.user = this.user
+                    this.$store.commit('setUser', this.user)
+                    window.User.user = this.user
+                    window.GeneralContractor.user = this.user
+                    window.SubContractor.user = this.user
+                    window.Customer.user = this.user
 
-                   // doAuthRouting(to, from, next)
+                    // doAuthRouting(to, from, next)
 
-                   if (store.state.user.user.password_updated === 0) {
-                     if (to.fullPath === '/furtherInfo') {
-                       next()
-                     } else {
-                       next('/furtherInfo')
-                     }
-                   } else {
-                     next()
-                   }
+                    if (store.state.user.user.password_updated === 0) {
+                      if (to.fullPath === '/furtherInfo') {
+                        next()
+                      } else {
+                        next('/furtherInfo')
+                      }
+                    } else {
+                      next()
+                    }
 
-                 })
+                  })
 
-             }
+              }
 
-           }
+            }
 
-           // need to send a user to further info if the user does not have
-           // their password updated
+            // need to send a user to further info if the user does not have
+            // their password updated
 
-           // a customer should not be able to initiate a bid or look at tasks
-           // page
+            // a customer should not be able to initiate a bid or look at tasks
+            // page
 
-         } else {
-           if (goingToANonAuthorizedPage(to.path)) {
-             next()
-           }
-         }
-       }
-     )
-     .catch(error => {
-       console.log(JSON.stringify(error))
-     })
- } else {
-   next()
- }
+          } else {
+            if (goingToANonAuthorizedPage(to.path)) {
+              next()
+            }
+          }
+        }
+      )
+      .catch(error => {
+        console.log(JSON.stringify(error))
+      })
+  } else {
+    next()
+  }
 
 })
 
@@ -212,10 +264,18 @@ router.afterEach((to, from) => {
   }
 })
 
+import MainHeader from './components/shared/Header'
+import MainFooter from './components/shared/Footer'
+
 var app = new Vue({
   mixins: [require('spark')],
+  components: {
+    MainHeader,
+    MainFooter
+  },
   router,
   store,
+  vuetify: new Vuetify(vuetifyOptions),
   data: {
     user: window.User
   },

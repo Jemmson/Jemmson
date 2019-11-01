@@ -62,5 +62,3 @@ Vue.component('task-images', require('./task/UploadTaskImages.vue'));
 
 
 
-
-

@@ -921,9 +921,10 @@ class JobController extends Controller
 
         $job = Job::find($request->id);
         $contractor = User::find($job->contractor_id);
+        $customer = User::find($job->customer_id);
 
         if ($job->updateStatus(__('bid.declined'))) {
-            $contractor->notify(new JobBidDeclined($job, $contractor, $message));
+            $contractor->notify(new JobBidDeclined($job, $contractor, $message, $customer));
             $job->setJobDeclinedMessage($message);
             return response()->json(['message' => 'Success'], 200);
         }
@@ -1002,8 +1003,9 @@ class JobController extends Controller
         $job = Job::find($jobId);
 
         $this->switchJobStatusToInProgress($job, __('bid.sent'));
+        $companyName = $job->contractor()->get()->first()->contractor->company_name;
 
-        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user));
+        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user, $companyName));
     }
 
     public
@@ -1036,27 +1038,26 @@ class JobController extends Controller
 
         $job = Job::find($request->id);
 
+        $general = User::find($job->contractor_id);
+        $contractors = JobTask::where('job_id', '=' , $job->id)->get()->pluck('contractor_id');
+        $customer = User::find($job->customer_id);
+
+        $general->notify(new JobCanceled($job->job_name));
+        $customer->notify(new JobCanceled($job->job_name));
+
+        foreach($contractors as $subId){
+            if ($general->id != $subId) {
+                $sub = User::find($subId);
+                $sub->notify(new JobCanceled($job->job_name));
+            }
+        }
+
         try {
             $job->delete();
         } catch (\Exception $e) {
             Log::error('Updating Job Status: ' . $e->getMessage());
             return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
             return false;
-        }
-
-//        if ($job->updatable(__('bid.canceled'))) {
-//            $job->updateStatus(__('bid.canceled'));
-//            $job->delete();
-//        } else {
-//            return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
-//        }
-
-        $currentUser = Auth::user()->id;
-        if ($currentUser == $job->customer_id) {
-            User::find($job->contractor_id)->notify(new JobCanceled());
-        }
-        if ($currentUser == $job->contractor_id) {
-            User::find($job->customer_id)->notify(new JobCanceled());
         }
 
         return response()->json(['message' => 'Success'], 200);
