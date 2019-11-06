@@ -25,12 +25,34 @@
             <!--                </button>-->
             <!--            </div>-->
 
-            <button ref="submitBid"
+
+            <v-btn
+                    ref="submitBid"
                     class="btn btn-normal-green btn-lg w-full"
                     @click="submitBid()"
                     :disabled="disableSubmitBid"
-            >Submit Bid
-            </button>
+            >
+                Submit Bid
+            </v-btn>
+
+            <div v-if="notSignedUpModalIsHidden()"
+            >
+                <v-divider></v-divider>
+                <v-btn
+                        text
+                        color="primary"
+                        @click="connectWithStripe()"
+                >
+                    SIGN UP WITH STRIPE
+                </v-btn>
+            </div>
+
+<!--            <button ref="submitBid"-->
+<!--                    class="btn btn-normal-green btn-lg w-full"-->
+<!--                    @click="submitBid()"-->
+<!--                    :disabled="disableSubmitBid"-->
+<!--            >Submit Bid-->
+<!--            </button>-->
 
             <!--        @click="openBidSubmissionDialog()">Submit Bid</button>-->
         </div>
@@ -90,6 +112,22 @@
       //   console.log('trying to trigger stripe')
       //   Bus.$emit('needsStripe')
       // },
+
+      connectWithStripe() {
+        let connectLink = "https://connect.stripe.com/express/oauth/authorize?client_id="
+          + Spark.stripeClientId +"&state="+ this.$route.path
+          + "&stripe_user[email]=" + Spark.state.user.email
+          + "&stripe_user[country]=US"
+          + "&stripe_user[phone_number]=" + Spark.state.user.phone;
+
+        window.location = connectLink;
+      },
+
+      notSignedUpModalIsHidden(){
+        if (this.bid && this.bid.contractor && this.bid.contractor.contractor) {
+          return this.bid.contractor.stripe_id === null && this.bid.contractor.contractor.hide_stripe_modal === 1
+        }
+      },
       checkReqs() {
         // return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent'
         if (this.bid && this.bid.job_tasks && this.bid.status) {
