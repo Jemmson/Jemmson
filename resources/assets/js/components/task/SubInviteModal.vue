@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal h-100 modal-background-gray" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog"
+    <div v-if="isContractor()" class="modal h-100 modal-background-gray" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog"
          aria-labelledby="stripe-modal"
          aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -188,6 +188,14 @@
           }
         }
       },
+
+      isContractor(){
+        if (Spark.state.user.usertype === 'contractor') {
+          return true
+        }
+        this.$router.push('/home')
+      },
+
       emailIsCorrectlyFormatted(email) {
         const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
         return email.match(mailformat) !== null

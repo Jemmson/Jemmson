@@ -20,12 +20,14 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn
+                            v-if="isContractor()"
                             color="primary"
                             to="/initiate-bid"
                     >ADD JOB
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
+                            v-if="isContractor()"
                             color="primary"
                             @click="getJobs()"
                     >
@@ -132,6 +134,10 @@
       showFeedback() {
         this.tasks = false
         this.feedback = true
+      },
+
+      isContractor(){
+        return Spark.state.user.usertype === 'contractor'
       },
       submit() {
         let theComment = this.comment

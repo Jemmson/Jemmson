@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="isContractor()">
         <icon-header icon="jobs" mainHeader="Add New Job" subHeader="Initiate a new job with a customer.">
         </icon-header>
         <card>
@@ -153,6 +153,13 @@
 
       imclicked() {
         console.log('Im clicked')
+      },
+
+      isContractor(){
+        if (Spark.state.user.usertype === 'contractor') {
+          return true
+        }
+        this.$router.push('/home')
       },
 
       unformatNumber(number) {

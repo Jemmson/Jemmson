@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="container" id="top">
+    <div class="container" id="top" v-if="isContractor()" >
         <icon-header icon="tasks" mainHeader="Add New Task"
                      :subHeader="'This adds a new task to the job so you can sub out a portion of the job.'">
         </icon-header>
@@ -395,6 +395,14 @@
       }
     },
     methods: {
+
+      isContractor(){
+        if (Spark.state.user.usertype === 'contractor') {
+          return true
+        }
+        this.$router.push('/home')
+      },
+
       checkErrors() {
 
         if (this.addNewTaskForm.taskName === '') {
