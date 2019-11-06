@@ -55,12 +55,20 @@
         </card>
       </div>
     </div>
+    <feedback
+            page="invoice"
+    ></feedback>
   </div>
 </template>
 
 <script>
 
+  import Feedback from '../components/shared/Feedback'
+
   export default {
+    components: {
+      Feedback
+    },
     props: {
       user: Object,
     },

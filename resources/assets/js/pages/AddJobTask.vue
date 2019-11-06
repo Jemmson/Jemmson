@@ -274,6 +274,9 @@
         <!--            &lt;!&ndash;Create New and Add&ndash;&gt;-->
         <!--            &lt;!&ndash;</button>&ndash;&gt;-->
         <!--        </div>-->
+        <feedback
+                page="AddJobTask"
+        ></feedback>
     </div>
 </template>
 
@@ -281,11 +284,13 @@
 
   import IconHeader from '../components/shared/IconHeader'
   import Card from '../components/shared/Card'
+  import Feedback from '../components/shared/Feedback'
 
   export default {
     name: 'AddJobTask',
     components: {
       Card,
+      Feedback,
       IconHeader
     },
     data() {

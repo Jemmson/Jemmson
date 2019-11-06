@@ -89,6 +89,9 @@
             </div>
         </card>
         <br>
+        <feedback
+                page="initiateBid"
+        ></feedback>
     </div>
 </template>
 

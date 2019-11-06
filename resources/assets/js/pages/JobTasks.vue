@@ -89,6 +89,9 @@
 
         <job-task-bid-modal :jobTask="jobTask">
         </job-task-bid-modal>
+        <feedback
+                page="JobTasks"
+        ></feedback>
     </div>
 </template>
 
@@ -99,6 +102,7 @@
   import SearchBar from '../components/shared/SearchBar'
   import JobTaskBidModal from '../components/task/JobTaskBidModal'
   import Card from '../components/shared/Card'
+  import Feedback from '../components/shared/Feedback'
 
   import { mapState } from 'vuex'
 
@@ -107,6 +111,7 @@
       BidTask,
       HorizontalTable,
       SearchBar,
+      Feedback,
       JobTaskBidModal,
       Card,
       DeleteTaskModal

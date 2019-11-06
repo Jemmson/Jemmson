@@ -104,6 +104,20 @@ class JobController extends Controller
         return response()->json($jobs, 200);
     }
 
+    public function getJobs()
+    {
+        return Job::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->where('deleted_at', '=', null)->get();
+    }
+
+    public function getTasks()
+    {
+        return JobTask::where('contractor_id', '=', Auth::user()
+            ->getAuthIdentifier())
+            ->where('deleted_at', '=', null)
+            ->where('status', '!=', 'job.approved')->with('task')
+            ->get();
+    }
+
     /**
      * Invoices
      *
@@ -1039,13 +1053,13 @@ class JobController extends Controller
         $job = Job::find($request->id);
 
         $general = User::find($job->contractor_id);
-        $contractors = JobTask::where('job_id', '=' , $job->id)->get()->pluck('contractor_id');
+        $contractors = JobTask::where('job_id', '=', $job->id)->get()->pluck('contractor_id');
         $customer = User::find($job->customer_id);
 
         $general->notify(new JobCanceled($job->job_name));
         $customer->notify(new JobCanceled($job->job_name));
 
-        foreach($contractors as $subId){
+        foreach ($contractors as $subId) {
             if ($general->id != $subId) {
                 $sub = User::find($subId);
                 $sub->notify(new JobCanceled($job->job_name));

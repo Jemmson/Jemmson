@@ -42,6 +42,9 @@
         <!--            stripe testing delete after -->
         <stripe :user='user'>
         </stripe>
+        <feedback
+                page="job"
+        ></feedback>
     </div>
 
 </template>

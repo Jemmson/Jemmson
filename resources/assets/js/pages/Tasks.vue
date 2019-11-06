@@ -36,9 +36,9 @@
         <!-- / end tasks -->
         <stripe :user='user'>
         </stripe>
-        <feedback></feedback>
-
-
+        <feedback
+            page="tasks"
+        ></feedback>
     </div>
 </template>
 

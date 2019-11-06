@@ -70,6 +70,9 @@
         </card>
         <br>
         <!-- / end invoices -->
+        <feedback
+            page="home"
+        ></feedback>
     </div>
 </template>
 

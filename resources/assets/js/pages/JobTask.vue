@@ -432,6 +432,9 @@
 
 
         </div>
+        <feedback
+                page="JobTask"
+        ></feedback>
     </div>
 </template>
 
@@ -446,6 +449,7 @@
   import Card from '../components/shared/Card'
   import ContentSection from '../components/shared/ContentSection'
   import User from '../classes/User'
+  import Feedback from '../components/shared/Feedback'
 
   import { mapState } from 'vuex'
 
@@ -453,6 +457,7 @@
     components: {
       SubInviteModal,
       DenyTaskModal,
+      Feedback,
       Card,
       Message,
       ContentSection,

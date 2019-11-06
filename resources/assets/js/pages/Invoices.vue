@@ -42,12 +42,19 @@
             </paginate-links>
           </div>
         </div> -->
+        <feedback
+                page="invoices"
+        ></feedback>
     </div>
 </template>
 
 <script>
+  import Feedback from '../components/shared/Feedback'
 
   export default {
+    components: {
+      Feedback
+    },
     props: {
       user: Object,
     },

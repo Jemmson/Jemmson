@@ -68,7 +68,9 @@
                 title="Do You Wish To Delete This Job?"
         >
         </delete-task-modal>
-
+        <feedback
+            page="jobs"
+        ></feedback>
     </div>
 </template>
 
@@ -78,6 +80,7 @@
   import SearchBar from '../components/shared/SearchBar'
   import Card from '../components/shared/Card'
   import DeleteTaskModal from '../components/job/DeleteTaskModal'
+  import Feedback from '../components/shared/Feedback'
 
   export default {
     name: 'Jobs',
@@ -85,6 +88,7 @@
       Tasks,
       Card,
       SearchBar,
+      Feedback,
       DeleteTaskModal
     },
     props: {
