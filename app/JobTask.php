@@ -16,27 +16,26 @@ class JobTask extends Model
     use SoftDeletes;
 
     protected $table = "job_task";
-    protected $fillable = [
-        'job_id',
-        'task_id',
-        'bid_id',
-        'location_id',
-        'contractor_id',
-        'status',
-        'cust_final_price',
-        'sub_final_price',
-        'start_when_accepted',
-        'stripe',
-        'start_date',
-        'stripe_transfer_is',
-        'customer_message',
-        'sub_message',
-        'qty',
-        'sub_sets_own_price',
-        'declined_message',
-        'unit_price'
-    ];
-
+//    protected $fillable = [
+//        'job_id',
+//        'task_id',
+//        'bid_id',
+//        'location_id',
+//        'contractor_id',
+//        'status',
+//        'cust_final_price',
+//        'sub_final_price',
+//        'start_when_accepted',
+//        'stripe',
+//        'start_date',
+//        'stripe_transfer_is',
+//        'customer_message',
+//        'sub_message',
+//        'qty',
+//        'sub_sets_own_price',
+//        'declined_message',
+//        'unit_price'
+//    ];
     protected $guarded = [];
 
     /**

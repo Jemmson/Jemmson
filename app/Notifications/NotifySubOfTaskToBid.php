@@ -80,7 +80,9 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         return (new NexmoMessage)
-                    ->content('Please Sign In and go bid on your task ' . url('/login/sub/task/'. $this->taskId . '/' . $this->user->generateToken(true)->token) . ' ');
+                    ->content('Please Sign In and go bid on your task ' .
+                        url('/login/sub/task/'. $this->taskId . '/' . $this->user->generateToken(true)->token) .
+                        ' ');
     }
 
     public function toSpark($notifiable)

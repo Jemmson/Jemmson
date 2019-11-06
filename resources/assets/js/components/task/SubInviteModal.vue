@@ -97,30 +97,30 @@
                                 <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                             </div>
                         </div>
-                        <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">
-                            <label for="email">Email</label>
-                            <input type="email" placeholder="Email" class="form-control"
-                                   @keyup="checkForDuplicateEmail($event.target.value)"
-                                   id="email" name="email"
-                                   v-model="initiateBidForSubForm.email">
-                            <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">
-                                {{ initiateBidForSubForm.errors.get('email') }}
-                            </span>
-                            <div v-show="duplicateError" class="capitalize" style="color:red; font-size:10pt;">
-                                this is a duplicate email. please use another email for this account or leave blank for
-                                the
-                                contractor to fill in.
-                            </div>
-                        </div>
+<!--                        <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">-->
+<!--                            <label for="email">Email</label>-->
+<!--                            <input type="email" placeholder="Email" class="form-control"-->
+<!--                                   @keyup="checkForDuplicateEmail($event.target.value)"-->
+<!--                                   id="email" name="email"-->
+<!--                                   v-model="initiateBidForSubForm.email">-->
+<!--                            <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">-->
+<!--                                {{ initiateBidForSubForm.errors.get('email') }}-->
+<!--                            </span>-->
+<!--                            <div v-show="duplicateError" class="capitalize" style="color:red; font-size:10pt;">-->
+<!--                                this is a duplicate email. please use another email for this account or leave blank for-->
+<!--                                the-->
+<!--                                contractor to fill in.-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </form>
                     <!-- /end col-md6ss -->
                 </div>
                 <div class="modal-footer">
                     <button @click="sendSubInviteToBidOnTask" class="btn btn-normal" type="submit"
                             :disabled="enableSubmit()" ref="submit">
-              <span v-if="disabled.invite">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-              </span>
+                          <span v-if="disabled.invite">
+                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                          </span>
                         Submit
                     </button>
                 </div>

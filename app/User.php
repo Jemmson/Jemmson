@@ -338,7 +338,8 @@ class User extends SparkUser
 
     public static function getUserByPhoneOrEmail($phone, $email)
     {
-        return User::where('phone', $phone)->orWhere('email', $email)->first();
+        return User::where('phone', $phone)->get()->first();
+//        return User::where('phone', $phone)->orWhere('email', $email)->first();
     }
 
     public function updatePhoneNumber($newPhone)

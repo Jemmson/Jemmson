@@ -57,15 +57,4 @@ trait Setup
         return factory(Task::class)->create($payload);
 
     }
-
-    public function mergeArrays($payload, $array)
-    {
-        if (!empty($array)) {
-            foreach ($array as $k => $a) {
-                $payload[$k] = $a;
-            }
-        }
-
-        return $payload;
-    }
 }

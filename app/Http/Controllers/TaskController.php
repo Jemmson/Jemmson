@@ -28,6 +28,7 @@ use App\User;
 use App\ContractorCustomer;
 use App\BidContractorJobTask;
 use App\JobTask;
+use http\Message;
 use Illuminate\Support\Facades\Log;
 use App\TaskImage;
 use Illuminate\Http\Request;
@@ -780,6 +781,11 @@ class TaskController extends Controller
         // this code will redirect them to the page with information on the task
         // if so then send a notification to that contractor
         $user_sub->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user_sub));
+
+        return response()->json([
+            'message' => 'success'
+        ], 200);
+
 
         return Task::getBidPrices($jobTask->job_id);
     }

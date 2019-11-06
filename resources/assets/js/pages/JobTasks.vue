@@ -96,12 +96,19 @@
   import BidTask from '../components/job/BidTask'
   import DeleteTaskModal from '../components/job/DeleteTaskModal'
   import HorizontalTable from '../components/shared/HorizontalTable'
+  import SearchBar from '../components/shared/SearchBar'
+  import JobTaskBidModal from '../components/task/JobTaskBidModal'
+  import Card from '../components/shared/Card'
+
   import { mapState } from 'vuex'
 
   export default {
     components: {
       BidTask,
       HorizontalTable,
+      SearchBar,
+      JobTaskBidModal,
+      Card,
       DeleteTaskModal
     },
     data() {

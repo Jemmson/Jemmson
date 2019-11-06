@@ -77,7 +77,6 @@
                             <div class="col-12" ref="prices">
                                 <div class="row">
                                     <div class="col-12">
-                                        x
                                         <!--                                    v-if="parseInt(cust_final_price) > 0"-->
                                         <content-section
                                                 v-if="isContractor()"
