@@ -143,6 +143,9 @@
         busy: state => state.busy
       })
     },
+    created() {
+      window.location.href = '#'
+    },
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),

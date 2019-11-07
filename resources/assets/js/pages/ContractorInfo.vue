@@ -87,6 +87,7 @@
     },
     created() {
       this.getContractor()
+      window.location.href = '#'
     },
     methods: {
       checkForPhoto() {

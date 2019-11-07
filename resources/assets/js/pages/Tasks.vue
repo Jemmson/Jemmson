@@ -151,6 +151,7 @@
       }
     },
     created: function() {
+      window.location.href = '#'
       this.getTasks()
       Bus.$on('bidUpdated', (payload) => {
         this.getTasks()

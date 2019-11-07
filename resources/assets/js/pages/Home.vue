@@ -113,6 +113,9 @@
         userFromState: state => state.user.user,
       })
     },
+    created() {
+      window.location.href = '#'
+    },
     methods: {
       goToNewJob(){
         this.$router.push('/initiate-bid');

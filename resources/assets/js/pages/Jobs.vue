@@ -230,6 +230,7 @@
       this.$store.commit('setCurrentPage', this.$router.history.current.path)
     },
     created() {
+      window.location.href = '#'
       this.getBids()
       Bus.$on('bidUpdated', (payload) => {
         this.getBids()

@@ -77,6 +77,9 @@
         invoice: null
       }
     },
+    created() {
+      window.location.href = '#'
+    },
     computed: {
       isContractor() {
         return User.isContractor()

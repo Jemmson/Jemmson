@@ -143,6 +143,9 @@
         }
       }
     },
+    created() {
+      window.location.href = '#'
+    },
     computed: {
       show() {
         return this.jobTasks.length > 0

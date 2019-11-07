@@ -92,6 +92,7 @@
       },
     },
     created: function() {
+      window.location.href = '#'
       axios.get('invoices').then((data) => {
         this.invoices = data.data
         this.sInvoices = this.invoices

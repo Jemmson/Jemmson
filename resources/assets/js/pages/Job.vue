@@ -206,7 +206,7 @@
       }
     },
     created: function() {
-
+      window.location.href = '#'
       // get the bid
       const bidId = this.$route.params.id
       this.getBid(bidId)

@@ -1080,6 +1080,7 @@
 
     },
     created() {
+      window.location.href = '#'
       this.authUser = new User()
     }
   }

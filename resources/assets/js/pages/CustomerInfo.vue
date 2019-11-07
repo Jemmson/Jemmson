@@ -60,6 +60,7 @@
     },
     created() {
       this.getCustomer()
+      window.location.href = '#'
     },
     methods: {
       checkForPhoto() {

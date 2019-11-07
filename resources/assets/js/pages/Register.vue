@@ -688,6 +688,9 @@
         return this.boxArray
       }
     },
+    created() {
+      window.location.href = '#'
+    },
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),

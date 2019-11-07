@@ -110,6 +110,7 @@
       this.getJobTask(this.jobTaskId)
     },
     mounted: function() {
+      window.location.href = '#'
       Bus.$on('bidUpdated', (payload) => {
         this.getJobTask()
       })

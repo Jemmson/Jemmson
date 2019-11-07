@@ -294,6 +294,9 @@
         return this.user.logo_url
       }
     },
+    created() {
+      window.location.href = '#'
+    },
     methods: {
       ...mapMutations([
         'setMobileResponse'
