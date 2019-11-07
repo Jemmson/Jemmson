@@ -3,13 +3,19 @@
 
     <div class="container">
 
-        <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">
-            <div v-if="bid.status === 'bid.initiated'">
-                <div v-if="isCustomer" class="text-center font-weight-bold">Thank You!</div>
-                <div class="text-center" style="font-size: 14pt">{{ status }}</div>
-            </div>
-            <div v-else class="text-center font-weight-bold">{{ status }}</div>
-        </div>
+<!--        <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">-->
+<!--&lt;!&ndash;            <div v-if="bid.status === 'bid.initiated'">&ndash;&gt;-->
+<!--&lt;!&ndash;                &ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="text-center" style="font-size: 14pt">{{ status }}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--            <div class="text-center font-weight-bold">Job Status:</div>-->
+<!--            <div class="text-center font-weight-bold">{{ status }}</div>-->
+<!--        </div>-->
+
+        <v-card>
+            <v-card-title>Job Status:</v-card-title>
+            <v-card-subtitle>{{ status }}</v-card-subtitle>
+        </v-card>
 
 <!--        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">-->
 <!--            &lt;!&ndash; /customer approve bid form &ndash;&gt;-->

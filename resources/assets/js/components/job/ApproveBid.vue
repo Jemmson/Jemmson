@@ -2,11 +2,11 @@
 
     <!-- /customer approve bid form -->
     <form role="form" class="flex flex-col">
-        <div class="flex form-group">
-            <label for="job_location_same_as_home">Job Location Same as Home Location</label>
-            <input type="checkbox" class="" id="job_location_same_as_home"
-                   v-model="form.job_location_same_as_home">
-        </div>
+<!--        <div class="flex form-group">-->
+<!--            <label for="job_location_same_as_home">Job Location Same as Home Location</label>-->
+<!--            <input type="checkbox" class="" id="job_location_same_as_home"-->
+<!--                   v-model="form.job_location_same_as_home">-->
+<!--        </div>-->
 
         <div class="flex form-group" :class="{'has-error': form.errors.has('agreed_start_date')}">
             <label for="start_date">Start Date</label>
@@ -177,8 +177,8 @@
               'Confirm Approval',
               'You are about to approve this bid. Click approve bid to approve or back to cancel this action.',
               'approveBid',
-              'approve bid',
-              'back'
+              'Approve Bid',
+              'Back'
             )
             this.modalCurrentlyOpenFor = 'approveBid'
             break
@@ -189,7 +189,7 @@
               ' To confirm please select Delete Job.',
               'cancelBid',
               'Delete Job',
-              'back'
+              'Back'
             )
             this.modalCurrentlyOpenFor = 'cancelBid'
             break

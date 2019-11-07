@@ -5,7 +5,6 @@
         </card>
 
         <section class="col-12">
-
             <v-card class="mb-4">
                 <v-card-title>Details</v-card-title>
 
@@ -33,10 +32,6 @@
                         <tr v-if="bidHasBeenSubmitted">
                             <td>Start Date:</td>
                             <td>{{ agreedStartDate }}</td>
-                        </tr>
-                        <tr v-if="!bidHasBeenSubmitted">
-                            <td>Total Bid Price:</td>
-                            <td>Bid Not Complete</td>
                         </tr>
                         <tr v-if="!bidHasBeenSubmitted">
                             <td>Total Bid Price:</td>
@@ -83,7 +78,7 @@
                 </v-simple-table>
 
                 <v-btn
-                        v-if="canAddATask()"
+                        v-if="canAddATask() && !isCustomer"
                         class="w-100 btn btn-sm btn-normal flex-1"
                         width="100%"
                         name="addTaskToBid"
@@ -229,8 +224,8 @@
         </section>
 
         <section class="col-12">
-            <h1 v-if="isCustomer" class="card-title mt-4">Special Instructions For Contractor</h1>
-            <h1 v-else class="card-title mt-4">Special Instructions From Customer</h1>
+            <h1 v-if="isCustomer" class="card-title mt-4">Special Notes For The Job</h1>
+            <h1 v-else class="card-title mt-4">Special Notes From Customer</h1>
             <card>
                 <main class="row">
                     <section class="col-12">

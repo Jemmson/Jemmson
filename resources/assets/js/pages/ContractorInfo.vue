@@ -26,24 +26,43 @@
                     <v-card class="mt-4">
                         <v-card-title>Address</v-card-title>
                         <v-card-text>
-                            <v-subheader>{{ contractor && contractor.user ? contractor.user.location.address_line_1 : ''
-                                }}
-                            </v-subheader>
-                            <v-subheader
-                                    v-if="checkForAddressLine2()"
-                            >{{ contractor && contractor.user ? contractor.user.location.address_line_2 : '' }}
-                            </v-subheader>
-                            <v-flex>
-                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.city : '' }}
-                                </v-subheader>
-                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.state : '' }}
-                                </v-subheader>
-                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.zip : '' }}
-                                </v-subheader>
-                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.country : ''
-                                    }}
-                                </v-subheader>
-                            </v-flex>
+
+
+                            <a
+                                    v-if="getAddress() !== 'Address Not Available'"
+                                    target="_blank"
+                                    :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress()">
+                                <!--                                    <i class="fas fa-map-marker icon"></i>-->
+                                <div class="flex flex-col location" v-if="jobLocationHasBeenSet">
+                                    <div>
+                                        {{ getAddressLine1 }}
+                                    </div>
+                                    <div>
+                                        {{ getCity }}, {{ getLocationState }} {{ getZip }}
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            
+                            
+<!--                            <v-subheader>{{ contractor && contractor.user ? contractor.user.location.address_line_1 : ''-->
+<!--                                }}-->
+<!--                            </v-subheader>-->
+<!--                            <v-subheader-->
+<!--                                    v-if="checkForAddressLine2()"-->
+<!--                            >{{ contractor && contractor.user ? contractor.user.location.address_line_2 : '' }}-->
+<!--                            </v-subheader>-->
+<!--                            <v-flex>-->
+<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.city : '' }}-->
+<!--                                </v-subheader>-->
+<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.state : '' }}-->
+<!--                                </v-subheader>-->
+<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.zip : '' }}-->
+<!--                                </v-subheader>-->
+<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.country : ''-->
+<!--                                    }}-->
+<!--                                </v-subheader>-->
+<!--                            </v-flex>-->
                         </v-card-text>
                     </v-card>
                     <v-spacer></v-spacer>
@@ -59,7 +78,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(license, i) in contractor.user.licenses" :key="i">
+                                    <tr v-for="(license, i) in getLicenses()" :key="i">
                                         <td>{{ license.name }}</td>
                                         <td>{{ license.value }}</td>
                                     </tr>
@@ -71,11 +90,20 @@
                 </v-col>
             </v-row>
         </v-container>
+        <feedback
+                page="ContractorInfo"
+        ></feedback>
     </div>
 </template>
 
 <script>
+
+  import Feedback from '../components/shared/Feedback'
+
   export default {
+    components: {
+      Feedback
+    },
     name: 'ContractorInfo',
     props: {
       contractorId: Number
@@ -89,6 +117,40 @@
       this.getContractor()
       window.location.href = '#'
     },
+    computed: {
+      jobLocationHasBeenSet() {
+        if (this.contractor && this.contractor.user && this.contractor.user.location) {
+          return true
+        } else {
+          return false
+        }
+      },
+      getAddressLine1() {
+        console.log('contractor', this.contractor)
+        if (this.contractor && this.contractor.user && this.contractor.user.location) {
+          return this.contractor.user.location.address_line_1
+        }
+        return ''
+      },
+      getCity() {
+        if (this.contractor && this.contractor.user && this.contractor.user.location) {
+          return this.contractor.user.location.city
+        }
+        return ''
+      },
+      getLocationState() {
+        if (this.contractor && this.contractor.user && this.contractor.user.location) {
+          return this.contractor.user.location.state
+        }
+        return ''
+      },
+      getZip() {
+        if (this.contractor && this.contractor.user && this.contractor.user.location) {
+          return this.contractor.user.location.zip
+        }
+        return ''
+      }
+    },
     methods: {
       checkForPhoto() {
         if (this.contractor && this.contractor.user) {
@@ -96,8 +158,27 @@
         }
       },
       checkForAddressLine2() {
-        if (this.contractor.location) {
+        if (this.contractor.user.location) {
           return this.contractor.user.location.address_line_2
+        }
+      },
+      getAddress() {
+        if (this.contractor && this.contractor.user && this.contractor.user.location) {
+          console.log(JSON.stringify(this.contractor.user.location))
+          if (this.contractor.user.location !== null) {
+            return this.contractor.user.location.address_line_1 + ' ' +
+              this.contractor.user.location.address_line_2 + ' ' +
+              this.contractor.user.location.city + ' ' +
+              this.contractor.user.location.state + ' ' +
+              this.contractor.user.location.zip
+          } else {
+            return 'Address Not Available'
+          }
+        }
+      },
+      getLicenses(){
+        if (this.contractor && this.contractor.user) {
+          return this.contractor.user.licenses
         }
       },
       async getContractor() {

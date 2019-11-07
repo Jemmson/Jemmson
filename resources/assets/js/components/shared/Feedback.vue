@@ -144,6 +144,7 @@
         this.comment = ''
         User.submitFeedback(theComment, this.disabled)
         this.feedback = false
+        this.dialog = false
       }
     }
   }

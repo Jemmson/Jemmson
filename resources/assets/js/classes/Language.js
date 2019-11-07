@@ -265,7 +265,7 @@ export default class Language {
       'job.approved': {
         sub: 'In Progress',
         general: 'In Progress',
-        customer: 'Approved'
+        customer: 'You have approved the bid. You will be notified when the contractor has finished the job'
       },
       'job.completed': {
         sub: 'Job Completed',

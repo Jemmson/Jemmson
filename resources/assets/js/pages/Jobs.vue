@@ -44,9 +44,9 @@
                             </div>
                         </section>
                         <div class="flex mt-1rem">
-                            <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">DELETE
+                            <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">CANCEL JOB
                             </button>
-                            <button @click="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">SELECT</button>
+                            <button @click="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">VIEW JOB</button>
                         </div>
                     </div>
                 </card>

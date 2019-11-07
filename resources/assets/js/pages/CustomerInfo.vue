@@ -28,27 +28,58 @@
                     <v-card class="mt-4">
                         <v-card-title>Address</v-card-title>
                         <v-card-text>
-                            <v-subheader>{{ customer.user ? customer.user.location.address_line_1 : '' }}</v-subheader>
-                            <v-subheader
-                                v-if="checkForAddressLine2()"
-                            >{{ customer.user ? customer.user.location.address_line_2 : '' }}
-                            </v-subheader>
-                            <v-flex>
-                                <v-subheader>{{ customer.user ? customer.user.location.city : '' }}</v-subheader>
-                                <v-subheader>{{ customer.user ? customer.user.location.state : '' }}</v-subheader>
-                                <v-subheader>{{ customer.user ? customer.user.location.zip : '' }}</v-subheader>
-                                <v-subheader>{{ customer.user ? customer.user.location.country : '' }}</v-subheader>
-                            </v-flex>
+
+
+                            <a
+                                    v-if="getAddress() !== 'Address Not Available'"
+                                    target="_blank"
+                                    :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress()">
+                                <!--                                    <i class="fas fa-map-marker icon"></i>-->
+                                <div class="flex flex-col location" v-if="jobLocationHasBeenSet">
+                                    <div>
+                                        {{ getAddressLine1 }}
+                                    </div>
+                                    <div>
+                                        {{ getCity }}, {{ getLocationState }} {{ getZip }}
+                                    </div>
+                                </div>
+                            </a>
+
+<!--                            <v-subheader>{{ customer.user ? customer.user.location.address_line_1 : '' }}</v-subheader>-->
+<!--                            <v-subheader-->
+<!--                                v-if="checkForAddressLine2()"-->
+<!--                            >{{ customer.user ? customer.user.location.address_line_2 : '' }}-->
+<!--                            </v-subheader>-->
+<!--                            <v-flex>-->
+<!--                                <v-subheader>{{ customer.user ? customer.user.location.city : '' }}</v-subheader>-->
+<!--                                <v-subheader>{{ customer.user ? customer.user.location.state : '' }}</v-subheader>-->
+<!--                                <v-subheader>{{ customer.user ? customer.user.location.zip : '' }}</v-subheader>-->
+<!--                                <v-subheader>{{ customer.user ? customer.user.location.country : '' }}</v-subheader>-->
+<!--                            </v-flex>-->
+<!--                            -->
+
+
                         </v-card-text>
                     </v-card>
                 </v-col>
             </v-row>
         </v-container>
+
+        <feedback
+                page="CustomerInfo"
+        ></feedback>
+
     </div>
 </template>
 
 <script>
+
+  import Feedback from '../components/shared/Feedback'
+
   export default {
+    components: {
+      Feedback
+    },
     name: 'CustomerInfo',
     props: {
       customerId: Number
@@ -62,6 +93,40 @@
       this.getCustomer()
       window.location.href = '#'
     },
+    computed: {
+      jobLocationHasBeenSet() {
+        if (this.customer && this.customer.user && this.customer.user.location) {
+          return true
+        } else {
+          return false
+        }
+      },
+      getAddressLine1() {
+        console.log('customer', this.customer)
+        if (this.customer && this.customer.user && this.customer.user.location) {
+          return this.customer.user.location.address_line_1
+        }
+        return ''
+      },
+      getCity() {
+        if (this.customer && this.customer.user && this.customer.user.location) {
+          return this.customer.user.location.city
+        }
+        return ''
+      },
+      getLocationState() {
+        if (this.customer && this.customer.user && this.customer.user.location) {
+          return this.customer.user.location.state
+        }
+        return ''
+      },
+      getZip() {
+        if (this.customer && this.customer.user && this.customer.user.location) {
+          return this.customer.user.location.zip
+        }
+        return ''
+      }
+    },
     methods: {
       checkForPhoto() {
         if (this.customer.user) {
@@ -69,8 +134,22 @@
         }
       },
       checkForAddressLine2() {
-        if (this.customer.location) {
+        if (this.customer.user.location) {
           return this.customer.user.location.address_line_2 !== null
+        }
+      },
+      getAddress() {
+        if (this.customer.user && this.customer.user.location) {
+          console.log(JSON.stringify(this.customer.user.location))
+          if (this.customer.user.location !== null) {
+            return this.customer.user.location.address_line_1 + ' ' +
+              this.customer.user.location.address_line_2 + ' ' +
+              this.customer.user.location.city + ' ' +
+              this.customer.user.location.state + ' ' +
+              this.customer.user.location.zip
+          } else {
+            return 'Address Not Available'
+          }
         }
       },
       async getCustomer() {
