@@ -6,7 +6,7 @@
 
         <section class="col-12">
 
-            <v-card>
+            <v-card class="mb-4">
                 <v-card-title>Details</v-card-title>
 
                 <v-simple-table v-if="isCustomer">
@@ -50,8 +50,11 @@
                     </template>
                 </v-simple-table>
 
+
+                <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less than the sum of
+                    your subs bids</v-card-text>
                 <v-simple-table v-if="!isCustomer">
-                    <template v-slot:default>
+                <template v-slot:default>
                         <thead>
                         <tr>
                             <th class="text-left"></th>
@@ -79,81 +82,19 @@
                     </template>
                 </v-simple-table>
 
+                <v-btn
+                        v-if="canAddATask()"
+                        class="w-100 btn btn-sm btn-normal flex-1"
+                        width="100%"
+                        name="addTaskToBid"
+                        id="addTaskToBid"
+                        @click="$router.push('/job/add/task')"
+                >
+                    Add A Task
+                </v-btn>
 
             </v-card>
 
-
-            <h1 class="card-title">Details</h1>
-            <card>
-                <main class="row">
-
-                    <strong v-if="subTaskWarning" class="uppercase red ml-1rem mr-1rem">bid price less than the sum of
-                        your subs bids</strong>
-
-                    <content-section
-                            input-classes="uppercase"
-                            label="Job Name:"
-                            :content="bid.job_name"
-                            type="paymentType"></content-section>
-
-                    <content-section
-                            v-if="isCustomer"
-                            label="Contractor Name:"
-                            input-classes="uppercase"
-                            :content="getCompanyName()"
-                            type="contractorName"></content-section>
-
-                    <content-section
-                            v-if="!isCustomer"
-                            input-classes="capitalize"
-                            label="Customer Name:"
-                            :content="customerName"
-                            type="customerName"></content-section>
-
-
-                    <content-section
-                            v-if="isCustomer && !bidHasBeenSubmitted"
-                            label="Start Date:"
-                            content="Bid Not Complete"
-                            type="startDate"
-                    ></content-section>
-
-                    <content-section
-                            v-if="!isCustomer || (isCustomer && bidHasBeenSubmitted)"
-                            label="Start Date:"
-                            :content-classes="addTaskStartDate ? 'redColor' : ''"
-                            :content="agreedStartDate"
-                            type="startDate"></content-section>
-
-                    <content-section
-                            v-if="isCustomer && !bidHasBeenSubmitted"
-                            label="Total Bid Price:"
-                            content="Bid Not Complete"
-                            type="totalBidPrice"></content-section>
-
-                    <content-section
-                            v-if="!isCustomer || (isCustomer && bidHasBeenSubmitted)"
-                            label="Total Bid Price:"
-                            :content-classes="addTaskBidPrice ? 'redColor' : ''"
-                            :content="bidPrice"
-                            type="totalBidPrice"></content-section>
-                    <hr>
-
-                    <section class="w-full">
-
-                        <div v-if="!this.isCustomer" class="mr-1rem ml-1rem">
-                            <button class="w-100 btn btn-sm btn-normal flex-1"
-                                    name="addTaskToBid" id="addTaskToBid"
-                                    @click="$router.push('/job/add/task')"
-                            >
-                                Add A Task
-                            </button>
-
-                        </div>
-                    </section>
-
-                </main>
-            </card>
         </section>
 
 
@@ -523,6 +464,9 @@
       }
     },
     methods: {
+      canAddATask(){
+        return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
+      },
       viewContractorInfo(){
         this.$router.push({name: 'contractor-info', params: { contractorId: this.bid.contractor.id }});
       },
