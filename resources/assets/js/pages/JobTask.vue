@@ -330,14 +330,13 @@
                                         <div class="flex flex-col">
                                             <div class="table-header">
                                                 <div class="flex-1">Sub</div>
-                                                <!--                                            <div class="flex-1">Payment Type</div>-->
                                                 <div class="flex-1">Bid</div>
                                                 <div class="flex-1">Action</div>
                                             </div>
                                             <div class="flex mb-2 justify-content-between"
                                                  v-for="bid in jobTask.bid_contractor_job_tasks"
                                                  :key="jobTask ? bid.id : 0">
-                                                <div class="flex-1">{{ getCompanyName(bid) }}</div>
+                                                <div class="flex-1 lookLikeALink" @click="viewContractorInfo(bid.contractor_id)">{{ getCompanyName(bid) }}</div>
                                                 <!--                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>-->
                                                 <div class="flex-1">${{ getBidPrice(bid) }}</div>
                                                 <div class="flex-1">
@@ -590,6 +589,11 @@
       }
     },
     methods: {
+
+      viewContractorInfo(id){
+        this.$router.push({name: 'contractor-info', params: { contractorId: id }});
+      },
+
       approvedByCustomer() {
         return this.jobTask.status === 'bid_task.approved_by_customer'
       },
@@ -1133,6 +1137,11 @@
         font-weight: bold;
         font-family: Roboto, serif;
         text-align: center;
+    }
+
+    .lookLikeALink {
+        text-decoration: underline;
+        color: #1976d2 !important;
     }
 
 </style>
