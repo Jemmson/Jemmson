@@ -13,6 +13,7 @@ import JobTasks from './pages/JobTasks'
 import AddJobTask from './pages/AddJobTask'
 import JobTask from './pages/JobTask'
 
+import ContractorInfo from './pages/ContractorInfo'
 import Job from './pages/Job'
 import InitiateBid from './pages/InitiateBid'
 import Tasks from './pages/Tasks'
@@ -126,6 +127,12 @@ const routes = [
   {
     path: '/register',
     component: Register
+  },
+  {
+    path: 'contractor-info',
+    component: ContractorInfo,
+    name: 'contractor-info',
+    props: true
   },
   {
     path: '/#*'

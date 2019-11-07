@@ -5,6 +5,65 @@
         </card>
 
         <section class="col-12">
+
+            <v-card>
+                <v-card-title>Details</v-card-title>
+                <v-simple-table v-if="isCustomer">
+                    <template v-slot:default>
+                        <thead>
+                        <tr>
+                            <th class="text-left"></th>
+                            <th class="text-left"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr
+                        >
+                            <td>Job Name:</td>
+                            <td>{{ bid.job_name }}</td>
+                        </tr>
+                        <tr
+                                @click="viewContractorInfo()"
+                        >
+                            <td>Contractor Name:</td>
+                            <td
+                                class="lookLikeALink"
+                            >{{ getCompanyName() }}</td>
+                        </tr>
+                        <tr v-if="!bidHasBeenSubmitted"
+                        >
+                            <td>Start Date:</td>
+                            <td>Bid Not Complete</td>
+                        </tr>
+                        <tr v-if="bidHasBeenSubmitted"
+                        >
+                            <td>Start Date:</td>
+                            <td>{{ agreedStartDate }}</td>
+                        </tr>
+                        <tr
+                                v-if="!bidHasBeenSubmitted"
+                        >
+                            <td>Total Bid Price:</td>
+                            <td>Bid Not Complete</td>
+                        </tr>
+                        <tr
+                                v-if="!bidHasBeenSubmitted"
+                        >
+                            <td>Total Bid Price:</td>
+                            <td>Bid Not Complete</td>
+                        </tr>
+                        <tr
+                                v-if="bidHasBeenSubmitted"
+                        >
+                            <td>Total Bid Price:</td>
+                            <td>{{ bidPrice }}</td>
+                        </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+            </v-card>
+
+
             <h1 class="card-title">Details</h1>
             <card>
                 <main class="row">
@@ -37,7 +96,8 @@
                             v-if="isCustomer && !bidHasBeenSubmitted"
                             label="Start Date:"
                             content="Bid Not Complete"
-                            type="startDate"></content-section>
+                            type="startDate"
+                    ></content-section>
 
                     <content-section
                             v-if="!isCustomer || (isCustomer && bidHasBeenSubmitted)"
@@ -444,7 +504,17 @@
       }
     },
     methods: {
-      jobTaskObject(jt){
+      viewContractorInfo(){
+        // this.$router.push({name: '/contractor-info', params: { contractorId: this.bid.contractor.id }});
+        this.$router.push({name: 'contractor-info', params: { contractorId: this.bid.contractor.id }});
+      },
+
+    //   <router-link
+    // class="event-link" Z
+    //   :to="{ name: 'event-show', params: { id: event.id } }"
+    //   >
+
+      jobTaskObject(jt) {
         if (jt) {
           return {
             Name: jt.task ? jt.task.name : '',
@@ -714,6 +784,11 @@
 
     span {
         font-size: 15px;
+    }
+
+    .lookLikeALink {
+        text-decoration: underline;
+        color: #1976d2 !important;
     }
 
     /*@media (min-width: 762px) {*/

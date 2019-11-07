@@ -102,7 +102,16 @@ class ContractorController extends Controller
             }
         }
 
+    }
 
+    public function getContractor($id)
+    {
+        $user = [];
+        $user['user'] = User::select(['first_name', 'last_name'])->find($id);
+        $user['user']['contractor'] = User::find($id)->contractor()->select(['company_name', 'free_jobs'])->get()->first();
+        $user['user']['location'] = User::find($id)->contractor()->get()->first()->location()->select(['address_line_1', 'country'])->get()->first();
+//        array_push($user, User::find($id)->contractor()->get()->first());
+        return $user;
     }
 
     public function checkDuplicateEmail($email)
