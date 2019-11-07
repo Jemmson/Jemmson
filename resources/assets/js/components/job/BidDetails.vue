@@ -299,6 +299,8 @@
         $('#stripe-modal').modal()
       })
 
+      window.location.href = '#'
+
     },
     data() {
       return {
