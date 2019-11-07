@@ -14,6 +14,7 @@ import AddJobTask from './pages/AddJobTask'
 import JobTask from './pages/JobTask'
 
 import ContractorInfo from './pages/ContractorInfo'
+import CustomerInfo from './pages/CustomerInfo'
 import Job from './pages/Job'
 import InitiateBid from './pages/InitiateBid'
 import Tasks from './pages/Tasks'
@@ -132,6 +133,12 @@ const routes = [
     path: 'contractor-info',
     component: ContractorInfo,
     name: 'contractor-info',
+    props: true
+  },
+  {
+    path: 'customer-info',
+    component: CustomerInfo,
+    name: 'customer-info',
     props: true
   },
   {

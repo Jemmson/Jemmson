@@ -80,6 +80,34 @@ class CustomerController extends Controller
         dd($customer);
     }
 
+    public function getCustomer($id)
+    {
+        $user = [];
+        $user['user'] = User::select(
+            [
+                'name',
+                'first_name',
+                'last_name',
+                'email',
+                'photo_url',
+                'phone'
+            ]
+        )->find($id);
+        $user['user']['customer'] = User::find($id)->customer()->select([
+            'notes',
+        ])->get()->first();
+        $user['user']['location'] = User::find($id)->customer()->get()->first()->location()->select([
+            'address_line_1',
+            'address_line_2',
+            'city',
+            'state',
+            'zip',
+            'country'
+        ])->get()->first();
+
+        return $user;
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

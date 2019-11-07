@@ -8,6 +8,7 @@
 
             <v-card>
                 <v-card-title>Details</v-card-title>
+
                 <v-simple-table v-if="isCustomer">
                     <template v-slot:default>
                         <thead>
@@ -17,50 +18,68 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr
-                        >
+                        <tr>
                             <td>Job Name:</td>
                             <td>{{ bid.job_name }}</td>
                         </tr>
-                        <tr
-                                @click="viewContractorInfo()"
-                        >
+                        <tr @click="viewContractorInfo()">
                             <td>Contractor Name:</td>
-                            <td
-                                class="lookLikeALink"
-                            >{{ getCompanyName() }}</td>
+                            <td class="lookLikeALink">{{ getCompanyName() }}</td>
                         </tr>
-                        <tr v-if="!bidHasBeenSubmitted"
-                        >
+                        <tr v-if="!bidHasBeenSubmitted">
                             <td>Start Date:</td>
                             <td>Bid Not Complete</td>
                         </tr>
-                        <tr v-if="bidHasBeenSubmitted"
-                        >
+                        <tr v-if="bidHasBeenSubmitted">
                             <td>Start Date:</td>
                             <td>{{ agreedStartDate }}</td>
                         </tr>
-                        <tr
-                                v-if="!bidHasBeenSubmitted"
-                        >
+                        <tr v-if="!bidHasBeenSubmitted">
                             <td>Total Bid Price:</td>
                             <td>Bid Not Complete</td>
                         </tr>
-                        <tr
-                                v-if="!bidHasBeenSubmitted"
-                        >
+                        <tr v-if="!bidHasBeenSubmitted">
                             <td>Total Bid Price:</td>
                             <td>Bid Not Complete</td>
                         </tr>
-                        <tr
-                                v-if="bidHasBeenSubmitted"
-                        >
+                        <tr v-if="bidHasBeenSubmitted">
                             <td>Total Bid Price:</td>
                             <td>{{ bidPrice }}</td>
                         </tr>
                         </tbody>
                     </template>
                 </v-simple-table>
+
+                <v-simple-table v-if="!isCustomer">
+                    <template v-slot:default>
+                        <thead>
+                        <tr>
+                            <th class="text-left"></th>
+                            <th class="text-left"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Job Name:</td>
+                            <td>{{ bid.job_name }}</td>
+                        </tr>
+                        <tr @click="viewCustomerInfo()">
+                            <td>Customer Name:</td>
+                            <td class="lookLikeALink">{{ customerName }}</td>
+                        </tr>
+                        <tr>
+                            <td>Start Date:</td>
+                            <td>{{ agreedStartDate }}</td>
+                        </tr>
+                        <tr v-if="bidHasBeenSubmitted">
+                            <td>Total Bid Price:</td>
+                            <td>{{ bidPrice }}</td>
+                        </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+
+
             </v-card>
 
 
@@ -505,14 +524,12 @@
     },
     methods: {
       viewContractorInfo(){
-        // this.$router.push({name: '/contractor-info', params: { contractorId: this.bid.contractor.id }});
         this.$router.push({name: 'contractor-info', params: { contractorId: this.bid.contractor.id }});
       },
 
-    //   <router-link
-    // class="event-link" Z
-    //   :to="{ name: 'event-show', params: { id: event.id } }"
-    //   >
+      viewCustomerInfo(){
+        this.$router.push({name: 'customer-info', params: { customerId: this.bid.customer.id }});
+      },
 
       jobTaskObject(jt) {
         if (jt) {

@@ -107,9 +107,37 @@ class ContractorController extends Controller
     public function getContractor($id)
     {
         $user = [];
-        $user['user'] = User::select(['first_name', 'last_name'])->find($id);
-        $user['user']['contractor'] = User::find($id)->contractor()->select(['company_name', 'free_jobs'])->get()->first();
-        $user['user']['location'] = User::find($id)->contractor()->get()->first()->location()->select(['address_line_1', 'country'])->get()->first();
+        $user['user'] = User::select(
+            [
+                'name',
+                'first_name',
+                'last_name',
+                'email',
+                'photo_url',
+                'phone'
+            ]
+        )->find($id);
+        $user['user']['contractor'] = User::find($id)->contractor()->select([
+            'company_name',
+        ])->get()->first();
+        $user['user']['location'] = User::find($id)->contractor()->get()->first()->location()->select([
+            'address_line_1',
+            'address_line_2',
+            'city',
+            'state',
+            'zip',
+            'country'
+        ])->get()->first();
+
+        $user['user']['licenses'] = User::find($id)->contractor()->get()->first()->licenses()->select([
+            'name',
+            'value'
+        ])->get();
+
+//        $user['user'] = User::find($id);
+//        $user['user']['contractor'] = User::find($id)->contractor()->get()->first();
+//        $user['user']['location'] = User::find($id)->contractor()->get()->first()->location()->get()->first();
+
 //        array_push($user, User::find($id)->contractor()->get()->first());
         return $user;
     }
