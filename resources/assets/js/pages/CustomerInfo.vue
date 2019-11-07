@@ -11,7 +11,7 @@
                         </v-card-title>
                         <v-img
                                 v-if="checkForPhoto()"
-                                :src="customer.user ? customer.user.photo_url : '' " aspect-ratio="1.7"></v-img>
+                                :src="customer.user.photo_url" aspect-ratio="1.7"></v-img>
                         <v-card-text>
                             <div style="font-weight:bold">Email</div>
                             <v-subheader>{{ customer.user ? customer.user.email : '' }}</v-subheader>

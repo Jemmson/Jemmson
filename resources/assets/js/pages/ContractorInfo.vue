@@ -10,7 +10,7 @@
                             </v-card-title>
                             <v-img
                                     v-if="checkForPhoto()"
-                                    :src="contractor.user.photo_url : '' " aspect-ratio="1.7"></v-img>
+                                    :src="contractor.user.photo_url" aspect-ratio="1.7"></v-img>
                             <v-card-text>
                                 <div style="font-weight:bold">Name</div>
                                 <v-subheader>{{ contractor && contractor.user ? contractor.user.name : ''  }}</v-subheader>
