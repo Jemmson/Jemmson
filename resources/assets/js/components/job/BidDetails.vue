@@ -4,6 +4,7 @@
 
         <job-stepper
             :status="bid.status"
+            :user="getUser()"
         ></job-stepper>
 
         <card v-if="showDeclinedMessage" style="background-color: lightcoral">
@@ -530,6 +531,18 @@
       getCurrentUser() {
         if (Spark.state) {
           return Spark.state.user
+        }
+      },
+      getUser(){
+        switch(Spark.state.user.usertype){
+          case 'customer':
+            return 'customer'
+          case 'contractor':
+            if (Spark.state.user.id === this.bid.contractor_id) {
+              return 'general';
+            } else {
+              return 'sub';
+            }
         }
       },
       cancelDialog() {
