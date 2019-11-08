@@ -1,9 +1,14 @@
 <template>
     <div class="row">
+
+
+        <job-stepper
+            :status="bid.status"
+        ></job-stepper>
+
         <card v-if="showDeclinedMessage" style="background-color: lightcoral">
             {{ bid.declined_message }}
         </card>
-
         <section class="col-12">
             <v-card class="mb-4">
                 <v-card-title>Details</v-card-title>
@@ -46,10 +51,12 @@
                 </v-simple-table>
 
 
-                <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less than the sum of
-                    your subs bids</v-card-text>
+                <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less
+                    than the sum of
+                    your subs bids
+                </v-card-text>
                 <v-simple-table v-if="!isCustomer">
-                <template v-slot:default>
+                    <template v-slot:default>
                         <thead>
                         <tr>
                             <th class="text-left"></th>
@@ -268,6 +275,7 @@
   import Stripe from '../stripe/Stripe'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
   import ContentSection from '../shared/ContentSection'
+  import JobStepper from '../../components/shared/JobStepper'
   import CompletedTasks from './CompletedTasks'
   import ApproveBid from './ApproveBid'
   import GeneralContractorBidActions from './GeneralContractorBidActions'
@@ -280,6 +288,7 @@
       ContentSection,
       CompletedTasks,
       HorizontalTable,
+      JobStepper,
       ApproveBid,
       GeneralContractorBidActions
     },
@@ -289,16 +298,14 @@
       customerName: String
     },
     created: function() {
-
       Bus.$on('needsStripe', () => {
         $('#stripe-modal').modal()
       })
-
       window.location.href = '#'
-
     },
     data() {
       return {
+        el: 2,
         area: {
           area: ''
         },
@@ -461,15 +468,15 @@
       }
     },
     methods: {
-      canAddATask(){
+      canAddATask() {
         return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
       },
-      viewContractorInfo(){
-        this.$router.push({name: 'contractor-info', params: { contractorId: this.bid.contractor.id }});
+      viewContractorInfo() {
+        this.$router.push({name: 'contractor-info', params: {contractorId: this.bid.contractor.id}})
       },
 
-      viewCustomerInfo(){
-        this.$router.push({name: 'customer-info', params: { customerId: this.bid.customer.id }});
+      viewCustomerInfo() {
+        this.$router.push({name: 'customer-info', params: {customerId: this.bid.customer.id}})
       },
 
       jobTaskObject(jt) {
