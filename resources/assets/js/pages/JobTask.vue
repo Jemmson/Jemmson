@@ -595,7 +595,7 @@
       },
 
       approvedByCustomer() {
-        return this.jobTask.status === 'bid_task.approved_by_customer'
+        return this.jobTask.status === 'bid_task.approved_by_customer' || this.jobTask.status === 'bid_task.finished_by_general';
       },
       getBidPrice(bid) {
         if (bid) {
@@ -699,13 +699,58 @@
           }.bind(this), 2000)
         }
       },
+      userIsAGeneralContractor() {
+        return Spark.state.user.usertype === 'contractor' && Spark.state.user.id === this.jobTask.job.contractor_id;
+      },
+      userIsACustomer() {
+        return Spark.state.user.usertype === 'customer';
+      },
+      jobHasSubs () {
+        return this.jobTask.bid_contractor_job_tasks.length > 0;
+      },
+      subHasFinishedTheJob() {
+        return this.jobTask.status === 'bid_task.finished_by_sub';
+      },
+      jobHasNotBeenSubmittedToTheCustomer() {
+        return this.jobTask.status !== 'bid_task.approved_by_general';
+      },
+      jobHasBeenApprovedByTheGeneral() {
+        return this.jobTask.status === 'bid_task.approved_by_general';
+      },
+      generalHasFinishedTheJob() {
+        return this.jobTask.status === 'bid_task.approved_by_general';
+      },
       showDenyBtn(jobTask) {
         if (jobTask) {
-          const status = jobTask.status
-          if (this.isCustomer) {
-            return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general')
+
+          if (this.userIsAGeneralContractor()) {
+            if (this.jobHasSubs() && this.subHasFinishedTheJob() && this.jobHasNotBeenSubmittedToTheCustomer()) {
+              return true
+            } else {
+              return false
+            }
+          } else if(this.userIsACustomer()) {
+            if (this.jobHasBeenApprovedByTheGeneral) {
+              return true
+            } else {
+              return false
+            }
+          } else {
+            return false
           }
-          return (status === 'bid_task.finished_by_sub' || status === 'bid_task.reopened')
+
+
+          // should not see this if I am a general and the task has no subs
+
+          // I should see this if I am a general and I have subs
+
+          // I should see this if I am a customer and the task has been finished and approved by the general
+
+          // const status = jobTask.status
+          // if (this.isCustomer) {
+          //   return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general')
+          // }
+          // return (status === 'bid_task.finished_by_sub' || status === 'bid_task.reopened')
           // return (status === 'bid_task.finished_by_sub' || this.jobStatus === 'bid.declined');
         }
       },
