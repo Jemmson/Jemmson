@@ -23,28 +23,28 @@
                 ></horizontal-table>
 
 
-<!--                <table class="table">-->
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th>Task</th>-->
-<!--                        <th>Status</th>-->
-<!--                        <th>{{ !isContractor ? 'Contractor' : 'Sub' }}</th>-->
-<!--                        <th>Phone</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-<!--                    <tr>-->
-<!--                        <td>{{ jTask.task.name }}</td>-->
-<!--                        <td>-->
-<!--                                <span :class="getLabelClass(jTask)">-->
-<!--                                    {{ status(jTask) }}-->
-<!--                                </span>-->
-<!--                        </td>-->
-<!--                        <td>{{ jTask.contractor ? jTask.contractor.company_name : 'none'}}</td>-->
-<!--                        <td>{{ jTask.contractor ? jTask.contractor.phone : 'none'}}</td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-<!--                </table>-->
+                <!--                <table class="table">-->
+                <!--                    <thead>-->
+                <!--                    <tr>-->
+                <!--                        <th>Task</th>-->
+                <!--                        <th>Status</th>-->
+                <!--                        <th>{{ !isContractor ? 'Contractor' : 'Sub' }}</th>-->
+                <!--                        <th>Phone</th>-->
+                <!--                    </tr>-->
+                <!--                    </thead>-->
+                <!--                    <tbody>-->
+                <!--                    <tr>-->
+                <!--                        <td>{{ jTask.task.name }}</td>-->
+                <!--                        <td>-->
+                <!--                                <span :class="getLabelClass(jTask)">-->
+                <!--                                    {{ status(jTask) }}-->
+                <!--                                </span>-->
+                <!--                        </td>-->
+                <!--                        <td>{{ jTask.contractor ? jTask.contractor.company_name : 'none'}}</td>-->
+                <!--                        <td>{{ jTask.contractor ? jTask.contractor.phone : 'none'}}</td>-->
+                <!--                    </tr>-->
+                <!--                    </tbody>-->
+                <!--                </table>-->
 
 
                 <div class="row">
@@ -144,7 +144,8 @@
       }
     },
     created() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     computed: {
       show() {

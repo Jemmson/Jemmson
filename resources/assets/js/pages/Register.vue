@@ -167,7 +167,8 @@
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="locality" class=" pt-3 pt-2">State *</label>
-                            <input type="text" class="form-control" name="state" id="locality" v-model="registerForm.state">
+                            <input type="text" class="form-control" name="state" id="locality"
+                                   v-model="registerForm.state">
                             <!--                            <input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
                             <!--                            <select id="locality"-->
                             <!--                                    name="state"-->
@@ -194,18 +195,18 @@
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="country" class=" pt-3 pt-2">Country *</label>
-                            <input type="text" class="form-control" name="state" id="country" v-model="registerForm.country">
-<!--                            <select id="country"-->
-<!--                                    name="country"-->
-<!--                                    autocomplete="on"-->
-<!--                                    type="text" class="form-control "-->
-<!--                                    v-model="registerForm.country">-->
-<!--                                <option v-for="country in countries" :value="country">{{ country.name }}</option>-->
-<!--                            </select>-->
+                            <input type="text" class="form-control" name="state" id="country"
+                                   v-model="registerForm.country">
+                            <!--                            <select id="country"-->
+                            <!--                                    name="country"-->
+                            <!--                                    autocomplete="on"-->
+                            <!--                                    type="text" class="form-control "-->
+                            <!--                                    v-model="registerForm.country">-->
+                            <!--                                <option v-for="country in countries" :value="country">{{ country.name }}</option>-->
+                            <!--                            </select>-->
                             <span class="help-block" v-show="registerForm.errors.country !== ''">{{registerForm.errors.country}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
-
 
 
                         <div class="row">
@@ -231,15 +232,16 @@
                         </div>
 
 
-                       <div class="flex flex-col">
-                           <hr>
-                           <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
-                               Please Click To Add A Contractor License
-                           </label>
-                           <button @click="addLicenseBox()" id="addContractorLicenseButton"
-                                   class="btn btn-sm btn-normal mb-1rem" ref="add_contractor_license_button">Add A License
-                           </button>
-                       </div>
+                        <div class="flex flex-col">
+                            <hr>
+                            <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
+                                Please Click To Add A Contractor License
+                            </label>
+                            <button @click="addLicenseBox()" id="addContractorLicenseButton"
+                                    class="btn btn-sm btn-normal mb-1rem" ref="add_contractor_license_button">Add A
+                                License
+                            </button>
+                        </div>
 
                         <div id="licenseBoxes">
                             <div v-for="i in boxes">
@@ -689,7 +691,8 @@
       }
     },
     created() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     methods: {
       ...mapMutations(['setMobileResponse']),

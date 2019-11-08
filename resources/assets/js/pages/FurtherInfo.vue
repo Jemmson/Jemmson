@@ -1,180 +1,195 @@
 <template>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-12 mb-2">
-          <icon-header v-if="isContractor" icon="settings"
-                      mainHeader="Register Your Company"
-                      subHeader="Additional information needed">
-        </icon-header>
-        <icon-header v-if="!isContractor" icon="settings"
-                      mainHeader="Additional Information"
-                      subHeader="Additional information needed">
-        </icon-header>
-      </div>
-      <div class="col-12">
-        <card class="mb-2">
-          <form>
-            <input type="hidden" name="street_number" id="street_number">
-            <input type="hidden" name="country" id="country">
-            <div class="form-group" :class="{'has-error': form.errors.has('email')}">
-              <label for="email">Update Login Email: *</label>
-              <div>
-                <input id="email" type="text" class="form-control" name="email" v-model="form.email" autofocus required>
-                <span ref="emailError" class="help-block" v-show="form.errors.has('email')">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <icon-header v-if="isContractor" icon="settings"
+                             mainHeader="Register Your Company"
+                             subHeader="Additional information needed">
+                </icon-header>
+                <icon-header v-if="!isContractor" icon="settings"
+                             mainHeader="Additional Information"
+                             subHeader="Additional information needed">
+                </icon-header>
+            </div>
+            <div class="col-12">
+                <card class="mb-2">
+                    <form>
+                        <input type="hidden" name="street_number" id="street_number">
+                        <input type="hidden" name="country" id="country">
+                        <div class="form-group" :class="{'has-error': form.errors.has('email')}">
+                            <label for="email">Update Login Email: *</label>
+                            <div>
+                                <input id="email" type="text" class="form-control" name="email" v-model="form.email"
+                                       autofocus required>
+                                <span ref="emailError" class="help-block" v-show="form.errors.has('email')">
                   {{ form.errors.get('email') }}
                 </span>
-              </div>
-            </div>
+                            </div>
+                        </div>
 
-            <!-- Name -->
-            <div class="form-group" :class="{'has-error': (form.errors.has('first_name') || form.errors.has('last_name'))}">
-              <label for="first_name">First Name *</label>
-              <div>
-                <input id="first_name" type="text" class="form-control" name="name" v-model="form.first_name" required>
-                <span ref="first_name_error" class="help-block" v-show="form.errors.has('name')">
+                        <!-- Name -->
+                        <div class="form-group"
+                             :class="{'has-error': (form.errors.has('first_name') || form.errors.has('last_name'))}">
+                            <label for="first_name">First Name *</label>
+                            <div>
+                                <input id="first_name" type="text" class="form-control" name="name"
+                                       v-model="form.first_name" required>
+                                <span ref="first_name_error" class="help-block" v-show="form.errors.has('name')">
                   {{ form.errors.get('first_name') }}
                 </span>
-              </div>
-              <label for="last_name">Last Name *</label>
-              <div>
-                <input id="last_name" type="text" class="form-control" name="name" v-model="form.last_name" required>
-                <span ref="last_name_error" class="help-block" v-show="form.errors.has('name')">
+                            </div>
+                            <label for="last_name">Last Name *</label>
+                            <div>
+                                <input id="last_name" type="text" class="form-control" name="name"
+                                       v-model="form.last_name" required>
+                                <span ref="last_name_error" class="help-block" v-show="form.errors.has('name')">
                   {{ form.errors.get('last_name') }}
                 </span>
-              </div>
-            </div>
+                            </div>
+                        </div>
 
-            <!-- Company Name -->
-            <div class="form-group" :class="{'has-error': form.errors.has('company_name')}" v-if="isContractor">
-              <label for="company_name">Company Name *</label>
-              <div class="">
-                <input id="company_name" type="text" class="form-control" name="company_name"
-                  v-model="form.company_name">
-                <span ref="companyNameError" class="help-block" v-show="form.errors.has('company_name')">
+                        <!-- Company Name -->
+                        <div class="form-group" :class="{'has-error': form.errors.has('company_name')}"
+                             v-if="isContractor">
+                            <label for="company_name">Company Name *</label>
+                            <div class="">
+                                <input id="company_name" type="text" class="form-control" name="company_name"
+                                       v-model="form.company_name">
+                                <span ref="companyNameError" class="help-block"
+                                      v-show="form.errors.has('company_name')">
                   {{ form.errors.get('company_name') }}
                 </span>
-              </div>
-            </div>
+                            </div>
+                        </div>
 
-            <!-- Phone Number -->
-            <div class="form-group" :class="{'has-error': form.errors.has('phone_number')}">
-              <label for="phone">Mobile Phone Number *</label>
-              <div class="">
-                <input type="tel" id="phone" class="form-control" name="phone_number" maxlength="10"
-                  v-model="form.phone_number" @blur="validateMobileNumber($event.target.value)" @keyup="filterPhone">
-                <div v-if="checkThatNumberIsMobile()" style="color: green">{{ this.getMobileValidResponse[1]
-                                }}
-                </div>
-                <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1] }}
-                </div>
-                <span ref="phoneNumberError" class="help-block" v-show="form.errors.has('phone_number')">
+                        <!-- Phone Number -->
+                        <div class="form-group" :class="{'has-error': form.errors.has('phone_number')}">
+                            <label for="phone">Mobile Phone Number *</label>
+                            <div class="">
+                                <input type="tel" id="phone" class="form-control" name="phone_number" maxlength="10"
+                                       v-model="form.phone_number" @blur="validateMobileNumber($event.target.value)"
+                                       @keyup="filterPhone">
+                                <div v-if="checkThatNumberIsMobile()" style="color: green">{{
+                                    this.getMobileValidResponse[1]
+                                    }}
+                                </div>
+                                <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1]
+                                    }}
+                                </div>
+                                <span ref="phoneNumberError" class="help-block"
+                                      v-show="form.errors.has('phone_number')">
                   {{ form.errors.get('phone_number') }}
                 </span>
-              </div>
-            </div>
+                            </div>
+                        </div>
 
 
-            <!-- Address Line 1 -->
-            <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
-              <label for="route">Address Line 1 *</label>
-              <div class="">
-                <input type="text" class="form-control" name="address_line_1" id="route"
-                  v-model="form.address_line_1">
-                <span ref="addressLine1Error" class="help-block" v-show="form.errors.has('address_line_1')">
+                        <!-- Address Line 1 -->
+                        <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
+                            <label for="route">Address Line 1 *</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="address_line_1" id="route"
+                                       v-model="form.address_line_1">
+                                <span ref="addressLine1Error" class="help-block"
+                                      v-show="form.errors.has('address_line_1')">
                   {{ form.errors.get('address_line_1') }}
                 </span>
-              </div>
-            </div>
+                            </div>
+                        </div>
 
-            <!-- Address Line 2 -->
-            <div class="form-group">
-              <label for="address_line_2">Address Line 2</label>
-              <div class="">
-                <input id="address_line_2" type="text" class="form-control" name="" v-model="form.address_line_2">
-              </div>
-            </div>
+                        <!-- Address Line 2 -->
+                        <div class="form-group">
+                            <label for="address_line_2">Address Line 2</label>
+                            <div class="">
+                                <input id="address_line_2" type="text" class="form-control" name=""
+                                       v-model="form.address_line_2">
+                            </div>
+                        </div>
 
-            <!-- City -->
-            <div class="form-group" :class="{'has-error': form.errors.has('city')}">
-              <label for="administrative_area_level_1">City *</label>
-              <div class="">
-                <input type="text" class="form-control" name="city" id="administrative_area_level_1"
-                  v-model="form.city">
-                <span ref="cityError" class="help-block" v-show="form.errors.has('city')">
+                        <!-- City -->
+                        <div class="form-group" :class="{'has-error': form.errors.has('city')}">
+                            <label for="administrative_area_level_1">City *</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="city" id="administrative_area_level_1"
+                                       v-model="form.city">
+                                <span ref="cityError" class="help-block" v-show="form.errors.has('city')">
                   {{ form.errors.get('city') }}
                 </span>
-              </div>
-            </div>
+                            </div>
+                        </div>
 
-            <!-- State -->
+                        <!-- State -->
 
-            <div class="form-group" :class="{'has-error': form.errors.has('state')}">
-              <label for="locality" style="font-size: 1rem">State *</label>
-              <input type="text" class="form-control" name="state" id="locality" v-model="form.state">
-              <span ref="stateError" class="help-block" v-show="form.errors.has('state')">
+                        <div class="form-group" :class="{'has-error': form.errors.has('state')}">
+                            <label for="locality" style="font-size: 1rem">State *</label>
+                            <input type="text" class="form-control" name="state" id="locality" v-model="form.state">
+                            <span ref="stateError" class="help-block" v-show="form.errors.has('state')">
                 {{ form.errors.get('state') }}
               </span>
-            </div>
+                        </div>
 
-            <!-- Zip Code -->
-            <div class="form-group" :class="{'has-error': form.errors.has('zip')}">
-              <label for="postal_code">ZipCode *</label>
+                        <!-- Zip Code -->
+                        <div class="form-group" :class="{'has-error': form.errors.has('zip')}">
+                            <label for="postal_code">ZipCode *</label>
 
-              <input type="text" class="form-control" name="zip" id="postal_code" v-model="form.zip">
-              <span ref="zipError" class="help-block" v-show="form.errors.has('zip')">
+                            <input type="text" class="form-control" name="zip" id="postal_code" v-model="form.zip">
+                            <span ref="zipError" class="help-block" v-show="form.errors.has('zip')">
                 {{ form.errors.get('zip') }}
               </span>
-            </div>
+                        </div>
 
-            <!-- Notes -->
-            <div class="form-group" v-if="!isContractor">
-              <label for="notes">General Instructions For All Contractors</label>
-              <div class="">
+                        <!-- Notes -->
+                        <div class="form-group" v-if="!isContractor">
+                            <label for="notes">General Instructions For All Contractors</label>
+                            <div class="">
                 <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10"
-                  class="form-control"></textarea>
-              </div>
-            </div>
+                          class="form-control"></textarea>
+                            </div>
+                        </div>
 
-            <h3>Create Password</h3>
-            <div class="update_password" style="">
-                <!-- Update password -->
-                <div class="form-group" :class="{'has-error': form.errors.has('password')}">
-                  <label for="password">Password *</label>
+                        <h3>Create Password</h3>
+                        <div class="update_password" style="">
+                            <!-- Update password -->
+                            <div class="form-group" :class="{'has-error': form.errors.has('password')}">
+                                <label for="password">Password *</label>
 
-                  <div class="">
-                    <input id="password" class="form-control" type="password" name="password" ref="password"
-                      v-model="form.password">
-                    <span class="help-block" v-show="form.errors.has('password')">
+                                <div class="">
+                                    <input id="password" class="form-control" type="password" name="password"
+                                           ref="password"
+                                           v-model="form.password">
+                                    <span class="help-block" v-show="form.errors.has('password')">
                       {{ form.errors.get('password') }}
                     </span>
-                  </div>
-                </div>
+                                </div>
+                            </div>
 
-                <div class="form-group" :class="{'has-error': form.errors.has('password_confirmation')}">
-                  <label for="password_confirmation">Confirm Password *</label>
+                            <div class="form-group" :class="{'has-error': form.errors.has('password_confirmation')}">
+                                <label for="password_confirmation">Confirm Password *</label>
 
-                  <div class="">
-                    <input id="password_confirmation" class="form-control" type="password" name="password_confirmation"
-                      ref="password_confirmation" v-model="form.password_confirmation" @keyup="confirmPassword">
-                    <span class="help-block" v-show="form.errors.has('password_confirmation')">
+                                <div class="">
+                                    <input id="password_confirmation" class="form-control" type="password"
+                                           name="password_confirmation"
+                                           ref="password_confirmation" v-model="form.password_confirmation"
+                                           @keyup="confirmPassword">
+                                    <span class="help-block" v-show="form.errors.has('password_confirmation')">
                       {{ form.errors.get('password_confirmation') }}
                     </span>
-                  </div>
-                </div>
-            </div>
-            <button type="submit" name="submit" class="uppercase btn btn-normal btn-block"
-              @click.prevent="submitFurtherInfo()" :disabled="checkValidData()">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" name="submit" class="uppercase btn btn-normal btn-block"
+                                @click.prevent="submitFurtherInfo()" :disabled="checkValidData()">
               <span v-if="disabled.submit">
                 <i class="fa fa-btn fa-spinner fa-spin"></i>
               </span>
-              Register
-            </button>
-          </form>
-        </card>
-      </div>
+                            Register
+                        </button>
+                    </form>
+                </card>
+            </div>
+        </div>
     </div>
-  </div>
 
 </template>
 
@@ -295,7 +310,8 @@
       }
     },
     created() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     methods: {
       ...mapMutations([
@@ -324,13 +340,12 @@
         let phone = this.unformatNumber(this.form.phone_number)
 
         if ((this.getMobileValidResponse[1] === 'mobile' ||
-                this.getMobileValidResponse[2] === 'mobile') &&
-                (this.form.first_name !== '' && this.form.last_name !== '') && (phone === 10)){
+          this.getMobileValidResponse[2] === 'mobile') &&
+          (this.form.first_name !== '' && this.form.last_name !== '') && (phone === 10)) {
           return false
         } else {
           return true
         }
-
 
       },
       validateMobileNumber(phone) {
@@ -340,11 +355,11 @@
       },
       checkThatNumberIsMobile() {
         return this.getMobileValidResponse[1] === 'mobile' ||
-                this.getMobileValidResponse[2] === 'mobile'
+          this.getMobileValidResponse[2] === 'mobile'
       },
       checkLandLineNumber() {
         return this.getMobileValidResponse[1] === 'landline' ||
-                this.getMobileValidResponse[2] === 'landline'
+          this.getMobileValidResponse[2] === 'landline'
       },
       updateFormLocation(location) {
         this.form.address_line_1 = location.route

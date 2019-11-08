@@ -3,8 +3,8 @@
 
 
         <job-stepper
-            :status="bid.status"
-            :user="getUser()"
+                :status="bid.status"
+                :user="getUser()"
         ></job-stepper>
 
         <card v-if="showDeclinedMessage" style="background-color: lightcoral">
@@ -302,7 +302,8 @@
       Bus.$on('needsStripe', () => {
         $('#stripe-modal').modal()
       })
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     data() {
       return {
@@ -533,15 +534,15 @@
           return Spark.state.user
         }
       },
-      getUser(){
-        switch(Spark.state.user.usertype){
+      getUser() {
+        switch (Spark.state.user.usertype) {
           case 'customer':
             return 'customer'
           case 'contractor':
             if (Spark.state.user.id === this.bid.contractor_id) {
-              return 'general';
+              return 'general'
             } else {
-              return 'sub';
+              return 'sub'
             }
         }
       },

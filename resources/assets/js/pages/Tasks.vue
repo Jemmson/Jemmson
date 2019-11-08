@@ -3,12 +3,13 @@
         <div>
             <div class="search-bar shadow-md">
                 <search-bar>
-                    <input class="form-control" type="text" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
+                    <input class="form-control" type="text" placeholder="Search Tasks" v-model="searchTerm"
+                           @keyup="search">
                 </search-bar>
             </div>
 
             <footer
-                class="paginate">
+                    class="paginate">
                 <paginate ref="paginator"
                           name="sTasks"
                           :list="sTasks"
@@ -37,7 +38,7 @@
         <stripe :user='user'>
         </stripe>
         <feedback
-            page="tasks"
+                page="tasks"
         ></feedback>
     </div>
 </template>
@@ -52,7 +53,7 @@
   import Task from '../components/task/Task'
 
   export default {
-    name: "Tasks",
+    name: 'Tasks',
     props: {
       user: Object
     },
@@ -151,7 +152,8 @@
       }
     },
     created: function() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
       this.getTasks()
       Bus.$on('bidUpdated', (payload) => {
         this.getTasks()

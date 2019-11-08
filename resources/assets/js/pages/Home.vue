@@ -1,13 +1,14 @@
 <template>
     <div class="container">
 
-<!--        <figcaption class="caption small-header" :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">New Job</figcaption>-->
+        <!--        <figcaption class="caption small-header" :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">New Job</figcaption>-->
 
         <button
                 v-if="isContractor()"
                 class="btn btn-normal btn-lg w-full mb-1rem"
                 @click="goToNewJob()"
-        >CREATE A NEW JOB</button>
+        >CREATE A NEW JOB
+        </button>
 
         <div v-if="isContractor()">
             <icon-header icon="jobs"
@@ -23,14 +24,14 @@
         </div>
 
         <card>
-          <list>
-            <list-item v-if="isContractor()" :left="'Initiated'" :right="bidData('bid.initiated')"></list-item>
-            <list-item :left="'In Progress'" :right="bidData('bid.in_progress')"></list-item>
-            <list-item v-if="isContractor()" :left="'Sent'" :right="bidData('bid.sent')"></list-item>
-            <list-item v-if="isContractor()" :left="'Declined'" :right="bidData('bid.declined')"></list-item>
-            <list-item :left="'Approved'" :right="bidData('bid.approved')"></list-item>
-            <list-item :left="'Completed'" :right="bidData('bid.completed')" noDivider="true"></list-item>
-          </list>
+            <list>
+                <list-item v-if="isContractor()" :left="'Initiated'" :right="bidData('bid.initiated')"></list-item>
+                <list-item :left="'In Progress'" :right="bidData('bid.in_progress')"></list-item>
+                <list-item v-if="isContractor()" :left="'Sent'" :right="bidData('bid.sent')"></list-item>
+                <list-item v-if="isContractor()" :left="'Declined'" :right="bidData('bid.declined')"></list-item>
+                <list-item :left="'Approved'" :right="bidData('bid.approved')"></list-item>
+                <list-item :left="'Completed'" :right="bidData('bid.completed')" noDivider="true"></list-item>
+            </list>
         </card>
         <br>
 
@@ -48,8 +49,10 @@
                     <list-item :left="'Accepted'" :right="bidData('bid_task.accepted')"></list-item>
                     <list-item :left="'Finished By Sub'" :right="bidData('bid_task.finished_by_sub')"></list-item>
                     <list-item :left="'Approved'" :right="bidData('bid_task.approved_by_general')"></list-item>
-                    <list-item :left="'Finished By General'" :right="bidData('bid_task.finished_by_general')"></list-item>
-                    <list-item :left="'Approved By Customer'" :right="bidData('bid_task.approved_by_customer')"></list-item>
+                    <list-item :left="'Finished By General'"
+                               :right="bidData('bid_task.finished_by_general')"></list-item>
+                    <list-item :left="'Approved By Customer'"
+                               :right="bidData('bid_task.approved_by_customer')"></list-item>
                     <list-item :left="'Payment Sent'" :right="bidData('bid_task.customer_sent_payment')"></list-item>
                     <list-item :left="'Reopened'" :right="bidData('bid_task.reopened')"></list-item>
                     <list-item :left="'Denied'" :right="bidData('bid_task.denied')" noDivider="true"></list-item>
@@ -60,18 +63,18 @@
         <!-- / end tasks -->
 
         <icon-header icon="invoices"
-                      mainHeader="My Receipts"
-                      subHeader="All Receipts for my Completed Jobs and Tasks">
+                     mainHeader="My Receipts"
+                     subHeader="All Receipts for my Completed Jobs and Tasks">
         </icon-header>
         <card>
-          <list>
-            <list-item :left="'Total Invoices'" :right="invoices.length" noDivider="true"></list-item>
-          </list>
+            <list>
+                <list-item :left="'Total Invoices'" :right="invoices.length" noDivider="true"></list-item>
+            </list>
         </card>
         <br>
         <!-- / end invoices -->
         <feedback
-            page="home"
+                page="home"
         ></feedback>
     </div>
 </template>
@@ -114,11 +117,12 @@
       })
     },
     created() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     methods: {
-      goToNewJob(){
-        this.$router.push('/initiate-bid');
+      goToNewJob() {
+        this.$router.push('/initiate-bid')
       },
       contractorName() {
         if (this.theUser !== undefined && this.theUser !== null) {
@@ -186,18 +190,18 @@
       }
     },
     mounted: function() {
-      this.$store.commit('setCurrentPage', this.$router.history.current.path);
+      this.$store.commit('setCurrentPage', this.$router.history.current.path)
       axios.get('/jobs').then((response) => {
-        if(response.data !== undefined) {
-          this.bids = response.data;
-          this.sBids = this.bids;
+        if (response.data !== undefined) {
+          this.bids = response.data
+          this.sBids = this.bids
         } else {
-          this.bids = [];
-          this.sBids = [];
+          this.bids = []
+          this.sBids = []
         }
       })
       axios.post('/bid/tasks').then((response) => {
-        if(response.data !== undefined) {
+        if (response.data !== undefined) {
           this.tasks = response.data
           this.sTasks = this.tasks
         } else {
@@ -207,7 +211,7 @@
 
       })
       axios.get('/invoices').then((response) => {
-        if(response.data !== undefined) {
+        if (response.data !== undefined) {
           this.invoices = response.data
           this.sInvoices = this.invoices
         } else {
@@ -216,14 +220,14 @@
         }
 
       })
-      if (this.user.user === null || this.user.user === undefined ) {
+      if (this.user.user === null || this.user.user === undefined) {
         if (this.userFromState !== '') {
-          this.theUser = this.userFromState;
+          this.theUser = this.userFromState
         } else {
-          this.theUser = Spark.state.user;
+          this.theUser = Spark.state.user
         }
       } else {
-        this.theUser = this.user;
+        this.theUser = this.user
       }
       // console.log(this.bids)
       // console.log(JSON.stringify(this.bids))

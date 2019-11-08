@@ -219,7 +219,7 @@
                                         v-if="getAddress() !== 'Address Not Available'"
                                         target="_blank"
                                         :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress()">
-<!--                                    <i class="fas fa-map-marker icon"></i>-->
+                                    <!--                                    <i class="fas fa-map-marker icon"></i>-->
                                     <div class="flex flex-col location" v-if="jobLocationHasBeenSet">
                                         <div>
                                             {{ getAddressLine1 }}
@@ -336,7 +336,10 @@
                                             <div class="flex mb-2 justify-content-between"
                                                  v-for="bid in jobTask.bid_contractor_job_tasks"
                                                  :key="jobTask ? bid.id : 0">
-                                                <div class="flex-1 lookLikeALink" @click="viewContractorInfo(bid.contractor_id)">{{ getCompanyName(bid) }}</div>
+                                                <div class="flex-1 lookLikeALink"
+                                                     @click="viewContractorInfo(bid.contractor_id)">{{
+                                                    getCompanyName(bid) }}
+                                                </div>
                                                 <!--                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>-->
                                                 <div class="flex-1">${{ getBidPrice(bid) }}</div>
                                                 <div class="flex-1">
@@ -590,12 +593,12 @@
     },
     methods: {
 
-      viewContractorInfo(id){
-        this.$router.push({name: 'contractor-info', params: { contractorId: id }});
+      viewContractorInfo(id) {
+        this.$router.push({name: 'contractor-info', params: {contractorId: id}})
       },
 
       approvedByCustomer() {
-        return this.jobTask.status === 'bid_task.approved_by_customer' || this.jobTask.status === 'bid_task.finished_by_general';
+        return this.jobTask.status === 'bid_task.approved_by_customer' || this.jobTask.status === 'bid_task.finished_by_general'
       },
       getBidPrice(bid) {
         if (bid) {
@@ -700,25 +703,25 @@
         }
       },
       userIsAGeneralContractor() {
-        return Spark.state.user.usertype === 'contractor' && Spark.state.user.id === this.jobTask.job.contractor_id;
+        return Spark.state.user.usertype === 'contractor' && Spark.state.user.id === this.jobTask.job.contractor_id
       },
       userIsACustomer() {
-        return Spark.state.user.usertype === 'customer';
+        return Spark.state.user.usertype === 'customer'
       },
-      jobHasSubs () {
-        return this.jobTask.bid_contractor_job_tasks.length > 0;
+      jobHasSubs() {
+        return this.jobTask.bid_contractor_job_tasks.length > 0
       },
       subHasFinishedTheJob() {
-        return this.jobTask.status === 'bid_task.finished_by_sub';
+        return this.jobTask.status === 'bid_task.finished_by_sub'
       },
       jobHasNotBeenSubmittedToTheCustomer() {
-        return this.jobTask.status !== 'bid_task.approved_by_general';
+        return this.jobTask.status !== 'bid_task.approved_by_general'
       },
       jobHasBeenApprovedByTheGeneral() {
-        return this.jobTask.status === 'bid_task.approved_by_general';
+        return this.jobTask.status === 'bid_task.approved_by_general'
       },
       generalHasFinishedTheJob() {
-        return this.jobTask.status === 'bid_task.approved_by_general';
+        return this.jobTask.status === 'bid_task.approved_by_general'
       },
       showDenyBtn(jobTask) {
         if (jobTask) {
@@ -729,7 +732,7 @@
             } else {
               return false
             }
-          } else if(this.userIsACustomer()) {
+          } else if (this.userIsACustomer()) {
             if (this.jobHasBeenApprovedByTheGeneral) {
               return true
             } else {
@@ -738,7 +741,6 @@
           } else {
             return false
           }
-
 
           // should not see this if I am a general and the task has no subs
 
@@ -1125,7 +1127,8 @@
 
     },
     created() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
       this.authUser = new User()
     }
   }

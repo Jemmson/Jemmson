@@ -2,7 +2,8 @@
     <div class="flex flex-col">
         <card>
             <h2 class="self-center uppercase">Task Images</h2>
-            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name }}</label>
+            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name
+                }}</label>
         </card>
 
         <div class="flex mb-1rem">
@@ -110,7 +111,8 @@
       this.getJobTask(this.jobTaskId)
     },
     mounted: function() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
       Bus.$on('bidUpdated', (payload) => {
         this.getJobTask()
       })

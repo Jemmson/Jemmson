@@ -42,27 +42,26 @@
                                     </div>
                                 </div>
                             </a>
-                            
-                            
-                            
-<!--                            <v-subheader>{{ contractor && contractor.user ? contractor.user.location.address_line_1 : ''-->
-<!--                                }}-->
-<!--                            </v-subheader>-->
-<!--                            <v-subheader-->
-<!--                                    v-if="checkForAddressLine2()"-->
-<!--                            >{{ contractor && contractor.user ? contractor.user.location.address_line_2 : '' }}-->
-<!--                            </v-subheader>-->
-<!--                            <v-flex>-->
-<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.city : '' }}-->
-<!--                                </v-subheader>-->
-<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.state : '' }}-->
-<!--                                </v-subheader>-->
-<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.zip : '' }}-->
-<!--                                </v-subheader>-->
-<!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.country : ''-->
-<!--                                    }}-->
-<!--                                </v-subheader>-->
-<!--                            </v-flex>-->
+
+
+                            <!--                            <v-subheader>{{ contractor && contractor.user ? contractor.user.location.address_line_1 : ''-->
+                            <!--                                }}-->
+                            <!--                            </v-subheader>-->
+                            <!--                            <v-subheader-->
+                            <!--                                    v-if="checkForAddressLine2()"-->
+                            <!--                            >{{ contractor && contractor.user ? contractor.user.location.address_line_2 : '' }}-->
+                            <!--                            </v-subheader>-->
+                            <!--                            <v-flex>-->
+                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.city : '' }}-->
+                            <!--                                </v-subheader>-->
+                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.state : '' }}-->
+                            <!--                                </v-subheader>-->
+                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.zip : '' }}-->
+                            <!--                                </v-subheader>-->
+                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.country : ''-->
+                            <!--                                    }}-->
+                            <!--                                </v-subheader>-->
+                            <!--                            </v-flex>-->
                         </v-card-text>
                     </v-card>
                     <v-spacer></v-spacer>
@@ -115,7 +114,8 @@
     },
     created() {
       this.getContractor()
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     computed: {
       jobLocationHasBeenSet() {
@@ -176,7 +176,7 @@
           }
         }
       },
-      getLicenses(){
+      getLicenses() {
         if (this.contractor && this.contractor.user) {
           return this.contractor.user.licenses
         }

@@ -3,28 +3,28 @@
 
     <div class="container">
 
-<!--        <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">-->
-<!--&lt;!&ndash;            <div v-if="bid.status === 'bid.initiated'">&ndash;&gt;-->
-<!--&lt;!&ndash;                &ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="text-center" style="font-size: 14pt">{{ status }}</div>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--            <div class="text-center font-weight-bold">Job Status:</div>-->
-<!--            <div class="text-center font-weight-bold">{{ status }}</div>-->
-<!--        </div>-->
+        <!--        <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">-->
+        <!--&lt;!&ndash;            <div v-if="bid.status === 'bid.initiated'">&ndash;&gt;-->
+        <!--&lt;!&ndash;                &ndash;&gt;-->
+        <!--&lt;!&ndash;                <div class="text-center" style="font-size: 14pt">{{ status }}</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--            <div class="text-center font-weight-bold">Job Status:</div>-->
+        <!--            <div class="text-center font-weight-bold">{{ status }}</div>-->
+        <!--        </div>-->
 
         <v-card>
             <v-card-title>Job Status:</v-card-title>
             <v-card-subtitle>{{ status }}</v-card-subtitle>
         </v-card>
 
-<!--        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">-->
-<!--            &lt;!&ndash; /customer approve bid form &ndash;&gt;-->
-<!--            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">-->
-<!--            </approve-bid>-->
-<!--            &lt;!&ndash; /buttons  &ndash;&gt;-->
-<!--            <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">-->
-<!--            </general-contractor-bid-actions>-->
-<!--        </card>-->
+        <!--        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">-->
+        <!--            &lt;!&ndash; /customer approve bid form &ndash;&gt;-->
+        <!--            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">-->
+        <!--            </approve-bid>-->
+        <!--            &lt;!&ndash; /buttons  &ndash;&gt;-->
+        <!--            <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">-->
+        <!--            </general-contractor-bid-actions>-->
+        <!--        </card>-->
 
         <!-- /show all bid information -->
         <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
@@ -212,7 +212,8 @@
       }
     },
     created: function() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
       // get the bid
       const bidId = this.$route.params.id
       this.getBid(bidId)

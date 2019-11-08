@@ -22,7 +22,7 @@
                             </header>
                             <div class="flex flex-col w-full ">
                                 <div class="flex align-content-baseline status-height justify-items-center">
-<!--                                    <span class="dot ml-half-rem" :class="'bg-' + getLabelClass(bid)"></span>-->
+                                    <!--                                    <span class="dot ml-half-rem" :class="'bg-' + getLabelClass(bid)"></span>-->
                                     <div class="fs-1rem ml-half-rem text-center w-full" :class="getLabelClass(bid)">
                                         {{ status(bid) }}
                                     </div>
@@ -44,9 +44,11 @@
                             </div>
                         </section>
                         <div class="flex mt-1rem">
-                            <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">CANCEL JOB
+                            <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">
+                                CANCEL JOB
                             </button>
-                            <button @click="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">VIEW JOB</button>
+                            <button @click="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">VIEW JOB
+                            </button>
                         </div>
                     </div>
                 </card>
@@ -69,7 +71,7 @@
         >
         </delete-task-modal>
         <feedback
-            page="jobs"
+                page="jobs"
         ></feedback>
     </div>
 </template>
@@ -148,7 +150,7 @@
           console.log('error')
         }
       },
-      isContractor(){
+      isContractor() {
         if (this.user) {
           return this.user.usertype === 'contractor'
         }
@@ -230,7 +232,8 @@
       this.$store.commit('setCurrentPage', this.$router.history.current.path)
     },
     created() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
       this.getBids()
       Bus.$on('bidUpdated', (payload) => {
         this.getBids()

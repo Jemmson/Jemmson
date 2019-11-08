@@ -92,7 +92,8 @@
       },
     },
     created: function() {
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
       axios.get('invoices').then((data) => {
         this.invoices = data.data
         this.sInvoices = this.invoices

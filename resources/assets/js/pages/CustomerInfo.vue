@@ -45,18 +45,18 @@
                                 </div>
                             </a>
 
-<!--                            <v-subheader>{{ customer.user ? customer.user.location.address_line_1 : '' }}</v-subheader>-->
-<!--                            <v-subheader-->
-<!--                                v-if="checkForAddressLine2()"-->
-<!--                            >{{ customer.user ? customer.user.location.address_line_2 : '' }}-->
-<!--                            </v-subheader>-->
-<!--                            <v-flex>-->
-<!--                                <v-subheader>{{ customer.user ? customer.user.location.city : '' }}</v-subheader>-->
-<!--                                <v-subheader>{{ customer.user ? customer.user.location.state : '' }}</v-subheader>-->
-<!--                                <v-subheader>{{ customer.user ? customer.user.location.zip : '' }}</v-subheader>-->
-<!--                                <v-subheader>{{ customer.user ? customer.user.location.country : '' }}</v-subheader>-->
-<!--                            </v-flex>-->
-<!--                            -->
+                            <!--                            <v-subheader>{{ customer.user ? customer.user.location.address_line_1 : '' }}</v-subheader>-->
+                            <!--                            <v-subheader-->
+                            <!--                                v-if="checkForAddressLine2()"-->
+                            <!--                            >{{ customer.user ? customer.user.location.address_line_2 : '' }}-->
+                            <!--                            </v-subheader>-->
+                            <!--                            <v-flex>-->
+                            <!--                                <v-subheader>{{ customer.user ? customer.user.location.city : '' }}</v-subheader>-->
+                            <!--                                <v-subheader>{{ customer.user ? customer.user.location.state : '' }}</v-subheader>-->
+                            <!--                                <v-subheader>{{ customer.user ? customer.user.location.zip : '' }}</v-subheader>-->
+                            <!--                                <v-subheader>{{ customer.user ? customer.user.location.country : '' }}</v-subheader>-->
+                            <!--                            </v-flex>-->
+                            <!--                            -->
 
 
                         </v-card-text>
@@ -91,7 +91,8 @@
     },
     created() {
       this.getCustomer()
-      window.location.href = '#'
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     computed: {
       jobLocationHasBeenSet() {
