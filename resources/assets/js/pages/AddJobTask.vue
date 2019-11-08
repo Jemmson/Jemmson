@@ -46,6 +46,12 @@
                     </div>
                 </div>
 
+                <div
+                        v-if="taskExistsInJob"
+                        style="color: red; font-size: 10pt;"
+                        class="uppercase">
+                    This Task already exists for this job</div>
+
                 <div class="form-row">
 
                     <!--Task Price-->
