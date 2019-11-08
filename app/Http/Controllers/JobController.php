@@ -255,6 +255,7 @@ class JobController extends Controller
         array_push($contractorUserResults, [
             "id" => $contractorUser->id,
             "name" => $contractorUser->name,
+            "stripe_id" => empty($contractorUser->name),
             "email" => $contractorUser->email,
             "photo_url" => $contractorUser->photo_url,
             "logo_url" => $contractorUser->logo_url,
@@ -444,7 +445,6 @@ class JobController extends Controller
 
         if ($this->isCustomerBidNotSent($job)) {
 
-
             $location = $this->getCustomersJobLocation($job);
 
             $contractor = $this->getContractorInfoForCustomer($job);
@@ -478,7 +478,6 @@ class JobController extends Controller
             ], 200);
 
         } else if ($this->isGeneralContractor($job)) {
-
 
             $job->load(
                 [

@@ -67,7 +67,7 @@
                         </span>
                 Paid With Cash
             </button>
-            <button class="btn btn-normal" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+            <button v-if="contractorIsSetupWithStripe()" class="btn btn-normal" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
@@ -196,6 +196,9 @@
       }
     },
     methods: {
+      contractorIsSetupWithStripe(){
+        return this.bid.contractor.stripe_id;
+      },
       showDenyBtn(jobTask) {
         const status = jobTask.status
         if (this.isCustomer) {
