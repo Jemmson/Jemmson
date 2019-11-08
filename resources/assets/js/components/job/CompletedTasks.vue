@@ -77,11 +77,18 @@
         <transition name="slide-fade">
             <div v-show="paidCash">
                 <div class="form-group col-md-12">
-                    <label for="">Message</label>
-                    <input type="text" class="form-control"
-                           name="message"
-                           v-model="cashMessage"
-                           placeholder="Optional Message">
+
+                    <v-combobox
+                            label="Instructions For Contractor"
+                            :items="instructions"
+                            v-model="cashMessage"
+                    ></v-combobox>
+
+<!--                    <label for="">Message</label>-->
+<!--                    <input type="text" class="form-control"-->
+<!--                           name="message"-->
+<!--                           v-model="cashMessage"-->
+<!--                           placeholder="Optional Message">-->
                 </div>
                 <div class="form-group col-md-12">
                     <button
@@ -120,6 +127,11 @@
     },
     data() {
       return {
+        instructions: [
+          'Pay In Person',
+          'Left Under The Mat',
+          'Check Is In The Mail'
+        ],
         jTask: {},
         excluded: {},
         showPaidInCash: false,
