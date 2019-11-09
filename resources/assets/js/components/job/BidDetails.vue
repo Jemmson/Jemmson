@@ -3,7 +3,7 @@
 
 
         <job-stepper
-                :status="bid.status"
+                :status="getSelectedJob()"
                 :user="getUser()"
         ></job-stepper>
 
@@ -274,7 +274,7 @@
   import Format from '../../classes/Format'
   import Card from '../shared/Card'
   import Stripe from '../stripe/Stripe'
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import { mapGetters, mapMutations, mapActions, mapState } from 'vuex'
   import ContentSection from '../shared/ContentSection'
   import JobStepper from '../../components/shared/JobStepper'
   import CompletedTasks from './CompletedTasks'
@@ -302,6 +302,7 @@
       Bus.$on('needsStripe', () => {
         $('#stripe-modal').modal()
       })
+      this.getUser()
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
@@ -370,6 +371,9 @@
       }
     },
     computed: {
+      ...mapState({
+        selectedJob: state => state.job.model,
+      }),
       ...mapGetters(['getCustomerName']),
       agreedStartDate() {
         if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
@@ -470,6 +474,9 @@
       }
     },
     methods: {
+      getSelectedJob(){
+        return this.selectedJob[0].status;
+      },
       canAddATask() {
         return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
       },
@@ -534,6 +541,12 @@
           return Spark.state.user
         }
       },
+      cancelDialog() {
+        this.cancelBidCard = false
+        this.submissionCard = false
+        this.disabled.cancelBid = false
+        this.disabled.submitBid = false
+      },
       getUser() {
         switch (Spark.state.user.usertype) {
           case 'customer':
@@ -545,12 +558,6 @@
               return 'sub'
             }
         }
-      },
-      cancelDialog() {
-        this.cancelBidCard = false
-        this.submissionCard = false
-        this.disabled.cancelBid = false
-        this.disabled.submitBid = false
       },
       openCancelDialogCard() {
         this.cancelBidCard = true

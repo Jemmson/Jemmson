@@ -185,6 +185,9 @@
       status: String,
       user: String
     },
+    created() {
+      this.currentStep()
+    },
     mounted() {
       this.currentStep()
     },
