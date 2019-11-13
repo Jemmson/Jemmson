@@ -255,7 +255,7 @@ class JobController extends Controller
         array_push($contractorUserResults, [
             "id" => $contractorUser->id,
             "name" => $contractorUser->name,
-            "stripe_id" => empty($contractorUser->name),
+            "stripe_id" => !empty($contractorUser->stripe_id),
             "email" => $contractorUser->email,
             "photo_url" => $contractorUser->photo_url,
             "logo_url" => $contractorUser->logo_url,

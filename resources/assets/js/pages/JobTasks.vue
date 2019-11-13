@@ -162,7 +162,6 @@
         } else {
           return []
         }
-
       },
       ...mapState({
         job: state => state.job.model

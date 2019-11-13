@@ -120,30 +120,65 @@
                  v-if="bid.job_tasks !== undefined"
         >
             <div v-if="!isCustomer">
+
                 <h1 class="card-title mt-4">Job Tasks</h1>
-                <card>
-                    <div>
 
-                        <span class="">
-                        (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)
-                        </span> Total
+                <v-card v-for="(item, i) in bid.job_tasks"
+                        :key="i"
+                        class="card-positioning"
+                >
+                    <v-list dense flat>
+                        <v-list-item-group v-model="jobTaskItem" color="primary">
+                            <v-list-item
+                                    v-for="(jt, key, index) in jobTaskObject(item)"
+                                    :key="index"
+                            >
+                                <v-list-item-title v-text="key"></v-list-item-title>
+                                <v-list-item-subtitle v-text="jt"></v-list-item-subtitle>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
 
-                        <button class="btn btn-normal btn-sm float-right"
-                                style="width:75%"
-                                @click.prevent="viewTasks()">View, Edit, and Add Subs
-                        </button>
+                    <v-card-actions>
+                        <v-btn
+                                color="primary"
+                                :to="'/job/task/' + i"
+                                width="45%"
+                        >View</v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                width="45%"
+                                color="primary"
+                        >Add Sub</v-btn>
+                    </v-card-actions>
 
-                    </div>
+                </v-card>
 
-                    <div class="mt-1rem">
-                        <div v-for="jt in bid.job_tasks">
-                            <horizontal-table
-                                    :data="jobTaskObject(jt)"
-                            ></horizontal-table>
-                            <hr>
-                        </div>
-                    </div>
-                </card>
+
+                <!--                <h1 class="card-title mt-4">Job Tasks</h1>-->
+                <!--                <card>-->
+                <!--                    <div>-->
+
+                <!--                        <span class="">-->
+                <!--                        (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)-->
+                <!--                        </span> Total-->
+
+                <!--                        <button class="btn btn-normal btn-sm float-right"-->
+                <!--                                style="width:75%"-->
+                <!--                                @click.prevent="viewTasks()">View, Edit, and Add Subs-->
+                <!--                        </button>-->
+
+                <!--                    </div>-->
+
+                <!--                    <div class="mt-1rem">-->
+                <!--                        <div v-for="jt in bid.job_tasks">-->
+                <!--                            <horizontal-table-->
+                <!--                                    :data="jobTaskObject(jt)"-->
+                <!--                            ></horizontal-table>-->
+                <!--                            <hr>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </card>-->
             </div>
 
             <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">
@@ -312,6 +347,7 @@
         area: {
           area: ''
         },
+        jobTaskItem: {},
         addTaskStartDate: false,
         addTaskBidPrice: false,
         statuses: [
@@ -474,8 +510,10 @@
       }
     },
     methods: {
-      getSelectedJob(){
-        return this.selectedJob[0].status;
+      getSelectedJob() {
+        if (this.selectedJob && this.selectedJob.length > 0) {
+          return this.selectedJob[0].status
+        }
       },
       canAddATask() {
         return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
@@ -701,6 +739,10 @@
 </script>
 
 <style lang="less" scoped>
+
+    .card-positioning {
+        margin-bottom: .25rem;
+    }
 
     .status {
         padding-top: 1rem;

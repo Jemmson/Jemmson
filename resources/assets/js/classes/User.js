@@ -21,22 +21,22 @@ export default class User {
   }
 
   // TODO: NOTICE: need to fix the error handling since it doesn't work
-  async createToken() {
-    // create stripe token
-    const {
-      token,
-      error
-    } = await this.stripe.createToken(this.card)
-
-    if (error) {
-      // Inform the customer that there was an error
-      const errorElement = document.getElementById('card-errors')
-      errorElement.textContent = error.message
-      return false
-    } else {
-      return token
-    }
-  }
+  // async createToken(card) {
+  //   // create stripe token
+  //   const {
+  //     token,
+  //     error
+  //   } = await this.stripe.createToken(card)
+  //
+  //   if (error) {
+  //     // Inform the customer that there was an error
+  //     const errorElement = document.getElementById('card-errors')
+  //     errorElement.textContent = error.message
+  //     return false
+  //   } else {
+  //     return token
+  //   }
+  // }
 
   emitChange(emit) {
     switch (emit) {

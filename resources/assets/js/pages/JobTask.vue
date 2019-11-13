@@ -415,11 +415,7 @@
                 </div>
             </div>
 
-            <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
-                              :job-task-task="jobTask ? jobTask.task : null"
-                              :job-task-name="jobTask ? jobTask.task.name : null"
-                              :id="jobTask ? jobTask.id : null">
-            </sub-invite-modal>
+           .
 
             <deny-task-modal v-if="isContractor()"
                              :job-task="jobTask"
@@ -431,7 +427,6 @@
                     :job-task="jobTask"
                     :id="jobTask ? jobTask.id : null">
             </update-task-location-modal>
-
 
         </div>
         <feedback
