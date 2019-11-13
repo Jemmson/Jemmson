@@ -144,13 +144,23 @@
                                 color="primary"
                                 :to="'/job/task/' + i"
                                 width="45%"
-                        >View</v-btn>
+                        >View
+                        </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn
+                                v-if="isGeneral() && !approvedByCustomer()"
                                 width="45%"
+                                @click="openSubInvite(item.id)"
                                 color="primary"
-                        >Add Sub</v-btn>
+                        >Add Sub
+                        </v-btn>
                     </v-card-actions>
+
+                    <sub-invite-modal v-if="isGeneral()" :job-task="item"
+                                      :job-task-task="item ? item.task : null"
+                                      :job-task-name="item ? item.task.name : null"
+                                      :id="item ? item.id : null">
+                    </sub-invite-modal>
 
                 </v-card>
 
@@ -306,6 +316,7 @@
 <script>
   import Info from '../shared/Info'
   import HorizontalTable from '../shared/HorizontalTable'
+  import SubInviteModal from '../../components/task/SubInviteModal'
   import Format from '../../classes/Format'
   import Card from '../shared/Card'
   import Stripe from '../stripe/Stripe'
@@ -320,6 +331,7 @@
     components: {
       Card,
       Stripe,
+      SubInviteModal,
       Info,
       ContentSection,
       CompletedTasks,
@@ -510,6 +522,17 @@
       }
     },
     methods: {
+      openSubInvite(jobTaskId) {
+        // debugger;
+        // this.currentJobTask = jobTask;
+        $('#sub-invite-modal_' + jobTaskId).modal()
+      },
+      approvedByCustomer() {
+        if (this.bid && this.bid.jobTask) {
+          return this.bid.jobTask.status === 'bid_task.approved_by_customer' || this.bid.jobTask.status === 'bid_task.finished_by_general'
+
+        }
+      },
       getSelectedJob() {
         if (this.selectedJob && this.selectedJob.length > 0) {
           return this.selectedJob[0].status
