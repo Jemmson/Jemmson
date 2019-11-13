@@ -144,7 +144,7 @@
                                 color="primary"
                                 :to="'/job/task/' + i"
                                 width="45%"
-                        >View
+                        >View And Edit
                         </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn
@@ -153,6 +153,16 @@
                                 @click="openSubInvite(item.id)"
                                 color="primary"
                         >Add Sub
+                        </v-btn>
+                    </v-card-actions>
+                    <v-card-actions>
+                        <v-btn
+                                color="primary"
+                                width="100%"
+                                v-if="isGeneral() && showFinishedBtn(item)"
+                                @click="finishedTask(item)"
+                                :loading="disabled.finished"
+                        >Click Me When Task Is Finished
                         </v-btn>
                     </v-card-actions>
 
@@ -414,7 +424,8 @@
           cancelBid: false,
           jobCompleted: false,
           submitBid: false,
-          submitMessage: false
+          submitMessage: false,
+          finished: false
         }
       }
     },
@@ -522,10 +533,29 @@
       }
     },
     methods: {
+      showFinishedBtn(jobTask) {
+        if (this.isGeneral() &&
+          this.isAssignedToMe(jobTask, Spark.state.user.id) &&
+          (jobTask.status === 'bid_task.approved_by_customer'
+            || jobTask.status === 'bid.in_progress'
+            || jobTask.status === 'bid_task.reopened'
+            || jobTask.status === 'bid_task.finished_by_sub'
+            || jobTask.status === 'bid_task.denied'
+          )) {
+          return true
+        }
+        return false
+      },
       openSubInvite(jobTaskId) {
         // debugger;
         // this.currentJobTask = jobTask;
         $('#sub-invite-modal_' + jobTaskId).modal()
+      },
+      finishedTask(jobTask) {
+        SubContractor.finishedTask(jobTask, this.disabled)
+      },
+      isAssignedToMe(jobTask, userId) {
+        return userId === jobTask.contractor_id
       },
       approvedByCustomer() {
         if (this.bid && this.bid.jobTask) {
