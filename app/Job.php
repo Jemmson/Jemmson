@@ -74,9 +74,6 @@ class Job extends Model
         return $this->belongsTo(Location::class);
 
 
-
-
-
 //        use App\Job;
 //        Job::find(1)->
 //        with(

@@ -40,6 +40,16 @@ class Contractor extends Model
         return $this->hasMany(JobTask::class, 'contractor_id', 'user_id');
     }
 
+    public function subStatuses()
+    {
+        return $this->hasMany(SubStatus::class);
+    }
+
+    public function jobTaskStatuses()
+    {
+        return $this->hasMany(JobTaskStatus::class);
+    }
+
     public function time()
     {
         return $this->hasMany(Time::class, 'contractor_id', 'user_id');

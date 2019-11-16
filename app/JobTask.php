@@ -54,6 +54,16 @@ class JobTask extends Model
         return $this->belongsTo(Task::class);
     }
 
+    public function jobTaskStatuses()
+    {
+        return $this->hasMany(JobTaskStatus::class);
+    }
+
+    public function subStatuses()
+    {
+        return $this->hasMany(SubStatus::class);
+    }
+
     public function job()
     {
         return $this->belongsTo(Job::class);
@@ -63,7 +73,6 @@ class JobTask extends Model
     {
         return $this->belongsTo(User::class)->with('contractor');
     }
-
 
     public function bidContractorJobTasks()
     {
