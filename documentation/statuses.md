@@ -11,7 +11,7 @@
 |Customer approves a bid|  bid.in_progress | bid_task.approved_by_customer | bid_task.accepted |
 |Sub finishes task|  job.approved | bid_task.finished_by_sub | bid_task.accepted |
 |Contractor approves the task|  job.approved | bid_task.approved_by_general | bid_task.accepted |
-|Customer pays for job|  bid.sent | bid_task.approved_by_general | bid_task.accepted |
+|Customer pays for job|  job.completed | bid_task.customer_sent_payment | bid_task.accepted |
 
 
 |Step| Action | Job Status | Job Task Status | Bid Contractor Job Task Status |
@@ -35,7 +35,6 @@
 |17|Contractor approves the task|  job.approved | bid_task.approved_by_customer | sub.finished_job_approved_by_contractor |
 |18|Customer has not paid for finished job | job.approved | bid_task.approved_by_customer | sub.waiting_for_customer_payment |
 |19|Customer pays for job|  job.paid | bid_task.paid | sub.paid |
-
 
 
 Need to be able to add a sub until the job has been accepted by the customer

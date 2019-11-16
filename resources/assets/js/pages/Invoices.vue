@@ -1,47 +1,59 @@
 <template>
 
     <div class="container-fluid">
-        <search-bar>
-            <input type="text" class="form-control" placeholder="Search Paid Receipts" v-model="searchTerm"
-                   @keyup="search">
-        </search-bar>
 
-        <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
-        <div class="paginated mt-4 mb-1">
+        <v-card>
+            <v-card-title>
+                Receipts
+                <v-spacer></v-spacer>
+                <v-text-field
+                        v-model="search"
+                        append-icon="mdi-table-search"
+                        label="Search"
+                        single-line
+                        hide-details
+                ></v-text-field>
+            </v-card-title>
+            <v-data-table
+                    :headers="headers"
+                    :items="receipts()"
+                    :search="search"
+                    @click:row="goToInvoice('/invoice/'+ $event.id)"
+            ></v-data-table>
+        </v-card>
+        <!--        <search-bar>-->
+        <!--            <input type="text" class="form-control" placeholder="Search Paid Receipts" v-model="searchTerm"-->
+        <!--                   @keyup="search">-->
+        <!--        </search-bar>-->
 
-            <card class="list-card" v-for="invoice in sInvoices" v-bind:key="invoice.id"
-                  @click.native="invoice.job_id !== undefined ? goToInvoice('/sub/invoice/' + invoice.id) : goToInvoice('/invoice/' + invoice.id)">
-                <div class="row">
-                    <div class="col-12 page-header-title">
-                        <div v-if="invoice.job_id !== undefined">
-                            {{invoice.task.name}}
-                        </div>
-                        <div v-else>
-                            {{invoice.job_name}}
-                        </div>
-                    </div>
-                    <div class="col-12 mt-1">
-            <span class="float-left list-card-info">
-              Customer Name Here
-            </span>
+        <!--        &lt;!&ndash; <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> &ndash;&gt;-->
+        <!--        <div class="paginated mt-4 mb-1">-->
+        <!--            <v-card v-for="invoice in sInvoices.jobs" v-bind:key="invoice.id"-->
+        <!--                    @click.native="invoice.job_id !== undefined ? goToInvoice('/sub/invoice/' + invoice.id) : goToInvoice('/invoice/' + invoice.id)"-->
+        <!--            >-->
+        <!--                <v-card-title v-if="invoice.job_id !== undefined">{{invoice.task.name}}</v-card-title>-->
+        <!--                <v-card-title class="headline">{{invoice.job_name}}</v-card-title>-->
 
-                        <span class="float-right mr-2 list-card-info">
-              Completed On: {{completedOn()}}
-              <i class="far fa-calendar-check"></i>
-            </span>
-
-                    </div>
-                </div>
-            </card>
-        </div>
-        <!-- </paginate> -->
-
-        <!-- <div class="card mb-4 mt-3">
-          <div class="card-body d-flex justify-content-center">
-            <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
-            </paginate-links>
-          </div>
-        </div> -->
+        <!--                <v-list-item two-line>-->
+        <!--                    <v-list-item-content>-->
+        <!--                        <v-list-item-title>Completed On:</v-list-item-title>-->
+        <!--                        <v-list-item-subtitle>{{completedOn(invoice.completed_bid_date)}}</v-list-item-subtitle>-->
+        <!--                    </v-list-item-content>-->
+        <!--                </v-list-item>-->
+        <!--                <v-list-item two-line>-->
+        <!--                    <v-list-item-content>-->
+        <!--                        <v-list-item-title>Job Name:</v-list-item-title>-->
+        <!--                        <v-list-item-subtitle>{{invoice.job_name}}</v-list-item-subtitle>-->
+        <!--                    </v-list-item-content>-->
+        <!--                </v-list-item>-->
+        <!--                <v-list-item two-line>-->
+        <!--                    <v-list-item-content>-->
+        <!--                        <v-list-item-title>General Contractor:</v-list-item-title>-->
+        <!--                        <v-list-item-subtitle>{{invoice.contractor.company_name}}</v-list-item-subtitle>-->
+        <!--                    </v-list-item-content>-->
+        <!--                </v-list-item>-->
+        <!--            </v-card>-->
+        <!--        </div>-->
         <feedback
                 page="invoices"
         ></feedback>
@@ -50,16 +62,33 @@
 
 <script>
   import Feedback from '../components/shared/Feedback'
+  import SearchBar from '../components/shared/SearchBar'
 
   export default {
     components: {
-      Feedback
+      Feedback,
+      SearchBar
     },
     props: {
       user: Object,
     },
     data() {
       return {
+
+        search: '',
+        headers: [{
+          text: 'ID',
+          align: 'left',
+          sortable: false,
+          value: 'id',
+        },
+          {text: 'Job Name', value: 'job_name'},
+          {text: 'General', value: 'general'},
+          {text: 'Sub', value: 'sub'},
+          {text: 'Customer', value: 'customer'},
+          {text: 'Finished', value: 'finished'},
+        ],
+
         invoices: [],
         sInvoices: [],
         searchTerm: '',
@@ -68,26 +97,51 @@
     },
     computed: {},
     methods: {
+      getReceipt(row) {
+
+        this.$router.push({name: receipt})
+
+        console.log('row', row)
+      },
       invoiceLink(id) {
         console.log('invoice id: ' + id)
+      },
+      receipts() {
+        if (this.invoices.jobs) {
+          let receipts = []
+
+          for (let i = 0; i < this.invoices.jobs.length; i++) {
+            receipts.push({
+              id: this.invoices.jobs[i].id,
+              job_name: this.invoices.jobs[i].job_name,
+              general: this.invoices.jobs[i].contractor.company_name,
+              sub: '',
+              customer: this.invoices.jobs[i].customer.name,
+              finished: this.invoices.jobs[i].completed_bid_date
+            })
+          }
+
+          return receipts
+        }
+
       },
       goToInvoice(location) {
         // debugger;
         this.$router.push(location)
       },
-      search() {
-        console.log('searching: ' + this.searchTerm)
-
-        this.sInvoices = this.invoices.filter((invoice) => {
-          if (this.searchTerm == '') {
-            return true
-          }
-          return invoice.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
-        })
-      },
-      completedOn() {
-        if (this.invoice) {
-          return this.invoice.completed_bid_date.split(' ')[0]
+      // search() {
+      //   console.log('searching: ' + this.searchTerm)
+      //
+      //   this.sInvoices = this.invoices.filter((invoice) => {
+      //     if (this.searchTerm == '') {
+      //       return true
+      //     }
+      //     return invoice.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+      //   })
+      // },
+      completedOn(date) {
+        if (date) {
+          return date.split(' ')[0]
         }
       },
     },
@@ -95,7 +149,36 @@
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
       axios.get('invoices').then((data) => {
-        this.invoices = data.data
+        // this.invoices = data.data
+        this.invoices = {
+          'jobs': [{
+            'id': 1,
+            'job_name': 'new job',
+            'completed_bid_date': null,
+            'contractor_id': 1,
+            'customer_id': 2,
+            'contractor': {'company_name': 'Jemmson'},
+            'customer': {'name': 'Shawn Pike', 'tax_rate': 0}
+          },
+            {
+              'id': 2,
+              'job_name': 'new job1',
+              'completed_bid_date': null,
+              'contractor_id': 1,
+              'customer_id': 2,
+              'contractor': {'company_name': 'Jemmson'},
+              'customer': {'name': 'Shawn Pike', 'tax_rate': 0}
+            },
+            {
+              'id': 3,
+              'job_name': 'new job2',
+              'completed_bid_date': null,
+              'contractor_id': 1,
+              'customer_id': 2,
+              'contractor': {'company_name': 'Jemmson'},
+              'customer': {'name': 'Shawn Pike', 'tax_rate': 0}
+            }]
+        }
         this.sInvoices = this.invoices
       })
     },

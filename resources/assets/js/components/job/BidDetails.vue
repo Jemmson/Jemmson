@@ -139,7 +139,7 @@
                         </v-list-item-group>
                     </v-list>
 
-                    <v-card-actions>
+                    <v-card-actions v-if="jobIsNotFinishedAndNotApproved()">
                         <v-btn
                                 color="primary"
                                 :to="'/job/task/' + i"
@@ -533,6 +533,14 @@
       }
     },
     methods: {
+      jobIsNotFinishedAndNotApproved() {
+        if (this.bid && this.bid.jobTask) {
+          return !(this.bid.jobTask.status === 'bid.in_progress'
+            || this.bid.jobTask.status === 'job.approved'
+            || this.bid.jobTask.status === 'bid.paid'
+          )
+        }
+      },
       showFinishedBtn(jobTask) {
         if (this.isGeneral() &&
           this.isAssignedToMe(jobTask, Spark.state.user.id) &&

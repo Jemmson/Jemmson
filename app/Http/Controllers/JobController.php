@@ -125,30 +125,57 @@ class JobController extends Controller
      */
     public function getInvoices()
     {
-        if ($this->isCustomer()) {
-            $invoices = Auth::user()->jobs()
-                ->where(function ($query) {
-                    $query->where('status', __('job.completed'));
-                })
-                ->with(
-                    [
-                        'jobTasks' => function ($query) {
-                            $query->with(
-                                [
-                                    'task' => function ($q) {
-                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
-                                    }
-                                ]);
-                        }
-                    ])->get();
 
-        } else {
-            $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
-            $subInvoices = Auth::user()->contractor()->first()->jobTasks()->where('bid_id', '!=', null)->where('status', 'bid_task.customer_sent_payment')->with('task')->get();
-            $invoices = $invoices->merge($subInvoices);
+
+        $invoices = [];
+
+        $invoices['jobs'] = Auth::user()->jobs()->select([
+            'id',
+            'job_name',
+            'completed_bid_date',
+            'contractor_id',
+            'customer_id'
+        ])->get();
+
+        foreach($invoices['jobs'] as $job) {
+            $contractor = Contractor::where('user_id', '=', $job->contractor_id)->select([
+                'company_name'
+            ])->get()->first();
+            $job['contractor'] = $contractor;
+
+            $customer = User::where('id', '=', $job->customer_id)->select([
+                'name'
+            ])->get()->first();
+            $job['customer'] = $customer;
         }
 
         return response()->json($invoices, 200);
+
+
+//        if ($this->isCustomer()) {
+//            $invoices = Auth::user()->jobs()
+//                ->where(function ($query) {
+//                    $query->where('status', __('job.completed'));
+//                })
+//                ->with(
+//                    [
+//                        'jobTasks' => function ($query) {
+//                            $query->with(
+//                                [
+//                                    'task' => function ($q) {
+//                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
+//                                    }
+//                                ]);
+//                        }
+//                    ])->get();
+//
+//        } else {
+//            $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
+//            $subInvoices = Auth::user()->contractor()->first()->jobTasks()->where('bid_id', '!=', null)->where('status', 'bid_task.customer_sent_payment')->with('task')->get();
+//            $invoices = $invoices->merge($subInvoices);
+//        }
+//
+//        return response()->json($invoices, 200);
     }
 
     public function getInvoice(Job $job)
