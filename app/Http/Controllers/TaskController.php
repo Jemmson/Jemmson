@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ContractorSubcontractorPreferredPayment;
+use App\JobStatus;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
 use App\Notifications\NotifySubOfBidNotAcceptedBid;
@@ -20,7 +21,9 @@ use App\Quickbook;
 use App\QuickbooksContractor;
 use App\Location;
 use App\QuickbooksItem;
+use App\SubStatus;
 use App\Task;
+use App\JobTaskStatus;
 use App\Job;
 use App\Contractor;
 use App\Customer;
@@ -39,6 +42,7 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ConvertPrices;
+use App\Traits\Status;
 use Cloudinary;
 use Cloudinary\Api;
 
@@ -46,6 +50,7 @@ class TaskController extends Controller
 {
 
     use ConvertPrices;
+    use Status;
 
     /**
      * Display a listing of the resource.
@@ -782,6 +787,8 @@ class TaskController extends Controller
         // if so then send a notification to that contractor
         $user_sub->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user_sub));
 
+        $this->setSubStatus($contractor->user_id, $jobTask->id, 'initiated');
+
         return response()->json([
             'message' => 'success'
         ], 200);
@@ -1259,6 +1266,9 @@ class TaskController extends Controller
         $job->changeJobStatus($job, __('bid.in_progress'));
         $job->jobTotal();
         $job->setEarliestStartDateToTask($jobTask);
+
+        $this->setJobStatus($job->id, 'in_progress');
+        $this->setJobTaskStatus($jobTask->id, 'initiated');
 
         return response()->json($job->tasks()->get(), 200);
     }

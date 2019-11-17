@@ -103,7 +103,20 @@ class Job extends Model
     }
 
 
+    public function setStatusToInProgress()
+    {
 
+        if (empty($this->checkStatus('in_progress'))) {
+            $js = new JobStatus();
+            $js->setStatus($this->id, 'in_progress');
+        }
+    }
+
+    private function checkStatus($status)
+    {
+        return JobStatus::where("status", "=", $status)
+            ->where("job_id", "=", $this->id)->get()->first();
+    }
 
     /**
      * All subs who have a job task on this job

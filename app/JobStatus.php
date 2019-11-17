@@ -21,18 +21,25 @@ class JobStatus extends Model
         return $this->belongsTo(Job::class);
     }
 
-
     public function setStatus($jobId, $status)
     {
-        $statusNumber = $this->getStatusNumber($status);
-
-        $this->fill([
-           'job_id' => $jobId,
-           'status_number' => $statusNumber,
-           'status' => $status
-        ]);
-        $this->save();
+        if (empty($this->checkStatus($jobId, $status))) {
+            $statusNumber = $this->getStatusNumber($status);
+            $this->fill([
+                'job_id' => $jobId,
+                'status_number' => $statusNumber,
+                'status' => $status
+            ]);
+            $this->save();
+        }
     }
+
+    private function checkStatus($job_id, $status)
+    {
+        return JobStatus::where("status", "=", $status)
+            ->where("job_id", "=", $job_id)->get()->first();
+    }
+
 
     public function getStatusNumber($status)
     {
@@ -43,20 +50,26 @@ class JobStatus extends Model
             case 'in_progress':
                 return 2;
                 break;
-            case 'completed':
+            case 'sent':
                 return 3;
                 break;
-            case 'approved':
+            case 'changed':
                 return 4;
                 break;
-            case 'sent':
+            case 'canceled_by_customer':
                 return 5;
                 break;
-            case 'declined':
+            case 'canceled_by_general':
                 return 6;
                 break;
-            case 'paid':
+            case 'approved':
                 return 7;
+                break;
+            case 'declines_finished_task':
+                return 8;
+                break;
+            case 'paid':
+                return 9;
                 break;
         }
     }

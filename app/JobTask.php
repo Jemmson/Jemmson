@@ -89,12 +89,24 @@ class JobTask extends Model
         return $this->belongsTo(Location::class);
     }
 
-
     /*
  * *********************************
  * Methods
  * **********************************/
 
+    public function setStatusToInitiated()
+    {
+        if (empty($this->checkStatus('initiated'))) {
+            $jts = new JobTaskStatus();
+            $jts->setStatus($this->id, 'initiated');
+        }
+    }
+
+    private function checkStatus($status)
+    {
+        return JobStatus::where("status", "=", $status)
+            ->where("job_task_id", "=", $this->id)->get()->first();
+    }
 
     public function updateTaskStartDate($date)
     {

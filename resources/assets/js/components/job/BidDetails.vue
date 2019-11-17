@@ -139,7 +139,7 @@
                         </v-list-item-group>
                     </v-list>
 
-                    <v-card-actions v-if="jobIsNotFinishedAndNotApproved()">
+                    <v-card-actions v-if="jobIsNotFinishedAndNotApproved(item)">
                         <v-btn
                                 color="primary"
                                 :to="'/job/task/' + i"
@@ -533,12 +533,10 @@
       }
     },
     methods: {
-      jobIsNotFinishedAndNotApproved() {
-        if (this.bid && this.bid.jobTask) {
-          return !(this.bid.jobTask.status === 'bid.in_progress'
-            || this.bid.jobTask.status === 'job.approved'
-            || this.bid.jobTask.status === 'bid.paid'
-          )
+      jobIsNotFinishedAndNotApproved(item) {
+        if (item) {
+          return !(item.status === 'job.approved'
+            || item.status === 'bid.paid')
         }
       },
       showFinishedBtn(jobTask) {
