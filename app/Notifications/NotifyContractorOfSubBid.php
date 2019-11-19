@@ -81,7 +81,9 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
-        $text = 'Hello ' . $this->user->name . ' Contractor ' . $this->subName . ' has just submitted a bid for the task you sent him. Please use the following link. ' . url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token);
+        $text = 'Hello ' . $this->user->name . ' Contractor ' . $this->subName . ' has just submitted a bid for the task you sent. 
+        Please use the following link. '
+            . url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token);
 
         return (new NexmoMessage)
             ->content($text);

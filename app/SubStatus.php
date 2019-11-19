@@ -22,7 +22,13 @@ class SubStatus extends Model
 
     public function setStatus($user_id, $job_task_id, $status)
     {
-        if (empty($this->checkStatus($user_id, $job_task_id, $status))) {
+
+        $ss = SubStatus::where('user_id', '=', $user_id)
+            ->where('job_task_id', '=', $job_task_id)
+            ->orderBy('created_at', 'desc')->select('status')
+            ->get()->first();
+
+        if (empty($this->checkStatus($user_id, $job_task_id, $status)) || $ss['status'] != $status ) {
             $statusNumber = $this->getStatusNumber($status);
             $this->fill([
                 'user_id' => $user_id,
@@ -49,7 +55,7 @@ class SubStatus extends Model
             case 'initiated':
                 return 1;
                 break;
-            case 'task_sent':
+            case 'sent_a_bid':
                 return 2;
                 break;
             case 'accepted':

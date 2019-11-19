@@ -137,7 +137,9 @@
       },
 
       isContractor(){
-        return Spark.state.user.usertype === 'contractor'
+        if (Spark.state.user) {
+          return Spark.state.user.usertype === 'contractor'
+        }
       },
       submit() {
         let theComment = this.comment

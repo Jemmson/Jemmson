@@ -165,22 +165,24 @@ class TaskController extends Controller
             }
             $locationResults = [];
             $location = Location::where('user_id', '=', $job->customer_id)->get()->first();
-            array_push($locationResults, [
-                "id" => $location->id,
-                "user_id" => $location->user_id,
-                "default" => $location->default,
-                "address_line_1" => $location->address_line_1,
-                "address_line_2" => $location->address_line_2,
-                "city" => $location->city,
-                "state" => $location->state,
-                "zip" => $location->zip,
-                "area" => $location->area,
-                "country" => $location->country,
-                "created_at" => $location->created_at,
-                "updated_at" => $location->updated_at,
-                "lat" => $location->lat,
-                "long" => $location->long
-            ]);
+            if(!empty($location)){
+                array_push($locationResults, [
+                    "id" => $location->id,
+                    "user_id" => $location->user_id,
+                    "default" => $location->default,
+                    "address_line_1" => $location->address_line_1,
+                    "address_line_2" => $location->address_line_2,
+                    "city" => $location->city,
+                    "state" => $location->state,
+                    "zip" => $location->zip,
+                    "area" => $location->area,
+                    "country" => $location->country,
+                    "created_at" => $location->created_at,
+                    "updated_at" => $location->updated_at,
+                    "lat" => $location->lat,
+                    "long" => $location->long
+                ]);
+            }
 
             array_push($jtResults, [
                 "id" => $jt->id,
@@ -348,11 +350,11 @@ class TaskController extends Controller
 
         $jobTask = JobTask::find($request->id);
 
-
-
         $contractor_id = $jobTask->job()->get()->first()->contractor_id;
         $customer_id = $jobTask->job()->get()->first()->customer_id;
         $job_id = $jobTask->job()->get()->first()->id;
+
+        $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'canceled_bid_task');
 
         if ($this->userIsAContractor($contractor_id) || $this->userIsACustomer($customer_id)) {
             $this->deleteSubContractorTasks($jobTask->id);
@@ -528,7 +530,11 @@ class TaskController extends Controller
         $gContractor = User::find($jobTask->task()->first()->contractor_id);
         $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
 
+        $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'sent_a_bid');
+
         return response()->json(["message" => "Success"], 200);
+
+
     }
 
     /**
@@ -858,12 +864,13 @@ class TaskController extends Controller
 
         $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
 
-        $allContractorsForJobTask->map(function ($con) use ($bidId, $task) {
+        $allContractorsForJobTask->map(function ($con) use ($bidId, $task, $jobTask) {
             if ($con->id != $bidId) {
                 $con->accepted = 0;
                 $con->save();
                 $user = User::find($con->contractor_id);
                 $user->notify(new NotifySubOfBidNotAcceptedBid($task, $user));
+                $this->setSubStatus($user->id, $jobTask->id, 'denied');
             } else {
                 $con->accepted = 1;
                 $con->save();
@@ -887,7 +894,10 @@ class TaskController extends Controller
         $user = User::find($contractorId);
         $user->notify(new NotifySubOfAcceptedBid($task, $user));
 
+        $this->setSubStatus($user->id, $jobTask->id, 'accepted');
+
         return response()->json(["message" => "Success"], 200);
+
     }
 
     /**
@@ -934,6 +944,8 @@ class TaskController extends Controller
         $customer->notify(new TaskFinished($task, true, $customer));
         $subContractor->notify(new TaskApproved($task, $subContractor));
 
+        $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job_approved_by_contractor');
+
         return response()->json(["message" => "Success"], 200);
     }
 
@@ -979,6 +991,12 @@ class TaskController extends Controller
             $customer->notify(new TaskFinished($task, true, $customer));
         } else {
             $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
+        }
+
+        if ($jobTask->contractor_id == $generalContractor->id) {
+            $this->setJobTaskStatus($jobTask->id, 'general_finished_work');
+        } else {
+            $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job');
         }
 
         $jobTask->resetDeclinedMessage();
@@ -1302,6 +1320,8 @@ class TaskController extends Controller
         }
 
         $jobTask->setDeclinedMessage($request->message);
+
+        $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job_denied_by_contractor');
 
         return response()->json($task, 200);
     }

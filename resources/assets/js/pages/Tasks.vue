@@ -1,12 +1,12 @@
 <template>
     <div class="main flex flex-col justify-between">
         <div>
-            <div class="search-bar shadow-md">
-                <search-bar>
-                    <input class="form-control" type="text" placeholder="Search Tasks" v-model="searchTerm"
-                           @keyup="search">
-                </search-bar>
-            </div>
+<!--            <div class="search-bar shadow-md">-->
+<!--                <search-bar>-->
+<!--                    <input class="form-control" type="text" placeholder="Search Tasks" v-model="searchTerm"-->
+<!--                           @keyup="search">-->
+<!--                </search-bar>-->
+<!--            </div>-->
 
             <footer
                     class="paginate">
@@ -16,11 +16,7 @@
                           :per="8"
                           class="paginated"
                           v-show="sTasks.length > 0">
-                    <div class=""
-                         v-for="bidTask in paginated('sTasks')"
-                         v-bind:key="bidTask.id"
-                         :id="'task_' + bidTask.task_id"
-                         style="z-index:2;">
+                    <div v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
                         <task
                                 :bidTask="bidTask"
                         ></task>

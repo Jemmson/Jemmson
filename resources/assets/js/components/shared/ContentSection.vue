@@ -9,7 +9,7 @@
                 <span :ref="inputRef" :class="contentClasses">{{ content }}</span>
             </strong>
         </div>
-        <aside class="red uppercase ml-1rem mr-1rem" v-if="warning">{{ warningMessage }}</aside>
+        <aside class="redColor uppercase ml-1rem mr-1rem" v-if="warning">{{ warningMessage }}</aside>
         <!--            <span ref="details_contractor_name" class="float-right">{{ contractorName }}</span>-->
     </section>
 </template>
@@ -57,7 +57,7 @@
       computed: {
         totalSectionClasses(){
           if (this.warning) {
-            return 'red ' + this.sectionClasses;
+            return 'redColor ' + this.sectionClasses;
           } else {
             return this.sectionClasses;
           }

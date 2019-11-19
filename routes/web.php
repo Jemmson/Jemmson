@@ -96,6 +96,9 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('job/cancel', 'JobController@cancelJobBid');
     Route::get('/getContractor/{id}', 'ContractorController@getContractor');
     Route::get('/getCustomer/{id}', 'CustomerController@getCustomer');
+    Route::put('bid/task/{id}', 'TaskController@updateBidContractorJobTask');
+    Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
+    Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 
     // Stripe routes
     Route::get('/stripe/express/connect', 'StripeController@connectExpress');

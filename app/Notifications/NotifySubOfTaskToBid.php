@@ -39,10 +39,10 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $notifyThrough = [SparkChannel::class, 'mail', 'broadcast'];
-        if ($notifiable->smsOn() || !$notifiable->password_updated) {
-            $notifyThrough[] = 'nexmo';
-        }
+        $notifyThrough = [SparkChannel::class, 'mail', 'broadcast', 'nexmo'];
+//        if ($notifiable->smsOn() || !$notifiable->password_updated) {
+//            $notifyThrough[] = 'nexmo';
+//        }
         return $notifyThrough;
     }
 

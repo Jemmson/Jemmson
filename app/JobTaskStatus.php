@@ -22,7 +22,12 @@ class JobTaskStatus extends Model
 
     public function setStatus($job_task_id, $status)
     {
-        if (empty($this->checkStatus($job_task_id, $status))) {
+
+        $jts = JobTaskStatus::where('job_task_id', '=', $job_task_id)
+            ->orderBy('created_at', 'desc')->select('status')
+            ->get()->first();
+
+        if (empty($this->checkStatus($job_task_id, $status)) || $jts['status'] != $status ) {
             $statusNumber = $this->getStatusNumber($status);
             $this->fill([
                 'job_task_id' => $job_task_id,
@@ -35,7 +40,7 @@ class JobTaskStatus extends Model
 
     private function checkStatus($job_task_id, $status)
     {
-        return JobStatus::where("status", "=", $status)
+        return JobTaskStatus::where("status", "=", $status)
             ->where("job_task_id", "=", $job_task_id)->get()->first();
     }
 

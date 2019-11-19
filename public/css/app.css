@@ -170,7 +170,7 @@ h4 {
   border: solid red thin;
   background-color: #f39fae;
 }
-.error {
+.errorClass {
   color: red;
   font-size: 12pt;
 }
@@ -366,7 +366,7 @@ section {
 .w-inherit {
   width: inherit;
 }
-.red {
+.redColor {
   color: red;
 }
 .card {

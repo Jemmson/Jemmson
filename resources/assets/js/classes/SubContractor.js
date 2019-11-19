@@ -67,7 +67,7 @@ export default class SubContractor {
         if (id === bid.contractor_id && id === contractor_id)
             general = true;
 
-        axios.post('/api/task/finished', bid)
+        axios.post('task/finished', bid)
             .then((response) => {
                 console.log(response)
                 // show a toast notification

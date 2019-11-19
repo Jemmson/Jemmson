@@ -124,7 +124,7 @@ export default class GeneralContractor {
     approveTaskHasBeenFinished(jobTask, disabled) {
         console.log('approveTaskHasBeenFinished', jobTask)
         disabled.approve = true
-        axios.post('/api/task/approve', jobTask)
+        axios.post('task/approve', jobTask)
             .then((response) => {
                 console.log(response)
                 // show a toast notification

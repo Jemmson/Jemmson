@@ -72,7 +72,6 @@ Route::post('/task/finishedBidNotification', 'JobController@finishedBidNotificat
 
 // Tasks
 Route::resource('task', 'TaskController');
-Route::put('bid/task/{id}', 'TaskController@updateBidContractorJobTask');
 Route::post('/task/notifyAcceptedBid', 'TaskController@notifyAcceptedBid');
 Route::post('/task/updateTaskName', 'TaskController@updateTaskName');
 Route::post('/task/updateTaskQuantity', 'TaskController@updateTaskQuantity');
@@ -98,8 +97,6 @@ Route::post('/task/updateTaskStartDate', function (Request $request) {
 //});
 
 Route::post('/task/delete', 'TaskController@destroy');
-Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
-Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
 Route::post('/task/togglestripe', 'TaskController@toggleStripe');
 Route::post('/task/checkStripeForJob', 'TaskController@checkStripeForJob');
 

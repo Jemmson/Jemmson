@@ -23,6 +23,7 @@ use App\Notifications\NotifyCustomerThatBidIsFinished;
 use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\JobCanceled;
 use App\Traits\ConvertPrices;
+use App\Traits\Status;
 use App\Location;
 
 
@@ -30,6 +31,7 @@ class JobController extends Controller
 {
 
     use ConvertPrices;
+    use Status;
 
     /**
      * Construct
@@ -622,7 +624,10 @@ class JobController extends Controller
 //        need to delete any job tasks
 
 
+
         $job = Job::find($request->id);
+
+        $this->setCancelJobStatuses($job,'canceled_by_general');
 
 //        are there any tasks associated to the job
         $jobTasks = JobTask::where('job_id', '=', $request->id)->get();
@@ -654,7 +659,6 @@ class JobController extends Controller
                 }
             }
         }
-
 
         $job->delete();
 
@@ -708,6 +712,11 @@ class JobController extends Controller
         });
 
         $this->notifyAll($job);
+
+        $this->setJobTasksAndSubStatuses($job, 'approved_by_customer');
+
+        $this->setJobStatus($job->id, 'approved');
+
 
         return response()->json($job, 200);
     }
@@ -966,6 +975,9 @@ class JobController extends Controller
         if ($job->updateStatus(__('bid.declined'))) {
             $contractor->notify(new JobBidDeclined($job, $contractor, $message, $customer));
             $job->setJobDeclinedMessage($message);
+
+            $this->setJobStatus($job->id, 'changed');
+
             return response()->json(['message' => 'Success'], 200);
         }
         return response()->json(['message' => "Couldn't decline job, please try again."], 400);
@@ -1046,18 +1058,21 @@ class JobController extends Controller
         $companyName = $job->contractor()->get()->first()->contractor->company_name;
 
         $user->notify(new NotifyCustomerThatBidIsFinished($job, $user, $companyName));
+
+        $this->setJobTasksAndSubStatuses($job, 'waiting_for_customer_approval');
+
+        $this->setJobStatus($job->id, 'sent');
+
     }
 
-    public
-    function updateArea(Request $request)
+    public function updateArea(Request $request)
     {
         $job = Job::find($request->job_id);
         $job->updateArea($request->area);
 
     }
 
-    public
-    function getArea(Request $request)
+    public function getArea(Request $request)
     {
         $job = Job::find($request->job_id);
         return $job->getArea();
@@ -1069,8 +1084,7 @@ class JobController extends Controller
      * @param Request $request
      * @return boolean
      */
-    public
-    function cancelJobBid(Request $request)
+    public function cancelJobBid(Request $request)
     {
         $this->validate($request, [
             'id' => 'required'
@@ -1099,6 +1113,8 @@ class JobController extends Controller
             return response()->json(['message' => "Couldn't cancel job, please try again."], 400);
             return false;
         }
+
+        $this->setCancelJobStatuses($job,'canceled_by_customer');
 
         return response()->json(['message' => 'Success'], 200);
     }

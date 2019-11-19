@@ -178,11 +178,11 @@
                                                         }}</strong>
                                                 </div>
                                             </div>
-                                            <div class="error" v-if="errors.unit_price">Your Contractor Task Price Must
+                                            <div class="errorClass" v-if="errors.unit_price">Your Contractor Task Price Must
                                                 Be
                                                 Higher The Sub Price
                                             </div>
-                                            <div class="error" v-if="errors.priceMustBeANumber">Your Input Must Be A
+                                            <div class="errorClass" v-if="errors.priceMustBeANumber">Your Input Must Be A
                                                 Number
                                             </div>
                                         </div>
@@ -316,7 +316,7 @@
                                            ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(job)) ||
                                             (checkIfBidHasBeenAccepted(jobTask)) ||
                                             (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(job)))">
-                    <h1 class="card-title mt-4">Bids</h1>
+                    <h1 id="bids" class="card-title mt-4">Bids</h1>
                     <card>
                         <div class="row">
                             <!--show this box if the show button has been selected and if showSubsPanel is selected then show -->

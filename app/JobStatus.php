@@ -23,7 +23,12 @@ class JobStatus extends Model
 
     public function setStatus($jobId, $status)
     {
-        if (empty($this->checkStatus($jobId, $status))) {
+
+        $js = JobStatus::where('job_id', '=', $jobId)
+            ->orderBy('created_at', 'desc')->select('status')
+            ->get()->first();
+
+        if (empty($this->checkStatus($jobId, $status)) || $js['status'] != $status ) {
             $statusNumber = $this->getStatusNumber($status);
             $this->fill([
                 'job_id' => $jobId,

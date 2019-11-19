@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -35,7 +36,7 @@ class NotifySubOfBidNotAcceptedBid extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -63,6 +64,18 @@ class NotifySubOfBidNotAcceptedBid extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+        return (new NexmoMessage)
+            ->content('Your bid for ' . $this->bid->name . ' was not accepted. Thank you for using our application');
     }
 
     public function toBroadcast($notifiable)
