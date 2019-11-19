@@ -77,7 +77,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        dd($customer);
+//        dd($customer);
     }
 
     public function getCustomer($id)

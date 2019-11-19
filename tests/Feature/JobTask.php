@@ -8,8 +8,6 @@ use Tests\TestCase;
 
 class JobTask extends TestCase
 {
-
-
     /**  @test */
     function shouldBeAbleToAddATask() {
         //

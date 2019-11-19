@@ -836,22 +836,42 @@ class JobController extends Controller
 //            dd(Auth::user()->usertype);
 //            $jobs = Auth::user()->jobs();
 
-            $jobs = Auth::user()
-                ->jobs()
-                ->with(
-                    [
-                        'jobTasks.task',
-                        'jobTasks.task.contractor',
-                        'jobTasks.bidContractorJobTasks.contractor',
-                        'jobTasks.bidContractorJobTasks.contractor.contractor',
-                        // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
-                        'jobTasks.location',
-                        'customer:id'
-//                        'customer' => function ($query) {
-//                            $query->select('id', 'name');
-//                        }
-                    ]
-                )->where('status', '!=', __('job.completed'))->get();
+
+            $jobs = Job::where('contractor_id', '=', Auth::user()
+                ->getAuthIdentifier())
+                ->select([
+                    'status',
+                    'job_name',
+                    'id'
+                ])
+                ->get();
+
+            foreach ($jobs as $j) {
+                $j['job_status'] = $j->jobStatuses()->get();
+                $j['job_tasks'] = $j->jobTasks()->select(['id'])->get();
+                foreach ($j['job_tasks'] as $jt){
+                    $j['job_tasks']['bid_contractor_job_tasks'] = $jt->bidContractorJobTasks()->select('contractor_id')->get();
+                }
+            }
+
+
+
+//            $jobs = Auth::user()
+//                ->jobs()
+//                ->with(
+//                    [
+//                        'jobTasks.task',
+//                        'jobTasks.task.contractor',
+//                        'jobTasks.bidContractorJobTasks.contractor',
+//                        'jobTasks.bidContractorJobTasks.contractor.contractor',
+//                        // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
+//                        'jobTasks.location',
+//                        'customer:id'
+////                        'customer' => function ($query) {
+////                            $query->select('id', 'name');
+////                        }
+//                    ]
+//                )->where('status', '!=', __('job.completed'))->get();
 
 //                $jobs = Job::with([
 //                    'jobTasks:id,job_id',
