@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\BidContractorJobTask;
 use App\Job;
+use App\JobTaskStatus;
+use App\SubStatus;
 use App\User;
 use App\Task;
 use App\Customer;
@@ -25,6 +27,7 @@ use App\Notifications\JobCanceled;
 use App\Traits\ConvertPrices;
 use App\Traits\Status;
 use App\Location;
+use App\JobStatus;
 
 
 class JobController extends Controller
@@ -337,6 +340,7 @@ class JobController extends Controller
 
             $taskResults = [];
             $task = Task::where('id', '=', $jobTask->task()->get()->first()->id)->get()->first();
+
             array_push($taskResults, [
                 "name" => $task->name,
                 "description" => $task->description,
@@ -403,6 +407,9 @@ class JobController extends Controller
                 "phone" => $contractorUser->phone,
             ]);
 
+            $jts = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->get();
+            $ss = SubStatus::where('job_task_id', '=', $jobTask->id)->get();
+
             array_push($jobTasksResults, [
                 "id" => $jobTask->id,
                 "task_id" => $jobTask->task_id,
@@ -417,6 +424,8 @@ class JobController extends Controller
                 "location" => $location,
                 "customer" => $customerUserResults[0],
                 "task" => $taskResults[0],
+                "job_task_status" => $jts,
+                "sub_status" => $ss,
                 "contractor" => $contractorResults[0],
                 "job" => [
                     "id" => $job->id
@@ -431,6 +440,8 @@ class JobController extends Controller
     private
     function customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks = [])
     {
+        $jt = JobStatus::where('job_id', '=', $job->id)->get();
+
         $result = [];
         array_push($result, [
             "id" => $job->id,
@@ -450,7 +461,8 @@ class JobController extends Controller
             "location" => $location,
             "contractor" => $contractorUser,
             "customer" => $customerUser,
-            "job_tasks" => $jobTasks
+            "job_tasks" => $jobTasks,
+            "job_status" => $jt
         ]);
 
         return $result[0];
@@ -507,18 +519,20 @@ class JobController extends Controller
             ], 200);
 
         } else if ($this->isGeneralContractor($job)) {
-
             $job->load(
                 [
                     'jobTasks.task',
                     'jobTasks.job',
                     'jobTasks.job.customer',
+                    'jobTasks.jobTaskStatuses',
+                    'jobTasks.subStatuses',
                     'jobTasks.task.contractor',
                     'jobTasks.bidContractorJobTasks.contractor',
                     'jobTasks.bidContractorJobTasks.contractor.contractor',
                     'location',
                     'jobTasks.location',
                     'jobTasks.images',
+                    'jobStatuses',
                     'contractor',
                     'customer' => function ($query) {
                         $query->select('id', 'name');
@@ -787,6 +801,10 @@ class JobController extends Controller
         ])->get();
     }
 
+    private function getJobStatus($job, $status)
+    {
+        return $job->jobStatuses()->select('status') == $status;
+    }
 
     /**
      * Get all jobs associated with user
@@ -800,42 +818,63 @@ class JobController extends Controller
 
         if ($this->isCustomer()) {
             // only load tasks on jobs that are approved or need approval
-            $jobsWithTasks = Auth::user()->jobs()
-                ->where(function ($query) {
-                    $query->where('status', __('bid.sent'))
-                        ->orwhere('status', __('job.approved'))
-                        ->orwhere('status', __('bid.declined'))
-                        ->Where('status', '!=', __('job.completed'));
-                })
-                ->with(
-                    [
-                        'jobTasks' => function ($query) {
-                            //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
-                            $query->with(
-                                [
-                                    'task' => function ($q) {
-                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
-                                    }
-                                ]);
-                        },
-                        'jobTasks.location',
-                        'jobTasks.task',
-                        'jobTasks.task.contractor'
-                        // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
-                    ])->get();
 
-            $jobsWithoutTasks = Auth::user()->jobs()
-                ->where('status', '!=', __('bid.sent'))
-                ->where('status', '!=', __('job.approved'))
-                ->Where('status', '!=', __('bid.declined'))
-                ->Where('status', '!=', __('job.completed'))
-                ->get();
-            $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
+            $jobs = Job::where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
+
+            foreach ($jobs as $j){
+                if (
+                    $this->getJobStatus($j, 'approved')
+                    || $this->getJobStatus($j, 'sent')
+                    || $this->getJobStatus($j, 'declines_finished_task')
+                    || $this->getJobStatus($j, 'paid')
+                    || $this->getJobStatus($j, 'changed')
+                ) {
+                    $j['job_tasks'] = $j->job_tasks()->get();
+                    foreach ($j['job_tasks'] as $jt){
+                        $jt['job_task_status'] = JobTaskStatus::where('job_task_id', '=', $jt->id)->get();
+                        $jt['sub_status'] = SubStatus::where('job_task_id', '=', $jt->id)->get();
+                    }
+                    $j['job_status'] = $j->jobStatuses()->get();
+                }
+            }
+
+
+
+
+//            $jobsWithTasks = Auth::user()->jobs()
+//                ->where(function ($query) {
+//                    $query->where('status', __('bid.sent'))
+//                        ->orwhere('status', __('job.approved'))
+//                        ->orwhere('status', __('bid.declined'))
+//                        ->Where('status', '!=', __('job.completed'));
+//                })
+//                ->with(
+//                    [
+//                        'jobTasks' => function ($query) {
+//                            //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
+//                            $query->with(
+//                                [
+//                                    'task' => function ($q) {
+//                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
+//                                    }
+//                                ]);
+//                        },
+//                        'jobTasks.location',
+//                        'jobTasks.task',
+//                        'jobTasks.jobTaskStatuses',
+//                        'jobTasks.subStatuses',
+//                        'jobTasks.task.contractor'
+//                        // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
+//                    ])->get();
+//
+//            $jobsWithoutTasks = Auth::user()->jobs()
+//                ->where('status', '!=', __('bid.sent'))
+//                ->where('status', '!=', __('job.approved'))
+//                ->Where('status', '!=', __('bid.declined'))
+//                ->Where('status', '!=', __('job.completed'))
+//                ->get();
+//            $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
-
-//            dd(Auth::user()->usertype);
-//            $jobs = Auth::user()->jobs();
-
 
             $jobs = Job::where('contractor_id', '=', Auth::user()
                 ->getAuthIdentifier())
@@ -843,8 +882,7 @@ class JobController extends Controller
                     'status',
                     'job_name',
                     'id'
-                ])
-                ->get();
+                ])->get();
 
             foreach ($jobs as $j) {
                 $j['job_status'] = $j->jobStatuses()->get();
@@ -853,40 +891,9 @@ class JobController extends Controller
                     $j['job_tasks']['bid_contractor_job_tasks'] = $jt->bidContractorJobTasks()->select('contractor_id')->get();
                 }
             }
-
-
-
-//            $jobs = Auth::user()
-//                ->jobs()
-//                ->with(
-//                    [
-//                        'jobTasks.task',
-//                        'jobTasks.task.contractor',
-//                        'jobTasks.bidContractorJobTasks.contractor',
-//                        'jobTasks.bidContractorJobTasks.contractor.contractor',
-//                        // 'jobTasks.bidContractorJobTasks.contractorSubContractorPreferredPayment',
-//                        'jobTasks.location',
-//                        'customer:id'
-////                        'customer' => function ($query) {
-////                            $query->select('id', 'name');
-////                        }
-//                    ]
-//                )->where('status', '!=', __('job.completed'))->get();
-
-//                $jobs = Job::with([
-//                    'jobTasks:id,job_id',
-//                    'jobTasks.bidContractorJobTasks:id,job_task_id',
-//                    'jobTasks.images:id,job_task_id',
-//                    'location.jobTask:id,location_id'])->
-//                where('id','=',1)->get()
-//                $jobs = Job::with(['jobTasks:id,job_id','jobTasks.bidContractorJobTasks:id,job_task_id','jobTasks.images:id,job_task_id','location.jobTask:id,location_id'])->where('id','=',1)->get()
-
-
         }
 
-//        return $jobs;
         return response()->json($jobs, 200);
-//        return response()->json(collect($jobs)->toArray(), 200);
     }
 
 

@@ -68,6 +68,8 @@ class TaskController extends Controller
         with([
             'jobTask.job',
             'jobTask.task',
+            'jobTask.jobTaskStatuses',
+            'jobTask.subStatuses',
             'jobTask.task.contractor'
         ])->get();
         return view('tasks.index')->with(['tasks' => $bidTasks]);
@@ -82,6 +84,10 @@ class TaskController extends Controller
             $jtResults = [];
             $jt = JobTask::where('id', '=', $task->job_task_id)->get()->first();
 
+            $jts = JobTaskStatus::where('job_task_id', '=', $jt->id)->get();
+            $jtss = SubStatus::where('job_task_id', '=', $jt->id)
+                ->where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
+
             $jobResults = [];
             $job = Job::where('id', '=', $jt->job_id)->get()->first();
             array_push($jobResults, [
@@ -91,6 +97,8 @@ class TaskController extends Controller
                 "location_id" => $job->location_id,
                 "job_name" => $job->job_name,
                 "status" => $job->status,
+                "job_task_status" => $jts,
+                "sub_status" => $jtss,
                 "completed_bid_date" => $job->completed_bid_date,
                 "agreed_start_date" => $job->agreed_start_date,
                 "agreed_end_date" => $job->agreed_end_date,
