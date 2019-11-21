@@ -12,9 +12,13 @@
         <!--            <div class="text-center font-weight-bold">{{ status }}</div>-->
         <!--        </div>-->
 
+        <div v-show="false">{{ getJobStatus() }}</div>
+
         <v-card>
             <v-card-title>Job Status:</v-card-title>
-            <v-card-subtitle>{{ status }}</v-card-subtitle>
+            <v-card-subtitle>
+                <span class="capitalize">{{ jobStatus.status }} on {{ jobStatus.created_at }}</span>
+            </v-card-subtitle>
         </v-card>
 
         <!--        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">-->
@@ -97,7 +101,8 @@
           approve: false,
           declineBid: false
         },
-        showStripe: false
+        showStripe: false,
+        jobStatus: {}
       }
     },
     watch: {
@@ -154,6 +159,11 @@
       },
     },
     methods: {
+      getJobStatus(){
+        if (this.bid && this.bid.job_statuses) {
+          this.jobStatus = this.bid.job_statuses[this.bid.job_statuses.length - 1]
+        }
+      },
       getLabelClass(status) {
         return Format.statusLabel(status,)
       },
@@ -254,6 +264,9 @@
       Vue.toasted.success(success)
       const error = this.$route.query.error
       Vue.toasted.error(error)
+
+      this.getJobStatus()
+
     },
   }
 </script>

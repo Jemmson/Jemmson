@@ -1,7 +1,5 @@
 <template>
     <div class="row">
-
-
         <job-stepper
                 :status="getSelectedJob()"
                 :user="getUser()"
@@ -336,6 +334,7 @@
   import CompletedTasks from './CompletedTasks'
   import ApproveBid from './ApproveBid'
   import GeneralContractorBidActions from './GeneralContractorBidActions'
+  import CurrentStatus from '../mixins/CurrentStatus.js'
 
   export default {
     components: {
@@ -350,6 +349,7 @@
       ApproveBid,
       GeneralContractorBidActions
     },
+    mixins: [CurrentStatus],
     props: {
       bid: Object,
       isCustomer: Boolean,
@@ -590,10 +590,20 @@
           return {
             Name: jt.task ? jt.task.name : '',
             Subs: jt.bid_contractor_job_tasks ? jt.bid_contractor_job_tasks.length : '',
-            Status: jt.status,
+            Status: jt.job_task_statuses[jt.job_task_statuses.length - 1].status,
+            'Status Date': jt.job_task_statuses[jt.job_task_statuses.length - 1].created_at,
             Qty: jt.qty,
             Price: jt.cust_final_price
           }
+        }
+      },
+      currentStep () {
+        if (this.bid) {
+          this.step = this.getStatus(
+            this.bid.job_statuses[this.bid.job_statuses.length - 1],
+            this.bid.job_statuses[this.bid.job_statuses.length - 1],
+            this.bid.job_statuses[this.bid.job_statuses.length - 1]
+          )
         }
       },
       needsApproval() {
