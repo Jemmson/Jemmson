@@ -12,13 +12,18 @@
         <!--            <div class="text-center font-weight-bold">{{ status }}</div>-->
         <!--        </div>-->
 
-        <div v-show="false">{{ getJobStatus() }}</div>
+        <div v-show="false">{{ getJobStatusValue() }}</div>
 
         <v-card>
             <v-card-title>Job Status:</v-card-title>
             <v-card-subtitle>
-                <span class="capitalize">{{ jobStatus.status }} on {{ jobStatus.created_at }}</span>
+                <span class="capitalize">{{ formatStatus(jobStatus.status) }} on {{ formatDate(dateOnly(jobStatus.created_at)) }}</span>
             </v-card-subtitle>
+            <div v-if="isCustomer && jobStatus.status === 'in_progress'"
+                style="padding-bottom: .1rem"
+            >
+                <h5 class="text-center">Please wait until your contractor submits bid</h5>
+            </div>
         </v-card>
 
         <!--        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">-->
@@ -67,6 +72,8 @@
   import GeneralContractorBidActions from '../components/job/GeneralContractorBidActions'
   import CompletedTasks from '../components/job/CompletedTasks'
   import Stripe from '../components/stripe/Stripe'
+  import Status from '../components/mixins/Status'
+  import Utilities from '../components/mixins/Utilities'
   import { mapState } from 'vuex'
 
   // global.Bus = new Vue();
@@ -75,6 +82,10 @@
     props: {
       user: Object,
     },
+    mixins: [
+      Status,
+      Utilities
+    ],
     components: {
       Feedback,
       BidDetails,
@@ -159,9 +170,11 @@
       },
     },
     methods: {
-      getJobStatus(){
+      getJobStatusValue(){
         if (this.bid && this.bid.job_statuses) {
           this.jobStatus = this.bid.job_statuses[this.bid.job_statuses.length - 1]
+        } else if (this.bid && this.bid.job_status)  {
+          this.jobStatus = this.bid.job_status[this.bid.job_status.length - 1]
         }
       },
       getLabelClass(status) {
@@ -265,7 +278,7 @@
       const error = this.$route.query.error
       Vue.toasted.error(error)
 
-      this.getJobStatus()
+      this.getJobStatusValue()
 
     },
   }

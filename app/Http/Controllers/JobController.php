@@ -142,7 +142,7 @@ class JobController extends Controller
             'customer_id'
         ])->get();
 
-        foreach($invoices['jobs'] as $job) {
+        foreach ($invoices['jobs'] as $job) {
             $contractor = Contractor::where('user_id', '=', $job->contractor_id)->select([
                 'company_name'
             ])->get()->first();
@@ -638,10 +638,9 @@ class JobController extends Controller
 //        need to delete any job tasks
 
 
-
         $job = Job::find($request->id);
 
-        $this->setCancelJobStatuses($job,'canceled_by_general');
+        $this->setCancelJobStatuses($job, 'canceled_by_general');
 
 //        are there any tasks associated to the job
         $jobTasks = JobTask::where('job_id', '=', $request->id)->get();
@@ -794,11 +793,16 @@ class JobController extends Controller
     public
     function getJobsForCustomer()
     {
-        return Auth::user()->jobs()->select([
+        $jobs = Auth::user()->jobs()->select([
             'job_name',
             'id',
-            'status'
         ])->get();
+
+        foreach ($jobs as $j) {
+            $j['job_statuses'] = $j->jobStatuses()->get();
+        }
+
+        return $jobs;
     }
 
     private function getJobStatus($job, $status)
@@ -821,7 +825,7 @@ class JobController extends Controller
 
             $jobs = Job::where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
 
-            foreach ($jobs as $j){
+            foreach ($jobs as $j) {
                 if (
                     $this->getJobStatus($j, 'approved')
                     || $this->getJobStatus($j, 'sent')
@@ -830,15 +834,15 @@ class JobController extends Controller
                     || $this->getJobStatus($j, 'changed')
                 ) {
                     $j['job_tasks'] = $j->job_tasks()->get();
-                    foreach ($j['job_tasks'] as $jt){
+                    foreach ($j['job_tasks'] as $jt) {
                         $jt['job_task_status'] = JobTaskStatus::where('job_task_id', '=', $jt->id)->get();
                         $jt['sub_status'] = SubStatus::where('job_task_id', '=', $jt->id)->get();
                     }
-                    $j['job_status'] = $j->jobStatuses()->get();
+                    $j['job_statuses'] = $j->jobStatuses()->get();
+                } else {
+                    $j['job_statuses'] = $j->jobStatuses()->get();
                 }
             }
-
-
 
 
 //            $jobsWithTasks = Auth::user()->jobs()
@@ -885,9 +889,9 @@ class JobController extends Controller
                 ])->get();
 
             foreach ($jobs as $j) {
-                $j['job_status'] = $j->jobStatuses()->get();
+                $j['job_statuses'] = $j->jobStatuses()->get();
                 $j['job_tasks'] = $j->jobTasks()->select(['id'])->get();
-                foreach ($j['job_tasks'] as $jt){
+                foreach ($j['job_tasks'] as $jt) {
                     $j['job_tasks']['bid_contractor_job_tasks'] = $jt->bidContractorJobTasks()->select('contractor_id')->get();
                 }
             }
@@ -1141,7 +1145,7 @@ class JobController extends Controller
             return false;
         }
 
-        $this->setCancelJobStatuses($job,'canceled_by_customer');
+        $this->setCancelJobStatuses($job, 'canceled_by_customer');
 
         return response()->json(['message' => 'Success'], 200);
     }

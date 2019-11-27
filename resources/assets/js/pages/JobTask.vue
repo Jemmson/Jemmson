@@ -19,7 +19,7 @@
                             <div class="col-12">
                                 Job Task Name:
                                 <!-- task name-->
-                                <div class="float-right font-weight-bold">
+                                <div class="float-right font-weight-bold capitalize">
                                     {{ jobTask ? jobTask.task.name : '' }}
                                 </div>
                             </div>
@@ -47,9 +47,9 @@
                         <div class="row">
                             <div class="col-12">
                                 Status:
-                                <div class="float-right font-weight-bold"
+                                <div class="float-right font-weight-bold capitalize"
                                      :class="jobTask ? getLabelClass(jobTask.status) : 0">
-                                    {{ jobTask ? status(jobTask.status) : ''}}
+                                    {{ getLatestJobTaskStatus() }}
                                 </div>
                             </div>
                         </div>
@@ -178,11 +178,13 @@
                                                         }}</strong>
                                                 </div>
                                             </div>
-                                            <div class="errorClass" v-if="errors.unit_price">Your Contractor Task Price Must
+                                            <div class="errorClass" v-if="errors.unit_price">Your Contractor Task Price
+                                                Must
                                                 Be
                                                 Higher The Sub Price
                                             </div>
-                                            <div class="errorClass" v-if="errors.priceMustBeANumber">Your Input Must Be A
+                                            <div class="errorClass" v-if="errors.priceMustBeANumber">Your Input Must Be
+                                                A
                                                 Number
                                             </div>
                                         </div>
@@ -376,7 +378,7 @@
                         <button
                                 class="btn btn-sm btn-normal w-full"
                                 v-if="isGeneral()
-                                       && !approvedByCustomer()"
+                                       && approvedByCustomer()"
                                 ref="addASubButton"
                                 @click.prevent="openSubInvite(jobTask.id)"
                         >Add A Sub
@@ -451,6 +453,7 @@
   import ContentSection from '../components/shared/ContentSection'
   import User from '../classes/User'
   import Feedback from '../components/shared/Feedback'
+  import Status from '../components/mixins/Status'
 
   import { mapState } from 'vuex'
 
@@ -465,6 +468,9 @@
       TaskImages,
       UpdateTaskLocationModal
     },
+    mixins: [
+      Status
+    ],
     data() {
       return {
         authUser: {},
@@ -591,13 +597,25 @@
       }
     },
     methods: {
-
+      getLatestJobTaskStatus() {
+        if (this.jobTask && this.jobTask.job_task_statuses) {
+          return this.formatStatus(this.getJobTaskStatus_latest(this.jobTask))
+        }
+      },
       viewContractorInfo(id) {
         this.$router.push({name: 'contractor-info', params: {contractorId: id}})
       },
 
       approvedByCustomer() {
-        return this.jobTask.status === 'bid_task.approved_by_customer' || this.jobTask.status === 'bid_task.finished_by_general'
+
+        const latestStatus = this.getLatestJobTaskStatus()
+
+        if (
+          latestStatus === 'initiated'
+          || latestStatus === 'customer_changes_bid'
+        ) {
+          return true
+        }
       },
       getBidPrice(bid) {
         if (bid) {
@@ -892,12 +910,12 @@
         $('#update-task-location-modal_' + jobTaskId).modal()
       },
       openDenyTaskForm(jobTaskId) {
-        $('#deny-task-modal_' + jobTaskId).modal()
+        $('#deny-task-modal_' + jobTaskId).modal('show')
       },
       openSubInvite(jobTaskId) {
         // debugger;
         // this.currentJobTask = jobTask;
-        $('#sub-invite-modal_' + jobTaskId).modal()
+        $('#sub-invite-modal_' + jobTaskId).modal('show')
       },
       location(jobTask, bid) {
         if (this.job && jobTask && jobTask.location) {

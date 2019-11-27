@@ -12,24 +12,24 @@
                         <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
                             taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
 
-                        <div v-show="subInvited">
-                            <hr>
-                            <div class="flex flex-column">
-                                <h6>Sent Invite - {{ taskForSubInvite === undefined ? '' :
-                                    jobTaskNameForSubInvite.toUpperCase() }} -
-                                    <span class="capitalize">would you like to invite another sub to bid on this task?</span>
-                                </h6>
-                                <div class="flex space-between">
-                                    <button class="btn btn-normal w-full capitalize mr-1rem" @click="needsNewTask()">
-                                        Yes
-                                    </button>
-                                    <button class="btn btn-normal w-full capitalize ml-1rem" data-dismiss="modal"
-                                            aria-label="Close">No
-                                    </button>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
+<!--                        <div v-show="subInvited">-->
+<!--                            <hr>-->
+<!--                            <div class="flex flex-column">-->
+<!--                                <h6>Sent Invite - {{ taskForSubInvite === undefined ? '' :-->
+<!--                                    jobTaskNameForSubInvite.toUpperCase() }} - -->
+<!--                                    <span class="capitalize">would you like to invite another sub to bid on this task?</span>-->
+<!--                                </h6>-->
+<!--                                <div class="flex space-between">-->
+<!--                                    <button class="btn btn-normal w-full capitalize mr-1rem" @click="needsNewTask()">-->
+<!--                                        Yes-->
+<!--                                    </button>-->
+<!--                                    <button class="btn btn-normal w-full capitalize ml-1rem" data-dismiss="modal"-->
+<!--                                            aria-label="Close">No-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <hr>-->
+<!--                        </div>-->
 
                     </div>
 
@@ -231,7 +231,7 @@
       sendSubInviteToBidOnTask() {
         GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
         this.companyName = ''
-        this.subInvited = true
+        $('#sub-invite-modal_' + this.id).modal('hide')
       },
       clearFields() {
 

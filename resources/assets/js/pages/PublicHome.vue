@@ -27,6 +27,7 @@
                         <v-divider></v-divider>
                         <v-card-actions>
                             <v-btn
+                                    id="register"
                                     to="/register"
                                     width="40%"
                                     color="success">

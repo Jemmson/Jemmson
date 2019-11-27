@@ -429,20 +429,19 @@ class TaskController extends Controller
                 'images',
                 'location',
                 'job',
+                'job',
                 'job.customer',
+                'jobTaskStatuses',
                 'bidContractorJobTasks',
                 'bidContractorJobTasks.contractor',
                 'bidContractorJobTasks.contractor.contractor'
             ])->where('id', '=', $jobTaskId)->get();
-
         foreach ($jobTasks as $jt) {
             $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
             $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
             $jt->unit_price = $this->convertToDollars($jt->unit_price);
         }
-
         return $jobTasks;
-
     }
 
     /**
@@ -771,7 +770,10 @@ class TaskController extends Controller
         $jobTask = JobTask::find($jobTaskId);
         $subBid = $this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id);
         if (!$subBid) {
-            return response()->json(["message" => "Task Already Exists.", "errors" => ["error" => "Task Already Exists."]], 422);
+            return response()->json([
+                "message" => "This Sub Has Already Been Invited For This Task",
+                "errors" => ["error" => "This Sub Has Already Been Invited For This Task"]
+            ], 422);
         }
 
         // adding a preferred payment entry for contractor for a given task

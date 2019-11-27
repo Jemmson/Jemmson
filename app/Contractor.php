@@ -177,11 +177,12 @@ class Contractor extends Model
 
     public function checkIfContractorSetBidForATask($subcontractorId, $jobTaskId)
     {
-        if (empty(DB::table('bid_contractor_job_task')
-            ->select('job_task_id')
-            ->where('contractor_id', '=', $subcontractorId)
+
+
+        if (empty(
+            BidContractorJobTask::where('contractor_id', '=', $subcontractorId)
             ->where('job_task_id', '=', $jobTaskId)
-            ->get()[0])) {
+            ->get()->first())) {
             return true;
 //            DB::table('bid_contractor_job_task')->select('job_task_id')->where('contractor_id', '=', 3)->where('job_task_id', '=', 3)->get()[0];
         } else {

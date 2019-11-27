@@ -15,7 +15,7 @@
                 <v-card-subtitle
                         class="ml-1rem"
                         :class="getLabelClass(bidTask)"
-                > {{ status(bidTask) }}
+                > {{ getLatestStatus() }}
                 </v-card-subtitle>
                 <v-card-actions>
                     <v-btn
@@ -267,7 +267,7 @@
                         <main class="row">
                             <content-section
                                     label="Job Status:"
-                                    :content="status(bidTask)"
+                                    :content="getLatestStatus()"
                                     :input-classes="getLabelClass(bidTask.job_task.status)"
                                     :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
                                     type="startOn"></content-section>
@@ -314,6 +314,7 @@
   import ContentSection from '../shared/ContentSection'
   import DeleteTaskModal from '../../components/job/DeleteTaskModal'
   import ShowTaskModal from '../../components/job/ShowTaskModal'
+  import Status from '../../components/mixins/Status'
   import Card from '../shared/Card'
 
   export default {
@@ -325,6 +326,9 @@
       DeleteTaskModal,
       Card
     },
+    mixins: [
+      Status
+    ],
     updated() {
       this.getStoredBidPrice
     },
@@ -357,6 +361,17 @@
       bidTask: Object
     },
     methods: {
+      getLatestStatus(){
+        if (
+          this.bidTask
+          && this.bidTask.job_task
+          && this.bidTask.job_task.job
+          && this.bidTask.job_task.job.sub_status
+          && this.bidTask.job_task.job.sub_status.length > 0
+        ) {
+          return this.formatStatus(this.getSubStatus_latest(this.bidTask));
+        }
+      },
       showTheTaskModal() {
         $('#show-task-modal').modal('show')
       },

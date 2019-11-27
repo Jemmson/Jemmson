@@ -23,7 +23,7 @@
                         <tbody>
                         <tr>
                             <td>Job Name:</td>
-                            <td>{{ bid.job_name }}</td>
+                            <td class="capitalize">{{ bid.job_name }}</td>
                         </tr>
                         <tr @click="viewContractorInfo()">
                             <td>Contractor Name:</td>
@@ -65,7 +65,7 @@
                         <tbody>
                         <tr>
                             <td>Job Name:</td>
-                            <td>{{ bid.job_name }}</td>
+                            <td class="capitalize">{{ bid.job_name }}</td>
                         </tr>
                         <tr @click="viewCustomerInfo()">
                             <td>Customer Name:</td>
@@ -132,7 +132,9 @@
                                     :key="index"
                             >
                                 <v-list-item-title v-text="key"></v-list-item-title>
-                                <v-list-item-subtitle v-text="jt"></v-list-item-subtitle>
+                                <v-list-item-subtitle
+                                        class="capitalize"
+                                        v-text="jt"></v-list-item-subtitle>
                             </v-list-item>
                         </v-list-item-group>
                     </v-list>
@@ -198,8 +200,8 @@
                 <!--                    </div>-->
                 <!--                </card>-->
             </div>
-
-            <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">
+            <!--            <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">-->
+            <div v-else-if="generalHasSentABid(bid)">
                 <h1 class="card-title mt-4">Job Tasks</h1>
                 <card>
 
@@ -334,7 +336,7 @@
   import CompletedTasks from './CompletedTasks'
   import ApproveBid from './ApproveBid'
   import GeneralContractorBidActions from './GeneralContractorBidActions'
-  import CurrentStatus from '../mixins/CurrentStatus.js'
+  import Status from '../mixins/Status.js'
 
   export default {
     components: {
@@ -349,7 +351,7 @@
       ApproveBid,
       GeneralContractorBidActions
     },
-    mixins: [CurrentStatus],
+    mixins: [Status],
     props: {
       bid: Object,
       isCustomer: Boolean,
@@ -492,7 +494,8 @@
       showBidPrice() {
         if (this.isCustomer) {
           const status = this.bid.status
-          if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
+          // if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
+          if (this.generalHasSentABid(this.bid)) {
             return true
           }
           return false
@@ -503,19 +506,26 @@
         return User.status(this.bid.status, this.bid, Spark.state.user)
       },
       bidHasBeenSubmitted() {
-        return this.bid.status !== 'bid.initiated' &&
-          this.bid.status !== 'bid.in_progress'
+        // return this.bid.status !== 'bid.initiated' &&
+        //   this.bid.status !== 'bid.in_progress'
+        if (this.bid.status) {
+          return this.generalHasSentABid(this.bid)
+        }
       },
       showDeclinedMessage() {
-        return (
-          !this.isCustomer &&
-          this.bid.declined_message !== null &&
-          this.bid.status === 'bid.declined'
-        )
+        if (this.bid && this.bid.declined_message) {
+          return (
+            !this.isCustomer &&
+            this.bid.declined_message !== null
+            && this.getJobStatus_latest(this.bid) === 'changed'
+            // && this.bid.status === 'bid.declined'
+          )
+        }
       },
 
       disableSubmitBid() {
-        return this.bid.status === 'bid.sent'
+        // return this.bid.status === 'bid.sent'
+        return this.generalCanSubmitABid(this.bid);
       },
 
       showAddress() {
@@ -590,8 +600,8 @@
           return {
             Name: jt.task ? jt.task.name : '',
             Subs: jt.bid_contractor_job_tasks ? jt.bid_contractor_job_tasks.length : '',
-            Status: jt.job_task_statuses[jt.job_task_statuses.length - 1].status,
-            'Status Date': jt.job_task_statuses[jt.job_task_statuses.length - 1].created_at,
+            Status: this.formatStatus(this.getJobTaskStatus_latest(jt)),
+            'Status Date': this.getJobTaskCreationDate_latest(jt),
             Qty: jt.qty,
             Price: jt.cust_final_price
           }

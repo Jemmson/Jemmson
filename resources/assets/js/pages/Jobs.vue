@@ -23,8 +23,8 @@
                             <div class="flex flex-col w-full ">
                                 <div class="flex align-content-baseline status-height justify-items-center">
                                     <!--                                    <span class="dot ml-half-rem" :class="'bg-' + getLabelClass(bid)"></span>-->
-                                    <div class="fs-1rem ml-half-rem text-center w-full" :class="getLabelClass(bid)">
-                                        {{ status(bid) }}
+                                    <div class="fs-1rem ml-half-rem text-center w-full capitalize" :class="getLabelClass(bid)">
+                                        {{ getJobStatus(bid) }}
                                     </div>
                                 </div>
 
@@ -83,6 +83,7 @@
   import Card from '../components/shared/Card'
   import DeleteTaskModal from '../components/job/DeleteTaskModal'
   import Feedback from '../components/shared/Feedback'
+  import Status from '../components/mixins/Status'
 
   export default {
     name: 'Jobs',
@@ -93,6 +94,9 @@
       Feedback,
       DeleteTaskModal
     },
+    mixins: [
+      Status
+    ],
     props: {
       user: Object
     },
@@ -129,6 +133,9 @@
       ...mapMutations([
         'toggleBidsContractor'
       ]),
+      getJobStatus(bid){
+        return this.formatStatus(this.getJobStatus_latest(bid));
+      },
       showDeleteJobModal(job) {
         this.deleteJob.id = job.id
         this.job = job
