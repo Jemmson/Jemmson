@@ -337,6 +337,7 @@
   import ApproveBid from './ApproveBid'
   import GeneralContractorBidActions from './GeneralContractorBidActions'
   import Status from '../mixins/Status.js'
+  import Utilities from '../mixins/Utilities'
 
   export default {
     components: {
@@ -351,7 +352,7 @@
       ApproveBid,
       GeneralContractorBidActions
     },
-    mixins: [Status],
+    mixins: [Status, Utilities],
     props: {
       bid: Object,
       isCustomer: Boolean,
@@ -601,7 +602,7 @@
             Name: jt.task ? jt.task.name : '',
             Subs: jt.bid_contractor_job_tasks ? jt.bid_contractor_job_tasks.length : '',
             Status: this.formatStatus(this.getJobTaskStatus_latest(jt)),
-            'Status Date': this.getJobTaskCreationDate_latest(jt),
+            'Status Date': this.formatDate(this.dateOnly(this.getJobTaskCreationDate_latest(jt))),
             Qty: jt.qty,
             Price: jt.cust_final_price
           }
