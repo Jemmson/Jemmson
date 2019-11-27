@@ -18,9 +18,9 @@
                 <div class="modal-footer" style="justify-content: space-between !important">
                     <slot name="button"></slot>
                     <div class="flex w-full">
-                        <button type="button" class="btn btn-normal w-full mr-1rem" data-dismiss="modal">{{ no }}
+                        <button type="button" class="btn btn-normal-red w-full mr-1rem" data-dismiss="modal">{{ no }}
                         </button>
-                        <button type="button" class="btn btn-normal-red btn-model-yes w-full ml-1rem"
+                        <button type="button" class="btn btn-normal btn-model-yes w-full ml-1rem"
                                 @click="$emit('modal', modalId)">{{ yes }}
                         </button>
                     </div>
