@@ -29,7 +29,7 @@
 |11|Contractor submits a bid|  bid.sent | bid_task.waiting_for_customer_approval | sub.waiting_for_customer_approval | 11 |
 |12|Customer approves a bid|  job.approved | bid_task.approved_by_customer | sub.approved_by_customer | 23 |
 |13|Contractor finishes task|  job.approved | bid_task.general_finished_work | {null} | 14 |
-|14|Sub finishes task|  job.approved | bid_task.approved_by_customer | sub.finished_job | 24 |
+|14|Sub finishes task|  job.approved | bid_task.sub_finished_work | sub.finished_job | 24 |
 |15|General declines the task|  job.approved | bid_task.approved_by_customer | sub.finished_job_denied_by_contractor | 25 |
 |16|General approves the task|  job.approved | bid_task.approved_by_customer | sub.finished_job_approved_by_contractor | 27 |
 |17|Customer declines the task|  job.declines_finished_task | bid_task.customer_changes_finished_task | sub.customer_changes_finished_task | 29 |

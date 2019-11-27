@@ -139,7 +139,7 @@
                         </v-list-item-group>
                     </v-list>
 
-                    <v-card-actions v-if="jobIsNotFinishedAndNotApproved(item)">
+                    <v-card-actions>
                         <v-btn
                                 color="primary"
                                 :to="'/job/task/' + i"
@@ -148,11 +148,11 @@
                         </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn
-                                v-if="isGeneral() && !approvedByCustomer()"
+                                v-if="isGeneral() && approvedByCustomer(item)"
                                 width="45%"
                                 @click="openSubInvite(item.id)"
                                 color="primary"
-                        >Add Sub
+                        >Add A Sub
                         </v-btn>
                     </v-card-actions>
                     <v-card-actions>
@@ -574,10 +574,13 @@
       isAssignedToMe(jobTask, userId) {
         return userId === jobTask.contractor_id
       },
-      approvedByCustomer() {
-        if (this.bid && this.bid.jobTask) {
-          return this.bid.jobTask.status === 'bid_task.approved_by_customer' || this.bid.jobTask.status === 'bid_task.finished_by_general'
-
+      approvedByCustomer(task) {
+        const latestStatus = this.getLatestJobTaskStatus(task)
+        return latestStatus !== 'general finished work' && latestStatus !== 'sub finished work'
+      },
+      getLatestJobTaskStatus(task) {
+        if (task && task.job_task_statuses) {
+          return this.formatStatus(this.getJobTaskStatus_latest(task))
         }
       },
       getSelectedJob() {

@@ -1,32 +1,14 @@
 <template>
     <div>
-
         <div ref="subTaskWarning"
              class="text-white btn-red rounded p-3 mt-2 mb-2 text-center"
              style="font-weight: 700"
              v-if="subTaskWarning">
             PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
         </div>
-
         <div class="flex flex-col">
-
-            <!--            <div class="flex flex-center">-->
-            <!--                <button-->
-            <!--                        v-if="shouldBeSignedUpForStripe()"-->
-            <!--                        ref="stripeButton"-->
-            <!--                        @click="triggerStripe()"-->
-            <!--                        class="mt-1rem"-->
-            <!--                        style="background-image: url('/img/blue-on-light.png'); width: 12rem; height: 2.15rem;"-->
-            <!--                ></button>-->
-            <!--                <button v-else-->
-            <!--                        class="mt-1rem"-->
-            <!--                        style="background-image: url('/img/powered_by_stripe.png'); background-repeat: no-repeat; width: 151px; height: 43px;"-->
-            <!--                >-->
-            <!--                </button>-->
-            <!--            </div>-->
-
-
             <v-btn
+                    v-if="jobHasNotBeenSubmittedOrAChangeIsRequested()"
                     ref="submitBid"
                     class="btn btn-normal-green btn-lg w-full"
                     @click="submitBid()"
@@ -34,7 +16,9 @@
             >
                 Submit Bid
             </v-btn>
-
+            <div v-else>
+                <span class="capitalize">Bid Has Been Approved By The Customer. Please refer to individual tasks for Task Completion.</span>
+            </div>
             <div v-if="notSignedUpModalIsHidden()"
             >
                 <v-divider></v-divider>
@@ -46,23 +30,12 @@
                     SIGN UP WITH STRIPE
                 </v-btn>
             </div>
-
-<!--            <button ref="submitBid"-->
-<!--                    class="btn btn-normal-green btn-lg w-full"-->
-<!--                    @click="submitBid()"-->
-<!--                    :disabled="disableSubmitBid"-->
-<!--            >Submit Bid-->
-<!--            </button>-->
-
-            <!--        @click="openBidSubmissionDialog()">Submit Bid</button>-->
         </div>
-
         <stripe
                 :user="getUser"
                 @sendBid="$event ? sendBid() : false"
         >
         </stripe>
-
     </div>
 
 </template>
@@ -70,6 +43,7 @@
 <script>
 
   import Stripe from '../../components/stripe/Stripe'
+  import Status from '../../components/mixins/Status'
   import GeneralContractor from '../../classes/GeneralContractor'
 
   export default {
@@ -81,9 +55,10 @@
       submitTheBid: Boolean,
       bid: Object
     },
+    mixins: [Status],
     watch: {
-      submitTheBid: function () {
-        this.notifyCustomerOfFinishedBid(this.bid, this.disabled);
+      submitTheBid: function() {
+        this.notifyCustomerOfFinishedBid(this.bid, this.disabled)
       }
     },
     data() {
@@ -103,27 +78,30 @@
       }
     },
     watch: {
-      bid: function () {
+      bid: function() {
         this.checkReqs()
       }
     },
     methods: {
-      // triggerStripe() {
-      //   console.log('trying to trigger stripe')
-      //   Bus.$emit('needsStripe')
-      // },
 
-      connectWithStripe() {
-        let connectLink = "https://connect.stripe.com/express/oauth/authorize?client_id="
-          + Spark.stripeClientId +"&state="+ this.$route.path
-          + "&stripe_user[email]=" + Spark.state.user.email
-          + "&stripe_user[country]=US"
-          + "&stripe_user[phone_number]=" + Spark.state.user.phone;
-
-        window.location = connectLink;
+      jobHasNotBeenSubmittedOrAChangeIsRequested() {
+        if (this.bid && this.bid.job_statuses) {
+          const statusNumber = this.getJobStatusNumber_latest(this.bid);
+          return statusNumber < 3 || statusNumber === 4;
+        }
       },
 
-      notSignedUpModalIsHidden(){
+      connectWithStripe() {
+        let connectLink = 'https://connect.stripe.com/express/oauth/authorize?client_id='
+          + Spark.stripeClientId + '&state=' + this.$route.path
+          + '&stripe_user[email]=' + Spark.state.user.email
+          + '&stripe_user[country]=US'
+          + '&stripe_user[phone_number]=' + Spark.state.user.phone
+
+        window.location = connectLink
+      },
+
+      notSignedUpModalIsHidden() {
         if (this.bid && this.bid.contractor && this.bid.contractor.contractor) {
           return this.bid.contractor.stripe_id === null && this.bid.contractor.contractor.hide_stripe_modal === 1
         }

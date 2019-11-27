@@ -607,15 +607,8 @@
       },
 
       approvedByCustomer() {
-
         const latestStatus = this.getLatestJobTaskStatus()
-
-        if (
-          latestStatus === 'initiated'
-          || latestStatus === 'customer_changes_bid'
-        ) {
-          return true
-        }
+        return latestStatus !== 'general finished work' && latestStatus !== 'sub finished work'
       },
       getBidPrice(bid) {
         if (bid) {

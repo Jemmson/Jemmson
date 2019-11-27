@@ -1006,6 +1006,7 @@ class TaskController extends Controller
         if ($jobTask->contractor_id == $generalContractor->id) {
             $this->setJobTaskStatus($jobTask->id, 'general_finished_work');
         } else {
+            $this->setJobTaskStatus($jobTask->id, 'sub_finished_work');
             $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job');
         }
 

@@ -69,11 +69,14 @@ class JobTaskStatus extends Model
             case 'general_finished_work':
                 return 7;
                 break;
-            case 'customer_changes_finished_task':
+            case 'sub_finished_work':
                 return 8;
                 break;
-            case 'paid':
+            case 'customer_changes_finished_task':
                 return 9;
+                break;
+            case 'paid':
+                return 10;
                 break;
         }
     }
