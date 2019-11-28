@@ -24,20 +24,28 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="flex justify-content-between">
-                                    <label>Task Start Date</label>
-                                    <!-- <i class="fas fa-clock icon m-r-2"></i> -->
-                                    <input type="date" class="form-control form-control-sm w-50" style=""
-                                           v-if="showTaskStartDate()"
-                                           :value="jobTask ? prettyDate(jobTask.start_date) : 0"
-                                           @blur="updateTaskStartDate($event.target.value, jobTask.id)">
-                                    <!--                                <div v-else>-->
-                                    <!--                                    <strong>{{ prettyDate(jobTask.start_date) }}</strong>-->
-                                    <!--                                </div>-->
+                                <div v-if="jobIsNotComplete()">
+                                    <div class="flex justify-content-between">
+                                        <label>Task Start Date</label>
+                                        <!-- <i class="fas fa-clock icon m-r-2"></i> -->
+                                        <input type="date" class="form-control form-control-sm w-50" style=""
+                                               v-if="showTaskStartDate()"
+                                               :value="jobTask ? this.formatDate(prettyDate(jobTask.start_date)) : 0"
+                                               @blur="updateTaskStartDate($event.target.value, jobTask.id)">
+                                        <!--                                <div v-else>-->
+                                        <!--                                    <strong>{{ prettyDate(jobTask.start_date) }}</strong>-->
+                                        <!--                                </div>-->
+                                    </div>
+                                    <span :class="{ error: hasStartDateError }"
+                                          v-show="hasStartDateError">{{ startDateErrorMessage }}
+                                </span>
                                 </div>
-                                <span :class="{ error: hasStartDateError }"
-                                      v-show="hasStartDateError">{{ startDateErrorMessage }}
-                            </span>
+                                <div v-else>
+                                    <div class="flex justify-content-between">
+                                        <label>Task Start Date</label>
+                                        <div><strong>{{ this.formatDate(prettyDate(jobTask.start_date)) }}</strong></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </card>
@@ -161,31 +169,35 @@
 
                                         <div class="form-group" ref="unitPrice" v-if="isContractor()">
 
-                                            <div class="flex justify-content-between">
-                                                <label class="">Unit Price:</label>
-                                                <div v-if="showTaskPriceInput()" class="flex">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">$</span>
+                                            <div v-if="jobHasNotBeenApproved()">
+                                                <div class="flex justify-content-between">
+                                                    <label class="">Unit Price:</label>
+                                                    <div v-if="showTaskPriceInput()" class="flex">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" ref="price"
+                                                               class="form-control form-control-sm w-full"
+                                                               :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
+                                                               :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
+                                                               @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
                                                     </div>
-                                                    <input type="text" ref="price"
-                                                           class="form-control form-control-sm w-full"
-                                                           :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
-                                                           :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
-                                                           @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
+                                                    <div v-else class="mt-1">
+                                                        <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price) }}</strong>
+                                                    </div>
                                                 </div>
-                                                <div v-else class="mt-1">
-                                                    <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price)
-                                                        }}</strong>
+                                                <div class="errorClass" v-if="errors.unit_price">
+                                                    Your Contractor Task Price Must Be Higher The Sub Price
+                                                </div>
+                                                <div class="errorClass" v-if="errors.priceMustBeANumber">
+                                                    Your Input Must Be A Number
                                                 </div>
                                             </div>
-                                            <div class="errorClass" v-if="errors.unit_price">Your Contractor Task Price
-                                                Must
-                                                Be
-                                                Higher The Sub Price
-                                            </div>
-                                            <div class="errorClass" v-if="errors.priceMustBeANumber">Your Input Must Be
-                                                A
-                                                Number
+                                            <div v-else>
+                                                <div class="flex justify-content-between">
+                                                    <label class="">Unit Price:</label>
+                                                    <div><strong>{{ taskCustFinalPrice(unit_price) }}</strong></div>
+                                                </div>
                                             </div>
                                         </div>
                                         <!-- <button v-if="isContractor()" class="btn btn-green btn-large m-t-3" v-show="
@@ -241,9 +253,8 @@
                                     <i class="fas fa-map-marker icon"></i>
                                     {{ location(jobTask, job) }}
                                 </div>
-                                <div class="flex flex-col"
-                                     v-else-if="location(jobTask, job) === 'Same as Job Location'">
-                                    <button class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
+                                <div class="flex flex-col" v-else-if="location(jobTask, job) === 'Same as Job Location'">
+                                    <button v-if="jobIsNotComplete()" class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
                                         <span class="mr-1rem">Change Task Location</span><i class="fas fa-edit"></i>
                                     </button>
                                 </div>
@@ -378,7 +389,7 @@
                         <button
                                 class="btn btn-sm btn-normal w-full"
                                 v-if="isGeneral()
-                                       && approvedByCustomer()"
+                                       && jobIsNotComplete()"
                                 ref="addASubButton"
                                 @click.prevent="openSubInvite(jobTask.id)"
                         >Add A Sub
@@ -454,6 +465,7 @@
   import User from '../classes/User'
   import Feedback from '../components/shared/Feedback'
   import Status from '../components/mixins/Status'
+  import Utilities from '../components/mixins/Utilities'
 
   import { mapState } from 'vuex'
 
@@ -469,7 +481,7 @@
       UpdateTaskLocationModal
     },
     mixins: [
-      Status
+      Status, Utilities
     ],
     data() {
       return {
@@ -597,6 +609,14 @@
       }
     },
     methods: {
+      jobHasNotBeenApproved () {
+        const latestStatus = this.getJobStatus_latest(this.job)
+        return latestStatus === 'in progress' && latestStatus === 'initiated'
+      },
+      jobIsNotComplete() {
+        const latestStatus = this.getLatestJobTaskStatus()
+        return latestStatus !== 'general finished work' && latestStatus !== 'sub finished work'
+      },
       getLatestJobTaskStatus() {
         if (this.jobTask && this.jobTask.job_task_statuses) {
           return this.formatStatus(this.getJobTaskStatus_latest(this.jobTask))
@@ -604,11 +624,6 @@
       },
       viewContractorInfo(id) {
         this.$router.push({name: 'contractor-info', params: {contractorId: id}})
-      },
-
-      approvedByCustomer() {
-        const latestStatus = this.getLatestJobTaskStatus()
-        return latestStatus !== 'general finished work' && latestStatus !== 'sub finished work'
       },
       getBidPrice(bid) {
         if (bid) {

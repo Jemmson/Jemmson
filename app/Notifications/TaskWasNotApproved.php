@@ -3,12 +3,13 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\Task;
+use App\JobTask;
 use App\User;
 
 class TaskWasNotApproved extends Notification implements ShouldQueue
@@ -20,7 +21,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Task $task, User $user, string $message = null)
+    public function __construct(JobTask $task, User $user, string $message = null)
     {
         $this->task = $task;
         $this->user = $user;
@@ -35,7 +36,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -72,6 +73,21 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+
+        $text = $this->user->name . " has approved your bid " . url('/login/sub/task/'. $this->bid->id . '/' . $this->user->generateToken(true)->token);
+
+        return (new NexmoMessage)
+            ->content($text);
     }
 
     public function toBroadcast($notifiable)

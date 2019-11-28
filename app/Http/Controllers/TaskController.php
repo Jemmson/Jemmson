@@ -1310,31 +1310,65 @@ class TaskController extends Controller
      */
     public function denyTask(Request $request)
     {
+
         $this->validate($request, [
             'job_task_id' => 'required',
         ]);
 
         $jobTask = JobTask::find($request->job_task_id);
         $task = $jobTask->task()->first();
-
         $jobTask->updateStatus(__('bid_task.denied'));
 
-        // notify
-        if ($request->user_id !== $task->contractor_id) {
-            $contractor = User::find($task->contractor_id);
-            $contractor->notify(new TaskWasNotApproved($task, $contractor, $request->message));
-        }
+        if ($this->iAmACustomer()) {
+            $this->setJobTaskStatus($jobTask->id, 'customer_changes_finished_task');
+            if($this->taskUsesAsub($jobTask, $task)) {
+                $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'customer_changes_finished_task');
+                $this->notifyGeneral($jobTask, $request->message);
+                $this->notifySub($jobTask->contractor_id, $task, $request->message);
+            } else {
+                $this->notifyGeneral($jobTask, $request->message);
+            }
 
-        if ($jobTask->contractor_id !== $task->contractor_id) {
-            $subContractor = User::find($jobTask->contractor_id);
-            $subContractor->notify(new TaskWasNotApproved($task, $subContractor, $request->message));
+        } else if ($this->iAmAGeneral($task)) {
+            $this->notifySub($jobTask->contractor_id, $task, $request->message);
+            $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job_denied_by_contractor');
         }
 
         $jobTask->setDeclinedMessage($request->message);
 
-        $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job_denied_by_contractor');
-
         return response()->json($task, 200);
+    }
+
+    public function notifyGeneral($jobTask, $message)
+    {
+        $contractor = User::find($jobTask->contractor_id);
+        $contractor->notify(new TaskWasNotApproved($jobTask, $contractor, $message));
+    }
+
+    public function notifySub($contractor_id, $task, $message)
+    {
+        $subContractor = User::find($contractor_id);
+        $subContractor->notify(new TaskWasNotApproved($task, $subContractor, $message));
+    }
+
+    public function taskUsesASub($jobTask, $task)
+    {
+        return $jobTask->contractor_id !== $task->contractor_id;
+    }
+
+    public function iAmACustomer()
+    {
+        return Auth::user()->usertype == 'customer';
+    }
+
+    public function iAmAGeneral($task)
+    {
+        return Auth::user()->getAuthIdentifier() == $task->contractor_id;
+    }
+
+    public function iAmASub($jobTask, $task)
+    {
+
     }
 
     public function updateTaskWithNewValuesIfValuesAreDifferent($task, $subTaskPrice, $taskPrice)
