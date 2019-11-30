@@ -55,9 +55,19 @@ class JobBidDeclined extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Job was declined.')
+                    ->line('Customer is Requesting a Change.')
                     ->line($this->message)
-                    ->action('View Job', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Job', url('/login/contractor/' .
+                        $this->bid->id . '/' .
+                        $this->user->generateToken(
+                            $this->user->id,
+                            true,
+                            $this->bid->id,
+                            'changed',
+                            'waiting_for_customer_approval',
+                            'waiting_for_customer_approval',
+                            'email'
+                        )->token))
                     ->line('Thank you for using our application!');
     }
 
@@ -83,7 +93,18 @@ class JobBidDeclined extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
-        $text = $this->customer->name . " requests a change to your bid. The customer's message is: " . $this->bid->declined_message . ".  Please go to the link below to view the job. " . url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token);
+        $text = $this->customer->name . " requests a change to your bid. The customer's message is: "
+            . $this->bid->declined_message . ".  Please go to the link below to view the job. "
+            . url('/login/contractor/' . $this->bid->id . '/'
+                . $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->bid->id,
+                    'changed',
+                    'waiting_for_customer_approval',
+                    'waiting_for_customer_approval',
+                    'text'
+                )->token);
 
         return (new NexmoMessage)
             ->content($text);

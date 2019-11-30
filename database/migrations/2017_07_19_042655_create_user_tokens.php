@@ -16,15 +16,15 @@ class CreateUserTokens extends Migration
       Schema::create(
           'user_tokens', function (Blueprint $table) {
           $table->increments('id');
+          $table->integer('job_id')->unsigned()->nullable();
+          $table->integer('user_id')->unsigned();
+          $table->timestamp('expires_at')->nullable();
+          $table->string('job_step')->nullable();
+          $table->string('job_task_step')->nullable();
+          $table->string('sub_step')->nullable();
           $table->string('token');
-          $table->integer('user_id')
-              ->unsigned();
-          $table->timestamp('created_at')
-              ->nullable();
-          $table->timestamp('expires_at')
-              ->nullable();
-          $table->timestamp('updated_at')
-              ->nullable();
+          $table->string('type')->nullable();
+          $table->timestamps();
           $table->softDeletes();
       }
       );

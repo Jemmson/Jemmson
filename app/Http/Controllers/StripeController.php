@@ -226,19 +226,11 @@ class StripeController extends Controller
         // job tasks excluded from this payment [jobtask ids => true]
         $excluded = $request->excluded;
 
-        // get all tasks that havent been paid for 
         $job = Job::find($request->id);
-        $job->paid_with_cash_message = $request->cashMessage;
+        $this->updateJobCashMessage($job, $request->cashMessage);
 
-        try {
-            $job->save();
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'code' => $e->getCode()
-            ], 200);
-        }
 
+        // get all tasks that havent been paid for
         $jobTasks = $job->
                         jobTasks()->
                         where('status', 'bid_task.finished_by_general')->
@@ -698,4 +690,18 @@ class StripeController extends Controller
         
         return $response;
     }
+
+    private function updateJobCashMessage($job, $message)
+    {
+        $job->paid_with_cash_message = $message;
+        try {
+            $job->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+    }
+
 }

@@ -59,13 +59,32 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' back to Jemmson.')
                 ->line('Please Sign In and go bid on your task')
-                ->action('Login', url('/login/sub/task/'. $task->id . '/' . $this->user->generateToken(true)->token))
+                ->action('Login', url('/login/sub/task/'. $task->id . '/' .
+                    $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $task->id,
+                        'in_progress',
+                        'initiated',
+                        'initiated',
+                        'email'
+                    )->token))
                 ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' to Jemmson.')
                 ->line('Please follow these steps to sign up for the site. and review your task.')
-                ->action('Login', url('/login/sub/task/'. $task->id . '/' . $this->user->generateToken(true)->token))
+                ->action('Login', url('/login/sub/task/'.
+                    $task->id . '/' .
+                    $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $task->id,
+                        'in_progress',
+                        'initiated',
+                        'initiated',
+                        'email'
+                    )->token))
                 ->line('Thank you for using our application!');
         }
 
@@ -81,7 +100,17 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
     {
         return (new NexmoMessage)
                     ->content('Please Sign In and go bid on your task ' .
-                        url('/login/sub/task/'. $this->taskId . '/' . $this->user->generateToken(true)->token) .
+                        url('/login/sub/task/'.
+                            $this->taskId . '/' .
+                            $this->user->generateToken(
+                                $this->user->id,
+                                true,
+                                $this->taskId,
+                                'in_progress',
+                                'initiated',
+                                'initiated',
+                                'text'
+                            )->token) .
                         ' ');
     }
 

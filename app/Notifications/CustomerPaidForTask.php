@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -36,7 +37,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -54,17 +55,76 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                     ->line('Customer has sent you a payment for : '. $this->task->name . '.')
                     ->action('View Task',
                         url('/login/general/' . $this->task->jobTask()->first()->job_id . '/'
-                            . $this->user->generateToken(true)->token))
+                            .  $this->user->generateToken(
+                                $this->user->id,
+                                true,
+                                $this->task->id,
+                                'paid',
+                                'paid',
+                                'paid',
+                                'email'
+                            )->token
+                        ))
                     ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
                     ->line('Customer has sent you a payment for : ' .$this->task->name . '.')
                     ->action('View Task',
                         url('/login/sub/task/' . $this->task->id . '/'
-                            . $this->user->generateToken(true)->token))
+                            . $this->user->generateToken(
+                                $this->user->id,
+                                true,
+                                $this->task->id,
+                                'paid',
+                                'paid',
+                                'paid',
+                                'email'
+                            )->token))
                     ->line('Thank you for using our application!');
         }
 
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+        $isGeneral = $this->task->contractor_id === $this->user->id;
+
+        if ($isGeneral) {
+            $text = 'Customer has sent you a payment for : '. $this->task->name . '.'
+                . url('/login/general/' . $this->task->id . '/'
+                            . $this->user->generateToken(
+                                $this->user->id,
+                                true,
+                                $this->task->id,
+                                'paid',
+                                'paid',
+                                'paid',
+                                'text'
+                            )->token)
+            . 'Thank you for using our application!';
+        } else {
+            $text = 'Customer has sent you a payment for : '. $this->task->name . '.'
+                . url('/login/sub/task/' . $this->task->id . '/'
+                    . $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $this->task->id,
+                        'paid',
+                        'paid',
+                        'paid',
+                        'text'
+                    )->token)
+            . 'Thank you for using our application!';
+        }
+
+        return (new NexmoMessage)
+            ->content($text);
     }
 
     /**

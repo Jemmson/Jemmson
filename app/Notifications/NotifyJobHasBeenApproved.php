@@ -58,14 +58,33 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
     {
         if ($this->sub) {
             return (new MailMessage)
-                ->line('Job has been approved. Sub Contractor.')
-                ->action('View Job', url('/login/sub/task/' . $this->job->id . '/' . $this->user->generateToken(true)->token))
+                ->line('The Customer Has Approved The Job!')
+                ->action('View Job', url('/login/sub/task/' . $this->job->id . '/' .
+                    $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $this->job->id,
+                        'approved',
+                        'approved_by_customer',
+                        'approved_by_customer',
+                        'email')->token)
+                )
                 ->line('Thank you for using our application!');
         }
 
         return (new MailMessage)
-            ->line('Job has been approved. General Contractor.')
-            ->action('View Job', url('/login/contractor/' . $this->job->id . '/' . $this->user->generateToken(true)->token))
+            ->line('The Customer Has Approved The Job!')
+            ->action('View Job', url('/login/contractor/' . $this->job->id . '/' .
+                $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->job->id,
+                    'approved',
+                    'approved_by_customer',
+                    'approved_by_customer',
+                    'email'
+                )->token)
+            )
             ->line('Thank you for using our application!');
     }
 
@@ -92,9 +111,29 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
     {
 
         if ($this->sub) {
-            $text = "The customer has approved of the job. Please go to the link below view job and begin work. " . url('/login/sub/task/' . $this->job->id . '/' . $this->user->generateToken(true)->token);
+            $text = "The customer has approved of the job. Please go to the link below view job and begin work. "
+                . url('/login/sub/task/' . $this->job->id . '/'
+                    . $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $this->job->id,
+                        'approved',
+                        'approved_by_customer',
+                        'approved_by_customer',
+                        'text'
+                    )->token);
         } else {
-            $text = "The customer has approved of the job. Please go to the link below view job and begin work. " . url('/login/contractor/' . $this->job->id . '/' . $this->user->generateToken(true)->token);
+            $text = "The customer has approved of the job. Please go to the link below view job and begin work. "
+                . url('/login/contractor/' . $this->job->id . '/'
+                    . $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $this->job->id,
+                        'approved',
+                        'approved_by_customer',
+                        'approved_by_customer',
+                        'text'
+                    )->token);
         }
 
         return (new NexmoMessage)

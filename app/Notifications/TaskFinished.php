@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -35,7 +36,7 @@ class TaskFinished extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -46,17 +47,66 @@ class TaskFinished extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $custom = '';
         if ($this->customer) {
             $custom = "Please approve the task";
+            $generalStatus = 'general_finished_work';
+            $subStatus = '';
         } else {
             $custom = "Please review the finished task.";
+            $generalStatus = 'sub_finished_work';
+            $subStatus = 'finished_job';
         }
         return (new MailMessage)
                     ->line("The task: " . $this->task->name . " has been finished.")
                     ->line($custom)
-                    ->action('View Task', url('/login/mix/' . $this->task->jobTask()->first()->job_id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Task', url('/login/mix/' .
+                        $this->task->jobTask()->first()->job_id . '/' .
+                        $this->user->generateToken(
+                            $this->user->id,
+                            true,
+                            $this->task->id,
+                            'approved',
+                            $generalStatus,
+                            $subStatus,
+                            'email'
+                        )->token))
                     ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+        if ($this->customer) {
+            $custom = "Please approve the task";
+            $generalStatus = 'general_finished_work';
+            $subStatus = '';
+        } else {
+            $custom = "Please review the finished task.";
+            $generalStatus = 'sub_finished_work';
+            $subStatus = 'finished_job';
+        }
+        $text = "The task: " . $this->task->name . " has been finished."
+            . " $custom"
+            . 'View Task'
+            . url('/login/mix/' .
+                $this->task->jobTask()->first()->job_id . '/' .
+                $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->task->id,
+                    'approved',
+                    $generalStatus,
+                    $subStatus,
+                    'text'
+                )->token);
+
+        return (new NexmoMessage)
+            ->content($text);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -34,7 +35,7 @@ class TaskApproved extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -48,9 +49,48 @@ class TaskApproved extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line("The task: " . $this->task->name . " has been Approved.")
                     ->line('Now waiting on customer to approve the task & send payment.')
-                    ->action('View Task', url('/login/sub/task/' . $this->task->id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Task', url('/login/sub/task/' .
+                        $this->task->id . '/' .
+                        $this->user->generateToken(
+                            $this->user->id,
+                            true,
+                            $this->task->id,
+                            'approved',
+                            'approved_by_customer',
+                            'finished_job_approved_by_contractor',
+                            'email'
+                        )->token))
                     ->line('Thank you for using our application!');
     }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+
+        $text = "The task: " . $this->task->name . " has been Approved."
+            . 'Now waiting on customer to approve the task & send payment.'
+            . 'View Task'
+            . url('/login/sub/task/' .
+                $this->task->id . '/' .
+                $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->task->id,
+                    'approved',
+                    'approved_by_customer',
+                    'finished_job_approved_by_contractor',
+                    'text'
+                )->token);
+
+        return (new NexmoMessage)
+            ->content($text);
+    }
+
 
     /**
      * Get the array representation of the notification.

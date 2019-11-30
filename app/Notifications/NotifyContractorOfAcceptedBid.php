@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -34,7 +35,7 @@ class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail', 'broadcast'];
+        return ['mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -46,10 +47,45 @@ class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Your bid for job: ' . $bid->name)
-                    ->lin('has been accepted')
-                    ->action('View Job', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
+                    ->line('Your bid for job: ' . $this->bid->name)
+                    ->line('has been accepted')
+                    ->action('View Job',
+                        url('/login/contractor/' . $this->bid->id . '/'
+                            . $this->user->generateToken(
+                            $this->user->id,
+                            true,
+                            $this->bid->id,
+                            'approved',
+                            'approved_by_customer',
+                            'approved_by_customer',
+                            'email'
+                        )->token))
                     ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param  mixed $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo($notifiable)
+    {
+        $text = 'Your bid for job: ' . $this->bid->name .
+            'has been accepted' .
+            ' View Job: ' .
+            url('/login/contractor/' . $this->bid->id . '/'
+                . $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->bid->id,
+                    'approved',
+                    'approved_by_customer',
+                    'approved_by_customer',
+                    'text'
+                )->token);
+        return (new NexmoMessage)
+            ->content($text);
     }
 
     /**

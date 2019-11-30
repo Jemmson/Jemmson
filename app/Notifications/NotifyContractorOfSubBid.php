@@ -54,7 +54,16 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line('Hello ' . $this->user->name . ' Contractor ' . $this->subName)
                     ->line('Has just submitted a bid for the task you sent him.')
-                    ->action('View Bid', url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Bid', url('/login/contractor/' . $this->bid->id . '/'
+                        . $this->user->generateToken(
+                            $this->user->id,
+                            true,
+                            $this->bid->id,
+                            'in_progress',
+                            'initiated',
+                            'sent_a_bid',
+                            'email'
+                        )->token))
                     ->line('Thank you for using our application!');
     }
 
@@ -81,9 +90,19 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
-        $text = 'Hello ' . $this->user->name . ' Contractor ' . $this->subName . ' has just submitted a bid for the task you sent. 
+        $text = 'Hello ' . $this->user->name . ' Contractor ' . $this->subName
+            . ' has just submitted a bid for the task you sent. 
         Please use the following link. '
-            . url('/login/contractor/' . $this->bid->id . '/' . $this->user->generateToken(true)->token);
+            . url('/login/contractor/' . $this->bid->id . '/' .
+                $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->bid->id,
+                    'in_progress',
+                    'initiated',
+                    'sent_a_bid',
+                    'text'
+                )->token);
 
         return (new NexmoMessage)
             ->content($text);

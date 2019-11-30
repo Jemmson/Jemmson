@@ -49,16 +49,36 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
     {
         if ($this->task->contractor_id !== $this->user->id) {
             return (new MailMessage)
-                    ->line('Task was not approved. Sub Contractor.')
+                    ->line('Your finished task was not approved.')
                     ->line($this->message)
-                    ->action('View Job', url('/login/sub/task/' . $this->task->id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Job', url('/login/sub/task/' .
+                        $this->task->id . '/' .
+                        $this->user->generateToken(
+                            $this->user->id,
+                            true,
+                            $this->task->id,
+                            'approved',
+                            'approved_by_customer',
+                            'finished_job_denied_by_contractor',
+                            'email'
+                        )->token))
                     ->line('Thank you for using our application!');
         }
 
         return (new MailMessage)
-                    ->line('Task was not approved. General Contractor.')
+                    ->line('Your finished task was not approved.')
                     ->line($this->message)
-                    ->action('View Job', url('/login/contractor/' . $this->task->job_id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Job', url('/login/contractor/' .
+                        $this->task->job_id . '/' .
+                        $this->user->generateToken(
+                            $this->user->id,
+                            true,
+                            $this->task->id,
+                            'approved',
+                            'customer_changes_finished_task',
+                            'customer_changes_finished_task',
+                            'email'
+                        )->token))
                     ->line('Thank you for using our application!');
     }
 
@@ -84,7 +104,31 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
-        $text = $this->user->name . " has approved your bid " . url('/login/sub/task/'. $this->bid->id . '/' . $this->user->generateToken(true)->token);
+        if ($this->task->contractor_id !== $this->user->id) {
+            $text = 'Your finished task was not approved. '. $this->message .
+                url('/login/sub/task/'. $this->task->id . '/' .
+                    $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $this->task->id,
+                        'approved',
+                        'approved_by_customer',
+                        'finished_job_denied_by_contractor',
+                        'text'
+                    )->token);
+        } else {
+            $text = 'Your finished task was not approved. '. $this->message .
+                url('/login/contractor/' . $this->task->id . '/' .
+                    $this->user->generateToken(
+                        $this->user->id,
+                        true,
+                        $this->task->id,
+                        'approved',
+                        'customer_changes_finished_task',
+                        'customer_changes_finished_task',
+                        'text'
+                    )->token);
+        }
 
         return (new NexmoMessage)
             ->content($text);

@@ -49,7 +49,8 @@ class NotifySubOfBidNotAcceptedBid extends Notification implements ShouldQueue
     {
 
         return (new MailMessage)
-                    ->line('Your bid for ' . $this->bid->name . ' was not accepted')
+                    ->line('Your bid for ' .
+                        $this->bid->name . ' was not accepted')
                     ->line('Thank you for using our application!');
     }
 
@@ -75,7 +76,9 @@ class NotifySubOfBidNotAcceptedBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         return (new NexmoMessage)
-            ->content('Your bid for ' . $this->bid->name . ' was not accepted. Thank you for using our application');
+            ->content('Your bid for '
+                . $this->bid->name
+                . ' was not accepted. Thank you for using our application');
     }
 
     public function toBroadcast($notifiable)

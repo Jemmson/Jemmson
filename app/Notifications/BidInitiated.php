@@ -17,8 +17,10 @@ class BidInitiated extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $user, $pwLink, $contractor;
+    protected $user, $contractor;
     public $job;
+    public $emailToken;
+    public $textToken;
     public $value = 10;
 
     /**
@@ -30,7 +32,27 @@ class BidInitiated extends Notification implements ShouldQueue
     {
         $this->job = $job;
         $this->user = $user;
-        $this->pwLink = $this->user->generateToken(true)->token;
+
+        $this->emailToken = $this->user->generateToken(
+            $this->user->id,
+            true,
+            $this->job->id,
+            'initiated',
+            null,
+            null,
+            'email'
+        )->token;
+
+        $this->textToken = $this->user->generateToken(
+            $this->user->id,
+            true,
+            $this->job->id,
+            'initiated',
+            null,
+            null,
+            'text'
+        )->token;
+
         $this->contractor = $job->contractor()->first()->name;
     }
 
@@ -42,18 +64,7 @@ class BidInitiated extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $notifyThrough = ['broadcast'];
-
-        if ($notifiable->phone) {
-            Log::debug('bidinitiated - notify through phone');
-            array_push($notifyThrough, 'nexmo');
-        }
-
-//        if ($notifiable->email) {
-//            array_push($notifyThrough, 'email', 'broadcast');
-//        }
-
-        return $notifyThrough;
+        return ['mail', 'nexmo'];
     }
 
     public function toDatabase($notifiable)
@@ -73,7 +84,8 @@ class BidInitiated extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->line('A bid has been initiated by contractor: ' . $this->contractor)
-            ->action('Login', url('/login/customer/' . $this->job->id . '/' . $this->pwLink))
+            ->action('Login', url('/login/customer/' . $this->job->id . '/' .
+                $this->emailToken))
             ->line('Thank you for using our application!');
     }
 
@@ -96,10 +108,9 @@ class BidInitiated extends Notification implements ShouldQueue
                 'customer/' .
                 $this->job->id .
                 '/' .
-                $this->pwLink);
+               $this->textToken);
         return (new NexmoMessage)
             ->content($text);
-//            ->from('15554443333');
     }
 
     public function toBroadcast($notifiable)

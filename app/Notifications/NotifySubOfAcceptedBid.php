@@ -50,7 +50,16 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
 
         return (new MailMessage)
                     ->line('Your bid for ' . $this->bid->name . ' has been accepted')
-                    ->action('View Job', url('/login/sub/task/'. $this->bid->id . '/' . $this->user->generateToken(true)->token))
+                    ->action('View Job',
+                        url('/login/sub/task/'. $this->bid->id . '/'
+                            . $this->user->generateToken(
+                                true,
+                                $this->bid->id,
+                                'in_progress',
+                                'initiated',
+                                'accepted',
+                                'email'
+                            )->token))
                     ->line('Thank you for using our application!');
     }
 
@@ -76,7 +85,15 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
-        $text = $this->user->name . " has approved your bid " . url('/login/sub/task/'. $this->bid->id . '/' . $this->user->generateToken(true)->token);
+        $text = $this->user->name . " has approved your bid " .
+            url('/login/sub/task/'. $this->bid->id . '/' .
+                $this->user->generateToken($this->user->id,
+                    true,
+                    $this->bid->id,
+                    'in_progress',
+                    'initiated',
+                    'accepted',
+                    'text')->token);
 
         return (new NexmoMessage)
             ->content($text);
