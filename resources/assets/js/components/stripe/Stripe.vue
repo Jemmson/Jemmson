@@ -8,7 +8,8 @@
                 <div class="modal-header">
                     <div class="flex flex-col">
                         <button type="button btn-normal" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
+                                aria-hidden="true">&times;</span>
+                        </button>
                         <div class="title" v-if="showStripeExpress">Would you like to be able to receive credit card
                             payments from your customer?
                         </div>

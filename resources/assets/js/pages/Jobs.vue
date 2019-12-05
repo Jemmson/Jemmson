@@ -44,11 +44,23 @@
                             </div>
                         </section>
                         <div class="flex mt-1rem">
-                            <button class="btn btn-normal-red btn-sm w-full mr-1rem" @click="showDeleteJobModal(bid)">
+
+                            <v-btn
+                                    class="w-40"
+                                    color="warning"
+                                    @click="showDeleteJobModal(bid)"
+                            >
                                 CANCEL JOB
-                            </button>
-                            <button @click="goToJob(bid.id)" class="btn btn-normal btn-sm w-full ml-1rem">VIEW JOB
-                            </button>
+                            </v-btn>
+
+                            <v-spacer></v-spacer>
+
+                            <v-btn
+                                    @click="goToJob(bid.id)"
+                                    color="primary"
+                                    class="w-40"
+                            >VIEW JOB</v-btn>
+
                         </div>
                     </div>
                 </card>

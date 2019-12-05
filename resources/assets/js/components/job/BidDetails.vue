@@ -107,7 +107,7 @@
                 <!-- /customer approve bid form -->
                 <approve-bid v-if="isCustomer && needsApproval()" :bid="bid">
                 </approve-bid>
-                <!-- /buttons  -->
+
                 <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
                 </general-contractor-bid-actions>
             </card>
@@ -133,6 +133,11 @@
                             >
                                 <v-list-item-title v-text="key"></v-list-item-title>
                                 <v-list-item-subtitle
+                                        v-if="key === 'Price'"
+                                        class="capitalize"
+                                        v-text="'$ ' + jt"></v-list-item-subtitle>
+                                <v-list-item-subtitle
+                                        v-else
                                         class="capitalize"
                                         v-text="jt"></v-list-item-subtitle>
                             </v-list-item>
@@ -173,34 +178,7 @@
                     </sub-invite-modal>
 
                 </v-card>
-
-
-                <!--                <h1 class="card-title mt-4">Job Tasks</h1>-->
-                <!--                <card>-->
-                <!--                    <div>-->
-
-                <!--                        <span class="">-->
-                <!--                        (<b ref="job_task_length">{{bid.job_tasks.length}}</b>)-->
-                <!--                        </span> Total-->
-
-                <!--                        <button class="btn btn-normal btn-sm float-right"-->
-                <!--                                style="width:75%"-->
-                <!--                                @click.prevent="viewTasks()">View, Edit, and Add Subs-->
-                <!--                        </button>-->
-
-                <!--                    </div>-->
-
-                <!--                    <div class="mt-1rem">-->
-                <!--                        <div v-for="jt in bid.job_tasks">-->
-                <!--                            <horizontal-table-->
-                <!--                                    :data="jobTaskObject(jt)"-->
-                <!--                            ></horizontal-table>-->
-                <!--                            <hr>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </card>-->
             </div>
-            <!--            <div v-else-if="bid.status !== 'bid.initiated' && bid.status !== 'bid.in_progress'">-->
             <div v-else-if="generalHasSentABid(bid)">
                 <h1 class="card-title mt-4">Job Tasks</h1>
                 <card>
@@ -210,9 +188,13 @@
                         (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
                         </span> Total
 
-                        <button class="btn btn-normal btn-sm float-right"
-                                @click.prevent="viewTasks()">View Tasks
-                        </button>
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                @click.prevent="viewTasks()"
+                        >
+                            View Tasks
+                        </v-btn>
                     </div>
 
                     <table class="table mt-2rem">
@@ -306,12 +288,12 @@
 
                             </textarea>
 
-                        <button v-if="isCustomer" class="btn btn-normal btn-sm"
-                                style="margin-top: .5rem"
+                        <v-btn
+                                v-if="isCustomer"
+                                color="primary"
                                 ref="update_customer_notes_button"
                                 @click="updateGeneralContractorNotes"
-                        >Submit
-                        </button>
+                        >Submit</v-btn>
 
                     </section>
                 </main>

@@ -7,10 +7,12 @@
         </card>
 
         <div class="flex mb-1rem">
-            <button class="btn btn-md btn-normal text-uppercase mr-1rem flex-1"
+            <v-btn
+                    class="w-40"
+                    color="primary"
                     @click.prevent="goBack()">
                 Back
-            </button>
+            </v-btn>
         </div>
 
         <div class="flex flex-col card">
@@ -20,10 +22,13 @@
                     <a class="lightbox" @click.prevent="openImage(image.id)">
                         <img :src="image.url" alt="">
                     </a>
-                    <button class="btn btn-normal image-btn pull-right mr-2" :id="'image-' + image.id"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            :id="'image-' + image.id"
                             @click="deleteImage(image.id, index)">
                         <i class="fas fa-trash-alt"></i>
-                    </button>
+                    </v-btn>
                 </div>
                 <!-- lightbox container hidden with CSS -->
                 <a class="lightbox-target" :id="'image' + image.id">

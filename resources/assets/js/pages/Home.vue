@@ -3,12 +3,13 @@
 
         <!--        <figcaption class="caption small-header" :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">New Job</figcaption>-->
 
-        <button
+        <v-btn
+                class="w-40"
+                color="primary"
                 v-if="isContractor()"
-                class="btn btn-normal btn-lg w-full mb-1rem"
                 @click="goToNewJob()"
         >CREATE A NEW JOB
-        </button>
+        </v-btn>
 
         <div v-if="isContractor()">
             <icon-header icon="jobs"

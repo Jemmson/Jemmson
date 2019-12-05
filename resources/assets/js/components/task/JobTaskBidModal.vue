@@ -1,153 +1,171 @@
 <template>
-  <div class="modal h-100 modal-background-gray" id="job-task-bid-modal" tabindex="-1" role="dialog" aria-labelledby="stripe-modal"
-    aria-hidden="false">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Send Bid</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div v-if="jobTask !== null" class="modal-body">
-
-          <div class="row">
-            <div class="col-12 text-center">
-              <!--<label class="job-status"-->
-              <!--:class="getLabelClass(jobTask.status)">-->
-              <label class="mb-2 mt-2" :class="getLabelClass(jobTask.status)">
-                {{ status(jobTask) }}</label>
-              <label class="mt-2 mb-2">
-                - {{ jobName(jobTask.task.name) }}
-              </label>
-            </div>
-
-            <div class="col-12">
-              <div class="form-group">
-                <label class="">Start On:</label>
-                <label class="float-right">{{ prettyDate(jobTask.start_date) }}</label>
-              </div>
-              <div class="form-group">
-                <label class="">Quantity: </label>
-                <label class="float-right">{{ jobTask.qty }}</label>
-              </div>
-              <div class="form-group">
-                <label class="">Contractor Suggested Price: </label>
-                <label class="float-right" v-if="jobTask.sub_final_price !== 0">
-                  ${{ jobTask.sub_final_price }}</label>
-                <label class="float-right" v-else>$ 0</label>
-              </div>
-
-              <div class="form-group">
-                <label v-if="isBidOpen(jobTask)" class="">Bid Price:</label>
-                <input v-if="jobTask.sub_sets_own_price_for_job === 1 && isBidOpen(jobTask)" type="text"
-                  class="form-control " v-bind:id="'price-' + jobTask.id" v-model="jobTask.bid_price"
-                  @keyup="bidPrice('price-' + jobTask.id)" />
-                <input v-else-if="!jobTask.sub_sets_own_price_for_job === 1 && isBidOpen(jobTask)" type="text"
-                  class="form-control " v-bind:id="'price-' + jobTask.id" v-model="jobTask.bid_price"
-                  @keyup="bidPrice('price-' + jobTask.id)" />
-              </div>
-
-              <div class="form-group">
-                <label v-if="!isBidOpen(jobTask)" class="">
-                  Accepted Bid Price:
-                </label>
-                <label v-if="!isBidOpen(jobTask)" class="">${{ jobTask.bid_price }}</label>
-              </div>
-
-              <div class="form-group">
-                <label class="">Job Address</label>
-                <div class="map-responsive">
-                  <iframe width="600" height="450" frameborder="0" style="border:0"
-                    :src="'https://www.google.com/maps/embed/v1/search?q='+ jobTask.location.address_line_1 + ' ' + jobTask.location.city + ' ' + jobTask.location.state + ' ' + jobTask.location.zip +'&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"
-                    allowfullscreen></iframe>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="">Payment Method</label>
-                <div v-if="jobTask.accepted === 1">
-                  <div class="">Selected Payment Method:</div>
-                  <div class=" uppercase">{{ paymentType }}</div>
-                  <div v-if="paymentType === 'cash'" class="">Payment Instructions</div>
-                  <div v-if="paymentType === 'cash'">{{ jobTask.job.paid_with_cash_message }}</div>
-                </div>
-                <div v-else>
-                  <div class="flex justify-around">
-                    <button class="btn btn-md blue flex-1"
-                      :class="paymentType === 'stripe' ? 'btn-active' : 'btn-default'"
-                      @click="setPaymentType('stripe')">Stripe
+    <div class="modal h-100 modal-background-gray" id="job-task-bid-modal" tabindex="-1" role="dialog"
+         aria-labelledby="stripe-modal"
+         aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Send Bid</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
-                    <button class="btn btn-md blue flex-1 mr-6 ml-6"
-                      :class="paymentType === 'cash' ? 'btn-active' : 'btn-default'"
-                      @click="setPaymentType('cash')">Cash
-                    </button>
-                    <button class="btn btn-md blue flex-1"
-                      :class="paymentType === 'other' ? 'btn-active' : 'btn-default'"
-                      @click="setPaymentType('other')">other
-                    </button>
-                  </div>
                 </div>
-              </div>
-              <!-- <div class="address-adjust">
-                <p v-if="getAddress(jobTask) !== 'Address Not Available'">
-                  <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(jobTask)">
-                    <i class="fas fa-map-marker icon"></i>
-                    {{ getAddress(jobTask) }}
-                  </a>
-                </p>
-                <p v-else>
-                  <i class="fas fa-map-marker icon"></i>
-                  {{ getAddress(jobTask) }}
-                </p>
-              </div> -->
-            </div>
+                <div v-if="jobTask !== null" class="modal-body">
 
-            <div class="col-12" v-if="showDeclinedMsg(jobTask.declined_message)">
-              <label class="">Declined Reason</label>
-              <p>
-                {{ jobTask.declined_message }}
-              </p>
-            </div>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <!--<label class="job-status"-->
+                            <!--:class="getLabelClass(jobTask.status)">-->
+                            <label class="mb-2 mt-2" :class="getLabelClass(jobTask.status)">
+                                {{ status(jobTask) }}</label>
+                            <label class="mt-2 mb-2">
+                                - {{ jobName(jobTask.task.name) }}
+                            </label>
+                        </div>
 
-            <div class="col-12" v-if="jobTask.sub_message !== null && jobTask.sub_message != ''">
-              <h3 class="text-center m-2">Sub Instructions</h3>
-              <div class="text-center">
-                {{ jobTask.sub_message }}
-              </div>
-            </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="">Start On:</label>
+                                <label class="float-right">{{ prettyDate(jobTask.start_date) }}</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="">Quantity: </label>
+                                <label class="float-right">{{ jobTask.qty }}</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="">Contractor Suggested Price: </label>
+                                <label class="float-right" v-if="jobTask.sub_final_price !== 0">
+                                    ${{ jobTask.sub_final_price }}</label>
+                                <label class="float-right" v-else>$ 0</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label v-if="isBidOpen(jobTask)" class="">Bid Price:</label>
+                                <input v-if="jobTask.sub_sets_own_price_for_job === 1 && isBidOpen(jobTask)" type="text"
+                                       class="form-control " v-bind:id="'price-' + jobTask.id"
+                                       v-model="jobTask.bid_price"
+                                       @keyup="bidPrice('price-' + jobTask.id)"/>
+                                <input v-else-if="!jobTask.sub_sets_own_price_for_job === 1 && isBidOpen(jobTask)"
+                                       type="text"
+                                       class="form-control " v-bind:id="'price-' + jobTask.id"
+                                       v-model="jobTask.bid_price"
+                                       @keyup="bidPrice('price-' + jobTask.id)"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label v-if="!isBidOpen(jobTask)" class="">
+                                    Accepted Bid Price:
+                                </label>
+                                <label v-if="!isBidOpen(jobTask)" class="">${{ jobTask.bid_price }}</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="">Job Address</label>
+                                <div class="map-responsive">
+                                    <iframe width="600" height="450" frameborder="0" style="border:0"
+                                            :src="'https://www.google.com/maps/embed/v1/search?q='+ jobTask.location.address_line_1 + ' ' + jobTask.location.city + ' ' + jobTask.location.state + ' ' + jobTask.location.zip +'&key=AIzaSyCI21pbEus0AZc4whkqwM3VaDO1YV1Dygs'"
+                                            allowfullscreen></iframe>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="">Payment Method</label>
+                                <div v-if="jobTask.accepted === 1">
+                                    <div class="">Selected Payment Method:</div>
+                                    <div class=" uppercase">{{ paymentType }}</div>
+                                    <div v-if="paymentType === 'cash'" class="">Payment Instructions</div>
+                                    <div v-if="paymentType === 'cash'">{{ jobTask.job.paid_with_cash_message }}</div>
+                                </div>
+                                <div v-else>
+                                    <div class="flex justify-around">
+                                        <v-btn
+                                                class="w-40"
+                                                color="primary"
+                                                :class="paymentType === 'stripe' ? 'btn-active' : 'btn-default'"
+                                                @click="setPaymentType('stripe')">Stripe
+                                        </v-btn>
+                                        <v-btn
+                                                class="w-40"
+                                                color="primary"
+                                                :class="paymentType === 'cash' ? 'btn-active' : 'btn-default'"
+                                                @click="setPaymentType('cash')">Cash
+                                        </v-btn>
+                                        <v-btn
+                                                class="w-40"
+                                                color="primary"
+                                                :class="paymentType === 'other' ? 'btn-active' : 'btn-default'"
+                                                @click="setPaymentType('other')">other
+                                        </v-btn>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="address-adjust">
+                              <p v-if="getAddress(jobTask) !== 'Address Not Available'">
+                                <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(jobTask)">
+                                  <i class="fas fa-map-marker icon"></i>
+                                  {{ getAddress(jobTask) }}
+                                </a>
+                              </p>
+                              <p v-else>
+                                <i class="fas fa-map-marker icon"></i>
+                                {{ getAddress(jobTask) }}
+                              </p>
+                            </div> -->
+                        </div>
+
+                        <div class="col-12" v-if="showDeclinedMsg(jobTask.declined_message)">
+                            <label class="">Declined Reason</label>
+                            <p>
+                                {{ jobTask.declined_message }}
+                            </p>
+                        </div>
+
+                        <div class="col-12" v-if="jobTask.sub_message !== null && jobTask.sub_message != ''">
+                            <h3 class="text-center m-2">Sub Instructions</h3>
+                            <div class="text-center">
+                                {{ jobTask.sub_message }}
+                            </div>
+                        </div>
 
 
-            <div class="col-12 mb-4">
-              <task-images class="images" :jobTask="jobTask" type="sub">
-              </task-images>
-            </div>
+                        <div class="col-12 mb-4">
+                            <task-images class="images" :jobTask="jobTask" type="sub">
+                            </task-images>
+                        </div>
 
 
-            <div class="col-12">
+                        <div class="col-12">
 
-                <button v-if="isBidOpen(jobTask)" class="btn btn-block btn-success float-right" @click.prevent="update" v-bind:id="jobTask.id"
-                  :disabled="disabled.submit">
+                            <v-btn
+                                    class="w-40"
+                                    color="primary"
+                                    v-if="isBidOpen(jobTask)"
+                                    @click.prevent="update" v-bind:id="jobTask.id"
+                                    :disabled="disabled.submit">
                   <span v-if="disabled.submit">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
-                  Submit
-                </button>
-                <button v-if="showFinishedBtn(jobTask)" class="btn btn-block btn-success float-right" @click="finished(jobTask)"
-                  :disabled="disabled.finished">
+                                Submit
+                            </v-btn>
+                            <v-btn
+                                    class="w-40"
+                                    color="primary"
+                                    v-if="showFinishedBtn(jobTask)"
+                                    @click="finished(jobTask)"
+                                    :disabled="disabled.finished">
                   <span v-if="disabled.finished">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
-                  Finished
-                </button>
+                                Finished
+                            </v-btn>
 
+                        </div>
+
+                    </div>
+                </div>
             </div>
-
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -281,9 +299,9 @@
 
 <style scoped>
 
-.btn-active {
-  background-color: green;
-  color: white;
-}
+    .btn-active {
+        background-color: green;
+        color: white;
+    }
 
 </style>

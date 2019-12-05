@@ -12,12 +12,15 @@
             <div id="card-errors" role="alert"></div>
         </div>
         <br>
-        <button class="btn btn-green" style="float: right;" :disabled="signup">
+        <v-btn
+                class="w-40"
+                color="primary"
+                style="float: right;" :disabled="signup">
         <span v-if="signup">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
         </span>
             Sign Up
-        </button>
+        </v-btn>
         <div style="clear:both;"></div>
     </form>
 </template>

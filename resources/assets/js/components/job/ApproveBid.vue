@@ -62,27 +62,35 @@
                 </span>
             </div>
         </div>
-        <!-- / buttons -->
         <div class="flex w-full justify-between">
-            <button class="btn btn-normal flex-1" @click.prevent="openModal('approveBid')"
+            <v-btn
+                    class="w-40"
+                    color="primary"
+                    @click.prevent="openModal('approveBid')"
                     :disabled="disabled.approve"
                     ref="approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Approve
-            </button>
-            <button class="btn btn-normal flex-1 mr-6 ml-6" @click.prevent="openModal('cancelBid')"
+            </v-btn>
+            <v-btn
+                    class="w-40"
+                    color="primary"
+                    @click.prevent="openModal('cancelBid')"
                     :disabled="disabled.cancelBid"
                     ref="cancel">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
                 Cancel
-            </button>
-            <button class="btn btn-normal flex-1" @click.prevent="openDeclineForm" ref="decline">
+            </v-btn>
+            <v-btn
+                    class="w-40"
+                    color="primary"
+                    @click.prevent="openDeclineForm" ref="decline">
                 Change Bid
-            </button>
+            </v-btn>
         </div>
         <!-- / decline bid section -->
         <transition name="slide-fade">
@@ -97,13 +105,16 @@
                     </span>
                 </div>
                 <div class="form-group col-md-12">
-                    <button class="btn btn-normal" @click.prevent="declineBid" :disabled="disabled.declineBid"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            @click.prevent="declineBid" :disabled="disabled.declineBid"
                             ref="declineBid">
                         <span v-if="disabled.declineBid">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                         Change Bid
-                    </button>
+                    </v-btn>
                 </div>
             </div>
         </transition>

@@ -5,12 +5,12 @@
                 <!-- details -->
                 <div class="col-12">
 
-                    <div class="flex mb-1rem">
-                        <button class="btn btn-md btn-normal text-uppercase flex-1"
-                                @click.prevent="goBack()">
-                            Back
-                        </button>
-                    </div>
+                    <v-btn
+                            class="w-full primary mb-1rem"
+                            @click.prevent="goBack()"
+                    >
+                        Back
+                    </v-btn>
 
 
                     <h1 class="card-title">Details</h1>
@@ -254,9 +254,17 @@
                                     {{ location(jobTask, job) }}
                                 </div>
                                 <div class="flex flex-col" v-else-if="location(jobTask, job) === 'Same as Job Location'">
-                                    <button v-if="jobIsNotComplete()" class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
-                                        <span class="mr-1rem">Change Task Location</span><i class="fas fa-edit"></i>
-                                    </button>
+
+
+                                    <v-btn
+                                            v-if="jobIsNotComplete()"
+                                            class="primary w-full"
+                                            @click="openUpdateTaskLocation(jobTask.id)"
+                                    >
+                                        <v-icon>mdi-home-edit</v-icon>
+                                        Change Task Location
+                                    </v-btn>
+
                                 </div>
                                 <div v-else class="flex flex-col">
                                     <a target="_blank"
@@ -264,9 +272,14 @@
                                         <i class="fas fa-map-marker icon"></i>
                                         {{ location(jobTask, job) }}
                                     </a>
-                                    <button class="btn btn-normal btn-md" @click="openUpdateTaskLocation(jobTask.id)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
+
+                                    <v-btn
+                                            class="primary w-full"
+                                            @click="openUpdateTaskLocation(jobTask.id)"
+                                    >
+                                        <v-icon>mdi-home-edit</v-icon>
+                                    </v-btn>
+
                                 </div>
                             </div>
                         </div>
@@ -357,21 +370,31 @@
                                                 <div class="flex-1">${{ getBidPrice(bid) }}</div>
                                                 <div class="flex-1">
                                                     <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
-                                                    <button
+
+
+                                                    <v-btn
                                                             v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
                                                             @click="acceptSubBidForTask(bid, jobTask)"
-                                                            class="btn btn-normal"
-                                                            :disabled="disabled.accept">
-                                                    <span v-if="disabled.accept">
-                                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                                    </span>
+                                                            class="primary"
+                                                            :disabled="disabled.accept"
+                                                    >
+                                                        <span v-if="disabled.accept">
+                                                            <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                                        </span>
                                                         Accept
-                                                    </button>
-                                                    <div v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)"><strong>Accepted</strong>
+                                                    </v-btn>
+
+
+
+                                                    <div
+                                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
+                                                            <strong>Accepted</strong>
                                                     </div>
-                                                    <div v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
-                                                        <strong>Pending</strong></div>
-                                                </div>
+                                                    <div
+                                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                                            <strong>Pending</strong></div>
+                                                    </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -386,44 +409,62 @@
                     <h1 class="card-title mt-4"></h1>
                     <div class="flex space-between">
 
-                        <button
-                                class="btn btn-sm btn-normal w-full"
+
+                        <v-btn
+                                class="w-full"
+                                color="primary"
                                 v-if="isGeneral()
                                        && jobIsNotComplete()"
                                 ref="addASubButton"
                                 @click.prevent="openSubInvite(jobTask.id)"
-                        >Add A Sub
+                        >
+                            Add A Sub
+                        </v-btn>
 
-                        </button>
-
-
-                        <button class="btn btn-sm btn-normal w-full" v-if="showFinishedBtn(jobTask)"
-                                @click="finishedTask(jobTask)" :disabled="disabled.finished">
+                        <v-btn
+                                class="w-full"
+                                color="primary"
+                                v-if="showFinishedBtn(jobTask)"
+                                @click="finishedTask(jobTask)" :disabled="disabled.finished"
+                        >
                             <span v-if="disabled.finished">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>Click Me When Job Is Finished
-                        </button>
+                        </v-btn>
 
-                        <button class="btn btn-sm btn-normal w-full"
+                        <v-btn
+                                class="w-full"
+                                color="primary"
                                 v-if="showApproveBtn(jobTask)"
                                 @click="approveTaskHasBeenFinished(jobTask)"
-                                :disabled="disabled.approve">
+                                :disabled="disabled.approve"
+                        >
                             <span v-if="disabled.approve">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>Approve
-                        </button>
+                        </v-btn>
 
-                        <button class="btn btn-sm btn-normal w-full" v-if="showDenyBtn(jobTask)"
-                                @click="openDenyTaskForm(jobTask.id)">Deny
-                        </button>
-                        <button class="btn btn-sm btn-normal-red w-full"
+                        <v-btn
+                                class="w-full"
+                                color="primary"
+                                v-if="showDenyBtn(jobTask)"
+                                @click="openDenyTaskForm(jobTask.id)"
+                        >
+                            Deny
+                        </v-btn>
+
+
+                        <v-btn
+                                class="w-full"
+                                color="warning"
                                 v-if="showDeleteBtn(jobTask)"
                                 @click="deleteTask(jobTask)"
-                                :disabled="disabled.deleteTask">
+                                :disabled="disabled.deleteTask"
+                        >
                             <span v-if="disabled.deleteTask">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>Delete
-                        </button>
+                        </v-btn>
                     </div>
                 </div>
             </div>
@@ -611,7 +652,7 @@
     methods: {
       jobHasNotBeenApproved () {
         const latestStatus = this.getJobStatus_latest(this.job)
-        return latestStatus === 'in progress' && latestStatus === 'initiated'
+        return latestStatus === 'in_progress' || latestStatus === 'initiated'
       },
       jobIsNotComplete() {
         const latestStatus = this.getLatestJobTaskStatus()
@@ -882,7 +923,6 @@
         if (this.jobTask && this.jobTask.task) {
           return this.jobTask.task.contractor_id === this.user.id
         }
-        return false
       },
       prettyDate(date) {
         if (date == null)

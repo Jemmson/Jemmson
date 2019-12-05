@@ -116,26 +116,34 @@
                 <h4 class="text-center mt-2">General Info</h4>
                 <div class="row" style="justify-content: center" v-show="!sections.editGeneralInfo">
                     <div class="flex-1 w-full"></div>
-                    <button class="flex-1 w-full btn btn-sm btn-normal"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
                             ref="edit_btn"
                             @click="sections.editGeneralInfo = true">Edit
-                    </button>
+                    </v-btn>
                     <div class="flex-1 w-full"></div>
                 </div>
                 <div class="row" style="justify-content: space-evenly" v-show="sections.editGeneralInfo">
-                    <button class="flex-1 w-full btn btn-sm btn-normal"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
                             id="cancel_btn"
                             ref="cancel_btn"
                             @click="cancel()">Cancel
-                    </button>
-                    <button class="flex-1 w-full btn btn-sm btn-normal"
+                    </v-btn>
+                    <v-btn
+                            class="w-40"
+                            color="primary"
                             ref="reset_btn"
                             @click="reset()">Reset
-                    </button>
-                    <button class="flex-1 w-full btn btn-sm btn-normal"
+                    </v-btn>
+                    <v-btn
+                            class="w-40"
+                            color="primary"
                             ref="save_btn"
                             @click="save()">Save
-                    </button>
+                    </v-btn>
                 </div>
 
                 <hr>
@@ -335,9 +343,6 @@
                             <div v-else-if="checkIfNumberIsVirtual()" style="color: red">
                                 {{ this.getMobileValidResponse[1] }}
                             </div>
-                            <!--<span class="help-block" v-show="form.errors('phone_number')">-->
-                            <!--{{ form.errors.get('phone_number') }}-->
-                            <!--</span>-->
                         </div>
                     </div>
 
@@ -365,47 +370,32 @@
                 <div class="content">
                     <!-- Terms And Conditions -->
                     <div class="row pt-2" style="flex-direction: column;">
-                        <!--<div class="input-section" :class="{'has-error': registerForm.errors.has('terms')}">-->
                         <div class="col-md-6 col-md-offset-4">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="terms" v-model="form.terms">
                                     I Accept The <a href="/terms" target="_blank">Terms Of Service</a>
                                 </label>
-
-                                <!--<span class="help-block" v-show="registerForm.errors.has('terms')"></span>-->
                             </div>
                         </div>
                     </div>
 
-
-                    <!--<pre>{{ registerForm.terms }}</pre>-->
-
-
-                    <!--TODO check if checkValidData can be used-->
-                    <!--<button type="submit" name="submit" class="register text-center border shadow uppercase"-->
-                    <!--@click.prevent="submitFurtherInfo()"-->
-                    <!--:disabled="checkValidData()">-->
-                    <!--<span v-if="disabled.submit">-->
-                    <!--<i class="fa fa-btn fa-spinner fa-spin"></i>-->
-                    <!--</span>-->
-                    <!--Register-->
-                    <!--</button>-->
-
                     <div class="row pt-2" style="flex-direction: column;">
                         <div class="col-md-6 col-md-offset-4">
-                            <button id="register" name=register
-                                    class="register form-control btn-normal shadow uppercase"
+                            <v-btn
+                                    class="w-40"
+                                    color="primary"
+                                    id="register" name=register
                                     @click.prevent="register"
                                     ref="register"
                                     :disabled="registerForm.busy">
-                    <span v-if="registerForm.busy">
-                        <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
-                    </span>
-                                <span v-else>
-                        <i class="fa fa-btn fa-check-circle mr-2"></i>Register
-                    </span>
-                            </button>
+                                    <span v-if="registerForm.busy">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
+                                    </span>
+                                    <span v-else>
+                                        <i class="fa fa-btn fa-check-circle mr-2"></i>Register
+                                    </span>
+                            </v-btn>
                         </div>
                     </div>
                 </div>

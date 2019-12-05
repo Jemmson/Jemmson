@@ -62,12 +62,15 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <button @click="update" class="btn btn-normal" type="submit" :disabled="disabled.update">
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                @click="update" type="submit" :disabled="disabled.update">
                             <span v-if="disabled.update">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
                             Submit
-                        </button>
+                        </v-btn>
                     </div>
                 </div>
             </div>

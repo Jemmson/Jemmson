@@ -9,8 +9,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="flex space-between">
-                        <button class="btn btn-normal-red flex-1 mr-1rem ml-1rem" @click="cancel()">Cancel</button>
-                        <button class="btn btn-normal flex-1 mr-1rem ml-1rem" @click="confirm()">Yes</button>
+                        <v-btn class="w-40" color="warning" @click="cancel()">Cancel</v-btn>
+                        <v-btn class="w-40" color="primary" @click="confirm()">Yes</v-btn>
                     </div>
                 </div>
                 <div class="modal-footer">

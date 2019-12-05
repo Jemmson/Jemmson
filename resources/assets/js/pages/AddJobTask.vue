@@ -27,10 +27,13 @@
                             {{ addNewTaskForm.errors.get('taskName') }}
                         </span>
                     <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
-                        <button class="btn btn-normal w-full mb-1" v-for="result in taskResults"
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                v-for="result in taskResults"
                                 v-bind:key="result.id" @click.prevent="fillTaskValues(result)">
                             {{ result.name }}
-                        </button>
+                        </v-btn>
                     </div>
                 </div>
 
@@ -213,16 +216,19 @@
             <!-- /end col-md-6 -->
 
             <div class="flex mb-1rem">
-                <button class="btn btn-md btn-normal text-uppercase mr-1rem flex-1"
+                <v-btn
+                        class="w-40"
+                        color="primary"
                         @click.prevent="goBack()">
                     Back
-                </button>
-                <button
+                </v-btn>
+                <v-btn
+                        class="w-40"
+                        color="primary"
                         @click.prevent="changeTask('Add')"
-                        class="btn btn-md btn-normal text-uppercase ml-1rem flex-1"
                         :disabled="checkErrors()"
                         ref="add_task"
-                >Add Task</button>
+                >Add Task</v-btn>
             </div>
 
         </card>

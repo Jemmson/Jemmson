@@ -18,11 +18,16 @@
                 <div class="modal-footer" style="justify-content: space-between !important">
                     <slot name="button"></slot>
                     <div class="flex w-full">
-                        <button type="button" class="btn btn-normal-red w-full mr-1rem" data-dismiss="modal">{{ no }}
-                        </button>
-                        <button type="button" class="btn btn-normal btn-model-yes w-full ml-1rem"
+                        <v-btn type="button"
+                               class="w-40"
+                               color="primary"
+                               data-dismiss="modal">{{ no }}
+                        </v-btn>
+                        <v-btn type="button"
+                                class="w-40"
+                                color="primary"
                                 @click="$emit('modal', modalId)">{{ yes }}
-                        </button>
+                        </v-btn>
                     </div>
                 </div>
             </div>

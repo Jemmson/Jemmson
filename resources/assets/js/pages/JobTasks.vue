@@ -3,10 +3,12 @@
     <div class="container-fluid">
 
         <div class="flex mb-1rem">
-            <button class="btn btn-md btn-normal text-uppercase flex-1"
+            <v-btn
+                    class="w-40"
+                    color="primary"
                     @click.prevent="goBack()">
                 Back
-            </button>
+            </v-btn>
         </div>
 
         <search-bar>
@@ -64,12 +66,17 @@
                     </div>
 
                     <div class="flex w-full btn-spacing">
-                        <button class="btn btn-normal-red btn-sm w-full mr-1rem"
+                        <v-btn
+                                class="w-40"
+                                color="primary"
                                 @click="showDeleteTaskModal(jTask, index)">
                             DELETE
                             <i v-if="checkSpinner(index)" class="fa fa-btn fa-spinner fa-spin"></i>
-                        </button>
-                        <button class="btn btn-normal btn-sm w-full ml-1rem" @click="goToJobTask(index)">SELECT</button>
+                        </v-btn>
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                @click="goToJobTask(index)">SELECT</v-btn>
                     </div>
                 </div>
             </card>

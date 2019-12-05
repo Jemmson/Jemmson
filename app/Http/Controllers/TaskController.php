@@ -903,7 +903,6 @@ class TaskController extends Controller
         // notify sub contractor that his bid was approved
         $user = User::find($contractorId);
         $user->notify(new NotifySubOfAcceptedBid($task, $user));
-
         $this->setSubStatus($user->id, $jobTask->id, 'accepted');
 
         return response()->json(["message" => "Success"], 200);

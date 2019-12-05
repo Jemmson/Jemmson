@@ -6,16 +6,19 @@
                     v-model="theServerMessage"
                     id="message">
             </textarea>
-        <button class="btn btn-normal-green mt-half-rem mb-4"
-                @click="updateMessage()"
-                :disabled="!shouldSendMessage"
-                >
-            <span v-if="shouldSendMessage">Send Message</span>
-            <span v-else-if="messageIsSent" class="mr-2">Message Sent</span>
-            <span v-else-if="messageIsBeingSent" class="mr-2">Sending Message
-              <i class="fa fa-btn fa-spinner fa-spin"></i>
-            </span>
-        </button>
+
+
+            <v-btn
+                    class="primary mt-1rem"
+                    @click="updateMessage()"
+                    :disabled="!shouldSendMessage"
+            >
+                <span v-if="shouldSendMessage">Send Message</span>
+                <span v-else-if="messageIsSent" class="mr-2">Message Sent</span>
+                <span v-else-if="messageIsBeingSent" class="mr-2">Sending Message
+                    <i class="fa fa-btn fa-spinner fa-spin"></i>
+                </span>
+            </v-btn>
     </div>   
 </template>
 

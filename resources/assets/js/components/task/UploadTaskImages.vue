@@ -31,25 +31,12 @@
                 <img :src="'/img/more.png'" alt="">
             </a>
         </div>
-        <!-- / end task images preview -->
-
-        <!-- upload images -->
-        <!-- <button type="button" 
-        :class="disabled.uploadTaskImageBtn ? 'btn btn-blue btn-upload disabled' : 'btn btn-blue btn-upload'">
-            <span>Attach Images</span>
-            <span v-show="disabled.uploadTaskImageBtn">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-            </span>
-            <span v-if="!disabled.uploadTaskImageBtn"> -->
         <input :ref="jobTask ? 'task_photo_' + jobTask.id : ''"
                class="btn btn-normal ml-2 mt-4"
                style="width: 95%"
                :id="jobTask ? 'task_photo_' + jobTask.id : ''"
                type="file" @change="uploadTaskImage(jobTask.id)">
         <i v-show="uploading" class="fa fa-btn fa-spinner fa-spin"></i>
-        <!-- </span>
-    </button> -->
-        <!-- / end upload task images-->
     </div>
 </template>
 

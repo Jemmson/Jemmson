@@ -8,8 +8,10 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Deny Approval - {{ jobTask.task === undefined ? '' :
-                        jobTask.task.name.toUpperCase() }}</h4>
+                    <h4
+                            class="modal-title">
+                        Deny Approval - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}
+                    </h4>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -24,13 +26,16 @@
                 </div>
                 <div class="modal-footer">
                     <div class="form-group">
-                        <button class="btn btn-normal" @click.prevent="denyTask" :disabled="disabled.deny"
+                        <v-btn class="w-full"
+                               color="primary"
+                               @click.prevent="denyTask"
+                               :disabled="disabled.deny"
                                 ref="denyTaskBtn">
                                         <span v-if="disabled.deny">
                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                             Deny Approval
-                        </button>
+                        </v-btn>
                     </div>
                 </div>
             </div>

@@ -12,9 +12,16 @@
                             </div>
                             <div v-show="buttons === 'true'">
                                 <div class="flex">
-                                    <button class="flex-1 mr-1 btn btn-normal" @click="showBody('tldr')">OVERVIEW
-                                    </button>
-                                    <button class="flex-1 ml-1 btn btn-normal" @click="showBody('full')">DETAILS</button>
+                                    <v-btn
+                                            class="w-40"
+                                            color="primary"
+                                            @click="showBody('tldr')">OVERVIEW
+                                    </v-btn>
+                                    <v-btn
+                                            class="w-40"
+                                            color="primary"
+                                            @click="showBody('full')">DETAILS
+                                    </v-btn>
                                 </div>
                             </div>
                         </div>

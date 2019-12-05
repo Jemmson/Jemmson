@@ -55,14 +55,17 @@
                                    v-on:keyup="autoComplete">
                             <div class="panel-footer" v-if="aResults.length > 0">
                                 <div class="flex flex-col" ref="buttons">
-                                    <button class="flex-1 m-2 btn-normal" v-for="(result, index) in aResults"
+                                    <v-btn
+                                            class="w-40"
+                                            color="primary"
+                                            v-for="(result, index) in aResults"
                                             v-bind:key="result.id"
                                             :name="result.phone" @click.prevent="fillFields(result)">
                                         <!--                                    <button>-->
                                         <span :id="'result' + index">
                                           {{ result.name }} - {{ result.contractor.company_name }}
                                         </span>
-                                    </button>
+                                    </v-btn>
                                 </div>
                             </div>
 
@@ -116,13 +119,16 @@
                     <!-- /end col-md6ss -->
                 </div>
                 <div class="modal-footer">
-                    <button @click="sendSubInviteToBidOnTask" class="btn btn-normal" type="submit"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            @click="sendSubInviteToBidOnTask" type="submit"
                             :disabled="enableSubmit()" ref="submit">
                           <span v-if="disabled.invite">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                           </span>
                         Submit
-                    </button>
+                    </v-btn>
                 </div>
             </div>
         </div>

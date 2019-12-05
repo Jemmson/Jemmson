@@ -271,22 +271,28 @@
                                     :input-classes="getLabelClass(bidTask.job_task.status)"
                                     :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
                                     type="startOn"></content-section>
-                            <button v-if="isBidOpen(bidTask)" class="btn btn-normal mt-one-and-one-quarter-rem"
+                            <v-btn
+                                    class="w-40"
+                                    color="primary"
+                                    v-if="isBidOpen(bidTask)"
                                     @click.prevent="update"
                                     v-bind:id="bidTask.id" :disabled="disabled.submit">
                                         <span v-if="disabled.submit">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
                                 Submit
-                            </button>
-                            <button v-if="showFinishedBtn(bidTask)" class="btn btn-normal mt-1rem"
+                            </v-btn>
+                            <v-btn
+                                    class="w-40"
+                                    color="primary"
+                                    v-if="showFinishedBtn(bidTask)"
                                     @click="finished(bidTask)"
                                     :disabled="disabled.finished">
                                         <span v-if="disabled.finished">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
                                 Click Me When Task Is Finished
-                            </button>
+                            </v-btn>
                         </main>
                     </card>
                 </section>

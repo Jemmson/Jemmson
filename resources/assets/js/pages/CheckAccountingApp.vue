@@ -3,12 +3,21 @@
         <div>
             <h1 class="text-center">WHO ARE YOU?</h1>
             <div class="flex">
-                <button class="btn default w-full m-2 btn-normal"
-                        ref="customer">Customer
-                </button>
-                <button class="btn default w-full m-2 btn-normal" @click="getAuthURL()"
-                        ref="contractor">Contractor
-                </button>
+
+                <v-btn
+                        class="w-full"
+                        color="primary"
+                        ref="customer"
+                >Customer</v-btn>
+
+
+                <v-btn
+                        class="w-full"
+                        color="primary"
+                        @click="getAuthURL()"
+                        ref="contractor"
+                >Contractor</v-btn>
+
             </div>
         </div>
         <div v-show="isContractor">
@@ -23,9 +32,13 @@
                             alt="qbo/docs/develop/authentication-and-authorization/C2QB_auth.png"
                             src="https://static.developer.intuit.com/images/C2QB_auth.png">
                 </a>
-                <button class="flex-1 btn default w-full m-2 btn-normal"
-                        ref="dont_use" @click="goToRegistration()">Dont Use
-                </button>
+
+                <v-btn
+                        class="w-full"
+                        color="primary"
+                        ref="dont_use"
+                        @click="goToRegistration()"
+                >Dont Use</v-btn>
             </div>
         </div>
     </div>

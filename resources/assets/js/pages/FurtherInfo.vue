@@ -89,8 +89,12 @@
                         <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
                             <label for="route">Address Line 1 *</label>
                             <div class="">
-                                <input type="text" class="form-control" name="address_line_1" id="route"
-                                       v-model="form.address_line_1">
+                                <input id="route"
+                                       name="addressLine1"
+                                       autocomplete="on"
+                                       type="text" class="form-control"
+                                       v-model="form.address_line_1"
+                                >
                                 <span ref="addressLine1Error" class="help-block"
                                       v-show="form.errors.has('address_line_1')">
                   {{ form.errors.get('address_line_1') }}
@@ -100,9 +104,13 @@
 
                         <!-- Address Line 2 -->
                         <div class="form-group">
-                            <label for="address_line_2">Address Line 2</label>
+                            <label for="addressLine2">Address Line 2</label>
                             <div class="">
-                                <input id="address_line_2" type="text" class="form-control" name=""
+                                <input
+                                        id="addressLine2"
+                                        name="addressLine2"
+                                        autocomplete="on"
+                                        type="text" class="form-control "
                                        v-model="form.address_line_2">
                             </div>
                         </div>
@@ -111,7 +119,11 @@
                         <div class="form-group" :class="{'has-error': form.errors.has('city')}">
                             <label for="administrative_area_level_1">City *</label>
                             <div class="">
-                                <input type="text" class="form-control" name="city" id="administrative_area_level_1"
+                                <input
+                                        id="administrative_area_level_1"
+                                        name="city"
+                                        autocomplete="on"
+                                        type="text" class="form-control "
                                        v-model="form.city">
                                 <span ref="cityError" class="help-block" v-show="form.errors.has('city')">
                   {{ form.errors.get('city') }}
@@ -123,7 +135,12 @@
 
                         <div class="form-group" :class="{'has-error': form.errors.has('state')}">
                             <label for="locality" style="font-size: 1rem">State *</label>
-                            <input type="text" class="form-control" name="state" id="locality" v-model="form.state">
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    name="state"
+                                    id="locality"
+                                    v-model="form.state">
                             <span ref="stateError" class="help-block" v-show="form.errors.has('state')">
                 {{ form.errors.get('state') }}
               </span>
@@ -133,7 +150,12 @@
                         <div class="form-group" :class="{'has-error': form.errors.has('zip')}">
                             <label for="postal_code">ZipCode *</label>
 
-                            <input type="text" class="form-control" name="zip" id="postal_code" v-model="form.zip">
+                            <input
+                                    id="postal_code"
+                                    name="zip"
+                                    autocomplete="on"
+                                    type="text" class="form-control "
+                                    v-model="form.zip">
                             <span ref="zipError" class="help-block" v-show="form.errors.has('zip')">
                 {{ form.errors.get('zip') }}
               </span>
@@ -147,6 +169,33 @@
                           class="form-control"></textarea>
                             </div>
                         </div>
+
+
+                        <div v-if="isContractor">
+                            <div class="flex flex-col">
+                                <hr>
+                                <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
+                                    Please Click To Add A Contractor License
+                                </label>
+                                <v-btn
+                                        class="w-40"
+                                        color="primary"
+                                        @click.prevent="addLicenseBox()" id="addContractorLicenseButton"
+                                        ref="add_contractor_license_button">
+                                    Add A License
+                                </v-btn>
+                            </div>
+
+                            <div id="licenseBoxes">
+                                <div v-for="i in boxes">
+                                    <add-license-box
+                                            @delete="deleteLicense($event)">
+                                    </add-license-box>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
 
                         <h3>Create Password</h3>
                         <div class="update_password" style="">
@@ -198,6 +247,7 @@
   import JemmsonFooter from '../components/shared/JemmsonFooter'
   import Card from '../components/shared/Card'
   import IconHeader from '../components/shared/IconHeader'
+  import AddLicenseBox from '../components/user/AddLicenseBox'
 
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 
@@ -208,10 +258,12 @@
     components: {
       JemmsonFooter,
       Card,
+      AddLicenseBox,
       IconHeader
     },
     data() {
       return {
+        boxArray: [],
         disabled: {
           submit: false,
           validData: true
@@ -226,6 +278,7 @@
           first_name: '',
           last_name: '',
           city: '',
+          licenses: [],
           state: '',
           zip: '',
           notes: '',
@@ -299,6 +352,9 @@
       ...mapGetters([
         'getMobileValidResponse'
       ]),
+      boxes() {
+        return this.boxArray
+      },
       passwordUpdated() {
         return this.user.password_updated
       },
@@ -320,6 +376,36 @@
       ...mapActions([
         'checkMobileNumber',
       ]),
+      getLicenseElements() {
+        const lb = document.getElementById('licenseBoxes')
+        let lbArray = []
+        for (let i = 0; i < lb.children.length; i++) {
+          if (this.nameOrValueIsNotEmpty(lb.children[i])) {
+            lbArray.push({
+              name: lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value,
+              value: lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value
+            })
+          }
+        }
+        this.form.licenses = lbArray
+      },
+      addLicenseBox() {
+        this.boxArray.push(this.boxArray.length + 1)
+      },
+      nameOrValueIsNotEmpty(lb) {
+        return lb.children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1] !== ''
+          && lb.children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value !== ''
+      },
+      deleteLicense(license) {
+        const lb = document.getElementById('licenseBoxes')
+        for (let i = 0; i < lb.children.length; i++) {
+          if (license.name === lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value &&
+            license.value === lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value) {
+            lb.removeChild(lb.children[i])
+            break
+          }
+        }
+      },
       unformatNumber(number) {
         let unformattedNumber = ''
         for (let i = 0; i < number.length; i++) {
@@ -386,6 +472,7 @@
           return false
         }
         this.form.email = this.form.email.trim()
+        this.getLicenseElements()
         User.submitFurtherInfo(this.form, this.disabled)
       },
       initAutocomplete() {

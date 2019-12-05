@@ -12,16 +12,18 @@
                     {{ jobTask.task.name }}
                 </div>
                 <div class="flex">
-                    <button
+                    <v-btn
                             @click="showTheJobTaskDetails('show')"
-                            class="uppercase btn btn-primary btn-bid-task flex-1"
+                            class="uppercase w-40"
+                            color="show"
                             v-show="!showDetails">show
-                    </button>
-                    <button
+                    </v-btn>
+                    <v-btn
                             @click="showTheJobTaskDetails('hide')"
-                            class="uppercase btn btn-primary btn-bid-task flex-1"
+                            class="uppercase w-40"
+                            color="show"
                             v-show="showDetails">hide
-                    </button>
+                    </v-btn>
                 </div>
             </div>
         </div>
@@ -67,15 +69,16 @@
                         </div>
                     </div>
                 </div>
-                <button v-if="isContractor()"
-                        class="btn btn-green btn-large m-t-3"
-                        v-show="
+                <v-btn v-if="isContractor()"
+                       class="w-40"
+                       color="primary"
+                       v-show="
                             jobTask.status === 'bid_task.reopened' ||
                             bid.status === 'bid.initiated' ||
                             bid.status === 'bid.in_progress' ||
                             bid.status === 'bid.declined'
                         ">Update
-                </button>
+                </v-btn>
 
                 <div class="bid-task-wrapper mb-2 mt-2">
                     <label>Task Start Date</label>
@@ -101,9 +104,11 @@
                     </div>
                     <div class="flex flex-col" v-else-if="location(jobTask, bid) === 'Same as Job Location'">
                         <span class="label mb-2">Change Task Location</span>
-                        <button class="btn btn-normal btn-small" @click="openUpdateTaskLocation(jobTask.id)">
+                        <v-btn class="w-40"
+                               color="primary"
+                               @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
-                        </button>
+                        </v-btn>
                     </div>
                     <div v-else class="flex flex-col">
                         <a target="_blank"
@@ -111,9 +116,12 @@
                             <i class="fas fa-map-marker icon"></i>
                             {{ location(jobTask, bid) }}
                         </a>
-                        <button class="btn btn-normal btn-small" @click="openUpdateTaskLocation(jobTask.id)">
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
-                        </button>
+                        </v-btn>
                     </div>
                 </div>
             </div>
@@ -153,43 +161,12 @@
 
             </div>
         </div>
-
-
-        <!--show this box if
-            the show button has been selected and
-            if showSubsPanel is selected then show -->
         <div class="box shadow-md" v-show="showDetails &&
                                            showSubsPanel &&
                                            (isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0) &&
                                            ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid)) ||
                                             (checkIfBidHasBeenAccepted(jobTask)) ||
                                             (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)))">
-            <!--<div class="box shadow-md">-->
-            <!--<pre>{{ showDetails }} -> the show hide button was selected </pre>-->
-            <!--<pre>{{ showSubsPanel }}-> show the sub panel if the user is a contractor and-->
-            <!--the job is not approved and-->
-            <!--the job has not been completed</pre>-->
-            <!--<pre>{{ isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0 }} the user is a general && the task is not approved && subs have been added</pre>-->
-            <!--<pre>{{ !checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid) }} the bid has not been accepted && the bid has not been sent by the sub</pre>-->
-            <!--<pre>{{ checkIfBidHasBeenAccepted(jobTask) }} the bid has been accepted</pre>-->
-            <!--<pre>{{ !checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid) }} the bid has not been accepted and the sub has not sent a bid</pre>-->
-            <!--<pre>{{ !checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid) }} if the bid has not been accepted and the bid has been sent</pre>-->
-            <!--<pre>{{ checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1 }} if the bid has been accepted</pre>-->
-            <!--<pre>{{ !checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid) }} if the bid has not been accepted and the bid has not been sent</pre>-->
-            <!--<pre>{{ isGeneral() }} -> checks to see the contractor is a general contractor</pre>-->
-            <!--<pre>{{ !taskApproved }} -> this task is not approved</pre>-->
-            <!--<pre>{{ !checkIfBidHasBeenAccepted(jobTask) }} -> checks if the contractor has accepted one of the bids</pre>-->
-            <!--<pre>{{ checkIfBidHasBeenSent(bid) }} -> checks if the contractor has sent the bid</pre>-->
-            <!--<pre>{{ bid.accepted }} -> value of the bid being accepted or not</pre>-->
-            <!--<pre>{{ !checkIfBidHasBeenSent(bid) }} -> checks if the contractor has sent the bid</pre>-->
-            <!--<pre>{{ isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0 }}</pre>-->
-            <!--<pre>{{ showDetails &&-->
-            <!--showSubsPanel &&-->
-            <!--(isGeneral() && !taskApproved) &&-->
-            <!--((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(bid)) ||-->
-            <!--(checkIfBidHasBeenAccepted(jobTask) && bid.accepted === 1) ||-->
-            <!--(!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)))-->
-            <!--}} -> total value of all settings</pre>-->
             <div v-if="showSubsPanel" class="mt-4">
                 <div :id="'task-divider-' + jobTask.id" :key="1"></div>
 
@@ -208,15 +185,17 @@
                             <div class="flex-1 uppercase">{{ preferredPaymentType(bid) }}</div>
                             <div class="flex-1">${{ bid.bid_price }}</div>
                             <div class="flex-1">
-                                <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
-                                <button v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
-                                        @click="acceptSubBidForTask(bid, jobTask)" class="btn btn-green"
+                                <v-btn
+                                        v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
+                                        @click="acceptSubBidForTask(bid, jobTask)"
+                                        class="w-40"
+                                        color="primary"
                                         :disabled="disabled.accept">
                                             <span v-if="disabled.accept">
                                               <i class="fa fa-btn fa-spinner fa-spin"></i>
                                             </span>
                                     Accept
-                                </button>
+                                </v-btn>
                                 <div v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
                                     <h5>Bid Has Been Accepted</h5>
                                 </div>
@@ -228,63 +207,60 @@
                 </div>
             </div>
         </div>
-
-
-        <!--I want to show details if
-        1. the user is a customer and they have the status of 'bid_task.finished_by_general' or 'bid_task.approved_by_general'
-
-
-        -->
-        <!--<div class="box shadow-md" v-show="showDetails &&-->
-        <!--(showDenyBtn(jobTask) || showDeleteBtn(jobTask) ||-->
-        <!--(isGeneral && showSendSubInvite && !checkIfBidHasBeenAccepted(jobTask)) ||-->
-        <!--(showFinishedBtn(jobTask) || showApproveBtn(jobTask)))">-->
-
-
         <div class="box shadow-md" v-show="showDetails">
             <h4 class="text-center">Action Buttons</h4>
             <div class="flex w-full justify-between">
-                <button class="btn btn-normal" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask.id)">
+                <v-btn
+                        class="w-40"
+                        color="primary"
+                        v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask.id)">
                     Deny
-                </button>
+                </v-btn>
 
-                <button class="btn btn-normal-red" v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
+                <v-btn
+                        class="w-40"
+                        color="warning"
+                        v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                         :disabled="disabled.deleteTask">
                   <span v-if="disabled.deleteTask">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                   </span>
                     Delete
-                </button>
+                </v-btn>
 
                 <div v-if="isContractor()" class=" justify-between">
-                    <!-- / not sure we need this show subs button -->
-                    <!-- <button v-show="jobTask.bid_contractor_job_tasks.length > 0 && showSubsPanel" class="btn btn-blue" @click.prevent="openTaskBids(jobTask.id)"
-                      v-if="isGeneral">
-                      Show Subs
-                    </button> -->
-                    <button class="btn btn-normal" @click.prevent="openSubInvite(jobTask.id)"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            @click.prevent="openSubInvite(jobTask.id)"
                             v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
                         Add A Sub
-                    </button>
+                    </v-btn>
                 </div>
 
                 <div v-if="showFinishedBtn(jobTask) || showApproveBtn(jobTask)" class=" justify-between">
-                    <button class="btn btn-normal" v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                             :disabled="disabled.finished">
                               <span v-if="disabled.finished">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                               </span>
                         Click Me When Job Is Finished
-                    </button>
+                    </v-btn>
 
-                    <button class="btn btn-normal" v-if="showApproveBtn(jobTask)"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            v-if="showApproveBtn(jobTask)"
                             @click="approveTaskHasBeenFinished(jobTask)"
                             :disabled="disabled.approve">
                               <span v-if="disabled.approve">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                               </span>
                         Approve
-                    </button>
+                    </v-btn>
 
                 </div>
             </div>
@@ -453,7 +429,7 @@
         }
         return false
       },
-      preferredPaymentType (bid) {
+      preferredPaymentType(bid) {
         if (bid.contractor_sub_contractor_preferred_payment) {
           return bid.contractor_sub_contractor_preferred_payment.contractor_preferred_payment_type
         }

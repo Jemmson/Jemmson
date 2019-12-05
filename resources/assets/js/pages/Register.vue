@@ -6,47 +6,22 @@
                 <card>
                     <h3 class="text-center">Who Are You?</h3>
                     <div class="row w-full justify-content-between">
-                        <button
-                                class="btn btn-md btn-normal flex-1 mr-1rem"
+                        <v-btn
+                                class="w-40"
+                                color="primary"
                                 ref="customerButton"
                                 :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
                                 v-on:click="userSelected('customer')">Customer
-                        </button>
+                        </v-btn>
 
-                        <button class="btn btn-md btn-normal flex-1 ml-1rem"
+                        <v-btn
+                                class="w-40"
+                                color="primary"
                                 ref="contractorButton"
                                 :class="userTypeSelected === 'contractor' ? 'selected-button' : ''"
                                 v-on:click="userSelected('contractor')">Contractor
-                        </button>
+                        </v-btn>
                     </div>
-
-
-                    <!--                    <h4 data-v-24a44010=""-->
-                    <!--                        class="text-center"-->
-                    <!--                        v-if="usesQuickbooks"-->
-                    <!--                        style="margin-top: 1.5rem">Do You Use Quickbooks?</h4>-->
-
-                    <!--                    <div class="row w-full justify-content-between" v-if="usesQuickbooks">-->
-                    <!--                        <button class="btn btn-md btn-normal-green flex-1 mr-1rem">-->
-                    <!--                            <a-->
-                    <!--                                    :href="quickbooks.auth_url"-->
-                    <!--                                    ref="quickbooks"-->
-                    <!--                            >-->
-                    <!--                                <span style="color: green;">Quickbooks</span>-->
-                    <!--                            </a>-->
-                    <!--                        </button>-->
-
-                    <!--                        <button class="btn btn-md btn-normal flex-1 ml-1rem"-->
-                    <!--                                v-on:click="doesNotUseQuickbooks()"><span class="uppercase">no</span>-->
-                    <!--                        </button>-->
-                    <!--                    </div>-->
-
-                    <!--                    <img-->
-                    <!--                            alt="qbo/docs/develop/authentication-and-authorization/C2QB_auth.png"-->
-                    <!--                            src="https://static.developer.intuit.com/images/C2QB_auth.png"-->
-                    <!--                            style="height: 100%; width: 100%"-->
-                    <!--                            class="w-full"-->
-                    <!--                    >-->
 
                     <div v-show="showRegistration">
 
@@ -167,7 +142,11 @@
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="locality" class=" pt-3 pt-2">State *</label>
-                            <input type="text" class="form-control" name="state" id="locality"
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    name="state"
+                                    id="locality"
                                    v-model="registerForm.state">
                             <!--                            <input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
                             <!--                            <select id="locality"-->
@@ -195,7 +174,11 @@
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="country" class=" pt-3 pt-2">Country *</label>
-                            <input type="text" class="form-control" name="state" id="country"
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    name="state"
+                                    id="country"
                                    v-model="registerForm.country">
                             <!--                            <select id="country"-->
                             <!--                                    name="country"-->
@@ -237,10 +220,13 @@
                             <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
                                 Please Click To Add A Contractor License
                             </label>
-                            <button @click="addLicenseBox()" id="addContractorLicenseButton"
-                                    class="btn btn-sm btn-normal mb-1rem" ref="add_contractor_license_button">Add A
+                            <v-btn
+                                    class="w-40"
+                                    color="primary"
+                                    @click="addLicenseBox()" id="addContractorLicenseButton"
+                                    ref="add_contractor_license_button">Add A
                                 License
-                            </button>
+                            </v-btn>
                         </div>
 
                         <div id="licenseBoxes">
@@ -265,8 +251,10 @@
                             <span class="help-block" v-show="registerForm.errors.terms">You Must Accept The Terms Of Service</span>
                         </div>
 
-                        <button id="register" name=register
-                                class="register border shadow uppercase btn-normal"
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                id="register" name=register
                                 @click.prevent="register"
                                 :disabled="registerForm.disabled">
                             <span v-if="registerForm.busy">
@@ -275,7 +263,7 @@
                             <span v-else>
                                 <i class="fa fa-btn fa-check-circle mr-2"></i>Register
                             </span>
-                        </button>
+                        </v-btn>
 
 
                         <div style="height: 10rem; width: 100%">

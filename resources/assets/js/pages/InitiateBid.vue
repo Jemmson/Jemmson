@@ -5,11 +5,14 @@
         <card>
             <div class="form-group">
                 <div class="flex flex-col" v-if="results.length">
-                    <button class="flex-1 m-2 btn-format btn-normal" v-for="result in results" v-bind:key="result.id"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            v-for="result in results" v-bind:key="result.id"
                             :name="result.phone"
                             @click.prevent="fillFields(result)">
                         {{ showCustomerName(result) }}
-                    </button>
+                    </v-btn>
                 </div>
             </div>
 
@@ -78,14 +81,17 @@
             </div>
 
             <div class="form-group pt-4 mb-0">
-                <button name="submit" id="submit" dusk="submitBid" class="btn btn-normal btn-block"
+                <v-btn
+                        class="w-40"
+                        color="primary"
+                        name="submit" id="submit" dusk="submitBid"
                         @click.prevent="submit"
                         :disabled="checkValidData()">
           <span v-if="disabled.submit">
             <i class="fa fa-btn fa-spinner fa-spin"></i>
           </span>
                     Submit
-                </button>
+                </v-btn>
             </div>
         </card>
         <br>

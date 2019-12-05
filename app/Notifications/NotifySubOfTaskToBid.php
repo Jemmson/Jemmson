@@ -17,6 +17,8 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
 
     protected $taskId;
     protected $user;
+    protected $emailToken;
+    protected $nexmoToken;
 
     use Queueable;
 
@@ -29,6 +31,35 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
     {
         $this->taskId = $taskId;
         $this->user = $user;
+        $this->createEmailToken($taskId, $user);
+        $this->createNexmoToken($taskId, $user);
+
+    }
+
+    private function createEmailToken($taskId, $user)
+    {
+        $this->emailToken = $user->generateToken(
+            $this->user->id,
+            true,
+            $taskId,
+            'in_progress',
+            'initiated',
+            'initiated',
+            'email'
+        )->token;
+    }
+
+    private function createNexmoToken($taskId, $user)
+    {
+        $this->nexmoToken = $this->user->generateToken(
+            $user->id,
+            true,
+            $taskId,
+            'in_progress',
+            'initiated',
+            'initiated',
+            'text'
+        )->token;
     }
 
     /**
@@ -39,11 +70,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $notifyThrough = [SparkChannel::class, 'mail', 'broadcast', 'nexmo'];
-//        if ($notifiable->smsOn() || !$notifiable->password_updated) {
-//            $notifyThrough[] = 'nexmo';
-//        }
-        return $notifyThrough;
+        return [SparkChannel::class, 'mail', 'broadcast', 'nexmo'];
     }
 
     /**
@@ -59,16 +86,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' back to Jemmson.')
                 ->line('Please Sign In and go bid on your task')
-                ->action('Login', url('/login/sub/task/'. $task->id . '/' .
-                    $this->user->generateToken(
-                        $this->user->id,
-                        true,
-                        $task->id,
-                        'in_progress',
-                        'initiated',
-                        'initiated',
-                        'email'
-                    )->token))
+                ->action('Login', url('/login/sub/task/'. $task->id . '/' . $this->emailToken))
                 ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
@@ -76,15 +94,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
                 ->line('Please follow these steps to sign up for the site. and review your task.')
                 ->action('Login', url('/login/sub/task/'.
                     $task->id . '/' .
-                    $this->user->generateToken(
-                        $this->user->id,
-                        true,
-                        $task->id,
-                        'in_progress',
-                        'initiated',
-                        'initiated',
-                        'email'
-                    )->token))
+                    $this->emailToken))
                 ->line('Thank you for using our application!');
         }
 
@@ -101,17 +111,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
         return (new NexmoMessage)
                     ->content('Please Sign In and go bid on your task ' .
                         url('/login/sub/task/'.
-                            $this->taskId . '/' .
-                            $this->user->generateToken(
-                                $this->user->id,
-                                true,
-                                $this->taskId,
-                                'in_progress',
-                                'initiated',
-                                'initiated',
-                                'text'
-                            )->token) .
-                        ' ');
+                            $this->taskId . '/' . $this->nexmoToken) . ' ');
     }
 
     public function toSpark($notifiable)

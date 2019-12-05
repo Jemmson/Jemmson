@@ -24,17 +24,23 @@
                            @click="addJobTaskToExcludedList(jobTask)">
                 </div>
                 <div class="flex-1 pl-1" v-if="showReopenBtn(jobTask)">
-                    <button class="btn btn-normal" @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
                             <span v-if="disabled.reopen">
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>
                         Reopen
-                    </button>
+                    </v-btn>
                 </div>
                 <div class="flex-1 pl-1" v-else>
-                    <button class="btn btn-normal" v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                    <v-btn
+                            class="w-40"
+                            color="primary"
+                            v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                         Deny
-                    </button>
+                    </v-btn>
                 </div>
             </div>
             <div class="flex pl-2 mb-2" v-if="isContractor">
@@ -49,8 +55,8 @@
                 <div class="flex-1"></div>
                 <div class="flex-1"></div>
                 <div class="flex-1">
-<!--                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - -->
-<!--                        subtractFromTotal}}</label>-->
+                    <!--                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - -->
+                    <!--                        subtractFromTotal}}</label>-->
                     <label v-if="isCustomer">Total: ${{ totalPriceForAllCompletedTasks }}</label>
                 </div>
                 <div class="flex-1" v-if="isContractor">
@@ -59,20 +65,26 @@
             </div>
         </div>
 
-
         <div v-if="isCustomer" class="text-right">
-            <button class="btn btn-normal" @click.prevent="paidCash = true" :disabled="disabled.payCash">
+            <v-btn
+                    class="w-40"
+                    color="primary"
+                    @click.prevent="paidCash = true" :disabled="disabled.payCash">
                         <span v-if="disabled.payCash">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                 Paid With Cash
-            </button>
-            <button v-if="contractorIsSetupWithStripe()" class="btn btn-normal" @click.prevent="payAllPayableTasks()" :disabled="disabled.payAll">
+            </v-btn>
+            <v-btn
+                    class="w-40"
+                    color="primary"
+                    v-if="contractorIsSetupWithStripe()" @click.prevent="payAllPayableTasks()"
+                    :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                 Pay With Credit Card
-            </button>
+            </v-btn>
         </div>
         <transition name="slide-fade">
             <div v-show="paidCash">
@@ -84,15 +96,16 @@
                             v-model="cashMessage"
                     ></v-combobox>
 
-<!--                    <label for="">Message</label>-->
-<!--                    <input type="text" class="form-control"-->
-<!--                           name="message"-->
-<!--                           v-model="cashMessage"-->
-<!--                           placeholder="Optional Message">-->
+                    <!--                    <label for="">Message</label>-->
+                    <!--                    <input type="text" class="form-control"-->
+                    <!--                           name="message"-->
+                    <!--                           v-model="cashMessage"-->
+                    <!--                           placeholder="Optional Message">-->
                 </div>
                 <div class="form-group col-md-12">
-                    <button
-                            class="btn btn-normal"
+                    <v-btn
+                            class="w-40"
+                            color="primary"
                             @click.prevent="paidWithCash()"
                             :disabled="disableCashMessageButton"
                             ref="cashMessage">
@@ -100,7 +113,7 @@
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
                         Submit
-                    </button>
+                    </v-btn>
                 </div>
             </div>
         </transition>
@@ -196,8 +209,8 @@
       }
     },
     methods: {
-      contractorIsSetupWithStripe(){
-        return this.bid.contractor.stripe_id;
+      contractorIsSetupWithStripe() {
+        return this.bid.contractor.stripe_id
       },
       showDenyBtn(jobTask) {
         const status = jobTask.status
@@ -229,7 +242,7 @@
       },
       openDenyTaskForm(jobTask) {
         this.jTask = jobTask
-        $('#deny-task-modal_'+jobTask.id).modal()
+        $('#deny-task-modal_' + jobTask.id).modal()
       },
 
       paidWithCash() {
