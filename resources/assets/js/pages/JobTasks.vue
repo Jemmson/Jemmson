@@ -4,7 +4,7 @@
 
         <div class="flex mb-1rem">
             <v-btn
-                    class="w-40"
+                    class="w-full"
                     color="primary"
                     @click.prevent="goBack()">
                 Back
@@ -73,6 +73,7 @@
                             DELETE
                             <i v-if="checkSpinner(index)" class="fa fa-btn fa-spinner fa-spin"></i>
                         </v-btn>
+                        <v-spacer></v-spacer>
                         <v-btn
                                 class="w-40"
                                 color="primary"
