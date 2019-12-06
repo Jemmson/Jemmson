@@ -183,19 +183,23 @@
                 <h1 class="card-title mt-4">Job Tasks</h1>
                 <card>
 
-                    <div>
-                            <span class="">
-                        (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
-                        </span> Total
+                    <v-row>
+                            <div>
+                                <span class="">
+                                    (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
+                                </span> Total
+                            </div>
 
-                        <v-btn
-                                class="w-40"
-                                color="primary"
-                                @click.prevent="viewTasks()"
-                        >
-                            View Tasks
-                        </v-btn>
-                    </div>
+                        <v-spacer></v-spacer>
+
+                            <v-btn
+                                    class="w-40"
+                                    color="primary"
+                                    @click.prevent="viewTasks()"
+                            >
+                                View Tasks
+                            </v-btn>
+                    </v-row>
 
                     <table class="table mt-2rem">
                         <thead>

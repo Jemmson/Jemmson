@@ -169,7 +169,7 @@
 
                                         <div class="form-group" ref="unitPrice" v-if="isContractor()">
 
-                                            <div v-if="jobHasNotBeenApproved()">
+                                            <div v-if="!jobIsApproved()">
                                                 <div class="flex justify-content-between">
                                                     <label class="">Unit Price:</label>
                                                     <div v-if="showTaskPriceInput()" class="flex">
@@ -651,6 +651,14 @@
       }
     },
     methods: {
+
+      jobIsApproved(){
+        if (this.job && this.job.job_statuses) {
+          const statusNumber = this.getJobStatusNumber_latest(this.job);
+          return statusNumber === 7;
+        }
+      },
+
       jobHasNotBeenApproved () {
         const latestStatus = this.getJobStatus_latest(this.job)
         return latestStatus === 'in_progress' || latestStatus === 'initiated'
@@ -770,7 +778,8 @@
         }
       },
       userIsAGeneralContractor() {
-        return Spark.state.user.usertype === 'contractor' && Spark.state.user.id === this.jobTask.job.contractor_id
+        return Spark.state.user.usertype === 'contractor'
+          && Spark.state.user.id === this.jobTask.job.contractor_id
       },
       userIsACustomer() {
         return Spark.state.user.usertype === 'customer'

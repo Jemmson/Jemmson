@@ -62,35 +62,41 @@
                 </span>
             </div>
         </div>
-        <div class="flex w-full justify-between">
-            <v-btn
-                    class="w-40"
-                    color="primary"
-                    @click.prevent="openModal('approveBid')"
-                    :disabled="disabled.approve"
-                    ref="approve">
+        <div class="w-full">
+           <v-row>
+               <v-btn
+                       class="w-full mb-half-rem"
+                       color="primary"
+                       @click.prevent="openModal('approveBid')"
+                       :disabled="disabled.approve"
+                       ref="approve">
                 <span v-if="disabled.approve">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
-                Approve
-            </v-btn>
-            <v-btn
-                    class="w-40"
-                    color="primary"
-                    @click.prevent="openModal('cancelBid')"
-                    :disabled="disabled.cancelBid"
-                    ref="cancel">
+                   Approve
+               </v-btn>
+           </v-row>
+
+            <v-row>
+                <v-btn
+                        class="w-40"
+                        color="red"
+                        @click.prevent="openModal('cancelBid')"
+                        :disabled="disabled.cancelBid"
+                        ref="cancel">
                 <span v-if="disabled.cancelBid">
                     <i class="fa fa-btn fa-spinner fa-spin"></i>
                 </span>
-                Cancel
-            </v-btn>
-            <v-btn
-                    class="w-40"
-                    color="primary"
-                    @click.prevent="openDeclineForm" ref="decline">
-                Change Bid
-            </v-btn>
+                    Cancel
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                        class="w-40"
+                        color="warning"
+                        @click.prevent="openDeclineForm" ref="decline">
+                    Change Bid
+                </v-btn>
+            </v-row>
         </div>
         <!-- / decline bid section -->
         <transition name="slide-fade">

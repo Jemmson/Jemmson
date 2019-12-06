@@ -16,7 +16,7 @@
             >
                 Submit Bid
             </v-btn>
-            <div v-else>
+            <div v-else-if="jobIsApproved()">
                 <span class="capitalize">Bid Has Been Approved By The Customer. Please refer to individual tasks for Task Completion.</span>
             </div>
             <div v-if="notSignedUpModalIsHidden()"
@@ -84,10 +84,26 @@
     },
     methods: {
 
-      jobHasNotBeenSubmittedOrAChangeIsRequested() {
+      jobHasBeenSent(){
         if (this.bid && this.bid.job_statuses) {
           const statusNumber = this.getJobStatusNumber_latest(this.bid);
-          return statusNumber < 3 || statusNumber === 4;
+          return statusNumber === 3;
+        }
+      },
+
+      jobIsApproved(){
+        if (this.bid && this.bid.job_statuses) {
+          const statusNumber = this.getJobStatusNumber_latest(this.bid);
+          return statusNumber === 7;
+        }
+      },
+
+      jobHasNotBeenSubmittedOrAChangeIsRequested() {
+        if (this.bid) {
+          if (this.bid.job_statuses) {
+            const statusNumber = this.getJobStatusNumber_latest(this.bid)
+            return statusNumber <= 5 || statusNumber === 8
+          }
         }
       },
 
@@ -107,17 +123,7 @@
         }
       },
       checkReqs() {
-        // return this.shouldHaveAtLeastOneTask() && this.bid.status === 'bid.sent'
-        if (this.bid && this.bid.job_tasks && this.bid.status) {
-          if (this.bidHasBeenSent()) {
-            this.disableSubmitBid = true
-          }
-          if (!this.bidHasBeenSent() && this.shouldHaveAtLeastOneTask()) {
-            this.disableSubmitBid = false
-          } else {
-            this.disableSubmitBid = true
-          }
-        }
+        this.disableSubmitBid = !(!this.jobIsApproved() && this.shouldHaveAtLeastOneTask())
       },
       shouldHaveAtLeastOneTask() {
         if (this.bid && this.bid.job_tasks) {
