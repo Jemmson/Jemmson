@@ -160,7 +160,7 @@ export default class GeneralContractor {
     async deleteTask(jobTask, disabled) {
         disabled.deleteTask = true
         try {
-            const data = await axios.post('/api/task/delete', {
+            await axios.post('/api/task/delete', {
                 jobTaskId: jobTask.id,
                 jobId: jobTask.job_id
             })

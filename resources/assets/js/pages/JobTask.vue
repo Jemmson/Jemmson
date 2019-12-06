@@ -311,7 +311,7 @@
                                 <div class="flex flex-col">
                                     <div class="flex flex-col mb-3" v-if="isContractor()">
                                         <message label="Notes for Subcontractor" :jobId="jobTask ? jobTask.id : -1"
-                                                 :server-message="jobTask.sub_message" actor='sub'
+                                                 :server-message="jobTask && jobTask.sub_message ? jobTask.sub_message : ''" actor='sub'
                                                  :disable-messages="disableMessages">
                                         </message>
                                     </div>
@@ -328,7 +328,6 @@
                                                   :value="getContractorNotesForCustomer"
                                                   style="color: black;"></textarea>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -855,11 +854,9 @@
           return false
         }
       },
-      // reopenTask(jobTask) {
-      //   SubContractor.reopenTask(jobTask, this.disabled);
-      // },
-      deleteTask(jobTask) {
-        GeneralContractor.deleteTask(jobTask, this.disabled)
+      async deleteTask(jobTask) {
+        await GeneralContractor.deleteTask(jobTask, this.disabled)
+        this.$router.push('/bid/' + this.job.id)
       },
       /**
        * customer task price

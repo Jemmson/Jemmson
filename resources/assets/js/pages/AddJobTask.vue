@@ -28,7 +28,7 @@
                         </span>
                     <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
                         <v-btn
-                                class="w-40"
+                                class="w-full"
                                 color="primary"
                                 v-for="result in taskResults"
                                 v-bind:key="result.id" @click.prevent="fillTaskValues(result)">
@@ -233,48 +233,6 @@
             </div>
 
         </card>
-        <!--<div class="form-group ">-->
-        <!--<button id="addTaskToInvoice" class="btn btn-success"-->
-        <!--@click.prevent="checkForExistingTaskChanges()">-->
-        <!--Add Task-->
-        <!--</button>-->
-        <!--</div>-->
-        <!--<label for="taskResultsChange"></label>-->
-        <!--        <div id="taskResultsChange" class="mb-4">-->
-
-        <!--            &lt;!&ndash; Name in task name is different than a task name in the database&ndash;&gt;-->
-        <!--            &lt;!&ndash;<button v-if="!nameExistsInDB && !taskExistsInJob"&ndash;&gt;-->
-        <!--            <button class="btn btn-block btn-lg btn-normal text-uppercase font-weight-bold" :disabled="checkErrors"-->
-        <!--                    @click.prevent="changeTask('Add')">-->
-        <!--                Add Task-->
-        <!--            </button>-->
-
-        <!--            &lt;!&ndash;Name is the same as one in the database&ndash;&gt;-->
-        <!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
-        <!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
-        <!--            &lt;!&ndash;@click.prevent="changeTask('Update')">Update and Add Task&ndash;&gt;-->
-        <!--            &lt;!&ndash;</button>&ndash;&gt;-->
-
-        <!--            &lt;!&ndash;<button v-if="nameExistsInDB" class="btn btn-green"&ndash;&gt;-->
-        <!--            &lt;!&ndash;:disabled="checkErrors"&ndash;&gt;-->
-        <!--            &lt;!&ndash;@click.prevent="changeTask('Ignore')">Dont Update and Add Task&ndash;&gt;-->
-        <!--            &lt;!&ndash;</button>&ndash;&gt;-->
-
-
-        <!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
-        <!--            &lt;!&ndash;drop down is selected and&ndash;&gt;-->
-        <!--            &lt;!&ndash;any of the values have changed &ndash;&gt;&ndash;&gt;-->
-
-
-        <!--            &lt;!&ndash;&lt;!&ndash; show if&ndash;&gt;-->
-        <!--            &lt;!&ndash;drop down is selected&ndash;&gt;-->
-        <!--            &lt;!&ndash;drop down name is changed -> gives option to create a new task based on an existing one &ndash;&gt;&ndash;&gt;-->
-        <!--            &lt;!&ndash;<button v-if="(!dropdownSelected && !nameExistsInDB && !submitted)"&ndash;&gt;-->
-        <!--            &lt;!&ndash;class="btn btn-green" :disabled="checkErrors"&ndash;&gt;-->
-        <!--            &lt;!&ndash;@click.prevent="changeTask('New')">&ndash;&gt;-->
-        <!--            &lt;!&ndash;Create New and Add&ndash;&gt;-->
-        <!--            &lt;!&ndash;</button>&ndash;&gt;-->
-        <!--        </div>-->
         <feedback
                 page="AddJobTask"
         ></feedback>
