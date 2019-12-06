@@ -8,13 +8,11 @@
 <!--                </search-bar>-->
 <!--            </div>-->
 
-            <footer
-                    class="paginate">
+            <footer>
                 <paginate ref="paginator"
                           name="sTasks"
                           :list="sTasks"
                           :per="8"
-                          class="paginated"
                           v-show="sTasks.length > 0">
                     <div v-for="bidTask in paginated('sTasks')" v-bind:key="bidTask.id" :id="'task_' + bidTask.task_id" style="z-index:2;">
                         <task
@@ -183,6 +181,10 @@
 </script>
 
 <style scoped>
+
+    ul {
+        padding: 0px !important;
+    }
 
     .paginate {
         height: 1rem;

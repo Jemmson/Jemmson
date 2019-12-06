@@ -375,7 +375,7 @@
                                                     <v-btn
                                                             v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
                                                             @click="acceptSubBidForTask(bid, jobTask)"
-                                                            class="primary"
+                                                            class="primary w-1/2"
                                                             :disabled="disabled.accept"
                                                     >
                                                         <span v-if="disabled.accept">
@@ -411,7 +411,7 @@
 
 
                         <v-btn
-                                class="w-full"
+                                class="w-40"
                                 color="primary"
                                 v-if="isGeneral()
                                        && jobIsNotComplete()"
@@ -421,8 +421,10 @@
                             Add A Sub
                         </v-btn>
 
+                        <v-spacer></v-spacer>
+
                         <v-btn
-                                class="w-full"
+                                class="w-40"
                                 color="primary"
                                 v-if="showFinishedBtn(jobTask)"
                                 @click="finishedTask(jobTask)" :disabled="disabled.finished"
@@ -431,9 +433,9 @@
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>Click Me When Job Is Finished
                         </v-btn>
-
+                        <v-spacer></v-spacer>
                         <v-btn
-                                class="w-full"
+                                class="w-40"
                                 color="primary"
                                 v-if="showApproveBtn(jobTask)"
                                 @click="approveTaskHasBeenFinished(jobTask)"
@@ -443,20 +445,20 @@
                                 <i class="fa fa-btn fa-spinner fa-spin"></i>
                             </span>Approve
                         </v-btn>
-
+                        <v-spacer></v-spacer>
                         <v-btn
-                                class="w-full"
+                                class="w-40"
                                 color="primary"
                                 v-if="showDenyBtn(jobTask)"
                                 @click="openDenyTaskForm(jobTask.id)"
                         >
                             Deny
                         </v-btn>
-
+                        <v-spacer></v-spacer>
 
                         <v-btn
-                                class="w-full"
-                                color="warning"
+                                class="w-40"
+                                color="red"
                                 v-if="showDeleteBtn(jobTask)"
                                 @click="deleteTask(jobTask)"
                                 :disabled="disabled.deleteTask"

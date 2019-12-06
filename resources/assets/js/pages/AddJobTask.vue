@@ -222,6 +222,7 @@
                         @click.prevent="goBack()">
                     Back
                 </v-btn>
+                <v-spacer></v-spacer>
                 <v-btn
                         class="w-40"
                         color="primary"

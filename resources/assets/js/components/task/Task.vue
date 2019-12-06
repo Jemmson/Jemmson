@@ -272,7 +272,7 @@
                                     :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
                                     type="startOn"></content-section>
                             <v-btn
-                                    class="w-40"
+                                    class="w-40 mt-1rem"
                                     color="primary"
                                     v-if="isBidOpen(bidTask)"
                                     @click.prevent="update"

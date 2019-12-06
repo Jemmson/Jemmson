@@ -265,9 +265,9 @@
     }
 
     .main > h2 {
-        padding-left: 1rem;
-        padding-top: 2rem;
-        padding-right: 1rem;
+        /*padding-left: 1rem;*/
+        /*padding-top: 2rem;*/
+        /*padding-right: 1rem;*/
         width: 100%;
         margin: 0rem;
     }

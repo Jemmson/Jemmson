@@ -68,7 +68,7 @@
                     <div class="flex w-full btn-spacing">
                         <v-btn
                                 class="w-40"
-                                color="primary"
+                                color="red"
                                 @click="showDeleteTaskModal(jTask, index)">
                             DELETE
                             <i v-if="checkSpinner(index)" class="fa fa-btn fa-spinner fa-spin"></i>

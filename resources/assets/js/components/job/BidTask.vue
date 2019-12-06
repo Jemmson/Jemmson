@@ -219,7 +219,7 @@
 
                 <v-btn
                         class="w-40"
-                        color="warning"
+                        color="red"
                         v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                         :disabled="disabled.deleteTask">
                   <span v-if="disabled.deleteTask">

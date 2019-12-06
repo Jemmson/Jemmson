@@ -47,7 +47,7 @@
 
                             <v-btn
                                     class="w-40"
-                                    color="warning"
+                                    color="red"
                                     @click="showDeleteJobModal(bid)"
                             >
                                 CANCEL JOB

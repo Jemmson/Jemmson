@@ -188,7 +188,7 @@
     .main {
         background-color: white;
         height: 200vh;
-        padding: .25rem;
+        /*padding: .25rem;*/
     }
 
     .search-bar {

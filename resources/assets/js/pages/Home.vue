@@ -1,10 +1,7 @@
 <template>
     <div class="container">
-
-        <!--        <figcaption class="caption small-header" :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">New Job</figcaption>-->
-
         <v-btn
-                class="w-40"
+                class="w-full"
                 color="primary"
                 v-if="isContractor()"
                 @click="goToNewJob()"

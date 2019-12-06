@@ -24,7 +24,7 @@
                     </a>
                     <v-btn
                             class="w-40"
-                            color="primary"
+                            color="red"
                             :id="'image-' + image.id"
                             @click="deleteImage(image.id, index)">
                         <i class="fas fa-trash-alt"></i>

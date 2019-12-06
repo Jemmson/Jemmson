@@ -7,7 +7,7 @@
                     <h3 class="text-center">Who Are You?</h3>
                     <div class="row w-full justify-content-between">
                         <v-btn
-                                class="w-40"
+                                class="w-1/2"
                                 color="primary"
                                 ref="customerButton"
                                 :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
@@ -15,7 +15,7 @@
                         </v-btn>
 
                         <v-btn
-                                class="w-40"
+                                class="w-1/2"
                                 color="primary"
                                 ref="contractorButton"
                                 :class="userTypeSelected === 'contractor' ? 'selected-button' : ''"
@@ -221,7 +221,7 @@
                                 Please Click To Add A Contractor License
                             </label>
                             <v-btn
-                                    class="w-40"
+                                    class="w-full"
                                     color="primary"
                                     @click="addLicenseBox()" id="addContractorLicenseButton"
                                     ref="add_contractor_license_button">Add A
@@ -252,7 +252,7 @@
                         </div>
 
                         <v-btn
-                                class="w-40"
+                                class="w-full"
                                 color="primary"
                                 id="register" name=register
                                 @click.prevent="register"

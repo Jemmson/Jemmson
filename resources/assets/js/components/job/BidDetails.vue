@@ -290,6 +290,7 @@
 
                         <v-btn
                                 v-if="isCustomer"
+                                class="mt-1rem"
                                 color="primary"
                                 ref="update_customer_notes_button"
                                 @click="updateGeneralContractorNotes"

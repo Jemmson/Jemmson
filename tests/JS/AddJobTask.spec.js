@@ -3,6 +3,8 @@ import {
 } from "@vue/test-utils";
 import AddJobTask from '../../resources/assets/js/pages/AddJobTask';
 import utility from './Utilities';
+require('jsdom-global')();
+global.expect = require('expect');
 
 require('./bootstrap');
 

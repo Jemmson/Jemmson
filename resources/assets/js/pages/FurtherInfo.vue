@@ -111,7 +111,7 @@
                                         name="addressLine2"
                                         autocomplete="on"
                                         type="text" class="form-control "
-                                       v-model="form.address_line_2">
+                                        v-model="form.address_line_2">
                             </div>
                         </div>
 
@@ -124,7 +124,7 @@
                                         name="city"
                                         autocomplete="on"
                                         type="text" class="form-control "
-                                       v-model="form.city">
+                                        v-model="form.city">
                                 <span ref="cityError" class="help-block" v-show="form.errors.has('city')">
                   {{ form.errors.get('city') }}
                 </span>
@@ -178,7 +178,7 @@
                                     Please Click To Add A Contractor License
                                 </label>
                                 <v-btn
-                                        class="w-40"
+                                        class="w-full"
                                         color="primary"
                                         @click.prevent="addLicenseBox()" id="addContractorLicenseButton"
                                         ref="add_contractor_license_button">
@@ -227,13 +227,18 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" name="submit" class="uppercase btn btn-normal btn-block"
-                                @click.prevent="submitFurtherInfo()" :disabled="checkValidData()">
-              <span v-if="disabled.submit">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-              </span>
+                        <v-btn
+                                class="w-full"
+                                color="primary"
+                                type="submit"
+                                name="submit"
+                                @click.prevent="submitFurtherInfo()"
+                                :disabled="checkValidData()">
+                              <span v-if="disabled.submit">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                              </span>
                             Register
-                        </button>
+                        </v-btn>
                     </form>
                 </card>
             </div>
@@ -378,16 +383,18 @@
       ]),
       getLicenseElements() {
         const lb = document.getElementById('licenseBoxes')
-        let lbArray = []
-        for (let i = 0; i < lb.children.length; i++) {
-          if (this.nameOrValueIsNotEmpty(lb.children[i])) {
-            lbArray.push({
-              name: lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value,
-              value: lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value
-            })
+        if (lb) {
+          let lbArray = []
+          for (let i = 0; i < lb.children.length; i++) {
+            if (this.nameOrValueIsNotEmpty(lb.children[i])) {
+              lbArray.push({
+                name: lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value,
+                value: lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value
+              })
+            }
           }
+          this.form.licenses = lbArray
         }
-        this.form.licenses = lbArray
       },
       addLicenseBox() {
         this.boxArray.push(this.boxArray.length + 1)
@@ -472,7 +479,7 @@
           return false
         }
         this.form.email = this.form.email.trim()
-        this.getLicenseElements()
+        this.user.customer ? this.getLicenseElements() : console.log('is a customer')
         User.submitFurtherInfo(this.form, this.disabled)
       },
       initAutocomplete() {
