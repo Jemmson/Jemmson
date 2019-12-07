@@ -15,6 +15,7 @@
     "jswatch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js tests/JS/**/*.spec.js"
   },
   "dependencies": {
+    "@babel/core": "^7.7.5",
     "@mdi/font": "^4.6.95",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.30",
     "axios": "^0.19",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^24.9.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
