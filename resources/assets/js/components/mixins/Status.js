@@ -31,6 +31,16 @@ export default {
       }
     },
 
+    getJobTaskStatusNumber_latest(jobTask) {
+
+      if (jobTask.job_task_status) {
+        return jobTask.job_task_status[jobTask.job_task_status.length - 1].status_number
+      }
+      if (jobTask.job_task_statuses) {
+        return jobTask.job_task_statuses[jobTask.job_task_statuses.length - 1].status_number
+      }
+    },
+
     getSubStatus_latest(bidTask){
       return bidTask.job_task.job.sub_status[bidTask.job_task.job.sub_status.length - 1].status
     },

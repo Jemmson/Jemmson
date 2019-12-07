@@ -408,63 +408,87 @@
                     <div class="flex space-between">
 
 
-                        <v-btn
-                                class="w-40"
-                                color="primary"
-                                v-if="isGeneral()
-                                       && jobIsNotComplete()"
-                                ref="addASubButton"
-                                @click.prevent="openSubInvite(jobTask.id)"
-                        >
-                            Add A Sub
-                        </v-btn>
+                        <div v-if="isGeneral()">
+                            <div v-if="jobIsNotComplete()">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="primary"
+                                        ref="addASubButton"
+                                        @click.prevent="openSubInvite(jobTask.id)"
+                                >
+                                    Add A Sub
+                                </v-btn>
+                            </div>
+                            <div v-if="jobTaskIsFinished(jobTask)">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="primary"
+                                        v-if="showFinishedBtn(jobTask)"
+                                        @click="finishedTask(jobTask)" :disabled="disabled.finished"
+                                >
+                                    <span v-if="disabled.finished">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                    </span>Click Me When Job Is Finished
+                                </v-btn>
+                            </div>
+                            <div v-if="contractorCanApproveSubsTask(jobTask)">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="primary"
+                                        @click="approveTaskHasBeenFinished(jobTask)"
+                                        :disabled="disabled.approve"
+                                >
+                                    <span v-if="disabled.approve">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                    </span>Approve
+                                </v-btn>
+                            </div>
+                            <div v-if="contractorWantsToChangeBid()">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="warning"
+                                        @click="openDenyTaskForm(jobTask.id)"
+                                >
+                                    Change Task
+                                </v-btn>
+                            </div>
+                            <div v-if="contractorWantsToDeleteTheTask(jobTask)">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="red"
+                                        @click="deleteTask(jobTask)"
+                                        :disabled="disabled.deleteTask"
+                                >
+                                    <span v-if="disabled.deleteTask">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                    </span>Delete
+                                </v-btn>
+                            </div>
+                        </div>
 
-                        <v-spacer></v-spacer>
-
-                        <v-btn
-                                class="w-40"
-                                color="primary"
-                                v-if="showFinishedBtn(jobTask)"
-                                @click="finishedTask(jobTask)" :disabled="disabled.finished"
-                        >
-                            <span v-if="disabled.finished">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>Click Me When Job Is Finished
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                class="w-40"
-                                color="primary"
-                                v-if="showApproveBtn(jobTask)"
-                                @click="approveTaskHasBeenFinished(jobTask)"
-                                :disabled="disabled.approve"
-                        >
-                            <span v-if="disabled.approve">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>Approve
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                class="w-40"
-                                color="primary"
-                                v-if="showDenyBtn(jobTask)"
-                                @click="openDenyTaskForm(jobTask.id)"
-                        >
-                            Deny
-                        </v-btn>
-                        <v-spacer></v-spacer>
-
-                        <v-btn
-                                class="w-40"
-                                color="red"
-                                v-if="showDeleteBtn(jobTask)"
-                                @click="deleteTask(jobTask)"
-                                :disabled="disabled.deleteTask"
-                        >
-                            <span v-if="disabled.deleteTask">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>Delete
-                        </v-btn>
+                        <div v-else>
+                            <div v-if="customerWantsToChangeTheBid()">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="warning"
+                                        @click="openDenyTaskForm(jobTask.id)"
+                                >
+                                    Change Task
+                                </v-btn>
+                            </div>
+                            <div v-if="customerWantsToDeleteTheTask(jobTask)">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="red"
+                                        @click="deleteTask(jobTask)"
+                                        :disabled="disabled.deleteTask"
+                                >
+                                    <span v-if="disabled.deleteTask">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                    </span>Delete
+                                </v-btn>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -563,8 +587,8 @@
     },
     computed: {
       ...mapState({
-        job: state => state.job.model[0],
-        jobStatus: state => state.job.model[0].status
+        job: state => state.job.model,
+        jobStatus: state => state.job.model.status
       }),
       jobLocationHasBeenSet() {
         if (this.jobTask && this.jobTask.location) {
@@ -653,10 +677,10 @@
 
       createHyphenDate(date) {
         const dateArray = date.split('/')
-        return dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1]
+        return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
       },
 
-      setStartDate(jt){
+      setStartDate(jt) {
         if (jt) {
           return this.createHyphenDate(this.formatDate(this.prettyDate(jt.start_date)))
         } else {
@@ -665,9 +689,52 @@
       },
 
       jobIsApproved() {
-        if (this.job && this.job.job_statuses) {
-          const statusNumber = this.getJobStatusNumber_latest(this.job)
-          return statusNumber === 7
+          return this.getLatestJobStatusNumber() === 7
+      },
+
+      jobTaskIsFinished(jobTask) {
+        const status = this.getLatestJobTaskStatus(jobTask)
+        return status === 'general_finished_work' || status === 'sub_finished_work'
+      },
+
+      subHasFinishedWork(jobTask) {
+        if (jobTask && jobTask.job_task_statuses) {
+          const status = this.getJobTaskStatus_latest(jobTask)
+          return status === 'sub_finished_work'
+        }
+      },
+
+      contractorCanApproveSubsTask(jobTask) {
+        this.subHasFinishedWork(jobTask)
+      },
+
+      customerWantsToDeleteTheTask(jobTask) {
+        this.taskHasNotBeenApproved(jobTask)
+      },
+
+      contractorWantsToDeleteTheTask(jobTask) {
+        this.taskHasNotBeenApproved(jobTask)
+      },
+
+      taskHasNotBeenApproved(jobTask) {
+        return this.getLatestJobTaskStatusNumber(jobTask) < 6
+      },
+
+      getLatestJobTaskStatusNumber(jobTask) {
+        if (this.jobTask && (this.jobTask.job_task_statuses || this.jobTask.job_task_status)) {
+          return this.getJobTaskStatusNumber_latest(this.jobTask)
+        }
+      },
+
+      getLatestJobStatusNumber() {
+        if (this.job && (this.job.job_statuses || this.job.job_status)) {
+          return this.getJobStatusNumber_latest(this.job)
+        }
+      },
+
+      getLatestJobTaskStatus(jobTask) {
+        if (jobTask && (jobTask.job_task_statuses || jobTask.job_task_status)) {
+          return this.getJobTaskStatus_latest(jobTask)
         }
       },
 
@@ -811,9 +878,16 @@
       generalHasFinishedTheJob() {
         return this.jobTask.status === 'bid_task.approved_by_general'
       },
+      customerWantsToChangeTheBid() {
+          return !this.jobIsApproved()
+      },
+      contractorWantsToChangeBid(jobTask) {
+        if (jobTask) {
+          return this.jobHasSubs() && this.subHasFinishedWork(jobTask) && !this.jobIsApproved()
+        }
+      },
       showDenyBtn(jobTask) {
         if (jobTask) {
-
           if (this.userIsAGeneralContractor()) {
             if (this.jobHasSubs() && this.subHasFinishedTheJob() && this.jobHasNotBeenSubmittedToTheCustomer()) {
               return true
@@ -829,19 +903,6 @@
           } else {
             return false
           }
-
-          // should not see this if I am a general and the task has no subs
-
-          // I should see this if I am a general and I have subs
-
-          // I should see this if I am a customer and the task has been finished and approved by the general
-
-          // const status = jobTask.status
-          // if (this.isCustomer) {
-          //   return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general')
-          // }
-          // return (status === 'bid_task.finished_by_sub' || status === 'bid_task.reopened')
-          // return (status === 'bid_task.finished_by_sub' || this.jobStatus === 'bid.declined');
         }
       },
       showFinishedBtn(jobTask) {
@@ -868,8 +929,10 @@
       showDeleteBtn(jobTask) {
         if (jobTask) {
           const status = jobTask.status
-          if (this.isGeneral() && (status === 'bid_task.initiated' || status === 'bid_task.bid_sent' || this.jobStatus ===
-            'bid.declined')) {
+          if (this.isGeneral() && (
+            status === 'bid_task.initiated'
+            || status === 'bid_task.bid_sent'
+            || this.jobStatus === 'bid.declined')) {
             return true
           }
           return false

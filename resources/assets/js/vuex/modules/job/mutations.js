@@ -24,7 +24,12 @@ export const loadStore = (state, job) => {
 }
 
 export const setJob = (state, job) => {
-  state.model = job
+
+  if (job.length > 0) {
+    state.model = job[0]
+  } else {
+    state.model = job
+  }
 }
 
 export const setId = (state, id) => {
