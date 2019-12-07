@@ -69,56 +69,22 @@ export default class GeneralContractor {
     }
 
     adjustDate(date) {
-        let d = ''
-        if (date === 'today') {
-            d = new Date()
-            let year = d.getFullYear()
-            let month = d.getMonth() + 1
-            let day = d.getDate()
-            return [year, month, day]
-        } else {
-            let dateArray = date.split('-')
-            dateArray[0] = parseInt(dateArray[0])
-            dateArray[1] = parseInt(dateArray[1])
-            dateArray[2] = parseInt(dateArray[2])
-            return dateArray
+        if (date) {
+            let d = ''
+            if (date === 'today') {
+                d = new Date()
+                let year = d.getFullYear()
+                let month = d.getMonth() + 1
+                let day = d.getDate()
+                return [year, month, day]
+            } else {
+                let dateArray = date.split('-')
+                dateArray[0] = parseInt(dateArray[0])
+                dateArray[1] = parseInt(dateArray[1])
+                dateArray[2] = parseInt(dateArray[2])
+                return dateArray
+            }
         }
-
-        //
-        // let year = d.getFullYear ();
-        // let month = d.getMonth () + 1;
-        // let day = d.getDate () + 1;
-        //
-        // if (month === 12 && day === 32) {
-        //   year = year + 1;
-        //   month = 1;
-        //   day = 1;
-        // } else if (day === 32) {
-        //   month = month + 1;
-        //   day = 1;
-        // } else if (day === 31 && (
-        //   month === 4 ||
-        //   month === 6 ||
-        //   month === 9 ||
-        //   month === 11
-        // )
-        // ) {
-        //   day = 1;
-        //   month = month + 1;
-        // } else if (
-        //   day === 29 && month === 2 && (year % 4 !== 0)
-        // ) {
-        //   day = 1;
-        //   month = month + 1;
-        // } else if (
-        //   day === 30 && month === 2 && (year % 4 === 0)
-        // ) {
-        //   day = 1;
-        //   month = month + 1;
-        // }
-        //
-        // return [year, month, day];
-
     }
 
     approveTaskHasBeenFinished(jobTask, disabled) {
@@ -140,21 +106,23 @@ export default class GeneralContractor {
     }
 
     checkDateIsTodayorLater(firstDate, secondDate) {
-        let pickerDate = this.adjustDate(firstDate)
-        let today = this.adjustDate(secondDate)
-        let errorMessage = ''
-        let hasDateError = false
-        if (
-            (pickerDate[0] < today[0]) ||
-            (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
-            (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
-        ) {
-            errorMessage = 'Start Date cannot be before today\'s date'
-            hasDateError = true
-        } else {
-            hasDateError = false
+        if (firstDate && secondDate) {
+            let pickerDate = this.adjustDate(firstDate)
+            let today = this.adjustDate(secondDate)
+            let errorMessage = ''
+            let hasDateError = false
+            if (
+              (pickerDate[0] < today[0]) ||
+              (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
+              (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
+            ) {
+                errorMessage = 'Start Date cannot be before today\'s date'
+                hasDateError = true
+            } else {
+                hasDateError = false
+            }
+            return [errorMessage, hasDateError]
         }
-        return [errorMessage, hasDateError]
     }
 
     async deleteTask(jobTask, disabled) {

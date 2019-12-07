@@ -27,14 +27,10 @@
                                 <div v-if="jobIsNotComplete()">
                                     <div class="flex justify-content-between">
                                         <label>Task Start Date</label>
-                                        <!-- <i class="fas fa-clock icon m-r-2"></i> -->
                                         <input type="date" class="form-control form-control-sm w-50" style=""
                                                v-if="showTaskStartDate()"
-                                               :value="jobTask ? this.formatDate(prettyDate(jobTask.start_date)) : 0"
+                                               :value="setStartDate(jobTask)"
                                                @blur="updateTaskStartDate($event.target.value, jobTask.id)">
-                                        <!--                                <div v-else>-->
-                                        <!--                                    <strong>{{ prettyDate(jobTask.start_date) }}</strong>-->
-                                        <!--                                </div>-->
                                     </div>
                                     <span :class="{ error: hasStartDateError }"
                                           v-show="hasStartDateError">{{ startDateErrorMessage }}
@@ -43,7 +39,8 @@
                                 <div v-else>
                                     <div class="flex justify-content-between">
                                         <label>Task Start Date</label>
-                                        <div><strong>{{ this.formatDate(prettyDate(jobTask.start_date)) }}</strong></div>
+                                        <div><strong>{{ this.formatDate(prettyDate(jobTask.start_date)) }}</strong>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +180,8 @@
                                                                @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
                                                     </div>
                                                     <div v-else class="mt-1">
-                                                        <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price) }}</strong>
+                                                        <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price)
+                                                            }}</strong>
                                                     </div>
                                                 </div>
                                                 <div class="errorClass" v-if="errors.unit_price">
@@ -253,7 +251,8 @@
                                     <i class="fas fa-map-marker icon"></i>
                                     {{ location(jobTask, job) }}
                                 </div>
-                                <div class="flex flex-col" v-else-if="location(jobTask, job) === 'Same as Job Location'">
+                                <div class="flex flex-col"
+                                     v-else-if="location(jobTask, job) === 'Same as Job Location'">
 
 
                                     <v-btn
@@ -311,7 +310,8 @@
                                 <div class="flex flex-col">
                                     <div class="flex flex-col mb-3" v-if="isContractor()">
                                         <message label="Notes for Subcontractor" :jobId="jobTask ? jobTask.id : -1"
-                                                 :server-message="jobTask && jobTask.sub_message ? jobTask.sub_message : ''" actor='sub'
+                                                 :server-message="jobTask && jobTask.sub_message ? jobTask.sub_message : ''"
+                                                 actor='sub'
                                                  :disable-messages="disableMessages">
                                         </message>
                                     </div>
@@ -384,15 +384,14 @@
                                                     </v-btn>
 
 
-
                                                     <div
                                                             v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
-                                                            <strong>Accepted</strong>
+                                                        <strong>Accepted</strong>
                                                     </div>
                                                     <div
                                                             v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
-                                                            <strong>Pending</strong></div>
-                                                    </div>
+                                                        <strong>Pending</strong></div>
+                                                </div>
 
                                             </div>
                                         </div>
@@ -564,8 +563,8 @@
     },
     computed: {
       ...mapState({
-        job: state => state.job.model,
-        jobStatus: state => state.job.model.status
+        job: state => state.job.model[0],
+        jobStatus: state => state.job.model[0].status
       }),
       jobLocationHasBeenSet() {
         if (this.jobTask && this.jobTask.location) {
@@ -652,14 +651,27 @@
     },
     methods: {
 
-      jobIsApproved(){
-        if (this.job && this.job.job_statuses) {
-          const statusNumber = this.getJobStatusNumber_latest(this.job);
-          return statusNumber === 7;
+      createHyphenDate(date) {
+        const dateArray = date.split('/')
+        return dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1]
+      },
+
+      setStartDate(jt){
+        if (jt) {
+          return this.createHyphenDate(this.formatDate(this.prettyDate(jt.start_date)))
+        } else {
+          return 0
         }
       },
 
-      jobHasNotBeenApproved () {
+      jobIsApproved() {
+        if (this.job && this.job.job_statuses) {
+          const statusNumber = this.getJobStatusNumber_latest(this.job)
+          return statusNumber === 7
+        }
+      },
+
+      jobHasNotBeenApproved() {
         const latestStatus = this.getJobStatus_latest(this.job)
         return latestStatus === 'in_progress' || latestStatus === 'initiated'
       },
@@ -940,26 +952,20 @@
         return date[0]
       },
       showTaskStartDate() {
-        // return this.isGeneral() && (
-        //   this.jobStatus === 'bid.in_progress' ||
-        //   this.jobStatus === 'bid.initiated' ||
-        //   this.jobStatus === 'bid.declined')
-
         return true
-
       },
       updateTaskStartDate(date, jobTaskId) {
+        if (date !== '') {
+          let dateArray = GeneralContractor.checkDateIsTodayorLater(date, this.job.created_at)
+          this.startDateErrorMessage = dateArray[0]
+          this.hasStartDateError = dateArray[1]
 
-        // debugger
+          if (!this.hasStartDateError) {
+            GeneralContractor.updateTaskStartDate(date, jobTaskId)
+          } else {
+            this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
+          }
 
-        let dateArray = GeneralContractor.checkDateIsTodayorLater(date, this.job.created_at)
-        this.startDateErrorMessage = dateArray[0]
-        this.hasStartDateError = dateArray[1]
-
-        if (!this.hasStartDateError) {
-          GeneralContractor.updateTaskStartDate(date, jobTaskId)
-        } else {
-          this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
         }
       },
       openUpdateTaskLocation(jobTaskId) {

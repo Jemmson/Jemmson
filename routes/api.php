@@ -81,11 +81,13 @@ Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
 Route::post('/task/updateTaskStartDate', function (Request $request) {
 
-    $jt = JobTask::find($request->jobTaskId);
-    $jt->updateTaskStartDate($request->date);
-    $earliestDate = JobTask::findEarliestStartDate($jt->job_id);
-    $job = Job::find($jt->job_id);
-    $job->updateJobAgreedStartDate($earliestDate);
+    if (!empty($request->date)) {
+        $jt = JobTask::find($request->jobTaskId);
+        $jt->updateTaskStartDate($request->date);
+        $earliestDate = JobTask::findEarliestStartDate($jt->job_id);
+        $job = Job::find($jt->job_id);
+        $job->updateJobAgreedStartDate($earliestDate);
+    }
 
 });
 
