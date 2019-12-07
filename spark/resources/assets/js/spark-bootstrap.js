@@ -38,6 +38,7 @@ if (window.$ === undefined || window.jQuery === undefined) {
     window.$ = window.jQuery = require('jquery');
 }
 
+// require('bootstrap/dist/js/');
 require('bootstrap/dist/js/npm');
 
 /**
