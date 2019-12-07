@@ -8,13 +8,13 @@
 <!--                   v-model="form.job_location_same_as_home">-->
 <!--        </div>-->
 
-        <div class="flex form-group" :class="{'has-error': form.errors.has('agreed_start_date')}">
-            <label for="start_date">Start Date</label>
-            <input type="date" class="form-control" id="start_date" v-model="form.agreed_start_date">
-            <span class="help-block" v-show="form.errors.has('agreed_start_date')">
-                {{ form.errors.get('agreed_start_date') }}
-            </span>
-        </div>
+<!--        <div class="flex form-group" :class="{'has-error': form.errors.has('agreed_start_date')}">-->
+<!--            <label for="start_date">Start Date</label>-->
+<!--            <input type="date" class="form-control" id="start_date" v-model="form.agreed_start_date">-->
+<!--            <span class="help-block" v-show="form.errors.has('agreed_start_date')">-->
+<!--                {{ form.errors.get('agreed_start_date') }}-->
+<!--            </span>-->
+<!--        </div>-->
 
         <!-- /job location -->
         <div v-show="!form.job_location_same_as_home" class="flex flex-col" ref="address-section">
