@@ -22,42 +22,12 @@
 
                 <horizontal-table
                         :data="jobTaskObject(jTask)"
+                        :id="jTask.contractor.id"
                 ></horizontal-table>
 
 
-                <!--                <table class="table">-->
-                <!--                    <thead>-->
-                <!--                    <tr>-->
-                <!--                        <th>Task</th>-->
-                <!--                        <th>Status</th>-->
-                <!--                        <th>{{ !isContractor ? 'Contractor' : 'Sub' }}</th>-->
-                <!--                        <th>Phone</th>-->
-                <!--                    </tr>-->
-                <!--                    </thead>-->
-                <!--                    <tbody>-->
-                <!--                    <tr>-->
-                <!--                        <td>{{ jTask.task.name }}</td>-->
-                <!--                        <td>-->
-                <!--                                <span :class="getLabelClass(jTask)">-->
-                <!--                                    {{ status(jTask) }}-->
-                <!--                                </span>-->
-                <!--                        </td>-->
-                <!--                        <td>{{ jTask.contractor ? jTask.contractor.company_name : 'none'}}</td>-->
-                <!--                        <td>{{ jTask.contractor ? jTask.contractor.phone : 'none'}}</td>-->
-                <!--                    </tr>-->
-                <!--                    </tbody>-->
-                <!--                </table>-->
-
-
                 <div class="row">
-                    <!--                    <div class="col-12 page-header-title">-->
-                    <!--                        {{ jTask.task.name }}-->
-                    <!--                    </div>-->
                     <div class="col-12">
-                        <!--                        <span class="dot" :class="'bg-' + getLabelClass(jTask)"></span>-->
-                        <!--                        <span :class="getLabelClass(jTask)">-->
-                        <!--                            {{ status(jTask) }}-->
-                        <!--                        </span>-->
                         <span v-if="isContractor"
                               class="float-right list-card-info">{{ jTask.bid_contractor_job_tasks.length }} Subs
                       <i class="fas fa-users"></i>
@@ -82,12 +52,6 @@
                 </div>
             </card>
         </div>
-        <!-- </paginate> -->
-
-        <!-- <div class="card p-5 card-body justify-center">
-                <paginate-links for="jobTasks" :limit="2" :show-step-links="true">
-                </paginate-links>
-            </div> -->
 
         <delete-task-modal
                 @action="deleteTheTask($event)"
@@ -111,8 +75,10 @@
   import JobTaskBidModal from '../components/task/JobTaskBidModal'
   import Card from '../components/shared/Card'
   import Feedback from '../components/shared/Feedback'
+  import Status from '../components/mixins/Status'
 
   import { mapState } from 'vuex'
+  import Utilities from '../components/mixins/Utilities'
 
   export default {
     components: {
@@ -151,6 +117,9 @@
         }
       }
     },
+    mixins: [
+      Status
+    ],
     created() {
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
@@ -177,17 +146,21 @@
     },
     methods: {
       jobTaskObject(jt) {
+
+
+        const latestStatus = this.formatStatus(this.getJobTaskStatusCustomer_latest(jt));
+
         if (jt && !this.isContractor) {
           return {
             Task: jt.task ? jt.task.name : '',
-            Status: jt.status,
+            Status: latestStatus,
             Contractor: jt.contractor ? jt.contractor.company_name : 'none',
             Phone: jt.contractor ? jt.contractor.phone : 'none'
           }
         } else {
           return {
             Task: jt.task ? jt.task.name : '',
-            Status: jt.status,
+            Status: latestStatus,
             Sub: jt.contractor ? jt.contractor.company_name : 'none',
             Phone: jt.contractor ? jt.contractor.phone : 'none'
           }

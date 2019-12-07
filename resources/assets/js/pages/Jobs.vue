@@ -146,7 +146,13 @@
         'toggleBidsContractor'
       ]),
       getJobStatus(bid){
-        return this.formatStatus(this.getJobStatus_latest(bid));
+        const status = this.formatStatus(this.getJobStatus_latest(bid));
+
+        if (status === 'sent' && this.isCustomer()) {
+          return 'Job has been submitted. Please approve the bid.'
+        } else {
+          return status
+        }
       },
       showDeleteJobModal(job) {
         this.deleteJob.id = job.id
@@ -208,6 +214,9 @@
           return bid.contractor_id === this.user.id
         }
         return false
+      },
+      isCustomer(){
+        return this.spark.state.user.usertype === 'customer'
       },
       status(bid) {
         if (bid !== null && this.user !== undefined) {

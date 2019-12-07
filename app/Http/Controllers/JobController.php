@@ -6,6 +6,7 @@ use App\BidContractorJobTask;
 use App\Job;
 use App\JobTaskStatus;
 use App\SubStatus;
+use App\TaskImage;
 use App\User;
 use App\Task;
 use App\Customer;
@@ -401,15 +402,17 @@ class JobController extends Controller
             $contractor = Contractor::where('user_id', '=', $jobTask->contractor_id)->get()->first();
             $contractorUser = User::where('id', '=', $jobTask->contractor_id)->get()->first();
             array_push($contractorResults, [
+                "id" => $contractorUser->id,
                 "company_name" => $contractor->company_name,
                 "first_name" => $contractorUser->first_name,
                 "last_name" => $contractorUser->last_name,
                 "phone" => $contractorUser->phone,
             ]);
 
+            $images = TaskImage::where('job_task_id', '=', $jobTask->id)->get();
+
             $jts = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->get();
             $ss = SubStatus::where('job_task_id', '=', $jobTask->id)->get();
-
             array_push($jobTasksResults, [
                 "id" => $jobTask->id,
                 "task_id" => $jobTask->task_id,
@@ -422,6 +425,7 @@ class JobController extends Controller
                 "declined_message" => $jobTask->declined_message,
                 "customer_message" => $jobTask->customer_message,
                 "location" => $location,
+                "images" => $images,
                 "customer" => $customerUserResults[0],
                 "task" => $taskResults[0],
                 "job_task_status" => $jts,
