@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="container" id="top" v-if="isContractor()" >
+    <div class="container" id="top" v-if="isContractor()">
         <icon-header icon="tasks" mainHeader="Add New Task"
                      :subHeader="'This adds a new task to the job so you can sub out a portion of the job.'">
         </icon-header>
@@ -41,7 +41,8 @@
                         v-if="taskExistsInJob"
                         style="color: red; font-size: 10pt;"
                         class="uppercase">
-                    This Task already exists for this job</div>
+                    This Task already exists for this job
+                </div>
 
                 <div class="form-row">
 
@@ -229,7 +230,8 @@
                         @click.prevent="changeTask('Add')"
                         :disabled="checkErrors()"
                         ref="add_task"
-                >Add Task</v-btn>
+                >Add Task
+                </v-btn>
             </div>
 
         </card>
@@ -254,7 +256,7 @@
     },
     data() {
       return {
-        addNewTaskForm: new SparkForm({
+        addNewTaskForm: {
           area: '',
           assetAccountRef: {
             value: '0',
@@ -294,7 +296,7 @@
           type: 'Inventory',
           updateTask: false,
           useStripe: false
-        }),
+        },
         checked: 'checked',
         result: {
           resultReturned: false,
@@ -355,7 +357,7 @@
     },
     methods: {
 
-      isContractor(){
+      isContractor() {
         if (Spark.state.user.usertype === 'contractor') {
           return true
         }
@@ -387,7 +389,7 @@
         return false
 
       },
-      needsNewTask(){
+      needsNewTask() {
         this.taskSubmitted = false
         this.clearTaskResults()
       },
@@ -788,14 +790,14 @@
           this.errors.general.errorExists = true
         }
       },
-      async addNewTask () {
+      async addNewTask() {
         // TODO:: I want task submitted varaiable to be true after the addNewTaskToBid method is caled
-          try {
-              await GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
-              this.taskSubmitted = true;
-          } catch (error) {
-              console.log('error');
-          }
+        try {
+          await GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
+          this.taskSubmitted = true
+        } catch (error) {
+          console.log('error')
+        }
       },
       toggleStripePaymentOption() {
         this.addNewTaskForm.useStripe = !this.addNewTaskForm.useStripe
@@ -807,7 +809,7 @@
       getMonth() {
         let date = new Date()
         let month = date.getMonth()
-        month = month + 1;
+        month = month + 1
         if (month < 10) {
           month = '0' + month
         }

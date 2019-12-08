@@ -3,56 +3,29 @@
 
     <div class="container">
 
-        <!--        <div class="col-12 mb-3 status" :class="getLabelClass(bid.status)">-->
-        <!--&lt;!&ndash;            <div v-if="bid.status === 'bid.initiated'">&ndash;&gt;-->
-        <!--&lt;!&ndash;                &ndash;&gt;-->
-        <!--&lt;!&ndash;                <div class="text-center" style="font-size: 14pt">{{ status }}</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;            </div>&ndash;&gt;-->
-        <!--            <div class="text-center font-weight-bold">Job Status:</div>-->
-        <!--            <div class="text-center font-weight-bold">{{ status }}</div>-->
-        <!--        </div>-->
-
         <div v-show="false">{{ getJobStatusValue() }}</div>
+
+        <h1>{{ user.name }}</h1>
+<!--        <h1>{{ contractor.name }}</h1>-->
 
         <v-card>
             <v-card-title>Job Status:</v-card-title>
             <v-card-subtitle>
-                <span class="capitalize">{{ formatStatus(jobStatus.status) }} on {{ formatDate(dateOnly(jobStatus.created_at)) }}</span>
+                <span class="capitalize"
+                     ref="jobStatus">
+                    {{ formatStatus(jobStatus.status) }} on {{ formatDate(dateOnly(jobStatus.created_at)) }}
+                </span>
             </v-card-subtitle>
             <div v-if="isCustomer && jobStatus.status === 'in_progress'"
-                style="padding-bottom: .1rem"
+                 style="padding-bottom: .1rem"
             >
                 <h5 class="text-center">Please wait until your contractor submits bid</h5>
             </div>
         </v-card>
 
-        <!--        <card class="mb-4" v-if="(isCustomer && needsApproval) || !isCustomer">-->
-        <!--            &lt;!&ndash; /customer approve bid form &ndash;&gt;-->
-        <!--            <approve-bid v-if="isCustomer && needsApproval" :bid="bid">-->
-        <!--            </approve-bid>-->
-        <!--            &lt;!&ndash; /buttons  &ndash;&gt;-->
-        <!--            <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">-->
-        <!--            </general-contractor-bid-actions>-->
-        <!--        </card>-->
-
         <!-- /show all bid information -->
         <bid-details :customerName="customerName" :bid="bid" :isCustomer="isCustomer">
         </bid-details>
-
-
-        <!-- / show all completed tasks-->
-        <!-- <completed-tasks :bid="bid">
-        </completed-tasks> -->
-
-        <!-- /show all tasks associated to this bid
-        <bid-tasks v-if="bid.job_tasks !== undefined && showTasks" :bid="bid" @openTaskPanel="openTaskPanel">
-        </bid-tasks> -->
-
-        <!-- /add task to bid -->
-        <!-- <transition name="slide-fade">
-          <bid-add-task :show="showAddTaskPanel" :bid="bid" :bidId="this.$route.params.id" v-if="!jobApproved">
-          </bid-add-task>
-        </transition> -->
 
         <!--            stripe testing delete after -->
         <stripe :user='user'>
@@ -96,15 +69,19 @@
     },
     data() {
       return {
+        myText: '',
+        contractor: {
+          name: 'General Contractor'
+        },
         bid: {},
         jobTaskIndex: 0,
-        bidForm: new SparkForm({
+        bidForm: {
           id: 0,
           agreed_start_date: '',
           end_date: '',
           area: '',
           status: '',
-        }),
+        },
         bidApproved: false,
         showTaskPanel: false,
         showAddTaskPanel: false,
@@ -113,7 +90,10 @@
           declineBid: false
         },
         showStripe: false,
-        jobStatus: {}
+        jobStatus: {
+          status: '',
+          created_at: ''
+        }
       }
     },
     watch: {
@@ -170,12 +150,16 @@
       },
     },
     methods: {
-      getJobStatusValue(){
+      setMyText(){
+        this.myText = 'hello';
+      },
+      getJobStatusValue() {
         if (this.bid && this.bid.job_statuses) {
           this.jobStatus = this.bid.job_statuses[this.bid.job_statuses.length - 1]
-        } else if (this.bid && this.bid.job_status)  {
+        } else if (this.bid && this.bid.job_status) {
           this.jobStatus = this.bid.job_status[this.bid.job_status.length - 1]
         }
+
       },
       getLabelClass(status) {
         return Format.statusLabel(status,)
@@ -273,6 +257,7 @@
 
       this.bidForm.id = this.bid.id
       this.bidForm.status = this.bid.status
+
       const success = this.$route.query.success
       Vue.toasted.success(success)
       const error = this.$route.query.error
