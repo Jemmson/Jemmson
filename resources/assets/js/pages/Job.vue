@@ -5,9 +5,6 @@
 
         <div v-show="false">{{ getJobStatusValue() }}</div>
 
-        <h1>{{ user.name }}</h1>
-<!--        <h1>{{ contractor.name }}</h1>-->
-
         <v-card>
             <v-card-title>Job Status:</v-card-title>
             <v-card-subtitle>

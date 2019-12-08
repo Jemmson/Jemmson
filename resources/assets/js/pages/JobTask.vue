@@ -408,7 +408,7 @@
                     <div class="flex space-between">
 
 
-                        <div v-if="isGeneral()">
+                        <div v-if="isGeneral()" class="w-full">
                             <div v-if="jobIsNotComplete()">
                                 <v-btn
                                         class="w-full mb-half-rem"
@@ -466,9 +466,10 @@
                             </div>
                         </div>
 
-                        <div v-else>
+                        <div v-else class="w-full">
                             <div v-if="customerWantsToChangeTheBid()">
                                 <v-btn
+                                        id="changeTask"
                                         class="w-full mb-half-rem"
                                         color="warning"
                                         @click="openDenyTaskForm(jobTask.id)"
@@ -709,11 +710,11 @@
       },
 
       customerWantsToDeleteTheTask(jobTask) {
-        this.taskHasNotBeenApproved(jobTask)
+        return this.taskHasNotBeenApproved(jobTask)
       },
 
       contractorWantsToDeleteTheTask(jobTask) {
-        this.taskHasNotBeenApproved(jobTask)
+        return this.taskHasNotBeenApproved(jobTask)
       },
 
       taskHasNotBeenApproved(jobTask) {
