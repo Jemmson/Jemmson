@@ -1338,21 +1338,6 @@
 
         return true
       }
-      // showReopenBtn(jobTask) {
-      //   if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
-      //       'bid_task.approved_by_general')) {
-      //     return true;
-      //   }
-      //   return false;
-      // },
-      // showPayCashForTaskBtn(jobTask) {
-      //   return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
-      //     this.user.isCustomer();
-      // },
-      // showPayForTaskBtn(jobTask) {
-      //   return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status === 'bid_task.approved_by_general') &&
-      //     this.user.isCustomer() && jobTask.stripe;
-      // },
     },
     mounted() {
 
