@@ -68,6 +68,17 @@ export default class GeneralContractor {
         })
     }
 
+    async approveSubsTask (jobTask) {
+        try {
+            await axios.post ('task/approve', {
+                id: jobTask.id
+            });
+            Vue.toasted.success('Task Has Been Approved and Customer Has Been Notified')
+        } catch (error) {
+            console.log('error');
+        }
+    }
+
     adjustDate(date) {
         if (date) {
             let d = ''

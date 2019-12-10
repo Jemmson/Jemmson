@@ -952,6 +952,7 @@ class TaskController extends Controller
         $customer->notify(new TaskFinished($task, true, $customer));
         $subContractor->notify(new TaskApproved($task, $subContractor));
 
+        $this->setJobTaskStatus($jobTask->id, 'approved_subs_work');
         $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job_approved_by_contractor');
 
         return response()->json(["message" => "Success"], 200);

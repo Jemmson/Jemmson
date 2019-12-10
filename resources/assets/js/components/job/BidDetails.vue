@@ -144,32 +144,39 @@
                         </v-list-item-group>
                     </v-list>
 
-                    <v-card-actions>
-                        <v-btn
-                                color="primary"
-                                :to="'/job/task/' + i"
-                                width="45%"
-                        >View And Edit
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                v-if="isGeneral() && approvedByCustomer(item)"
-                                width="45%"
-                                @click="openSubInvite(item.id)"
-                                color="primary"
-                        >Add A Sub
-                        </v-btn>
-                    </v-card-actions>
-                    <v-card-actions>
-                        <v-btn
-                                color="primary"
-                                width="100%"
-                                v-if="isGeneral() && showFinishedBtn(item)"
-                                @click="finishedTask(item)"
-                                :loading="disabled.finished"
-                        >Click Me When Task Is Finished
-                        </v-btn>
-                    </v-card-actions>
+                    <v-btn
+                            color="primary"
+                            :to="'/job/task/' + i"
+                            width="100%"
+                            class="m-15"
+                    >View And Edit
+                    </v-btn>
+                    <v-btn
+                            v-if="isGeneral() && approvedByCustomer(item)"
+                            width="100%"
+                            @click="openSubInvite(item.id)"
+                            color="primary"
+                            class="m-15"
+                    >Add A Sub
+                    </v-btn>
+                    <v-btn
+                            v-if="isGeneral() && subFinishedTask(item)"
+                            width="100%"
+                            @click="approveSubsWork(item)"
+                            color="primary"
+                            class="m-15"
+                    >
+                        Approve Subs Finished Work
+                    </v-btn>
+                    <v-btn
+                            color="primary"
+                            width="100%"
+                            class="m-15"
+                            v-if="isGeneral() && showFinishedBtn(item)"
+                            @click="finishedTask(item)"
+                            :loading="disabled.finished"
+                    >Click Me When Task Is Finished
+                    </v-btn>
 
                     <sub-invite-modal v-if="isGeneral()" :job-task="item"
                                       :job-task-task="item ? item.task : null"
@@ -184,21 +191,21 @@
                 <card>
 
                     <v-row>
-                            <div>
+                        <div>
                                 <span class="">
                                     (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
                                 </span> Total
-                            </div>
+                        </div>
 
                         <v-spacer></v-spacer>
 
-                            <v-btn
-                                    class="w-40"
-                                    color="primary"
-                                    @click.prevent="viewTasks()"
-                            >
-                                View Tasks
-                            </v-btn>
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                @click.prevent="viewTasks()"
+                        >
+                            View Tasks
+                        </v-btn>
                     </v-row>
 
                     <table class="table mt-2rem">
@@ -298,7 +305,8 @@
                                 color="primary"
                                 ref="update_customer_notes_button"
                                 @click="updateGeneralContractorNotes"
-                        >Submit</v-btn>
+                        >Submit
+                        </v-btn>
 
                     </section>
                 </main>
@@ -513,7 +521,7 @@
 
       disableSubmitBid() {
         // return this.bid.status === 'bid.sent'
-        return this.generalCanSubmitABid(this.bid);
+        return this.generalCanSubmitABid(this.bid)
       },
 
       showAddress() {
@@ -531,6 +539,20 @@
       }
     },
     methods: {
+
+      subFinishedTask(item) {
+        let status = this.getLatestSubStatus(item);
+        return status === 'finished_job'
+      },
+
+      getLatestSubStatus(item) {
+        return item.sub_statuses[item.sub_statuses.length - 1].status
+      },
+
+      approveSubsWork(jobTask) {
+        GeneralContractor.approveSubsTask(jobTask)
+      },
+
       jobIsNotFinishedAndNotApproved(item) {
         if (item) {
           return !(item.status === 'job.approved'
@@ -551,12 +573,10 @@
         return false
       },
       openSubInvite(jobTaskId) {
-        // debugger;
-        // this.currentJobTask = jobTask;
         $('#sub-invite-modal_' + jobTaskId).modal()
       },
       finishedTask(jobTask) {
-        SubContractor.finishedTask(jobTask, this.disabled)
+        GeneralContractor.finishedTask(jobTask.id, this.user.contractor.id)
       },
       isAssignedToMe(jobTask, userId) {
         return userId === jobTask.contractor_id
@@ -598,7 +618,7 @@
           }
         }
       },
-      currentStep () {
+      currentStep() {
         if (this.bid) {
           this.step = this.getStatus(
             this.bid.job_statuses[this.bid.job_statuses.length - 1],
