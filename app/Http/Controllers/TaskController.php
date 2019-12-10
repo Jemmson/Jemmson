@@ -31,6 +31,7 @@ use App\User;
 use App\ContractorCustomer;
 use App\BidContractorJobTask;
 use App\JobTask;
+use App\TaskMessage;
 use http\Message;
 use Illuminate\Support\Facades\Log;
 use App\TaskImage;
@@ -84,178 +85,176 @@ class TaskController extends Controller
             $jtResults = [];
             $jt = JobTask::where('id', '=', $task->job_task_id)->get()->first();
 
-            $jts = JobTaskStatus::where('job_task_id', '=', $jt->id)->get();
-            $jtss = SubStatus::where('job_task_id', '=', $jt->id)
-                ->where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
+            if (!empty($jt)) {
+                $jts = JobTaskStatus::where('job_task_id', '=', $jt->id)->get();
+                $jtss = SubStatus::where('job_task_id', '=', $jt->id)
+                    ->where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
 
-            $jobResults = [];
-            $job = Job::where('id', '=', $jt->job_id)->get()->first();
-            array_push($jobResults, [
-                "id" => $job->id,
-                "customer_id" => $job->customer_id,
-                "contractor_id" => $job->contractor_id,
-                "location_id" => $job->location_id,
-                "job_name" => $job->job_name,
-                "status" => $job->status,
-                "job_task_status" => $jts,
-                "sub_status" => $jtss,
-                "completed_bid_date" => $job->completed_bid_date,
-                "agreed_start_date" => $job->agreed_start_date,
-                "agreed_end_date" => $job->agreed_end_date,
-                "actual_end_date" => $job->actual_end_date,
-                "deleted_at" => $job->deleted_at,
-                "created_at" => $job->created_at,
-                "updated_at" => $job->updated_at,
-                "declined_message" => $job->declined_message,
-                "paid_with_cash_message" => $job->paid_with_cash_message
-            ]);
+                $jobResults = [];
+                $job = Job::where('id', '=', $jt->job_id)->get()->first();
+                array_push($jobResults, [
+                    "id" => $job->id,
+                    "customer_id" => $job->customer_id,
+                    "contractor_id" => $job->contractor_id,
+                    "location_id" => $job->location_id,
+                    "job_name" => $job->job_name,
+                    "status" => $job->status,
+                    "job_task_status" => $jts,
+                    "sub_status" => $jtss,
+                    "completed_bid_date" => $job->completed_bid_date,
+                    "agreed_start_date" => $job->agreed_start_date,
+                    "agreed_end_date" => $job->agreed_end_date,
+                    "actual_end_date" => $job->actual_end_date,
+                    "deleted_at" => $job->deleted_at,
+                    "created_at" => $job->created_at,
+                    "updated_at" => $job->updated_at,
+                    "declined_message" => $job->declined_message,
+                    "paid_with_cash_message" => $job->paid_with_cash_message
+                ]);
 
-            $taskResults = [];
-            $singleTask = Task::where('id', '=', $jt->task_id)->get()->first();
+                $taskResults = [];
+                $singleTask = Task::where('id', '=', $jt->task_id)->get()->first();
 
-            $contractorResults = [];
-
-
-
-
-            $contractor = Contractor::where('user_id', '=', $job->contractor_id)->get()->first();
-            array_push($contractorResults, [
-                "id" => $contractor->id,
-                "user_id" => $contractor->user_id,
-                "location_id" => $contractor->location_id,
-                "company_name" => $contractor->company_name,
-                "company_logo_name" => $contractor->company_logo_name,
-                "email_method_of_contact" => $contractor->email_method_of_contact,
-                "sms_method_of_contact" => $contractor->sms_method_of_contact,
-                "phone_method_of_contact" => $contractor->phone_method_of_contact
-            ]);
+                $contractorResults = [];
 
 
+                $contractor = Contractor::where('user_id', '=', $job->contractor_id)->get()->first();
+                array_push($contractorResults, [
+                    "id" => $contractor->id,
+                    "user_id" => $contractor->user_id,
+                    "location_id" => $contractor->location_id,
+                    "company_name" => $contractor->company_name,
+                    "company_logo_name" => $contractor->company_logo_name,
+                    "email_method_of_contact" => $contractor->email_method_of_contact,
+                    "sms_method_of_contact" => $contractor->sms_method_of_contact,
+                    "phone_method_of_contact" => $contractor->phone_method_of_contact
+                ]);
 
 
-            array_push($taskResults, [
-                "id" => $singleTask->id,
-                "name" => $singleTask->name,
-                "contractor_id" => $singleTask->contractor_id,
-                "sub_instructions" => $singleTask->sub_instructions,
-                "customer_instructions" => $singleTask->customer_instructions,
-                "contractor" => $contractorResults[0]
-            ]);
+                array_push($taskResults, [
+                    "id" => $singleTask->id,
+                    "name" => $singleTask->name,
+                    "contractor_id" => $singleTask->contractor_id,
+                    "sub_instructions" => $singleTask->sub_instructions,
+                    "customer_instructions" => $singleTask->customer_instructions,
+                    "contractor" => $contractorResults[0]
+                ]);
 
-            $imageResults = [];
-            $images = TaskImage::where('job_task_id', '=', $task->job_task_id)->get();
-            if (!empty($images->toArray())) {
-                foreach ($images as $image) {
+                $imageResults = [];
+                $images = TaskImage::where('job_task_id', '=', $task->job_task_id)->get();
+                if (!empty($images->toArray())) {
+                    foreach ($images as $image) {
 
-                    array_push($imageResults, [
-                        "id" => $image->id,
-                        "job_id" => $image->job_id,
-                        "job_task_id" => $image->job_task_id,
-                        "public_id" => $image->public_id,
-                        "version" => $image->version,
-                        "signature" => $image->signature,
-                        "width" => $image->width,
-                        "height" => $image->height,
-                        "format" => $image->format,
-                        "resource_type" => $image->resource_type,
-                        "bytes" => $image->bytes,
-                        "type" => $image->type,
-                        "etag" => $image->etag,
-                        "placeholder" => $image->placeholder,
-                        "url" => $image->url,
-                        "secure_url" => $image->secure_url,
-                        "overwritten" => $image->overwritten,
-                        "original_filename" => $image->original_filename,
-                        "created_at" => $image->created_at,
-                        "updated_at" => $image->updated_at,
+                        array_push($imageResults, [
+                            "id" => $image->id,
+                            "job_id" => $image->job_id,
+                            "job_task_id" => $image->job_task_id,
+                            "public_id" => $image->public_id,
+                            "version" => $image->version,
+                            "signature" => $image->signature,
+                            "width" => $image->width,
+                            "height" => $image->height,
+                            "format" => $image->format,
+                            "resource_type" => $image->resource_type,
+                            "bytes" => $image->bytes,
+                            "type" => $image->type,
+                            "etag" => $image->etag,
+                            "placeholder" => $image->placeholder,
+                            "url" => $image->url,
+                            "secure_url" => $image->secure_url,
+                            "overwritten" => $image->overwritten,
+                            "original_filename" => $image->original_filename,
+                            "created_at" => $image->created_at,
+                            "updated_at" => $image->updated_at,
+                        ]);
+                    }
+                }
+                $locationResults = [];
+                $location = Location::where('user_id', '=', $job->customer_id)->get()->first();
+                if (!empty($location)) {
+                    array_push($locationResults, [
+                        "id" => $location->id,
+                        "user_id" => $location->user_id,
+                        "default" => $location->default,
+                        "address_line_1" => $location->address_line_1,
+                        "address_line_2" => $location->address_line_2,
+                        "city" => $location->city,
+                        "state" => $location->state,
+                        "zip" => $location->zip,
+                        "area" => $location->area,
+                        "country" => $location->country,
+                        "created_at" => $location->created_at,
+                        "updated_at" => $location->updated_at,
+                        "lat" => $location->lat,
+                        "long" => $location->long
                     ]);
                 }
-            }
-            $locationResults = [];
-            $location = Location::where('user_id', '=', $job->customer_id)->get()->first();
-            if(!empty($location)){
-                array_push($locationResults, [
-                    "id" => $location->id,
-                    "user_id" => $location->user_id,
-                    "default" => $location->default,
-                    "address_line_1" => $location->address_line_1,
-                    "address_line_2" => $location->address_line_2,
-                    "city" => $location->city,
-                    "state" => $location->state,
-                    "zip" => $location->zip,
-                    "area" => $location->area,
-                    "country" => $location->country,
-                    "created_at" => $location->created_at,
-                    "updated_at" => $location->updated_at,
-                    "lat" => $location->lat,
-                    "long" => $location->long
+
+                array_push($jtResults, [
+                    "id" => $jt->id,
+                    "job_id" => $jt->job_id,
+                    "task_id" => $jt->task_id,
+                    "bid_id" => $jt->bid_id,
+                    "location_id" => $jt->location_id,
+                    "contractor_id" => $jt->contractor_id,
+                    "status" => $jt->status,
+                    "sub_final_price" => $jt->sub_final_price,
+                    "start_when_accepted" => $jt->start_when_accepted,
+                    "stripe" => $jt->stripe,
+                    "start_date" => $jt->start_date,
+                    "deleted_at" => $jt->deleted_at,
+                    "created_at" => $jt->created_at,
+                    "updated_at" => $jt->updated_at,
+                    "stripe_transfer_id" => $jt->stripe_transfer_id,
+                    "customer_message" => $jt->customer_message,
+                    "sub_message" => $jt->sub_message,
+                    "qty" => $jt->qty,
+                    "sub_sets_own_price_for_job" => $jt->sub_sets_own_price_for_job,
+                    "declined_message" => $jt->declined_message,
+                    "unit_price" => $jt->unit_price
+                ]);
+
+
+                if (!empty($jobResults)) {
+                    $jtResults[0]["job"] = $jobResults[0];
+                } else {
+                    $jtResults[0]["job"] = null;
+                }
+
+                if (!empty($taskResults)) {
+                    $jtResults[0]["task"] = $taskResults[0];
+                } else {
+                    $jtResults[0]["task"] = null;
+                }
+
+                if (!empty($imageResults)) {
+                    $jtResults[0]["images"] = $imageResults;
+                } else {
+                    $jtResults[0]["images"] = [];
+                }
+
+                if (!empty($locationResults)) {
+                    $jtResults[0]["location"] = $locationResults[0];
+                } else {
+                    $jtResults[0]["location"] = null;
+                }
+
+
+                array_push($bidContractorJobTasksResults, [
+                    "id" => $task->id,
+                    "contractor_id" => $task->contractor_id,
+                    "job_task_id" => $task->job_task_id,
+                    "bid_price" => $task->bid_price,
+                    "created_at" => $task->created_at,
+                    "updated_at" => $task->updated_at,
+                    "status" => $task->status,
+                    "proposed_start_date" => $task->proposed_start_date,
+                    "bid_description" => $task->bid_description,
+                    "accepted" => $task->accepted,
+                    "payment_type" => $task->payment_type,
+                    "job_task" => $jtResults[0]
                 ]);
             }
-
-            array_push($jtResults, [
-                "id" => $jt->id,
-                "job_id" => $jt->job_id,
-                "task_id" => $jt->task_id,
-                "bid_id" => $jt->bid_id,
-                "location_id" => $jt->location_id,
-                "contractor_id" => $jt->contractor_id,
-                "status" => $jt->status,
-                "sub_final_price" => $jt->sub_final_price,
-                "start_when_accepted" => $jt->start_when_accepted,
-                "stripe" => $jt->stripe,
-                "start_date" => $jt->start_date,
-                "deleted_at" => $jt->deleted_at,
-                "created_at" => $jt->created_at,
-                "updated_at" => $jt->updated_at,
-                "stripe_transfer_id" => $jt->stripe_transfer_id,
-                "customer_message" => $jt->customer_message,
-                "sub_message" => $jt->sub_message,
-                "qty" => $jt->qty,
-                "sub_sets_own_price_for_job" => $jt->sub_sets_own_price_for_job,
-                "declined_message" => $jt->declined_message,
-                "unit_price" => $jt->unit_price
-            ]);
-
-
-            if (!empty($jobResults)) {
-                $jtResults[0]["job"] = $jobResults[0];
-            } else {
-                $jtResults[0]["job"] = null;
-            }
-
-            if (!empty($taskResults)) {
-                $jtResults[0]["task"] = $taskResults[0];
-            } else {
-                $jtResults[0]["task"] = null;
-            }
-
-            if (!empty($imageResults)) {
-                $jtResults[0]["images"] = $imageResults;
-            } else {
-                $jtResults[0]["images"] = [];
-            }
-
-            if (!empty($locationResults)) {
-                $jtResults[0]["location"] = $locationResults[0];
-            } else {
-                $jtResults[0]["location"] = null;
-            }
-
-
-            array_push($bidContractorJobTasksResults, [
-                "id" => $task->id,
-                "contractor_id" => $task->contractor_id,
-                "job_task_id" => $task->job_task_id,
-                "bid_price" => $task->bid_price,
-                "created_at" => $task->created_at,
-                "updated_at" => $task->updated_at,
-                "status" => $task->status,
-                "proposed_start_date" => $task->proposed_start_date,
-                "bid_description" => $task->bid_description,
-                "accepted" => $task->accepted,
-                "payment_type" => $task->payment_type,
-                "job_task" => $jtResults[0]
-            ]);
         }
 
         return $bidContractorJobTasksResults;
@@ -336,7 +335,7 @@ class TaskController extends Controller
     private function deleteSubsBid($contractorId, $jobTaskId)
     {
         $subTask = BidContractorJobTask::where('job_task_id', '=', $jobTaskId)->
-                where('contractor_id', '=', $contractorId)->get()->first();
+        where('contractor_id', '=', $contractorId)->get()->first();
         try {
             $subTask->delete();
         } catch (\Exception $e) {
@@ -1320,7 +1319,7 @@ class TaskController extends Controller
 
         if ($this->iAmACustomer()) {
             $this->setJobTaskStatus($jobTask->id, 'customer_changes_finished_task');
-            if($this->taskUsesAsub($jobTask, $task)) {
+            if ($this->taskUsesAsub($jobTask, $task)) {
                 $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'customer_changes_finished_task');
                 $this->notifyGeneral($jobTask, $request->message);
                 $this->notifySub($jobTask->contractor_id, $task, $request->message);
@@ -1532,4 +1531,30 @@ class TaskController extends Controller
 
         $result = Cloudinary\Uploader::destroy($taskImage->public_id, $options = array());
     }
+
+
+    public function setChangeMessage(Request $request)
+    {
+        $message = new TaskMessage();
+        $message->general_id = $request->general_id;
+        $message->sub_id = $request->sub_id;
+        $message->customer_id = $request->customer_id;
+        $message->job_task_id = $request->job_task_id;
+        $message->message = $request->message;
+
+        try {
+            $message->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        $jobTask = JobTask::find($request->job_task_id);
+        $job = Job::find($jobTask->job_id);
+        $this->setJobStatus($job->id, 'changed');
+
+    }
+
 }

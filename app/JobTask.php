@@ -44,6 +44,11 @@ class JobTask extends Model
         return $this->hasMany(SubStatus::class);
     }
 
+    public function taskMessages()
+    {
+        return $this->hasMany(TaskMessage::class);
+    }
+
     public function job()
     {
         return $this->belongsTo(Job::class);

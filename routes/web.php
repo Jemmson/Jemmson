@@ -118,6 +118,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/task/notify', 'TaskController@notify')->middleware('quickbook.token');
     Route::post('/paidWithCashMessage', 'JobController@paidWithCashMessage');
     Route::get('/email/duplicate/{email}', 'ContractorController@checkDuplicateEmail');
+    Route::post('/jobTask/message', 'TaskController@setChangeMessage');
 }
 );
 

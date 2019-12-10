@@ -283,7 +283,7 @@
                                 Submit
                             </v-btn>
                             <v-btn
-                                    class="w-40"
+                                    class="w-full mt-1rem"
                                     color="primary"
                                     v-if="showFinishedBtn(bidTask)"
                                     @click="finished(bidTask)"

@@ -7,6 +7,7 @@ use App\Job;
 use App\JobTaskStatus;
 use App\SubStatus;
 use App\TaskImage;
+use App\TaskMessage;
 use App\User;
 use App\Task;
 use App\Customer;
@@ -337,6 +338,9 @@ class JobController extends Controller
         $jobTasksResults = [];
         $jobTasks = JobTask::where('job_id', '=', $job->id)->get();
 
+        $messages = $job->jobStatuses()->get();
+        $job['messages'] = $messages;
+
         foreach ($jobTasks as $jobTask) {
 
             $taskResults = [];
@@ -409,6 +413,20 @@ class JobController extends Controller
                 "phone" => $contractorUser->phone,
             ]);
 
+
+            $generalResults = [];
+            $general = Contractor::where('user_id', '=', $task->contractor_id)->get()->first();
+            $generalUser = User::where('id', '=', $task->contractor_id)->get()->first();
+            array_push($generalResults, [
+                "id" => $generalUser->id,
+                "company_name" => $general->company_name,
+                "first_name" => $generalUser->first_name,
+                "last_name" => $generalUser->last_name,
+                "phone" => $generalUser->phone,
+            ]);
+
+            $jobTaskMessages = TaskMessage::where('job_task_id', '=', $jobTask->id)->get();
+
             $images = TaskImage::where('job_task_id', '=', $jobTask->id)->get();
 
             $jts = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->get();
@@ -430,9 +448,12 @@ class JobController extends Controller
                 "task" => $taskResults[0],
                 "job_task_status" => $jts,
                 "sub_status" => $ss,
+                "messages" => $jobTaskMessages,
                 "contractor" => $contractorResults[0],
+                "general" => $generalResults[0],
                 "job" => [
-                    "id" => $job->id
+                    "id" => $job->id,
+                    "job_statuses" => $messages
                 ]
             ]);
 
@@ -527,9 +548,11 @@ class JobController extends Controller
                 [
                     'jobTasks.task',
                     'jobTasks.job',
+                    'jobTasks.job.jobStatuses',
                     'jobTasks.job.customer',
                     'jobTasks.jobTaskStatuses',
                     'jobTasks.subStatuses',
+                    'jobTasks.taskMessages',
                     'jobTasks.task.contractor',
                     'jobTasks.bidContractorJobTasks.contractor',
                     'jobTasks.bidContractorJobTasks.contractor.contractor',
@@ -689,8 +712,7 @@ class JobController extends Controller
      * @param Job $job
      * @return void
      */
-    public
-    function approveJob(Request $request, Job $job)
+    public function approveJob(Request $request, Job $job)
     {
         $this->validate($request, [
             'agreed_start_date' => 'required|date',
@@ -827,7 +849,7 @@ class JobController extends Controller
         if ($this->isCustomer()) {
             // only load tasks on jobs that are approved or need approval
 
-            $jobs = Job::where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
+            $jobs = Job::where('customer_id', '=', Auth::user()->getAuthIdentifier())->get();
 
             foreach ($jobs as $j) {
                 if (
@@ -841,6 +863,7 @@ class JobController extends Controller
                     foreach ($j['job_tasks'] as $jt) {
                         $jt['job_task_status'] = JobTaskStatus::where('job_task_id', '=', $jt->id)->get();
                         $jt['sub_status'] = SubStatus::where('job_task_id', '=', $jt->id)->get();
+                        $jt['messages'] = $jt->taskMessages()->get();
                     }
                     $j['job_statuses'] = $j->jobStatuses()->get();
                 } else {
@@ -896,7 +919,9 @@ class JobController extends Controller
                 $j['job_statuses'] = $j->jobStatuses()->get();
                 $j['job_tasks'] = $j->jobTasks()->select(['id'])->get();
                 foreach ($j['job_tasks'] as $jt) {
-                    $j['job_tasks']['bid_contractor_job_tasks'] = $jt->bidContractorJobTasks()->select('contractor_id')->get();
+                    $j['job_tasks']['messages'] = $jt->taskMessages()->get();
+                    $j['job_tasks']['bid_contractor_job_tasks'] =
+                        $jt->bidContractorJobTasks()->select('contractor_id')->get();
                 }
             }
         }

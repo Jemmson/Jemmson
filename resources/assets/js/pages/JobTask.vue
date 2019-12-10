@@ -47,14 +47,14 @@
                         </div>
                     </card>
 
-                    <h1 class="card-title">Job Status</h1>
+                    <h1 class="card-title">Task Status</h1>
                     <card>
                         <div class="row">
                             <div class="col-12">
                                 Status:
                                 <div class="float-right font-weight-bold capitalize"
                                      :class="jobTask ? getLabelClass(jobTask.status) : 0">
-                                    {{ getLatestJobTaskStatus() }}
+                                    {{ getLatestJobStatus(jobTask) }}
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     Message:
-                                    <div class="float-right font-weight-bold">{{jobTask ? jobTask.declined_message: ''}}
+                                    <div class="float-right font-weight-bold">
+                                        {{jobTask && jobTask.task_messages && jobTask.task_messages.length > 0 ? jobTask.task_messages[jobTask.task_messages.length -1].message: ''}}
                                     </div>
                                 </div>
                             </div>
@@ -402,6 +403,47 @@
                     </card>
                 </div>
 
+
+<!--                <v-card v-if="checkIfThereAreMessaages(jobTask)"-->
+<!--                        style="width: 95%;-->
+<!--                            margin-left: auto;-->
+<!--                            margin-right: auto;"-->
+<!--                >-->
+
+<!--                    <v-card-title>-->
+<!--                        Change Messages to the contractor-->
+<!--                    </v-card-title>-->
+<!--                    <v-card-text v-show="messages">-->
+<!--                        <v-list-item v-for="i in jobTask.messages" :key="i.id"-->
+<!--                                     style="border: black solid thin;-->
+<!--                                        border-radius: 10px;-->
+<!--                                        background-color: aliceblue;-->
+<!--                                        margin-bottom: .15rem;-->
+<!--                                        margin-top: .15rem;"-->
+<!--                        >-->
+<!--                            <v-list-item-content>-->
+<!--                                <v-list-item-title>{{ i.message }}</v-list-item-title>-->
+<!--                            </v-list-item-content>-->
+<!--                        </v-list-item>-->
+<!--                    </v-card-text>-->
+
+<!--                    <v-btn-->
+<!--                            color="primary w-full"-->
+<!--                            @click="showTaskMessages(false)"-->
+<!--                            v-show="messages"-->
+<!--                    >-->
+<!--                        Hide-->
+<!--                    </v-btn>-->
+<!--                    <v-btn-->
+<!--                            color="primary w-full"-->
+<!--                            @click="showTaskMessages(true)"-->
+<!--                            v-show="!messages"-->
+<!--                    >-->
+<!--                        Show-->
+<!--                    </v-btn>-->
+
+<!--                </v-card>-->
+
                 <!-- Task Actions -->
                 <div class="col-12 mb-4">
                     <h1 class="card-title mt-4"></h1>
@@ -472,8 +514,9 @@
                                         id="changeTask"
                                         class="w-full mb-half-rem"
                                         color="warning"
-                                        @click="openDenyTaskForm(jobTask.id)"
+                                        @click="changeTaskDialog()"
                                 >
+                                    <!--                                    @click="openDenyTaskForm(jobTask.id)"-->
                                     Change Task
                                 </v-btn>
                             </div>
@@ -492,6 +535,44 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="text-center">
+                <v-dialog
+                        v-model="dialog"
+                        width="500"
+                >
+                    <v-card>
+                        <v-card-title
+                                class="headline grey lighten-2"
+                                primary-title
+                        >
+                            What About This Task Would You Like For The Contractor To Change?
+                        </v-card-title>
+
+                        <v-card-text style="margin-top: 1.25rem">
+                            <v-textarea
+                                    outlined
+                                    name="contractorMessage"
+                                    label="Message To Contractor"
+                                    v-model="changeMessage"
+                            ></v-textarea>
+                        </v-card-text>
+
+                        <v-divider></v-divider>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                    color="primary"
+                                    text
+                                    @click="sendMessageToContractor()"
+                            >
+                                Submit
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
             </div>
 
             <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
@@ -551,6 +632,9 @@
     ],
     data() {
       return {
+        messages: false,
+        changeMessage: '',
+        dialog: false,
         authUser: {},
         user: {},
         jobTask: null,
@@ -676,6 +760,16 @@
     },
     methods: {
 
+      checkIfThereAreMessaages(jobTask) {
+        if (jobTask && jobTask.messages) {
+          return jobTask.messages.length > 0
+        }
+      },
+
+      showTaskMessages(show) {
+        this.messages = show
+      },
+
       createHyphenDate(date) {
         const dateArray = date.split('/')
         return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
@@ -690,7 +784,7 @@
       },
 
       jobIsApproved() {
-          return this.getLatestJobStatusNumber() === 7
+        return this.getLatestJobStatusNumber() === 7
       },
 
       jobTaskIsFinished(jobTask) {
@@ -736,6 +830,28 @@
       getLatestJobTaskStatus(jobTask) {
         if (jobTask && (jobTask.job_task_statuses || jobTask.job_task_status)) {
           return this.getJobTaskStatus_latest(jobTask)
+        }
+      },
+
+      getLatestJobStatus(jobTask) {
+        if (jobTask && (jobTask.job.job_statuses)) {
+            return jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status
+        }
+      },
+
+      async sendMessageToContractor() {
+        try {
+          await axios.post('/jobTask/message', {
+            general_id: this.jobTask.general.id,
+            sub_id: this.jobTask.contractor.id,
+            customer_id: this.jobTask.customer.id,
+            job_task_id: this.jobTask.id,
+            message: this.changeMessage
+          })
+          Bus.$emit('bidUpdated')
+          this.dialog = false
+        } catch (error) {
+          console.log('error')
         }
       },
 
@@ -880,7 +996,7 @@
         return this.jobTask.status === 'bid_task.approved_by_general'
       },
       customerWantsToChangeTheBid() {
-          return !this.jobIsApproved()
+        return !this.jobIsApproved()
       },
       contractorWantsToChangeBid(jobTask) {
         if (jobTask) {
@@ -1034,6 +1150,9 @@
       },
       openUpdateTaskLocation(jobTaskId) {
         $('#update-task-location-modal_' + jobTaskId).modal()
+      },
+      changeTaskDialog() {
+        this.dialog = true
       },
       openDenyTaskForm(jobTaskId) {
         $('#deny-task-modal_' + jobTaskId).modal('show')

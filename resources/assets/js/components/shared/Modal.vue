@@ -23,6 +23,7 @@
                                color="primary"
                                data-dismiss="modal">{{ no }}
                         </v-btn>
+                        <v-spacer></v-spacer>
                         <v-btn type="button"
                                 class="w-40"
                                 color="primary"
