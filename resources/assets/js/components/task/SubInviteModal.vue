@@ -56,7 +56,7 @@
                             <div class="panel-footer" v-if="aResults.length > 0">
                                 <div class="flex flex-col" ref="buttons">
                                     <v-btn
-                                            class="w-full"
+                                            class="w-full m-15"
                                             color="primary"
                                             v-for="(result, index) in aResults"
                                             v-bind:key="result.id"

@@ -275,7 +275,7 @@
                                     class="w-40 mt-1rem"
                                     color="primary"
                                     v-if="isBidOpen(bidTask)"
-                                    @click.prevent="update"
+                                    @click.prevent="update(bidTask)"
                                     v-bind:id="bidTask.id" :disabled="disabled.submit">
                                         <span v-if="disabled.submit">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -422,14 +422,14 @@
         let zero = 0
         return zero.toString()
       },
-      update(e) {
-        let id = e.target.id
+      update(bidTask) {
+        let id = bidTask.id
         // debugger;
         let bid_price = $('#price-' + id).val()
         let po = this.paymentType
         this.disabled.submit = true
         console.log(id, bid_price)
-        axios.put('/bid/task/' + id, {
+        axios.post('/bid/task/', {
           id: id,
           bid_price: bid_price,
           paymentType: po

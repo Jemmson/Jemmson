@@ -67,7 +67,7 @@
 
         <div v-if="isCustomer" class="text-right">
             <v-btn
-                    class="w-40"
+                    class="w-full"
                     color="primary"
                     @click.prevent="paidCash = true" :disabled="disabled.payCash">
                         <span v-if="disabled.payCash">
@@ -76,7 +76,7 @@
                 Paid With Cash
             </v-btn>
             <v-btn
-                    class="w-40"
+                    class="w-full"
                     color="primary"
                     v-if="contractorIsSetupWithStripe()" @click.prevent="payAllPayableTasks()"
                     :disabled="disabled.payAll">

@@ -28,7 +28,7 @@
                         </span>
                     <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
                         <v-btn
-                                class="w-full"
+                                class="w-full m-15"
                                 color="primary"
                                 v-for="result in taskResults"
                                 v-bind:key="result.id" @click.prevent="fillTaskValues(result)">
@@ -256,7 +256,7 @@
     },
     data() {
       return {
-        addNewTaskForm: {
+        addNewTaskForm: new SparkForm({
           area: '',
           assetAccountRef: {
             value: '0',
@@ -296,7 +296,7 @@
           type: 'Inventory',
           updateTask: false,
           useStripe: false
-        },
+        }),
         checked: 'checked',
         result: {
           resultReturned: false,

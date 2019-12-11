@@ -117,7 +117,7 @@
         <section ref="job_tasks" class="col-12"
                  v-if="bid.job_tasks !== undefined"
         >
-            <div v-if="!isCustomer">
+            <div v-if="!isCustomer && bid.job_tasks.length > 0">
 
                 <h1 class="card-title mt-4">Job Tasks</h1>
 
@@ -541,12 +541,14 @@
     methods: {
 
       subFinishedTask(item) {
-        let status = this.getLatestSubStatus(item);
+        let status = this.getLatestSubStatus(item)
         return status === 'finished_job'
       },
 
       getLatestSubStatus(item) {
-        return item.sub_statuses[item.sub_statuses.length - 1].status
+        if (item && item.sub_statuses && item.sub_statuses.length > 0) {
+          return item.sub_statuses[item.sub_statuses.length - 1].status
+        }
       },
 
       approveSubsWork(jobTask) {
@@ -638,7 +640,13 @@
         let taskIsFinished = false
         if (this.bid && this.bid.job_tasks) {
           for (let i = 0; i < this.bid.job_tasks.length; i++) {
-            if (this.bid.job_tasks[i].status === 'bid_task.finished_by_general') {
+            let status = ''
+            if (this.bid.job_tasks[i].job_task_status && this.bid.job_tasks[i].job_task_status.length > 0) {
+              status = this.bid.job_tasks[i].job_task_status[this.bid.job_tasks[i].job_task_status.length - 1].status
+            } else {
+              status = this.bid.job_tasks[i].job_task_statuses[this.bid.job_tasks[i].job_task_statuses.length - 1].status
+            }
+            if (status === 'approved_subs_work' || status === 'general_finished_work') {
               taskIsFinished = true
             }
           }

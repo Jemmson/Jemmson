@@ -15,6 +15,7 @@ use App\Task;
 use App\JobTask;
 use App\User;
 use App\Job;
+use App\Traits\Status;
 
 use App\Notifications\CustomerUnableToSendPaymentWithStripe;
 use App\Notifications\CustomerPaidForTask;
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class StripeController extends Controller
 {
+
+    use Status;
 
     /**
      * Your application sends the user to Stripe’s website to provide the necessary details, including banking 
@@ -260,9 +263,26 @@ class StripeController extends Controller
             if ($sub_contractor_id != $general_contractor_id) {
                 $sub_contractor = User::find($sub_contractor_id);
                 $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+                $this->setSubStatus($sub_contractor_id, $jobTask->id, 'paid');
             } 
             $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
         }
+
+        $this->setJobTaskStatus($jobTask->id, 'paid');
+
+        $allJobTasks = $job->jobTasks()->get();
+        $totalJobTasks = count($allJobTasks);
+        $totalPaid = [];
+        foreach($allJobTasks as $jt){
+            $status = $jt->jobTaskStatuses()->orderBy('created_at', 'asc')->get()->last()->status;
+            if ($status == 'paid') {
+                array_push($totalPaid, 'paid');
+            }
+        }
+        if (count($totalPaid) == $totalJobTasks) {
+            $this->setJobStatus($job->id, 'paid');
+        }
+
 
         $this->updateJobTasksAsPaid($jobTasks, $transfers, $excluded);
         

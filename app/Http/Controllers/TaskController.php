@@ -511,9 +511,9 @@ class TaskController extends Controller
      * @param \App\BidContractorJobTask $task
      * @return \Illuminate\Http\Response
      */
-    public function updateBidContractorJobTask(Request $request, $id)
+    public function updateBidContractorJobTask(Request $request)
     {
-        $bidContractorJobTask = BidContractorJobTask::find($id);
+        $bidContractorJobTask = BidContractorJobTask::find($request->id);
 
         if ($bidContractorJobTask == null) {
             return response()->json(["message" => "Couldn't find record.", "errors" => ["error" => ["Couldn't find record."]]], 404);
