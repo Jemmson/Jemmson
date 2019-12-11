@@ -43,15 +43,15 @@
       return {
 
         search: '',
-        headers: [{
-          text: 'ID',
-          align: 'left',
-          sortable: false,
-          value: 'id',
-        },
+        headers: [
+          {
+            text: 'ID',
+            align: 'left',
+            sortable: false,
+            value: 'id',
+          },
           {text: 'Job Name', value: 'job_name'},
           {text: 'General', value: 'general'},
-          {text: 'Sub', value: 'sub'},
           {text: 'Customer', value: 'customer'},
           {text: 'Finished', value: 'finished'},
         ],
@@ -79,16 +79,15 @@
           let job
           let status
           for (let i = 0; i < this.invoices.jobs.length; i++) {
-            job = this.invoices.jobs[i];
-            status = job.statuses[job.statuses.length - 1].status
-            if (status === 'paid') {
+            job = this.invoices.jobs[i]
+            status = job.statuses[job.statuses.length - 1]
+            if (status.status === 'paid') {
               receipts.push({
                 id: job.id,
                 job_name: job.job_name,
                 general: job.contractor.company_name,
-                sub: '',
                 customer: job.customer.name,
-                finished: job.completed_bid_date
+                finished: status.updated_at
               })
             }
           }
