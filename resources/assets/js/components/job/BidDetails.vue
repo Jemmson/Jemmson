@@ -585,7 +585,9 @@
       },
       approvedByCustomer(task) {
         const latestStatus = this.getLatestJobTaskStatus(task)
-        return latestStatus !== 'general finished work' && latestStatus !== 'sub finished work'
+        return latestStatus !== 'general finished work'
+          && latestStatus !== 'sub finished work'
+          && latestStatus !== 'paid'
       },
       getLatestJobTaskStatus(task) {
         if (task && task.job_task_statuses) {
