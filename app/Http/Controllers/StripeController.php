@@ -233,7 +233,7 @@ class StripeController extends Controller
         $this->updateJobCashMessage($job, $request->cashMessage);
 
 
-        // get all tasks that havent been paid for
+        // get all tasks that haven't been paid for
         $jobTasks = $job->
                         jobTasks()->
                         where('status', 'bid_task.finished_by_general')->

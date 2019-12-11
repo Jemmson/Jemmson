@@ -5,6 +5,13 @@
 
         <div v-show="false">{{ getJobStatusValue() }}</div>
 
+        <v-card v-if="bid.paid_with_cash_message">
+            <v-card-title
+                    class="title-paid-format">
+                {{ bid.paid_with_cash_message }}
+            </v-card-title>
+        </v-card>
+
         <v-card>
             <v-card-title>Job Status:</v-card-title>
             <v-card-subtitle>
@@ -267,6 +274,14 @@
 </script>
 
 <style scoped>
+
+
+    .title-paid-format {
+        background-color: #d03838ba;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
 
     .status {
         padding-top: 1rem;

@@ -64,7 +64,7 @@
                                 <div class="col-12">
                                     Message:
                                     <div class="float-right font-weight-bold">
-                                        {{jobTask && jobTask.task_messages && jobTask.task_messages.length > 0 ? jobTask.task_messages[jobTask.task_messages.length -1].message: ''}}
+                                        {{ getMessage(jobTask) }}
                                     </div>
                                 </div>
                             </div>
@@ -760,6 +760,18 @@
     },
     methods: {
 
+      getMessage(jobTask){
+
+        let status = this.getLatestJobTaskStatus(jobTask);
+
+        if (status === 'paid') {
+          return jobTask.job.paid_with_cash_message
+        } else if (jobTask && jobTask.task_messages && jobTask.task_messages.length > 0) {
+          return jobTask.task_messages[jobTask.task_messages.length -1].message
+        }
+
+      },
+
       checkIfThereAreMessaages(jobTask) {
         if (jobTask && jobTask.messages) {
           return jobTask.messages.length > 0
@@ -861,7 +873,9 @@
       },
       jobIsNotComplete() {
         const latestStatus = this.getLatestJobTaskStatus()
-        return latestStatus !== 'general finished work' && latestStatus !== 'sub finished work'
+        return latestStatus !== 'general finished work'
+          && latestStatus !== 'sub finished work'
+          && latestStatus !== 'paid'
       },
       getLatestJobTaskStatus() {
         if (this.jobTask && this.jobTask.job_task_statuses) {
