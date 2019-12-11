@@ -59,6 +59,11 @@ class JobTask extends Model
         return $this->belongsTo(User::class)->with('contractor');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function bidContractorJobTasks()
     {
         return $this->hasMany(BidContractorJobTask::class, 'job_task_id');

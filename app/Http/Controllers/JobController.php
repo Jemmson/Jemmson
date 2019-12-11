@@ -190,8 +190,171 @@ class JobController extends Controller
 
     public function getInvoice(Job $job)
     {
-        $job->load('location', 'jobTasks.task');
-        return $job;
+
+        $user = Auth::user();
+
+        if ($user->usertype == 'customer') {
+            return $this->customerInvoice($job);
+        } else if ($user->usertype === 'contractor') {
+            if ($user->id == $job->contractor_id) {
+                return $this->generalInvoice($job);
+            } else {
+                return $this->subInvoice($job);
+            }
+        }
+    }
+
+    public function customerInvoice($job)
+    {
+        $invoice = [];
+        $invoice['job'] = $job->select([
+            'bid_price',
+            'job_name'
+        ])->get()->first();
+        $invoice['contractor'] = $job->contractor()->select([
+            'name'
+        ])->get()->first();
+        $invoice['contractor']['company'] =
+            $job->contractor()->get()->first()
+                ->contractor()->select([
+                    'company_name'
+                ])->get()->first();
+
+        $jobTasks = $job->jobTasks()->select([
+            'qty',
+            'cust_final_price',
+            'task_id',
+            'contractor_id',
+            'unit_price'
+        ])->get();
+
+        $invoice['job']['job_tasks'] = $jobTasks;
+
+        foreach ($jobTasks as $jt) {
+            $jt['task'] = $jt->task()->select([
+                'name'
+            ])->get()->first();
+
+            if ($jt->contractor_id != $job->contractor_id) {
+                $jt['sub'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'name'
+                ])->get()->first();
+                $jt['sub']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
+                    ->select(['company_name'])->get()->first();
+            } else {
+                $jt['general'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'name'
+                ])->get()->first();
+                $jt['general']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
+                    ->select(['company_name'])->get()->first();
+            }
+        }
+
+        $invoice['user'] = 'customer';
+
+        return $invoice;
+    }
+
+    public function generalInvoice($job)
+    {
+        $invoice = [];
+        $invoice['job'] = $job->select([
+            'bid_price',
+            'job_name'
+        ])->get()->first();
+        $invoice['contractor'] = $job->contractor()->select([
+            'name'
+        ])->get()->first();
+        $invoice['contractor']['company'] =
+            $job->contractor()->get()->first()
+                ->contractor()->select([
+                    'company_name'
+                ])->get()->first();
+
+        $jobTasks = $job->jobTasks()->select([
+            'qty',
+            'cust_final_price',
+            'task_id',
+            'contractor_id',
+            'unit_price'
+        ])->get();
+
+        $invoice['job']['job_tasks'] = $jobTasks;
+
+        foreach ($jobTasks as $jt) {
+            $jt['task'] = $jt->task()->select([
+                'name'
+            ])->get()->first();
+
+            if ($jt->contractor_id != $job->contractor_id) {
+                $jt['sub'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'name'
+                ])->get()->first();
+                $jt['sub']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
+                    ->select(['company_name'])->get()->first();
+            } else {
+                $jt['general'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'name'
+                ])->get()->first();
+                $jt['general']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
+                    ->select(['company_name'])->get()->first();
+            }
+        }
+
+        $invoice['user'] = 'general';
+
+        return $invoice;
+    }
+
+    public function subInvoice($job)
+    {
+        $invoice = [];
+        $invoice['job'] = $job->select([
+            'bid_price',
+            'job_name'
+        ])->get()->first();
+        $invoice['contractor'] = $job->contractor()->select([
+            'name'
+        ])->get()->first();
+        $invoice['contractor']['company'] =
+            $job->contractor()->get()->first()
+                ->contractor()->select([
+                    'company_name'
+                ])->get()->first();
+
+        $jobTasks = $job->jobTasks()->select([
+            'qty',
+            'cust_final_price',
+            'task_id',
+            'contractor_id',
+            'unit_price'
+        ])->get();
+
+        $invoice['job']['job_tasks'] = $jobTasks;
+
+        foreach ($jobTasks as $jt) {
+            $jt['task'] = $jt->task()->select([
+                'name'
+            ])->get()->first();
+
+            if ($jt->contractor_id != $job->contractor_id) {
+                $jt['sub'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'name'
+                ])->get()->first();
+                $jt['sub']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
+                    ->select(['company_name'])->get()->first();
+            } else {
+                $jt['general'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'name'
+                ])->get()->first();
+                $jt['general']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
+                    ->select(['company_name'])->get()->first();
+            }
+        }
+
+        $invoice['user'] = 'sub';
+
+        return $invoice;
     }
 
     public function getSubInvoice(JobTask $jobTask)
