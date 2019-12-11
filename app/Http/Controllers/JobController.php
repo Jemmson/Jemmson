@@ -154,6 +154,9 @@ class JobController extends Controller
                 'name'
             ])->get()->first();
             $job['customer'] = $customer;
+
+            $jobStatuses = $job->jobStatuses()->get();
+            $job['statuses'] = $jobStatuses;
         }
 
         return response()->json($invoices, 200);
