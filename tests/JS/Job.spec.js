@@ -6,19 +6,15 @@ import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
+require('./setup')
+
 // window.Vue = Vue
 import Vuetify from 'vuetify'
-
-// config.stubs['v-card'] = '<div />'
-config.stubs['bid-details'] = '<div />'
-config.stubs['approve-bid'] = '<div />'
-config.stubs['general-contractor-bid-actions'] = '<div />'
-config.stubs['completed-tasks'] = '<div />'
-config.stubs['stripe'] = '<div />'
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)
 localVue.use(Vuex)
+localVue.use(Vuetify, {})
 
 const router = new VueRouter()
 
@@ -62,6 +58,7 @@ describe('Job', () => {
     store,
     router,
     vuetify,
+    localVue,
     mixins: [Status, Utilities],
     mocks: {
       $store: {
@@ -91,7 +88,7 @@ describe('Job', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
-  test.skip('in_progress status shows up as In Progress status', () => {
+  test('in_progress status shows up as In Progress status', () => {
     wrapper.setData({
       bid: {
         job_statuses: [
@@ -136,10 +133,9 @@ describe('Job', () => {
       }
     })
 
-    expect(wrapper.find('h1').text()).toContain('General Contractor')
-
-    expect(wrapper.text()).toContain('Job Status:')
-    // expect(wrapper.find({ref: 'jobStatus'}).text()).toBe('sent on 12/06/2019')
+    Vue.nextTick(() => {
+      expect(wrapper.find({ref: 'jobStatus'}).text()).toBe('sent on 12/06/2019')
+    })
 
   })
 

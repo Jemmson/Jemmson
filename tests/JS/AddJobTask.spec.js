@@ -1,17 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import AddJobTask from '../../resources/assets/js/pages/AddJobTask'
-// import SparkForm from '../../spark/resources/assets/js/forms/form.js'
-
-global.Spark = {
-  state: {
-    user: {
-      id: 1,
-      contractor: {
-        accounting_software: ''
-      }
-    }
-  }
-}
+require('./setup');
 
 describe('AddJobTask', () => {
 

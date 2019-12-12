@@ -1,13 +1,25 @@
 {
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "vue-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    }
+  },
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "test:unit": "jest",
+    "test:unit:all": "jest tests/JS/",
+    "test:unit:one": "jest",
     "test:unit:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --no-cache --runInBand",
-    "test_jest_watch": "jest --watch",
+    "test_jest_watch": "jest --watch tests/JS/",
     "test": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JS/setup.js tests/JS/**/*.spec.js",
     "test_file": "mocha-webpack  --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JS/setup.js",
     "test_file_glob": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JS/setup.js",
@@ -58,16 +70,5 @@
     "sass-loader": "^7.1.0",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.10"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "vue"
-    ],
-    "transform": {
-      ".*\\.(vue)$": "vue-jest",
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
-    }
   }
 }

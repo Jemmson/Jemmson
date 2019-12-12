@@ -1,17 +1,27 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import JobTask from '../../resources/assets/js/pages/JobTask'
 import Vuex from 'vuex'
+import VueRouter from 'vue-router'
 import Vue from 'vue'
+import Vuetify from 'vuetify'
+
+require('./setup')
 
 const localVue = createLocalVue()
 
 global.Bus = new Vue()
+
 // global.Bus.$on('taskAdded', (data) => {
 //   wrapper.vm.$emit('openSettings', data);
 // });
+
 global.Bus.$on('taskAdded')
 
 localVue.use(Vuex)
+localVue.use(VueRouter)
+localVue.use(Vuetify, {})
+
+const router = new VueRouter()
 
 describe('JobTask', () => {
   let actions
@@ -27,8 +37,7 @@ describe('JobTask', () => {
   state = {
     job: {
       model: {
-        job_tasks: [
-        ]
+        job_tasks: []
       }
     }
   }
@@ -36,29 +45,35 @@ describe('JobTask', () => {
   storeOptions = {
     actions: actions,
     mutations: mutations,
-    getters: getters
+    getters: getters,
+    state: state
   }
   store = new Vuex.Store(storeOptions)
 
-  const $route = {
-    params: {
-      index: 123
-    }
-  }
-
-
   let wrapper = shallowMount(JobTask, {
     store,
+    router,
+    localVue,
     mocks: {
       $store: {
         commit: jest.fn(),
-        state: state
+        state: {
+          job: {
+            model: {
+              job_tasks: []
+            }
+          }
+        }
       },
-      $route
+      $route: {
+        params: {
+          index: 123
+        }
+      }
     },
   })
 
-  test ('change task button shows when job is not approved', () => {
+  test('change task button shows when job is not approved', () => {
 
     // user is a customer
 
@@ -105,13 +120,13 @@ describe('JobTask', () => {
       }
     })
 
-    let btn = wrapper.find("#changeTask")
+    let btn = wrapper.find('#changeTask')
 
     expect(btn.exists()).toBe(true)
 
   })
 
-  test ('delete task button shows when job is not approved', () => {
+  test('delete task button shows when job is not approved', () => {
 
     // user is a customer
 
@@ -158,7 +173,7 @@ describe('JobTask', () => {
       }
     })
 
-    let btn = wrapper.find("#changeTask")
+    let btn = wrapper.find('#changeTask')
 
     expect(btn.exists()).toBe(true)
 

@@ -783,8 +783,10 @@
       },
 
       createHyphenDate(date) {
-        const dateArray = date.split('/')
-        return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
+        if (date) {
+          const dateArray = date.split('/')
+          return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
+        }
       },
 
       setStartDate(jt) {
@@ -846,7 +848,7 @@
       },
 
       getLatestJobStatus(jobTask) {
-        if (jobTask && (jobTask.job.job_statuses)) {
+        if (jobTask && jobTask.job && jobTask.job.job_statuses) {
             return jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status
         }
       },
