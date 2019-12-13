@@ -472,11 +472,15 @@ class JobController extends Controller
     {
         $customerResults = [];
         $customer = customer::where('user_id', '=', $job->customer_id)->get()->first();
-        array_push($customerResults, [
-            "notes" => $customer->notes
-        ]);
+        if (!empty($customer)) {
+            array_push($customerResults, [
+                "notes" => $customer->notes
+            ]);
+            return $customerResults[0];
+        } else {
+            return null;
+        }
 
-        return $customerResults[0];
 
     }
 

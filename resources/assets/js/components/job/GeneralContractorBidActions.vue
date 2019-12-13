@@ -1,7 +1,7 @@
 <template>
     <div>
         <div ref="subTaskWarning"
-             class="text-white btn-red rounded p-3 mt-2 mb-2 text-center"
+             class="text-white bg-red rounded p-3 mt-2 mb-2 text-center"
              style="font-weight: 700"
              v-if="subTaskWarning">
             PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
@@ -227,5 +227,9 @@
 </script>
 
 <style>
+
+    .bg-red{
+        background-color: red;
+    }
 
 </style>
