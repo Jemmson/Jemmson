@@ -281,6 +281,10 @@ article {
 .justify-content-around {
   justify-content: space-around !important;
 }
+.justify-center {
+  -webkit-box-pack: center !important;
+          justify-content: center !important;
+}
 .space-between {
   -webkit-box-pack: justify;
           justify-content: space-between;
@@ -320,6 +324,9 @@ section {
 .flex-center {
   -webkit-box-pack: center;
           justify-content: center;
+}
+.w-95 {
+  width: 95%;
 }
 .w-full {
   width: 100%;

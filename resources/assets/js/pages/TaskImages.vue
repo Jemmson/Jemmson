@@ -6,9 +6,9 @@
                 }}</label>
         </card>
 
-        <div class="flex mb-1rem">
+        <div class="flex mb-1rem w-full justify-center">
             <v-btn
-                    class="w-40"
+                    class="mb-1rem w-95"
                     color="primary"
                     @click.prevent="goBack()">
                 Back
@@ -23,7 +23,8 @@
                         <img :src="image.url" alt="">
                     </a>
                     <v-btn
-                            class="w-40"
+                            v-if="userCreatedImage(image.user_id)"
+                            class="w-full"
                             color="red"
                             :id="'image-' + image.id"
                             @click="deleteImage(image.id, index)">
@@ -68,6 +69,9 @@
     },
     computed: {},
     methods: {
+      userCreatedImage(imageUserId){
+        return this.user.id === imageUserId;
+      },
       goBack() {
         this.$router.go(-1)
       },

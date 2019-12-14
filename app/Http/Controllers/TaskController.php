@@ -1438,6 +1438,7 @@ class TaskController extends Controller
         $url = $image['secure_url'];
         $taskImage = new TaskImage;
         $taskImage->job_id = $request->jobId;
+        $taskImage->user_id = Auth::user()->getAuthIdentifier();
         $taskImage->job_task_id = $request->jobTaskId;
         $taskImage->url = $url;
         $taskImage->secure_url = $url;
