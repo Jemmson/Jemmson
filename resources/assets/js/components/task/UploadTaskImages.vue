@@ -32,11 +32,20 @@
             </a>
         </div>
         <input :ref="jobTask ? 'task_photo_' + jobTask.id : ''"
+               :disabled="loading"
                class="btn btn-normal ml-2 mt-4"
                style="width: 95%"
                :id="jobTask ? 'task_photo_' + jobTask.id : ''"
                type="file" @change="uploadTaskImage(jobTask.id)">
-        <i v-show="uploading" class="fa fa-btn fa-spinner fa-spin"></i>
+
+        <v-progress-linear
+                :active="loading"
+                :indeterminate="loading"
+                absolute
+                bottom
+                color="deep-purple accent-4"
+        ></v-progress-linear>
+
     </div>
 </template>
 
@@ -53,7 +62,7 @@
         disabled: {
           uploadTaskImageBtn: false
         },
-        uploading: false
+        loading: false
       }
     },
     computed: {
@@ -108,16 +117,17 @@
           return jobTask.images.length > 0
         }
       },
-      uploadTaskImage(jobTaskId) {
+      async uploadTaskImage(jobTaskId) {
         if (this.jobTask && this.jobTask.job) {
-          this.uploading = true
+          this.loading = true
           const data = new FormData()
           console.log(this.$refs['task_photo_' + jobTaskId])
           data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0])
           data.append('jobTaskId', jobTaskId)
 
           this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id)
-          User.uploadTaskImage(data, this.disabled)
+          const disabled = await User.uploadTaskImage(data, this.disabled)
+          this.loading = disabled;
         }
       },
     }

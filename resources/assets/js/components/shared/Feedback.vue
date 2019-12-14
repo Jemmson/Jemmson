@@ -10,7 +10,6 @@
         >
             <v-icon>mdi-navigation</v-icon>
         </v-btn>
-
         <v-dialog
                 v-model="dialog"
                 width="400">
@@ -65,14 +64,6 @@
                             </template>
                             <span>Feedback</span>
                         </v-tooltip>
-
-
-
-
-
-
-
-
                     </div>
                 </v-card-actions>
                 <v-divider></v-divider>
@@ -126,7 +117,6 @@
                     </v-sheet>
                 </div>
             </v-card>
-
         </v-dialog>
     </div>
 </template>

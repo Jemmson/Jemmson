@@ -427,9 +427,11 @@ export default class User {
       console.log(data)
       Bus.$emit('bidUpdated')
       disabled.uploadTaskImageBtn = false
+      return false;
     } catch (error) {
       Vue.toasted.error(error.message)
       disabled.uploadTaskImageBtn = false
+      return false;
     }
   }
 
