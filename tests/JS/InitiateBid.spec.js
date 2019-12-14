@@ -51,8 +51,7 @@ describe('InitiateBid', () => {
     fname.trigger('keyup')
     await Vue.nextTick(() => {
       console.log('fname', fname.html())
-      expect(
-        wrapper.text()).toContain('Name must be less than 16 characters')
+      expect(wrapper.text()).toContain('Name must be less than 16 characters')
     })
   })
 

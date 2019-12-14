@@ -285,6 +285,10 @@ article {
   -webkit-box-pack: justify;
           justify-content: space-between;
 }
+.space-evenly {
+  -webkit-box-pack: space-evenly;
+          justify-content: space-evenly;
+}
 .justify-items-center {
   justify-items: center !important;
 }

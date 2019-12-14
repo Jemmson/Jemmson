@@ -13,38 +13,79 @@
 
         <v-dialog
                 v-model="dialog"
-                width="400"
-        >
+                width="400">
             <v-card>
-                <v-card-title class="text-center">Shortcuts</v-card-title>
-                <v-divider></v-divider>
-                <v-card-actions>
-                    <v-btn
-                            v-if="isContractor()"
-                            color="primary"
-                            to="/initiate-bid"
-                    >ADD JOB
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                            v-if="isContractor()"
-                            color="primary"
-                            @click="getJobs()"
+                <v-card-actions
+                        align="center"
+                        justify="center"
+                >
+                    <div
+                            style="margin-left: auto; margin-right: auto;"
+                            class="flex space-evenly"
                     >
-                        ADD TASK
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                            color="primary"
-                            @click="showFeedback()"
-                    >
-                        ADD FEEDBACK
-                    </v-btn>
+
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn
+                                        dark v-on="on"
+                                        v-if="isContractor()"
+                                        class="ma-2 white--text"
+                                        color="primary"
+                                        to="/initiate-bid"
+                                        id="addbtn"
+                                >
+                                    <v-icon dark>mdi-office-building</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Add A Job</span>
+                        </v-tooltip>
+
+
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn
+                                        dark v-on="on"
+                                        v-if="isContractor() && activeJobsExist()"
+                                        color="primary"
+                                        class="ma-2 white--text"
+                                        @click="showJobs()"
+                                >
+                                    <v-icon dark>mdi-worker</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Add A Task</span>
+                        </v-tooltip>
+
+
+
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn
+                                        dark v-on="on"
+                                        color="primary"
+                                        class="ma-2 white--text"
+                                        @click="showFeedback()"
+                                >
+                                    <v-icon dark>mdi-voice</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Feedback</span>
+                        </v-tooltip>
+
+
+
+
+
+
+
+
+                    </div>
                 </v-card-actions>
                 <v-divider></v-divider>
                 <div v-show="tasks">
                     <v-list
                             shaped
+                            v-if="this.jobs.length > 0"
                     >
                         <v-subheader>Which Job Would You Like To Add A Task To?</v-subheader>
                         <v-list-item-group
@@ -65,27 +106,30 @@
                             </v-list-item>
                         </v-list-item-group>
                     </v-list>
+                    <div v-else>
+                        <v-subheader>There Are No Active Jobs</v-subheader>
+                    </div>
                 </div>
                 <div v-show="feedback">
-                        <v-sheet
-                                elevation="2"
-                                class="pa-12"
+                    <v-sheet
+                            elevation="2"
+                            class="pa-12"
+                    >
+                        <v-textarea
+                                v-model="comment"
+                                :auto-grow="true"
+                                :clearable="true"
+                                :label="label"
+                                :placeholder="placeholder"
+                                :rows="rows"
+                        ></v-textarea>
+                        <v-btn
+                                @click="submit"
+                                color="primary"
                         >
-                            <v-textarea
-                                    v-model="comment"
-                                    :auto-grow="true"
-                                    :clearable="true"
-                                    :label="label"
-                                    :placeholder="placeholder"
-                                    :rows="rows"
-                            ></v-textarea>
-                            <v-btn
-                                    @click="submit"
-                                    color="primary"
-                            >
-                                Submit
-                            </v-btn>
-                        </v-sheet>
+                            Submit
+                        </v-btn>
+                    </v-sheet>
                 </div>
             </v-card>
 
@@ -116,15 +160,23 @@
     props: {
       page: String
     },
+    mounted() {
+      this.getJobs()
+    },
     methods: {
+      showJobs() {
+        this.tasks = true
+        this.feedback = false
+      },
+      activeJobsExist() {
+        return this.jobs.length > 0
+      },
       open() {
         $('#feedback-modal').modal()
       },
       async getJobs() {
         let data = await axios.get('/getJobs')
         this.jobs = data.data
-        this.tasks = true
-        this.feedback = false
       },
       async getTasks() {
         let data = await axios.get('/getTasks')
@@ -136,7 +188,7 @@
         this.feedback = true
       },
 
-      isContractor(){
+      isContractor() {
         if (Spark.state.user) {
           return Spark.state.user.usertype === 'contractor'
         }
@@ -156,4 +208,13 @@
     #feedback {
         z-index: 1000;
     }
+
+    .long {
+        width: 45%;
+    }
+
+    .short {
+        width: 205%;
+    }
+
 </style>

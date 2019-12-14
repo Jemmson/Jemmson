@@ -113,7 +113,23 @@ class JobController extends Controller
 
     public function getJobs()
     {
-        return Job::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->where('deleted_at', '=', null)->get();
+
+        $jobs = Job::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->where('deleted_at', '=', null)->get();
+
+        foreach ($jobs as $job) {
+            $job['status'] = $job->jobStatuses()->get();
+        }
+
+        $activeJobs = [];
+
+        foreach ($jobs as $job) {
+            $status = $job['status'][count( $job['status']) - 1]->status;
+            if ($status != 'paid') {
+                array_push($activeJobs, $job);
+            }
+        }
+
+        return $activeJobs;
     }
 
     public function getTasks()
