@@ -217,8 +217,11 @@
       filterPhone() {
         this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
       },
-      sendSubInviteToBidOnTask() {
-        GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
+      async sendSubInviteToBidOnTask() {
+        await GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
+      },
+      clearAndCloseForm(){
+        this.clearFields()
         this.companyName = ''
         $('#sub-invite-modal_' + this.id).modal('hide')
       },
@@ -336,6 +339,9 @@
     mounted: function() {
       this.$store.commit('setPhoneLoadingValue')
       this.user = Spark.state.user
+      Bus.$on('clearAndCloseForm', () => {
+        this.clearAndCloseForm()
+      });
     }
   }
 </script>

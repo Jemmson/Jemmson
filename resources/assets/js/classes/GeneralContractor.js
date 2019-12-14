@@ -265,6 +265,7 @@ export default class GeneralContractor {
                 form.name = '';
                 form.email = '';
                 form.phone = '';
+                Bus.$emit('clearAndCloseForm')
             }).catch((error) => {
             console.error(error);
             form.errors.errors = error.errors;
