@@ -66,22 +66,32 @@
                         <!-- Phone Number -->
                         <div class="form-group" :class="{'has-error': form.errors.has('phone_number')}">
                             <label for="phone">Mobile Phone Number *</label>
-                            <div class="">
-                                <input type="tel" id="phone" class="form-control" name="phone_number" maxlength="10"
-                                       v-model="form.phone_number" @blur="validateMobileNumber($event.target.value)"
-                                       @keyup="filterPhone">
-                                <div v-if="checkThatNumberIsMobile()" style="color: green">{{
-                                    this.getMobileValidResponse[1]
-                                    }}
-                                </div>
-                                <div v-if="checkLandLineNumber()" style="color: red">{{ this.getMobileValidResponse[1]
-                                    }}
-                                </div>
-                                <span ref="phoneNumberError" class="help-block"
-                                      v-show="form.errors.has('phone_number')">
-                  {{ form.errors.get('phone_number') }}
-                </span>
+                            <input
+                                    type="tel" id="phone"
+                                    :disabled="loading"
+                                    class="form-control"
+                                    name="phone_number"
+                                    maxlength="10"
+                                    v-model="form.phone_number"
+                                    @blur="validateMobileNumber($event.target.value)"
+                                    @keyup="filterPhone">
+                            <div v-if="checkThatNumberIsMobile()"
+                                 style="color: green">{{ this.getMobileValidResponse[1] }}
                             </div>
+                            <div v-if="checkLandLineNumber()" style="color: red">
+                                {{ this.getMobileValidResponse[1] }}
+                            </div>
+                                <span ref="phoneNumberError" class="help-block"
+                                  v-show="form.errors.has('phone_number')">
+                                        {{ form.errors.get('phone_number') }}
+                                </span>
+                            <v-progress-linear
+                                    :active="loading"
+                                    :indeterminate="loading"
+                                    absolute
+                                    bottom
+                                    color="deep-purple accent-4"
+                            ></v-progress-linear>
                         </div>
 
 
@@ -253,8 +263,9 @@
   import Card from '../components/shared/Card'
   import IconHeader from '../components/shared/IconHeader'
   import AddLicenseBox from '../components/user/AddLicenseBox'
+  import Phone from '../components/mixins/Phone'
 
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import {mapMutations, mapActions} from 'vuex'
 
   export default {
     props: {
@@ -354,9 +365,6 @@
       }
     },
     computed: {
-      ...mapGetters([
-        'getMobileValidResponse'
-      ]),
       boxes() {
         return this.boxArray
       },
@@ -374,6 +382,7 @@
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
+    mixins: [ Phone ],
     methods: {
       ...mapMutations([
         'setMobileResponse'
@@ -412,47 +421,6 @@
             break
           }
         }
-      },
-      unformatNumber(number) {
-        let unformattedNumber = ''
-        for (let i = 0; i < number.length; i++) {
-          if (!isNaN(parseInt(number[i]))) {
-            unformattedNumber = unformattedNumber + number[i]
-          }
-        }
-        let numberLength = unformattedNumber.length
-        if (numberLength < 10) {
-          if (this.getMobileValidResponse[1] !== '') {
-            this.$store.commit('setTheMobileResponse', ['', '', ''])
-          }
-        }
-        // debugger;
-        return numberLength
-      },
-      checkValidData() {
-        let phone = this.unformatNumber(this.form.phone_number)
-
-        if ((this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile') &&
-          (this.form.first_name !== '' && this.form.last_name !== '') && (phone === 10)) {
-          return false
-        } else {
-          return true
-        }
-
-      },
-      validateMobileNumber(phone) {
-        if (phone !== '') {
-          this.checkMobileNumber(phone)
-        }
-      },
-      checkThatNumberIsMobile() {
-        return this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile'
-      },
-      checkLandLineNumber() {
-        return this.getMobileValidResponse[1] === 'landline' ||
-          this.getMobileValidResponse[2] === 'landline'
       },
       updateFormLocation(location) {
         this.form.address_line_1 = location.route
@@ -560,9 +528,6 @@
 
       this.form.company_name = this.user.contractor !== null ? this.user.contractor.company_name : ''
 
-      if (this.user.phone != null) {
-        this.validateMobileNumber(this.user.phone)
-      }
       Bus.$on('updateFormLocation', (payload) => {
         this.updateFormLocation(payload)
       })

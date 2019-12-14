@@ -32,12 +32,11 @@
             </a>
         </div>
         <input :ref="jobTask ? 'task_photo_' + jobTask.id : ''"
-               :disabled="loading"
+               :disabled="loading ? 'disabled' : false"
                class="btn btn-normal ml-2 mt-4"
                style="width: 95%"
                :id="jobTask ? 'task_photo_' + jobTask.id : ''"
                type="file" @change="uploadTaskImage(jobTask.id)">
-
         <v-progress-linear
                 :active="loading"
                 :indeterminate="loading"

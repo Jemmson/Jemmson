@@ -27,6 +27,10 @@ export default {
     }
   },
 
+  setPhoneLoadingValue(state){
+    state.busy = false
+  },
+
   setCurrentPage (state, payload) {
     state.page = payload;
   },

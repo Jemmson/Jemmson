@@ -89,10 +89,18 @@
                                    type="text"
                                    name="phone"
                                    autocomplete="on"
+                                   :disabled="loading"
                                    class="form-control "
                                    @blur="validateMobileNumber($event.target.value)"
                                    @keyup="filterPhone"
                                    v-model="registerForm.phoneNumber">
+                            <v-progress-linear
+                                    :active="loading"
+                                    :indeterminate="loading"
+                                    absolute
+                                    bottom
+                                    color="deep-purple accent-4"
+                            ></v-progress-linear>
                             <div v-if="getMobileValidResponse.length > 0">
                                 <div class="hidden">{{ registerButtonIsDisabled() }}</div>
                                 <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
@@ -147,15 +155,7 @@
                                     class="form-control"
                                     name="state"
                                     id="locality"
-                                   v-model="registerForm.state">
-                            <!--                            <input type="text" class="border input" name="state" id="locality" v-model="form.state">-->
-                            <!--                            <select id="locality"-->
-                            <!--                                    name="state"-->
-                            <!--                                    autocomplete="on"-->
-                            <!--                                    type="text" class="form-control "-->
-                            <!--                                    v-model="registerForm.state">-->
-                            <!--                                <option v-for="state in states" :value="state">{{ state.name }}</option>-->
-                            <!--                            </select>-->
+                                    v-model="registerForm.state">
                             <span class="help-block" v-show="registerForm.errors.state !== ''">{{registerForm.errors.state}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
@@ -179,7 +179,7 @@
                                     class="form-control"
                                     name="state"
                                     id="country"
-                                   v-model="registerForm.country">
+                                    v-model="registerForm.country">
                             <!--                            <select id="country"-->
                             <!--                                    name="country"-->
                             <!--                                    autocomplete="on"-->
@@ -281,9 +281,10 @@
 </template>
 
 <script>
-  import { mapGetters, mapState, mapActions, mapMutations } from 'vuex'
+  import { mapGetters, mapState } from 'vuex'
   import Card from '../components/shared/Card'
   import AddLicenseBox from '../components/user/AddLicenseBox'
+  import Phone from '../components/mixins/Phone'
 
   export default {
     name: 'Register',
@@ -330,7 +331,6 @@
           disabled: true
         },
         boxArray: [],
-        phoneFormatError: false,
         userTypeSelected: '',
         usesQuickbooks: false,
         showRegistration: false,
@@ -666,10 +666,10 @@
       //   }
       // )
     },
+    mixins: [Phone],
     computed: {
       ...mapGetters([
-        'getQuickBooksState',
-        'getMobileValidResponse'
+        'getQuickBooksState'
       ]),
       ...mapState({
         quickBooks: state => state.features.quickbooks,
@@ -683,8 +683,6 @@
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     methods: {
-      ...mapMutations(['setMobileResponse']),
-      ...mapActions(['checkMobileNumber']),
       initAutocomplete() {
         User.initAutocomplete('route')
       },
@@ -718,15 +716,6 @@
           }
         }
       },
-      validateMobileNumber(phone) {
-        // debugger
-        this.phoneFormatError = false
-        if (this.unformatNumber(this.registerForm.phoneNumber) === 10) {
-          this.checkMobileNumber(phone)
-        } else {
-          this.phoneFormatError = true
-        }
-      },
       registerButtonIsDisabled() {
         if (this.getMobileValidResponse[1] === 'mobile') {
           this.registerForm.disabled = false
@@ -740,69 +729,6 @@
         this.registerForm.state = location.administrative_area_level_1
         this.registerForm.zip = location.postal_code
         this.registerForm.country = location.country
-      },
-      unformatNumber(number) {
-        let unformattedNumber = ''
-        if (number) {
-          for (let i = 0; i < number.length; i++) {
-            if (!isNaN(parseInt(number[i]))) {
-              unformattedNumber = unformattedNumber + number[i]
-            }
-          }
-          let numberLength = unformattedNumber.length
-          if (numberLength < 10) {
-            if (this.getMobileValidResponse[1] !== '') {
-              this.$store.commit('setTheMobileResponse', ['', '', ''])
-            }
-          }
-          return numberLength
-        }
-      },
-      checkValidData() {
-        // debugger
-        let phoneLength = this.unformatNumber(this.registerForm.phoneNumber)
-        if (
-          (this.getMobileValidResponse[1] === 'mobile' ||
-            this.getMobileValidResponse[2] === 'mobile') &&
-          this.form.customerName !== '' &&
-          phoneLength === 10
-        ) {
-          return false
-        } else {
-          return true
-        }
-      },
-      validResponse() {
-        this.networkType.success = this.getMobileValidResponse[0]
-        this.networkType.originalCarrier = this.getMobileValidResponse[1]
-        this.networkType.currentCarrier = this.getMobileValidResponse[2]
-        this.networkType.exists = this.getMobileValidResponse[3]
-      },
-      checkThatNumberIsMobile() {
-        // debugger;
-        if (
-          this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile'
-        ) {
-          this.validResponse()
-          return true
-        } else {
-          return false
-        }
-      },
-      checkLandLineNumber() {
-        if (
-          this.getMobileValidResponse[1] === 'landline' ||
-          this.getMobileValidResponse[2] === 'landline'
-        ) {
-          this.validResponse()
-          return true
-        } else {
-          return false
-        }
-      },
-      filterPhone() {
-        this.registerForm.phoneNumber = Format.phone(this.registerForm.phoneNumber)
       },
       goToCheckAccounting() {
         // have to check quickbooks is turned on

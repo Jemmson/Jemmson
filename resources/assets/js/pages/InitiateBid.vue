@@ -52,9 +52,18 @@
                     <label for="phone">Mobile Phone *</label>
                     <div v-show="phoneFormatError" class="formatErrorLabel">The phone number must be 10 numbers</div>
                 </div>
-                <input class="form-control" :class="{'formatError': phoneFormatError}" id="phone" @keyup="filterPhone"
-                       maxlength="10" data-dependency="jobName" name="phone" dusk="phone" type="tel"
-                       @blur="validateMobileNumber($event.target.value)" v-model="form.phone">
+                <input class="form-control"
+                       :class="{'formatError': phoneFormatError}"
+                       id="phone"
+                       @keyup="$event.target.value > 9 ? filterPhone : false"
+                       maxlength="10"
+                       data-dependency="jobName"
+                       :disabled="loading"
+                       name="phone"
+                       dusk="phone"
+                       type="tel"
+                       @blur="validateMobileNumber($event.target.value)"
+                       v-model="form.phone">
 
                 <div v-if="getMobileValidResponse.length > 0">
                     <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
@@ -62,12 +71,18 @@
                     </div>
                     <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                 </div>
-                <div v-if="busy">
-            <i class="fa fa-btn fa-spinner fa-spin"></i>
-          </div>
+
+                <v-progress-linear
+                        :active="loading"
+                        :indeterminate="loading"
+                        absolute
+                        bottom
+                        color="deep-purple accent-4"
+                ></v-progress-linear>
+
                 <span class="help-block" v-show="form.errors.has('phone')">
-          {{ form.errors.get('phone') }}
-        </span>
+                  {{ form.errors.get('phone') }}
+                </span>
             </div>
 
 
@@ -105,8 +120,7 @@
   import Card from '../components/shared/Card'
   import Feedback from '../components/shared/Feedback'
   import IconHeader from '../components/shared/IconHeader'
-  import { mapGetters, mapMutations, mapActions, mapState } from 'vuex'
-  import Format from '../classes/Format'
+  import Phone from '../components/mixins/Phone'
 
   export default {
     components: {
@@ -117,8 +131,6 @@
     data() {
       return {
         query: '',
-        phoneFormatError: false,
-        validMobileNumber: '',
         results: [],
         form: new SparkForm({
           customerName: '',
@@ -129,12 +141,6 @@
           phone: '',
           quickbooks_id: '',
         }),
-        networkType: {
-          success: '',
-          originalCarrier: '',
-          currentCarrier: '',
-          exists: ''
-        },
         disabled: {
           submit: false,
           validData: true,
@@ -143,19 +149,12 @@
         numberType: ''
       }
     },
-    computed: {
-      ...mapGetters(['getMobileValidResponse']),
-      ...mapState({
-        busy: state => state.busy
-      })
-    },
+    mixins: [ Phone ],
     created() {
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     },
     methods: {
-      ...mapMutations(['setMobileResponse']),
-      ...mapActions(['checkMobileNumber']),
       submit() {
         console.log('submit')
         GeneralContractor.initiateBid(this.form, this.disabled)
@@ -170,81 +169,6 @@
           return true
         }
         this.$router.push('/home')
-      },
-
-      unformatNumber(number) {
-        let unformattedNumber = ''
-        if (number) {
-          for (let i = 0; i < number.length; i++) {
-            if (!isNaN(parseInt(number[i]))) {
-              unformattedNumber = unformattedNumber + number[i]
-            }
-          }
-          let numberLength = unformattedNumber.length
-          if (numberLength < 10) {
-            if (this.getMobileValidResponse[1] !== '') {
-              this.$store.commit('setTheMobileResponse', ['', '', ''])
-            }
-          }
-          // debugger;
-          return numberLength
-        }
-      },
-      checkValidData() {
-        // debugger
-        let phoneLength = this.unformatNumber(this.form.phone)
-        if (
-          (this.getMobileValidResponse[1] === 'mobile' ||
-            this.getMobileValidResponse[2] === 'mobile') &&
-          this.form.firstName !== '' &&
-          this.form.lastName !== '' &&
-          phoneLength === 10
-        ) {
-          return false
-        } else {
-          return true
-        }
-      },
-      validateMobileNumber(phone) {
-        this.phoneFormatError = false
-        if (this.unformatNumber(this.form.phone) === 10) {
-          // this.$store.commit('clearMobileResponse')
-          this.checkMobileNumber(phone)
-        } else {
-          this.phoneFormatError = true
-        }
-      },
-      validResponse() {
-        this.networkType.success = this.getMobileValidResponse[0]
-        this.networkType.originalCarrier = this.getMobileValidResponse[1]
-        this.networkType.currentCarrier = this.getMobileValidResponse[2]
-        this.networkType.exists = this.getMobileValidResponse[3]
-      },
-      checkThatNumberIsMobile() {
-        // debugger;
-        if (
-          this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile'
-        ) {
-          this.validResponse()
-          return true
-        } else {
-          return false
-        }
-      },
-      checkLandLineNumber() {
-        if (
-          this.getMobileValidResponse[1] === 'landline' ||
-          this.getMobileValidResponse[2] === 'landline'
-        ) {
-          this.validResponse()
-          return true
-        } else {
-          return false
-        }
-      },
-      filterPhone() {
-        this.form.phone = Format.phone(this.form.phone)
       },
       createName() {
         if (this.form.firstName === "" && this.form.lastName !== "") {

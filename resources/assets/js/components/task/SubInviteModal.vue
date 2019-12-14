@@ -1,6 +1,7 @@
 <template>
     <!-- Modal -->
-    <div v-if="isContractor()" class="modal h-100 modal-background-gray" :id="'sub-invite-modal_' + id" tabindex="-1" role="dialog"
+    <div v-if="isContractor()" class="modal h-100 modal-background-gray" :id="'sub-invite-modal_' + id" tabindex="-1"
+         role="dialog"
          aria-labelledby="stripe-modal"
          aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -13,12 +14,9 @@
                             taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
                     </div>
 
-
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-
-
                 </div>
                 <div class="modal-body">
                     <form role="form">
@@ -65,20 +63,38 @@
                         </div>
                         <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
                             <label for="phone">Mobile Phone *</label>
-                            <input type="tel" placeholder="Phone Number" class="form-control" id="phone" name="phone"
+                            <input type="tel"
+                                   placeholder="Phone Number"
+                                   class="form-control"
+                                   id="phone"
+                                   name="phone"
                                    maxlength="10"
+                                   :disabled="loading"
                                    required v-model="initiateBidForSubForm.phone"
                                    @blur="validateMobileNumber($event.target.value)"
-                                   @keyup="filterPhone">
+                                   @keyup="filterPhone"
+                            >
                             <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
-                {{ initiateBidForSubForm.errors.get('phone') }}
-              </span>
+                                {{ initiateBidForSubForm.errors.get('phone') }}
+                            </span>
                             <div v-if="getMobileValidResponse.length > 0">
-                                <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
-                                    <div style="color: green">{{ getMobileValidResponse[1] }}</div>
+                                <div v-if="getMobileValidResponse[1] === 'mobile'"
+                                        class="mt-2">
+                                    <div style="color: green">
+                                        {{ getMobileValidResponse[1] }}
+                                    </div>
                                 </div>
-                                <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
+                                <div class="mt-2" v-else style="color: red">
+                                    {{ getMobileValidResponse[1] }}
+                                </div>
                             </div>
+                            <v-progress-linear
+                                    :active="loading"
+                                    :indeterminate="loading"
+                                    absolute
+                                    bottom
+                                    color="deep-purple accent-4"
+                            ></v-progress-linear>
                         </div>
                     </form>
                     <!-- /end col-md6ss -->
@@ -102,7 +118,8 @@
 
 <script>
 
-  import { mapGetters, mapMutations, mapActions } from 'vuex'
+  import {mapMutations, mapActions} from 'vuex'
+  import Phone from '../../components/mixins/Phone'
 
   export default {
     name: 'SubInviteModal',
@@ -143,6 +160,7 @@
         }
       }
     },
+    mixins: [ Phone ],
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),
@@ -160,7 +178,7 @@
         }
       },
 
-      isContractor(){
+      isContractor() {
         if (Spark.state.user.usertype === 'contractor') {
           return true
         }
@@ -275,55 +293,11 @@
           }.bind(this))
         }
       },
-      validateMobileNumber(phone) {
-        // this.phoneFormatError = false
-        if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
-          this.checkMobileNumber(phone)
-          this.checkValidData()
-        } else {
-          this.phoneFormatError = true
-        }
+      enableSubmit() {
+        return this.getMobileValidResponse[1] !== 'mobile' || this.duplicateError
       },
-      unformatNumber(number) {
-        let unformattedNumber = ''
-        if (number !== '') {
-          if (number) {
-            for (let i = 0; i < number.length; i++) {
-              if (!isNaN(parseInt(number[i]))) {
-                unformattedNumber = unformattedNumber + number[i]
-              }
-            }
-            let numberLength = unformattedNumber.length
-            if (numberLength < 10) {
-              if (this.getMobileValidResponse[1] !== '') {
-                this.$store.commit('setTheMobileResponse', ['', '', ''])
-              }
-            }
-            return numberLength
-          }
-        } else {
-          return 0
-        }
-      },
-      enableSubmit(){
-        return this.getMobileValidResponse[1] !== 'mobile' ||  this.duplicateError
-      },
-      checkValidData() {
-        let phoneLength = this.unformatNumber(this.initiateBidForSubForm.phone)
-        if (
-          (this.getMobileValidResponse[1] === 'mobile' ||
-            this.getMobileValidResponse[2] === 'mobile') &&
-          this.initiateBidForSubForm.name !== '' &&
-          phoneLength === 10
-        ) {
-          this.phoneFormatError = false
-        } else {
-          this.phoneFormatError = true
-        }
-      }
     },
     computed: {
-      ...mapGetters(['getMobileValidResponse']),
       taskForSubInvite() {
         // debugger;
         return this.jobTaskTask
@@ -360,6 +334,7 @@
       }
     },
     mounted: function() {
+      this.$store.commit('setPhoneLoadingValue')
       this.user = Spark.state.user
     }
   }
