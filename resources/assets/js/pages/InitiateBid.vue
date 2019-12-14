@@ -6,7 +6,7 @@
             <div class="form-group">
                 <div class="flex flex-col" v-if="results.length">
                     <v-btn
-                            class="w-40"
+                            class="w-full"
                             color="primary"
                             v-for="result in results" v-bind:key="result.id"
                             :name="result.phone"
@@ -82,7 +82,7 @@
 
             <div class="form-group pt-4 mb-0">
                 <v-btn
-                        class="w-40"
+                        class="w-full"
                         color="primary"
                         name="submit" id="submit" dusk="submitBid"
                         @click.prevent="submit"

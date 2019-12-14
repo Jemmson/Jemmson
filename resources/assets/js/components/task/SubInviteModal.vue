@@ -11,26 +11,6 @@
                     <div class="flex flex-column">
                         <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
                             taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
-
-<!--                        <div v-show="subInvited">-->
-<!--                            <hr>-->
-<!--                            <div class="flex flex-column">-->
-<!--                                <h6>Sent Invite - {{ taskForSubInvite === undefined ? '' :-->
-<!--                                    jobTaskNameForSubInvite.toUpperCase() }} - -->
-<!--                                    <span class="capitalize">would you like to invite another sub to bid on this task?</span>-->
-<!--                                </h6>-->
-<!--                                <div class="flex space-between">-->
-<!--                                    <button class="btn btn-normal w-full capitalize mr-1rem" @click="needsNewTask()">-->
-<!--                                        Yes-->
-<!--                                    </button>-->
-<!--                                    <button class="btn btn-normal w-full capitalize ml-1rem" data-dismiss="modal"-->
-<!--                                            aria-label="Close">No-->
-<!--                                    </button>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <hr>-->
-<!--                        </div>-->
-
                     </div>
 
 
@@ -100,27 +80,12 @@
                                 <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
                             </div>
                         </div>
-<!--                        <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('email')}">-->
-<!--                            <label for="email">Email</label>-->
-<!--                            <input type="email" placeholder="Email" class="form-control"-->
-<!--                                   @keyup="checkForDuplicateEmail($event.target.value)"-->
-<!--                                   id="email" name="email"-->
-<!--                                   v-model="initiateBidForSubForm.email">-->
-<!--                            <span class="help-block" v-show="initiateBidForSubForm.errors.has('email')">-->
-<!--                                {{ initiateBidForSubForm.errors.get('email') }}-->
-<!--                            </span>-->
-<!--                            <div v-show="duplicateError" class="capitalize" style="color:red; font-size:10pt;">-->
-<!--                                this is a duplicate email. please use another email for this account or leave blank for-->
-<!--                                the-->
-<!--                                contractor to fill in.-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </form>
                     <!-- /end col-md6ss -->
                 </div>
                 <div class="modal-footer">
                     <v-btn
-                            class="w-40"
+                            class="w-full"
                             color="primary"
                             @click="sendSubInviteToBidOnTask" type="submit"
                             :disabled="enableSubmit()" ref="submit">

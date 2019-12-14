@@ -23,7 +23,6 @@
                             style="margin-left: auto; margin-right: auto;"
                             class="flex space-evenly"
                     >
-
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-btn
@@ -39,8 +38,6 @@
                             </template>
                             <span>Add A Job</span>
                         </v-tooltip>
-
-
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-btn
@@ -55,9 +52,6 @@
                             </template>
                             <span>Add A Task</span>
                         </v-tooltip>
-
-
-
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-btn
