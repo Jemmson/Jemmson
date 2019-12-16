@@ -98,6 +98,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/getCustomer/{id}', 'CustomerController@getCustomer');
     Route::post('bid/task/', 'TaskController@updateBidContractorJobTask');
     Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
+    Route::post('/task/finished/sub', 'TaskController@taskFinishedBySubContractor');
+    Route::post('/task/finished/general', 'TaskController@taskFinishedBGeneralContractor');
     Route::post('/task/general/finished', 'TaskController@taskHasBeenFinished');
     Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 

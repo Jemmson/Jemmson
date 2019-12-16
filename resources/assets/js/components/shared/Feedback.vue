@@ -40,7 +40,7 @@
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-btn
-                                        dark v-on="on"
+                                         dark v-on="on"
                                         v-if="isContractor() && activeJobsExist()"
                                         color="primary"
                                         class="ma-2 white--text"
@@ -70,7 +70,7 @@
                 <div v-show="tasks">
                     <v-list
                             shaped
-                            v-if="this.jobs.length > 0"
+                            v-if="this.jobs && this.jobs.length > 0 ? true : false "
                     >
                         <v-subheader>Which Job Would You Like To Add A Task To?</v-subheader>
                         <v-list-item-group
@@ -148,12 +148,17 @@
       this.getJobs()
     },
     methods: {
+      printHello(){
+        return 'Hello'
+      },
       showJobs() {
         this.tasks = true
         this.feedback = false
       },
       activeJobsExist() {
-        return this.jobs.length > 0
+        if (this.jobs) {
+          return this.jobs.length > 0
+        }
       },
       open() {
         $('#feedback-modal').modal()

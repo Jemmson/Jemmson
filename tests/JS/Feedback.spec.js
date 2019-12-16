@@ -33,4 +33,10 @@ describe('Feedback', () => {
 
   })
 
+
+  test ('calling printHello will return hello string', () => {
+    expect(wrapper.vm.printHello()).toBe('Hello');
+  })
+
+
 })

@@ -778,6 +778,9 @@
           }.bind(this))
         }
       },
+
+
+
       async register() {
 
         if (!this.registerForm.terms) {

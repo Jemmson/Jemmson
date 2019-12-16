@@ -5,6 +5,10 @@ export default {
       return jobTask.job_task_statuses[jobTask.job_task_statuses.length - 1].status
     },
 
+    getTheLatestJobTaskStatus(statuses) {
+      return statuses[statuses.length - 1].status
+    },
+
     getJobTaskStatusCustomer_latest(jobTask) {
       return jobTask.job_task_status[jobTask.job_task_status.length - 1].status
     },

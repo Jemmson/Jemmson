@@ -42,12 +42,14 @@ export default class SubContractor {
     }
 
     finishedTask(bid, disabled) {
+
         console.log('finishedTask', bid);
         let id = this.user.id;
         bid.current_user_id = id;
 
         let general = false;
         disabled.finished = true;
+
 
         console.log(bid.payment_type)
 
@@ -67,12 +69,14 @@ export default class SubContractor {
         if (id === bid.contractor_id && id === contractor_id)
             general = true;
 
-        axios.post('task/finished', bid)
+        axios.post('task/finished/sub', bid)
             .then((response) => {
                 console.log(response)
                 // show a toast notification
                 User.emitChange('bidUpdated');
-                Vue.toasted.success(general ? Language.lang().submit.job_finished.success.general : Language.lang().submit.job_finished.success.sub);
+                Vue.toasted.success(general ?
+                  Language.lang().submit.job_finished.success.general :
+                  Language.lang().submit.job_finished.success.sub);
                 disabled.finished = false;
             }).catch((error) => {
                 console.error(error);

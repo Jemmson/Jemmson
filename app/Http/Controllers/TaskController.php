@@ -960,6 +960,107 @@ class TaskController extends Controller
         return response()->json(["message" => "Success"], 200);
     }
 
+
+    public function taskFinishedBySubContractor(Request $request)
+    {
+        $taskId = $this->getJobTaskIdFromRequest($request->job_task_id, $request->id);
+        $jobTask = $this->getTheJobTask($taskId);
+        $task = $this->getTheTaskFromTheJobTask($jobTask);
+        $status = __("bid_task.finished_by_sub");
+
+        if (!$jobTask->updateStatus($status)) {
+            return response()->json(["message" => "Couldn't update job task.", "errors" => ["error" => ['']]], 422);
+        }
+
+        $this->setSubsFinishedStatus($jobTask);
+
+        $this->notifyTheGeneralContractor($task->contractor_id, $task);
+
+        $jobTask->resetDeclinedMessage();
+
+        return response()->json(["message" => "Success"], 200);
+    }
+
+    public function taskFinishedBGeneralContractor(Request $request)
+    {
+
+        $taskId = $this->getJobTaskIdFromRequest($request->job_task_id, $request->id);
+        $jobTask = $this->getTheJobTask($taskId);
+        $task = $this->getTheTaskFromTheJobTask($jobTask);
+
+        $status = __("bid_task.finished_by_general");
+        if (!$jobTask->updateStatus($status)) {
+            return response()->json(["message" => "Couldn't update job task.", "errors" => ["error" => ['']]], 422);
+        }
+
+        $this->setsGeneralsFinishedStatus($jobTask);
+
+        $this->notifyTheCustomer($jobTask, $task);
+        $jobTask->resetDeclinedMessage();
+
+        return response()->json(["message" => "Success"], 200);
+    }
+
+
+    public function getJobTaskIdFromRequest($jobTaskId, $id)
+    {
+        if ($jobTaskId !== null) {
+            // request comes from the bid task page
+            // main object is not the task itself
+            return $jobTaskId;
+        } else {
+            return $id;
+        }
+    }
+
+    public function updateTheFinishedStatus($jobTask, $status)
+    {
+
+    }
+
+    public function getTheJobTask($id)
+    {
+        return JobTask::find($id);
+    }
+
+    public function getTheTaskFromTheJobTask($jobTask)
+    {
+        return $jobTask->task()->first();
+    }
+
+    public function getTheGeneralContractor($contractor_id)
+    {
+        return User::find($contractor_id);
+    }
+
+    public function getTheCustomerFromTheJobTask($jobTask)
+    {
+        return User::find(Job::find($jobTask->job_id)->customer_id);
+    }
+
+    public function notifyTheGeneralContractor($contractor_id, $task)
+    {
+        $generalContractor = $this->getTheGeneralContractor($contractor_id);
+        $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
+    }
+
+    public function notifyTheCustomer($jobTask, $task)
+    {
+        $customer = $this->getTheCustomerFromTheJobTask($jobTask);
+        $customer->notify(new TaskFinished($task, true, $customer));
+    }
+
+    public function setSubsFinishedStatus($jobTask)
+    {
+        $this->setJobTaskStatus($jobTask->id, 'sub_finished_work');
+        $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job');
+    }
+
+    public function setsGeneralsFinishedStatus($jobTask)
+    {
+        $this->setJobTaskStatus($jobTask->id, 'general_finished_work');
+    }
+
     /**
      * General or Sub Contractor
      * Put task as finished and notify relevant users

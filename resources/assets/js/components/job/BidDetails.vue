@@ -218,18 +218,30 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="jt in bid.job_tasks">
-                            <td>{{ jt.task.name }}</td>
-                            <td>
-                                {{ jt.qty }}
-                            </td>
-                            <td>
-                                {{ formatPrice(jt.unit_price) }}
-                            </td>
-                            <td>
-                                {{ formatPrice(jt.cust_final_price) }}
-                            </td>
-                        </tr>
+                        <template v-for="jt in bid.job_tasks">
+                            <tr
+                                :class="paid(jt) ? 'paid' : ''">
+                                <td colspan="4"
+                                    class="uppercase text-center"
+                                >
+                                    {{ getLatestJobTaskStatus(jt) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="capitalize">
+                                    {{ jt.task.name }}
+                                </td>
+                                <td>
+                                    {{ jt.qty }}
+                                </td>
+                                <td>
+                                    {{ formatPrice(jt.unit_price) }}
+                                </td>
+                                <td>
+                                    {{ formatPrice(jt.cust_final_price) }}
+                                </td>
+                            </tr>
+                        </template>
                         </tbody>
                     </table>
 
@@ -540,6 +552,13 @@
     },
     methods: {
 
+      paid(jobTask) {
+        let status = this.getLatestJobTaskStatus(jobTask)
+
+        return status === 'paid'
+
+      },
+
       subFinishedTask(item) {
         let status = this.getLatestSubStatus(item)
         return status === 'finished_job'
@@ -578,7 +597,7 @@
         $('#sub-invite-modal_' + jobTaskId).modal()
       },
       finishedTask(jobTask) {
-        GeneralContractor.finishedTask(jobTask.id, this.user.contractor.id)
+        GeneralContractor.finishedTask(jobTask, this.disabled)
       },
       isAssignedToMe(jobTask, userId) {
         return userId === jobTask.contractor_id
@@ -590,6 +609,15 @@
           && latestStatus !== 'paid'
       },
       getLatestJobTaskStatus(task) {
+
+        if (task) {
+          if (task.job_task_statuses) {
+            return this.formatStatus(this.getJobTaskStatus_latest(task))
+          } else {
+            return this.formatStatus(this.getTheLatestJobTaskStatus(task.job_task_status))
+          }
+        }
+
         if (task && task.job_task_statuses) {
           return this.formatStatus(this.getJobTaskStatus_latest(task))
         }
@@ -839,6 +867,10 @@
 </script>
 
 <style lang="less" scoped>
+
+    .paid {
+        background-color: red;
+    }
 
     .card-positioning {
         margin-bottom: .25rem;
