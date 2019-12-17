@@ -75,7 +75,7 @@
                             <td>Start Date:</td>
                             <td>{{ agreedStartDate }}</td>
                         </tr>
-                        <tr v-if="bidHasBeenSubmitted">
+                        <tr>
                             <td>Total Bid Price:</td>
                             <td>{{ bidPrice }}</td>
                         </tr>

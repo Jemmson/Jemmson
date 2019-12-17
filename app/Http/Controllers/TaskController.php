@@ -1515,8 +1515,6 @@ class TaskController extends Controller
      */
     public function uploadTaskImage(Request $request)
     {
-
-
         // get the file
         $file = $request->photo;
 
@@ -1601,18 +1599,7 @@ class TaskController extends Controller
 
     public function deleteImage(TaskImage $taskImage)
     {
-//        if (preg_match('/tasks\/(.*)$/', $taskImage->url, $matches)) {
-//            $disk = Storage::disk('public');
-//            try {
-//                $disk->delete('tasks/' . $matches[1]);
-//            } catch (\Exception $e) {
-//                Log::error('Delete Image: ' . $e->getMessage());
-//                return response()->json('Something Went Wrong', 422);
-//            }
-//
         $taskImage->delete();
-//        }
-
 
         $job = Job::find($taskImage->job_id);
         $jobTask = JobTask::find($taskImage->job_task_id);

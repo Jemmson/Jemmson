@@ -41,7 +41,8 @@ $router->group(['middleware' => 'web'], function ($router) {
     $router->put('/settings/contact', 'Settings\Profile\ContactInformationController@update');
 
     // Profile Photo...
-    $router->post('/settings/photo', 'Settings\Profile\PhotoController@store');
+    $router->post('/settings/photo', 'Settings\Profile\PhotoController@uploadTaskImage');
+//    $router->post('/settings/photo', 'Settings\Profile\PhotoController@store');
 
     // Teams...
     if (Spark::usesTeams()) {

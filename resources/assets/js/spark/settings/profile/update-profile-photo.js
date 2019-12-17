@@ -33,13 +33,21 @@ module.exports = {
                 .then(
                     () => {
                         Bus.$emit('updateUser');
-
                         self.form.finishProcessing();
                     },
                     (error) => {
                         self.form.setErrors(error.response.data);
                     }
                 );
+        },
+
+        uploadProfileImage(e) {
+            e.preventDefault()
+            try {
+                axios.post('/settings/photo', this.gatherFormData())
+            } catch (error) {
+                Vue.toasted.error(error.message)
+            }
         },
 
 

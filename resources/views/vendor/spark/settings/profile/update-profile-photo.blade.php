@@ -28,6 +28,7 @@
                             <label type="button" class="btn btn-primary btn-upload" :disabled="form.busy">
                                 <span>Select New Photo</span>
 
+                                <input ref="photo" type="file" class="form-control" name="photo" @change="uploadProfileImage()">
                                 <input ref="photo" type="file" class="form-control" name="photo" @change="update">
                             </label>
                         </div>

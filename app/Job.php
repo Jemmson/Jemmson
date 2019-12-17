@@ -73,7 +73,6 @@ class Job extends Model
     {
         return $this->belongsTo(Location::class);
 
-
 //        use App\Job;
 //        Job::find(1)->
 //        with(
@@ -166,6 +165,26 @@ class Job extends Model
         return $jobName;
     }
 
+    public function updateJobPrice()
+    {
+        $jobTasks = $this->jobTasks()->get();
+        $totalPrice = 0;
+        foreach ($jobTasks as $jobTask) {
+            $totalPrice = $totalPrice + $jobTask->cust_final_price;
+        }
+        $this->bid_price = $totalPrice;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+    }
+
     public static function createQuickBooksEstimate($customer, $task, $job, $jt, $customer_quickBooks_Id)
     {
         $qb = new Quickbook();
@@ -225,7 +244,6 @@ class Job extends Model
 
         return $resultingObj;
     }
-
 
     public function setEarliestStartDateToTask(JobTask $jobTask)
     {
