@@ -81,7 +81,7 @@
                             <div v-if="checkLandLineNumber()" style="color: red">
                                 {{ this.getMobileValidResponse[1] }}
                             </div>
-                                <span ref="phoneNumberError" class="help-block"
+                            <span ref="phoneNumberError" class="help-block"
                                   v-show="form.errors.has('phone_number')">
                                         {{ form.errors.get('phone_number') }}
                                 </span>
@@ -182,28 +182,12 @@
 
 
                         <div v-if="isContractor">
-                            <div class="flex flex-col">
-                                <hr>
-                                <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
-                                    Please Click To Add A Contractor License
-                                </label>
-                                <v-btn
-                                        class="w-full"
-                                        color="primary"
-                                        @click.prevent="addLicenseBox()" id="addContractorLicenseButton"
-                                        ref="add_contractor_license_button">
-                                    Add A License
-                                </v-btn>
-                            </div>
 
-                            <div id="licenseBoxes">
-                                <div v-for="i in boxes">
-                                    <add-license-box
-                                            @delete="deleteLicense($event)">
-                                    </add-license-box>
-                                </div>
-                            </div>
-                            <hr>
+                            <add-license-box
+                                    @add="addlicenses($event)"
+                            >
+                            </add-license-box>
+
                         </div>
 
 
@@ -265,7 +249,7 @@
   import AddLicenseBox from '../components/user/AddLicenseBox'
   import Phone from '../components/mixins/Phone'
 
-  import {mapMutations, mapActions} from 'vuex'
+  import { mapMutations, mapActions } from 'vuex'
 
   export default {
     props: {
@@ -382,7 +366,7 @@
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
-    mixins: [ Phone ],
+    mixins: [Phone],
     methods: {
       ...mapMutations([
         'setMobileResponse'
@@ -390,38 +374,12 @@
       ...mapActions([
         'checkMobileNumber',
       ]),
-      getLicenseElements() {
-        const lb = document.getElementById('licenseBoxes')
-        if (lb) {
-          let lbArray = []
-          for (let i = 0; i < lb.children.length; i++) {
-            if (this.nameOrValueIsNotEmpty(lb.children[i])) {
-              lbArray.push({
-                name: lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value,
-                value: lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value
-              })
-            }
-          }
-          this.form.licenses = lbArray
-        }
+
+      addLicenses(licenses) {
+        this.form.licenses = []
+        this.form.licenses[this.form.licenses.length] = licenses
       },
-      addLicenseBox() {
-        this.boxArray.push(this.boxArray.length + 1)
-      },
-      nameOrValueIsNotEmpty(lb) {
-        return lb.children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1] !== ''
-          && lb.children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value !== ''
-      },
-      deleteLicense(license) {
-        const lb = document.getElementById('licenseBoxes')
-        for (let i = 0; i < lb.children.length; i++) {
-          if (license.name === lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value &&
-            license.value === lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value) {
-            lb.removeChild(lb.children[i])
-            break
-          }
-        }
-      },
+
       updateFormLocation(location) {
         this.form.address_line_1 = location.route
         this.form.city = location.locality

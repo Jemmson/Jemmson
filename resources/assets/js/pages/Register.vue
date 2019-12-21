@@ -101,7 +101,7 @@
                                     bottom
                                     color="deep-purple accent-4"
                             ></v-progress-linear>
-                            <div v-if="getMobileValidResponse.length > 0">
+                            <div v-if="getMobileValidResponse ? getMobileValidResponse.length > 0 : false">
                                 <div class="hidden">{{ registerButtonIsDisabled() }}</div>
                                 <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
                                     <div style="color: green">{{ getMobileValidResponse[1] }}</div>
@@ -214,30 +214,13 @@
                             <span class="help-block" v-show="registerForm.errors.password_confirmation !== ''">{{registerForm.errors.password_confirmation}}</span>
                         </div>
 
-
-                        <div class="flex flex-col">
-                            <hr>
-                            <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
-                                Please Click To Add A Contractor License
-                            </label>
-                            <v-btn
-                                    class="w-full"
-                                    color="primary"
-                                    @click="addLicenseBox()" id="addContractorLicenseButton"
-                                    ref="add_contractor_license_button">Add A
-                                License
-                            </v-btn>
-                        </div>
-
-                        <div id="licenseBoxes">
-                            <div v-for="i in boxes">
-                                <add-license-box
-                                        @delete="deleteLicense($event)">
-                                </add-license-box>
-                            </div>
-                        </div>
-
                         <hr style="margin-top: 3rem">
+
+
+                        <add-license-box
+                            @add="addLicenses($event)"
+                        ></add-license-box>
+
 
                         <div class="row pt-3 pt-2 ">
                             <input
@@ -264,7 +247,6 @@
                                 <i class="fa fa-btn fa-check-circle mr-2"></i>Register
                             </span>
                         </v-btn>
-
 
                         <div style="height: 10rem; width: 100%">
 
@@ -334,7 +316,7 @@
         userTypeSelected: '',
         usesQuickbooks: false,
         showRegistration: false,
-        states:
+        stateObjects:
           [
             {'name': 'Alabama', 'code': 'AL'},
             {'name': 'Alaska', 'code': 'AK'},
@@ -673,49 +655,23 @@
       ]),
       ...mapState({
         quickBooks: state => state.features.quickbooks,
-      }),
-      boxes() {
-        return this.boxArray
-      }
+      })
     },
     created() {
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
     methods: {
+
+      addLicenses(licenses){
+        this.registerForm.licenses = []
+        this.registerForm.licenses[this.registerForm.licenses.length] = licenses
+      },
+
       initAutocomplete() {
         User.initAutocomplete('route')
       },
-      getLicenseElements() {
-        const lb = document.getElementById('licenseBoxes')
-        let lbArray = []
-        for (let i = 0; i < lb.children.length; i++) {
-          if (this.nameOrValueIsNotEmpty(lb.children[i])) {
-            lbArray.push({
-              name: lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value,
-              value: lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value
-            })
-          }
-        }
-        this.registerForm.licenses = lbArray
-      },
-      addLicenseBox() {
-        this.boxArray.push(this.boxArray.length + 1)
-      },
-      nameOrValueIsNotEmpty(lb) {
-        return lb.children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1] !== ''
-          && lb.children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value !== ''
-      },
-      deleteLicense(license) {
-        const lb = document.getElementById('licenseBoxes')
-        for (let i = 0; i < lb.children.length; i++) {
-          if (license.name === lb.children[i].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[1].value &&
-            license.value === lb.children[i].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[1].value) {
-            lb.removeChild(lb.children[i])
-            break
-          }
-        }
-      },
+
       registerButtonIsDisabled() {
         if (this.getMobileValidResponse[1] === 'mobile') {
           this.registerForm.disabled = false
@@ -778,8 +734,6 @@
           }.bind(this))
         }
       },
-
-
 
       async register() {
 
