@@ -1,100 +1,91 @@
 <template>
-    <div>
-        <v-container>
+    <div class="w-full">
+        <div class="flex flex-col">
+            <hr>
+            <v-btn
+                    class="w-full"
+                    color="primary"
+                    @click="showLicenseBox()"
+                    id="addContractorLicenseButton"
+                    ref="add_contractor_license_button">Add A
+                License
+            </v-btn>
+        </div>
 
-            <div class="flex flex-col">
-                <hr>
-                <label for="addContractorLicenseButton" ref="contractor_label" class="mb-1rem">
-                    Please Click To Add A Contractor License
-                </label>
-                <v-btn
-                        class="w-full"
-                        color="primary"
-                        @click="showLicenseBox()"
-                        id="addContractorLicenseButton"
-                        ref="add_contractor_license_button">Add A
-                    License
-                </v-btn>
-            </div>
-
-            <div
-                    class="flex space-between mt-1rem"
-                    v-if="licenses.length > 0"
-                    v-for="license in licenses"
-                    :key="license.number">
-                <div class="uppercase"><strong>{{ license.type }}</strong></div>
-                <div>{{ license.number }}</div>
-                <v-btn
-                        class="uppercase"
-                        color="red"
-                        @click="removeLicense(license)"
-                >
-                    delete
-                </v-btn>
-            </div>
-
-
-            <v-dialog
-                    width="500"
-                    v-model="showLicense"
-                    id="licenseDialog"
+        <div
+                class="flex space-between mt-1rem"
+                v-if="licenses.length > 0"
+                v-for="license in licenses"
+                :key="license.number">
+            <div class="uppercase"><strong>{{ license.type }}</strong></div>
+            <div>{{ license.number }}</div>
+            <v-btn
+                    class="uppercase"
+                    color="red"
+                    @click="removeLicense(license)"
             >
+                delete
+            </v-btn>
+        </div>
+        <v-dialog
+                width="500"
+                v-model="showLicense"
+                id="licenseDialog"
+        >
 
-                <v-card>
-                    <v-card-title>Add A License</v-card-title>
+            <v-card>
+                <v-card-title>Add A License</v-card-title>
 
-                    <v-card-text>
-                        <v-autocomplete
-                                label="State *"
-                                id="state"
-                                :items="states"
-                                v-model="license.state"
-                                :error="licenseErrors.state"
-                                @change="checkLicenseError()"
-                                :rules="[
+                <v-card-text>
+                    <v-autocomplete
+                            label="State *"
+                            id="state"
+                            :items="states"
+                            v-model="license.state"
+                            :error="licenseErrors.state"
+                            @change="checkLicenseError()"
+                            :rules="[
                                               licenseStateError()
                                               ]"
-                        ></v-autocomplete>
-                        <v-autocomplete
-                                v-if="license.state === 'Arizona'"
-                                id="type"
-                                label="License Type *"
-                                :items="licenseTypes.arizona"
-                                v-model="license.type"
-                        ></v-autocomplete>
-                        <v-text-field
-                                label="License Name"
-                                id="name"
-                                v-model="license.name"
-                        ></v-text-field>
-                        <v-text-field
-                                id="value"
-                                label="License Number *"
-                                v-model="license.number"
-                        ></v-text-field>
-                    </v-card-text>
+                    ></v-autocomplete>
+                    <v-autocomplete
+                            v-if="license.state === 'Arizona'"
+                            id="type"
+                            label="License Type *"
+                            :items="licenseTypes.arizona"
+                            v-model="license.type"
+                    ></v-autocomplete>
+                    <v-text-field
+                            label="License Name"
+                            id="name"
+                            v-model="license.name"
+                    ></v-text-field>
+                    <v-text-field
+                            id="value"
+                            label="License Number *"
+                            v-model="license.number"
+                    ></v-text-field>
+                </v-card-text>
 
-                    <v-card-actions>
-                        <v-btn
-                                color="red"
-                                @click="showLicense = false"
-                        >Cancel
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                                color="red"
-                                id="addLicense"
-                                @click="addLicense()"
-                        >Add
-                        </v-btn>
-                    </v-card-actions>
+                <v-card-actions>
+                    <v-btn
+                            color="red"
+                            @click="showLicense = false"
+                    >Cancel
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            color="red"
+                            id="addLicense"
+                            @click="addLicense()"
+                    >Add
+                    </v-btn>
+                </v-card-actions>
 
-                </v-card>
-            </v-dialog>
+            </v-card>
+        </v-dialog>
+        <hr>
 
-            <hr>
-
-        </v-container>
     </div>
 </template>
 
@@ -353,10 +344,10 @@
       }
     },
     methods: {
-      removeLicense(license){
+      removeLicense(license) {
         for (let i = 0; i < this.licenses.length; i++) {
-          if(this.licenses[i].number === license.number){
-            this.licenses.splice(i, 1);
+          if (this.licenses[i].number === license.number) {
+            this.licenses.splice(i, 1)
             return
           }
         }
@@ -367,7 +358,7 @@
         if (
           this.license.state !== ''
         ) {
-          const license = {};
+          const license = {}
           license.name = this.license.name
           license.type = this.license.type
           license.number = this.license.number

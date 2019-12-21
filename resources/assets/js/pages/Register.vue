@@ -75,6 +75,10 @@
                                    type="text" class="form-control "
                                    v-model="registerForm.companyName">
                             <span class="help-block" v-show="registerForm.errors.companyName !== ''">{{registerForm.errors.companyName}}</span>
+                            <add-license-box
+                                    width="100%"
+                                    @add="addLicenses($event)"
+                            ></add-license-box>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
 
@@ -204,7 +208,6 @@
                         </div>
 
                         <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="password_confirmation" class=" pt-3 pt-2">Confirm
                                 Password *</label>
                             <input id="password_confirmation"
@@ -215,12 +218,6 @@
                         </div>
 
                         <hr style="margin-top: 3rem">
-
-
-                        <add-license-box
-                            @add="addLicenses($event)"
-                        ></add-license-box>
-
 
                         <div class="row pt-3 pt-2 ">
                             <input
@@ -633,20 +630,6 @@
       Bus.$on('updateFormLocation', (payload) => {
         this.updateFormLocation(payload)
       })
-      // TODO: Feature Not Working
-      // axios.get('/loadFeatures').then((response) => {
-      //     console.log(JSON.stringify(response.data))
-      //     for (let i = 0; i < response.data.length; i++) {
-      //       if (response.data[i].name === 'quickbooks') {
-      //         if (response.data[i].on === 1) {
-      //           this.$router.push('check_accounting')
-      //         } else {
-      //           window.location = '/register'
-      //         }
-      //       }
-      //     }
-      //   }
-      // )
     },
     mixins: [Phone],
     computed: {
@@ -663,7 +646,7 @@
     },
     methods: {
 
-      addLicenses(licenses){
+      addLicenses(licenses) {
         this.registerForm.licenses = []
         this.registerForm.licenses[this.registerForm.licenses.length] = licenses
       },
@@ -743,7 +726,6 @@
           this.registerForm.busy = true
           if (this.getMobileValidResponse[1] === 'mobile') {
             if (this.registerForm.usertype === 'contractor') {
-              this.getLicenseElements()
               try {
                 let {data} = await axios.post('/registerContractor', this.registerForm)
                 console.log(data)

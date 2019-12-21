@@ -138,11 +138,13 @@ class HomeController extends Controller
             }
 
            if (!empty($request->licenses)) {
-               foreach($request->licenses as $license){
+               foreach($request->licenses[0] as $license){
                    $l = new \App\License();
                    $l->contractor_id = $contractor->id;
                    $l->name = $license['name'];
-                   $l->value = $license['value'];
+                   $l->number = $license['number'];
+                   $l->type = $license['type'];
+                   $l->state = $license['state'];
 
                    try {
                        $l->save();

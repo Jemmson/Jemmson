@@ -16,8 +16,10 @@ class CreateLicensesTable extends Migration
         Schema::create('licenses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('contractor_id');
-            $table->string('name');
-            $table->string('value');
+            $table->string('name')->nullable();
+            $table->string('number')->nullable();
+            $table->string('state')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

@@ -270,11 +270,13 @@ $router->group(['middleware' => 'web'], function ($router) {
 
         $user->location_id = $location->id;
 
-        foreach($request->licenses as $license){
+        foreach($request->licenses[0] as $license){
             $l = new \App\License();
             $l->contractor_id = $user->id;
             $l->name = $license['name'];
-            $l->value = $license['value'];
+            $l->number = $license['number'];
+            $l->type = $license['type'];
+            $l->state = $license['state'];
 
             try {
                 $l->save();

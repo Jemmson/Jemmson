@@ -405,7 +405,6 @@
           return false
         }
         this.form.email = this.form.email.trim()
-        this.user.customer ? this.getLicenseElements() : console.log('is a customer')
         User.submitFurtherInfo(this.form, this.disabled)
       },
       initAutocomplete() {
