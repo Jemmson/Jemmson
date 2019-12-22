@@ -43,25 +43,6 @@
                                 </div>
                             </a>
 
-
-                            <!--                            <v-subheader>{{ contractor && contractor.user ? contractor.user.location.address_line_1 : ''-->
-                            <!--                                }}-->
-                            <!--                            </v-subheader>-->
-                            <!--                            <v-subheader-->
-                            <!--                                    v-if="checkForAddressLine2()"-->
-                            <!--                            >{{ contractor && contractor.user ? contractor.user.location.address_line_2 : '' }}-->
-                            <!--                            </v-subheader>-->
-                            <!--                            <v-flex>-->
-                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.city : '' }}-->
-                            <!--                                </v-subheader>-->
-                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.state : '' }}-->
-                            <!--                                </v-subheader>-->
-                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.zip : '' }}-->
-                            <!--                                </v-subheader>-->
-                            <!--                                <v-subheader>{{ contractor && contractor.user ? contractor.user.location.country : ''-->
-                            <!--                                    }}-->
-                            <!--                                </v-subheader>-->
-                            <!--                            </v-flex>-->
                         </v-card-text>
                     </v-card>
                     <v-spacer></v-spacer>

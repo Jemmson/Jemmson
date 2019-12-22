@@ -1,117 +1,98 @@
 <template>
     <div>
-        <v-container>
-            <v-row>
-                <v-col>
-                    <v-card width="445" class="mx-auto mt-5">
-                        <v-card-title class="pb-0">
-                            <h1>Login</h1>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-form>
-                                <v-text-field
-                                        label="Email"
-                                        v-model="form.username"
-                                        prepend-icon="mdi-account-circle"
-                                />
-                                <v-text-field
-                                        :type="showPassword ? 'text' : 'password'"
-                                        v-model="form.password"
-                                        label="Password"
-                                        prepend-icon="mdi-lock"
-                                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                        @click:append="showPassword = !showPassword"
-                                />
-                            </v-form>
-                        </v-card-text>
-                        <v-divider></v-divider>
-                        <v-card-actions>
-                            <v-btn
-                                    id="register"
-                                    to="/register"
-                                    width="40%"
-                                    color="success">
-                                Register
-                            </v-btn>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                    color="info"
-                                    :loading="form.busy"
-                                    width="40%"
-                                    @click="login(form)"
-                            >Login
-                            </v-btn>
-                        </v-card-actions>
-                        <v-divider></v-divider>
 
-                        <v-col cols="12" class="text-center">
-                            <v-row justify="center" align-content="center">
-                                <v-checkbox
-                                        v-model="form.remember"
-                                        class=""
-                                        label="Remember Me"></v-checkbox>
-                            </v-row>
 
-                            <v-btn
-                                    text
-                                    color="primary"
-                                    link
-                                    href="/password/reset"
-                            >Forgot Your Password?
-                            </v-btn>
-                        </v-col>
+        <app-bar></app-bar>
 
-                    </v-card>
-                </v-col>
+
+        <v-container fluid
+                     style="margin-top: 4rem"
+                     v-if="$vuetify.breakpoint.xs"
+        >
+            <v-row class="main">
+                <h2 class="text-center">Subcontract Work</h2>
+                <p>How often at a job do you run into work that you do not do or work you dont have time for?
+                    How often do you simply lose income because you either call someone to handle the job for
+                    you or
+                    just tell the customer to find someone else? Now with this app you can easily create a task
+                    and then
+                    subcontract that task, mark up the task, and then easily get paid for the work.</p>
             </v-row>
-            <div class="container bg-white">
-                <div class="row main">
-                    <div class="col-12">
-                        <h2 class="text-center">Subcontract Work</h2>
-                        <p>How often at a job do you run into work that you do not do or work you dont have time for?
-                            How often do you simply lose income because you either call someone to handle the job for
-                            you or
-                            just tell the customer to find someone else? Now with this app you can easily create a task
-                            and then
-                            subcontract that task, mark up the task, and then easily get paid for the work.</p>
-                    </div>
-                </div>
-                <div class="row pricing">
-                    <div class="col-12">
-                        <h2 class="text-center" style="color:black">Invoice Customers</h2>
-                        <p style="color:black">You can create an invoice at the beginning of a job and then use that as
-                            a
-                            commmunication tool
-                            throughout the jobs life cycle. You simply initiate a bid for all jobs. Then construct that
-                            bid,
-                            subcontract any of those tasks, and then submit the bid to the customer. The customer then
-                            has
-                            the ability to approve the bid. Once the bid has been approve then the work can be
-                            performed. Once
-                            the
-                            work has been performed the customer can now approve the finish work and pay using Stripe or
-                            cash.
-                        </p>
-                    </div>
-                </div>
-                <div class="row features">
-                    <div class="col-12">
-                        <h2 class="text-center">Get Paid Easily</h2>
-                        <p>How much money is wasted chasing down a check? How much of a pain is it to have to write a
-                            check
-                            to a subcontractor after a job has been finished? With Stripe this will happen easily.
-                            The customer pays the invoice and then the money is automatically split between the
-                            contractor
-                            and the sub.</p>
-                    </div>
-                </div>
-            </div>
+            <v-row class="pricing">
+                <h2 class="text-center" style="color:black">Invoice Customers</h2>
+                <p style="color:black">You can create an invoice at the beginning of a job and then use that as
+                    a
+                    commmunication tool
+                    throughout the jobs life cycle. You simply initiate a bid for all jobs. Then construct that
+                    bid,
+                    subcontract any of those tasks, and then submit the bid to the customer. The customer then
+                    has
+                    the ability to approve the bid. Once the bid has been approve then the work can be
+                    performed. Once
+                    the
+                    work has been performed the customer can now approve the finish work and pay using Stripe or
+                    cash.
+                </p>
+            </v-row>
+            <v-row class="features">
+                <h2 class="text-center">Get Paid Easily</h2>
+                <p>How much money is wasted chasing down a check? How much of a pain is it to have to write a
+                    check
+                    to a subcontractor after a job has been finished? With Stripe this will happen easily.
+                    The customer pays the invoice and then the money is automatically split between the
+                    contractor
+                    and the sub.</p>
+            </v-row>
+        </v-container>
+
+        <v-container fluid
+                     style="margin-top: 4rem"
+                     v-if="$vuetify.breakpoint.smAndUp"
+        >
+            <v-row>
+                <v-col cols="4" class="main">
+                    <h2 class="text-center">Subcontract Work</h2>
+                    <p>How often at a job do you run into work that you do not do or work you dont have time for?
+                        How often do you simply lose income because you either call someone to handle the job for
+                        you or
+                        just tell the customer to find someone else? Now with this app you can easily create a task
+                        and then
+                        subcontract that task, mark up the task, and then easily get paid for the work.</p>
+                </v-col>
+                <v-col cols="4" class="pricing">
+                    <h2 class="text-center" style="color:black">Invoice Customers</h2>
+                    <p style="color:black">You can create an invoice at the beginning of a job and then use that as
+                        a
+                        commmunication tool
+                        throughout the jobs life cycle. You simply initiate a bid for all jobs. Then construct that
+                        bid,
+                        subcontract any of those tasks, and then submit the bid to the customer. The customer then
+                        has
+                        the ability to approve the bid. Once the bid has been approve then the work can be
+                        performed. Once
+                        the
+                        work has been performed the customer can now approve the finish work and pay using Stripe or
+                        cash.
+                    </p>
+                </v-col>
+                <v-col cols="4" class="features">
+                    <h2 class="text-center">Get Paid Easily</h2>
+                    <p>How much money is wasted chasing down a check? How much of a pain is it to have to write a
+                        check
+                        to a subcontractor after a job has been finished? With Stripe this will happen easily.
+                        The customer pays the invoice and then the money is automatically split between the
+                        contractor
+                        and the sub.</p>
+                </v-col>
+
+            </v-row>
         </v-container>
     </div>
 </template>
 
 <script>
   import { mapActions } from 'vuex'
+  import AppBar from '../components/header/AppBar'
 
   export default {
     computed: {
@@ -122,24 +103,16 @@
         }
       }
     },
+    components: {
+      AppBar
+    },
     data() {
       return {
         currentWindow: window.location.origin,
-        form: {
-          username: '',
-          password: '',
-          remember: null,
-          error: null,
-          busy: false
-        },
-        showPassword: false,
         disabled: false
       }
     },
     methods: {
-      ...mapActions([
-        'login'
-      ]),
       route(value) {
         if (value === 'login') {
           window.location = '/login'
