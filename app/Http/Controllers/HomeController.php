@@ -137,26 +137,7 @@ class HomeController extends Controller
                 ]);
             }
 
-           if (!empty($request->licenses)) {
-               foreach($request->licenses[0] as $license){
-                   $l = new \App\License();
-                   $l->contractor_id = $contractor->id;
-                   $l->name = $license['name'];
-                   $l->number = $license['number'];
-                   $l->type = $license['type'];
-                   $l->state = $license['state'];
-
-                   try {
-                       $l->save();
-                   } catch (\Exception $e) {
-                       return response()->json([
-                           'message' => $e->getMessage(),
-                           'code' => $e->getCode()
-                       ], 200);
-                   }
-
-               }
-           }
+            \App\License::addLicenses($request->licenses, $contractor);
 
         } else if (Auth::user()->usertype == 'customer') {
 

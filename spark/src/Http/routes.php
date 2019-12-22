@@ -270,24 +270,7 @@ $router->group(['middleware' => 'web'], function ($router) {
 
         $user->location_id = $location->id;
 
-        foreach($request->licenses[0] as $license){
-            $l = new \App\License();
-            $l->contractor_id = $user->id;
-            $l->name = $license['name'];
-            $l->number = $license['number'];
-            $l->type = $license['type'];
-            $l->state = $license['state'];
-
-            try {
-                $l->save();
-            } catch (\Exception $e) {
-                return response()->json([
-                    'message' => $e->getMessage(),
-                    'code' => $e->getCode()
-                ], 200);
-            }
-
-        }
+       \App\License::addLicenses($request->licenses, $user);
 
         try {
             $user->save();

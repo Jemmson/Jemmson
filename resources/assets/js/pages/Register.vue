@@ -255,6 +255,11 @@
                 </card>
             </div>
         </div>
+
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+
     </div>
 
 </template>
@@ -309,6 +314,7 @@
           busy: false,
           disabled: true
         },
+        overlay: false,
         boxArray: [],
         userTypeSelected: '',
         usesQuickbooks: false,
@@ -724,12 +730,14 @@
           this.registerForm.errors.terms = true
         } else {
           this.registerForm.busy = true
+          this.overlay = true
           if (this.getMobileValidResponse[1] === 'mobile') {
             if (this.registerForm.usertype === 'contractor') {
               try {
                 let {data} = await axios.post('/registerContractor', this.registerForm)
                 console.log(data)
                 this.registerForm.busy = false
+                this.overlay = false
                 this.$store.commit('setUser', data.user)
                 Bus.$emit('updateUser')
                 this.$router.push('/home')
@@ -738,12 +746,14 @@
                 let {errors} = error.response.data
                 this.setErrors(errors)
                 this.registerForm.busy = false
+                this.overlay = false
               }
             } else {
               try {
                 let {data} = await axios.post('/registerCustomer', this.registerForm)
                 console.log(data)
                 this.registerForm.busy = false
+                this.overlay = false
                 this.$store.commit('setUser', data.user)
                 Bus.$emit('updateUser')
                 this.$router.push('/home')
@@ -751,6 +761,7 @@
                 let {errors} = error.response.data
                 this.setErrors(errors)
                 this.registerForm.disabled = false
+                this.overlay = false
               }
             }
           } else {
