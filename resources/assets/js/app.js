@@ -127,6 +127,7 @@ function goingToANonAuthorizedPage(path) {
     path === '/' ||
     path === '/check_accounting' ||
     path === '/howto' ||
+    path === '/documentation' ||
     path === '/benefits' ||
     path === '/register' ||
     path === '/registerQuickBooks'
@@ -291,28 +292,6 @@ var app = new Vue({
       port: window.location.port,
       protocol: window.location.protocol
     }
-
-    // axios.post('/loadFeatures', {
-    //   hello: 'world',
-    //   location: location
-    // }).then((response) => {
-    //
-    //   if (response.data.redirect) {
-    //     if (response.data.redirect !== window.location.pathname) {
-    //       window.location = response.data.redirect
-    //     }
-    //   } else {
-    //     if (response.data.state[0]) {
-    //       this.$store.commit('loadFeatures', response.data.state[0])
-    //     }
-    //     if (this.$store.state.user.user === '') {
-    //       this.$store.commit('setUser', response.data.state[1])
-    //     }
-    //   }
-    //
-    // }).catch(function(error) {
-    //   console.log(JSON.stringify(error))
-    // })
   }
 })
 

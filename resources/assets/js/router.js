@@ -15,6 +15,7 @@ import JobTask from './pages/JobTask'
 
 import ContractorInfo from './pages/ContractorInfo'
 import CustomerInfo from './pages/CustomerInfo'
+import Documentation from './pages/Documentation'
 import Job from './pages/Job'
 import InitiateBid from './pages/InitiateBid'
 import Tasks from './pages/Tasks'
@@ -78,6 +79,10 @@ const routes = [
     component: Demo
   },
   {
+    path: '/documentation',
+    component: Documentation
+  },
+  {
     path: '/howto',
     component: HowTo
   },
@@ -139,6 +144,12 @@ const routes = [
     path: 'customer-info',
     component: CustomerInfo,
     name: 'customer-info',
+    props: true
+  },
+  {
+    path: 'documentation',
+    component: Documentation,
+    name: 'documentation',
     props: true
   },
   {

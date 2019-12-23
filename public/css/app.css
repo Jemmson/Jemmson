@@ -331,6 +331,9 @@ section {
 .w-full {
   width: 100%;
 }
+.h-full {
+  height: 100%;
+}
 .align-content-baseline {
   -webkit-box-align: baseline;
           align-items: baseline;

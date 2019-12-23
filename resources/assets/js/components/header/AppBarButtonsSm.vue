@@ -47,7 +47,7 @@
         this.$emit('appBtn', btn)
       },
       routeToDocumentation() {
-        this.$route.push('documentation')
+        this.$router.push('documentation')
       }
     }
   }

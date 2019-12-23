@@ -6,6 +6,9 @@
                 height="100px"
                 :extended="extended"
         >
+            <slot
+                name="hamburger"
+            ></slot>
             <v-toolbar-title
             class="display-1"
             ><strong style="color: white !important;">Jemmson</strong></v-toolbar-title>
