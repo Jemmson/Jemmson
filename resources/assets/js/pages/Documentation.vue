@@ -18,7 +18,6 @@
                     permanent
                     v-model="drawer"
                     height="100vh"
-                    width="200px"
             >
                 <v-list
                         nav
@@ -27,22 +26,30 @@
                     <v-list-item link
                                  @click="showMainWorkflow()"
                     >
-                        <v-list-item-title>Main Workflow</v-list-item-title>
+                        <v-list-item-title
+                                class="subtitle-1 capitalize"
+                        >Main Workflow</v-list-item-title>
                     </v-list-item>
                     <v-list-item link
                                  @click="showGeneralWorkflow()"
                     >
-                        <v-list-item-title>General Workflow</v-list-item-title>
+                        <v-list-item-title
+                                class="subtitle-1 capitalize"
+                        >General Workflow</v-list-item-title>
                     </v-list-item>
                     <v-list-item link
                                  @click="showSubWorkflow()"
                     >
-                        <v-list-item-title>Subcontractor Contractor Workflow</v-list-item-title>
+                        <v-list-item-title
+                                class="subtitle-1 capitalize"
+                        >Subcontractor Workflow</v-list-item-title>
                     </v-list-item>
                     <v-list-item link
                                  @click="showCustomerWorkflow()"
                     >
-                        <v-list-item-title>Customer Workflow</v-list-item-title>
+                        <v-list-item-title
+                                class="subtitle-1 capitalize"
+                        >Customer Workflow</v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-navigation-drawer>
@@ -66,6 +73,7 @@
                             <v-timeline>
                                 <v-timeline-item
                                         :color="dotcolor"
+                                        class="capitalize"
                                         v-for="step in steps.main" :key="step.id"
                                         :class="step.id % 2 === 0 ? 'text-right' : ''"
                                 >{{ step.step }}
@@ -77,6 +85,7 @@
                             <v-timeline>
                                 <v-timeline-item
                                         :color="dotcolor"
+                                        class="capitalize"
                                         v-for="step in steps.general" :key="step.id"
                                         :class="step.id % 2 === 0 ? 'text-right' : ''"
                                 >{{ step.step }}
@@ -88,6 +97,7 @@
                             <v-timeline>
                                 <v-timeline-item
                                         :color="dotcolor"
+                                        class="capitalize"
                                         v-for="step in steps.sub" :key="step.id"
                                         :class="step.id % 2 === 0 ? 'text-right' : ''"
                                 >{{ step.step }}
@@ -99,6 +109,7 @@
                             <v-timeline>
                                 <v-timeline-item
                                         :color="dotcolor"
+                                        class="capitalize"
                                         v-for="step in steps.customer" :key="step.id"
                                         :class="step.id % 2 === 0 ? 'text-right' : ''"
                                 >{{ step.step }}
@@ -246,7 +257,7 @@
               {id: 1, step: 'Customer a text for an initiated bid from General Contractor'},
               {id: 2, step: 'Customer receives a text for a completed Bid'},
               {id: 3, step: 'Customer Approves the bid'},
-              {id: 4, step: '>General Finishes the work'},
+              {id: 4, step: 'General Finishes the work'},
               {id: 5, step: 'Customer Pays for Job'}
             ]
           },

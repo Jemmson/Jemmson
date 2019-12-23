@@ -24,7 +24,7 @@
 
             <v-btn
                     icon
-                    @click="showContent('features')"
+                    @click="showContent('login')"
             >
                 <v-icon>mdi-login</v-icon>
             </v-btn>
@@ -39,6 +39,9 @@
     methods: {
       emit(btn) {
         this.$emit('appBtn', btn)
+      },
+      showContent(btn){
+        this.emit(btn)
       }
     }
   }
