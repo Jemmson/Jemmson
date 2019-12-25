@@ -24,7 +24,7 @@
 
             <v-btn
                     icon
-                    @click="showContent('login')"
+                    @click="showContent('login  ')"
             >
                 <v-icon>mdi-login</v-icon>
             </v-btn>

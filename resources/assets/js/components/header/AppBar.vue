@@ -77,6 +77,8 @@
           } else {
             this.show.login = false
           }
+        } else if (content === 'documentation') {
+          this.$router.push('documentation')
         }
       },
       hideAllContent() {

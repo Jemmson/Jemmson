@@ -358,10 +358,7 @@
     methods: {
 
       isContractor() {
-        if (Spark.state.user.usertype === 'contractor') {
-          return true
-        }
-        this.$router.push('/home')
+        return Spark.state.user.usertype === 'contractor'
       },
 
       checkErrors() {
@@ -742,14 +739,26 @@
         this.errors.general.errorExists = false
 
       },
-      changeTask(message) {
-        if (message === 'New' || message === 'Add') {
-          this.addNewTaskForm.updateTask = false
-          this.addNewTaskForm.createNew = true
-        }
+
+      createNewDontUpdate () {
+        this.addNewTaskForm.updateTask = false
+        this.addNewTaskForm.createNew = true
         this.addNewTaskToBid()
+        this.goToTop();
+      },
+
+      goToTop(){
         window.location.href = '#top'
       },
+
+      changeTask(message) {
+        let taskIsNewOrNeedsToBeAdded = {
+          'New': true,
+          'Add': true
+        }
+        taskIsNewOrNeedsToBeAdded[message] ? this.createNewDontUpdate() : ''
+      },
+
       checkForExistingTaskChanges() {
         if (this.result.resultReturned && (
           this.result.standardCustomerTaskPrice !== this.addNewTaskForm.taskPrice ||
