@@ -14,7 +14,6 @@
  */
 
 import Echo from 'laravel-echo'
-// import { apiHost } from 'config'
 
 window.Pusher = require('pusher-js')
 
@@ -27,7 +26,6 @@ window.Echo = new Echo({
 
 require('spark-bootstrap')
 
-// register the plugin on vue
 import Toasted from 'vue-toasted'
 import Vue from 'vue'
 
@@ -46,8 +44,6 @@ const vuetifyOptions = {
   }
 }
 Vue.use(Vuetify)
-// const opts = {}
-// export default new vuetify(opts)
 
 import VuePaginate from 'vue-paginate'
 
@@ -128,6 +124,7 @@ function goingToANonAuthorizedPage(path) {
     path === '/check_accounting' ||
     path === '/howto' ||
     path === '/documentation' ||
+    path === '/pricing' ||
     path === '/benefits' ||
     path === '/register' ||
     path === '/registerQuickBooks'
@@ -164,13 +161,22 @@ function doAuthRouting(to, from, next) {
   }
 }
 
+import MainHeader from './components/shared/Header'
+import MainFooter from './components/shared/Footer'
+
 router.beforeEach((to, from, next) => {
 
   if (to.fullPath !== '/' && to.fullPath !== '/register') {
     axios.get('/checkAuth')
       .then(response => {
-
           if (response.data.auth) {
+
+            // setAuth(this,true)
+            // this.$store.commit('setAuth', true);
+
+            store.state.auth = true
+            console.log('auth', store.state.auth)
+
             checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
 
             if (isUserInVuexStore()) {
@@ -212,7 +218,6 @@ router.beforeEach((to, from, next) => {
                     this.user = response.data
                     console.log(JSON.stringify(this.user))
                     Spark.state.user = this.user
-
                     this.$store.commit('setUser', this.user)
                     window.User.user = this.user
                     window.GeneralContractor.user = this.user
@@ -246,12 +251,14 @@ router.beforeEach((to, from, next) => {
           } else {
             if (goingToANonAuthorizedPage(to.path)) {
               next()
+              store.state.auth = false
             }
           }
         }
       )
       .catch(error => {
         console.log(JSON.stringify(error))
+        store.state.auth = false
       })
   } else {
     next()
@@ -265,22 +272,21 @@ router.afterEach((to, from) => {
   }
 })
 
-import MainHeader from './components/shared/Header'
-import MainFooter from './components/shared/Footer'
-
 var app = new Vue({
   mixins: [require('spark')],
   components: {
     MainHeader,
     MainFooter
   },
-  router,
   store,
+  router,
   vuetify: new Vuetify(vuetifyOptions),
   data: {
     user: window.User
   },
   mounted() {
+
+    console.log('I am calling the mounted object in the main vue app mounted function')
 
     let location = {
       hash: window.location.hash,

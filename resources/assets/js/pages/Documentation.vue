@@ -1,17 +1,9 @@
 <template>
     <div>
 
-        <app-bar>
-
-            <template
-                    slot="hamburger"
-            >
-                <v-app-bar-nav-icon
-                        @click.stop="drawer = !drawer"
-                >
-                </v-app-bar-nav-icon>
-            </template>
-
+        <app-bar
+                @drawer="drawer = $event"
+        >
         </app-bar>
         <v-flex style="margin-top: 6rem;">
             <v-navigation-drawer
@@ -149,7 +141,7 @@
       return {
         dotcolor: '#95ca97',
         initiateBid: false,
-        drawer: true,
+        drawer: false,
         mainWorkflow: true,
         generalWorkflow: false,
         subWorkflow: false,
@@ -211,7 +203,7 @@
         this.subWorkflow = false
         this.customerWorkflow = false
       },
-      closeDrawer(){
+      closeDrawer() {
         this.drawer = false
       },
       workflow(workflow) {

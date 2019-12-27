@@ -1,6 +1,15 @@
 <template>
-    <v-content v-if="$vuetify.breakpoint.xs">
-        <div class="flex space-between">
+    <div>
+        <div class="flex space-between"
+             v-if="!auth"
+        >
+            <v-btn
+                    @click="gotoPage('/')"
+                    icon
+            >
+                <v-icon>mdi-home-outline</v-icon>
+            </v-btn>
+
             <v-btn
                     @click="emit('features')"
                     icon
@@ -24,23 +33,60 @@
 
             <v-btn
                     icon
-                    @click="showContent('login  ')"
+                    @click="emit('login')"
             >
                 <v-icon>mdi-login</v-icon>
             </v-btn>
         </div>
-    </v-content>
+        <div
+            v-if="auth"
+        >
+            <v-btn
+                    @click="gotoPage('/home')"
+                    icon
+            >
+                <v-icon>mdi-home-outline</v-icon>
+            </v-btn>
+
+            <v-btn
+                    @click="gotoSettings()"
+                    icon
+            >
+                <v-icon>mdi-settings</v-icon>
+            </v-btn>
+        </div>
+    </div>
 </template>
 
 <script>
 
+  import { mapState } from 'vuex'
+
   export default {
     name: 'AppBarButtons',
+    computed: {
+      ...mapState({
+        auth: state => state.auth
+      })
+    },
     methods: {
+      goHome(){
+        if (this.auth) {
+          this.$router.push('/home')
+        } else {
+          this.$router.push('/')
+        }
+      },
+      gotoSettings(){
+        window.location.href = '/settings'
+      },
+      gotoPage(page){
+        this.$router.push(page)
+      },
       emit(btn) {
         this.$emit('appBtn', btn)
       },
-      showContent(btn){
+      showContent(btn) {
         this.emit(btn)
       }
     }

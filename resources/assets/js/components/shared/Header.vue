@@ -1,5 +1,8 @@
 <template>
     <nav>
+
+<!--        <app-bar></app-bar>-->
+
         <section v-if="onHomePage()">
             <header-bio
                     ref="homePage"
@@ -8,10 +11,6 @@
         </section>
 
         <section v-else-if="onParticularJobPage()">
-            <!--            <header-job-name-settings-logout-->
-            <!--                ref="headerJobNameSettingsLogout"-->
-            <!--                :job-name=getCompanyName-->
-            <!--            ></header-job-name-settings-logout>-->
 
             <header-bio
                     ref="homePage4"
@@ -63,11 +62,6 @@
             ></header-bio>
         </section>
 
-
-        <!--        <section v-else-if="onPublicHomePage() ||-->
-        <!--                            onRegisterPage() ||-->
-        <!--                            onFurtherInfoPage()"></section>-->
-
     </nav>
 </template>
 
@@ -77,10 +71,12 @@
   import HeaderBackButton from '../header/HeaderBackButton'
   import HeaderJobNameSettingsLogout from '../header/HeaderJobNameSettingsLogout'
   import HeaderJobToggle from '../header/HeaderJobToggle'
+  import AppBar from '../header/AppBar'
 
   export default {
     name: 'Header',
     components: {
+      AppBar,
       HeaderBio,
       HeaderBackButton,
       HeaderJobNameSettingsLogout,
@@ -89,6 +85,7 @@
     props: ['user'],
     data() {
       return {
+        drawer:false,
         currentUser: ''
       }
     },

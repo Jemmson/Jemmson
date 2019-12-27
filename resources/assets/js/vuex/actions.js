@@ -52,5 +52,9 @@ export const checkMobileNumber = ({commit}, phone) => {
 
 }
 
+export const auth = ({commit}, payload) => {
+  commit('setAuth', payload)
+}
+
 
 

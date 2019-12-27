@@ -1,5 +1,5 @@
-import VueRouter from 'vue-router'
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
@@ -25,6 +25,7 @@ import SubInvoice from './pages/SubInvoice'
 import FurtherInfo from './pages/FurtherInfo'
 import TaskImages from './pages/TaskImages'
 import Benefits from './pages/Benefits'
+import Pricing from './pages/Pricing'
 import Demo from './pages/Demo'
 import HowTo from './pages/HowTo'
 import RegisterQuickBooks from './pages/RegisterQuickBooks'
@@ -151,6 +152,10 @@ const routes = [
     component: Documentation,
     name: 'documentation',
     props: true
+  },
+  {
+    path: '/pricing',
+    component: Pricing
   },
   {
     path: '/#*'

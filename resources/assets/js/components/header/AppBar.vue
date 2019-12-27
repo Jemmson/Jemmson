@@ -6,20 +6,37 @@
                 height="100px"
                 :extended="extended"
         >
-            <slot
-                name="hamburger"
-            ></slot>
-            <v-toolbar-title
-            class="display-1"
-            ><strong style="color: white !important;">Jemmson</strong></v-toolbar-title>
-            <v-spacer></v-spacer>
-            <app-bar-buttons-sm
-                    @appBtn="showContent($event)">
-            </app-bar-buttons-sm>
-            <app-bar-buttons
-                    @appBtn="showContent($event)"
+
+
+            <v-content v-if="$vuetify.breakpoint.xs">
+                <template class="flex flex-column">
+                    <div class="flex space-between">
+                        <v-app-bar-nav-icon
+                                @click.stop="toggleDrawer()"
+                        >
+                        </v-app-bar-nav-icon>
+                        <v-toolbar-title
+                                class="display-1"
+                        ><strong style="color: white !important;">Jemmson</strong></v-toolbar-title>
+                        <div></div>
+                    </div>
+                    <app-bar-buttons
+                            @appBtn="showContent($event)"
+                    >
+                    </app-bar-buttons>
+                </template>
+            </v-content>
+            <v-content
+                    v-else
             >
-            </app-bar-buttons>
+                <v-toolbar-title
+                        class="display-1"
+                ><strong style="color: white !important;">Jemmson</strong></v-toolbar-title>
+                <v-spacer></v-spacer>
+                <app-bar-buttons-sm
+                        @appBtn="showContent($event)">
+                </app-bar-buttons-sm>
+            </v-content>
         </v-app-bar>
 
         <features
@@ -45,6 +62,7 @@
     name: 'AppBar',
     data() {
       return {
+        drawer: false,
         extended: false,
         extendedHeight: 0,
         show: {
@@ -62,6 +80,9 @@
       Login
     },
     methods: {
+      toggleDrawer() {
+        this.$emit('drawer', true)
+      },
       showContent(content) {
         if (content === 'features') {
           if (!this.show.features) {
@@ -79,6 +100,8 @@
           }
         } else if (content === 'documentation') {
           this.$router.push('documentation')
+        } else if (content === 'pricing') {
+          this.$router.push('pricing')
         }
       },
       hideAllContent() {
