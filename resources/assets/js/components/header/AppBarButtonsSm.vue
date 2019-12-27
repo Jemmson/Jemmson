@@ -39,7 +39,7 @@
                     text
                     @click="emit('login')"
             >
-                Login
+                Register / Login
             </v-btn>
         </div>
         <div

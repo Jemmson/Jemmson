@@ -7,7 +7,7 @@
 
         <v-container fluid
                      style="margin-top: 4rem"
-                     v-if="$vuetify.breakpoint.xs"
+                     v-if="$vuetify.breakpoint.smAndDown"
         >
             <v-row class="main">
                 <h2 class="text-center">Subcontract Work</h2>
@@ -47,7 +47,7 @@
 
         <v-container fluid
                      style="margin-top: 4rem"
-                     v-if="$vuetify.breakpoint.smAndUp"
+                     v-if="$vuetify.breakpoint.mdAndUp"
         >
             <v-row>
                 <v-col cols="4" class="main">

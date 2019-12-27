@@ -2,7 +2,7 @@
 
     <v-container class="spacing" fluid>
         <v-row
-                v-if="$vuetify.breakpoint.smAndUp"
+                v-if="$vuetify.breakpoint.mdAndUp"
         >
             <v-col
                     cols="3"
@@ -28,7 +28,7 @@
                 <h5 class="text-center">Security</h5>
             </v-col>
         </v-row>
-        <div v-if="$vuetify.breakpoint.xs">
+        <div v-if="$vuetify.breakpoint.smAndDown">
             <v-row>
                 <v-col
                         cols="12"

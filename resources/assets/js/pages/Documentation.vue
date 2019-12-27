@@ -12,12 +12,6 @@
                     clipped
                     style="margin-top: 6rem;"
             >
-                <!--                <v-navigation-drawer-->
-                <!--                    stateless-->
-                <!--                    v-model="drawer"-->
-                <!--                    height="100vh"-->
-                <!--                    width="300px"-->
-                <!--            >-->
                 <v-list
                 >
                     <v-list-item link

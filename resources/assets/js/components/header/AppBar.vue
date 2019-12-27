@@ -8,7 +8,7 @@
         >
 
 
-            <v-content v-if="$vuetify.breakpoint.xs">
+            <v-content v-if="$vuetify.breakpoint.smAndDown">
                 <template class="flex flex-column">
                     <div class="flex space-between">
                         <v-app-bar-nav-icon
@@ -30,7 +30,7 @@
                     v-else
             >
                 <v-toolbar-title
-                        class="display-1"
+                        class="display-1 text-center mt-1rem"
                 ><strong style="color: white !important;">Jemmson</strong></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <app-bar-buttons-sm
@@ -101,7 +101,7 @@
         } else if (content === 'documentation') {
           this.$router.push('documentation')
         } else if (content === 'pricing') {
-          this.$router.push('pricing')
+          this.$router.push('/pricing')
         }
       },
       hideAllContent() {
