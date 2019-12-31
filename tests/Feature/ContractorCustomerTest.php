@@ -45,9 +45,4 @@ class ContractorCustomerTest extends TestCase
 
     }
 
-    /**  @test */
-    function if_a_customer_is_associated_to_a_contractor_then_the_customer_should_not_be_added_to_contractorCustomer_table() {
-
-    }
-
 }

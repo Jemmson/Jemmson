@@ -6,13 +6,9 @@ use App\Contractor;
 use App\Customer;
 use App\Location;
 use App\User;
-use Illuminate\Foundation\Testing\WithFaker;
 
 trait UserTrait
 {
-
-    use WithFaker;
-    use UtilitiesTrait;
 
     public function createLocation($user_id, $params = [])
     {
@@ -32,7 +28,79 @@ trait UserTrait
         return $location;
     }
 
-    public function createAdmin_Contractor($user_params = [], $location_params = [], $contractor_params = [])
+    public function createContractor(
+        $userArray = [], $contractorArray = []
+    )
+    {
+
+        $payload = [
+            "usertype" => 'contractor',
+            "password_updated" => 1
+        ];
+
+        $payload = $this->mergeArrays($payload, $userArray);
+        $user = factory(User::class)->create($payload);
+
+        $contractorPayload = [
+            "user_id" => $user->id,
+            "location_id" => $user->location_id
+        ];
+        $contractorPayload = $this->mergeArrays($contractorPayload, $contractorArray);
+        factory(Contractor::class)->create($contractorPayload);
+
+        $location = $this->createLocation($user->id);
+
+        $user->location_id = $location->id;
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $user;
+    }
+
+    public function createCustomer(
+        $userArray = [], $customerArray = []
+    )
+    {
+
+        $payload = [
+            "usertype" => 'customer',
+            "password_updated" => 1
+        ];
+
+        $payload = $this->mergeArrays($payload, $userArray);
+        $user = factory(User::class)->create($payload);
+
+        $customerPayload = [
+            "user_id" => $user->id,
+            "location_id" => $user->location_id
+        ];
+        $customerPayload = $this->mergeArrays($customerPayload, $customerArray);
+        factory(customer::class)->create($customerPayload);
+
+        $location = $this->createLocation($user->id);
+
+        $user->location_id = $location->id;
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        return $user;
+    }
+
+    public function createdmin_Contractor($user_params = [], $location_params = [], $contractor_params = [])
     {
 
         if (count($user_params) != 0) {

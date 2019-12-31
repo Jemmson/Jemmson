@@ -6,8 +6,6 @@
                 height="100px"
                 :extended="extended"
         >
-
-
             <v-content v-if="$vuetify.breakpoint.smAndDown">
                 <template class="flex flex-column">
                     <div class="flex space-between">

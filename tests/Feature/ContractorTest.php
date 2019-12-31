@@ -2,18 +2,30 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Feature\Traits\JobTrait;
+use Tests\Feature\Traits\TaskTrait;
+use Tests\Feature\Traits\UtilitiesTrait;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Contractor;
 use App\User;
 use App\QuickbooksContractor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\Traits\UserTrait;
+use Tests\Feature\Traits\JobTaskTrait;
 
 
 class ContractorTest extends TestCase
 {
 
+    use WithFaker;
+    use UtilitiesTrait;
     use Setup;
+    use UserTrait;
+    use JobTaskTrait;
+    use TaskTrait;
+    use JobTrait;
     use RefreshDatabase;
 
     /**  @test */
@@ -866,20 +878,85 @@ class ContractorTest extends TestCase
     {
         //
 
-        $user = $this->createAUser('contractor', 1, 1, [], [
-            'company_name' => 'Albertsons'
-        ]);
-
-        echo $user->contractor()->get()->first()->company_name;
-
-        $response = $this->actingAs($user)->
-            json('GET', '/search/' . $user->contractor()->get()->first()->company_name);
-
-        $response->assertJson([
-            'hello' => "world"
-        ]);
+//        $user = $this->createUser('contractor', 1, 1, [], [
+//            'company_name' => 'Albertsons'
+//        ]);
+//
+//        echo $user->contractor()->get()->first()->company_name;
+//
+//        $response = $this->actingAs($user)->
+//            json('GET', '/search/' . $user->contractor()->get()->first()->company_name);
+//
+//        $response->assertJson([
+//            'hello' => "world"
+//        ]);
 
 //        $this->assertEquals(1, count($response->json()));
+    }
+
+
+    /**  @test */
+    function test_The_contractor_can_pull_back_only_those_contractors_the_contractor_has_worked_with_before() {
+        //
+        $general = $this->createContractor();
+        $customer = $this->createCustomer();
+        $sub1 = $this->createContractor();
+        $sub2 = $this->createContractor();
+        $sub3 = $this->createContractor();
+        $sub4 = $this->createContractor();
+
+        $job = $this->createJob(
+            $customer->id,
+            $general->id,
+            $customer->location_id,
+            'initiated'
+        );
+
+
+        $task1 = $this->createTask($general->id, [
+            "name" => "task1",
+            "unit_price" => 10000
+        ]);
+
+        $task2 = $this->createTask($general->id, [
+            "name" => "task1",
+            "unit_price" => 20000
+        ]);
+
+        $jobTask1 = $this->createJobTask($job->id, $task1->id, $customer->location_id, $general->id, 'initiated');
+        $jobTask2 = $this->createJobTask($job->id, $task2->id, $customer->location_id, $general->id, 'initiated');
+
+        $general->inviteSub($sub1, $jobTask1);
+        $general->inviteSub($sub2, $jobTask1);
+        $general->inviteSub($sub3, $jobTask2);
+        $general->inviteSub($sub4, $jobTask2);
+
+        $this->assertDatabaseHas('contractor_contractor', [
+            "contractor_id" => $general->id,
+            "subcontractor_id" => $sub1->id
+        ]);
+
+        $this->assertDatabaseHas('contractor_contractor', [
+            "contractor_id" => $general->id,
+            "subcontractor_id" => $sub2->id
+        ]);
+
+        $general->getAssociatedSubsForTask($task1->id);
+
+        $this->assertJson(json_encode([
+            "subs" => [
+                "contractor_id" => $sub1->id,
+                "name" => $sub1->name,
+                "phone" => $sub1->phone
+            ],
+            [
+                "contractor_id" => $sub2->id,
+                "name" => $sub2->name,
+                "phone" => $sub2->phone
+            ]
+        ]));
+
+
     }
 
 }

@@ -6,11 +6,12 @@ use App\Contractor;
 use App\Customer;
 use App\Task;
 use App\User;
+use phpDocumentor\Reflection\Location;
 
 trait Setup
 {
 
-    public function createAUser(
+    public function createUser(
         $usertype, $passwordUpdated, $locationId,
         $userArray = [], $contractorArray = [], $customerArray = []
     )
@@ -42,19 +43,5 @@ trait Setup
         }
 
         return $user;
-    }
-
-    public function createATask($name, $price, $contractorId, $array = [])
-    {
-        $payload = [
-            "name" => $name,
-            "proposed_cust_price" => $price,
-            "contractor_id" => $contractorId
-        ];
-
-        $payload = $this->mergeArrays($payload, $array);
-
-        return factory(Task::class)->create($payload);
-
     }
 }

@@ -11,11 +11,14 @@ use App\ContractorCustomer;
 use App\Location;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\Utilities;
+use App\Traits\QuickbookContractor;
 
 class Contractor extends Model
 {
     use Utilities;
     use SoftDeletes;
+    use QuickbookContractor;
+
 
 //    protected $fillable = [
 //        'user_id',
@@ -507,7 +510,7 @@ class Contractor extends Model
     }
 
     public
-    function getAllQuickbookCompaniesAndFormattedSubs($companyName, $formattedSubs, $contractorId)
+    function getAllQuickbookCompaniesAndFormattedSubs($companyName, $formattedSubs)
     {
 //        TODO:: pull back unique contractors from the quickbooks table because different general contractors can have
         // TODO:: the same subs that they have worked with. I would like for this to be sorted
@@ -569,7 +572,6 @@ class Contractor extends Model
                 }
             }
         }
-
 
 
 

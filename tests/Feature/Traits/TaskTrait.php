@@ -7,22 +7,23 @@ use App\Customer;
 use App\Location;
 use App\User;
 use App\Task;
-use Illuminate\Foundation\Testing\WithFaker;
 
 trait TaskTrait
 {
 
-    use WithFaker;
-    use UtilitiesTrait;
-
-    public function create_a_task(
-        $contractor_id
+    public function createTask(
+        $contractor_id, $task_array = []
     )
     {
         $params = [
             "contractor_id" => $contractor_id,
         ];
-        return factory(Task::class)->create($params);
+
+        count($task_array) > 0 ?
+            $payload = $this->mergeArrays($params, $task_array) :
+            $payload = [];
+
+        return factory(Task::class)->create($payload);
     }
 
 }

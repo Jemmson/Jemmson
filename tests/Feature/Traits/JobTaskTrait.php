@@ -2,20 +2,12 @@
 
 namespace Tests\Feature\Traits;
 
-use App\Contractor;
-use App\Customer;
-use App\Location;
-use App\User;
 use App\JobTask;
-use Illuminate\Foundation\Testing\WithFaker;
 
 trait JobTaskTrait
 {
 
-    use WithFaker;
-    use UtilitiesTrait;
-
-    public function create_a_job_task(
+    public function createJobTask(
         $job_id,
         $task_id,
         $location_id,
