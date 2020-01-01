@@ -336,10 +336,21 @@ class User extends SparkUser
 
     }
 
+    public static function getContractorByPhone($phone)
+    {
+        $users = User::where('phone', $phone)->where('usertype', '=', 'contractor')->get();
+        if (count($users) == 0) {
+            return null;
+        }
+        if (count($users) > 1) {
+            Log::debug('There is more than one contractor in the database with the same mobile phone number and this needs to be reconciled');
+        }
+        return $users->first();
+    }
+
     public static function getUserByPhoneOrEmail($phone, $email)
     {
         return User::where('phone', $phone)->get()->first();
-//        return User::where('phone', $phone)->orWhere('email', $email)->first();
     }
 
     public function updatePhoneNumber($newPhone)
@@ -367,10 +378,10 @@ class User extends SparkUser
         $user->name = $request->name;
         $user->phone = $this->digitsOnly($phone);
         $user->password_updated = 0;
-        $user->password = bcrypt('random'.rand(0,9999));
+        $user->password = bcrypt('random' . rand(0, 9999));
         $user->usertype = 'contractor';
-        !empty($request->firstName) ? $user->first_name = $request->firstName  :  $user->first_name = $request->givenName;
-        !empty($request->lastName) ? $user->last_name = $request->lastName  :  $user->last_name = $request->familyName;
+        !empty($request->firstName) ? $user->first_name = $request->firstName : $user->first_name = $request->givenName;
+        !empty($request->lastName) ? $user->last_name = $request->lastName : $user->last_name = $request->familyName;
 
         try {
             $user->save();
@@ -444,7 +455,7 @@ class User extends SparkUser
     private function addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user)
     {
         $qbContractor = QuickbooksContractor::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->
-            where('quickbooks_id', '=', $request->quickbooksId)->get()->first();
+        where('quickbooks_id', '=', $request->quickbooksId)->get()->first();
         $location = new Location();
         $location->address_line_1 = $qbContractor->line1;
         $location->address_line_2 = $qbContractor->line2;
@@ -488,11 +499,11 @@ class User extends SparkUser
 
     public function addExistingQBContractorToJemTable($request)
     {
-      $user = $this->addContractorUser($request);
-      $contractor = $this->addUserToContractorTable($request, $user);
-      $this->addGeneralAndSubToContractorContractorTable($request, $user);
-      $this->addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user);
-      return $user;
+        $user = $this->addContractorUser($request);
+        $contractor = $this->addUserToContractorTable($request, $user);
+        $this->addGeneralAndSubToContractorContractorTable($request, $user);
+        $this->addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user);
+        return $user;
     }
 
     public function addNewContractorToJemTable($request, $quickbooksId)
