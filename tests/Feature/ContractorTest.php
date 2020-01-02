@@ -900,10 +900,30 @@ class ContractorTest extends TestCase
         //
         $general = $this->createContractor();
         $customer = $this->createCustomer();
-        $sub1 = $this->createContractor();
-        $sub2 = $this->createContractor();
-        $sub3 = $this->createContractor();
-        $sub4 = $this->createContractor();
+        $sub1 = $this->createContractor([
+            'first_name' => 'jane1',
+            'last_name' => 'smith1'
+        ], [
+            'company_name' => 'Acme1'
+        ]);
+        $sub2 = $this->createContractor([
+            'first_name' => 'jane2',
+            'last_name' => 'smith2'
+        ], [
+            'company_name' => 'Acme2'
+        ]);
+        $sub3 = $this->createContractor([
+            'first_name' => 'jane3',
+            'last_name' => 'smith3'
+        ], [
+            'company_name' => 'Acme3'
+        ]);
+        $sub4 = $this->createContractor([
+            'first_name' => 'jane4',
+            'last_name' => 'smith4'
+        ], [
+            'company_name' => 'Acme4'
+        ]);
 
         $job = $this->createJob(
             $customer->id,
@@ -911,7 +931,6 @@ class ContractorTest extends TestCase
             $customer->location_id,
             'initiated'
         );
-
 
         $task1 = $this->createTask($general->id, [
             "name" => "task1",
@@ -926,10 +945,67 @@ class ContractorTest extends TestCase
         $jobTask1 = $this->createJobTask($job->id, $task1->id, $customer->location_id, $general->id, 'initiated');
         $jobTask2 = $this->createJobTask($job->id, $task2->id, $customer->location_id, $general->id, 'initiated');
 
-        $general->inviteSub($sub1, $jobTask1);
-        $general->inviteSub($sub2, $jobTask1);
-        $general->inviteSub($sub3, $jobTask2);
-        $general->inviteSub($sub4, $jobTask2);
+
+        $general->inviteSub(
+            $sub1->id,
+            $sub1->phone,
+            $sub1->email,
+            $jobTask1->id,
+            '',
+            $sub1->first_name,
+            $sub1->last_name,
+            $sub1->contractor()->get()->first()->company_name,
+            'stripe',
+            $general->id,
+            $jobTask1
+        );
+
+        $general->inviteSub(
+            $sub2->id,
+            $sub2->phone,
+            $sub2->email,
+            $jobTask1->id,
+            '',
+            $sub2->first_name,
+            $sub2->last_name,
+            $sub2->contractor()->get()->first()->company_name,
+            'stripe',
+            $general->id,
+            $jobTask1
+        );
+
+        $general->inviteSub(
+            $sub3->id,
+            $sub3->phone,
+            $sub3->email,
+            $jobTask2->id,
+            '',
+            $sub3->first_name,
+            $sub3->last_name,
+            $sub3->contractor()->get()->first()->company_name,
+            'stripe',
+            $general->id,
+            $jobTask2
+        );
+
+        $general->inviteSub(
+            $sub4->id,
+            $sub4->phone,
+            $sub4->email,
+            $jobTask2->id,
+            '',
+            $sub4->first_name,
+            $sub4->last_name,
+            $sub4->contractor()->get()->first()->company_name,
+            'stripe',
+            $general->id,
+            $jobTask2
+        );
+
+        $general->associateContractorWithSub($general->id, $sub1->id);
+        $general->associateContractorWithSub($general->id, $sub2->id);
+        $general->associateContractorWithSub($general->id, $sub3->id);
+        $general->associateContractorWithSub($general->id, $sub4->id);
 
         $this->assertDatabaseHas('contractor_contractor', [
             "contractor_id" => $general->id,

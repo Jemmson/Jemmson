@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\ContractorContractor;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
@@ -152,9 +153,9 @@ class User extends SparkUser
         $proposedBidPrice = Task::find($taskId)->proposed_sub_price;
 
         $bcjt = new BidContractorJobTask();
-        $bcjt->contractor_id  = $subcontractorId;
-        $bcjt->job_task_id  = $jobTaskId;
-        $bcjt->bid_price  = $proposedBidPrice;
+        $bcjt->contractor_id = $subcontractorId;
+        $bcjt->job_task_id = $jobTaskId;
+        $bcjt->bid_price = $proposedBidPrice;
 
         try {
             $bcjt->save();
@@ -191,7 +192,7 @@ class User extends SparkUser
             );
         }
 
-//        $jobTask = self::getCurrentJobTask($jobTaskId);
+        self::associateContractorWithSub($generalId, $sub->id);
 
         try {
             $bid = self::addBidEntryForTheSubContractor(
@@ -199,7 +200,7 @@ class User extends SparkUser
                 $jobTaskId,
                 $jobTask->task_id
             );
-        } catch (SubHasAlreadyBeenInvitedForThisTaskException $e){
+        } catch (SubHasAlreadyBeenInvitedForThisTaskException $e) {
             return response()->json([
                 "message" => "This Sub Has Already Been Invited For This Task",
                 "errors" => ["error" => "This Sub Has Already Been Invited For This Task"]
@@ -228,6 +229,25 @@ class User extends SparkUser
             'message' => 'success'
         ], 200);
 
+    }
+
+    public function associateContractorWithSub($generalId, $subId)
+    {
+        if (empty(self::associationExists($generalId, $subId))) {
+            self::associateSub($generalId, $subId);
+        }
+    }
+
+    public function associationExists($generalId, $subId)
+    {
+        return ContractorContractor::where('contractor_id', '=', $generalId)
+            ->where('subcontractor_id', '=', $subId)->get()->first();
+    }
+
+    public function associateSub($generalId, $subId)
+    {
+        $cc = new ContractorContractor();
+        $cc->create($generalId, $subId);
     }
 
     protected function setSubStatusToInitiated($sub, $jobTaskId)
@@ -281,7 +301,6 @@ class User extends SparkUser
     {
         return ‌‌JobTask::where('id', '=', $jobTaskId)->get()->first();
     }
-
 
 
     public function createSub($first_name, $last_name, $email, $phone, $companyName)
