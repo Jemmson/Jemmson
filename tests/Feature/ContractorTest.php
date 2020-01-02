@@ -956,6 +956,66 @@ class ContractorTest extends TestCase
             ]
         ]));
 
+    }
+
+    /**  @test */
+    function test_that_a_general_can_invite_a_sub() {
+        //
+        $general = $this->createContractor();
+        $customer = $this->createCustomer();
+        $location = $this->createLocation($customer->id);
+        $job = $this->createJob(
+            $customer->id,
+            $general->id,
+            $location->id,
+            'initated'
+        );
+        $task = $this->createTask($general->id);
+        $jobTask = $this->createJobTask(
+          $job->id,
+          $task->id,
+          $location->id,
+          $general->id,
+          'initated'
+        );
+        $sub = $this->createContractor([
+            'first_name' => 'jane',
+            'last_name' => 'smith'
+        ], [
+            'company_name' => 'Acme'
+        ]);
+        $general->inviteSub(
+            $sub->id,
+            $sub->phone,
+            $sub->email,
+            $jobTask->id,
+            '',
+            $sub->first_name,
+            $sub->last_name,
+            $sub->contractor()->get()->first()->company_name,
+            'stripe',
+            $general->id,
+            $jobTask
+        );
+
+        $this->assertDatabaseHas('bid_contractor_job_task', [
+            "contractor_id" => $sub->id,
+            "job_task_id" => $jobTask->id
+        ]);
+
+        $this->assertDatabaseHas('contractor_subcontractor_preferred_payment', [
+            "job_task_id" => $jobTask->id,
+            "contractor_id" => $general->id,
+            "sub_id" => $sub->id,
+            "contractor_preferred_payment_type" => 'stripe',
+        ]);
+
+        $this->assertDatabaseHas('sub_status', [
+            "user_id" => $sub->id,
+            "job_task_id" => $jobTask->id,
+            "status" => 'initiated',
+            "status_number" => 1,
+        ]);
 
     }
 

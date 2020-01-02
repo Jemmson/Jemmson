@@ -701,117 +701,127 @@ class TaskController extends Controller
             'phone' => 'required|string|min:10|max:14',
         ]);
 
-        //
-        $phone = SanatizeService::phone($request->phone);
-        $email = $request->email;
-        $jobTaskId = $request->jobTaskId;
+        $jobTask = ‌‌JobTask::where('id', '=', $request->jobTaskId)->get()->first();
 
-        if (!empty($request->id)) {
-            $user_sub = User::getUserByPhoneOrEmail($phone, $email);
-        } else {
-            $user_sub = User::find($request->id);
-        }
-
-        $qb = new Quickbook();
-        // TODO: Not sure about this logic.
-        // TODO: Should be if a user is not a contractor then create a contractor.
-        // TODO: If a user is a customer then that should not throw an error
-        //   becuase a user can be both a contractor and a customer
-//           Have to resolve that a customer name does not have to be unique
-//           in QB becuase more than one person can have the same name. Can
-//           take into account middle name maybe. Can check that name is not
-//           in the QB customer table for that contractor. Needs to be fixed though.
-        if (empty($user_sub)) {
-            // if no user found create one
-            if ($qb->isContractorThatUsesQuickbooks()) {
-                $qbc = QuickbooksContractor::ContractorExists($request);
-                if ($qbc) {
-                    if ($qbc->phone !== $phone) {
-                        $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
-                    }
-                    $user = new User();
-                    $user_sub = $user->addExistingQBContractorToJemTable($request);
-                } else {
-                    $resultingCustomerObj = Quickbook::addNewContractorToQuickBooks($request);
-                    QuickbooksContractor::addContractorToQuickbooksContractorTable($request, $resultingCustomerObj);
-                    $user = new User();
-                    $user_sub = $user->addNewContractorToJemTable($request, $resultingCustomerObj->Id);
-                }
-            } else {
-                $user_sub = $this->createNewUserFirstNameAndLastName(
-                    $request->firstName, $request->lastName, $email, $phone, $request->companyName
-                );
-            }
-        } else if ($user_sub->usertype === 'customer') {
-            // return if the user is a customer
-            return response()->json(["message" => "This person is a customer in the system and can not also be a contractor", "errors" => ["error" => "No valid user."]], 422);
-        } else {
-            if ($user_sub->phone !== $phone) {
-                $user_sub->updatePhoneNumber($phone);
-                if ($qb->isContractorThatUsesQuickbooks()) {
-                    $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
-                    $qbc = QuickbooksContractor::where('quickbooks_id', '=', $request->quickbooksId)->
-                    where('contractor_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
-                    $qbc->primary_phone = $phone;
-                    try {
-                        $qbc->save();
-                    } catch (\Exception $e) {
-                        return response()->json([
-                            'message' => $e->getMessage(),
-                            'code' => $e->getCode()
-                        ], 200);
-                    }
-                }
-            }
-        }
-
-        // add bid entry for the sub
-        // add an entry in to the contractor bid table so that the sub can bid on the task
-        $contractor = $user_sub->contractor()->first();
-        $jobTask = JobTask::find($jobTaskId);
-        $subBid = $this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id);
-        if (!$subBid) {
-            return response()->json([
-                "message" => "This Sub Has Already Been Invited For This Task",
-                "errors" => ["error" => "This Sub Has Already Been Invited For This Task"]
-            ], 422);
-        }
-
-        // adding a preferred payment entry for contractor for a given task
-        $ccspp = ContractorSubcontractorPreferredPayment::where('bid_contractor_job_task_id', '=', $subBid->id);
-        if (empty($ccspp->id)) {
-            $ccspp = new ContractorSubcontractorPreferredPayment();
-
-            $ccspp->job_task_id = $jobTask->id;
-            $ccspp->contractor_id = Auth::user()->getAuthIdentifier();
-            $ccspp->sub_id = $user_sub->id;
-            $ccspp->contractor_preferred_payment_type = $request->paymentType;
-
-        } else {
-            $ccspp->contractor_preferred_payment_type = $request->paymentType;
-        }
-
-        try {
-            $ccspp->save();
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'code' => $e->getCode()
-            ], 200);
-        }
-
-        // this code will redirect them to the page with information on the task
-        // if so then send a notification to that contractor
-        $user_sub->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user_sub));
-
-        $this->setSubStatus($contractor->user_id, $jobTask->id, 'initiated');
-
-        return response()->json([
-            'message' => 'success'
-        ], 200);
+        return Auth::user()->inviteSub(
+            $request->id,
+            $request->phone,
+            $request->email,
+            $request->jobTaskId,
+            $request->quickbooksId,
+            $request->firstName,
+            $request->lastName,
+            $request->companyName,
+            $request->paymentType,
+            Auth::user()->id,
+            $jobTask
+        );
 
 
-        return Task::getBidPrices($jobTask->job_id);
+//        //
+//        $phone = SanatizeService::phone($request->phone);
+//        $email = $request->email;
+//        $jobTaskId = $request->jobTaskId;
+//
+//        $user_sub = User::getContractorByPhone($phone, $request->id);
+//
+//        $qb = new Quickbook();
+//        // TODO: Not sure about this logic.
+//        // TODO: Should be if a user is not a contractor then create a contractor.
+//        // TODO: If a user is a customer then that should not throw an error
+//        //   becuase a user can be both a contractor and a customer
+////           Have to resolve that a customer name does not have to be unique
+////           in QB becuase more than one person can have the same name. Can
+////           take into account middle name maybe. Can check that name is not
+////           in the QB customer table for that contractor. Needs to be fixed though.
+//        if (empty($user_sub)) {
+//            // if no user found create one
+//            if ($qb->isContractorThatUsesQuickbooks()) {
+//                $qbc = QuickbooksContractor::ContractorExists($request);
+//                if ($qbc) {
+//                    if ($qbc->phone !== $phone) {
+//                        $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
+//                    }
+//                    $user = new User();
+//                    $user_sub = $user->addExistingQBContractorToJemTable($request);
+//                } else {
+//                    $resultingCustomerObj = Quickbook::addNewContractorToQuickBooks($request);
+//                    QuickbooksContractor::addContractorToQuickbooksContractorTable($request, $resultingCustomerObj);
+//                    $user = new User();
+//                    $user_sub = $user->addNewContractorToJemTable($request, $resultingCustomerObj->Id);
+//                }
+//            } else {
+//                $user_sub = $this->createNewUserFirstNameAndLastName(
+//                    $request->firstName, $request->lastName, $email, $phone, $request->companyName
+//                );
+//            }
+//        } else {
+//            if ($user_sub->phone !== $phone) {
+//                $user_sub->updatePhoneNumber($phone);
+//                if ($qb->isContractorThatUsesQuickbooks()) {
+//                    $qb->UpdateSubPhoneNumberInQuickbooks($phone, $request->quickbooksId);
+//                    $qbc = QuickbooksContractor::where('quickbooks_id', '=', $request->quickbooksId)->
+//                    where('contractor_id', '=', Auth::user()->getAuthIdentifier())->get()->first();
+//                    $qbc->primary_phone = $phone;
+//                    try {
+//                        $qbc->save();
+//                    } catch (\Exception $e) {
+//                        return response()->json([
+//                            'message' => $e->getMessage(),
+//                            'code' => $e->getCode()
+//                        ], 200);
+//                    }
+//                }
+//            }
+//        }
+//
+//        // add bid entry for the sub
+//        // add an entry in to the contractor bid table so that the sub can bid on the task
+//        $contractor = $user_sub->contractor()->first();
+//        $jobTask = JobTask::find($jobTaskId);
+//        $subBid = $this->addBidEntryForTheSubContractor($contractor, $jobTaskId, $jobTask->task_id);
+//        if (!$subBid) {
+//            return response()->json([
+//                "message" => "This Sub Has Already Been Invited For This Task",
+//                "errors" => ["error" => "This Sub Has Already Been Invited For This Task"]
+//            ], 422);
+//        }
+//
+//        // adding a preferred payment entry for contractor for a given task
+//        $ccspp = ContractorSubcontractorPreferredPayment::where('bid_contractor_job_task_id', '=', $subBid->id);
+//        if (empty($ccspp->id)) {
+//            $ccspp = new ContractorSubcontractorPreferredPayment();
+//
+//            $ccspp->job_task_id = $jobTask->id;
+//            $ccspp->contractor_id = Auth::user()->getAuthIdentifier();
+//            $ccspp->sub_id = $user_sub->id;
+//            $ccspp->contractor_preferred_payment_type = $request->paymentType;
+//
+//        } else {
+//            $ccspp->contractor_preferred_payment_type = $request->paymentType;
+//        }
+//
+//        try {
+//            $ccspp->save();
+//        } catch (\Exception $e) {
+//            return response()->json([
+//                'message' => $e->getMessage(),
+//                'code' => $e->getCode()
+//            ], 200);
+//        }
+//
+//        // this code will redirect them to the page with information on the task
+//        // if so then send a notification to that contractor
+//        $user_sub->notify(new NotifySubOfTaskToBid($jobTask->task_id, $user_sub));
+//
+//        $this->setSubStatus($contractor->user_id, $jobTask->id, 'initiated');
+//
+//        return response()->json([
+//            'message' => 'success'
+//        ], 200);
+//
+//
+//        return Task::getBidPrices($jobTask->job_id);
     }
 
     public function notifyAcceptedBid(Request $request)

@@ -25,7 +25,7 @@ class InviteSubTest extends TestCase
             "email" => "sub@sub.com",
         ]);
 
-        $subFromDb = User::getContractorByPhone($sub->phone);
+        $subFromDb = User::getContractorByPhone($sub->phone, '');
 
         $this->assertEquals($sub->phone, $subFromDb->phone);
 
@@ -44,7 +44,7 @@ class InviteSubTest extends TestCase
             "email" => "cust@cust.com",
         ]);
 
-        $subFromDb = User::getContractorByPhone($sub->phone);
+        $subFromDb = User::getContractorByPhone($sub->phone, '');
 
         $this->assertEquals($sub->phone, $subFromDb->phone);
     }
@@ -54,7 +54,7 @@ class InviteSubTest extends TestCase
     {
         //
 
-        $subFromDb = User::getContractorByPhone('1237898');
+        $subFromDb = User::getContractorByPhone('1237898', '');
 
         $this->assertNull($subFromDb);
 
@@ -69,7 +69,7 @@ class InviteSubTest extends TestCase
             "email" => "cust@cust.com",
         ]);
 
-        $subFromDb = User::getContractorByPhone("1234567");
+        $subFromDb = User::getContractorByPhone("1234567", '');
 
         $this->assertNull($subFromDb);
     }
@@ -88,8 +88,50 @@ class InviteSubTest extends TestCase
             "email" => "sub1@sub1.com",
         ]);
 
-        $subFromDb = User::getContractorByPhone($sub->phone);
+        $subFromDb = User::getContractorByPhone($sub->phone, '');
         $this->assertEquals($sub->phone, $subFromDb->phone);
+
+    }
+
+    /**  @test */
+    function pull_back_the_contractor_if_the_request_id_exists()
+    {
+        //
+        $sub = $this->createContractor([
+            "phone" => "1234567",
+            "email" => "sub1@sub1.com",
+        ]);
+
+        $subFromDb = User::getContractorByPhone($sub->phone, '');
+        $this->assertEquals($sub->phone, $subFromDb->phone);
+    }
+
+    /**  @test */
+    function a_sub_is_created_based_upon_their_demographics()
+    {
+        //
+
+        $general = $this->createContractor();
+        $first_name = 'sub1fn';
+        $last_name = 'subln';
+        $email = 'sub@sub.com';
+        $phone = '1234567';
+        $companyName = 'Acme';
+
+        $general->createNewUserFirstNameAndLastName(
+            $first_name, $last_name, $email, $phone, $companyName
+        );
+
+        $this->assertDatabaseHas('users', [
+            "first_name" => $first_name,
+            "last_name" => $last_name,
+            "email" => $email,
+            "phone" => $phone
+        ]);
+
+        $this->assertDatabaseHas('contractors', [
+            "company_name" => $companyName
+        ]);
 
     }
 }
