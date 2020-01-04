@@ -514,10 +514,10 @@ class TaskController extends Controller
     public function updateBidContractorJobTask(Request $request)
     {
 
-        $sub = User::find($request->subId);
+//        $sub = User::find($request->subId);
 //
-        $jobTask = JobTask::find($request->job_task_id);
-        $job = Job::find($jobTask->job_id);
+//        $jobTask = JobTask::find($request->job_task_id);
+//        $job = Job::find($jobTask->job_id);
 
 //        $sub->subSendsBidToGeneral(
 //            $request->bid_price,
