@@ -373,7 +373,8 @@
 
 
                                                     <v-btn
-                                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid) && checkIfBidHasBeenSent(bid)"
+                                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
+                                                                    && checkIfBidHasBeenSent(bid)"
                                                             @click="acceptSubBidForTask(bid, jobTask)"
                                                             class="primary w-1/2"
                                                             :disabled="disabled.accept"
@@ -404,45 +405,45 @@
                 </div>
 
 
-<!--                <v-card v-if="checkIfThereAreMessaages(jobTask)"-->
-<!--                        style="width: 95%;-->
-<!--                            margin-left: auto;-->
-<!--                            margin-right: auto;"-->
-<!--                >-->
+                <!--                <v-card v-if="checkIfThereAreMessaages(jobTask)"-->
+                <!--                        style="width: 95%;-->
+                <!--                            margin-left: auto;-->
+                <!--                            margin-right: auto;"-->
+                <!--                >-->
 
-<!--                    <v-card-title>-->
-<!--                        Change Messages to the contractor-->
-<!--                    </v-card-title>-->
-<!--                    <v-card-text v-show="messages">-->
-<!--                        <v-list-item v-for="i in jobTask.messages" :key="i.id"-->
-<!--                                     style="border: black solid thin;-->
-<!--                                        border-radius: 10px;-->
-<!--                                        background-color: aliceblue;-->
-<!--                                        margin-bottom: .15rem;-->
-<!--                                        margin-top: .15rem;"-->
-<!--                        >-->
-<!--                            <v-list-item-content>-->
-<!--                                <v-list-item-title>{{ i.message }}</v-list-item-title>-->
-<!--                            </v-list-item-content>-->
-<!--                        </v-list-item>-->
-<!--                    </v-card-text>-->
+                <!--                    <v-card-title>-->
+                <!--                        Change Messages to the contractor-->
+                <!--                    </v-card-title>-->
+                <!--                    <v-card-text v-show="messages">-->
+                <!--                        <v-list-item v-for="i in jobTask.messages" :key="i.id"-->
+                <!--                                     style="border: black solid thin;-->
+                <!--                                        border-radius: 10px;-->
+                <!--                                        background-color: aliceblue;-->
+                <!--                                        margin-bottom: .15rem;-->
+                <!--                                        margin-top: .15rem;"-->
+                <!--                        >-->
+                <!--                            <v-list-item-content>-->
+                <!--                                <v-list-item-title>{{ i.message }}</v-list-item-title>-->
+                <!--                            </v-list-item-content>-->
+                <!--                        </v-list-item>-->
+                <!--                    </v-card-text>-->
 
-<!--                    <v-btn-->
-<!--                            color="primary w-full"-->
-<!--                            @click="showTaskMessages(false)"-->
-<!--                            v-show="messages"-->
-<!--                    >-->
-<!--                        Hide-->
-<!--                    </v-btn>-->
-<!--                    <v-btn-->
-<!--                            color="primary w-full"-->
-<!--                            @click="showTaskMessages(true)"-->
-<!--                            v-show="!messages"-->
-<!--                    >-->
-<!--                        Show-->
-<!--                    </v-btn>-->
+                <!--                    <v-btn-->
+                <!--                            color="primary w-full"-->
+                <!--                            @click="showTaskMessages(false)"-->
+                <!--                            v-show="messages"-->
+                <!--                    >-->
+                <!--                        Hide-->
+                <!--                    </v-btn>-->
+                <!--                    <v-btn-->
+                <!--                            color="primary w-full"-->
+                <!--                            @click="showTaskMessages(true)"-->
+                <!--                            v-show="!messages"-->
+                <!--                    >-->
+                <!--                        Show-->
+                <!--                    </v-btn>-->
 
-<!--                </v-card>-->
+                <!--                </v-card>-->
 
                 <!-- Task Actions -->
                 <div class="col-12 mb-4">
@@ -760,14 +761,14 @@
     },
     methods: {
 
-      getMessage(jobTask){
+      getMessage(jobTask) {
 
-        let status = this.getLatestJobTaskStatus(jobTask);
+        let status = this.getLatestJobTaskStatus(jobTask)
 
         if (status === 'paid') {
           return jobTask.job.paid_with_cash_message
         } else if (jobTask && jobTask.task_messages && jobTask.task_messages.length > 0) {
-          return jobTask.task_messages[jobTask.task_messages.length -1].message
+          return jobTask.task_messages[jobTask.task_messages.length - 1].message
         }
 
       },
@@ -849,7 +850,7 @@
 
       getLatestJobStatus(jobTask) {
         if (jobTask && jobTask.job && jobTask.job.job_statuses) {
-            return jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status
+          return jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status
         }
       },
 
@@ -965,7 +966,8 @@
         ])
       },
       acceptSubBidForTask(bid, jobTask) {
-        GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled)
+        const generalId = jobTask.task.contractor.id
+        GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled, generalId)
       },
       showStripeToggle(jobTask) {
         return this.authUser.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===

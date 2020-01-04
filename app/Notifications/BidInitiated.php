@@ -84,7 +84,7 @@ class BidInitiated extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->line('A bid has been initiated by contractor: ' . $this->contractor)
-            ->action('Login', url('/login/customer/' . $this->job->id . '/' .
+            ->action('Login ', url('/login/customer/' . $this->job->id . '/' .
                 $this->emailToken))
             ->line('Thank you for using our application!');
     }

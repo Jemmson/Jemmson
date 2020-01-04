@@ -26,4 +26,11 @@ class ContractorContractor extends Model
         }
 
     }
+
+    public static function getAllTasksForGeneralByTaskIds($generalId, Array $jobTask_taskids)
+    {
+        return ContractorContractor::where('contractor_id', '=', $generalId)
+            ->whereIn('task_id', $jobTask_taskids)
+            ->get();
+    }
 }

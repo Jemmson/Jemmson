@@ -629,4 +629,9 @@ class Job extends Model
         return true;
     }
 
+    public static function getAllJobIdsForContractor($generalId)
+    {
+        return Job::where('contractor_id', '=', $generalId)->select(['id'])->get()->toArray();
+    }
+
 }

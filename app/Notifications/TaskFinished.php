@@ -59,7 +59,7 @@ class TaskFinished extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line("The task: " . $this->task->name . " has been finished.")
                     ->line($custom)
-                    ->action('View Task', url('/login/mix/' .
+                    ->action('View Task ', url('/login/mix/' .
                         $this->task->jobTask()->first()->job_id . '/' .
                         $this->user->generateToken(
                             $this->user->id,
@@ -92,7 +92,7 @@ class TaskFinished extends Notification implements ShouldQueue
         }
         $text = "The task: " . $this->task->name . " has been finished."
             . " $custom"
-            . 'View Task'
+            . 'View Task '
             . url('/login/mix/' .
                 $this->task->jobTask()->first()->job_id . '/' .
                 $this->user->generateToken(

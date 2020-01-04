@@ -3,15 +3,16 @@ import {router} from '../router.js'
 
 export default class GeneralContractor {
 
-    acceptSubBidForTask(jobTask, bid, disabled) {
+    acceptSubBidForTask(jobTask, bid, disabled, generalId) {
         console.log('acceptSubBidForTask', jobTask)
         disabled.accept = true
         axios.post('/api/task/accept', {
             jobId: jobTask.job_id,
             jobTaskId: jobTask.id,
             contractorId: bid.contractor_id,
+            generalId: generalId,
             bidId: bid.id,
-            price: bid.bid_price,
+            price: bid.bid_price
         }).then((response) => {
             console.log(response.data)
             User.emitChange('bidUpdated')

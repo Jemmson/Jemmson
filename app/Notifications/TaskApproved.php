@@ -49,7 +49,7 @@ class TaskApproved extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line("The task: " . $this->task->name . " has been Approved.")
                     ->line('Now waiting on customer to approve the task & send payment.')
-                    ->action('View Task', url('/login/sub/task/' .
+                    ->action('View Task ', url('/login/sub/task/' .
                         $this->task->id . '/' .
                         $this->user->generateToken(
                             $this->user->id,
@@ -74,7 +74,7 @@ class TaskApproved extends Notification implements ShouldQueue
 
         $text = "The task: " . $this->task->name . " has been Approved."
             . 'Now waiting on customer to approve the task & send payment.'
-            . 'View Task'
+            . 'View Task '
             . url('/login/sub/task/' .
                 $this->task->id . '/' .
                 $this->user->generateToken(

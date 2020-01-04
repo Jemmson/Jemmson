@@ -513,32 +513,46 @@ class TaskController extends Controller
      */
     public function updateBidContractorJobTask(Request $request)
     {
-        $bidContractorJobTask = BidContractorJobTask::find($request->id);
 
-        if ($bidContractorJobTask == null) {
-            return response()->json(["message" => "Couldn't find record.", "errors" => ["error" => ["Couldn't find record."]]], 404);
-        } else if ($request->bid_price == 0) {
-            return response()->json(["message" => "Price needs to be greater than 0.", "errors" => ["error" => [""]]], 412);
-        }
+        $sub = User::find($request->subId);
+//
+        $jobTask = JobTask::find($request->job_task_id);
+        $job = Job::find($jobTask->job_id);
 
-        $bidContractorJobTask->bid_price = $this->convertToCents($request->bid_price);
-        $bidContractorJobTask->status = 'bid_task.bid_sent';
-        $bidContractorJobTask->payment_type = $request->paymentType;
-        $jobTask = $bidContractorJobTask->jobTask()->first();
+        $sub->subSendsBidToGeneral(
+            $request->bid_price,
+            $request->paymentType, $request->generalId,
+            $jobTask,
+            $request->subId,
+            $job
+        );
 
-        try {
-            $bidContractorJobTask->save();
-        } catch (\Exception $e) {
-            Log::error('Update Bid Task:' . $e->getMessage());
-            return response()->json(["message" => "Couldn't save record.", "errors" => ["error" => [$e->getMessage()]]], 404);
-        }
-
-        $jobTask->updateStatus(__('bid_task.bid_sent'));
-
-        $gContractor = User::find($jobTask->task()->first()->contractor_id);
-        $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
-
-        $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'sent_a_bid');
+//        $bidContractorJobTask = BidContractorJobTask::find($request->id);
+//
+//        if ($bidContractorJobTask == null) {
+//            return response()->json(["message" => "Couldn't find record.", "errors" => ["error" => ["Couldn't find record."]]], 404);
+//        } else if ($request->bid_price == 0) {
+//            return response()->json(["message" => "Price needs to be greater than 0.", "errors" => ["error" => [""]]], 412);
+//        }
+//
+//        $bidContractorJobTask->bid_price = $this->convertToCents($request->bid_price);
+//        $bidContractorJobTask->status = 'bid_task.bid_sent';
+//        $bidContractorJobTask->payment_type = $request->paymentType;
+//        $jobTask = $bidContractorJobTask->jobTask()->first();
+//
+//        try {
+//            $bidContractorJobTask->save();
+//        } catch (\Exception $e) {
+//            Log::error('Update Bid Task:' . $e->getMessage());
+//            return response()->json(["message" => "Couldn't save record.", "errors" => ["error" => [$e->getMessage()]]], 404);
+//        }
+//
+//        $jobTask->updateStatus(__('bid_task.bid_sent'));
+//
+//        $gContractor = User::find($jobTask->task()->first()->contractor_id);
+//        $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
+//
+//        $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'sent_a_bid');
 
         return response()->json(["message" => "Success"], 200);
 
@@ -701,7 +715,7 @@ class TaskController extends Controller
             'phone' => 'required|string|min:10|max:14',
         ]);
 
-        $jobTask = ‌‌JobTask::where('id', '=', $request->jobTaskId)->get()->first();
+        $jobTask = JobTask::where('id', '=', $request->jobTaskId)->get()->first();
 
         return Auth::user()->inviteSub(
             $request->id,
@@ -852,71 +866,71 @@ class TaskController extends Controller
         $bidId = $request->bidId;
         $jobTaskId = $request->jobTaskId;
         $price = $request->price;
-        $contractorId = $request->contractorId;
+        $subId = $request->contractorId;
+        $general = User::find($request->generalId);
+        $jobTask = JobTask::find($jobTaskId);
 
-        // accept bid task
-        $bidContractorJobTask = BidContractorJobTask::find($bidId);
+        $general->approvesSubsBid(
+            $jobTask, $subId, $jobTaskId, $price, $bidId
+        );
 
-        if ($bidContractorJobTask === false) {
-            return response()->json(["message" => "Couldn't accept bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
-        }
+//        // accept bid task
+//        $bidContractorJobTask = BidContractorJobTask::find($bidId);
+//
+//        if ($bidContractorJobTask === false) {
+//            return response()->json(["message" => "Couldn't accept bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
+//        }
 
-        // change statuses on bidContractorJobTask. need to change the statuses for each contractor that has this jobtaskid
-        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
 
 
-        $allContractorsForJobTask->map(function ($contractor) use ($bidId) {
-            $c = BidContractorJobTask::find($contractor->id);
-            if ($contractor->id === $bidId) {
-                $c->accepted = true;
-                $c->status = 'bid_task.accepted';
-            } else {
-                $c->accepted = false;
-                if ($c->status == 'bid_task.accepted') {
-                    $c->status = 'bid_task.bid_sent';
-                }
-            }
-            $c->save();
-        });
+//        self::changeSubsStatuses(
+//            $jobTaskId,
+//            $bidId,
+//            $sub
+//        );
+
+
 
         // set the sub price in the job task table
-        $jobTask = JobTask::find($jobTaskId);
-        $task = $jobTask->task()->first();
-
-        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
-
-        $allContractorsForJobTask->map(function ($con) use ($bidId, $task, $jobTask) {
-            if ($con->id != $bidId) {
-                $con->accepted = 0;
-                $con->save();
-                $user = User::find($con->contractor_id);
-                $user->notify(new NotifySubOfBidNotAcceptedBid($task, $user));
-                $this->setSubStatus($user->id, $jobTask->id, 'denied');
-            } else {
-                $con->accepted = 1;
-                $con->save();
-            }
-        });
-
-        $jobTask->sub_final_price = $price;
-        $jobTask->contractor_id = $contractorId;
-        $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
-        $jobTask->stripe = false;
-        $jobTask->status = __('bid_task.accepted');
-
-        try {
-            $jobTask->save();
-        } catch (\Exception $e) {
-            Log::error('Updating Job Task: ' . $e->getMessage());
-            return response()->json(["message" => "Couldn't accept Job Task bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
-        }
-
-        // notify sub contractor that his bid was approved
-        $user = User::find($contractorId);
-        $user->notify(new NotifySubOfAcceptedBid($task, $user));
-        $this->setSubStatus($user->id, $jobTask->id, 'accepted');
-
-        return response()->json(["message" => "Success"], 200);
+//        $jobTask = JobTask::find($jobTaskId);
+//        $task = $jobTask->task()->first();
+//
+//        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
+//
+//        $allContractorsForJobTask->map(function ($con) use ($bidId, $task, $jobTask) {
+//            if ($con->id != $bidId) {
+//                $con->accepted = 0;
+//                $con->save();
+//                $user = User::find($con->contractor_id);
+//                $user->notify(new NotifySubOfBidNotAcceptedBid($task, $user));
+//                $this->setSubStatus($user->id, $jobTask->id, 'denied');
+//            } else {
+//                $con->accepted = 1;
+//                $con->save();
+//            }
+//        });
+//        $this->setSubStatus($user->id, $jobTask->id, 'accepted');
+//
+//
+//        $jobTask->sub_final_price = $price;
+//        $jobTask->contractor_id = $contractorId;
+//        $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
+//        $jobTask->stripe = false;
+//        $jobTask->status = __('bid_task.accepted');
+//
+//        try {
+//            $jobTask->save();
+//        } catch (\Exception $e) {
+//            Log::error('Updating Job Task: ' . $e->getMessage());
+//            return response()->json(["message" => "Couldn't accept Job Task bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
+//        }
+//
+//        // notify sub contractor that his bid was approved
+//        $user = User::find($contractorId);
+//        $user->notify(new NotifySubOfAcceptedBid($task, $user));
+//
+//
+//        return response()->json(["message" => "Success"], 200);
 
     }
 

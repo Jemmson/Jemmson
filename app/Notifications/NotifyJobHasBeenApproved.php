@@ -59,7 +59,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
         if ($this->sub) {
             return (new MailMessage)
                 ->line('The Customer Has Approved The Job!')
-                ->action('View Job', url('/login/sub/task/' . $this->job->id . '/' .
+                ->action('View Job ', url('/login/sub/task/' . $this->job->id . '/' .
                     $this->user->generateToken(
                         $this->user->id,
                         true,
@@ -74,7 +74,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->line('The Customer Has Approved The Job!')
-            ->action('View Job', url('/login/contractor/' . $this->job->id . '/' .
+            ->action('View Job ', url('/login/contractor/' . $this->job->id . '/' .
                 $this->user->generateToken(
                     $this->user->id,
                     true,

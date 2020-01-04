@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\BidContractorJobTask;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\Traits\JobTrait;
 use Tests\Feature\Traits\TaskTrait;
@@ -896,7 +897,8 @@ class ContractorTest extends TestCase
 
 
     /**  @test */
-    function test_The_contractor_can_pull_back_only_those_contractors_the_contractor_has_worked_with_before() {
+    function test_The_contractor_can_pull_back_only_those_contractors_the_contractor_has_worked_with_before()
+    {
         //
         $general = $this->createContractor();
         $customer = $this->createCustomer();
@@ -1002,10 +1004,12 @@ class ContractorTest extends TestCase
             $jobTask2
         );
 
-        $general->associateContractorWithSub($general->id, $sub1->id);
-        $general->associateContractorWithSub($general->id, $sub2->id);
-        $general->associateContractorWithSub($general->id, $sub3->id);
-        $general->associateContractorWithSub($general->id, $sub4->id);
+        $sub1->subSendsBidToGeneral(
+            100, 'cash', $general->id, $jobTask1, $sub1->id, $job
+        );
+        $sub2->subSendsBidToGeneral(
+            100, 'cash', $general->id, $jobTask1, $sub2->id, $job
+        );
 
         $this->assertDatabaseHas('contractor_contractor', [
             "contractor_id" => $general->id,
@@ -1017,25 +1021,89 @@ class ContractorTest extends TestCase
             "subcontractor_id" => $sub2->id
         ]);
 
-        $general->getAssociatedSubsForTask($task1->id);
+        $bid = BidContractorJobTask::where('contractor_id', '=', $sub1->id)
+            ->where('job_task_id', '=', $jobTask1->id)
+            ->get()->first();
 
-        $this->assertJson(json_encode([
-            "subs" => [
-                "contractor_id" => $sub1->id,
-                "name" => $sub1->name,
-                "phone" => $sub1->phone
-            ],
-            [
-                "contractor_id" => $sub2->id,
-                "name" => $sub2->name,
-                "phone" => $sub2->phone
-            ]
-        ]));
+        $general->approvesSubsBid($jobTask1, $sub1->id, $jobTask1->id, $bid->bid_price, $job->id);
 
+        $this->assertDatabaseHas('bid_contractor_job_task', [
+            "contractor_id" => $sub1->id,
+            "job_task_id" => $jobTask1->id,
+            "status" => 'bid_task.accepted',
+            "accepted" => true
+        ]);
+
+        $this->assertDatabaseHas('bid_contractor_job_task', [
+            "contractor_id" => $sub2->id,
+            "job_task_id" => $jobTask1->id,
+            "status" => 'bid_task.bid_sent',
+            "accepted" => false
+        ]);
+
+        $this->assertDatabaseHas('job_task', [
+            "sub_final_price" => $bid->bid_price,
+            "contractor_id" => $sub1->id,
+            "bid_id" => $bid->id,
+            "stripe" => 0,
+            "status" => 'bid_task.accepted'
+        ]);
+
+        $this->assertDatabaseHas('sub_status', [
+            "user_id" => $sub1->id,
+            "job_task_id" => $jobTask1->id,
+            "status" => 'accepted'
+        ]);
+
+        $response = $general->getAssociatedSubsForTask(
+            $general->id,
+            $jobTask1->id,
+            true
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode([
+                "subs" => [
+                    [
+                        "contractor_id" => $sub1->id,
+                        "name" => $sub1->name,
+                        "phone" => $sub1->phone
+                    ]
+                ]
+            ]),
+            $response->getContent()
+        );
     }
 
     /**  @test */
-    function test_that_a_general_can_invite_a_sub() {
+    function test_that_a_general_can_invite_a_sub()
+    {
+
+        $setup = self::setupInvitedSubs();
+
+        $this->assertDatabaseHas('bid_contractor_job_task', [
+            "contractor_id" => $setup['sub']->id,
+            "job_task_id" => $setup['jobTask']->id
+        ]);
+
+        $this->assertDatabaseHas('contractor_subcontractor_preferred_payment', [
+            "job_task_id" => $setup['jobTask']->id,
+            "contractor_id" => $setup['general']->id,
+            "sub_id" => $setup['sub']->id,
+            "contractor_preferred_payment_type" => 'stripe',
+        ]);
+
+        $this->assertDatabaseHas('sub_status', [
+            "user_id" => $setup['sub']->id,
+            "job_task_id" => $setup['jobTask']->id,
+            "status" => 'initiated',
+            "status_number" => 1,
+        ]);
+
+    }
+
+    protected function setupInvitedSubs()
+    {
         //
         $general = $this->createContractor();
         $customer = $this->createCustomer();
@@ -1048,11 +1116,11 @@ class ContractorTest extends TestCase
         );
         $task = $this->createTask($general->id);
         $jobTask = $this->createJobTask(
-          $job->id,
-          $task->id,
-          $location->id,
-          $general->id,
-          'initated'
+            $job->id,
+            $task->id,
+            $location->id,
+            $general->id,
+            'initated'
         );
         $sub = $this->createContractor([
             'first_name' => 'jane',
@@ -1074,25 +1142,15 @@ class ContractorTest extends TestCase
             $jobTask
         );
 
-        $this->assertDatabaseHas('bid_contractor_job_task', [
-            "contractor_id" => $sub->id,
-            "job_task_id" => $jobTask->id
-        ]);
-
-        $this->assertDatabaseHas('contractor_subcontractor_preferred_payment', [
-            "job_task_id" => $jobTask->id,
-            "contractor_id" => $general->id,
-            "sub_id" => $sub->id,
-            "contractor_preferred_payment_type" => 'stripe',
-        ]);
-
-        $this->assertDatabaseHas('sub_status', [
-            "user_id" => $sub->id,
-            "job_task_id" => $jobTask->id,
-            "status" => 'initiated',
-            "status_number" => 1,
-        ]);
-
+        return [
+            "general" => $general,
+            "customer" => $customer,
+            "location" => $location,
+            "job" => $job,
+            "task" => $task,
+            "jobTask" => $jobTask,
+            "sub" => $sub
+        ];
     }
 
 }

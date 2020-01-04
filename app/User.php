@@ -3,6 +3,8 @@
 namespace App;
 
 use App\ContractorContractor;
+use App\Notifications\NotifyContractorOfSubBid;
+use App\Notifications\NotifySubOfAcceptedBid;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
@@ -19,11 +21,14 @@ use App\Traits\Utilities;
 use App\Exceptions\SubHasAlreadyBeenInvitedForThisTaskException;
 use App\Exceptions\UnableToAddPreferredPaymentException;
 use App\Traits\Status;
-use JobTask;
+use App\Traits\ConvertPrices;
+use App\Job;
+use App\JobTask;
 
 class User extends SparkUser
 {
     use Traits\Passwordless;
+    use ConvertPrices;
     use Notifiable;
     use Utilities;
     use SoftDeletes;
@@ -231,11 +236,197 @@ class User extends SparkUser
 
     }
 
+    public function getAssociatedSubsForTask(
+        $generalId, $taskId, $withTask = false, $limit = 5, $favorites = false
+    )
+    {
+        if ($withTask) {
+            return self::getSubsWithTasks($generalId, $taskId);
+        } else {
+            return self::getSubsWithOutTasks($generalId);
+        }
+
+    }
+
+    public function getSubsWithTasks($generalId, $taskId)
+    {
+
+        $acceptedContractors = [];
+
+        $jobIds = Job::getAllJobIdsForContractor($generalId);
+
+        $jobTask_taskIds = JobTask::getAllTaskIdsForAcceptedJobs($jobIds);
+
+        $contractors = ContractorContractor::getAllTasksForGeneralByTaskIds($generalId, $jobTask_taskIds);
+
+        foreach ($contractors as $contractor) {
+            if ($contractor->task_id === $taskId) {
+                array_push($acceptedContractors, $contractor);
+            }
+        }
+
+        return response()->json([
+            "subs" => $acceptedContractors
+        ], 200);
+    }
+
+    public function getSubsWithoutTasks($generalId)
+    {
+        $subs = ContractorContractor::where('contractor_id', '=', $generalId)
+            ->get()->toArray();
+
+        return response()->json([
+            "subs" => $subs
+        ], 200);
+    }
+
     public function associateContractorWithSub($generalId, $subId)
     {
         if (empty(self::associationExists($generalId, $subId))) {
             self::associateSub($generalId, $subId);
         }
+    }
+
+    public function approvesSubsBid(
+        $jobTask, $subId, $jobTaskId, $price, $bidId
+    )
+    {
+        $task = $jobTask->task()->first();
+        self::changeSubStatus($jobTaskId, $subId);
+        self::updateJobTaskWithAcceptedBid($jobTask, $price, $subId, $bidId);
+        self::notifySubOfAcceptedBid($subId, $task);
+    }
+
+    public function changeSubStatus(
+        $jobTaskId, $subId
+    )
+    {
+        self::changeBidContractorSubStatus($subId, $jobTaskId);
+        self::changeSubStatusTable($subId, $jobTaskId);
+    }
+
+    public function changeBidContractorSubStatus($subId, $jobTaskId)
+    {
+        // change statuses on bidContractorJobTask. need to change the statuses for each contractor that has this jobtaskid
+        $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
+
+        foreach ($allContractorsForJobTask as $jt) {
+            if ($jt->contractor_id == $subId) {
+                $jt->accepted = true;
+                $jt->status = 'bid_task.accepted';
+            } else {
+                $jt->accepted = false;
+                if ($jt->status == 'bid_task.accepted') {
+                    $jt->status = 'bid_task.bid_sent';
+                }
+            }
+            try {
+                $jt->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }
+        }
+    }
+
+    public function changeSubStatusTable($subId, $jobTaskId)
+    {
+        $this->setSubStatus($subId, $jobTaskId, 'accepted');
+    }
+
+    public function updateJobTaskWithAcceptedBid(
+        $jobTask,
+        $price,
+        $subId,
+        $bidId
+    )
+    {
+        $bidContractorJobTask = BidContractorJobTask::find($bidId);
+        $jobTask->sub_final_price = $price;
+        $jobTask->contractor_id = $subId;
+        $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
+        $jobTask->stripe = false;
+        $jobTask->status = __('bid_task.accepted');
+
+        try {
+            $jobTask->save();
+        } catch (\Exception $e) {
+            Log::error('Updating Job Task: ' . $e->getMessage());
+            return response()->json(["message" => "Couldn't accept Job Task bid.", "errors" => ["error" => ["Couldn't accept bid."]]], 404);
+        }
+    }
+
+    public function notifySubOfAcceptedBid($subId, $task)
+    {
+        $user = User::find($subId);
+        $user->notify(new NotifySubOfAcceptedBid($task, $user));
+    }
+
+    public function subSendsBidToGeneral(
+        $bidPrice, $paymentType, $generalId, $jobTask, $subId, $job
+    )
+    {
+        $bidContractorJobTask = BidContractorJobTask::where('job_task_id', '=', $jobTask->id)->where('contractor_id', '=', $subId)->get()->first();
+        self::updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType);
+        self::updateJobTaskStatuses($jobTask, $subId);
+        self::notifyGeneralOfSubmittedBid($job, $bidContractorJobTask, $generalId);
+    }
+
+    public function updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType)
+    {
+
+        if ($bidContractorJobTask == null) {
+            return response()->json(["message" => "Couldn't find record.", "errors" => ["error" => ["Couldn't find record."]]], 404);
+        } else if ($bidPrice == 0) {
+            return response()->json(["message" => "Price needs to be greater than 0.", "errors" => ["error" => [""]]], 412);
+        }
+
+        $bidContractorJobTask->bid_price = $this->convertToCents($bidPrice);
+        $bidContractorJobTask->status = 'bid_task.bid_sent';
+        $bidContractorJobTask->payment_type = $paymentType;
+
+        try {
+            $bidContractorJobTask->save();
+        } catch (\Exception $e) {
+            Log::error('Update Bid Task:' . $e->getMessage());
+            return response()->json(["message" => "Couldn't save record.", "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
+    }
+
+    public function updateJobTaskStatuses($jobTask, $subId)
+    {
+        self::updateBidStatusToSent($jobTask);
+        $this->setSubStatus($subId, $jobTask->id, 'sent_a_bid');
+    }
+
+    public function updateBidStatusToSent($jobTask, $status = 'bid_task.bid_sent')
+    {
+        // need to update jobstatus table
+        $jobTask->status = $status;
+        try {
+            $jobTask->save();
+        } catch (\Exception $e) {
+            Log::error('Updating JobStatus Status: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public function notifyGeneralOfSubmittedBid($job,
+                                                $bidContractorJobTask,
+                                                $generalId
+    )
+
+    {
+        $gContractor = User::find($generalId);
+        $gContractor->notify(
+            new NotifyContractorOfSubBid(
+                $job,
+                User::find($bidContractorJobTask->contractor_id)->name,
+                $gContractor));
+
     }
 
     public function associationExists($generalId, $subId)

@@ -322,7 +322,9 @@
         axios.post('/bid/task/', {
           id: id,
           bid_price: bid_price,
-          paymentType: po
+          paymentType: po,
+          subId: bidTask.contractor_id,
+          $generalId: bidTask.job.contractor_id
         }).then((response) => {
           // TODO: security review
           console.log(response)

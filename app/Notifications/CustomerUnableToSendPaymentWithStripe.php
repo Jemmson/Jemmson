@@ -45,7 +45,7 @@ class CustomerUnableToSendPaymentWithStripe extends Notification implements Shou
         return (new MailMessage)
                     ->line('A customer tried to send you a payment through Stripe.')
                     ->line('Please login and connect with Stripe to be able to receive payments')
-                    ->action('Connect With Stripe', url('/stripe/express/connect'))
+                    ->action('Connect With Stripe ', url('/stripe/express/connect'))
                     ->line('Thank you for using our application!');
     }
 

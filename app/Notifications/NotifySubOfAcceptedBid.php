@@ -50,7 +50,7 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
 
         return (new MailMessage)
                     ->line('Your bid for ' . $this->bid->name . ' has been accepted')
-                    ->action('View Job',
+                    ->action('View Job ',
                         url('/login/sub/task/'. $this->bid->id . '/'
                             . $this->user->generateToken(
                                 true,

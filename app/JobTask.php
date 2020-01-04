@@ -381,4 +381,11 @@ class JobTask extends Model
     {
         return $this->status === 'bid_task.finished_by_general' || $this->status === 'bid_task.approved_by_general';
     }
+
+    public static function getAllTaskIdsForAcceptedJobs(Array $jobIds)
+    {
+        return JobTask::whereIn('job_id', $jobIds)
+            ->where('status', '=', 'bid_task.accepted')
+            ->select(['task_id'])->get()->toArray();
+    }
 }

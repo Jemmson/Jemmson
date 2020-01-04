@@ -85,14 +85,14 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
         if (true) {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' back to Jemmson.')
-                ->line('Please Sign In and go bid on your task')
-                ->action('Login', url('/login/sub/task/'. $task->id . '/' . $this->emailToken))
+                ->line('You have a potential job! Please sign in to see it. ')
+                ->action('Login ', url('/login/sub/task/'. $task->id . '/' . $this->emailToken))
                 ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' to Jemmson.')
                 ->line('Please follow these steps to sign up for the site. and review your task.')
-                ->action('Login', url('/login/sub/task/'.
+                ->action('Login ', url('/login/sub/task/'.
                     $task->id . '/' .
                     $this->emailToken))
                 ->line('Thank you for using our application!');
@@ -109,7 +109,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         return (new NexmoMessage)
-                    ->content('Please Sign In and go bid on your task ' .
+                    ->content('You have a potential job! Please sign in to see it. ' .
                         url('/login/sub/task/'.
                             $this->taskId . '/' . $this->nexmoToken) . ' ');
     }

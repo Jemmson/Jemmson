@@ -22,4 +22,30 @@ class UserTest extends TestCase
     use UtilitiesTrait;
     use UserTrait;
 
+   /**  @test */
+   function approves_subs_bid() {
+       //
+       $general = $this->createContractor();
+       $sub1 = $this->createContractor();
+       $sub2 = $this->createContractor();
+       $sub3 = $this->createContractor();
+
+       factory(BidContractorJobTask::class)->create([
+           "sub1" => $sub1->id,
+           "status" => 'initiated',
+           "job_task_id" => 1
+           ]);
+       factory(BidContractorJobTask::class)->create([
+           "sub1" => $sub2->id,
+           "status" => 'initiated',
+           "job_task_id" => 1
+           ]);
+       factory(BidContractorJobTask::class)->create([
+           "sub1" => $sub3->id,
+           "status" => 'initiated',
+           "job_task_id" => 1
+           ]);
+
+   }
+
 }

@@ -52,7 +52,7 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
     {
         return (new MailMessage)
             ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
+            ->action('Notification Action ', url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
             ->line('Thank you for using our application!');
     }
 

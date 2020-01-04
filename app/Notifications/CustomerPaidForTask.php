@@ -53,7 +53,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
         if ($isGeneral) {
             return (new MailMessage)
                     ->line('Customer has sent you a payment for : '. $this->task->name . '.')
-                    ->action('View Task',
+                    ->action('View Task ',
                         url('/login/general/' . $this->task->jobTask()->first()->job_id . '/'
                             .  $this->user->generateToken(
                                 $this->user->id,
@@ -69,7 +69,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
         } else {
             return (new MailMessage)
                     ->line('Customer has sent you a payment for : ' .$this->task->name . '.')
-                    ->action('View Task',
+                    ->action('View Task ',
                         url('/login/sub/task/' . $this->task->id . '/'
                             . $this->user->generateToken(
                                 $this->user->id,
@@ -96,7 +96,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
         $isGeneral = $this->task->contractor_id === $this->user->id;
 
         if ($isGeneral) {
-            $text = 'Customer has sent you a payment for : '. $this->task->name . '.'
+            $text = 'Customer has sent you a payment for : '. $this->task->name . '. '
                 . url('/login/general/' . $this->task->id . '/'
                             . $this->user->generateToken(
                                 $this->user->id,
@@ -109,7 +109,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                             )->token)
             . 'Thank you for using our application!';
         } else {
-            $text = 'Customer has sent you a payment for : '. $this->task->name . '.'
+            $text = 'Customer has sent you a payment for : '. $this->task->name . '. '
                 . url('/login/sub/task/' . $this->task->id . '/'
                     . $this->user->generateToken(
                         $this->user->id,

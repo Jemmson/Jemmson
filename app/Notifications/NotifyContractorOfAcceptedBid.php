@@ -49,7 +49,7 @@ class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line('Your bid for job: ' . $this->bid->name)
                     ->line('has been accepted')
-                    ->action('View Job',
+                    ->action('View Job ',
                         url('/login/contractor/' . $this->bid->id . '/'
                             . $this->user->generateToken(
                             $this->user->id,

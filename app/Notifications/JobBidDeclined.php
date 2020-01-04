@@ -57,7 +57,7 @@ class JobBidDeclined extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line('Customer is Requesting a Change.')
                     ->line($this->message)
-                    ->action('View Job', url('/login/contractor/' .
+                    ->action('View Job ', url('/login/contractor/' .
                         $this->bid->id . '/' .
                         $this->user->generateToken(
                             $this->user->id,

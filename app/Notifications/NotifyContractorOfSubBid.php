@@ -54,7 +54,7 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line('Hello ' . $this->user->name . ' Contractor ' . $this->subName)
                     ->line('Has just submitted a bid for the task you sent him.')
-                    ->action('View Bid', url('/login/contractor/' . $this->bid->id . '/'
+                    ->action('View Bid ', url('/login/contractor/' . $this->bid->id . '/'
                         . $this->user->generateToken(
                             $this->user->id,
                             true,

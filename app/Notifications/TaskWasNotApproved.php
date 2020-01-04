@@ -51,7 +51,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
             return (new MailMessage)
                     ->line('Your finished task was not approved.')
                     ->line($this->message)
-                    ->action('View Job', url('/login/sub/task/' .
+                    ->action('View Job ', url('/login/sub/task/' .
                         $this->task->id . '/' .
                         $this->user->generateToken(
                             $this->user->id,
@@ -68,7 +68,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line('Your finished task was not approved.')
                     ->line($this->message)
-                    ->action('View Job', url('/login/contractor/' .
+                    ->action('View Job ', url('/login/contractor/' .
                         $this->task->job_id . '/' .
                         $this->user->generateToken(
                             $this->user->id,
@@ -105,7 +105,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
     {
 
         if ($this->task->contractor_id !== $this->user->id) {
-            $text = 'Your finished task was not approved. '. $this->message .
+            $text = 'Your finished task was not approved. '. $this->message . ' ' .
                 url('/login/sub/task/'. $this->task->id . '/' .
                     $this->user->generateToken(
                         $this->user->id,
@@ -117,7 +117,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
                         'text'
                     )->token);
         } else {
-            $text = 'Your finished task was not approved. '. $this->message .
+            $text = 'Your finished task was not approved. '. $this->message . ' '.
                 url('/login/contractor/' . $this->task->id . '/' .
                     $this->user->generateToken(
                         $this->user->id,
