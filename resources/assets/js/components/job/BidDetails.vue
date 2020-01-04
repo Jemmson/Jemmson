@@ -1,5 +1,6 @@
 <template>
     <div class="row">
+
         <job-stepper
                 :status="getSelectedJob()"
                 :user="getUser()"
@@ -96,21 +97,6 @@
 
             </v-card>
 
-        </section>
-
-
-        <!-- / tasks -->
-
-        <section class="col-12" v-if="(isCustomer && needsApproval()) || !isCustomer">
-            <h1 class="card-title mt-4">Actions</h1>
-            <card class="mb-4">
-                <!-- /customer approve bid form -->
-                <approve-bid v-if="isCustomer && needsApproval()" :bid="bid">
-                </approve-bid>
-
-                <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
-                </general-contractor-bid-actions>
-            </card>
         </section>
 
 
@@ -248,6 +234,20 @@
                 </card>
             </div>
 
+        </section>
+
+        <!-- / tasks -->
+
+        <section class="col-12" v-if="(isCustomer && needsApproval()) || !isCustomer">
+            <h1 class="card-title mt-4">Actions</h1>
+            <card class="mb-4">
+                <!-- /customer approve bid form -->
+                <approve-bid v-if="isCustomer && needsApproval()" :bid="bid">
+                </approve-bid>
+
+                <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
+                </general-contractor-bid-actions>
+            </card>
         </section>
 
         <section class="col-12" v-if="customerHasCompletedTasks()">

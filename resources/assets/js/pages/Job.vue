@@ -14,17 +14,18 @@
 
         <v-card>
             <v-card-title>Job Status:</v-card-title>
-            <v-card-subtitle>
-                <span class="capitalize"
-                     ref="jobStatus">
-                    {{ formatStatus(jobStatus.status) }} on {{ formatDate(dateOnly(jobStatus.created_at)) }}
-                </span>
-            </v-card-subtitle>
-            <div v-if="isCustomer && jobStatus.status === 'in_progress'"
-                 style="padding-bottom: .1rem"
-            >
-                <h5 class="text-center">Please wait until your contractor submits bid</h5>
-            </div>
+            <v-card-text>
+                <div v-if="isCustomer && jobStatus.status === 'in_progress'"
+                     style="padding-bottom: .1rem"
+                >
+                    <h5 class="text-center">Please wait until your contractor submits bid</h5>
+                </div>
+                <div v-else>
+                    <v-sheet class="capitalize"
+                             ref="jobStatus"
+                             color="status-bar lighten-2">{{ formatStatus(jobStatus.status) }} on {{ formatDate(dateOnly(jobStatus.created_at)) }}</v-sheet>
+                </div>
+            </v-card-text>
         </v-card>
 
         <!-- /show all bid information -->
@@ -288,6 +289,16 @@
         padding-bottom: 1rem;
         font-family: auto;
         font-size: 20pt;
+    }
+
+    .status-bar{
+        width: 100%;
+        margin-top: 1rem;
+        text-align: center;
+        padding: .5rem;
+        background-color: cornflowerblue;
+        font-size: 18pt;
+        font-weight: bolder;
     }
 
 </style>
