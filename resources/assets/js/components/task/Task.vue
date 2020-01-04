@@ -324,7 +324,7 @@
           bid_price: bid_price,
           paymentType: po,
           subId: bidTask.contractor_id,
-          $generalId: bidTask.job.contractor_id
+          $generalId: bidTask.job_task.job.contractor_id
         }).then((response) => {
           // TODO: security review
           console.log(response)
