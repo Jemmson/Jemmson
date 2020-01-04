@@ -161,6 +161,7 @@
           disabled.submitBid = false
           User.emitChange('bidUpdated')
           Vue.toasted.success('Bid has been submitted and notification sent!')
+          this.$emit('bidSubmitted');
         }).catch((error) => {
           console.error(error)
           disabled.submitBid = false

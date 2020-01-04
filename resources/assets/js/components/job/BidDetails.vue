@@ -245,7 +245,14 @@
                 <approve-bid v-if="isCustomer && needsApproval()" :bid="bid">
                 </approve-bid>
 
-                <general-contractor-bid-actions :bid="bid" v-if="!isCustomer">
+                <v-sheet
+                    class="text-center uppercase successful-submit"
+                    v-if="submittedMessage"
+                >You have successfully submitted a bid</v-sheet>
+
+                <general-contractor-bid-actions
+                        @bidSubmitted="bidSubmitted()"
+                        :bid="bid" v-if="!isCustomer">
                 </general-contractor-bid-actions>
             </card>
         </section>
@@ -436,7 +443,8 @@
           submitBid: false,
           submitMessage: false,
           finished: false
-        }
+        },
+        submittedMessage: false
       }
     },
     computed: {
@@ -551,6 +559,10 @@
       }
     },
     methods: {
+
+      bidSubmitted (){
+        this.submittedMessage = true
+      },
 
       paid(jobTask) {
         let status = this.getLatestJobTaskStatus(jobTask)
@@ -949,6 +961,12 @@
     .lookLikeALink {
         text-decoration: underline;
         color: #1976d2 !important;
+    }
+
+    .successful-submit{
+        background-color: green;
+        padding: .25rem;
+        margin-bottom: .5rem;
     }
 
     /*@media (min-width: 762px) {*/
