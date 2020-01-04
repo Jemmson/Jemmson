@@ -78,7 +78,8 @@
                                 {{ initiateBidForSubForm.errors.get('phone') }}
                             </span>
                             <div v-if="getMobileValidResponse.length > 0">
-                                <div v-if="getMobileValidResponse[1] === 'mobile'"
+                                <div v-if="getMobileValidResponse[1] === 'mobile'
+                                    || getMobileValidResponse[1] === 'virtual'"
                                         class="mt-2">
                                     <div style="color: green">
                                         {{ getMobileValidResponse[1] }}

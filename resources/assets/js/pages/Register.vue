@@ -662,7 +662,9 @@
       },
 
       registerButtonIsDisabled() {
-        if (this.getMobileValidResponse[1] === 'mobile') {
+        if (this.getMobileValidResponse[1] === 'mobile'
+          || this.getMobileValidResponse[1] === 'virtual'
+        ) {
           this.registerForm.disabled = false
         } else {
           this.registerForm.disabled = true
@@ -731,7 +733,10 @@
         } else {
           this.registerForm.busy = true
           this.overlay = true
-          if (this.getMobileValidResponse[1] === 'mobile') {
+          if (
+            this.getMobileValidResponse[1] === 'mobile'
+            || this.getMobileValidResponse[1] === 'virtual'
+          ) {
             if (this.registerForm.usertype === 'contractor') {
               try {
                 let {data} = await axios.post('/registerContractor', this.registerForm)

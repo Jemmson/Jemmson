@@ -126,8 +126,10 @@ export default {
     },
     checkThatNumberIsMobile() {
       if (
-        this.getMobileValidResponse[1] === 'mobile' ||
-        this.getMobileValidResponse[2] === 'mobile'
+        (this.getMobileValidResponse[1] === 'mobile' ||
+        this.getMobileValidResponse[2] === 'mobile')
+        || (this.getMobileValidResponse[1] === 'virtual' ||
+        this.getMobileValidResponse[2] === 'virtual')
       ) {
         this.validResponse()
         return true

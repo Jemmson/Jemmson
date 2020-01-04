@@ -340,7 +340,7 @@
                             <div v-else-if="checkLandLineNumber()" style="color: red">
                                 {{ this.getMobileValidResponse[1] }}
                             </div>
-                            <div v-else-if="checkIfNumberIsVirtual()" style="color: red">
+                            <div v-else-if="checkIfNumberIsVirtual()" style="color: green">
                                 {{ this.getMobileValidResponse[1] }}
                             </div>
                         </div>
@@ -758,7 +758,8 @@
             this.validateMobileNumber(phone)
           }
           if (
-            this.getMobileValidResponse[1] !== 'mobile' || this.getMobileValidResponse[2] !== 'mobile'
+            (this.getMobileValidResponse[1] !== 'mobile' || this.getMobileValidResponse[2] !== 'mobile')
+            || (this.getMobileValidResponse[1] !== 'virtual' || this.getMobileValidResponse[2] !== 'virtual')
           ) {
             this.errors.phone = true
             return false
@@ -1092,8 +1093,10 @@
         return re.test(this.companyInfoTemporary.Email.Address)
       },
       checkThatNumberIsMobile() {
-        if (this.getMobileValidResponse[1] === 'mobile' ||
-          this.getMobileValidResponse[2] === 'mobile') {
+        if ((this.getMobileValidResponse[1] === 'mobile' ||
+          this.getMobileValidResponse[2] === 'mobile')
+        || (this.getMobileValidResponse[1] === 'virtual' ||
+          this.getMobileValidResponse[2] === 'virtual')) {
           this.loading = false
           return true
         } else {

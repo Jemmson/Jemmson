@@ -66,7 +66,8 @@
                        v-model="form.phone">
 
                 <div v-if="getMobileValidResponse.length > 0">
-                    <div v-if="getMobileValidResponse[1] === 'mobile'" class="mt-2">
+                    <div v-if="getMobileValidResponse[1] === 'mobile'
+                    || getMobileValidResponse[1] === 'virtual'" class="mt-2">
                         <div style="color: green">{{ getMobileValidResponse[1] }}</div>
                     </div>
                     <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
