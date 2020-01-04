@@ -64,7 +64,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                                 'paid',
                                 'email'
                             )->token
-                        ))
+                            , [], true))
                     ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
@@ -79,7 +79,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                                 'paid',
                                 'paid',
                                 'email'
-                            )->token))
+                            )->token, [], true))
                     ->line('Thank you for using our application!');
         }
 
@@ -106,7 +106,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                                 'paid',
                                 'paid',
                                 'text'
-                            )->token)
+                            )->token, [], true)
             . 'Thank you for using our application!';
         } else {
             $text = 'Customer has sent you a payment for : '. $this->task->name . '. '
@@ -119,7 +119,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                         'paid',
                         'paid',
                         'text'
-                    )->token)
+                    )->token, [], true)
             . 'Thank you for using our application!';
         }
 

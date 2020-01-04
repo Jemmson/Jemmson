@@ -52,7 +52,7 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
     {
         return (new MailMessage)
             ->line('The introduction to the notification.')
-            ->action('Notification Action ', url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token))
+            ->action('Notification Action ', url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token, [], true))
             ->line('Thank you for using our application!');
     }
 
@@ -78,7 +78,7 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
     public function toNexmo($notifiable)
     {
 
-        $text = $this->company_name . " has finished your bid. Please go to the link below to take action on the job " . url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token);
+        $text = $this->company_name . " has finished your bid. Please go to the link below to take action on the job " . url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token, [], true);
 
         return (new NexmoMessage)
             ->content($text);

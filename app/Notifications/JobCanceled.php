@@ -54,7 +54,7 @@ class JobCanceled extends Notification
     {
         return (new MailMessage)
                     ->line('The introduction to the notification.')
-                    ->action('Notification Action ', url('/'))
+                    ->action('Notification Action ', url('/', [], true))
                     ->line('Thank you for using our application!');
     }
 
@@ -80,7 +80,7 @@ class JobCanceled extends Notification
     public function toNexmo($notifiable)
     {
 
-        $text = $this->jobName . " has been canceled. Please login to see your bids. " . url('/#/bids');
+        $text = $this->jobName . " has been canceled. Please login to see your bids. " . url('/#/bids', [], true);
 
         return (new NexmoMessage)
             ->content($text);

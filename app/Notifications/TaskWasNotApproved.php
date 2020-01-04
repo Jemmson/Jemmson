@@ -61,7 +61,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
                             'approved_by_customer',
                             'finished_job_denied_by_contractor',
                             'email'
-                        )->token))
+                        )->token, [], true))
                     ->line('Thank you for using our application!');
         }
 
@@ -78,7 +78,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
                             'customer_changes_finished_task',
                             'customer_changes_finished_task',
                             'email'
-                        )->token))
+                        )->token, [], true))
                     ->line('Thank you for using our application!');
     }
 
@@ -115,7 +115,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
                         'approved_by_customer',
                         'finished_job_denied_by_contractor',
                         'text'
-                    )->token);
+                    )->token, [], true);
         } else {
             $text = 'Your finished task was not approved. '. $this->message . ' '.
                 url('/login/contractor/' . $this->task->id . '/' .
@@ -127,7 +127,7 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
                         'customer_changes_finished_task',
                         'customer_changes_finished_task',
                         'text'
-                    )->token);
+                    )->token, [], true);
         }
 
         return (new NexmoMessage)

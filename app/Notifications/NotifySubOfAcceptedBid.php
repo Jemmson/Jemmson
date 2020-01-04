@@ -59,7 +59,7 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
                                 'initiated',
                                 'accepted',
                                 'email'
-                            )->token))
+                            )->token, [], true))
                     ->line('Thank you for using our application!');
     }
 
@@ -93,7 +93,7 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
                     'in_progress',
                     'initiated',
                     'accepted',
-                    'text')->token);
+                    'text')->token, [], true);
 
         return (new NexmoMessage)
             ->content($text);

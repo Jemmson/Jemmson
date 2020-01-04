@@ -67,7 +67,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
                         'approved',
                         'approved_by_customer',
                         'approved_by_customer',
-                        'email')->token)
+                        'email')->token, [], true)
                 )
                 ->line('Thank you for using our application!');
         }
@@ -83,7 +83,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
                     'approved_by_customer',
                     'approved_by_customer',
                     'email'
-                )->token)
+                )->token, [], true)
             )
             ->line('Thank you for using our application!');
     }
@@ -121,7 +121,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
                         'approved_by_customer',
                         'approved_by_customer',
                         'text'
-                    )->token);
+                    )->token, [], true);
         } else {
             $text = "The customer has approved of the job. Please go to the link below view job and begin work. "
                 . url('/login/contractor/' . $this->job->id . '/'
@@ -133,7 +133,7 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
                         'approved_by_customer',
                         'approved_by_customer',
                         'text'
-                    )->token);
+                    )->token, [], true);
         }
 
         return (new NexmoMessage)

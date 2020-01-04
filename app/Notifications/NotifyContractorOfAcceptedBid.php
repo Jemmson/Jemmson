@@ -59,7 +59,7 @@ class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
                             'approved_by_customer',
                             'approved_by_customer',
                             'email'
-                        )->token))
+                        )->token, [], true))
                     ->line('Thank you for using our application!');
     }
 
@@ -83,7 +83,7 @@ class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
                     'approved_by_customer',
                     'approved_by_customer',
                     'text'
-                )->token);
+                )->token, [], true);
         return (new NexmoMessage)
             ->content($text);
     }

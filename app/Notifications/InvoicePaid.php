@@ -44,7 +44,7 @@ class InvoicePaid extends Notification implements ShouldBroadcast
     {
         return (new MailMessage)
                     ->line('The introduction to the notification.')
-                    ->action('Notification Action ', url('/'))
+                    ->action('Notification Action ', url('/', [], true))
                     ->line('Thank you for using our application!');
     }
 

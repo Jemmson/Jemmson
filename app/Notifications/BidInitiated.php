@@ -85,7 +85,7 @@ class BidInitiated extends Notification implements ShouldQueue
         return (new MailMessage)
             ->line('A bid has been initiated by contractor: ' . $this->contractor)
             ->action('Login ', url('/login/customer/' . $this->job->id . '/' .
-                $this->emailToken))
+                $this->emailToken, [], true))
             ->line('Thank you for using our application!');
     }
 
@@ -108,7 +108,7 @@ class BidInitiated extends Notification implements ShouldQueue
                 'customer/' .
                 $this->job->id .
                 '/' .
-               $this->textToken);
+               $this->textToken, [], true);
         return (new NexmoMessage)
             ->content($text);
     }

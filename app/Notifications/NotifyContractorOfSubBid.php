@@ -63,7 +63,7 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
                             'initiated',
                             'sent_a_bid',
                             'email'
-                        )->token))
+                        )->token, [], true))
                     ->line('Thank you for using our application!');
     }
 
@@ -102,7 +102,7 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
                     'initiated',
                     'sent_a_bid',
                     'text'
-                )->token);
+                )->token, [], true);
 
         return (new NexmoMessage)
             ->content($text);

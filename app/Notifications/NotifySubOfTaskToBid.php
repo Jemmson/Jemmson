@@ -86,7 +86,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' back to Jemmson.')
                 ->line('You have a potential job! Please sign in to see it. ')
-                ->action('Login ', url('/login/sub/task/'. $task->id . '/' . $this->emailToken))
+                ->action('Login ', url('/login/sub/task/'. $task->id . '/' . $this->emailToken, [], true))
                 ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
@@ -94,7 +94,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
                 ->line('Please follow these steps to sign up for the site. and review your task.')
                 ->action('Login ', url('/login/sub/task/'.
                     $task->id . '/' .
-                    $this->emailToken))
+                    $this->emailToken, [], true))
                 ->line('Thank you for using our application!');
         }
 
@@ -111,7 +111,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
         return (new NexmoMessage)
                     ->content('You have a potential job! Please sign in to see it. ' .
                         url('/login/sub/task/'.
-                            $this->taskId . '/' . $this->nexmoToken) . ' ');
+                            $this->taskId . '/' . $this->nexmoToken, [], true) . ' ');
     }
 
     public function toSpark($notifiable)

@@ -67,7 +67,7 @@ class JobBidDeclined extends Notification implements ShouldQueue
                             'waiting_for_customer_approval',
                             'waiting_for_customer_approval',
                             'email'
-                        )->token))
+                        )->token, [], true))
                     ->line('Thank you for using our application!');
     }
 
@@ -104,7 +104,7 @@ class JobBidDeclined extends Notification implements ShouldQueue
                     'waiting_for_customer_approval',
                     'waiting_for_customer_approval',
                     'text'
-                )->token);
+                )->token, [], true);
 
         return (new NexmoMessage)
             ->content($text);

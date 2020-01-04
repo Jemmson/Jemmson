@@ -59,7 +59,7 @@ class TaskApproved extends Notification implements ShouldQueue
                             'approved_by_customer',
                             'finished_job_approved_by_contractor',
                             'email'
-                        )->token))
+                        )->token, [], true))
                     ->line('Thank you for using our application!');
     }
 
@@ -85,7 +85,7 @@ class TaskApproved extends Notification implements ShouldQueue
                     'approved_by_customer',
                     'finished_job_approved_by_contractor',
                     'text'
-                )->token);
+                )->token, [], true);
 
         return (new NexmoMessage)
             ->content($text);
