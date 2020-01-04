@@ -359,7 +359,11 @@
           this.license.state !== ''
         ) {
           const license = {}
-          license.name = this.license.name
+          if (this.license.state === 'Arizona') {
+            license.name = this.getArizonaLicenseName();
+          } else {
+            license.name = this.license.name
+          }
           license.type = this.license.type
           license.number = this.license.number
           license.state = this.license.state
@@ -378,6 +382,24 @@
         } else {
           return ''
         }
+      },
+
+      getArizonaLicenseName(){
+        // licenseNames = {
+        //   A-0: '',
+        // A-4: '',
+        // A-5: '',
+        // A-7: '',
+        // A-9: '',
+        // A-11: '',
+        // A-12: '',
+        // A-14: '',
+        // A-15: '',
+        // A-16: '',
+        // A-17: '',
+        // A-19: ''
+        // }
+
       },
 
       checkLicenseError() {

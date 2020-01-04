@@ -297,7 +297,10 @@
         }
       },
       enableSubmit() {
-        return this.getMobileValidResponse[1] !== 'mobile' || this.duplicateError
+        return
+        (this.getMobileValidResponse[1] !== 'mobile'
+        && this.getMobileValidResponse[1] !== 'virtual')
+        || this.duplicateError
       },
     },
     computed: {
