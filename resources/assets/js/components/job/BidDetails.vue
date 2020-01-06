@@ -1,16 +1,20 @@
 <template>
     <div class="row">
 
-        <job-stepper
-                :status="getSelectedJob()"
-                :user="getUser()"
-        ></job-stepper>
+        <v-col cols="5">
+            <job-stepper
+                    :status="getSelectedJob()"
+                    :user="getUser()"
+                    style="padding: 0;"
+            ></job-stepper>
+        </v-col>
 
-        <card v-if="showDeclinedMessage" style="background-color: lightcoral">
-            {{ bid.declined_message }}
-        </card>
-        <section class="col-12">
-            <v-card class="mb-4">
+        <v-col cols="7">
+            <card v-if="showDeclinedMessage"
+                  style="background-color: lightcoral">
+                {{ bid.declined_message }}
+            </card>
+            <v-card>
                 <v-card-title>Details</v-card-title>
 
                 <v-simple-table v-if="isCustomer">
@@ -97,7 +101,8 @@
 
             </v-card>
 
-        </section>
+
+        </v-col>
 
 
         <section ref="job_tasks" class="col-12"
@@ -111,64 +116,92 @@
                         :key="i"
                         class="card-positioning"
                 >
-                    <v-list dense flat>
-                        <v-list-item-group v-model="jobTaskItem" color="primary">
-                            <v-list-item
-                                    v-for="(jt, key, index) in jobTaskObject(item)"
-                                    :key="index"
-                            >
-                                <v-list-item-title v-text="key"></v-list-item-title>
-                                <v-list-item-subtitle
-                                        v-if="key === 'Price'"
-                                        class="capitalize"
-                                        v-text="'$ ' + jt"></v-list-item-subtitle>
-                                <v-list-item-subtitle
-                                        v-else
-                                        class="capitalize"
-                                        v-text="jt"></v-list-item-subtitle>
-                            </v-list-item>
-                        </v-list-item-group>
-                    </v-list>
-
-                    <v-btn
-                            color="primary"
-                            :to="'/job/task/' + i"
-                            width="100%"
-                            class="m-15"
-                    >View And Edit
-                    </v-btn>
-                    <v-btn
-                            v-if="isGeneral() && approvedByCustomer(item)"
-                            width="100%"
-                            @click="openSubInvite(item.id)"
-                            color="primary"
-                            class="m-15"
-                    >Add A Sub
-                    </v-btn>
-                    <v-btn
-                            v-if="isGeneral() && subFinishedTask(item)"
-                            width="100%"
-                            @click="approveSubsWork(item)"
-                            color="primary"
-                            class="m-15"
+                    <v-card-title
+                            class="uppercase"
+                    >{{ jobTaskObject(item).Name }}
+                    </v-card-title>
+                    <v-card-subtitle
+                            class="uppercase"
+                    >{{ jobTaskObject(item).Status }}
+                    </v-card-subtitle>
+                    <v-divider></v-divider>
+                    <v-row
+                            class="justify-content-around"
                     >
-                        Approve Subs Finished Work
-                    </v-btn>
-                    <v-btn
-                            color="primary"
-                            width="100%"
-                            class="m-15"
-                            v-if="isGeneral() && showFinishedBtn(item)"
-                            @click="finishedTask(item)"
-                            :loading="disabled.finished"
-                    >Click Me When Task Is Finished
-                    </v-btn>
+                        <strong class="uppercase">Subs</strong>
+                        <strong class="uppercase">Quantity</strong>
+                        <strong class="uppercase">Price</strong>
+                    </v-row>
+                    <v-row
+                            class="justify-content-around mb-15"
+                    >
+                        <div>{{ jobTaskObject(item).Subs }}</div>
+                        <div>{{ jobTaskObject(item).Qty }}</div>
+                        <div
+                                v-if="jobTaskObject(item).Price"
+                                v-text="'$ ' + jobTaskObject(item).Price"
+                        ></div>
+                        <div v-else>Price Not Set</div>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-btn
+                                color="primary"
+                                class="btn-size btn-weight"
+                                :to="'/job/task/' + i"
+                                text
+                        >Edit <span class="btn-size btn-weight spacer-grey">|</span>
+                        </v-btn>
+                        <v-btn
+                                v-if="isGeneral() && approvedByCustomer(item)"
+                                @click="openSubInvite(item.id)"
+                                class="btn-size btn-weight"
+                                color="primary"
+                                text
+                        >Add Sub <span class="btn-size btn-weight spacer-grey">|</span>
+                        </v-btn>
+                        <v-btn
+                                v-if="isGeneral() && subFinishedTask(item)"
+                                @click="approveSubsWork(item)"
+                                class="btn-size btn-weight"
+                                color="primary"
+                                text
+                        >
+                            Approve Subs Work <span class="btn-size btn-weight spacer-grey">|</span>
+                        </v-btn>
+                        <v-btn
+                                color="primary"
+                                v-if="isGeneral() && showFinishedBtn(item)"
+                                @click="finishedTask(item)"
+                                class="btn-size btn-weight"
+                                :loading="disabled.finished"
+                                text
+                        >Mark When Finished
+                        </v-btn>
+                    </v-card-actions>
 
                     <sub-invite-modal v-if="isGeneral()" :job-task="item"
                                       :job-task-task="item ? item.task : null"
                                       :job-task-name="item ? item.task.name : null"
                                       :id="item ? item.id : null">
                     </sub-invite-modal>
+                    <!--                    <v-list dense flat>-->
+                    <!--                        <v-list-item-group v-model="jobTaskItem" color="primary">-->
+                    <!--                            <v-list-item-->
+
+                    <!--                            >-->
+                    <!--                                <v-list-item-title v-text="key"></v-list-item-title>-->
+                    <!--                                <v-list-item-subtitle-->
+                    <!--                                        v-if="key === 'Price'"-->
+                    <!--                                        class="capitalize"-->
+                    <!--                                        v-text="'$ ' + jt"></v-list-item-subtitle>-->
+                    <!--                                <v-list-item-subtitle-->
+                    <!--                                        v-else-->
+                    <!--                                        class="capitalize"-->
+                    <!--                                        v-text="jt"></v-list-item-subtitle>-->
+                    <!--                            </v-list-item>-->
+                    <!--                        </v-list-item-group>-->
+                    <!--                    </v-list>-->
 
                 </v-card>
             </div>
@@ -206,7 +239,7 @@
                         <tbody>
                         <template v-for="jt in bid.job_tasks">
                             <tr
-                                :class="paid(jt) ? 'paid' : ''">
+                                    :class="paid(jt) ? 'paid' : ''">
                                 <td colspan="4"
                                     class="uppercase text-center"
                                 >
@@ -246,9 +279,10 @@
                 </approve-bid>
 
                 <v-sheet
-                    class="text-center uppercase successful-submit"
-                    v-if="submittedMessage"
-                >You have successfully submitted a bid</v-sheet>
+                        class="text-center uppercase successful-submit"
+                        v-if="submittedMessage"
+                >You have successfully submitted a bid
+                </v-sheet>
 
                 <general-contractor-bid-actions
                         @bidSubmitted="bidSubmitted()"
@@ -560,7 +594,7 @@
     },
     methods: {
 
-      bidSubmitted (){
+      bidSubmitted() {
         this.submittedMessage = true
       },
 
@@ -635,9 +669,12 @@
         }
       },
       getSelectedJob() {
-        if (this.selectedJob && this.selectedJob.length > 0) {
-          return this.selectedJob[0].status
+        if (this.bid && this.bid.job_statuses) {
+          return this.bid.job_statuses[this.bid.job_statuses.length - 1].status
         }
+        // if (this.selectedJob && this.selectedJob.length > 0) {
+        //   return this.selectedJob[0].status
+        // }
       },
       canAddATask() {
         return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
@@ -963,10 +1000,23 @@
         color: #1976d2 !important;
     }
 
-    .successful-submit{
+    .successful-submit {
         background-color: green;
         padding: .25rem;
         margin-bottom: .5rem;
+    }
+
+    .btn-size {
+        font-size: 12pt;
+    }
+
+    .btn-weight {
+        font-weight: bolder;
+    }
+
+    .spacer-grey {
+        color: lightgray;
+        margin-left: .45rem;
     }
 
     /*@media (min-width: 762px) {*/
