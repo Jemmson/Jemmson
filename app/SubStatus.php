@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class SubStatus extends Model
@@ -25,7 +26,7 @@ class SubStatus extends Model
 
         $ss = SubStatus::where('user_id', '=', $user_id)
             ->where('job_task_id', '=', $job_task_id)
-            ->orderBy('created_at', 'desc')->select('status')
+            ->orderBy('created_at', 'desc')
             ->get()->first();
 
         if (empty($this->checkStatus($user_id, $job_task_id, $status)) || $ss['status'] != $status ) {
@@ -37,6 +38,10 @@ class SubStatus extends Model
                 'status' => $status
             ]);
             $this->save();
+        } else {
+            $date = Carbon::now();
+            $ss->sent_on = $date->format('yy-m-d h:m:s');
+            $ss->save();
         }
     }
 

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class JobStatus extends Model
 {
@@ -25,7 +26,7 @@ class JobStatus extends Model
     {
 
         $js = JobStatus::where('job_id', '=', $jobId)
-            ->orderBy('created_at', 'desc')->select('status')
+            ->orderBy('created_at', 'desc')
             ->get()->first();
 
         if (empty($this->checkStatus($jobId, $status))
@@ -37,6 +38,10 @@ class JobStatus extends Model
                 'status' => $status
             ]);
             $this->save();
+        } else {
+            $date = Carbon::now();
+            $js->sent_on = $date->format('yy-m-d h:m:s');
+            $js->save();
         }
     }
 

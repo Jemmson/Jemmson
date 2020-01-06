@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class JobTaskStatus extends Model
@@ -24,7 +25,7 @@ class JobTaskStatus extends Model
     {
 
         $jts = JobTaskStatus::where('job_task_id', '=', $job_task_id)
-            ->orderBy('created_at', 'desc')->select('status')
+            ->orderBy('created_at', 'desc')
             ->get()->first();
 
         if (empty($this->checkStatus($job_task_id, $status)) || $jts['status'] != $status ) {
@@ -35,6 +36,10 @@ class JobTaskStatus extends Model
                 'status' => $status
             ]);
             $this->save();
+        } else {
+            $date = Carbon::now();
+            $jts->sent_on = $date->format('yy-m-d h:m:s');
+            $jts->save();
         }
     }
 

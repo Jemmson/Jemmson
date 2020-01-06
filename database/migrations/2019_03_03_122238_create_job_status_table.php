@@ -18,6 +18,7 @@ class CreateJobStatusTable extends Migration
             $table->bigInteger('job_id');
             $table->string('status');
             $table->integer('status_number');
+            $table->date('sent_on')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
