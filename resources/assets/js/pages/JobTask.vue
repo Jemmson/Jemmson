@@ -337,11 +337,7 @@
 
                 <!-- Subcontractor bids -->
                 <div class="col-12" v-show="
-                                           showSubsPanel &&
-                                           (isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0) &&
-                                           ((!checkIfBidHasBeenAccepted(jobTask) && checkIfBidHasBeenSent(job)) ||
-                                            (checkIfBidHasBeenAccepted(jobTask)) ||
-                                            (!checkIfBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(job)))">
+                                           showSubsPanel">
                     <h1 id="bids" class="card-title mt-4">Bids</h1>
                     <card>
                         <div class="row">
@@ -351,7 +347,7 @@
                                     <div :id="jobTask ? 'task-divider-' + jobTask.id : 0" :key="1"></div>
 
                                     <div :id="jobTask ? 'task-subs-' + jobTask.id : 0"
-                                         v-if="isGeneral() && !taskApproved && jobTask.bid_contractor_job_tasks.length > 0"
+                                         v-if="isGeneral() && jobTask.bid_contractor_job_tasks.length > 0"
                                          :key="3">
                                         <div class="flex flex-col">
                                             <div class="table-header">
@@ -731,8 +727,12 @@
       //   return this.user.isContractor()
       // },
       showSubsPanel() {
-        return this.isContractor() && this.jobStatus !== 'job.approved' && this.jobStatus !== 'job.completed'
+        return this.isContractor()
+          && this.jobHasNotBeenCompleted()
+          && this.bidsExistForTask()
+          && this.isGeneral()
       },
+
       showSendSubInvite() {
         if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress') {
           return true
@@ -760,6 +760,14 @@
       }
     },
     methods: {
+
+      bidsExistForTask() {
+        return this.jobTask.bid_contractor_job_tasks.length > 0
+      },
+
+      jobHasNotBeenCompleted() {
+        return this.jobStatus !== 'job.completed'
+      },
 
       getMessage(jobTask) {
 
