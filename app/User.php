@@ -368,7 +368,9 @@ class User extends SparkUser
         $bidPrice, $paymentType, $generalId, $jobTask, $subId, $job
     )
     {
-        $bidContractorJobTask = BidContractorJobTask::where('job_task_id', '=', $jobTask->id)->where('contractor_id', '=', $subId)->get()->first();
+        $bidContractorJobTask = BidContractorJobTask::where('job_task_id', '=', $jobTask->id)
+            ->where('contractor_id', '=', $subId)
+            ->get()->first();
         self::updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType);
         self::updateJobTaskStatuses($jobTask, $subId);
         self::notifyGeneralOfSubmittedBid($job, $bidContractorJobTask, $generalId);

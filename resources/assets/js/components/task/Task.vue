@@ -7,12 +7,13 @@
                     class="mb-1rem"
             >
                 <v-card-title
+                        class="uppercase"
                         v-if="showBid(bidTask)"
                 >
-                    {{ jobName(bidTask.job_task.task.name) }}
+                    {{ jobName(bidTask) }}
                 </v-card-title>
                 <v-card-subtitle
-                        class="ml-1rem"
+                        class="ml-1rem capitalize"
                         :class="getLabelClass(bidTask)"
                 > {{ getLatestStatus() }}
                 </v-card-subtitle>
@@ -35,81 +36,74 @@
                     <v-btn
                             class="red"
                             width="40%"
-                            @click="showDeleteTaskModal(bidTask.job_task)"
-                    >DELETE</v-btn>
+                            @click="showDeleteTaskModal(bidTask)"
+                    >DELETE
+                    </v-btn>
                 </v-card-actions>
             </v-card>
 
             <div v-show="showTheTask">
 
-                <section class="col-12">
+
+                <v-container>
                     <h1 class="card-title">Task Details</h1>
-                    <card>
-                        <main class="row">
-                            <content-section
-                                    label="Start On:"
-                                    :content="prettyDate(bidTask.job_task.start_date)"
-                                    type="startOn"></content-section>
-                            <content-section
-                                    label="Quantity:"
-                                    :content="bidTask.job_task.qty.toString()"
-                                    type="quantity"></content-section>
-                            <content-section
-                                    v-if="bidTask.job_task.sub_final_price !== 0"
-                                    label="Contractor Base Price:"
-                                    :content="convertNumToString(bidTask.job_task.sub_final_price)"
-                                    :dollar-sign=true
-                                    type="subFinalPrice"></content-section>
-                            <content-section
-                                    v-else
-                                    label="Contractor Base Price:"
-                                    :content="zero()"
-                                    :dollar-sign=true
-                                    type="subFinalPrice"></content-section>
-
-                            <div style="display:none;">{{ getStoredBidPrice }}</div>
-
-
-                            <div class="flex justify-content-between w-full mr-1rem mt-half-rem">
-
-                                <label v-if="isBidOpen(bidTask)" class="w-full ml-1rem mt-half-rem">Enter Your Bid
-                                    Price:</label>
-
-                                <input v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
-                                       type="text"
-                                       class="form-control form-control-sm w-40" v-bind:id="'price-' + bidTask.id"
-                                       v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
-
-
-                                <input v-else-if="!bidTask.job_task.sub_sets_own_price_for_job === 1 && isBidOpen(bidTask)"
-                                       type="text" class="form-control form-control-sm w-40"
-                                       v-bind:id="'price-' + bidTask.id"
-                                       v-model="bidTask.bid_price" @keyup="bidPrice('price-' + bidTask.id)"/>
-                            </div>
-
-                            <div class="flex justify-content-between w-full mr-1rem mt-half-rem">
-                                <label v-if="!isBidOpen(bidTask)" class="ml-1rem">
-                                    Accepted Bid Price:
-                                </label>
-                                <label v-if="!isBidOpen(bidTask)" class=""><strong>$
-                                    {{ getSubFinalPrice(bidTask.job_task.sub_final_price) }}</strong></label>
-                            </div>
-
-                            <v-btn
-                                    class="w-full mt-1rem"
-                                    color="primary"
+                    <v-card>
+                        <v-card-text>
+                            <v-row
+                                    class="justify-content-around mt-1rem"
+                            >
+                                <strong class="uppercase th-font">Start Date</strong>
+                                <strong class="uppercase th-font">Quantity</strong>
+                                <strong class="uppercase th-font">Price</strong>
+                            </v-row>
+                            <v-row
+                                    class="justify-content-around mb-15"
+                            >
+                                <div>{{ prettyDate(bidTask) }}</div>
+                                <div>{{ getTaskQuantity(bidTask) }}</div>
+                                <div
+                                        v-if="subHasEnteredAPrice(bidTask)"
+                                        v-text="'$ ' + getBidPrice(bidTask)"
+                                ></div>
+                                <div v-else>Price Not Set</div>
+                            </v-row>
+                            <v-divider></v-divider>
+                            <v-row
                                     v-if="isBidOpen(bidTask)"
-                                    @click.prevent="update(bidTask)"
-                                    v-bind:id="bidTask.id" :disabled="disabled.submit">
+                                    style="align-items:baseline"
+                            >
+                                <!--
+                                                       v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && "-->
+                                <v-spacer></v-spacer>
+                                <v-text-field
+                                        type="text"
+                                        v-mask="getCurrencyMask()"
+                                        v-model="bidPrice"
+                                        class="input-margins"
+                                        :id="'price-' + bidTask.id"
+                                        label="Input Bid Price Here"
+                                        @change="formatInput($event)"
+                                ></v-text-field>
+                                <!--                                @change="bidPrice('price-' + bidTask.id)"-->
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                        class=""
+                                        color="primary"
+                                        text
+                                        bottom
+                                        outlined
+                                        @click.prevent="update(bidTask)"
+                                        v-bind:id="bidTask.id" :disabled="disabled.submit">
                                         <span v-if="disabled.submit">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
-                                Submit
-                            </v-btn>
-
-                        </main>
-                    </card>
-                </section>
+                                    Submit
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+                </v-container>
 
                 <section class="col-12">
                     <h1 class="card-title">Job Address</h1>
@@ -138,14 +132,14 @@
                     <card>
                         <main class="row">
                             <content-section
-                                    v-if="showDeclinedMsg(bidTask.job_task.declined_message)"
+                                    v-if="showDeclinedMsg(bidTask)"
                                     label="Declined Reason:"
-                                    :content="bidTask.job_task.declined_message"
+                                    :content="getDeclinedMessage(bidTask)"
                                     type="declinedReason"></content-section>
                             <content-section
-                                    v-if="bidTask.job_task.sub_message !== null && bidTask.job_task.sub_message != ''"
+                                    v-if="subHasMessage(bidTask)"
                                     label="Sub Instructions:"
-                                    :content="bidTask.job_task.sub_message"
+                                    :content="getSubMessage(bidTask)"
                                     type="subInstructions"></content-section>
                         </main>
                     </card>
@@ -155,7 +149,7 @@
                     <h1 class="card-title">Images</h1>
                     <card>
                         <main class="row">
-                            <task-images class="images w-full ml-one-quarter-negative" :jobTask="bidTask.job_task"
+                            <task-images class="images w-full ml-one-quarter-negative" :jobTask="getJobTask(bidTask)"
                                          type="sub">
                             </task-images>
                         </main>
@@ -169,7 +163,7 @@
                             <content-section
                                     label="Job Status:"
                                     :content="getLatestStatus()"
-                                    :input-classes="getLabelClass(bidTask.job_task.status)"
+                                    :input-classes="getLabelClass(bidTask)"
                                     :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
                                     type="startOn"></content-section>
                             <v-btn
@@ -212,6 +206,7 @@
   import ShowTaskModal from '../../components/job/ShowTaskModal'
   import Status from '../../components/mixins/Status'
   import Card from '../shared/Card'
+  import Currency from '../../components/mixins/Currency'
 
   export default {
     name: 'Task',
@@ -223,7 +218,8 @@
       Card
     },
     mixins: [
-      Status
+      Status,
+      Currency
     ],
     updated() {
       this.getStoredBidPrice
@@ -236,7 +232,7 @@
       }
     },
     mounted() {
-      this.paymentType = this.bidTask.payment_type
+      this.bidTask ? this.paymentType = this.bidTask.payment_type : this.paymentType = null
     },
     data() {
       return {
@@ -250,14 +246,61 @@
         deleteTask: {
           id: ''
         },
-        jobTask: {}
+        jobTask: {},
+        formattedBidPrice: '',
+        bidPrice: ''
       }
     },
     props: {
       bidTask: Object
     },
     methods: {
-      getLatestStatus(){
+
+      getCurrencyMask (){
+        return this.currencyMask(this.bidPrice)
+      },
+
+      subHasEnteredAPrice(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return bidTask.bid_price !== 0
+        }
+      },
+
+      getBidPrice(bidTask) {
+        if (bidTask) {
+          return this.convertNumToString(this.formatInput(bidTask.bid_price)).toLocaleString()
+        }
+      },
+
+      formatInput(input) {
+
+        console.log('$event', input)
+        console.log('type of', typeof input)
+
+        if (typeof input === 'string') {
+          const numLength = input.length
+          let pricef = ''
+          if (numLength < 3) {
+            pricef = '.' + input
+            this.formattedBidPrice = pricef
+          } else if (numLength > 2) {
+            let price = ''
+            for (let i = 0; i < numLength - 2; i++) {
+              price = price + input[i]
+            }
+            pricef = price + '.' + input[numLength - 2] + input[numLength - 1]
+            this.formattedBidPrice = pricef
+          }
+          return pricef
+        } else if (typeof input === 'number') {
+          let bidPrice = input / 100
+          console.log('float', bidPrice)
+          this.formattedBidPrice = bidPrice
+          return bidPrice;
+        }
+      },
+
+      getLatestStatus() {
         if (
           this.bidTask
           && this.bidTask.job_task
@@ -265,16 +308,19 @@
           && this.bidTask.job_task.job.sub_status
           && this.bidTask.job_task.job.sub_status.length > 0
         ) {
-          return this.formatStatus(this.getSubStatus_latest(this.bidTask));
+          return this.formatStatus(this.getSubStatus_latest(this.bidTask))
         }
       },
       showTheTaskModal() {
         $('#show-task-modal').modal('show')
       },
-      showDeleteTaskModal(job_task) {
-        this.deleteTask.id = job_task.id
-        this.jobTask = job_task
-        $('#delete-task-modal').modal('show')
+      showDeleteTaskModal(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          let job_task = bidTask.job_task
+          this.deleteTask.id = job_task.id
+          this.jobTask = job_task
+          $('#delete-task-modal').modal('show')
+        }
       },
       deleteTheTask(action) {
         if (action === 'delete') {
@@ -292,30 +338,17 @@
           console.log('error')
         }
       },
-      getSubFinalPrice(num) {
-        return this.convertNumToString(num)
-      },
-      convertNumToString(num) {
-        let initialVal = num.toString()
-        num = num / 100
-        let finalVal = num.toString()
 
-        if (finalVal.length === initialVal.length - 1) {
-          finalVal = finalVal + '0'
-        } else if (finalVal.length === initialVal.length - 2) {
-          finalVal = finalVal + '.00'
-
-        }
-        return finalVal
-      },
       zero() {
         let zero = 0
         return zero.toString()
       },
+
       update(bidTask) {
         let id = bidTask.id
         // debugger;
         let bid_price = $('#price-' + id).val()
+        bid_price = this.convertPriceToIntegers(bid_price)
         let po = this.paymentType
         this.disabled.submit = true
         console.log(id, bid_price)
@@ -323,8 +356,9 @@
           id: id,
           bid_price: bid_price,
           paymentType: po,
+          job_task_id: bidTask.job_task.id,
           subId: bidTask.contractor_id,
-          $generalId: bidTask.job_task.job.contractor_id
+          generalId: bidTask.job_task.job.contractor_id
         }).then((response) => {
           // TODO: security review
           console.log(response)
@@ -342,18 +376,56 @@
       },
       showBid(bid) {
         // TODO: backend what should happen to the bids that wheren't accepted
-        if (bid.job_task === null) {
-          return false
-        }
-        return (bid.id === bid.job_task.bid_id && (bid.job_task.job.status === 'job.approved' || bid.job_task.job.status === 'job.completed' || bid.job_task.status === 'bid_task.accepted')) || (bid.job_task.status ===
-          'bid_task.bid_sent' || bid.job_task.status === 'bid_task.initiated')
+
+        const status = this.getLatestStatus()
+
+        return status !== 'denied'
+          && status !== 'canceled_by_customer'
+          && status !== 'canceled_by_general'
+          && status !== 'canceled_bid_task'
+          && status !== 'paid'
+
+        // if (bid.job_task === null) {
+        //   return false
+        // }
+        // return (
+        //   this.subsBidHasBeenAccepted()
+        //   && (this.jobTaskHasBeenApproved() || this.jobHasBeenCompleted() || this.jobTaskHasBeenAccepted())
+        //   || (this.jobHasBeenSentToTheCustomer() || this.jobTaskHasBeenInitiated))
       },
+
+      subsBidHasBeenAccepted() {
+        return bid.id === bid.job_task.bid_id
+      },
+
+      jobTaskHasBeenApproved() {
+        return bid.job_task.job.status === 'job.approved'
+      },
+
+      jobHasBeenCompleted() {
+        return bid.job_task.job.status === 'job.completed'
+      },
+
+      jobTaskHasBeenAccepted() {
+        return bid.job_task.status === 'bid_task.accepted'
+      },
+
+      jobHasBeenSentToTheCustomer() {
+        return bid.job_task.status === 'bid_task.bid_sent'
+      },
+
+      jobTaskHasBeenInitiated() {
+        return bid.job_task.status === 'bid_task.initiated'
+      },
+
       getLabelClass(bidTask) {
 
         if (bidTask && bidTask.job_task) {
 
+          let status = this.getStatus(bidTask)
+
           return Format.statusLabel(
-            bidTask.job_task.status,
+            status,
             this.isGeneral(bidTask),
             this.isCustomer(bidTask),
             bidTask
@@ -385,63 +457,113 @@
       status(bid_task) {
         return User.status(bid_task.status, bid_task.job_task, false)
       },
-      jobName(name) {
-        return Format.jobName(name)
-      },
-      prettyDate(date) {
 
-        if (date == null)
-          return ''
-        // return the date and ignore the time
-        date = date.split(' ')
-        return date[0]
-      },
-      isBidOpen(bid) {
-        let acceptedBid = bid.job_task.bid_id
-
-        // the contractor has not chosen a bid for the
-        // task yet
-        if (acceptedBid === null) {
-          return true
+      jobName(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return Format.jobName(bidTask.job_task.task.name)
         }
-
-        return false
       },
-      bidPrice(target) {
-        localStorage.setItem('bidPrice' + this.bidTask.id, this.bidTask.bid_price)
-        let price = $('#' + target).val().replace(/[^0-9.]/g, '')
-        $('#' + target).val(price)
+
+      prettyDate(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          let date = bidTask.job_task.start_date
+          if (date == null)
+            return ''
+          // return the date and ignore the time
+          date = date.split(' ')
+          return date[0]
+        }
+      },
+
+      getTaskQuantity(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return bidTask.job_task.qty.toString()
+        }
+      },
+
+      isBidOpen(bid) {
+        if (bid && bid.job_task) {
+          let acceptedBid = bid.job_task.bid_id
+
+          // the contractor has not chosen a bid for the
+          // task yet
+          if (acceptedBid === null) {
+            return true
+          }
+
+          return false
+        }
       },
       getAddress(bidTask) {
-        console.log(JSON.stringify(bidTask.job_task.location))
 
-        if (bidTask.job_task.location !== null) {
-          return bidTask.job_task.location.address_line_1 + ' ' +
-            bidTask.job_task.location.address_line_2 + ' ' +
-            bidTask.job_task.location.city + ' ' +
-            bidTask.job_task.location.state + ' ' +
-            bidTask.job_task.location.zip
-        } else {
-          return 'Address Not Available'
+        if (bidTask && bidTask.job_task) {
+          console.log(JSON.stringify(bidTask.job_task.location))
+
+          if (bidTask.job_task.location !== null) {
+            return bidTask.job_task.location.address_line_1 + ' ' +
+              bidTask.job_task.location.address_line_2 + ' ' +
+              bidTask.job_task.location.city + ' ' +
+              bidTask.job_task.location.state + ' ' +
+              bidTask.job_task.location.zip
+          } else {
+            return 'Address Not Available'
+          }
+
+          // return bidTask.job_task.location.address_line_1+" "+
+
+          // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
+          // let location_id = 0;
+          // if (bidTask.job_task.location_id !== null) {
+          //   location_id = bidTask.job_task.location_id;
+          // } else {
+          //   location_id = bidTask.job_task.job.location_id;
+          // }
+          // Customer.getAddress(location_id, this.location)
+          // return this.location.location
         }
 
-        // return bidTask.job_task.location.address_line_1+" "+
+      },
+      showDeclinedMsg(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          let msg = bidTask.job_task.declined_message
+          return msg !== null && msg !== ''
+        }
+      },
 
-        // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
-        // let location_id = 0;
-        // if (bidTask.job_task.location_id !== null) {
-        //   location_id = bidTask.job_task.location_id;
-        // } else {
-        //   location_id = bidTask.job_task.job.location_id;
-        // }
-        // Customer.getAddress(location_id, this.location)
-        // return this.location.location
+      getDeclinedMessage(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return bidTask.job_task.declined_message
+        }
       },
-      showDeclinedMsg(msg) {
-        return msg !== null && msg !== ''
+
+      subHasMessage(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return bidTask.job_task.sub_message !== null && bidTask.job_task.sub_message != ''
+        }
       },
+
+      getSubMessage(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return bidTask.job_task.sub_message
+        }
+      },
+
+      getJobTask(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return bidTask.job_task
+        }
+      },
+
+      getStatus(bidTask) {
+        if (bidTask && bidTask.job_task) {
+          return bidTask.job_task.status
+        }
+      },
+
       showFinishedBtn(bid) {
-        return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied'
+        if (bid && bid.job_task) {
+          return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied'
+        }
       },
       finished(bid) {
         SubContractor.finishedTask(bid, this.disabled)
@@ -475,6 +597,14 @@
 </script>
 
 <style scoped>
+
+    .th-font {
+        font-size: 12pt;
+    }
+
+    .input-margins {
+        /*margin-right: 11rem;*/
+    }
 
     .list-card {
         margin-left: 0rem !important;

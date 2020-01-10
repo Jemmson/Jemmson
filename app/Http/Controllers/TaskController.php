@@ -514,47 +514,48 @@ class TaskController extends Controller
     public function updateBidContractorJobTask(Request $request)
     {
 
-//        $sub = User::find($request->subId);
+        $sub = User::find($request->subId);
+
+        $jobTask = JobTask::find($request->job_task_id);
+        $job = Job::find($jobTask->job_id);
+
+        $sub->subSendsBidToGeneral(
+            $request->bid_price,
+            $request->paymentType,
+            $request->generalId,
+            $jobTask,
+            $request->subId,
+            $job
+        );
+
+//        $bidContractorJobTask = BidContractorJobTask::find($request->id);
 //
-//        $jobTask = JobTask::find($request->job_task_id);
-//        $job = Job::find($jobTask->job_id);
-
-//        $sub->subSendsBidToGeneral(
-//            $request->bid_price,
-//            $request->paymentType, $request->generalId,
-//            $jobTask,
-//            $request->subId,
-//            $job
-//        );
-
-        $bidContractorJobTask = BidContractorJobTask::find($request->id);
-
-        if ($bidContractorJobTask == null) {
-            return response()->json(["message" => "Couldn't find record.", "errors" => ["error" => ["Couldn't find record."]]], 404);
-        } else if ($request->bid_price == 0) {
-            return response()->json(["message" => "Price needs to be greater than 0.", "errors" => ["error" => [""]]], 412);
-        }
-
-        $bidContractorJobTask->bid_price = $this->convertToCents($request->bid_price);
-        $bidContractorJobTask->status = 'bid_task.bid_sent';
-        $bidContractorJobTask->payment_type = $request->paymentType;
-        $jobTask = $bidContractorJobTask->jobTask()->first();
-
-        try {
-            $bidContractorJobTask->save();
-        } catch (\Exception $e) {
-            Log::error('Update Bid Task:' . $e->getMessage());
-            return response()->json(["message" => "Couldn't save record.", "errors" => ["error" => [$e->getMessage()]]], 404);
-        }
-
-        $jobTask->updateStatus(__('bid_task.bid_sent'));
-
-        $gContractor = User::find($jobTask->task()->first()->contractor_id);
-        $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
-
-        $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'sent_a_bid');
-
-        return response()->json(["message" => "Success"], 200);
+//        if ($bidContractorJobTask == null) {
+//            return response()->json(["message" => "Couldn't find record.", "errors" => ["error" => ["Couldn't find record."]]], 404);
+//        } else if ($request->bid_price == 0) {
+//            return response()->json(["message" => "Price needs to be greater than 0.", "errors" => ["error" => [""]]], 412);
+//        }
+//
+//        $bidContractorJobTask->bid_price = $this->convertToCents($request->bid_price);
+//        $bidContractorJobTask->status = 'bid_task.bid_sent';
+//        $bidContractorJobTask->payment_type = $request->paymentType;
+//        $jobTask = $bidContractorJobTask->jobTask()->first();
+//
+//        try {
+//            $bidContractorJobTask->save();
+//        } catch (\Exception $e) {
+//            Log::error('Update Bid Task:' . $e->getMessage());
+//            return response()->json(["message" => "Couldn't save record.", "errors" => ["error" => [$e->getMessage()]]], 404);
+//        }
+//
+//        $jobTask->updateStatus(__('bid_task.bid_sent'));
+//
+//        $gContractor = User::find($jobTask->task()->first()->contractor_id);
+//        $gContractor->notify(new NotifyContractorOfSubBid(Job::find($jobTask->job_id), User::find($bidContractorJobTask->contractor_id)->name, $gContractor));
+//
+//        $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'sent_a_bid');
+//
+//        return response()->json(["message" => "Success"], 200);
 
 
     }

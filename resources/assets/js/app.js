@@ -38,6 +38,9 @@ import Vuetify from 'vuetify'
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/dist/vuetify.min.css'
 
+import VueMask from 'v-mask';
+Vue.use(VueMask);
+
 const vuetifyOptions = {
   icons: {
     iconfont: 'mdi'
