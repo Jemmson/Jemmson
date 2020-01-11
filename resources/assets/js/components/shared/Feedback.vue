@@ -24,43 +24,52 @@
                     >
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
-                                <v-btn
-                                        dark v-on="on"
-                                        v-if="isContractor()"
-                                        class="ma-2 white--text"
-                                        color="primary"
-                                        to="/initiate-bid"
-                                        id="addbtn"
-                                >
-                                    <v-icon dark>mdi-office-building</v-icon>
-                                </v-btn>
+                                <div class="flex flex-col">
+                                    <v-btn
+                                            dark v-on="on"
+                                            v-if="isContractor()"
+                                            class="ma-2 white--text"
+                                            color="primary"
+                                            to="/initiate-bid"
+                                            id="addbtn"
+                                    >
+                                        <v-icon dark>mdi-plus-circle</v-icon>
+                                    </v-btn>
+                                    <strong class="fob-btn-description">New Job</strong>
+                                </div>
                             </template>
                             <span>Add A Job</span>
                         </v-tooltip>
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
-                                <v-btn
-                                         dark v-on="on"
-                                        v-if="isContractor() && activeJobsExist()"
-                                        color="primary"
-                                        class="ma-2 white--text"
-                                        @click="showJobs()"
-                                >
-                                    <v-icon dark>mdi-worker</v-icon>
-                                </v-btn>
+                                <div class="flex flex-col">
+                                    <v-btn
+                                            dark v-on="on"
+                                            v-if="isContractor() && activeJobsExist()"
+                                            color="primary"
+                                            class="ma-2 white--text"
+                                            @click="showJobs()"
+                                    >
+                                        <v-icon dark>mdi-worker</v-icon>
+                                    </v-btn>
+                                    <strong class="fob-btn-description">Add Task</strong>
+                                </div>
                             </template>
                             <span>Add A Task</span>
                         </v-tooltip>
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
-                                <v-btn
-                                        dark v-on="on"
-                                        color="primary"
-                                        class="ma-2 white--text"
-                                        @click="showFeedback()"
-                                >
-                                    <v-icon dark>mdi-voice</v-icon>
-                                </v-btn>
+                                <div class="flex flex-col">
+                                    <v-btn
+                                            dark v-on="on"
+                                            color="primary"
+                                            class="ma-2 white--text"
+                                            @click="showFeedback()"
+                                    >
+                                        <v-icon dark>mdi-voice</v-icon>
+                                    </v-btn>
+                                    <strong class="fob-btn-description">Feedback</strong>
+                                </div>
                             </template>
                             <span>Feedback</span>
                         </v-tooltip>
@@ -148,7 +157,7 @@
       this.getJobs()
     },
     methods: {
-      printHello(){
+      printHello() {
         return 'Hello'
       },
       showJobs() {
@@ -204,6 +213,10 @@
 
     .short {
         width: 205%;
+    }
+
+    .fob-btn-description {
+        font-size: 10pt;
     }
 
 </style>

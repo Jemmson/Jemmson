@@ -43,8 +43,6 @@
             </v-card>
 
             <div v-show="showTheTask">
-
-
                 <v-container>
                     <h1 class="card-title">Task Details</h1>
                     <v-card>
@@ -263,6 +261,7 @@
       subHasEnteredAPrice(bidTask) {
         if (bidTask && bidTask.job_task) {
           return bidTask.bid_price !== 0
+          // return true
         }
       },
 
@@ -482,17 +481,17 @@
       },
 
       isBidOpen(bid) {
-        if (bid && bid.job_task) {
-          let acceptedBid = bid.job_task.bid_id
-
-          // the contractor has not chosen a bid for the
-          // task yet
-          if (acceptedBid === null) {
-            return true
-          }
-
-          return false
-        }
+        // if (bid && bid.job_task) {
+        //   let acceptedBid = bid.job_task.bid_id
+        //   // the contractor has not chosen a bid for the
+        //   // task yet
+        //   if (acceptedBid === null) {
+        //     return true
+        //   }
+        //
+        //   return false
+        // }
+        return true
       },
       getAddress(bidTask) {
 

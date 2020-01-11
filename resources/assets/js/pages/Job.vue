@@ -251,23 +251,17 @@
       Bus.$off('taskAdded')
     },
     mounted: function() {
-      this.$store.commit('setCurrentPage', this.$router.history.current.path)
-      // set up init data
-      // const bidId = this.$route.params.id;
-      // this.getBid(bidId);
 
+      this.$store.commit('setCurrentPage', this.$router.history.current.path)
       if (!this.user.user) {
         this.user.user = this.userFromState
       }
-
       this.bidForm.id = this.bid.id
       this.bidForm.status = this.bid.status
-
       const success = this.$route.query.success
       Vue.toasted.success(success)
       const error = this.$route.query.error
       Vue.toasted.error(error)
-
       this.getJobStatusValue()
 
     },

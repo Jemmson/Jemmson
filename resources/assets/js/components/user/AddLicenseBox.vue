@@ -44,9 +44,7 @@
                             v-model="license.state"
                             :error="licenseErrors.state"
                             @change="checkLicenseError()"
-                            :rules="[
-                                              licenseStateError()
-                                              ]"
+                            :rules="[licenseStateError()]"
                     ></v-autocomplete>
                     <v-autocomplete
                             v-if="license.state === 'Arizona'"
@@ -360,7 +358,8 @@
         ) {
           const license = {}
           if (this.license.state === 'Arizona') {
-            license.name = this.getArizonaLicenseName();
+            // license.name = this.getArizonaLicenseName()
+            license.name = this.license.name
           } else {
             license.name = this.license.name
           }
@@ -384,7 +383,7 @@
         }
       },
 
-      getArizonaLicenseName(){
+      getArizonaLicenseName() {
         // licenseNames = {
         //   A-0: '',
         // A-4: '',

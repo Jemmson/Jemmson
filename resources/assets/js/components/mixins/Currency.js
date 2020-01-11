@@ -52,18 +52,24 @@ export default {
 
     convertNumToString(num) {
 
-        const numString = num + ''
-        const numArray = numString.split('.')
-        let finalVal = ''
+      let numString = ''
+      let numArray = ''
+      let finalVal = ''
+      if (typeof num !== 'string') {
+        numString = num + ''
+      } else {
+        numString = num
+      }
+      numArray = numString.split('.')
 
-        if (numArray.length === 2 && numArray[1].length === 1) {
-          finalVal = numString + '0'
-        } else if (numArray.length === 1) {
-          finalVal = numArray[0] + '.00'
-        } else {
-          finalVal = numString
-        }
-        return finalVal
+      if (numArray.length === 2 && numArray[1].length === 1) {
+        finalVal = numString + '0'
+      } else if (numArray.length === 1) {
+        finalVal = numArray[0] + '.00'
+      } else {
+        finalVal = numString
+      }
+      return finalVal
     },
 
   }

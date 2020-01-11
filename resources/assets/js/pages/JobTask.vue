@@ -336,69 +336,138 @@
                 </div>
 
                 <!-- Subcontractor bids -->
-                <div class="col-12" v-show="
-                                           showSubsPanel">
+
+
+                <section class="col-12" v-show="showSubsPanel">
                     <h1 id="bids" class="card-title mt-4">Bids</h1>
-                    <card>
-                        <div class="row">
-                            <!--show this box if the show button has been selected and if showSubsPanel is selected then show -->
-                            <div class="col-12">
-                                <div v-if="showSubsPanel" class="mt-4">
-                                    <div :id="jobTask ? 'task-divider-' + jobTask.id : 0" :key="1"></div>
+                    <v-card
+                            :id="jobTask ? 'task-subs-' + jobTask.id : 0"
+                            v-if="isGeneral() && jobHasSubs()"
+                    >
 
-                                    <div :id="jobTask ? 'task-subs-' + jobTask.id : 0"
-                                         v-if="isGeneral() && jobTask.bid_contractor_job_tasks.length > 0"
-                                         :key="3">
-                                        <div class="flex flex-col">
-                                            <div class="table-header">
-                                                <div class="flex-1">Sub</div>
-                                                <div class="flex-1">Bid</div>
-                                                <div class="flex-1">Action</div>
-                                            </div>
-                                            <div class="flex mb-2 justify-content-between"
-                                                 v-for="bid in jobTask.bid_contractor_job_tasks"
-                                                 :key="jobTask ? bid.id : 0">
-                                                <div class="flex-1 lookLikeALink"
-                                                     @click="viewContractorInfo(bid.contractor_id)">{{
-                                                    getCompanyName(bid) }}
-                                                </div>
-                                                <!--                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>-->
-                                                <div class="flex-1">${{ getBidPrice(bid) }}</div>
-                                                <div class="flex-1">
-                                                    <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
+                        <v-card-text>
+                            <v-row
+                                    class="justify-content-between"
+                            >
+                                <strong class="uppercase">Sub</strong>
+                                <strong class="uppercase">Bid Price</strong>
+                                <strong class="uppercase">Action</strong>
+                            </v-row>
+                            <v-divider></v-divider>
+
+                            <v-row class="flex mb-2 justify-content-between"
+                                   v-for="bid in jobTask.bid_contractor_job_tasks"
+                                   :key="jobTask ? bid.id : 0">
+
+                                <div class="flex-1 lookLikeALink"
+                                     @click="viewContractorInfo(bid.contractor_id)">{{
+                                    getCompanyName(bid) }}
+                                </div>
+                                <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"
+                                >$ {{ getBidPrice(bid) }}
+                                </div>
+                                <div>
+                                    <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
 
 
-                                                    <v-btn
-                                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
+                                    <v-btn
+                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
                                                                     && checkIfBidHasBeenSent(bid)"
-                                                            @click="acceptSubBidForTask(bid, jobTask)"
-                                                            class="primary w-1/2"
-                                                            :disabled="disabled.accept"
-                                                    >
+                                            @click="acceptSubBidForTask(bid, jobTask)"
+                                            class="primary w-1/2"
+                                            :disabled="disabled.accept"
+                                    >
                                                         <span v-if="disabled.accept">
                                                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                                                         </span>
-                                                        Accept
-                                                    </v-btn>
+                                        Accept
+                                    </v-btn>
 
 
-                                                    <div
-                                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
-                                                        <strong>Accepted</strong>
-                                                    </div>
-                                                    <div
-                                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
-                                                        <strong>Pending</strong></div>
-                                                </div>
-
-                                            </div>
-                                        </div>
+                                    <div
+                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
+                                        <strong>Accepted</strong>
                                     </div>
+                                    <div
+                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                        <strong>Pending</strong></div>
                                 </div>
-                            </div>
-                        </div>
-                    </card>
-                </div>
+                            </v-row>
+                        </v-card-text>
+
+                    </v-card>
+                </section>
+
+
+<!--                <div class="col-12" v-show="showSubsPanel">-->
+<!--                    &lt;!&ndash;                    <h1 id="bids" class="card-title mt-4">Bids</h1>&ndash;&gt;-->
+<!--                    <card>-->
+<!--                        <div class="row">-->
+<!--                            &lt;!&ndash;show this box if the show button has been selected and if showSubsPanel is selected then show &ndash;&gt;-->
+<!--                            <div class="col-12">-->
+<!--                                <div v-if="showSubsPanel" class="mt-4">-->
+<!--                                    <div :id="jobTask ? 'task-divider-' + jobTask.id : 0" :key="1"></div>-->
+<!--                                    <div :id="jobTask ? 'task-subs-' + jobTask.id : 0"-->
+<!--                                         v-if="isGeneral() && this.jobHasSubs()"-->
+<!--                                         :key="3">-->
+<!--                                        <div class="flex flex-col">-->
+<!--                                            <div class="table-header">-->
+<!--                                                <div class="flex-1">Sub</div>-->
+<!--                                                <div class="flex-1">Bid Price</div>-->
+<!--                                                <div class="flex-1">Action</div>-->
+<!--                                            </div>-->
+<!--                                            <div class="flex mb-2 justify-content-between"-->
+<!--                                                 v-for="bid in jobTask.bid_contractor_job_tasks"-->
+<!--                                                 :key="jobTask ? bid.id : 0">-->
+<!--                                                <div class="flex-1 lookLikeALink"-->
+<!--                                                     @click="viewContractorInfo(bid.contractor_id)">{{-->
+<!--                                                    getCompanyName(bid) }}-->
+<!--                                                </div>-->
+<!--                                                &lt;!&ndash;                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>&ndash;&gt;-->
+
+
+<!--                                                <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"-->
+<!--                                                >$ {{ getBidPrice(bid) }}-->
+<!--                                                </div>-->
+
+
+<!--                                                <div class="flex-1">-->
+<!--                                                    &lt;!&ndash; <button v-if="showAcceptBtn(jobTask.status)" &ndash;&gt;-->
+
+
+<!--                                                    <v-btn-->
+<!--                                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)-->
+<!--                                                                    && checkIfBidHasBeenSent(bid)"-->
+<!--                                                            @click="acceptSubBidForTask(bid, jobTask)"-->
+<!--                                                            class="primary w-1/2"-->
+<!--                                                            :disabled="disabled.accept"-->
+<!--                                                    >-->
+<!--                                                        <span v-if="disabled.accept">-->
+<!--                                                            <i class="fa fa-btn fa-spinner fa-spin"></i>-->
+<!--                                                        </span>-->
+<!--                                                        Accept-->
+<!--                                                    </v-btn>-->
+
+
+<!--                                                    <div-->
+<!--                                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">-->
+<!--                                                        <strong>Accepted</strong>-->
+<!--                                                    </div>-->
+<!--                                                    <div-->
+<!--                                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">-->
+<!--                                                        <strong>Pending</strong></div>-->
+<!--                                                </div>-->
+
+<!--                                            </div>-->
+
+
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </card>-->
+<!--                </div>-->
 
 
                 <!--                <v-card v-if="checkIfThereAreMessaages(jobTask)"-->
@@ -609,6 +678,7 @@
   import User from '../classes/User'
   import Feedback from '../components/shared/Feedback'
   import Status from '../components/mixins/Status'
+  import Currency from '../components/mixins/Currency'
   import Utilities from '../components/mixins/Utilities'
 
   import { mapState } from 'vuex'
@@ -625,7 +695,7 @@
       UpdateTaskLocationModal
     },
     mixins: [
-      Status, Utilities
+      Status, Utilities, Currency
     ],
     data() {
       return {
@@ -729,7 +799,7 @@
       showSubsPanel() {
         return this.isContractor()
           && this.jobHasNotBeenCompleted()
-          && this.bidsExistForTask()
+          && this.jobHasSubs()
           && this.isGeneral()
       },
 
@@ -761,7 +831,11 @@
     },
     methods: {
 
-      bidsExistForTask() {
+      subPriceHigherThanBidPrice(bid) {
+        return this.jobTask.cust_final_price < bid.bid_price
+      },
+
+      jobHasSubs() {
         return this.jobTask.bid_contractor_job_tasks.length > 0
       },
 
@@ -898,7 +972,7 @@
       },
       getBidPrice(bid) {
         if (bid) {
-          return bid.bid_price / 100
+          return this.convertNumToString(bid.bid_price)
         }
       },
       goBack() {
@@ -912,7 +986,7 @@
         }
       },
       checkIfAnyBidHasBeenAccepted(jobTask) {
-        if (jobTask.bid_contractor_job_tasks.length > 0) {
+        if (this.jobHasSubs()) {
           for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
             if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
               return true
@@ -974,7 +1048,15 @@
         ])
       },
       acceptSubBidForTask(bid, jobTask) {
-        const generalId = jobTask.task.contractor.id
+
+        let generalId = null
+
+        if (jobTask.task.contractor) {
+          generalId = jobTask.task.contractor.id
+        } else {
+          generalId = jobTask.task.contractor_id
+        }
+
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled, generalId)
       },
       showStripeToggle(jobTask) {
@@ -1005,9 +1087,6 @@
       },
       userIsACustomer() {
         return Spark.state.user.usertype === 'customer'
-      },
-      jobHasSubs() {
-        return this.jobTask.bid_contractor_job_tasks.length > 0
       },
       subHasFinishedTheJob() {
         return this.jobTask.status === 'bid_task.finished_by_sub'
@@ -1408,6 +1487,10 @@
 </script>
 
 <style scoped>
+
+    .bid-price-error {
+        color: red;
+    }
 
     .location {
         align-items: center;

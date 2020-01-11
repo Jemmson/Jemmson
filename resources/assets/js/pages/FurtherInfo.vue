@@ -184,7 +184,7 @@
                         <div v-if="isContractor">
 
                             <add-license-box
-                                    @add="addlicenses($event)"
+                                    @add="addLicenses($event)"
                             >
                             </add-license-box>
 

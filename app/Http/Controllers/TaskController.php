@@ -441,6 +441,9 @@ class TaskController extends Controller
             $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
             $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
             $jt->unit_price = $this->convertToDollars($jt->unit_price);
+            foreach ($jt->bidContractorJobTasks as $bidContractorJobTask) {
+                $bidContractorJobTask->bid_price = $this->convertToDollars($bidContractorJobTask->bid_price);
+            }
         }
         return $jobTasks;
     }
@@ -860,7 +863,7 @@ class TaskController extends Controller
      * Accept bid for job task from sub contractor
      *
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function accept(Request $request)
     {
@@ -875,6 +878,8 @@ class TaskController extends Controller
             $jobTask, $subId, $jobTaskId, $price, $bidId
         );
 
+        return response()->json(["message" => "Success"], 200);
+
 //        // accept bid task
 //        $bidContractorJobTask = BidContractorJobTask::find($bidId);
 //
@@ -883,13 +888,11 @@ class TaskController extends Controller
 //        }
 
 
-
 //        self::changeSubsStatuses(
 //            $jobTaskId,
 //            $bidId,
 //            $sub
 //        );
-
 
 
         // set the sub price in the job task table

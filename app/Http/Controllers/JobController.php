@@ -123,7 +123,7 @@ class JobController extends Controller
         $activeJobs = [];
 
         foreach ($jobs as $job) {
-            $status = $job['status'][count( $job['status']) - 1]->status;
+            $status = $job['status'][count($job['status']) - 1]->status;
             if ($status != 'paid') {
                 array_push($activeJobs, $job);
             }
@@ -740,6 +740,7 @@ class JobController extends Controller
                     'jobTasks.subStatuses',
                     'jobTasks.taskMessages',
                     'jobTasks.task.contractor',
+                    'jobTasks.bidContractorJobTasks',
                     'jobTasks.bidContractorJobTasks.contractor',
                     'jobTasks.bidContractorJobTasks.contractor.contractor',
                     'location',
@@ -752,7 +753,6 @@ class JobController extends Controller
                     }
                 ]
             );
-
 
             $job->bid_price = $this->convertToDollars($job->bid_price);
 
@@ -767,14 +767,17 @@ class JobController extends Controller
                     "last_name" => $contractorUser->last_name,
                     "phone" => $contractorUser->phone,
                 ]);
-
-
                 $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
                 $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
                 $jt->unit_price = $this->convertToDollars($jt->unit_price);
-                $jt->task->proposed_cust_price = $this->convertToDollars($jt->task->proposed_cust_price);
+                $jt->task->proposed_cust_price =  $this->convertToDollars($jt->task->proposed_cust_price);
                 $jt->task->proposed_sub_price = $this->convertToDollars($jt->task->proposed_sub_price);
                 $jt->contractor = $contractorResults[0];
+
+                foreach ($jt->bidContractorJobTasks as $bcjt) {
+                    $bcjt->bid_price = $this->convertToDollars($bcjt->bid_price);
+                }
+
             }
 
             return $job;
@@ -1056,41 +1059,6 @@ class JobController extends Controller
                     $j['job_statuses'] = $j->jobStatuses()->get();
                 }
             }
-
-
-//            $jobsWithTasks = Auth::user()->jobs()
-//                ->where(function ($query) {
-//                    $query->where('status', __('bid.sent'))
-//                        ->orwhere('status', __('job.approved'))
-//                        ->orwhere('status', __('bid.declined'))
-//                        ->Where('status', '!=', __('job.completed'));
-//                })
-//                ->with(
-//                    [
-//                        'jobTasks' => function ($query) {
-//                            //$query->select('id', 'task_id', 'stripe', 'contractor_id', 'status', 'cust_final_price', 'start_date');
-//                            $query->with(
-//                                [
-//                                    'task' => function ($q) {
-//                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
-//                                    }
-//                                ]);
-//                        },
-//                        'jobTasks.location',
-//                        'jobTasks.task',
-//                        'jobTasks.jobTaskStatuses',
-//                        'jobTasks.subStatuses',
-//                        'jobTasks.task.contractor'
-//                        // NOTICE: 'with' resets the original result to all jobs?! this fixes a customer seeing others customers jobs that have been approved
-//                    ])->get();
-//
-//            $jobsWithoutTasks = Auth::user()->jobs()
-//                ->where('status', '!=', __('bid.sent'))
-//                ->where('status', '!=', __('job.approved'))
-//                ->Where('status', '!=', __('bid.declined'))
-//                ->Where('status', '!=', __('job.completed'))
-//                ->get();
-//            $jobs = $jobsWithTasks->merge($jobsWithoutTasks);
         } else {
 
             $jobs = Job::where('contractor_id', '=', Auth::user()
