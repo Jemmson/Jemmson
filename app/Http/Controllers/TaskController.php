@@ -1562,11 +1562,11 @@ class TaskController extends Controller
 //        $disk->put(
 //            $path, $this->formatImage($file)
 //        );
+
         $url = $image['secure_url'];
         $taskImage = new TaskImage;
         $taskImage->job_id = $request->jobId;
         $taskImage->user_id = Auth::user()->getAuthIdentifier();
-        $taskImage->job_task_id = $request->jobTaskId;
         $taskImage->url = $url;
         $taskImage->secure_url = $url;
         $taskImage->public_id = $image['public_id'];
@@ -1583,6 +1583,9 @@ class TaskController extends Controller
 //        $taskImage->overwritten = $image['overwritten'];
         $taskImage->original_filename = $image['original_filename'];
 
+        if ($this->imageIsAttachedToAJobTask($request->jobTaskId)) {
+            $taskImage->job_task_id = $request->jobTaskId;
+        }
         try {
             $taskImage->save();
         } catch (\Exception $e) {
@@ -1596,7 +1599,11 @@ class TaskController extends Controller
 
         // notify the customers and the contractors of the uploaded file
         $job = Job::find($taskImage->job_id);
-        $jobTask = JobTask::find($taskImage->job_task_id);
+        $jobTask = null;
+
+        if ($this->imageIsAttachedToAJobTask($request->jobTaskId)) {
+            $jobTask = JobTask::find($taskImage->job_task_id);
+        }
 
         $customer = $job->customer()->first();
         $contractor = $job->contractor()->first();
@@ -1611,12 +1618,18 @@ class TaskController extends Controller
             $job->contractor()->first()->notify(new UploadedTaskImage());
         }
 
-
-        if ($job->contractor_id !== $jobTask->contractor_id) {
-            $jobTask->contractor()->first()->notify(new UploadedTaskImage());
+        if ($this->imageIsAttachedToAJobTask($request->jobTaskId)) {
+            if ($job->contractor_id !== $jobTask->contractor_id) {
+                $jobTask->contractor()->first()->notify(new UploadedTaskImage());
+            }
         }
 
         return $url;
+    }
+
+    protected function imageIsAttachedToAJobTask($jobTaskId)
+    {
+        return $jobTaskId !== "null";
     }
 
     protected function formatImage($file)

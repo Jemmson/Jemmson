@@ -649,7 +649,7 @@ class JobController extends Controller
     }
 
     private
-    function customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks = [])
+    function customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks = [], $images)
     {
         $jt = JobStatus::where('job_id', '=', $job->id)->get();
 
@@ -670,6 +670,7 @@ class JobController extends Controller
             "declined_message" => $job->declined_message,
             "paid_with_cash_message" => $job->paid_with_cash_message,
             "location" => $location,
+            "images" => $images,
             "contractor" => $contractorUser,
             "customer" => $customerUser,
             "job_tasks" => $jobTasks,
@@ -697,6 +698,8 @@ class JobController extends Controller
 
         if ($this->isCustomerBidNotSent($job)) {
 
+            $images = TaskImage::where('job_id', '=', $job->id)->get();
+
             $location = $this->getCustomersJobLocation($job);
 
             $contractor = $this->getContractorInfoForCustomer($job);
@@ -708,10 +711,12 @@ class JobController extends Controller
             $customerUser = $this->getCustomerUserInformation($job, $customer);
 
             return response()->json([
-                $this->customerJobInformation($job, $location, $contractorUser, $customerUser)
+                $this->customerJobInformation($job, $location, $contractorUser, $customerUser, $images)
             ], 200);
 
         } else if ($this->isCustomerWithSubmittedBid($job)) {
+
+            $images = TaskImage::where('job_id', '=', $job->id)->get();
 
             $location = $this->getCustomersJobLocation($job);
 
@@ -726,7 +731,7 @@ class JobController extends Controller
             $jobTasks = $this->getJobTasks($job);
 
             return response()->json([
-                $this->customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks)
+                $this->customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks, $images)
             ], 200);
 
         } else if ($this->isGeneralContractor($job)) {

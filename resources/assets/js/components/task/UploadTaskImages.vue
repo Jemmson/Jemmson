@@ -54,6 +54,7 @@
     name: 'UploadTaskImages',
     props: {
       jobTask: Object,
+      job: Object,
       type: String
     },
     data() {

@@ -185,24 +185,6 @@
                                       :job-task-name="item ? item.task.name : null"
                                       :id="item ? item.id : null">
                     </sub-invite-modal>
-                    <!--                    <v-list dense flat>-->
-                    <!--                        <v-list-item-group v-model="jobTaskItem" color="primary">-->
-                    <!--                            <v-list-item-->
-
-                    <!--                            >-->
-                    <!--                                <v-list-item-title v-text="key"></v-list-item-title>-->
-                    <!--                                <v-list-item-subtitle-->
-                    <!--                                        v-if="key === 'Price'"-->
-                    <!--                                        class="capitalize"-->
-                    <!--                                        v-text="'$ ' + jt"></v-list-item-subtitle>-->
-                    <!--                                <v-list-item-subtitle-->
-                    <!--                                        v-else-->
-                    <!--                                        class="capitalize"-->
-                    <!--                                        v-text="jt"></v-list-item-subtitle>-->
-                    <!--                            </v-list-item>-->
-                    <!--                        </v-list-item-group>-->
-                    <!--                    </v-list>-->
-
                 </v-card>
             </div>
             <div v-else-if="generalHasSentABid(bid)">
@@ -268,6 +250,21 @@
             </div>
 
         </section>
+
+        <!-- images -->
+        <div class="col-12">
+            <h1 class="card-title mt-4">Images</h1>
+            <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>
+            <card>
+                <div class="row">
+
+                    <div class="col-12">
+                        <task-images :job="bid" type="notsub">
+                        </task-images>
+                    </div>
+                </div>
+            </card>
+        </div>
 
         <!-- / tasks -->
 
@@ -386,6 +383,7 @@
   import GeneralContractorBidActions from './GeneralContractorBidActions'
   import Status from '../mixins/Status.js'
   import Utilities from '../mixins/Utilities'
+  import TaskImages from '../../components/task/UploadJobImages'
 
   export default {
     components: {
@@ -397,6 +395,7 @@
       CompletedTasks,
       HorizontalTable,
       JobStepper,
+      TaskImages,
       ApproveBid,
       GeneralContractorBidActions
     },

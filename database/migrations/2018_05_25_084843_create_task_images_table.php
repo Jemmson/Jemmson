@@ -16,7 +16,7 @@ class CreateTaskImagesTable extends Migration
         Schema::create('task_images', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('job_id')->unsigned();
-            $table->integer('job_task_id')->unsigned();
+            $table->integer('job_task_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned();
             $table->string('public_id')->nullable(true);
             $table->integer('version')->nullable(true);
