@@ -11,6 +11,7 @@
                     <div class="flex space-between">
                         <v-app-bar-nav-icon
                                 @click.stop="toggleDrawer()"
+                                v-if="routeHasDrawer()"
                         >
                         </v-app-bar-nav-icon>
                         <v-toolbar-title
@@ -80,6 +81,9 @@
     methods: {
       toggleDrawer() {
         this.$emit('drawer', true)
+      },
+      routeHasDrawer(){
+        return this.$router.currentRoute.path === '/documentation'
       },
       showContent(content) {
         if (content === 'features') {

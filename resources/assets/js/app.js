@@ -38,8 +38,9 @@ import Vuetify from 'vuetify'
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/dist/vuetify.min.css'
 
-import VueMask from 'v-mask';
-Vue.use(VueMask);
+import VueMask from 'v-mask'
+
+Vue.use(VueMask)
 
 const vuetifyOptions = {
   icons: {
@@ -63,7 +64,6 @@ import Customer from './classes/Customer'
 import User from './classes/User'
 import TaskUtil from './classes/TaskUtil'
 
-
 import { router } from './router.js'
 
 window.Format = Format
@@ -81,7 +81,6 @@ require('./components/bootstrap')
 Spark.forms.register = {
   usertype: ''
 }
-
 
 const requireComponent = require.context(
   // The relative path of the components folder
@@ -107,7 +106,6 @@ requireComponent.keys().forEach(fileName => {
     )
   )
 
-
   // Register component globally
   Vue.component(
     componentName,
@@ -117,8 +115,6 @@ requireComponent.keys().forEach(fileName => {
     componentConfig.default || componentConfig
   )
 })
-
-
 
 function goingToANonAuthorizedPage(path) {
 
@@ -240,17 +236,8 @@ router.beforeEach((to, from, next) => {
                     }
 
                   })
-
               }
-
             }
-
-            // need to send a user to further info if the user does not have
-            // their password updated
-
-            // a customer should not be able to initiate a bid or look at tasks
-            // page
-
           } else {
             if (goingToANonAuthorizedPage(to.path)) {
               next()
