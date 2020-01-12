@@ -749,6 +749,7 @@ class JobController extends Controller
                     'jobTasks.bidContractorJobTasks.contractor',
                     'jobTasks.bidContractorJobTasks.contractor.contractor',
                     'location',
+                    'images',
                     'jobTasks.location',
                     'jobTasks.images',
                     'jobStatuses',

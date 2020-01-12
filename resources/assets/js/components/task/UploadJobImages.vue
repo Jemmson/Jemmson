@@ -1,5 +1,21 @@
 <template>
-    <div class="row">
+    <div class="row"
+        style="margin-top: -1.25rem"
+    >
+
+        <v-banner single-line @click:icon="alert"
+            style="margin: 0 auto 1rem auto"
+        >
+            <v-icon
+                    slot="icon"
+                    color="red"
+                    size="36"
+            >
+                mdi-google-photos
+            </v-icon>
+            Associate Images With Tasks
+        </v-banner>
+
         <div class="col-4" v-if="jobImageExists(job, 1)">
             <a class="lightbox" @click.prevent="openImage(job, 1)">
                 <img :src="getJobImage(job, 1).url" alt="">
