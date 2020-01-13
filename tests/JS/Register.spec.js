@@ -115,51 +115,6 @@ describe('Register', function() {
 
   })
 
-
-  test('when I delete a license then it should be removed from the license array', () => {
-    wrapper = shallowMount(Register, {
-      vuetify,
-      localVue,
-      store
-    })
-
-    wrapper.setData({
-      registerForm: {
-        licenses: [
-          {
-            name: 'swimming pool',
-            number: '1',
-            state: 'arizona',
-            type: 'A-4',
-          },
-          {
-            name: 'swimming pool',
-            number: '2',
-            state: 'alabama',
-            type: 'A-7',
-          },
-          {
-            name: 'swimming pool',
-            number: '3',
-            state: 'colorado',
-            type: 'A-5',
-          }
-        ]
-      },
-      license: {
-        name: 'swimming pool',
-        number: '2',
-        state: 'alabama',
-        type: 'A-7',
-      },
-    })
-
-    wrapper.vm.removeLicense(wrapper.vm.license)
-
-    expect(wrapper.vm.registerForm.licenses.length).toBe(2)
-
-  })
-
   test.skip('when I delete a license then I should only be able to remove that one from the license array', () => {
     wrapper = shallowMount(Register, {
       vuetify,

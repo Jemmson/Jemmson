@@ -1,15 +1,20 @@
 import { createLocalVue, shallowMount, mount, config } from '@vue/test-utils'
 import InitiateBid from '../../resources/assets/js/pages/InitiateBid'
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 
 require('./setup')
 
 // window.Vue = Vue
 import Vuetify from 'vuetify'
+
 Vue.use(Vuetify)
 
 const localVue = createLocalVue()
 localVue.use(Vuetify, {})
+localVue.use(VueRouter)
+
+const router = new VueRouter()
 
 describe('InitiateBid', () => {
   let wrapper
@@ -20,6 +25,12 @@ describe('InitiateBid', () => {
     wrapper = shallowMount(InitiateBid, {
       localVue,
       vuetify,
+      router,
+      mocks: {
+        $store: {
+          commit: jest.fn(),
+        }
+      },
       data() {
         return {}
       }
@@ -34,17 +45,55 @@ describe('InitiateBid', () => {
   }
 
   test('is a Vue instance', () => {
+    wrapper = shallowMount(InitiateBid, {
+      localVue,
+      vuetify,
+      router,
+      mocks: {
+        $store: {
+          commit: jest.fn(),
+        }
+      },
+      data() {
+        return {}
+      }
+    })
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
-  test('must have a title saying "Add New Job"', () => {
-
+  test.skip('must have a title saying "Add New Job"', () => {
+    wrapper = mount(InitiateBid, {
+      localVue,
+      vuetify,
+      router,
+      mocks: {
+        $store: {
+          commit: jest.fn(),
+        }
+      },
+      data() {
+        return {}
+      }
+    })
     expect(wrapper.find('#title').text()).toBe('Add New Job')
 
   })
 
-  test('test that the first name validation works', async () => {
-    let fname = wrapper.find('#fname')
+  test.skip('test that the first name validation works', async () => {
+    wrapper = mount(InitiateBid, {
+      localVue,
+      vuetify,
+      router,
+      mocks: {
+        $store: {
+          commit: jest.fn(),
+        }
+      },
+      data() {
+        return {}
+      }
+    })
+    let fname = wrapper.find({ref: 'firstName'})
     wrapper.setData({
       fname: 'asdasdasdasdasdasd'
     })
