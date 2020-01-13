@@ -14,7 +14,6 @@ export default {
         if (intStringArray[1].length === 1) {
           intString = intString + '' + 0
         }
-        console.log('string', intString)
         return parseFloat(intString)
 
       } else {

@@ -1,6 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Task from '../../resources/assets/js/components/task/Task'
 import Vuetify from 'vuetify'
+import VueMask from 'v-mask'
 
 require('./setup')
 
@@ -17,6 +18,9 @@ describe('Task', () => {
         $router: {
           push: jest.fn()
         }
+      },
+      directives: {
+        mask() {}
       }
     })
 
@@ -26,7 +30,10 @@ describe('Task', () => {
   test('test that I can pull back cents if there are only 2 digits', () => {
 
     let wrapper = shallowMount(Task, {
-      localVue
+      localVue,
+      directives: {
+        mask() {}
+      }
     })
     wrapper.setData({
       formattedBidPrice: ''
@@ -41,7 +48,10 @@ describe('Task', () => {
   test('test that I can pull back dollars if there are more than 2 digits', () => {
 
     let wrapper = shallowMount(Task, {
-      localVue
+      localVue,
+      directives: {
+        mask() {}
+      }
     })
     wrapper.setData({
       formattedBidPrice: ''
@@ -62,7 +72,10 @@ describe('Task', () => {
   test('that i can convert the number string to the correct number value', () => {
 
     let wrapper = shallowMount(Task, {
-      localVue
+      localVue,
+      directives: {
+        mask() {}
+      }
     })
 
     let val = wrapper.vm.convertPriceToIntegers('$ 4.50')
@@ -79,10 +92,13 @@ describe('Task', () => {
 
   })
 
-  test ('that I can convert num to string', () => {
+  test('that I can convert num to string', () => {
 
     let wrapper = shallowMount(Task, {
-      localVue
+      localVue,
+      directives: {
+        mask() {}
+      }
     })
 
     let val = wrapper.vm.convertNumToString(4.50)

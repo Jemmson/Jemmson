@@ -78,7 +78,7 @@
                                         v-mask="getCurrencyMask()"
                                         v-model="bidPrice"
                                         class="input-margins"
-                                        :id="'price-' + bidTask.id"
+                                        :id="bidTask ? 'price-' + bidTask.id : ''"
                                         label="Input Bid Price Here"
                                         @change="formatInput($event)"
                                 ></v-text-field>
@@ -91,7 +91,7 @@
                                         bottom
                                         outlined
                                         @click.prevent="update(bidTask)"
-                                        v-bind:id="bidTask.id" :disabled="disabled.submit">
+                                        v-bind:id="bidTask ? bidTask.id: null" :disabled="disabled.submit">
                                         <span v-if="disabled.submit">
                                           <i class="fa fa-btn fa-spinner fa-spin"></i>
                                         </span>
@@ -224,9 +224,9 @@
     },
     computed: {
       getStoredBidPrice() {
-        if (localStorage.getItem('bidPrice' + this.bidTask.id)) {
-          this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id)
-        }
+        // if (localStorage.getItem('bidPrice' + this.bidTask.id)) {
+        //   this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id)
+        // }
       }
     },
     mounted() {
@@ -254,7 +254,7 @@
     },
     methods: {
 
-      getCurrencyMask (){
+      getCurrencyMask() {
         return this.currencyMask(this.bidPrice)
       },
 
@@ -272,10 +272,6 @@
       },
 
       formatInput(input) {
-
-        console.log('$event', input)
-        console.log('type of', typeof input)
-
         if (typeof input === 'string') {
           const numLength = input.length
           let pricef = ''
@@ -293,9 +289,8 @@
           return pricef
         } else if (typeof input === 'number') {
           let bidPrice = input / 100
-          console.log('float', bidPrice)
           this.formattedBidPrice = bidPrice
-          return bidPrice;
+          return bidPrice
         }
       },
 
@@ -344,31 +339,30 @@
       },
 
       update(bidTask) {
-        let id = bidTask.id
-        // debugger;
-        let bid_price = $('#price-' + id).val()
-        bid_price = this.convertPriceToIntegers(bid_price)
-        let po = this.paymentType
-        this.disabled.submit = true
-        console.log(id, bid_price)
-        axios.post('/bid/task/', {
-          id: id,
-          bid_price: bid_price,
-          paymentType: po,
-          job_task_id: bidTask.job_task.id,
-          subId: bidTask.contractor_id,
-          generalId: bidTask.job_task.job.contractor_id
-        }).then((response) => {
-          // TODO: security review
-          console.log(response)
-          Vue.toasted.success('Bid Sent.')
-          User.emitChange('bidUpdated')
-          this.disabled.submit = false
-        }).catch((error) => {
-          console.log(error.response, '#error-' + id)
-          Vue.toasted.error(error.response.data.message)
-          this.disabled.submit = false
-        })
+        if (bidTask && bidTask.job_task) {
+          let id = bidTask.id
+          // debugger;
+          let bid_price = $('#price-' + id).val()
+          bid_price = this.convertPriceToIntegers(bid_price)
+          let po = this.paymentType
+          this.disabled.submit = true
+          axios.post('/bid/task/', {
+            id: id,
+            bid_price: bid_price,
+            paymentType: po,
+            job_task_id: bidTask.job_task.id,
+            subId: bidTask.contractor_id,
+            generalId: bidTask.job_task.job.contractor_id
+          }).then((response) => {
+            // TODO: security review
+            Vue.toasted.success('Bid Sent.')
+            User.emitChange('bidUpdated')
+            this.disabled.submit = false
+          }).catch((error) => {
+            Vue.toasted.error(error.response.data.message)
+            this.disabled.submit = false
+          })
+        }
       },
       setPaymentType(value) {
         this.paymentType = value
@@ -394,27 +388,39 @@
       },
 
       subsBidHasBeenAccepted() {
-        return bid.id === bid.job_task.bid_id
+        if (this.bid && this.bid.job_task) {
+          return this.bid.id === this.bid.job_task.bid_id
+        }
       },
 
       jobTaskHasBeenApproved() {
-        return bid.job_task.job.status === 'job.approved'
+        if (this.bid && this.bid.job_task) {
+          return bid.job_task.job.status === 'job.approved'
+        }
       },
 
       jobHasBeenCompleted() {
-        return bid.job_task.job.status === 'job.completed'
+        if (this.bid && this.bid.job_task) {
+          return bid.job_task.job.status === 'job.completed'
+        }
       },
 
       jobTaskHasBeenAccepted() {
-        return bid.job_task.status === 'bid_task.accepted'
+        if (this.bid && this.bid.job_task) {
+          return bid.job_task.status === 'bid_task.accepted'
+        }
       },
 
       jobHasBeenSentToTheCustomer() {
-        return bid.job_task.status === 'bid_task.bid_sent'
+        if (this.bid && this.bid.job_task) {
+          return bid.job_task.status === 'bid_task.bid_sent'
+        }
       },
 
       jobTaskHasBeenInitiated() {
-        return bid.job_task.status === 'bid_task.initiated'
+        if (this.bid && this.bid.job_task) {
+          return bid.job_task.status === 'bid_task.initiated'
+        }
       },
 
       getLabelClass(bidTask) {
@@ -496,8 +502,6 @@
       getAddress(bidTask) {
 
         if (bidTask && bidTask.job_task) {
-          console.log(JSON.stringify(bidTask.job_task.location))
-
           if (bidTask.job_task.location !== null) {
             return bidTask.job_task.location.address_line_1 + ' ' +
               bidTask.job_task.location.address_line_2 + ' ' +
@@ -581,7 +585,6 @@
           }
           this.$store.commit('setJob', data)
         } catch (error) {
-          console.log(error)
           if (
             error.message === 'Not Authorized to access this resource/api' ||
             error.response !== undefined && error.response.status === 403
