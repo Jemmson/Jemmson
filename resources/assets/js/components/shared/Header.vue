@@ -39,7 +39,7 @@
                 ></header-job-toggle>
             </div>
 
-            <div v-else="">
+            <div v-else>
                 <header-bio
                         ref="homePage2"
                         :name="user.first_name + ' ' + user.last_name"
@@ -48,14 +48,16 @@
 
         </section>
 
-        <section v-else-if="(onAddTaskPage() || onAddSubPage()) && !isCustomer()">
+        <section v-else-if="(
+          onAddTaskPage() || onAddSubPage()
+          ) && !isCustomer()">
             <header-back-button
                     ref="headerBackButton"
             ></header-back-button>
 
         </section>
 
-        <section v-else-if="onInitiateBidPage() && !isCustomer()">
+        <section v-else-if="(onInitiateBidPage() || onImageAssociationPage()) && !isCustomer()">
             <header-bio
                     ref="homePage"
                     :name="user.first_name + ' ' + user.last_name"
@@ -135,6 +137,9 @@
       },
       onAddTaskPage() {
         return this.page === '/job/add/task' || this.page === '/job/add/task/'
+      },
+      onImageAssociationPage() {
+        return this.page === '/image-association'
       },
       onAddSubPage() {
         return false

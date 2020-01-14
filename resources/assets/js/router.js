@@ -27,6 +27,7 @@ import TaskImages from './pages/TaskImages'
 import Benefits from './pages/Benefits'
 import Pricing from './pages/Pricing'
 import Demo from './pages/Demo'
+import ImageAssociation from './pages/ImageAssociation'
 import HowTo from './pages/HowTo'
 import RegisterQuickBooks from './pages/RegisterQuickBooks'
 import Register from './pages/Register'
@@ -151,6 +152,12 @@ const routes = [
     path: 'documentation',
     component: Documentation,
     name: 'documentation',
+    props: true
+  },
+  {
+    path: '/image-association',
+    component: ImageAssociation,
+    name: 'image-association',
     props: true
   },
   {

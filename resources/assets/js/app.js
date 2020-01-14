@@ -223,8 +223,6 @@ router.beforeEach((to, from, next) => {
                     window.SubContractor.user = this.user
                     window.Customer.user = this.user
 
-                    // doAuthRouting(to, from, next)
-
                     if (store.state.user.user.password_updated === 0) {
                       if (to.fullPath === '/furtherInfo') {
                         next()

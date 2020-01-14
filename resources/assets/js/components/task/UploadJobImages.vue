@@ -1,20 +1,23 @@
 <template>
     <div class="row"
-        style="margin-top: -1.25rem"
+         style="margin-top: -1.25rem"
     >
 
-        <v-banner single-line @click:icon="alert"
-            style="margin: 0 auto 1rem auto"
+        <div
+                @click="goToImagesPage()"
+                style="margin: 0 auto 1rem auto"
         >
-            <v-icon
-                    slot="icon"
-                    color="red"
-                    size="36"
-            >
-                mdi-google-photos
-            </v-icon>
-            Associate Images With Tasks
-        </v-banner>
+            <v-banner single-line>
+                <v-icon
+                        slot="icon"
+                        color="red"
+                        size="36"
+                >
+                    mdi-google-photos
+                </v-icon>
+                Associate Images With Tasks
+            </v-banner>
+        </div>
 
         <div class="col-4" v-if="jobImageExists(job, 1)">
             <a class="lightbox" @click.prevent="openImage(job, 1)">
@@ -67,7 +70,8 @@
     name: 'UploadJobImages',
     props: {
       job: Object,
-      type: String
+      type: String,
+      isCustomer: Boolean
     },
     data() {
       return {
@@ -88,6 +92,11 @@
       }
     },
     methods: {
+
+      goToImagesPage() {
+        this.$router.push({name: 'image-association', params: {isCustomer: this.isCustomer}})
+      },
+
       triggerFileInput(id) {
         console.log('trigger file', id)
 

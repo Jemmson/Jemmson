@@ -259,7 +259,9 @@
                 <div class="row">
 
                     <div class="col-12">
-                        <task-images :job="bid" type="notsub">
+                        <task-images
+                                :is-customer="isCustomer"
+                                :job="bid" type="notsub">
                         </task-images>
                     </div>
                 </div>
