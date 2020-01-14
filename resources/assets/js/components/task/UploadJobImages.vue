@@ -4,6 +4,7 @@
     >
 
         <div
+                v-if="isGeneral()"
                 @click="goToImagesPage()"
                 style="margin: 0 auto 1rem auto"
         >
@@ -78,6 +79,7 @@
         disabled: {
           uploadJobImageBtn: false
         },
+        user: Spark.state.user.usertype,
         loading: false
       }
     },
@@ -95,6 +97,18 @@
 
       goToImagesPage() {
         this.$router.push({name: 'image-association', params: {isCustomer: this.isCustomer}})
+      },
+
+      isGeneral(){
+        return this.contractorIdIsSameAsJobContractorId && this.userIsAContractor()
+      },
+
+      contractorIdIsSameAsJobContractorId(){
+        return this.job.contractor.id === Spark.state.user.id
+      },
+
+      userIsAContractor(){
+        return this.user === 'contractor'
       },
 
       triggerFileInput(id) {
