@@ -613,8 +613,6 @@ class JobController extends Controller
 
             $jobTaskMessages = TaskMessage::where('job_task_id', '=', $jobTask->id)->get();
 
-            $images = TaskImage::where('job_task_id', '=', $jobTask->id)->get();
-
             $jts = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->get();
             $ss = SubStatus::where('job_task_id', '=', $jobTask->id)->get();
             array_push($jobTasksResults, [
@@ -629,7 +627,6 @@ class JobController extends Controller
                 "declined_message" => $jobTask->declined_message,
                 "customer_message" => $jobTask->customer_message,
                 "location" => $location,
-                "images" => $images,
                 "customer" => $customerUserResults[0],
                 "task" => $taskResults[0],
                 "job_task_status" => $jts,
@@ -649,7 +646,7 @@ class JobController extends Controller
     }
 
     private
-    function customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks = [], $images)
+    function customerJobInformation($job, $location, $contractorUser, $customerUser, $images, $jobTasks = [])
     {
         $jt = JobStatus::where('job_id', '=', $job->id)->get();
 
@@ -731,7 +728,7 @@ class JobController extends Controller
             $jobTasks = $this->getJobTasks($job);
 
             return response()->json([
-                $this->customerJobInformation($job, $location, $contractorUser, $customerUser, $jobTasks, $images)
+                $this->customerJobInformation($job, $location, $contractorUser, $customerUser, $images, $jobTasks)
             ], 200);
 
         } else if ($this->isGeneralContractor($job)) {

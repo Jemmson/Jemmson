@@ -4,20 +4,28 @@
     >
 
         <div
-                v-if="isGeneral()"
-                @click="goToImagesPage()"
-                style="margin: 0 auto 1rem auto"
+            v-if="unassociatedImagesExist"
         >
-            <v-banner single-line>
-                <v-icon
-                        slot="icon"
-                        color="red"
-                        size="36"
-                >
-                    mdi-google-photos
-                </v-icon>
-                Associate Images With Tasks
-            </v-banner>
+            <div
+                    v-if="isGeneral()"
+                    @click="goToImagesPage()"
+                    style="margin: 0 auto 1rem auto"
+            >
+                <v-banner single-line>
+                    <v-icon
+                            slot="icon"
+                            color="red"
+                            size="36"
+                    >
+                        mdi-google-photos
+                    </v-icon>
+                    Associate Images With Tasks
+                </v-banner>
+            </div>
+        </div>
+
+        <div style="display:none">
+            {{ this.getUnassociatedImagesExist() }}
         </div>
 
         <div class="col-4" v-if="jobImageExists(job, 1)">
@@ -76,6 +84,7 @@
     },
     data() {
       return {
+        unassociatedImagesExist: false,
         disabled: {
           uploadJobImageBtn: false
         },
@@ -93,21 +102,35 @@
         return '#/bid/' + this.jobTask.job_id
       }
     },
+    mounted () {
+      this.getUnassociatedImagesExist()
+    },
     methods: {
 
-      goToImagesPage() {
-        this.$router.push({name: 'image-association', params: {isCustomer: this.isCustomer}})
+      async getUnassociatedImagesExist() {
+        if (this.job && this.job.id) {
+          try {
+            const data = await axios.get('/getImagesNotAssociatedToATask/' + this.job.id)
+            this.unassociatedImagesExist = data.data.length > 0
+          } catch (error) {
+            console.log(error)
+          }
+        }
       },
 
-      isGeneral(){
+      goToImagesPage() {
+        this.$router.push({name: 'image-association', params: {jobId: this.job.id}})
+      },
+
+      isGeneral() {
         return this.contractorIdIsSameAsJobContractorId && this.userIsAContractor()
       },
 
-      contractorIdIsSameAsJobContractorId(){
+      contractorIdIsSameAsJobContractorId() {
         return this.job.contractor.id === Spark.state.user.id
       },
 
-      userIsAContractor(){
+      userIsAContractor() {
         return this.user === 'contractor'
       },
 

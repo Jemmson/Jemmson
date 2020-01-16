@@ -948,7 +948,7 @@
           Bus.$emit('bidUpdated')
           this.dialog = false
         } catch (error) {
-          console.log('error')
+          console.log(error)
         }
       },
 

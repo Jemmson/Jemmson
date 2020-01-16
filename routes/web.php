@@ -63,10 +63,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
 
     Route::post('/search/task', 'TaskController@getTasks');
 
-//    Route::get('/quickbooks/getAuthUrl', 'QuickbooksController@getAuthUrl');
-//    Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
     Route::get('/quickbooks/getCompanyInfo', 'QuickbooksController@getCompanyInfo');
-
 
     Route::post('/initiate-bid', 'InitiateBidController@send')->middleware('quickbook.token');
 
@@ -79,6 +76,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/jobTask/delete/', 'TaskController@deleteJobTask');
     Route::post('/task/image', 'TaskController@uploadTaskImage');
     Route::delete('/task/image/{taskImage}', 'TaskController@deleteImage');
+    Route::get('/getAllTaskIdsForJob/{jobId}', 'TaskController@getAllTaskIdsForJob');
+    Route::get('/getImagesNotAssociatedToATask/{jobId}', 'TaskImagesController@getImagesNotAssociatedToATask');
     Route::get('/getJobTaskForGeneral/{task}/{userId}', 'TaskController@getJobTaskForGeneral');
 
     // JobController

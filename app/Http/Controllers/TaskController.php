@@ -1690,4 +1690,12 @@ class TaskController extends Controller
 
     }
 
+    public function getAllTaskIdsForJob($jobId)
+    {
+        $jobTasks = Job::where('jobs.id', '=', $jobId)->get()->first()->jobTasks()->select('job_task.id', 'task_id')->get();
+        foreach ($jobTasks as $jobTask){
+            $jobTask['name'] = $jobTask->task()->select('name')->get()->first()->name;
+        };
+        return $jobTasks;
+    }
 }

@@ -805,7 +805,7 @@
           await GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
           this.taskSubmitted = true
         } catch (error) {
-          console.log('error')
+          console.log(error)
         }
       },
       toggleStripePaymentOption() {

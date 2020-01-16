@@ -718,10 +718,12 @@
       },
       customerHasCompletedTasks() {
         let taskIsFinished = false
-        if (this.bid && this.bid.job_tasks) {
+        if ( this.bid && this.bid.job_tasks && this.bid.job_tasks.length > 0 ) {
           for (let i = 0; i < this.bid.job_tasks.length; i++) {
             let status = ''
-            if (this.bid.job_tasks[i].job_task_status && this.bid.job_tasks[i].job_task_status.length > 0) {
+            if (this.bid.job_tasks[i].job_task_status
+              && this.bid.job_tasks[i].job_task_status.length > 0
+             ) {
               status = this.bid.job_tasks[i].job_task_status[this.bid.job_tasks[i].job_task_status.length - 1].status
             } else {
               status = this.bid.job_tasks[i].job_task_statuses[this.bid.job_tasks[i].job_task_statuses.length - 1].status
@@ -873,7 +875,7 @@
           }
 
         } catch (error) {
-          console.log('error')
+          console.log(error)
         }
       },
       getLabelClass(status) {

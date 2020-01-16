@@ -329,7 +329,7 @@
           })
           this.getBid(this.job_task.job.id)
         } catch (error) {
-          console.log('error')
+          console.log(error)
         }
       },
 
