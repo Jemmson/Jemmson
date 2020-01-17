@@ -5,11 +5,11 @@
 
         <div
             v-if="unassociatedImagesExist"
+            style="margin: 0 auto 1rem auto"
         >
             <div
                     v-if="isGeneral()"
                     @click="goToImagesPage()"
-                    style="margin: 0 auto 1rem auto"
             >
                 <v-banner single-line>
                     <v-icon

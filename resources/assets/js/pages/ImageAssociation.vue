@@ -4,21 +4,36 @@
     >
 
         <div
-            v-for="image in images" :key="image.id"
+                v-for="image in images" :key="image.id"
         >
             <image-task
-                :image="image"
-                :tasks="tasks"
-                @associate="associateImageToTask(image.id, $event)"
+                    :image="image"
+                    :tasks="tasks"
+                    @clearTask="clearTask(image.id, $event)"
+                    @clearAllTasks="clearAllTasks(image.id)"
+                    @associate="associateImageToTask(image.id, $event)"
             ></image-task>
         </div>
+
+        <v-card class="margins">
+            <v-card-title>Associate Images</v-card-title>
+            <v-card-actions>
+                <v-btn
+                        :disabled="!imagesHaveBeenAssociated()"
+                        label="Submit"
+                        color="primary"
+                        @click="submitImageTasks()"
+                >Submit
+                </v-btn>
+            </v-card-actions>
+        </v-card>
 
     </div>
 </template>
 
 <script>
 
-    import ImageTask from "../components/task/ImageTask"
+  import ImageTask from '../components/task/ImageTask'
 
   export default {
     name: 'ImageAssociation',
@@ -43,20 +58,80 @@
     },
     methods: {
 
-      associateImageToTask (imageId, jobTaskId) {
-
+      clearTask(imageId, jobTaskId){
         for (let i = 0; i < this.imageTasks.length; i++) {
-          this.imageTasks.push({image_id: imageId, jobTaskId: jobTaskId})
+          if (this.imageTasks[i].image_id === imageId && this.imageTasks[i].jobTaskId === jobTaskId) {
+            this.imageTasks.splice(i, 1);
+          }
         }
-
       },
 
-      async submitImageTasks () {
-          try {
-              const data = await axios.get ('/associateImageToTask' + this.imageTasks);
-          } catch (error) {
-              console.log(error);
+      clearAllTasks(imageId){
+        while(this.clearTaskImage(imageId)){}
+      },
+
+      clearTaskImage(imageId){
+        for (let i = 0; i < this.imageTasks.length; i++) {
+          if (this.imageTasks[i].image_id === imageId) {
+            this.imageTasks.splice(i, 1);
+            return true
           }
+        }
+        return false
+      },
+
+      imagesHaveBeenAssociated(){
+        return this.imageTasks.length > 0;
+      },
+
+      associateImageToTask(imageId, jobTaskId) {
+
+        let exists = false;
+
+        for (let i = 0; i < this.imageTasks.length; i++) {
+          if(this.imageTasks[i].image_id === imageId){
+            this.imageTasks[i].jobTaskId = jobTaskId
+            exists = true;
+          }
+        }
+
+        if (!exists) {
+          this.addImageTask(imageId, jobTaskId)
+        }
+
+
+        // if (this.thereAreNoImageTasks()) {
+        //   this.addImageTask(imageId, jobTaskId)
+        // } else if (!this.duplicateExists(imageId, jobTaskId)) {
+        //   this.addImageTask(imageId, jobTaskId)
+        // }
+      },
+
+      duplicateExists(imageId, jobTaskId) {
+        for (let i = 0; i < this.imageTasks.length; i++) {
+          if (this.imageTasks[i].image_id === imageId && this.imageTasks[i].jobTaskId === jobTaskId) {
+            return true
+          }
+        }
+        return false
+      },
+
+      thereAreNoImageTasks() {
+        return this.imageTasks.length === 0
+      },
+
+      addImageTask(imageId, jobTaskId) {
+        this.imageTasks.push({image_id: imageId, jobTaskId: jobTaskId})
+      },
+
+      async submitImageTasks() {
+        try {
+          const data = await axios.post('/associateImagesToTasks', {
+            imageTasks: this.imageTasks
+          })
+        } catch (error) {
+          console.log(error)
+        }
       },
 
       async getImagesNotAssociatedToATask() {

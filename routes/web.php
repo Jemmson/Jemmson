@@ -77,8 +77,9 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/task/image', 'TaskController@uploadTaskImage');
     Route::delete('/task/image/{taskImage}', 'TaskController@deleteImage');
     Route::get('/getAllTaskIdsForJob/{jobId}', 'TaskController@getAllTaskIdsForJob');
-    Route::get('/getImagesNotAssociatedToATask/{jobId}', 'TaskImagesController@getImagesNotAssociatedToATask');
     Route::get('/getJobTaskForGeneral/{task}/{userId}', 'TaskController@getJobTaskForGeneral');
+    Route::get('/getImagesNotAssociatedToATask/{jobId}', 'TaskImagesController@getImagesNotAssociatedToATask');
+    Route::post('/associateImagesToTasks', 'TaskImagesController@associateImagesToTasks');
 
     // JobController
     Route::resource('/job', 'JobController');

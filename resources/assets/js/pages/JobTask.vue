@@ -170,7 +170,7 @@
                                             <div v-if="!jobIsApproved()">
                                                 <div class="flex justify-content-between">
                                                     <label class="">Unit Price:</label>
-                                                    <div v-if="showTaskPriceInput()" class="flex">
+                                                    <div v-if="showTaskPriceInput()" class="flex flex-row ml-2rem">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">$</span>
                                                         </div>

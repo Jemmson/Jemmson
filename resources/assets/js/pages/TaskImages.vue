@@ -1,43 +1,71 @@
 <template>
     <div class="flex flex-col">
-        <card>
-            <h2 class="self-center uppercase">Task Images</h2>
-            <label v-if="jobTask.task !== undefined" for="task-name" class="self-center mt-2">{{ jobTask.task.name
-                }}</label>
-        </card>
+        <v-card
+            class="margins"
+        >
+            <h2 class="self-center uppercase p-1rem text-center">Task Images</h2>
+            <v-card-actions>
+                <v-btn
+                        color="primary"
+                        @click.prevent="goBack()">
+                    Back
+                </v-btn>
+            </v-card-actions>
+        </v-card>
 
-        <div class="flex mb-1rem w-full justify-center">
-            <v-btn
-                    class="mb-1rem w-95"
-                    color="primary"
-                    @click.prevent="goBack()">
-                Back
-            </v-btn>
-        </div>
+        <!--<pre>{{ jobTask }}</pre>-->
 
-        <div class="flex flex-col card">
-            <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id"
-                 v-show="jobTask !== undefined && jobTask !== null">
-                <div class="image-ct">
-                    <a class="lightbox" @click.prevent="openImage(image.id)">
-                        <img :src="image.url" alt="">
-                    </a>
-                    <v-btn
-                            v-if="userCreatedImage(image.user_id)"
-                            class="w-full"
-                            color="red"
-                            :id="'image-' + image.id"
-                            @click="deleteImage(image.id, index)">
-                        <i class="fas fa-trash-alt"></i>
-                    </v-btn>
-                </div>
-                <!-- lightbox container hidden with CSS -->
-                <a class="lightbox-target" :id="'image' + image.id">
-                    <img :src="image.url" class="" :id="'image-img' + image.id">
-                    <a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>
-                </a>
-            </div>
-        </div>
+        <v-card
+                v-for="(image, index) of jobTask.images" :key="image.id"
+                class="margins"
+        >
+            <v-card-title
+                    v-if="jobTask.task !== undefined"
+                    for="task-name"
+                    class="self-center mt-2">{{ jobTask.task.name }}
+            </v-card-title>
+
+            <v-img
+                    :src="image ? image.url : null"
+                    height="200px"
+            ></v-img>
+
+            <v-card-actions>
+                <v-btn
+                        v-if="userCreatedImage(image.user_id)"
+                        class="w-full"
+                        color="red"
+                        :id="'image-' + image.id"
+                        @click="deleteImage(image.id, index)">
+                    <i class="fas fa-trash-alt"></i>
+                </v-btn>
+            </v-card-actions>
+
+        </v-card>
+        <!--        <div class="flex flex-col card">-->
+        <!--            <div class="flex-1 mb-4" v-for="(image, index) of jobTask.images" :key="image.id"-->
+        <!--                 >-->
+        <!--&lt;!&ndash;                v-show="jobTask !== undefined && jobTask !== null"&ndash;&gt;-->
+        <!--                <div class="image-ct">-->
+        <!--                    <a class="lightbox" @click.prevent="openImage(image.id)">-->
+        <!--                        <img :src="image.url" alt="">-->
+        <!--                    </a>-->
+        <!--                    <v-btn-->
+        <!--                            v-if="userCreatedImage(image.user_id)"-->
+        <!--                            class="w-full"-->
+        <!--                            color="red"-->
+        <!--                            :id="'image-' + image.id"-->
+        <!--                            @click="deleteImage(image.id, index)">-->
+        <!--                        <i class="fas fa-trash-alt"></i>-->
+        <!--                    </v-btn>-->
+        <!--                </div>-->
+        <!--                &lt;!&ndash; lightbox container hidden with CSS &ndash;&gt;-->
+        <!--                <a class="lightbox-target" :id="'image' + image.id">-->
+        <!--                    <img :src="image.url" class="" :id="'image-img' + image.id">-->
+        <!--                    <a class="lightbox-close" :id="'image-close' + image.id" @click.prevent="closeImage(image.id)"></a>-->
+        <!--                </a>-->
+        <!--            </div>-->
+        <!--        </div>-->
         <feedback></feedback>
     </div>
 </template>
@@ -69,8 +97,8 @@
     },
     computed: {},
     methods: {
-      userCreatedImage(imageUserId){
-        return this.user.id === imageUserId;
+      userCreatedImage(imageUserId) {
+        return this.user.id === imageUserId
       },
       goBack() {
         this.$router.go(-1)
