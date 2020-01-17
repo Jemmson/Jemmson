@@ -80,6 +80,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/getJobTaskForGeneral/{task}/{userId}', 'TaskController@getJobTaskForGeneral');
     Route::get('/getImagesNotAssociatedToATask/{jobId}', 'TaskImagesController@getImagesNotAssociatedToATask');
     Route::post('/associateImagesToTasks', 'TaskImagesController@associateImagesToTasks');
+    Route::get('/jobImages/{id}', 'JobController@jobImages');
 
     // JobController
     Route::resource('/job', 'JobController');

@@ -4,7 +4,6 @@
             <input type="text" class="form-control" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
         </search-bar>
 
-
         <div class="mt-4 mb-1">
 
             <card class="list-card " v-for="bid in sTasks" v-bind:key="bid.id" @click.native="bid.id">

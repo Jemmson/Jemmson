@@ -1,7 +1,11 @@
 <template>
     <div class="main flex flex-col justify-between">
         <div>
-            <footer>
+            <v-banner></v-banner>
+            <search-bar>
+                <input type="text" class="form-control" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
+            </search-bar>
+            <section>
                 <paginate ref="paginator"
                           name="sTasks"
                           :list="sTasks"
@@ -24,8 +28,7 @@
                                     class="m-center">
                     </paginate-links>
                 </div>
-            </footer>
-
+            </section>
         </div>
 
         <!-- / end tasks -->
@@ -125,6 +128,21 @@
 
         // return this.localArea.area
       },
+
+      hasStripe(){
+        return this.bid.contractor.stripe_id === null
+      },
+
+      connectWithStripe() {
+        let connectLink = 'https://connect.stripe.com/express/oauth/authorize?client_id='
+          + Spark.stripeClientId + '&state=' + this.$route.path
+          + '&stripe_user[email]=' + Spark.state.user.email
+          + '&stripe_user[country]=US'
+          + '&stripe_user[phone_number]=' + Spark.state.user.phone
+
+        window.location = connectLink
+      },
+
       showAddress(bidTask) {
         const status = bidTask.job_task.status
         return status !== 'bid_task.initiated' && status !== 'bid_task.bid_sent' && status !== 'bid_task.finished_by_sub'

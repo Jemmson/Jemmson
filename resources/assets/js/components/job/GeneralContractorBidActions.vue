@@ -122,6 +122,7 @@
           return this.bid.contractor.stripe_id === null && this.bid.contractor.contractor.hide_stripe_modal === 1
         }
       },
+
       checkReqs() {
         this.disableSubmitBid = !(!this.jobIsApproved() && this.shouldHaveAtLeastOneTask())
       },

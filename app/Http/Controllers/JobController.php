@@ -1393,4 +1393,13 @@ class JobController extends Controller
 
     }
 
+    public function jobImages($id)
+    {
+        $job = Job::find($id);
+        $jobImages = $job->images()->get();
+        return response()->json([
+            "images" => $jobImages
+        ], 200);
+    }
+
 }

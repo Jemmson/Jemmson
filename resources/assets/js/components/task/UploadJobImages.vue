@@ -58,7 +58,7 @@
         </div>
 
         <div class="col-4" v-if="showMoreImagesBtn(job)">
-            <a class="lightbox" :href="'/#/task/' + job.id + '/images'">
+            <a class="lightbox" :href="'/#/job/' + job.id + '/images'">
                 <img :src="'/img/more.png'" alt="">
             </a>
         </div>

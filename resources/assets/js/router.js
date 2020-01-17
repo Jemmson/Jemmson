@@ -24,6 +24,7 @@ import Invoice from './pages/Invoice'
 import SubInvoice from './pages/SubInvoice'
 import FurtherInfo from './pages/FurtherInfo'
 import TaskImages from './pages/TaskImages'
+import JobImages from './pages/JobImages'
 import Benefits from './pages/Benefits'
 import Pricing from './pages/Pricing'
 import Demo from './pages/Demo'
@@ -127,6 +128,10 @@ const routes = [
   {
     path: '/task/:id/images',
     component: TaskImages
+  },
+  {
+    path: '/job/:id/images',
+    component: JobImages
   },
   {
     path: '/registerQuickBooks',
