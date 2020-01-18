@@ -1,7 +1,18 @@
 <template>
     <div class="main flex flex-col justify-between">
         <div>
-            <v-banner></v-banner>
+            <v-btn
+                    color="aliceblue"
+                    elevation="2"
+                    single-line
+                    sticky
+                    @click="connectWithStripe()"
+                    class="w-full"
+                    style="background-color: cornflowerblue; font-size: 9pt;"
+                    v-show="needsStripe()"
+            >
+                Click To Securely Accept Credit Cards
+            </v-btn>
             <search-bar>
                 <input type="text" class="form-control" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
             </search-bar>
@@ -129,8 +140,14 @@
         // return this.localArea.area
       },
 
-      hasStripe(){
+      hasStripe() {
         return this.bid.contractor.stripe_id === null
+      },
+
+      needsStripe(){
+        if (Spark.state.user) {
+          return Spark.state.user.stripe_id === null
+        }
       },
 
       connectWithStripe() {
