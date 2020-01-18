@@ -129,6 +129,7 @@
           const data = await axios.post('/associateImagesToTasks', {
             imageTasks: this.imageTasks
           })
+          this.$router.push('/bid/' + this.jobId)
         } catch (error) {
           console.log(error)
         }
