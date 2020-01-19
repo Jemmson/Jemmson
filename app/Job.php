@@ -268,7 +268,7 @@ class Job extends Model
         return $this->qb_estimate_id != 'NULL';
     }
 
-    public function createEstimate($customer_id, $job_name, $contractor_id)
+    public function createEstimate($customer_id, $job_name, $contractor_id, $paymentType)
     {
 
         $jobId = $this->getJobId();

@@ -55,6 +55,32 @@
                     >
                     </v-text-field>
 
+                    <v-row class="flex-col payment-section">
+                        <h5 class="text-center">Select Payment Type For Job</h5>
+                        <v-radio-group
+                                v-model="form.paymentType"
+                                row
+                                style="margin: 1rem auto 0 auto;"
+                        >
+                            <v-radio
+                                    label="Cash"
+                                    value="cash"
+                            ></v-radio>
+                            <v-spacer></v-spacer>
+                            <v-radio
+                                    label="Credit Card"
+                                    value="creditCard"
+                            ></v-radio>
+                        </v-radio-group>
+                        <v-checkbox
+                                v-model="form.paymentTypeDefault"
+                                label="Set As Default"
+                                :value=true
+                                hide-details
+                                style="margin: 0 auto 0 auto;"
+                        ></v-checkbox>
+                    </v-row>
+
                     <v-card-actions>
                         <v-btn
                                 class="w-full"
@@ -93,6 +119,7 @@
     },
     data() {
       return {
+        radioGroup: 1,
         selected: null,
         query: '',
         valid: false,
@@ -109,6 +136,8 @@
           quickbooks_id: '',
           id: '',
           taxRate: 0,
+          paymentType: 'cash',
+          paymentTypeDefault: null
         }),
         disabled: {
           submit: false,
@@ -196,6 +225,7 @@
         this.form.quickbooks_id = result.quickbooks_id
         this.form.customerName = result.name
         this.form.id = result.id
+        this.validateMobileNumber(result.phone)
       },
 
       getCustomerNames() {
@@ -326,4 +356,11 @@
         border-bottom: solid thin black;
         padding: .5rem;
     }
+
+    .payment-section {
+        margin: .25rem .25rem 3rem .25rem;
+        border: solid thin black;
+        padding: 1rem 0 1rem 0;
+    }
+
 </style>

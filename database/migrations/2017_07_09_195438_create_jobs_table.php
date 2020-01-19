@@ -28,6 +28,7 @@ class CreateJobsTable extends Migration
             $table->string('job_name');
             $table->integer('location_id')->usigned()->nullable();
             $table->string('paid_with_cash_message')->nullable();
+            $table->string('payment_type')->default('cash');
             $table->string('qb_estimate_id')->default('NULL');
             $table->string('status')->nullable();
             $table->softDeletes();

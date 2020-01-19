@@ -209,6 +209,7 @@ class CustomerController extends Controller
                 $u = User::select(['id', 'name', 'first_name', 'last_name', 'phone', 'email'])
                     ->where('id', '=', $user['user_id'])->get()->first()
                     ->toArray();
+                $u['payment_type'] = $user['quickbooks_id'];
                 $u['quickbooks_id'] = $user['quickbooks_id'];
                 array_push($users, $u);
             }

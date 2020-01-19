@@ -25,6 +25,7 @@ class CreateContractorsTable extends Migration
             $table->boolean('hide_stripe_modal')->nullable()->default(false);
             $table->boolean('email_method_of_contact')->nullable();
             $table->boolean('sms_method_of_contact')->nullable();
+            $table->string('payment_type')->default('cash');
             $table->boolean('phone_method_of_contact')->nullable();
             $table->softDeletes();
             $table->timestamps();
