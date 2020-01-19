@@ -43,6 +43,7 @@ class Job extends Model
         'customer_id',
         'job_name',
         'location_id',
+        'payment_type',
         'state',
         'status',
         'zip',
@@ -268,7 +269,10 @@ class Job extends Model
         return $this->qb_estimate_id != 'NULL';
     }
 
-    public function createEstimate($customer_id, $job_name, $contractor_id, $paymentType)
+    public function createEstimate($customer_id,
+                                   $job_name,
+                                   $contractor_id,
+                                   $paymentType)
     {
 
         $jobId = $this->getJobId();
@@ -279,6 +283,7 @@ class Job extends Model
                 'contractor_id' => $contractor_id,
                 'customer_id' => $customer_id,
                 'job_name' => $job_name,
+                'payment_type' => $paymentType,
                 'status' => __("status.bid.initiated"),
                 'location_id' => null
             ];
@@ -288,10 +293,12 @@ class Job extends Model
                 'contractor_id' => $contractor_id,
                 'customer_id' => $customer_id,
                 'job_name' => $job_name,
+                'payment_type' => $paymentType,
                 'status' => __("status.bid.initiated"),
                 'location_id' => User::find($customer_id)->customer()->first()->location_id
             ];
         }
+
         $this->fill($attributes);
 
         try {

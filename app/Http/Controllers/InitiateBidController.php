@@ -100,14 +100,27 @@ class InitiateBidController extends Controller
         // create the job
         $job = new Job();
         $jobName = $job->jobName($request->jobName);
+
 //        $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
-        if (!$job->createEstimate($customer->id, $jobName, Auth::user()->id)) {
+        if (
+            !$job->createEstimate(
+                $customer->id, $jobName, Auth::user()->id,
+                $request->paymentType
+            )) {
             return response()->json(
                 [
                     'message' => 'Unable to create new job.',
                     'errors' => ['job_creation_failed' => 'Estimate could not be created. Please try initiating the bid again']
                 ], 422);
         }
+
+        if ($this->setPaymentTypeAsDefault($request)
+            && $this->paymentTypeForContractorIsDifferentThanDBPaymentType(
+                $request->paymentType, $contractor->payment_type)
+        ) {
+            $this->updatePaymentType($contractor, $request->paymentType);
+        }
+
         $js = new JobStatus();
         $js->setStatus($job->id, config("app.initiated"));
 
@@ -120,5 +133,28 @@ class InitiateBidController extends Controller
 
     }
 
+    private function setPaymentTypeAsDefault($request)
+    {
+        return $request->paymentTypeDefault;
+    }
+
+    private function paymentTypeForContractorIsDifferentThanDBPaymentType(
+        $requestPaymentType, $contractorPaymentType)
+    {
+        return $requestPaymentType != $contractorPaymentType;
+    }
+
+    private function updatePaymentType($contractor, $requestPaymentType)
+    {
+        $contractor->payment_type = $requestPaymentType;
+        try {
+            $contractor->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+    }
 
 }
