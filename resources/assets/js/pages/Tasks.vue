@@ -11,7 +11,7 @@
                     style="background-color: cornflowerblue; font-size: 9pt;"
                     v-show="needsStripe()"
             >
-                Click To Securely Accept Credit Cards
+                Click To Accept Credit Cards
             </v-btn>
             <search-bar>
                 <input type="text" class="form-control" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">

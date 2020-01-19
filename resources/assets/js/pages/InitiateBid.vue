@@ -68,6 +68,7 @@
                             ></v-radio>
                             <v-spacer></v-spacer>
                             <v-radio
+                                    :disabled="!hasSetupStripe()"
                                     label="Credit Card"
                                     value="creditCard"
                             ></v-radio>
@@ -79,6 +80,20 @@
                                 hide-details
                                 style="margin: 0 auto 0 auto;"
                         ></v-checkbox>
+
+                        <v-btn
+                                color="aliceblue"
+                                elevation="2"
+                                single-line
+                                sticky
+                                @click="connectWithStripe()"
+                                class="margins-1rem"
+                                style="background-color: cornflowerblue; font-size: 9pt;"
+                                v-show="!hasSetupStripe()"
+                        >
+                            Click To Accept Credit Cards
+                        </v-btn>
+
                     </v-row>
 
                     <v-card-actions>
@@ -173,6 +188,20 @@
     },
 
     methods: {
+
+      hasSetupStripe(){
+        return Spark.state.user.stripe_id !== null;
+      },
+
+      connectWithStripe() {
+        let connectLink = 'https://connect.stripe.com/express/oauth/authorize?client_id='
+          + Spark.stripeClientId + '&state=' + this.$route.path
+          + '&stripe_user[email]=' + Spark.state.user.email
+          + '&stripe_user[country]=US'
+          + '&stripe_user[phone_number]=' + Spark.state.user.phone
+
+        window.location = connectLink
+      },
 
       dataMustBeValid() {
         return !(this.allRequiredFieldsHaveAValue() && this.phoneNumberMustBeMobile())
