@@ -119,11 +119,12 @@
                     <v-card-title
                             class="uppercase"
                     >{{ jobTaskObject(item).Name }}
+                        <v-spacer></v-spacer>
+                        <v-card-subtitle
+                                class="uppercase"
+                        >{{ jobTaskObject(item).Status }}
+                        </v-card-subtitle>
                     </v-card-title>
-                    <v-card-subtitle
-                            class="uppercase"
-                    >{{ jobTaskObject(item).Status }}
-                    </v-card-subtitle>
                     <v-divider></v-divider>
                     <v-row
                             class="justify-content-around"

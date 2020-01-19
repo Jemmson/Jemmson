@@ -70,7 +70,7 @@
         </div>
         <tasks v-else>
         </tasks>
-        
+
         <delete-task-modal
                 @action="deleteTheJob($event)"
                 title="Do You Wish To Delete This Job?"

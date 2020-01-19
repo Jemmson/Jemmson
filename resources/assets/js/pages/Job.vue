@@ -13,7 +13,20 @@
         </v-card>
 
         <v-card>
-            <v-card-title>Job Status:</v-card-title>
+            <v-card-title>
+                <v-icon
+                        v-if="bid.payment_type === 'cash'"
+                >mdi-cash
+                </v-icon>
+                <v-icon
+                        v-else
+                >mdi-credit-card
+                </v-icon>
+                <div
+                        class="mr-1rem ml-half-rem"
+                >Job Status:
+                </div>
+            </v-card-title>
             <v-card-text>
                 <div v-if="isCustomer && jobStatus.status === 'in_progress'"
                      style="padding-bottom: .1rem"
@@ -23,7 +36,9 @@
                 <div v-else>
                     <v-sheet class="capitalize"
                              ref="jobStatus"
-                             color="status-bar lighten-2">{{ formatStatus(jobStatus.status) }} on {{ formatDate(dateOnly(jobStatus.created_at)) }}</v-sheet>
+                             color="status-bar lighten-2">{{ formatStatus(jobStatus.status) }} on {{
+                        formatDate(dateOnly(jobStatus.created_at)) }}
+                    </v-sheet>
                 </div>
             </v-card-text>
         </v-card>
@@ -155,8 +170,8 @@
       },
     },
     methods: {
-      setMyText(){
-        this.myText = 'hello';
+      setMyText() {
+        this.myText = 'hello'
       },
       getJobStatusValue() {
         if (this.bid && this.bid.job_statuses) {
@@ -285,7 +300,7 @@
         font-size: 20pt;
     }
 
-    .status-bar{
+    .status-bar {
         width: 100%;
         margin-top: 1rem;
         text-align: center;

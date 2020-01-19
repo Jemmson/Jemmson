@@ -69,6 +69,16 @@
                 style="width: 95%"
                 :id="job ? 'task_photo_' + job.id : ''"
                 type="file" @change="uploadTaskImage(job.id)">
+
+
+        <v-progress-linear
+                :active="loading"
+                :indeterminate="loading"
+                absolute
+                bottom
+                color="deep-purple accent-4"
+        ></v-progress-linear>
+
     </div>
 </template>
 
@@ -84,12 +94,12 @@
     },
     data() {
       return {
+        loading: false,
         unassociatedImagesExist: false,
         disabled: {
           uploadJobImageBtn: false
         },
         user: Spark.state.user.usertype,
-        loading: false
       }
     },
     computed: {
@@ -186,10 +196,8 @@
         if (this.jobExists()) {
           this.isLoading(true)
           const data = new FormData()
-
           data.append('photo', this.$refs['task_photo_' + jobId].files[0])
           data.append('jobTaskId', null)
-
           this.job.id ? data.append('jobId', this.job.id) : data.append('jobId', this.job.id)
           const disabled = await User.uploadTaskImage(data, this.disabled)
           this.isLoading(disabled)
