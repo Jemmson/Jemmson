@@ -31,7 +31,6 @@ export default {
     ...mapMutations(['setMobileResponse']),
     ...mapActions(['checkMobileNumber']),
     validateMobileNumber(phone) {
-
       if (this.initiateBidForSubForm) {
         if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
           this.checkMobileNumber(phone)
@@ -52,8 +51,7 @@ export default {
             this.checkMobileNumber(phone)
             this.checkValidData()
           }
-        }
-        else if (this.form.phone_number) {
+        } else if (this.form.phone_number) {
           if (this.unformatNumber(this.form.phone_number) === 10) {
             this.checkMobileNumber(phone)
             this.checkValidData()
@@ -99,6 +97,7 @@ export default {
         return this.unformatNumber(this.form.phone)
       }
     },
+
     checkValidData() {
 
       let phoneLength = this.getPhoneLength()
@@ -120,6 +119,8 @@ export default {
             this.phoneFormatError = false
           } else {
             this.phoneFormatError = true
+            this.phoneError = true
+            this.phoneErrorMessages = []
           }
         }
       }
@@ -127,7 +128,7 @@ export default {
     checkThatNumberIsMobile() {
       if (
         (this.getMobileValidResponse[1] === 'mobile' ||
-        this.getMobileValidResponse[2] === 'mobile')
+          this.getMobileValidResponse[2] === 'mobile')
         || (this.getMobileValidResponse[1] === 'virtual' ||
         this.getMobileValidResponse[2] === 'virtual')
       ) {

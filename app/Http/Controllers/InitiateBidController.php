@@ -94,6 +94,9 @@ class InitiateBidController extends Controller
 
         }
 
+        $cc = new ContractorCustomer();
+        $cc->associateCustomer(Auth::user()->getAuthIdentifier(), $customer->id);
+
         // create the job
         $job = new Job();
         $jobName = $job->jobName($request->jobName);

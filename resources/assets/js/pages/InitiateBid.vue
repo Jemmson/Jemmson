@@ -2,118 +2,80 @@
     <div class="container" v-if="isContractor()">
         <icon-header icon="jobs" mainHeader="Add New Job" subHeader="Initiate a new job with a customer.">
         </icon-header>
-        <card>
-            <div class="form-group">
-                <div class="flex flex-col" v-if="results.length">
-                    <v-btn
-                            class="w-full"
-                            color="primary"
-                            v-for="result in results" v-bind:key="result.id"
-                            :name="result.phone"
-                            @click.prevent="fillFields(result)">
-                        {{ showCustomerName(result) }}
-                    </v-btn>
-                </div>
-            </div>
+        <v-card>
+            <v-form v-model="valid">
+                <v-container>
 
-            <div class="form-group">
-                <label for="firstName">First Name *</label>
+                    <v-combobox
+                            v-model="selected"
+                            label="Customer Name"
+                            :search-input.sync="search"
+                            :items="comboResults"
+                            :value="form.firstName"
+                    >
+                    </v-combobox>
 
-                <input type="text"
-                       name="firstName"
-                       ref="firstName"
-                       id="firstName"
-                       class="form-control"
-                       v-on:keyup="autoComplete"
-                       required
-                       v-model="form.firstName"
-                >
-            </div>
+                    <v-text-field
+                            v-model="form.firstName"
+                            required
+                            :rules="nameRules()"
+                            :counter="20"
+                            label="First Name *"
+                    >
+                    </v-text-field>
 
+                    <v-text-field
+                            v-model="form.lastName"
+                            required
+                            :rules="nameRules()"
+                            :counter="20"
+                            label="Last Name *"
+                    >
+                    </v-text-field>
 
-            <div class="form-group">
-                <label for="lastName">Last Name *</label>
+                    <v-text-field
+                            v-model="form.phone"
+                            required
+                            v-mask="phoneMask"
+                            :rules="phoneRules()"
+                            :counter="14"
+                            label="Mobile Phone Number *"
+                            @change="validateMobileNumber($event)"
+                            :error="phoneError()"
+                            :error-messages="phoneErrorMessages()"
+                            :loading="loading"
+                            :disabled="loading"
+                            :messages="phoneMessages()"
+                    >
+                    </v-text-field>
 
-                <input type="text"
-                       name="lastName"
-                       ref="lastName"
-                       id="lastName"
-                       class="form-control"
-                       v-on:keyup="autoComplete"
-                       required
-                       v-model="form.lastName"
-                >
-            </div>
+                    <v-text-field
+                            v-model="form.jobName"
+                            label="Job Name"
+                    >
+                    </v-text-field>
 
+                    <v-card-actions>
+                        <v-btn
+                                class="w-full"
+                                color="primary"
+                                name="submit" id="submit" dusk="submitBid"
+                                @click.prevent="submit"
+                                :disabled="dataMustBeValid()">
+                              <span v-if="disabled.submit">
+                                <i class="fa fa-btn fa-spinner fa-spin"></i>
+                              </span>
+                            Submit
+                        </v-btn>
+                    </v-card-actions>
 
-            <!-- Phone Number -->
-            <div class="form-group" :class="{'has-error': form.errors.has('phone')}">
-                <div class="flex justify-between">
-                    <label for="phone">Mobile Phone *</label>
-                    <div v-show="phoneFormatError" class="formatErrorLabel">The phone number must be 10 numbers</div>
-                </div>
-                <input class="form-control"
-                       :class="{'formatError': phoneFormatError}"
-                       id="phone"
-                       @keyup="$event.target.value > 9 ? filterPhone : false"
-                       maxlength="10"
-                       data-dependency="jobName"
-                       :disabled="loading"
-                       name="phone"
-                       dusk="phone"
-                       type="tel"
-                       @blur="validateMobileNumber($event.target.value)"
-                       v-model="form.phone">
-
-                <div v-if="getMobileValidResponse.length > 0">
-                    <div v-if="getMobileValidResponse[1] === 'mobile'
-                    || getMobileValidResponse[1] === 'virtual'" class="mt-2">
-                        <div style="color: green">{{ getMobileValidResponse[1] }}</div>
-                    </div>
-                    <div class="mt-2" v-else style="color: red">{{ getMobileValidResponse[1] }}</div>
-                </div>
-
-                <v-progress-linear
-                        :active="loading"
-                        :indeterminate="loading"
-                        absolute
-                        bottom
-                        color="deep-purple accent-4"
-                ></v-progress-linear>
-
-                <span class="help-block" v-show="form.errors.has('phone')">
-                  {{ form.errors.get('phone') }}
-                </span>
-            </div>
-
-
-            <div class="form-group" :class="{'has-error': form.errors.has('jobName')}">
-                <label for="jobName">Job Name</label>
-                <input class="form-control" id="jobName" name="jobName" dusk="jobName" type="text"
-                       v-model="form.jobName">
-                <span class="help-block" v-show="form.errors.has('jobName')">
-          {{ form.errors.get('jobName') }}
-        </span>
-            </div>
-
-            <div class="form-group pt-4 mb-0">
-                <v-btn
-                        class="w-full"
-                        color="primary"
-                        name="submit" id="submit" dusk="submitBid"
-                        @click.prevent="submit"
-                        :disabled="checkValidData()">
-          <span v-if="disabled.submit">
-            <i class="fa fa-btn fa-spinner fa-spin"></i>
-          </span>
-                    Submit
-                </v-btn>
-            </div>
-        </card>
-        <br>
-        <feedback
-                page="initiateBid"
-        ></feedback>
+                    <br>
+                    <feedback
+                            page="initiateBid"
+                    ></feedback>
+                </v-container>
+            </v-form>
+        </v-card>
     </div>
 </template>
 
@@ -131,8 +93,12 @@
     },
     data() {
       return {
+        selected: null,
         query: '',
+        valid: false,
         results: [],
+        search: null,
+        phoneMask: '(###)-###-####',
         form: new SparkForm({
           customerName: '',
           email: '',
@@ -141,21 +107,109 @@
           jobName: '',
           phone: '',
           quickbooks_id: '',
+          id: '',
+          taxRate: 0,
         }),
         disabled: {
           submit: false,
           validData: true,
           searchingMobileNumber: true
         },
-        numberType: ''
+        numberType: '',
+        firstName: '',
+        comboResults: [{
+          text: '',
+          value: ''
+        }]
       }
     },
-    mixins: [ Phone ],
+    mixins: [Phone],
     created() {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      document.body.scrollTop = 0 // For Safari
+      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
     },
+
+    watch: {
+      search(val) {
+        if (val.length > 2) {
+          this.autoComplete()
+        }
+      },
+      selected(val) {
+        if (val !== null) {
+          const filteredComboResult = this.getComboResult(val)
+          this.setFormData(filteredComboResult)
+        }
+      }
+    },
+
     methods: {
+
+      dataMustBeValid() {
+        return !(this.allRequiredFieldsHaveAValue() && this.phoneNumberMustBeMobile())
+      },
+
+      allRequiredFieldsHaveAValue() {
+        return this.form.firstName !== ''
+          && this.form.lastName !== ''
+          && this.form.phone !== ''
+      },
+
+      phoneNumberMustBeMobile() {
+        return !this.phoneError()
+      },
+
+      phoneError() {
+
+        if (this.form.phone.length > 13) {
+          return !(this.getMobileValidResponse[1] === 'mobile'
+            || this.getMobileValidResponse[1] === 'virtual')
+        }
+      },
+
+      phoneErrorMessages() {
+        if (this.phoneError() && this.getMobileValidResponse[1]) {
+          return this.getMobileValidResponse[1]
+        }
+      },
+
+      phoneMessages() {
+        if (!this.phoneError()) {
+          return this.getMobileValidResponse[1]
+        }
+      },
+
+      getComboResult(selected) {
+        for (let i = 0; i < this.results.length; i++) {
+          if (selected.value === this.results[i].id) {
+            return this.results[i]
+          }
+        }
+      },
+
+      setFormData(result) {
+        this.form.firstName = result.first_name
+        this.form.lastName = result.last_name
+        this.form.phone = result.phone
+        this.form.email = result.email
+        this.form.taxRate = result.tax_rate
+        this.form.quickbooks_id = result.quickbooks_id
+        this.form.customerName = result.name
+        this.form.id = result.id
+      },
+
+      getCustomerNames() {
+        return [{}]
+      },
+
+      nameRules() {
+        return []
+      },
+
+      phoneRules() {
+        return []
+      },
+
       submit() {
         console.log('submit')
         GeneralContractor.initiateBid(this.form, this.disabled)
@@ -165,46 +219,61 @@
         console.log('Im clicked')
       },
 
-      isContractor(){
+      isContractor() {
         if (Spark.state.user.usertype === 'contractor') {
           return true
         }
         this.$router.push('/home')
       },
+
       createName() {
-        if (this.form.firstName === "" && this.form.lastName !== "") {
-          this.form.customerName = this.form.lastName;
-        } else if (this.form.firstName !== "" && this.form.lastName === "") {
-          this.form.customerName = this.form.firstName;
-        } else if (this.form.firstName === "" && this.form.lastName === "") {
-          this.form.customerName = "";
+        if (this.form.firstName === '' && this.form.lastName !== '') {
+          this.form.customerName = this.form.lastName
+        } else if (this.form.firstName !== '' && this.form.lastName === '') {
+          this.form.customerName = this.form.firstName
+        } else if (this.form.firstName === '' && this.form.lastName === '') {
+          this.form.customerName = ''
         } else {
-          this.form.customerName = this.form.firstName + " " + this.form.lastName;
+          this.form.customerName = this.form.firstName + ' ' + this.form.lastName
         }
       },
-      autoComplete() {
-        // this.results = []
+
+      async autoComplete() {
         this.createName()
-        if (this.form.customerName.length > 2) {
-          axios.get('/customer/search', {
+        try {
+          const data = await axios.get('/customer/search', {
             params: {
               query: this.form.customerName
             }
           })
-            .then(response => {
-              console.log(response.data)
-              console.log(JSON.stringify(response.data))
-              this.results = response.data
-            })
+          this.results = data.data
+          this.comboResults = this.transformDataForComboBox(data.data)
+        } catch (error) {
+          console.log(error)
         }
       },
+
+      transformDataForComboBox(data) {
+        let customers = []
+        for (let i = 0; i < data.length; i++) {
+          customers.push(
+            {
+              text: data[i].name,
+              value: data[i].id
+            }
+          )
+        }
+        return customers
+      },
+
       showCustomerName(result) {
         if (result.given_name !== undefined) {
           return result.fully_qualified_name
         } else {
-          return result.first_name + " " + result.last_name
+          return result.first_name + ' ' + result.last_name
         }
       },
+
       fillFields(result) {
         if (result.given_name !== undefined) {
           this.form.email = result.primary_email_addr

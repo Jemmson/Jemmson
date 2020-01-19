@@ -16,8 +16,7 @@ class ContractorCustomer extends Model
 
     public function checkIfCustomerCurrentlyExistsForContractor($contractorId, $customerId)
     {
-        return empty(ContractorCustomer::select()
-            ->where('contractor_user_id', '=', $contractorId)
+        return empty(ContractorCustomer::where('contractor_user_id', '=', $contractorId)
             ->where('customer_user_id', '=', $customerId)->get()->first());
     }
 
@@ -27,11 +26,15 @@ class ContractorCustomer extends Model
             ->where('customer_user_id', '=', $customerId)->get());
     }
 
-    public function associateCustomer($contractorId, $customerId)
+    public function associateCustomer($contractorId, $customerId, $quickbooksId = null)
     {
         if ($this->checkIfCustomerCurrentlyExistsForContractor($contractorId, $customerId)) {
             $this->contractor_user_id = $contractorId;
             $this->customer_user_id = $customerId;
+
+            if (!\is_null($quickbooksId)) {
+                $this->quickbooks_id = $quickbooksId;
+            }
 
             try {
                 $this->save();
