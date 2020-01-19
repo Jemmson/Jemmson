@@ -8,7 +8,6 @@
             <div class="modal-content">
                 <div class="modal-header">
 
-
                     <div class="flex flex-column">
                         <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
                             taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
@@ -19,98 +18,70 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form role="form">
-                        <div class="form-group">
-                            <label for="contractorName">Company Name *</label>
-                            <span class="validationError" v-show="initiateBidForSubForm.errors.has('name')" ref="name">
-                                Please Enter A Name
-                            </span>
-                            <input type="text" class="form-control" id="contractorName" name="contractorName"
-                                   autocomplete="off"
-                                   v-model="initiateBidForSubForm.companyName" placeholder="Name"
-                                   v-bind:class="{ 'text-danger': initiateBidForSubForm.errors.has('name')}" autofocus
-                                   required
-                                   v-on:keyup="autoComplete">
-                            <div class="panel-footer" v-if="aResults.length > 0">
-                                <div class="flex flex-col" ref="buttons">
+                    <v-card>
+                        <v-form v-model="valid">
+                            <v-container>
+                                <v-combobox
+                                        v-model="selected"
+                                        label="Company Name *"
+                                        :search-input.sync="search"
+                                        :items="comboResults"
+                                        :value="initiateBidForSubForm.companyName"
+                                >
+                                </v-combobox>
+
+                                <v-text-field
+                                        v-model="initiateBidForSubForm.firstName"
+                                        required
+                                        :rules="nameRules()"
+                                        :counter="20"
+                                        label="First Name *"
+                                >
+                                </v-text-field>
+
+                                <v-text-field
+                                        v-model="initiateBidForSubForm.lastName"
+                                        required
+                                        :rules="nameRules()"
+                                        :counter="20"
+                                        label="First Name *"
+                                >
+                                </v-text-field>
+
+                                <v-text-field
+                                        v-model="initiateBidForSubForm.phone"
+                                        required
+                                        v-mask="phoneMask"
+                                        :rules="phoneRules()"
+                                        :counter="14"
+                                        label="Mobile Phone Number *"
+                                        @change="validateMobileNumber($event)"
+                                        :error="phoneError()"
+                                        :error-messages="phoneErrorMessages()"
+                                        :loading="loading"
+                                        :disabled="loading"
+                                        :messages="phoneMessages()"
+                                >
+                                </v-text-field>
+
+                                <v-card-actions>
                                     <v-btn
-                                            class="w-full m-15"
+                                            class="w-full"
                                             color="primary"
-                                            v-for="(result, index) in aResults"
-                                            v-bind:key="result.id"
-                                            :name="result.phone" @click.prevent="fillFields(result)">
-                                        <!--                                    <button>-->
-                                        <span :id="'result' + index">
-                                          {{ result.name }} - {{ result.contractor.company_name }}
-                                        </span>
+                                            @click="sendSubInviteToBidOnTask" type="submit"
+                                            :disabled="enableSubmit()" ref="submit">
+                                      <span v-if="disabled.invite">
+                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
+                                      </span>
+                                        Submit
                                     </v-btn>
-                                </div>
-                            </div>
+                                </v-card-actions>
 
-                            <div class="flex flex-col">
-                                <div class="flex-1">
-                                    <label for="firstName">First Name</label>
-                                    <input type="text" class="form-control" id="firstName" name="contractorName"
-                                           v-model="initiateBidForSubForm.firstName">
-                                </div>
-                                <div class="flex-1">
-                                    <label for="lastName">Last Name</label>
-                                    <input type="text" class="form-control" id="lastName" name="contractorName"
-                                           v-model="initiateBidForSubForm.lastName">
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="form-group" :class="{'has-error': initiateBidForSubForm.errors.has('phone')}">
-                            <label for="phone">Mobile Phone *</label>
-                            <input type="tel"
-                                   placeholder="Phone Number"
-                                   class="form-control"
-                                   id="phone"
-                                   name="phone"
-                                   maxlength="10"
-                                   :disabled="loading"
-                                   required v-model="initiateBidForSubForm.phone"
-                                   @blur="validateMobileNumber($event.target.value)"
-                                   @keyup="filterPhone"
-                            >
-                            <span class="help-block" v-show="initiateBidForSubForm.errors.has('phone')">
-                                {{ initiateBidForSubForm.errors.get('phone') }}
-                            </span>
-                            <div v-if="getMobileValidResponse.length > 0">
-                                <div v-if="getMobileValidResponse[1] === 'mobile'
-                                    || getMobileValidResponse[1] === 'virtual'"
-                                        class="mt-2">
-                                    <div style="color: green">
-                                        {{ getMobileValidResponse[1] }}
-                                    </div>
-                                </div>
-                                <div class="mt-2" v-else style="color: red">
-                                    {{ getMobileValidResponse[1] }}
-                                </div>
-                            </div>
-                            <v-progress-linear
-                                    :active="loading"
-                                    :indeterminate="loading"
-                                    absolute
-                                    bottom
-                                    color="deep-purple accent-4"
-                            ></v-progress-linear>
-                        </div>
-                    </form>
-                    <!-- /end col-md6ss -->
+                            </v-container>
+                        </v-form>
+                    </v-card>
                 </div>
                 <div class="modal-footer">
-                    <v-btn
-                            class="w-full"
-                            color="primary"
-                            @click="sendSubInviteToBidOnTask" type="submit"
-                            :disabled="enableSubmit()" ref="submit">
-                          <span v-if="disabled.invite">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                          </span>
-                        Submit
-                    </v-btn>
                 </div>
             </div>
         </div>
@@ -119,7 +90,7 @@
 
 <script>
 
-  import {mapMutations, mapActions} from 'vuex'
+  import { mapMutations, mapActions } from 'vuex'
   import Phone from '../../components/mixins/Phone'
 
   export default {
@@ -133,6 +104,12 @@
     },
     data() {
       return {
+        comboResults: [{
+          text: '',
+          value: ''
+        }],
+        valid: true,
+        selected: null,
         initiateBidForSubForm: new SparkForm({
           task_id: 0,
           email: '',
@@ -154,6 +131,8 @@
         companyName: '',
         user: '',
         subInvited: false,
+        phoneMask: '(###)-###-####',
+        search: null,
         results: [],
         disabled: {
           accept: false,
@@ -161,10 +140,66 @@
         }
       }
     },
-    mixins: [ Phone ],
+    mixins: [Phone],
+
+    watch: {
+      search(subVal) {
+        if (subVal.length > 2) {
+          this.autoComplete()
+        }
+      },
+      selected(val) {
+        if (val !== null) {
+          const filteredComboResult = this.getComboResult(val)
+          this.fillFields(filteredComboResult)
+        }
+      }
+    },
+
     methods: {
       ...mapMutations(['setMobileResponse']),
       ...mapActions(['checkMobileNumber']),
+
+      nameRules() {
+        return []
+      },
+
+      phoneRules() {
+        return []
+      },
+
+      phoneNumberMustBeMobile() {
+        return !this.phoneError()
+      },
+
+      phoneError() {
+
+        if (this.initiateBidForSubForm.phone.length > 13) {
+          return !(this.getMobileValidResponse[1] === 'mobile'
+            || this.getMobileValidResponse[1] === 'virtual')
+        }
+      },
+
+      phoneErrorMessages() {
+        if (this.phoneError() && this.getMobileValidResponse[1]) {
+          return this.getMobileValidResponse[1]
+        }
+      },
+
+      phoneMessages() {
+        if (!this.phoneError()) {
+          return this.getMobileValidResponse[1]
+        }
+      },
+
+      getComboResult(selected) {
+        for (let i = 0; i < this.results.length; i++) {
+          if (selected.value === this.results[i].id) {
+            return this.results[i]
+          }
+        }
+      },
+
       async checkForDuplicateEmail(email) {
         this.duplicateError = false
         if (this.emailIsCorrectlyFormatted(email)) {
@@ -174,8 +209,8 @@
               this.duplicateError = true
             }
           } catch (error) {
-          console.log(error)
-        }
+            console.log(error)
+          }
         }
       },
 
@@ -221,7 +256,7 @@
       async sendSubInviteToBidOnTask() {
         await GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
       },
-      clearAndCloseForm(){
+      clearAndCloseForm() {
         this.clearFields()
         this.companyName = ''
         $('#sub-invite-modal_' + this.id).modal('hide')
@@ -241,6 +276,7 @@
         this.companyName = ''
 
       },
+
       fillFields(result) {
 
         this.clearFields()
@@ -273,6 +309,7 @@
         this.validateMobileNumber(this.initiateBidForSubForm.phone)
 
       },
+
       paymentMethod(paymentType) {
         if (paymentType === 'cash') {
           this.initiateBidForSubForm.paymentType = 'cash'
@@ -284,23 +321,48 @@
           this.paymentTypeStripe = true
         }
       },
-      autoComplete() {
+
+      async autoComplete() {
         this.results = []
-        let query = this.initiateBidForSubForm.companyName
-        // let query = this.initiateBidForSubForm.name;
-        // let query = this.initiateBidForSubForm.name;
-        console.log('checking for names')
-        if (query.length > 2) {
-          axios.get('/search/' + query).then(function(response) {
-            console.log('autocomplete', response.data)
-            this.results = this.returnContractorsNotAlreadyAssignedToTask(response.data)
-          }.bind(this))
+        try {
+          const data = await axios.get('/search/' + this.search)
+          console.log('data', JSON.stringify(data.data))
+          this.results = this.returnContractorsNotAlreadyAssignedToTask(data.data)
+          this.comboResults = this.transformDataForComboBox(this.results)
+        } catch (error) {
+          console.log(error)
         }
       },
+
+      transformDataForComboBox(data) {
+        let customers = []
+        for (let i = 0; i < data.length; i++) {
+          customers.push(
+            {
+              text: data[i].contractor.company_name,
+              value: data[i].id
+            }
+          )
+        }
+        return customers
+      },
+
+      // autoComplete() {
+      //   this.results = []
+      //   let query = this.initiateBidForSubForm.companyName
+      //   console.log('checking for names')
+      //   if (query.length > 2) {
+      //     axios.get('/search/' + query).then(function(response) {
+      //       console.log('autocomplete', response.data)
+      //       this.results = this.returnContractorsNotAlreadyAssignedToTask(response.data)
+      //     }.bind(this))
+      //   }
+      // },
+
       enableSubmit() {
         return
         (this.getMobileValidResponse[1] !== 'mobile'
-        && this.getMobileValidResponse[1] !== 'virtual')
+          && this.getMobileValidResponse[1] !== 'virtual')
         || this.duplicateError
       },
     },
@@ -345,7 +407,7 @@
       this.user = Spark.state.user
       Bus.$on('clearAndCloseForm', () => {
         this.clearAndCloseForm()
-      });
+      })
     }
   }
 </script>
