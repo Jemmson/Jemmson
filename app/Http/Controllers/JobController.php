@@ -114,7 +114,9 @@ class JobController extends Controller
     public function getJobs()
     {
 
-        $jobs = Job::where('contractor_id', '=', Auth::user()->getAuthIdentifier())->where('deleted_at', '=', null)->get();
+        $jobs = Job::where(
+            'contractor_id', '=', Auth::user()->getAuthIdentifier())->where('deleted_at', '=', null)
+            ->get();
 
         foreach ($jobs as $job) {
             $job['status'] = $job->jobStatuses()->get();
@@ -1069,6 +1071,7 @@ class JobController extends Controller
                 ->select([
                     'status',
                     'job_name',
+                    'payment_type',
                     'id'
                 ])->get();
 

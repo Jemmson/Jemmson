@@ -7,76 +7,70 @@
                 <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
             </search-bar>
 
-            <!-- <paginate name="sBids" :list="sBids" :per="6" tag="div" class="paginated mt-4" v-show="sBids.length > 0"> -->
 
-            <div class="mt-4 mb-1">
+            <v-card
+                    v-for="bid in sBids" v-bind:key="bid.id"
+                    class="margins-quarter-rem"
+            >
+                <v-card-title class="uppercase pb-0">
+                    <v-icon
+                            v-if="bid.payment_type === 'cash'"
+                    >mdi-cash
+                    </v-icon>
+                    <v-icon
+                            v-else
+                    >mdi-credit-card
+                    </v-icon>
+                    <div class="mr-1rem ml-half-rem">{{ jobName(bid.job_name) }}</div>
+                    <v-spacer></v-spacer>
+                    <v-card-subtitle class="uppercase">{{ getJobStatus(bid) }}</v-card-subtitle>
+                </v-card-title>
 
-                <card class="list-card"
-                      v-for="bid in sBids" v-bind:key="bid.id"
-                      classes="pt-half-rem pb-half-rem">
-
-                    <div class="job">
-                        <section ref="job" class="row">
-                            <header ref="job_name" class="col-12 page-header-title text-center">
-                                {{ jobName(bid.job_name) }}
-                            </header>
-                            <div class="flex flex-col w-full ">
-                                <div class="flex align-content-baseline status-height justify-items-center">
-                                    <!--                                    <span class="dot ml-half-rem" :class="'bg-' + getLabelClass(bid)"></span>-->
-                                    <div class="fs-1rem ml-half-rem text-center w-full capitalize" :class="getLabelClass(bid)">
-                                        {{ getJobStatus(bid) }}
-                                    </div>
-                                </div>
-
-                                <div v-if="isContractor()">
+                <v-card-text>
+                    <v-card-subtitle v-if="isContractor()"
+                                     class="p-0"
+                    >
                                      <span ref="total_number_of_subs"
                                            class="float-right list-card-info">
                                             {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
                                         <i class="fas fa-users"></i>
                                      </span>
 
-                                    <span class="float-right mr-2 list-card-info"
-                                          ref="show_number_of_job_tasks">
+                        <span class="float-right mr-2 list-card-info"
+                              ref="show_number_of_job_tasks">
                                             {{ bid.job_tasks.length }} Tasks
                                         <i class="far fa-check-square"></i>
                                     </span>
-                                </div>
-                            </div>
-                        </section>
-                        <div class="flex mt-1rem">
+                    </v-card-subtitle>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-btn
+                            class="w-40"
+                            text
+                            color="red"
+                            @click="showDeleteJobModal(bid)"
+                    >
+                        DELETE JOB
+                    </v-btn>
 
-                            <v-btn
-                                    class="w-40"
-                                    color="red"
-                                    @click="showDeleteJobModal(bid)"
-                            >
-                                CANCEL JOB
-                            </v-btn>
+                    <v-spacer></v-spacer>
 
-                            <v-spacer></v-spacer>
+                    <v-btn
+                            @click="goToJob(bid.id)"
+                            text
+                            color="primary"
+                            class="w-40"
+                    >VIEW JOB
+                    </v-btn>
 
-                            <v-btn
-                                    @click="goToJob(bid.id)"
-                                    color="primary"
-                                    class="w-40"
-                            >VIEW JOB</v-btn>
+                </v-card-actions>
 
-                        </div>
-                    </div>
-                </card>
-            </div>
-            <!-- </paginate> -->
-
-            <!-- <div class="card mb-4 mt-3">
-            <div class="card-body d-flex justify-content-center">
-              <paginate-links for="sBids" :async="true" :limit="2" :show-step-links="true">
-              </paginate-links>
-            </div>
-            </div> -->
+            </v-card>
         </div>
         <tasks v-else>
         </tasks>
-
+        
         <delete-task-modal
                 @action="deleteTheJob($event)"
                 title="Do You Wish To Delete This Job?"
@@ -145,8 +139,8 @@
       ...mapMutations([
         'toggleBidsContractor'
       ]),
-      getJobStatus(bid){
-        const status = this.formatStatus(this.getJobStatus_latest(bid));
+      getJobStatus(bid) {
+        const status = this.formatStatus(this.getJobStatus_latest(bid))
 
         if (status === 'sent' && this.isCustomer()) {
           return 'Job has been submitted. Please approve the bid.'
@@ -215,7 +209,7 @@
         }
         return false
       },
-      isCustomer(){
+      isCustomer() {
         return this.spark.state.user.usertype === 'customer'
       },
       status(bid) {
@@ -336,4 +330,9 @@
     button {
         margin-bottom: 1rem;
     }
+
+    .row-sizing {
+        padding: 0;
+    }
+
 </style>
