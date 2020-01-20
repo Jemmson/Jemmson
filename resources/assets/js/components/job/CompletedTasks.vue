@@ -67,18 +67,19 @@
 
         <div v-if="isCustomer" class="text-right">
             <v-btn
+                    v-if="cashJobOrNotSetupWithStripe()"
                     class="w-full"
                     color="primary"
                     @click.prevent="paidCash = true" :disabled="disabled.payCash">
                         <span v-if="disabled.payCash">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
                         </span>
-                Paid With Cash
+                Pay With Cash
             </v-btn>
             <v-btn
                     class="w-full"
                     color="primary"
-                    v-if="contractorIsSetupWithStripe()" @click.prevent="payAllPayableTasks()"
+                    v-if="creditCardJobAndContractorHasStripe()" @click.prevent="payAllPayableTasks()"
                     :disabled="disabled.payAll">
                         <span v-if="disabled.payAll">
                             <i class="fa fa-btn fa-spinner fa-spin"></i>
@@ -209,6 +210,35 @@
       }
     },
     methods: {
+
+      cashJobOrNotSetupWithStripe() {
+        return this.cashJob() || this.needsStripe()
+      },
+
+      creditCardJobAndContractorHasStripe(){
+        return this.creditCardJob() && this.hasStripe()
+      },
+
+      needsStripe() {
+        if (this.bid) {
+          return this.bid.contractor.contractor.stripe_id === false
+        }
+      },
+
+      hasStripe(){
+        if (this.bid) {
+          return this.bid.contractor.contractor.stripe_id !== false
+        }
+      },
+
+      creditCardJob(){
+        return this.bid.payment_type === 'creditCard'
+      },
+
+      cashJob() {
+        return this.bid.payment_type === 'cash'
+      },
+
       contractorIsSetupWithStripe() {
         return this.bid.contractor.stripe_id
       },

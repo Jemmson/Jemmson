@@ -177,7 +177,7 @@
                                 class="btn-size btn-weight"
                                 :loading="disabled.finished"
                                 text
-                        >Mark When Finished
+                        >Mark Finished
                         </v-btn>
                     </v-card-actions>
 
