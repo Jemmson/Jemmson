@@ -644,6 +644,7 @@
             <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
                               :job-task-task="jobTask ? jobTask.task : null"
                               :job-task-name="jobTask ? jobTask.task.name : null"
+                              :bid-payment-type="bid.payment_type"
                               :id="jobTask ? jobTask.id : null">
             </sub-invite-modal>
 

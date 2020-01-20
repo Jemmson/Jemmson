@@ -271,6 +271,7 @@
                 :job-task="jobTask"
                 :job-task-task="jobTask.task"
                 :job-task-name="jobTask.task.name"
+                :bid-payment-type="bid.payment_type"
                 :id="jobTask.id"
         >
         </sub-invite-modal>

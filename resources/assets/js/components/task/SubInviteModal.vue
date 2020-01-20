@@ -44,7 +44,7 @@
                                         required
                                         :rules="nameRules()"
                                         :counter="20"
-                                        label="First Name *"
+                                        label="Last Name *"
                                 >
                                 </v-text-field>
 
@@ -96,6 +96,7 @@
   export default {
     name: 'SubInviteModal',
     props: {
+      bidPaymentType: String,
       jobTask: Object,
       jobTaskTask: Object,
       jobTaskName: String,
@@ -122,7 +123,7 @@
           familyName: '',
           quickbooksId: '',
           companyName: '',
-          paymentType: 'stripe'
+          paymentType: ''
         }),
         paymentTypeCash: false,
         paymentTypeStripe: true,
@@ -279,34 +280,37 @@
 
       fillFields(result) {
 
-        this.clearFields()
+        if (result) {
+          this.clearFields()
 
-        this.initiateBidForSubForm.id = result.id
-        this.initiateBidForSubForm.email = result.email
-        this.initiateBidForSubForm.phone = result.phone
-        this.initiateBidForSubForm.name = result.name
-        if (result.first_name !== null && result.last_name !== null) {
+          this.initiateBidForSubForm.id = result.id
+          this.initiateBidForSubForm.email = result.email
+          this.initiateBidForSubForm.phone = result.phone
+          this.initiateBidForSubForm.name = result.name
+          if (result.first_name !== null && result.last_name !== null) {
 
-          if (result.given_name) {
-            this.initiateBidForSubForm.firstName = result.given_name
-            this.initiateBidForSubForm.lastName = result.family_name
-            this.initiateBidForSubForm.givenName = result.given_name
-            this.initiateBidForSubForm.familyName = result.family_name
-          } else if (result.first_name) {
-            this.initiateBidForSubForm.firstName = result.first_name
-            this.initiateBidForSubForm.lastName = result.last_name
-            this.initiateBidForSubForm.givenName = result.first_name
-            this.initiateBidForSubForm.familyName = result.last_name
+            if (result.given_name) {
+              this.initiateBidForSubForm.firstName = result.given_name
+              this.initiateBidForSubForm.lastName = result.family_name
+              this.initiateBidForSubForm.givenName = result.given_name
+              this.initiateBidForSubForm.familyName = result.family_name
+            } else if (result.first_name) {
+              this.initiateBidForSubForm.firstName = result.first_name
+              this.initiateBidForSubForm.lastName = result.last_name
+              this.initiateBidForSubForm.givenName = result.first_name
+              this.initiateBidForSubForm.familyName = result.last_name
+            }
+
           }
-
+          if (this.initiateBidForSubForm.quickbooksId !== null) {
+            this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
+          }
+          this.initiateBidForSubForm.companyName = result.contractor.company_name
+          this.companyName = result.contractor.company_name
+          this.initiateBidForSubForm.paymentType = this.bidPaymentType
+          this.results = ''
+          this.validateMobileNumber(this.initiateBidForSubForm.phone)
         }
-        if (this.initiateBidForSubForm.quickbooksId !== null) {
-          this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
-        }
-        this.initiateBidForSubForm.companyName = result.contractor.company_name
-        this.companyName = result.contractor.company_name
-        this.results = ''
-        this.validateMobileNumber(this.initiateBidForSubForm.phone)
 
       },
 

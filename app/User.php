@@ -153,7 +153,7 @@ class User extends SparkUser
         }
     }
 
-    public function addContractorToBidForJobTable($subcontractorId, $jobTaskId, $taskId)
+    public function addContractorToBidForJobTable($subcontractorId, $jobTaskId, $taskId, $paymentType = null)
     {
         $proposedBidPrice = Task::find($taskId)->proposed_sub_price;
 
@@ -161,6 +161,7 @@ class User extends SparkUser
         $bcjt->contractor_id = $subcontractorId;
         $bcjt->job_task_id = $jobTaskId;
         $bcjt->bid_price = $proposedBidPrice;
+        $bcjt->payment_type = $paymentType;
 
         try {
             $bcjt->save();
@@ -203,7 +204,8 @@ class User extends SparkUser
             $bid = self::addBidEntryForTheSubContractor(
                 $sub,
                 $jobTaskId,
-                $jobTask->task_id
+                $jobTask->task_id,
+                $paymentType
             );
         } catch (SubHasAlreadyBeenInvitedForThisTaskException $e) {
             return response()->json([
@@ -481,10 +483,10 @@ class User extends SparkUser
         }
     }
 
-    protected function addBidEntryForTheSubContractor($subcontractor, $jobTaskId, $taskId)
+    protected function addBidEntryForTheSubContractor($subcontractor, $jobTaskId, $taskId, $paymentType = null)
     {
         if ($subcontractor->checkIfContractorSetBidForATask($subcontractor->id, $jobTaskId)) {
-            return $subcontractor->addContractorToBidForJobTable($subcontractor->id, $jobTaskId, $taskId);
+            return $subcontractor->addContractorToBidForJobTable($subcontractor->id, $jobTaskId, $taskId, $paymentType);
         } else {
             return false;
         }

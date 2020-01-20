@@ -7,34 +7,48 @@
                     class="mb-1rem"
             >
                 <v-card-title
-                        class="uppercase"
+                        class="uppercase pb-0"
                         v-if="showBid(bidTask)"
                 >
-                    {{ jobName(bidTask) }}
+                    <v-icon
+                            v-if="bidTask.payment_type === 'cash'"
+                    >mdi-cash
+                    </v-icon>
+                    <v-icon
+                            v-else
+                    >mdi-credit-card
+                    </v-icon>
+
+                    <div class="mr-1rem ml-half-rem">{{ jobName(bidTask) }}</div>
+                    <v-spacer></v-spacer>
+                    <v-card-subtitle
+                            class="ml-1rem capitalize"
+                            :class="getLabelClass(bidTask)"
+                    > {{ getLatestStatus() }}
+                    </v-card-subtitle>
                 </v-card-title>
-                <v-card-subtitle
-                        class="ml-1rem capitalize"
-                        :class="getLabelClass(bidTask)"
-                > {{ getLatestStatus() }}
-                </v-card-subtitle>
+                <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn
                             v-show="!showTheTask"
-                            class="primary"
+                            text
+                            color="primary"
                             @click="showTheTask = !showTheTask"
                             width="40%"
                     >Show
                     </v-btn>
                     <v-btn
                             v-show="showTheTask"
-                            class="primary"
+                            color="primary"
+                            text
                             @click="showTheTask = !showTheTask"
                             width="40%"
                     >Hide
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
-                            class="red"
+                            text
+                            color="red"
                             width="40%"
                             @click="showDeleteTaskModal(bidTask)"
                     >DELETE

@@ -184,6 +184,7 @@
                     <sub-invite-modal v-if="isGeneral()" :job-task="item"
                                       :job-task-task="item ? item.task : null"
                                       :job-task-name="item ? item.task.name : null"
+                                      :bid-payment-type="bid.payment_type"
                                       :id="item ? item.id : null">
                     </sub-invite-modal>
                 </v-card>

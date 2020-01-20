@@ -156,7 +156,7 @@ class Contractor extends Model
         return $this->hasMany(BidContractorJobTask::class, 'contractor_id', 'user_id');
     }
 
-    public function addContractorToBidForJobTable($subcontractorId, $jobTaskId, $taskId)
+    public function addContractorToBidForJobTable($subcontractorId, $jobTaskId, $taskId, $paymentType = null)
     {
         $proposedBidPrice = Task::find($taskId)->proposed_sub_price;
         
@@ -164,6 +164,7 @@ class Contractor extends Model
         $bcjt->contractor_id  = $subcontractorId;
         $bcjt->job_task_id  = $jobTaskId;
         $bcjt->bid_price  = $proposedBidPrice;
+        $bcjt->payment_type = $paymentType;
         
         try {
             $bcjt->save();

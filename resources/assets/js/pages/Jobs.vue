@@ -38,7 +38,7 @@
 
                         <span class="float-right mr-2 list-card-info"
                               ref="show_number_of_job_tasks">
-                                            {{ bid.job_tasks.length }} Tasks
+                                            {{ bid.job_tasks_length }} Tasks
                                         <i class="far fa-check-square"></i>
                                     </span>
                     </v-card-subtitle>
