@@ -189,8 +189,8 @@
 
     methods: {
 
-      hasSetupStripe(){
-        return Spark.state.user.stripe_id !== null;
+      hasSetupStripe() {
+        return Spark.state.user.stripe_id !== null
       },
 
       connectWithStripe() {
@@ -246,15 +246,17 @@
       },
 
       setFormData(result) {
-        this.form.firstName = result.first_name
-        this.form.lastName = result.last_name
-        this.form.phone = result.phone
-        this.form.email = result.email
-        this.form.taxRate = result.tax_rate
-        this.form.quickbooks_id = result.quickbooks_id
-        this.form.customerName = result.name
-        this.form.id = result.id
-        this.validateMobileNumber(result.phone)
+        if (result) {
+          this.form.firstName = result.first_name
+          this.form.lastName = result.last_name
+          this.form.phone = result.phone
+          this.form.email = result.email
+          this.form.taxRate = result.tax_rate
+          this.form.quickbooks_id = result.quickbooks_id
+          this.form.customerName = result.name
+          this.form.id = result.id
+          this.validateMobileNumber(result.phone)
+        }
       },
 
       getCustomerNames() {
@@ -271,7 +273,14 @@
 
       submit() {
         console.log('submit')
+        this.setCustomerName()
         GeneralContractor.initiateBid(this.form, this.disabled)
+      },
+
+      setCustomerName() {
+        if (this.form.customerName === '') {
+          this.form.customerName = this.form.firstName + ' ' + this.form.lastName
+        }
       },
 
       imclicked() {
