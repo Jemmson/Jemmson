@@ -25,7 +25,7 @@ trait ProvidesScriptVariables
             'collectsEuropeanVat' => Spark::collectsEuropeanVat(),
             'createsAdditionalTeams' => Spark::createsAdditionalTeams(),
             'csrfToken' => csrf_token(),
-            'currencySymbol' => Cashier::usesCurrencySymbol(),
+//            'currencySymbol' => Cashier::usesCurrencySymbol(),
             'env' => config('app.env'),
             'roles' => Spark::roles(),
             'state' => Spark::call(InitialFrontendState::class.'@forUser', [Auth::user()]),

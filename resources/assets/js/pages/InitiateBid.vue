@@ -86,7 +86,7 @@
                                 elevation="2"
                                 single-line
                                 sticky
-                                @click="connectWithStripe()"
+                                @click="connectWithStripe($route.path)"
                                 class="margins-1rem"
                                 style="background-color: cornflowerblue; font-size: 9pt;"
                                 v-show="!hasSetupStripe()"
@@ -125,6 +125,7 @@
   import Feedback from '../components/shared/Feedback'
   import IconHeader from '../components/shared/IconHeader'
   import Phone from '../components/mixins/Phone'
+  import StripeMixin from '../components/mixins/StripeMixin'
 
   export default {
     components: {
@@ -167,7 +168,7 @@
         }]
       }
     },
-    mixins: [Phone],
+    mixins: [Phone, StripeMixin],
     created() {
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
@@ -191,16 +192,6 @@
 
       hasSetupStripe() {
         return Spark.state.user.stripe_id !== null
-      },
-
-      connectWithStripe() {
-        let connectLink = 'https://connect.stripe.com/express/oauth/authorize?client_id='
-          + Spark.stripeClientId + '&state=' + this.$route.path
-          + '&stripe_user[email]=' + Spark.state.user.email
-          + '&stripe_user[country]=US'
-          + '&stripe_user[phone_number]=' + Spark.state.user.phone
-
-        window.location = connectLink
       },
 
       dataMustBeValid() {

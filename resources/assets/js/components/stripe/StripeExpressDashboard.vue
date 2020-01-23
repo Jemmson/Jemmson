@@ -19,7 +19,6 @@ export default {
       showDashboardLoginBtn() {
           if (Spark.state.user.contractor === null)
             return false;
-
           return Spark.state.user.contractor.stripe_express !== null;
       }
   },

@@ -15,7 +15,7 @@
     "doctrine/dbal": "^2.9",
     "fideloper/proxy": "~4.0",
     "guzzlehttp/guzzle": "^6.3",
-    "laravel/cashier": "^9.0.1",
+    "laravel/cashier": "^10.5",
     "laravel/framework": "^6.0",
     "laravel/helpers": "^1.1",
     "laravel/nexmo-notification-channel": "^2.0",
@@ -27,7 +27,7 @@
     "pusher/pusher-php-server": "~3.0",
     "quickbooks/v3-php-sdk": "^5.0",
     "simplesoftwareio/simple-sms": "3.0.*",
-    "stripe/stripe-php": "~6.0"
+    "stripe/stripe-php": "^7.19"
   },
   "require-dev": {
     "composer/composer": "^1.8",

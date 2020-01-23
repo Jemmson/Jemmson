@@ -6,7 +6,7 @@
                     elevation="2"
                     single-line
                     sticky
-                    @click="connectWithStripe()"
+                    @click="connectWithStripe($route.path)"
                     class="w-full"
                     style="background-color: cornflowerblue; font-size: 9pt;"
                     v-show="needsStripe()"
@@ -59,6 +59,8 @@
   import Stripe from '../components/stripe/Stripe'
   import Card from '../components/shared/Card'
   import Task from '../components/task/Task'
+  import StripeMixin from '../components/mixins/StripeMixin'
+  import Phone from '../components/mixins/Phone'
 
   export default {
     name: 'Tasks',
@@ -91,6 +93,7 @@
         searchTerm: '',
       }
     },
+    mixins: [Phone, StripeMixin],
     methods: {
       goBack() {
         this.$router.go(-1)
@@ -148,16 +151,6 @@
         if (Spark.state.user) {
           return Spark.state.user.stripe_id === null
         }
-      },
-
-      connectWithStripe() {
-        let connectLink = 'https://connect.stripe.com/express/oauth/authorize?client_id='
-          + Spark.stripeClientId + '&state=' + this.$route.path
-          + '&stripe_user[email]=' + Spark.state.user.email
-          + '&stripe_user[country]=US'
-          + '&stripe_user[phone_number]=' + Spark.state.user.phone
-
-        window.location = connectLink
       },
 
       showAddress(bidTask) {

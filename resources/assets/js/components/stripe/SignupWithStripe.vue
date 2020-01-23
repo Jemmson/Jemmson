@@ -1,10 +1,10 @@
 <template>
     <form @submit="submit" method="post" id="payment-form" class="w-full">
-        <div class="form-row text-left">
+        <div class="flex flex-col text-left">
             <label for="card-element">
                 Sign Up With A Credit or Debit Card
             </label>
-            <div id="card-element" class="w-full">
+            <div id="card-element">
                 <!-- a Stripe Element will be inserted here. -->
             </div>
 
@@ -15,10 +15,12 @@
         <v-btn
                 class="w-40"
                 color="primary"
-                style="float: right;" :disabled="signup">
-        <span v-if="signup">
-            <i class="fa fa-btn fa-spinner fa-spin"></i>
-        </span>
+                style="float: right;"
+                @click="submit($event)"
+                :disabled="signup">
+            <span v-if="signup">
+                <i class="fa fa-btn fa-spinner fa-spin"></i>
+            </span>
             Sign Up
         </v-btn>
         <div style="clear:both;"></div>
@@ -48,14 +50,28 @@
     },
     computed: {
       isContractor() {
-        return User.isContractor();
+        return User.isContractor()
       },
       isCustomer() {
-        return User.isCustomer();
+        return User.isCustomer()
       },
     },
     methods: {
       async submit(event) {
+
+        // Handle form submission.
+        event.preventDefault()
+
+        let data = await this.stripe.createToken(this.card)
+
+        if (data.error) {
+          // Inform the user if there was an error.
+          var errorElement = document.getElementById('card-errors')
+          errorElement.textContent = result.error.message
+        } else {
+          // Send the token to your server.
+          this.stripeTokenHandler(result.token)
+        }
 
         // // Insert the token ID into the form so it gets submitted to the server
         // var form = document.getElementById('payment-form');
@@ -68,55 +84,77 @@
         // // Submit the form
         // form.submit();
 
-        event.preventDefault();
-        this.signup = true;
-        const {
-          token,
-          error
-        } = await this.stripe.createToken(this.card);
+        // event.preventDefault();
+        // this.signup = true;
+        // const {
+        //   token,
+        //   error
+        // } = await this.stripe.createToken(this.card);
 
-        if (error) {
-          // Inform the customer that there was an error
-          const errorElement = document.getElementById('card-errors');
-          errorElement.textContent = error.message;
-          this.signup = false;
-        } else {
-          try {
-            // create stripe customer with token
-            this.signup = false;
-            $('#stripe-modal').modal('hide');
-            let response = await axios.post('/stripe/customer', token);
-            console.log('customer');
-            let data = response.data;
-            Bus.$emit('signedupStripe', data.id);
-            Spark.state.user.stripe_id = data.id;
-            Vue.toasted.success('You may now pay with stripe');
-          } catch (error) {
-            this.signup = false;
-            error = error.response.data;
-            Vue.toasted.error(error.message);
-          }
-        }
+        // try {
+        //   const data = await this.stripe.createToken(this.card);
+        //   console.log(JSON.stringify(data));
+        // } catch (e) {
+        //   console.log(JSON.stringify(e));
+        // }
+        //
+        // if (error) {
+        //   // Inform the customer that there was an error
+        //   const errorElement = document.getElementById('card-errors');
+        //   errorElement.textContent = error.message;
+        //   this.signup = false;
+        // } else {
+        //   try {
+        //     // create stripe customer with token
+        //     this.signup = false;
+        //     $('#stripe-modal').modal('hide');
+        //     let response = await axios.post('/stripe/customer', token);
+        //     console.log('customer');
+        //     let data = response.data;
+        //     Bus.$emit('signedupStripe', data.id);
+        //     Spark.state.user.stripe_id = data.id;
+        //     Vue.toasted.success('You may now pay with stripe');
+        //   } catch (error) {
+        //     this.signup = false;
+        //     error = error.response.data;
+        //     Vue.toasted.error(error.message);
+        //   }
+        // }
       },
-    },
+
+      // Submit the form with the token ID.
+      stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form')
+        var hiddenInput = document.createElement('input')
+        hiddenInput.setAttribute('type', 'hidden')
+        hiddenInput.setAttribute('name', 'stripeToken')
+        hiddenInput.setAttribute('value', token.id)
+        form.appendChild(hiddenInput)
+
+        // Submit the form
+        form.submit()
+      }
+    }
+    ,
     mounted() {
-      this.stripe = Stripe(Spark.stripeKey);
-      const elements = this.stripe.elements();
+      this.stripe = Stripe(Spark.stripeKey)
+      const elements = this.stripe.elements()
       // Create an instance of the card Element
       this.card = elements.create('card', {
         style: this.style
-      });
+      })
 
       // Add an instance of the card Element into the `card-element` <div>
-      this.card.mount('#card-element');
+      this.card.mount('#card-element')
       this.card.addEventListener('change', ({error}) => {
-        const displayError = document.getElementById('card-errors');
+        const displayError = document.getElementById('card-errors')
         if (error) {
-          displayError.textContent = error.message;
+          displayError.textContent = error.message
         } else {
-          displayError.textContent = '';
+          displayError.textContent = ''
         }
-      });
+      })
     }
   }
 </script>

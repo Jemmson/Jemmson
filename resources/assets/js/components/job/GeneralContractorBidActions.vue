@@ -25,7 +25,7 @@
                 <v-btn
                         text
                         color="primary"
-                        @click="connectWithStripe()"
+                        @click="connectWithStripe($route.path)"
                 >
                     SIGN UP WITH STRIPE
                 </v-btn>
@@ -43,6 +43,7 @@
 <script>
 
   import Stripe from '../../components/stripe/Stripe'
+  import StripeMixin from '../../components/mixins/StripeMixin'
   import Status from '../../components/mixins/Status'
   import GeneralContractor from '../../classes/GeneralContractor'
 
@@ -55,7 +56,7 @@
       submitTheBid: Boolean,
       bid: Object
     },
-    mixins: [Status],
+    mixins: [Status, StripeMixin],
     watch: {
       submitTheBid: function() {
         this.notifyCustomerOfFinishedBid(this.bid, this.disabled)
@@ -105,16 +106,6 @@
             return statusNumber <= 5 || statusNumber === 8
           }
         }
-      },
-
-      connectWithStripe() {
-        let connectLink = 'https://connect.stripe.com/express/oauth/authorize?client_id='
-          + Spark.stripeClientId + '&state=' + this.$route.path
-          + '&stripe_user[email]=' + Spark.state.user.email
-          + '&stripe_user[country]=US'
-          + '&stripe_user[phone_number]=' + Spark.state.user.phone
-
-        window.location = connectLink
       },
 
       notSignedUpModalIsHidden() {
