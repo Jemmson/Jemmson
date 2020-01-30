@@ -37,7 +37,7 @@ class StripeGatewayController extends Controller
             "&stripe_user[city]=$user->billing_city".
             "&stripe_user[state]=$user->billing_state".
             "&stripe_user[zip]=$user->billing_zip".
-            "&stripe_user[country]=USA".
+            "&stripe_user[country]=US".
             "&stripe_user[currency]=usd".
             "&state=$state";
     }
@@ -86,7 +86,7 @@ class StripeGatewayController extends Controller
 
     public function allPartiesInSameRegion($customer, $general, $sub)
     {
-        return false;
+        return true;
     }
 
     /**

@@ -186,7 +186,7 @@ class HomeController extends Controller
         $user->billing_city = trim($request->city);
         $user->billing_state = trim($request->state);
         $user->billing_zip = trim($request->zip);
-        $user->billing_country = 'USA';
+        $user->billing_country = 'US';
 
         try {
             $user->save();
