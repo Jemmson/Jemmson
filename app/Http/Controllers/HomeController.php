@@ -188,7 +188,6 @@ class HomeController extends Controller
         $user->billing_zip = trim($request->zip);
         $user->billing_country = 'USA';
 
-
         try {
             $user->save();
         } catch (\Exception $e) {

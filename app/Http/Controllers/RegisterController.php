@@ -91,7 +91,6 @@ class RegisterController extends Controller
             'billing_city' => $request['form']['city'],
             'billing_state' => $request['form']['state'],
             'billing_zip' => $request['form']['zip'],
-            'billing_country' => $request['form']['country'],
             'usertype' => 'contractor',
             'password' => bcrypt($request['form']['password']),
 //        'last_name' => '',

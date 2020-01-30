@@ -127,7 +127,7 @@
     },
     mounted() {
       // Create a Stripe client.
-      var stripe = Stripe('pk_test_iAX3DPtpLj5RiG3FCexe1r0Z');
+      var stripe = Stripe(Spark.stripeKey);
 
       // Create an instance of Elements.
       var elements = stripe.elements();

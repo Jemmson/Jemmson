@@ -292,12 +292,10 @@
         if (!User.isSignedUpWithStripe()) {
           console.log('No Stripe Account')
           Bus.$emit('needsStripe')
-          disabled.pay = false
-          return false
         } else {
           this.selectWhichCreditCardToUse()
         }
-        Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)
+        // Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)
       },
 
       selectWhichCreditCardToUse() {

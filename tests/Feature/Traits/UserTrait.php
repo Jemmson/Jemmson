@@ -63,6 +63,8 @@ trait UserTrait
             ], 200);
         }
 
+        $this->addingBillingInfo($user, $location);
+
         return $user;
     }
 
@@ -140,7 +142,7 @@ trait UserTrait
         ];
 
         $payload = $this->mergeArrays($payload, $userArray);
-        $user = factory(User::class)->create($payload);
+        $user = factory(\App\User::class)->create($payload);
 
         $customerPayload = [
             "user_id" => $user->id,
@@ -153,6 +155,7 @@ trait UserTrait
 
         $user->location_id = $location->id;
 
+
         try {
             $user->save();
         } catch (\Exception $e) {
@@ -162,7 +165,28 @@ trait UserTrait
             ], 200);
         }
 
+        $this->addingBillingInfo($user, $location);
+
         return $user;
+    }
+
+    public function addingBillingInfo($user, $location)
+    {
+        $user->billing_address = $location->address_line_1;
+        $user->billing_address_line_2 = $location->address_line_2;
+        $user->billing_address_city = $location->city;
+        $user->billing_address_state = $location->state;
+        $user->billing_address_zip = $location->zip;
+        $user->billing_address_country = $location->country;
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
     }
 
     public function createdmin_Contractor($user_params = [], $location_params = [], $contractor_params = [])

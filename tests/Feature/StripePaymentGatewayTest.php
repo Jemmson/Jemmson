@@ -178,7 +178,6 @@ class StripePaymentGatewayTest extends TestCase
         $stripeCustomer = $this->createStripeCustomer($customer);
         $amount = 10000;
 
-
         $charge = $this->jemmsonIsPaidTheTask($this->clientSideToken(), $amount);
         $contractorAmount = $this->calculateContractorAmount($amount, $jobTask);
         $transferToGeneral = $this->transferAmountToGeneral($contractorAmount['contractorFee'], $general->id, $charge->id);

@@ -23,7 +23,7 @@ class CreateLocationsTable extends Migration
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->string('area')->nullable();
-            $table->string('country')->nullable();
+            $table->string('country')->default('USA');
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
             $table->softDeletes();

@@ -84,9 +84,9 @@ class StripeGatewayController extends Controller
 //        }
     }
 
-    public function allPartiesInSameRegion()
+    public function allPartiesInSameRegion($customer, $general, $sub)
     {
-
+        return false;
     }
 
     /**

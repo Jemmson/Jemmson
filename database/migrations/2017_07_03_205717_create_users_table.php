@@ -38,7 +38,7 @@ class CreateUsersTable extends Migration
             $table->string('billing_city')->nullable();
             $table->string('billing_state')->nullable();
             $table->string('billing_zip', 25)->nullable();
-            $table->string('billing_country', 100)->nullable();
+            $table->string('billing_country', 100)->default('USA');
             $table->text('extra_billing_information')->nullable();
             $table->timestamp('last_read_announcements_at')->nullable();
             $table->softDeletes();

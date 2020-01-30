@@ -16,7 +16,6 @@
                 <card class="mb-2">
                     <form>
                         <input type="hidden" name="street_number" id="street_number">
-                        <input type="hidden" name="country" id="country">
                         <div class="form-group" :class="{'has-error': form.errors.has('email')}">
                             <label for="email">Update Login Email: *</label>
                             <div>
