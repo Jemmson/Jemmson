@@ -3,8 +3,10 @@
 namespace Tests\Feature\Traits;
 
 use App\Contractor;
+use App\ContractorCustomer;
 use App\Customer;
 use App\Location;
+use App\StripeExpress;
 use App\User;
 
 trait UserTrait
@@ -62,6 +64,69 @@ trait UserTrait
         }
 
         return $user;
+    }
+
+    public function createSub($general, $jobTaskId, $jobTask)
+    {
+        return $general->inviteSub(
+            null,
+            "6023508801",
+            "kbattafarano@gmail.com",
+            $jobTaskId,
+            null,
+            "Kristen",
+            "Battafarano",
+            "Garden Bud",
+            "cash",
+            $general->id,
+            $jobTask
+        );
+    }
+
+    public function setsUpStipe($user, $usertype)
+    {
+        if($usertype == 'general'){
+            factory(StripeExpress::class)->create([
+                "contractor_id" => $user->id
+            ]);
+        } else {
+            factory(StripeExpress::class)->create([
+                "contractor_id" => $user->id,
+                'access_token' => 'sk_test_A66TTYqXidjivfiDYhomAfzd00M4efFmGy',
+                'refresh_token' => 'rt_GcPUs4G4iKUtQ8EFSU3j3ds1YlAl2qGsxK53cu1ZKzCJ87xK',
+                'stripe_publishable_key' => 'pk_test_X8lahyQoyHVpuFNxqVzbriLK00LpkFbEaW',
+                'stripe_user_id' => 'acct_1CpJFSAA4Eqw07CC'
+            ]);
+        }
+    }
+
+    public function subSendsBidToGeneral(
+        $sub,
+        $bid_price,
+        $paymentType,
+        $generalId,
+        $jobTask,
+        $subId,
+        $job
+    )
+    {
+        $sub->subSendsBidToGeneral(
+            $bid_price,
+            $paymentType,
+            $generalId,
+            $jobTask,
+            $subId,
+            $job
+        );
+    }
+
+    public function approvesSubsBid(
+        $general, $jobTask, $subId, $jobTaskId, $price, $bidId
+    )
+    {
+        $general->approvesSubsBid(
+            $jobTask, $subId, $jobTaskId, $price, $bidId
+        );
     }
 
     public function createCustomer(
@@ -224,12 +289,26 @@ trait UserTrait
         $response = '';
 
         try {
-            $response = $this->actingAs($admin)->json('POST', '/task/notify', $params);
+            return $this->actingAs($admin)->json('POST', '/task/notify', $params);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
 
-        return $response;
+    public function addCustomerToContractorCustomerTable($customerId, $generalId)
+    {
+        $cc = new ContractorCustomer();
+        $cc->contractor_user_id = $generalId;
+        $cc->customer_user_id = $customerId;
+        
+        try {
+            $cc->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
     }
 
 }

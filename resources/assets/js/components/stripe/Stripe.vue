@@ -43,7 +43,7 @@
                                @click="dontShowAgain = !dontShowAgain">
                     </div>
                 </div>
-                <div class="modal-footer" v-else-if="isCustomer && notSignedUp">
+                <div class="modal-footer" style="justify-content: center !important" v-else-if="isCustomer && notSignedUp">
                     <signup-with-stripe>
                     </signup-with-stripe>
                 </div>

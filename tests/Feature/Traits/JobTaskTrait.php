@@ -26,4 +26,14 @@ trait JobTaskTrait
         return factory(JobTask::class)->create($params);
     }
 
+    public function subFinishesJobTask($jobTask)
+    {
+        $jobTask->subFinishesJobTask($jobTask->id, $jobTask->id);
+    }
+
+    public function customerMakesPayment($jobTask)
+    {
+        $jobTask->makePayment();
+    }
+
 }

@@ -232,9 +232,7 @@ class User extends SparkUser
         self::notifySubAboutNewBid($sub, $jobTask->task_id);
         self::setSubStatusToInitiated($sub, $jobTaskId);
 
-        return response()->json([
-            'message' => 'success'
-        ], 200);
+        return $sub;
 
     }
 

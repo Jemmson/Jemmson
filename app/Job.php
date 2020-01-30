@@ -152,6 +152,34 @@ class Job extends Model
         return $jobActions;
     }
 
+    public function approveJob(
+        $address,
+        $agreedStartDate,
+        $customerLocationId,
+        $jobLocationSameAsHome
+    )
+    {
+        // TODO: what date needs to be updated here?
+        $this->agreed_start_date = $agreedStartDate;
+        $this->status = __('job.approved');
+
+        DB::transaction(function () use ($jobLocationSameAsHome, $customerLocationId, $address) {
+            if ($jobLocationSameAsHome) {
+                $this->location_id = $customerLocationId;
+            } else {
+                $this->newLocation($address);
+            }
+            $this->save();
+            // approve all tasks associated with this job, any exceptions?
+            JobTask::where('job_id', $this->id)
+                //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+                ->update(['status' => __('bid_task.approved_by_customer')]);
+            JobTask::where('job_id', $this->id)
+                ->where('start_when_accepted', true)
+                ->update(['start_date' => Carbon::now()]);
+        });
+    }
+
     public static function jobName($jobName = '')
     {
         if (empty($jobName)) {
@@ -361,14 +389,14 @@ class Job extends Model
         }
     }
 
-    public function newLocation($request)
+    public function newLocation($address)
     {
         $location = new Location();
-        $location->address_line_1 = $request->address_line_1;
-        $location->address_line_2 = $request->address_line_2;
-        $location->city = $request->city;
-        $location->state = $request->state;
-        $location->zip = $request->zip;
+        $location->address_line_1 = $address['addressLine1'];
+        $location->address_line_2 = $address['addressLine2'];
+        $location->city = $address['city'];
+        $location->state = $address['state'];
+        $location->zip = $address['zip'];
 
         try {
             $location->save();
@@ -475,14 +503,13 @@ class Job extends Model
      *
      * @return bool did this action succeed
      */
-    public function approveJob()
+    public function approveJobAction()
     {
         if ($this->id == null) {
             return false;
         }
 
         $jobActions = $this->jobActions();
-
         $jobActions->job_approved = true;
         $jobActions->job_approved_updated_on = Carbon::now();
         try {

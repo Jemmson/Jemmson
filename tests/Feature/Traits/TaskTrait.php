@@ -12,16 +12,16 @@ trait TaskTrait
 {
 
     public function createTask(
-        $contractor_id, $task_array = []
+        $contractorId, $task_array = []
     )
     {
         $params = [
-            "contractor_id" => $contractor_id,
+            "contractor_id" => $contractorId,
         ];
 
         count($task_array) > 0 ?
             $payload = $this->mergeArrays($params, $task_array) :
-            $payload = [];
+            $payload = $params;
 
         return factory(Task::class)->create($payload);
     }

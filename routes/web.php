@@ -112,6 +112,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/stripe/hideModal', 'ContractorController@hideStripeModal');
     Route::get('/getStripeOauthUrl/{path}', 'StripeGatewayController@getStripeOauthUrl');
 
+    Route::post('/stripe/charge', 'StripeGatewayController@charge');
+
 
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer');

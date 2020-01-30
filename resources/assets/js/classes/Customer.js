@@ -172,13 +172,11 @@ export default class Customer {
     console.log('payAllPayableTasks', id)
     disabled.payAll = true
 
-    if (User.payWithStripe()) {
-      if (!User.isSignedUpWithStripe()) {
-        console.log('No Stripe Account')
-        Bus.$emit('needsStripe')
-        disabled.payAll = false
-        return false
-      }
+    if (!User.isSignedUpWithStripe()) {
+      console.log('No Stripe Account')
+      Bus.$emit('needsStripe')
+      disabled.payAll = false
+      return false
     }
 
     try {
@@ -226,16 +224,6 @@ export default class Customer {
   async payForTask(jobTask, disabled) {
     console.log('payForTask', jobTask)
     disabled.pay = true
-
-    if (User.payWithStripe()) {
-      if (!User.isSignedUpWithStripe()) {
-        console.log('No Stripe Account')
-        Bus.$emit('needsStripe')
-        disabled.pay = false
-        return false
-      }
-    }
-
     try {
       await axios.post('/stripe/express/task/payment', jobTask)
       User.emitChange('bidUpdated')

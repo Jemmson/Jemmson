@@ -181,6 +181,13 @@ class HomeController extends Controller
         $user->last_name = trim($request->last_name);
         $user->name = "$request->first_name $request->last_name";
         $user->phone = $this->digitsOnly($request->phone_number);
+        $user->billing_address = trim($request->address_line_1);
+        $user->billing_address_line_2 = trim($request->address_line_2);
+        $user->billing_city = trim($request->city);
+        $user->billing_state = trim($request->state);
+        $user->billing_zip = trim($request->zip);
+        $user->billing_country = 'USA';
+
 
         try {
             $user->save();

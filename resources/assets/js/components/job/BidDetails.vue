@@ -366,6 +366,7 @@
                 </main>
             </card>
         </section>
+
         <stripe :user="getCurrentUser()">
         </stripe>
 

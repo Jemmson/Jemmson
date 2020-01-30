@@ -87,6 +87,7 @@
                 Pay With Credit Card
             </v-btn>
         </div>
+
         <transition name="slide-fade">
             <div v-show="paidCash">
                 <div class="form-group col-md-12">
@@ -288,8 +289,21 @@
         SubContractor.reopenTask(jobTask, this.disabled)
       },
       payAllPayableTasks() {
+        if (!User.isSignedUpWithStripe()) {
+          console.log('No Stripe Account')
+          Bus.$emit('needsStripe')
+          disabled.pay = false
+          return false
+        } else {
+          this.selectWhichCreditCardToUse()
+        }
         Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)
+      },
+
+      selectWhichCreditCardToUse() {
+        this.ccmodal = true;
       }
+
     },
     mounted() {}
   }

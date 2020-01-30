@@ -82,12 +82,12 @@
                         ></v-checkbox>
 
                         <v-btn
+                                @click="connectWithStripe($route.path)"
+                                class="margins-1rem"
                                 color="aliceblue"
                                 elevation="2"
                                 single-line
                                 sticky
-                                @click="connectWithStripe($route.path)"
-                                class="margins-1rem"
                                 style="background-color: cornflowerblue; font-size: 9pt;"
                                 v-show="!hasSetupStripe()"
                         >
@@ -176,12 +176,12 @@
 
     watch: {
       search(val) {
-        if (val.length > 2) {
+        if (val && val.length > 2) {
           this.autoComplete()
         }
       },
       selected(val) {
-        if (val !== null) {
+        if (val && val !== null) {
           const filteredComboResult = this.getComboResult(val)
           this.setFormData(filteredComboResult)
         }

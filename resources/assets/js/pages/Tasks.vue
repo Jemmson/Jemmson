@@ -2,12 +2,12 @@
     <div class="main flex flex-col justify-between">
         <div>
             <v-btn
+                    @click="connectWithStripe($route.path)"
+                    class="w-full"
                     color="aliceblue"
                     elevation="2"
                     single-line
                     sticky
-                    @click="connectWithStripe($route.path)"
-                    class="w-full"
                     style="background-color: cornflowerblue; font-size: 9pt;"
                     v-show="needsStripe()"
             >
@@ -18,9 +18,9 @@
             </search-bar>
             <section>
                 <paginate ref="paginator"
-                          name="sTasks"
                           :list="sTasks"
                           :per="8"
+                          name="sTasks"
                           v-show="sTasks.length > 0"
                 >
                     <div v-for="bidTask in paginated('sTasks')"
@@ -34,9 +34,11 @@
                     </div>
                 </paginate>
                 <div class="card card-body justify-center">
-                    <paginate-links for="sTasks" :limit="2"
+                    <paginate-links :limit="2"
                                     :show-step-links="true"
-                                    class="m-center">
+                                    name="tasks"
+                                    class="m-center"
+                                    for="sTasks">
                     </paginate-links>
                 </div>
             </section>
@@ -120,7 +122,7 @@
           if (this.searchTerm == '' || this.searchTerm.length <= 1) {
             return true
           }
-          return task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+          return this.task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
         })
         if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
           this.$refs.paginator.goToPage(1)

@@ -377,7 +377,7 @@ class TaskController extends Controller
     public function bidTasks()
     {
         $bidTasks = $this->getBidContractorJobTasks();
-        if (!empty($bidTasks)) {
+        if (!empty($bidTasks) && \sizeof($bidTasks) > 0) {
             foreach ($bidTasks[0] as $bt) {
                 if (!empty($bt->job_task)) {
                     $bt->job_task->sub_final_price = $this->convertToDollars($bt->job_task->sub_final_price);
@@ -1099,20 +1099,14 @@ class TaskController extends Controller
 
     public function taskFinishedBySubContractor(Request $request)
     {
-        $taskId = $this->getJobTaskIdFromRequest($request->job_task_id, $request->id);
-        $jobTask = $this->getTheJobTask($taskId);
-        $task = $this->getTheTaskFromTheJobTask($jobTask);
-        $status = __("bid_task.finished_by_sub");
 
-        if (!$jobTask->updateStatus($status)) {
-            return response()->json(["message" => "Couldn't update job task.", "errors" => ["error" => ['']]], 422);
+        if (empty($request->job_task_id)) {
+            $jobTask = JobTask::find($request->id);
+        } else {
+            $jobTask = JobTask::find($request->job_task_id);
         }
 
-        $this->setSubsFinishedStatus($jobTask);
-
-        $this->notifyTheGeneralContractor($task->contractor_id, $task);
-
-        $jobTask->resetDeclinedMessage();
+        $jobTask->subFinishesJobTask();
 
         return response()->json(["message" => "Success"], 200);
     }

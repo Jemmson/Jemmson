@@ -1,7 +1,7 @@
 @extends('spark::layouts.app')
 
 @section('scripts')
-    <script src="https://js.stripe.com/v2/"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 @endsection
 
 @section('content')

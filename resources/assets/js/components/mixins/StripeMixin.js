@@ -18,11 +18,22 @@ export default {
 
     formatPathVariable(path) {
       const pathArray = path.split('/')
-      let pathString = ''
-      if (pathArray.length > 1) {
-        for (let i = 0; i < pathArray.length; i++) {
-          pathString = pathString + '_' + pathArray[i]
+
+      const pathArrayWithOutSpaces = [];
+
+      for (let i = 0; i < pathArray.length; i++) {
+        if (pathArray[i] !== '') {
+          pathArrayWithOutSpaces.push(pathArray[i])
         }
+      }
+
+      let pathString = ''
+      if (pathArrayWithOutSpaces.length > 1) {
+        for (let i = 0; i < pathArrayWithOutSpaces.length; i++) {
+          pathString = pathString + '_' + pathArrayWithOutSpaces[i]
+        }
+      } else {
+        pathString = pathArrayWithOutSpaces[0]
       }
       return pathString
     }
