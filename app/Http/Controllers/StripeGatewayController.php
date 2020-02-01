@@ -45,6 +45,20 @@ class StripeGatewayController extends Controller
     public function charge(Request $request)
     {
 
+
+//        if (count($request->excluded) > 0) {
+//            $jobTask = JobTask::find($request->excluded[0]);
+//            $job = Job::find($jobTask->job_id);
+//            $jobTasks = $job->jobTasks()->get();
+//        } else {
+//
+//        }
+//
+//
+//
+//
+//        $jobTasks = JobTask::whereNotIn($request->token);
+
         $charge = $this->createCharge($request);
 
 //        if (!$this->isAStripeCustomerForContractor()) {

@@ -198,16 +198,18 @@
           this.sBids = []
         }
       })
-      axios.post('/bid/tasks').then((response) => {
-        if (response.data !== undefined) {
-          this.tasks = response.data
-          this.sTasks = this.tasks
-        } else {
-          this.tasks = []
-          this.sTasks = []
-        }
+      if (Spark.state.user.usertype === 'contractor') {
+        axios.post('/bid/tasks').then((response) => {
+          if (response.data !== undefined) {
+            this.tasks = response.data
+            this.sTasks = this.tasks
+          } else {
+            this.tasks = []
+            this.sTasks = []
+          }
+        })
 
-      })
+      }
       axios.get('/invoices').then((response) => {
         if (response.data !== undefined) {
           this.invoices = response.data

@@ -131,6 +131,7 @@
 
   import Card from '../shared/Card'
   import DenyTaskModal from '../task/DenyTaskModal'
+  import { mapActions } from 'vuex'
 
   export default {
     props: {
@@ -157,7 +158,7 @@
         disabled: {
           payAll: false,
           reopen: false,
-          payCash: false,
+          payCash: false
         }
       }
     },
@@ -211,12 +212,13 @@
       }
     },
     methods: {
+      ...mapActions(['excludedActions']),
 
       cashJobOrNotSetupWithStripe() {
         return this.cashJob() || this.needsStripe()
       },
 
-      creditCardJobAndContractorHasStripe(){
+      creditCardJobAndContractorHasStripe() {
         return this.creditCardJob() && this.hasStripe()
       },
 
@@ -226,13 +228,13 @@
         }
       },
 
-      hasStripe(){
+      hasStripe() {
         if (this.bid) {
           return this.bid.contractor.contractor.stripe_id !== false
         }
       },
 
-      creditCardJob(){
+      creditCardJob() {
         return this.bid.payment_type === 'creditCard'
       },
 
@@ -289,9 +291,10 @@
         SubContractor.reopenTask(jobTask, this.disabled)
       },
       payAllPayableTasks() {
+        console.log('excluded', this.excluded)
         if (!User.isSignedUpWithStripe()) {
-          console.log('No Stripe Account')
           Bus.$emit('needsStripe')
+          this.excludedActions(this.excluded)
         } else {
           this.selectWhichCreditCardToUse()
         }
@@ -299,11 +302,9 @@
       },
 
       selectWhichCreditCardToUse() {
-        this.ccmodal = true;
+        this.ccmodal = true
       }
-
-    },
-    mounted() {}
+    }
   }
 </script>
 

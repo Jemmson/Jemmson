@@ -4,6 +4,10 @@
 
 export default {
 
+  excluded(state, payload){
+    state.excluded = payload
+  },
+
   setCustomerName(state, payload) {
     state.customer.name = payload.name
   },

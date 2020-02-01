@@ -367,7 +367,9 @@
             </card>
         </section>
 
-        <stripe :user="getCurrentUser()">
+        <stripe
+                :bid="bid"
+                :user="getCurrentUser()">
         </stripe>
 
     </div>
@@ -411,9 +413,9 @@
       customerName: String
     },
     created: function() {
-      Bus.$on('needsStripe', () => {
+      Bus.$on('needsStripe', (excluded) => {
         $('#stripe-modal').modal()
-      })
+      });
       this.getUser()
       document.body.scrollTop = 0 // For Safari
       document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
@@ -721,12 +723,12 @@
       },
       customerHasCompletedTasks() {
         let taskIsFinished = false
-        if ( this.bid && this.bid.job_tasks && this.bid.job_tasks.length > 0 ) {
+        if (this.bid && this.bid.job_tasks && this.bid.job_tasks.length > 0) {
           for (let i = 0; i < this.bid.job_tasks.length; i++) {
             let status = ''
             if (this.bid.job_tasks[i].job_task_status
               && this.bid.job_tasks[i].job_task_status.length > 0
-             ) {
+            ) {
               status = this.bid.job_tasks[i].job_task_status[this.bid.job_tasks[i].job_task_status.length - 1].status
             } else {
               status = this.bid.job_tasks[i].job_task_statuses[this.bid.job_tasks[i].job_task_statuses.length - 1].status

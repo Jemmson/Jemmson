@@ -1,221 +1,116 @@
 <template>
-    <form method="post" id="payment-form">
-        <div class="form-row">
+    <form id="payment-form" class="w-full">
+        <div class="flex flex-col">
             <label for="card-element">
-                Credit or debit card
+                Sign Up With A Credit or Debit Card
             </label>
-            <br>
-            <div id="card-element" style="width: 30rem">
-                <!-- A Stripe Element will be inserted here. -->
+            <div id="card-element" ref="card">
+                <!-- a Stripe Element will be inserted here. -->
             </div>
 
-            <!-- Used to display form errors. -->
+            <!-- Used to display Element errors -->
             <div id="card-errors" role="alert"></div>
         </div>
-
-        <button>Submit Payment</button>
+        <br>
+        <button
+                @click="submit()">Sign Up
+        </button>
+        <div style="clear:both;"></div>
     </form>
 </template>
 
 <script>
+  import { mapState } from 'vuex'
 
+  let stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`)
+  let elements = stripe.elements()
+  let card = undefined
 
   export default {
     data() {
       return {
-      //   stripe: {},
-      //   card: {},
-      //   signup: false,
-      //   style: {
-      //     base: {
-      //       color: '#32325d',
-      //       lineHeight: '18px',
-      //       fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-      //       fontSmoothing: 'antialiased',
-      //       fontSize: '16px',
-      //       '::placeholder': {
-      //         color: '#aab7c4'
-      //       }
-      //     },
-      //   }
+        stripe: {},
+        card: {},
+        signup: false,
+        style: {
+          base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+              color: '#aab7c4'
+            }
+          },
+        }
       }
     },
     computed: {
-      // isContractor() {
-      //   return User.isContractor()
-      // },
-      // isCustomer() {
-      //   return User.isCustomer()
-      // },
+      isContractor() {
+        return User.isContractor()
+      },
+      isCustomer() {
+        return User.isCustomer()
+      },
+      ...mapState({
+        excludedTaskIds: state => state.excluded
+      })
+    },
+    props: {
+      bid: Object
     },
     methods: {
-      // async getToken() {
-      //
-      //   let data = await this.stripe.createToken(this.card)
-      //
-      //   if (data.error) {
-      //     // Inform the user if there was an error.
-      //     var errorElement = document.getElementById('card-errors')
-      //     errorElement.textContent = result.error.message
-      //   } else {
-      //     // Send the token to your server.
-      //     this.stripeTokenHandler(result.token)
-      //   }
-
-        // // Insert the token ID into the form so it gets submitted to the server
-        // var form = document.getElementById('payment-form');
-        // var hiddenInput = document.createElement('input');
-        // hiddenInput.setAttribute('type', 'hidden');
-        // hiddenInput.setAttribute('name', 'stripeToken');
-        // hiddenInput.setAttribute('value', token.id);
-        // form.appendChild(hiddenInput);
-        //
-        // // Submit the form
-        // form.submit();
-
-        // event.preventDefault();
-        // this.signup = true;
-        // const {
-        //   token,
-        //   error
-        // } = await this.stripe.createToken(this.card);
-
-        // try {
-        //   const data = await this.stripe.createToken(this.card);
-        //   console.log(JSON.stringify(data));
-        // } catch (e) {
-        //   console.log(JSON.stringify(e));
-        // }
-        //
-        // if (error) {
-        //   // Inform the customer that there was an error
-        //   const errorElement = document.getElementById('card-errors');
-        //   errorElement.textContent = error.message;
-        //   this.signup = false;
-        // } else {
-        //   try {
-        //     // create stripe customer with token
-        //     this.signup = false;
-        //     $('#stripe-modal').modal('hide');
-        //     let response = await axios.post('/stripe/customer', token);
-        //     console.log('customer');
-        //     let data = response.data;
-        //     Bus.$emit('signedupStripe', data.id);
-        //     Spark.state.user.stripe_id = data.id;
-        //     Vue.toasted.success('You may now pay with stripe');
-        //   } catch (error) {
-        //     this.signup = false;
-        //     error = error.response.data;
-        //     Vue.toasted.error(error.message);
-        //   }
-        // }
-      // },
-      //
-      // // Submit the form with the token ID.
-      // stripeTokenHandler(token) {
-      //   // Insert the token ID into the form so it gets submitted to the server
-      //   var form = document.getElementById('payment-form')
-      //   var hiddenInput = document.createElement('input')
-      //   hiddenInput.setAttribute('type', 'hidden')
-      //   hiddenInput.setAttribute('name', 'stripeToken')
-      //   hiddenInput.setAttribute('value', token.id)
-      //   form.appendChild(hiddenInput)
-      //
-      //   // Submit the form
-      //   form.submit()
-      // }
-    },
-    mounted() {
-      // Create a Stripe client.
-      var stripe = Stripe(Spark.stripeKey);
-
-      // Create an instance of Elements.
-      var elements = stripe.elements();
-
-      // Custom styling can be passed to options when creating an Element.
-      // (Note that this demo uses a wider set of styles than the guide below.)
-      var style = {
-        base: {
-          color: '#32325d',
-          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-          fontSmoothing: 'antialiased',
-          fontSize: '16px',
-          '::placeholder': {
-            color: '#aab7c4'
-          }
-        },
-        invalid: {
-          color: '#fa755a',
-          iconColor: '#fa755a'
-        }
-      };
-
-      // Create an instance of the card Element.
-      var card = elements.create('card', {style: style});
-
-      // Add an instance of the card Element into the `card-element` <div>.
-      card.mount('#card-element');
-
-      // Handle real-time validation errors from the card Element.
-      card.addEventListener('change', function(event) {
-        var displayError = document.getElementById('card-errors');
-        if (event.error) {
-          displayError.textContent = event.error.message;
-        } else {
-          displayError.textContent = '';
-        }
-      });
-
-      // Handle form submission.
-      var form = document.getElementById('payment-form');
-      form.addEventListener('submit', function(event) {
-        event.preventDefault();
-
+      submit() {
         stripe.createToken(card).then(function(result) {
           if (result.error) {
-            // Inform the user if there was an error.
-            var errorElement = document.getElementById('card-errors');
-            errorElement.textContent = result.error.message;
+            self.hasCardErrors = true;
+            self.$forceUpdate(); // Forcing the DOM to update so the Stripe Element can update.
+            return;
           } else {
             // Send the token to your server.
-            stripeTokenHandler(result.token);
+            this.stripeTokenHandler(result.token)
           }
-        });
-      });
+        }.bind(this))
+      },
+      async stripeTokenHandler(token) {
+        console.log('excludedTaskIds', this.excludedTaskIds)
+        const data = await axios.post('stripe/charge', {
+          token: token,
+          jobId: this.bid.id,
+          excluded: this.excludedTaskIds
+        })
+        console.log(JSON.stringify(data.data))
+      },
+    },
+    mounted() {
 
-      async function stripeTokenHandler (token) {
-          try {
-              const data = await axios.post ('stripe/charge', {
-                token: token
-              });
-              console.log('stripeTokenHandler data', data.data)
-          } catch (error) {
-              console.log(error);
-          }
-      };
+      let style = {
+        base: {
+          border: '1px solid #D8D8D8',
+          borderRadius: '4px',
+          color: '#000',
+        },
 
-      // Submit the form with the token ID.
-      // function stripeTokenHandler(token) {
-        // Insert the token ID into the form so it gets submitted to the server
-        // var form = document.getElementById('payment-form');
-        // var hiddenInput = document.createElement('input');
-        // hiddenInput.setAttribute('type', 'hidden');
-        // hiddenInput.setAttribute('name', 'stripeToken');
-        // hiddenInput.setAttribute('value', token.id);
-        // form.appendChild(hiddenInput);
-        //
-        // // Submit the form
-        // form.submit();
-      // }
+        invalid: {
+          // All of the error styles go inside of here.
+        }
+
+      }
+
+     if (!card) {
+       // Create an instance of the card Element
+       card = elements.create('card', style)
+       // Add an instance of the card Element into the `card-element` <div>
+       card.mount("#card-element")
+       // card.mount(this.$refs.card)
+     }
     }
   }
 </script>
 
 <style scope>
-    /**
-     * The CSS shown here will not be introduced in the Quickstart guide, but shows
-     * how you can use CSS to style your Element's container.
-     */
+
     .StripeElement {
         box-sizing: border-box;
 

@@ -136,11 +136,15 @@
         SubContractor.toggleStripePaymentOption(jobTask)
       },
       getTasks() {
-        console.log('getTasks')
-        axios.post('/bid/tasks').then((response) => {
-          this.tasks = response.data
-          this.sTasks = this.tasks
-        })
+        if (Spark.state.user.usertype === 'contractor') {
+          console.log('getTasks')
+          axios.post('/bid/tasks').then((response) => {
+            if (response.data) {
+              this.tasks = response.data
+              this.sTasks = this.tasks
+            }
+          })
+        }
       }
     },
     created: function() {
