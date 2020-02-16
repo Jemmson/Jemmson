@@ -8,7 +8,9 @@
         >CREATE A NEW JOB
         </v-btn>
 
-        <stripe-express-dashboard>
+        <stripe-express-dashboard
+            v-if="isContractor()"
+        >
         </stripe-express-dashboard>
 
         <div v-if="isContractor()">
