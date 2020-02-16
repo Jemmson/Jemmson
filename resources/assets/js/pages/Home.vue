@@ -8,6 +8,9 @@
         >CREATE A NEW JOB
         </v-btn>
 
+        <stripe-express-dashboard>
+        </stripe-express-dashboard>
+
         <div v-if="isContractor()">
             <icon-header icon="jobs"
                          mainHeader="My Jobs as a General"
@@ -79,157 +82,160 @@
 
 <script>
 
-  import { mapState } from 'vuex'
-  import Feedback from '../components/shared/Feedback'
-  import IconHeader from '../components/shared/IconHeader'
-  import Card from '../components/shared/Card'
-  import List from '../components/shared/List'
-  import ListItem from '../components/shared/ListItem'
+    import { mapState } from 'vuex'
+    import Feedback from '../components/shared/Feedback'
+    import IconHeader from '../components/shared/IconHeader'
+    import Card from '../components/shared/Card'
+    import List from '../components/shared/List'
+    import ListItem from '../components/shared/ListItem'
+    import StripeExpressDashboard from '../components/stripe/StripeExpressDashboard';
 
-  export default {
-    props: {
-      user: Object
-    },
-    components: {
-      Feedback,
-      ListItem,
-      List,
-      IconHeader,
-      Card
-    },
-    data() {
-      return {
-        bids: '',
-        invoices: '',
-        tasks: '',
-        theUser: '',
-        sBids: 0,
-        sTasks: 0,
-        sInvoices: 0
-      }
-    },
-    computed: {
-      ...mapState({
-        job: state => state.job.model,
-        userFromState: state => state.user.user,
-      })
-    },
-    created() {
-      document.body.scrollTop = 0 // For Safari
-      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
-    },
-    methods: {
-      goToNewJob() {
-        this.$router.push('/initiate-bid')
-      },
-      contractorName() {
-        if (this.theUser !== undefined && this.theUser !== null) {
-          return this.theUser.name
-        }
-      },
-      isContractor() {
-        return this.theUser.usertype === 'contractor'
-      },
-      checkContractorStripeIsValid() {
-        if (
-          this.theUser !== undefined &&
-          this.theUser !== null
-        ) {
-          if (
-            this.theUser.contractor !== null &&
-            this.theUser.contractor !== undefined
-          ) {
-            if (
-              this.theUser.contractor.stripe_express !== null &&
-              this.theUser.contractor.stripe_express !== undefined
-            ) {
-              return true
-            } else {
-              return false
+    export default {
+        name: 'Home',
+        props: {
+            user: Object
+        },
+        components: {
+            Feedback,
+            ListItem,
+            List,
+            IconHeader,
+            StripeExpressDashboard,
+            Card
+        },
+        data() {
+            return {
+                bids: '',
+                invoices: '',
+                tasks: '',
+                theUser: '',
+                sBids: 0,
+                sTasks: 0,
+                sInvoices: 0
             }
-          }
-        }
-      },
-      route(value) {
-        if (value === 'express') {
-          axios.post('/stripe/express/dashboard').then((response) => {
-            window.location = response.data.url
-          })
-        } else {
-          this.$router.push(value)
-        }
-      },
-      bidData(message) {
-        let count = 0
-        for (let i = 0; i < this.bids.length; i++) {
-          if (this.bids[i].status === message) {
-            count++
-          }
-        }
-        return count
-      },
-      bidTaskData(message) {
-        let count = 0
-        for (let i = 0; i < this.tasks.length; i++) {
-          if (this.tasks[i].status === message) {
-            count++
-          }
-        }
-        return count
-      },
-      taskData(message) {
-        let count = 0
-        for (let i = 0; i < this.tasks.length; i++) {
-          if (this.tasks[i].job_task.status === message) {
-            count++
-          }
-        }
-        return count
-      }
-    },
-    mounted: function() {
-      this.$store.commit('setCurrentPage', this.$router.history.current.path)
-      axios.get('/jobs').then((response) => {
-        if (response.data !== undefined) {
-          this.bids = response.data
-          this.sBids = this.bids
-        } else {
-          this.bids = []
-          this.sBids = []
-        }
-      })
-      if (Spark.state.user && Spark.state.user.usertype === 'contractor') {
-        axios.post('/bid/tasks').then((response) => {
-          if (response.data !== undefined) {
-            this.tasks = response.data
-            this.sTasks = this.tasks
-          } else {
-            this.tasks = []
-            this.sTasks = []
-          }
-        })
-      }
-      axios.get('/invoices').then((response) => {
-        if (response.data !== undefined) {
-          this.invoices = response.data
-          this.sInvoices = this.invoices
-        } else {
-          this.invoices = []
-          this.sInvoices = []
-        }
+        },
+        computed: {
+            ...mapState({
+                job: state => state.job.model,
+                userFromState: state => state.user.user,
+            })
+        },
+        created() {
+            document.body.scrollTop = 0 // For Safari
+            document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
+        },
+        methods: {
+            goToNewJob() {
+                this.$router.push('/initiate-bid')
+            },
+            contractorName() {
+                if (this.theUser !== undefined && this.theUser !== null) {
+                    return this.theUser.name
+                }
+            },
+            isContractor() {
+                return this.theUser.usertype === 'contractor'
+            },
+            checkContractorStripeIsValid() {
+                if (
+                    this.theUser !== undefined &&
+                    this.theUser !== null
+                ) {
+                    if (
+                        this.theUser.contractor !== null &&
+                        this.theUser.contractor !== undefined
+                    ) {
+                        if (
+                            this.theUser.contractor.stripe_express !== null &&
+                            this.theUser.contractor.stripe_express !== undefined
+                        ) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    }
+                }
+            },
+            route(value) {
+                if (value === 'express') {
+                    axios.post('/stripe/express/dashboard').then((response) => {
+                        window.location = response.data.url
+                    })
+                } else {
+                    this.$router.push(value)
+                }
+            },
+            bidData(message) {
+                let count = 0
+                for (let i = 0; i < this.bids.length; i++) {
+                    if (this.bids[i].status === message) {
+                        count++
+                    }
+                }
+                return count
+            },
+            bidTaskData(message) {
+                let count = 0
+                for (let i = 0; i < this.tasks.length; i++) {
+                    if (this.tasks[i].status === message) {
+                        count++
+                    }
+                }
+                return count
+            },
+            taskData(message) {
+                let count = 0
+                for (let i = 0; i < this.tasks.length; i++) {
+                    if (this.tasks[i].job_task.status === message) {
+                        count++
+                    }
+                }
+                return count
+            }
+        },
+        mounted: function() {
+            this.$store.commit('setCurrentPage', this.$router.history.current.path)
+            axios.get('/jobs').then((response) => {
+                if (response.data !== undefined) {
+                    this.bids = response.data
+                    this.sBids = this.bids
+                } else {
+                    this.bids = []
+                    this.sBids = []
+                }
+            })
+            if (Spark.state.user && Spark.state.user.usertype === 'contractor') {
+                axios.post('/bid/tasks').then((response) => {
+                    if (response.data !== undefined) {
+                        this.tasks = response.data
+                        this.sTasks = this.tasks
+                    } else {
+                        this.tasks = []
+                        this.sTasks = []
+                    }
+                })
+            }
+            axios.get('/invoices').then((response) => {
+                if (response.data !== undefined) {
+                    this.invoices = response.data
+                    this.sInvoices = this.invoices
+                } else {
+                    this.invoices = []
+                    this.sInvoices = []
+                }
 
-      })
-      if (this.user.user === null || this.user.user === undefined) {
-        if (this.userFromState !== '') {
-          this.theUser = this.userFromState
-        } else {
-          this.theUser = Spark.state.user
+            })
+            if (this.user.user === null || this.user.user === undefined) {
+                if (this.userFromState !== '') {
+                    this.theUser = this.userFromState
+                } else {
+                    this.theUser = Spark.state.user
+                }
+            } else {
+                this.theUser = this.user
+            }
+            // console.log(this.bids)
+            // console.log(JSON.stringify(this.bids))
         }
-      } else {
-        this.theUser = this.user
-      }
-      // console.log(this.bids)
-      // console.log(JSON.stringify(this.bids))
     }
-  }
 </script>

@@ -1,10 +1,23 @@
 <template>
-  <button v-if="showDashboardLoginBtn" type="button" class="btn btn-normal" @click="login" :disabled="busy">
-    <span v-if="busy">
+
+  <v-card
+          class="margins-1rem"
+          v-if="showDashboardLoginBtn"
+          @click="login"
+          :disabled="busy">
+    <v-card-actions>
+      <v-btn
+        color="primary"
+        text
+      >
+        <span v-if="busy">
       <i class="fa fa-btn fa-spinner fa-spin"></i>
     </span>
-    <span>Login into Stripe Dashboard</span>
-  </button>
+        <span>Login into Stripe Dashboard</span>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+
 </template>
 
 <script>
