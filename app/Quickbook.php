@@ -364,7 +364,7 @@ class Quickbook extends Model
 //            "BillAddr" => [
 //                "Line1"=>  "123 Main Street",
 //                "City"=>  "Mountain View",
-//                "Country"=>  "USA",
+//                "Country"=>  "US",
 //                "CountrySubDivisionCode"=>  "CA",
 //                "PostalCode"=>  "94042"
 //            ],
@@ -425,7 +425,7 @@ class Quickbook extends Model
 //            "BillAddr" => [
 //                "Line1"=>  "123 Main Street",
 //                "City"=>  "Mountain View",
-//                "Country"=>  "USA",
+//                "Country"=>  "US",
 //                "CountrySubDivisionCode"=>  "CA",
 //                "PostalCode"=>  "94042"
 //            ],

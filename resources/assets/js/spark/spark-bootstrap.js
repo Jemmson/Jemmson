@@ -39,7 +39,8 @@ if (window.$ === undefined || window.jQuery === undefined) {
 }
 
 // require('bootstrap/dist/js/');
-require('bootstrap/dist/js/npm');
+require('bootstrap/dist/js/bootstrap.js');
+// require('bootstrap/dist/js/npm');
 
 /**
  * Load Vue if this application is using Vue as its framework.

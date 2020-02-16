@@ -212,404 +212,407 @@
 
 <script>
 
-  import TaskImages from '../../components/task/UploadTaskImages'
-  import ContentSection from '../shared/ContentSection'
-  import DeleteTaskModal from '../../components/job/DeleteTaskModal'
-  import ShowTaskModal from '../../components/job/ShowTaskModal'
-  import Status from '../../components/mixins/Status'
-  import Card from '../shared/Card'
-  import Currency from '../../components/mixins/Currency'
+    import TaskImages from '../../components/task/UploadTaskImages'
+    import ContentSection from '../shared/ContentSection'
+    import DeleteTaskModal from '../../components/job/DeleteTaskModal'
+    import ShowTaskModal from '../../components/job/ShowTaskModal'
+    import Status from '../../components/mixins/Status'
+    import Card from '../shared/Card'
+    import Currency from '../../components/mixins/Currency'
 
-  export default {
-    name: 'Task',
-    components: {
-      TaskImages,
-      ContentSection,
-      ShowTaskModal,
-      DeleteTaskModal,
-      Card
-    },
-    mixins: [
-      Status,
-      Currency
-    ],
-    updated() {
-      this.getStoredBidPrice
-    },
-    computed: {
-      getStoredBidPrice() {
-        // if (localStorage.getItem('bidPrice' + this.bidTask.id)) {
-        //   this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id)
-        // }
-      }
-    },
-    mounted() {
-      this.bidTask ? this.paymentType = this.bidTask.payment_type : this.paymentType = null
-    },
-    data() {
-      return {
-        paymentType: 'cash',
-        showTheTask: false,
-        disabled: {
-          submit: false,
-          finished: false,
-          deleteTask: false
+    export default {
+        name: 'Task',
+        components: {
+            TaskImages,
+            ContentSection,
+            ShowTaskModal,
+            DeleteTaskModal,
+            Card
         },
-        deleteTask: {
-          id: ''
+        mixins: [
+            Status,
+            Currency
+        ],
+        updated() {
+            this.getStoredBidPrice
         },
-        jobTask: {},
-        formattedBidPrice: '',
-        bidPrice: ''
-      }
-    },
-    props: {
-      bidTask: Object
-    },
-    methods: {
-
-      getCurrencyMask() {
-        return this.currencyMask(this.bidPrice)
-      },
-
-      subHasEnteredAPrice(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return bidTask.bid_price !== 0
-          // return true
-        }
-      },
-
-      getBidPrice(bidTask) {
-        if (bidTask) {
-          return this.convertNumToString(this.formatInput(bidTask.bid_price)).toLocaleString()
-        }
-      },
-
-      formatInput(input) {
-        if (typeof input === 'string') {
-          const numLength = input.length
-          let pricef = ''
-          if (numLength < 3) {
-            pricef = '.' + input
-            this.formattedBidPrice = pricef
-          } else if (numLength > 2) {
-            let price = ''
-            for (let i = 0; i < numLength - 2; i++) {
-              price = price + input[i]
+        computed: {
+            getStoredBidPrice() {
+                // if (localStorage.getItem('bidPrice' + this.bidTask.id)) {
+                //   this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id)
+                // }
             }
-            pricef = price + '.' + input[numLength - 2] + input[numLength - 1]
-            this.formattedBidPrice = pricef
-          }
-          return pricef
-        } else if (typeof input === 'number') {
-          let bidPrice = input / 100
-          this.formattedBidPrice = bidPrice
-          return bidPrice
+        },
+        mounted() {
+            this.bidTask ? this.paymentType = this.bidTask.payment_type : this.paymentType = null
+        },
+        data() {
+            return {
+                paymentType: 'cash',
+                showTheTask: false,
+                disabled: {
+                    submit: false,
+                    finished: false,
+                    deleteTask: false
+                },
+                deleteTask: {
+                    id: ''
+                },
+                jobTask: {},
+                formattedBidPrice: '',
+                bidPrice: ''
+            }
+        },
+        props: {
+            bidTask: Object
+        },
+        methods: {
+
+            getCurrencyMask() {
+                return this.currencyMask(this.bidPrice)
+            },
+
+            subHasEnteredAPrice(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return bidTask.bid_price !== 0
+                    // return true
+                }
+            },
+
+            getBidPrice(bidTask) {
+                if (bidTask) {
+                    return this.convertNumToString(this.formatInput(bidTask.bid_price)).toLocaleString()
+                }
+            },
+
+            formatInput(input) {
+                if (typeof input === 'string') {
+                    const numLength = input.length
+                    let pricef = ''
+                    if (numLength < 3) {
+                        pricef = '.' + input
+                        this.formattedBidPrice = pricef
+                    } else if (numLength > 2) {
+                        let price = ''
+                        for (let i = 0; i < numLength - 2; i++) {
+                            price = price + input[i]
+                        }
+                        pricef = price + '.' + input[numLength - 2] + input[numLength - 1]
+                        this.formattedBidPrice = pricef
+                    }
+                    return pricef
+                } else if (typeof input === 'number') {
+                    let bidPrice = input / 100
+                    this.formattedBidPrice = bidPrice
+                    return bidPrice
+                }
+            },
+
+            getLatestStatus() {
+                if (
+                    this.bidTask
+                    && this.bidTask.job_task
+                    && this.bidTask.job_task.job
+                    && this.bidTask.job_task.job.sub_status
+                    && this.bidTask.job_task.job.sub_status.length > 0
+                ) {
+                    return this.formatStatus(this.getSubStatus_latest(this.bidTask))
+                }
+            },
+            showTheTaskModal() {
+                $('#show-task-modal').modal('show')
+            },
+            showDeleteTaskModal(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    let job_task = bidTask.job_task
+                    this.deleteTask.id = job_task.id
+                    this.jobTask = job_task
+                    $('#delete-task-modal').modal('show')
+                }
+            },
+            deleteTheTask(action) {
+                if (action === 'delete') {
+                    this.deleteTheActualTask(this.deleteTask.id)
+                }
+                $('#delete-task-modal').modal('hide')
+            },
+            async deleteTheActualTask(id) {
+                try {
+                    const data = await axios.post('/jobTask/delete/', {
+                        id: id
+                    })
+                    this.getBid(this.job_task.job.id)
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+
+            zero() {
+                let zero = 0
+                return zero.toString()
+            },
+
+            update(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    let id = bidTask.id
+                    // debugger;
+                    let bid_price = $('#price-' + id).val()
+                    bid_price = this.convertPriceToIntegers(bid_price)
+                    let po = this.paymentType
+                    this.disabled.submit = true
+                    axios.post('/bidTask', {
+                        id: id,
+                        bid_price: bid_price,
+                        paymentType: po,
+                        job_task_id: bidTask.job_task.id,
+                        subId: bidTask.contractor_id,
+                        generalId: bidTask.job_task.job.contractor_id
+                    }).then((response) => {
+                        // TODO: security review
+                        Vue.toasted.success('Bid Sent.')
+                        User.emitChange('bidUpdated')
+                        this.disabled.submit = false
+                    }).catch((error) => {
+                        Vue.toasted.error(error.response.data.message)
+                        this.disabled.submit = false
+                    })
+                }
+            },
+            setPaymentType(value) {
+                this.paymentType = value
+            },
+            showBid(bid) {
+                // TODO: backend what should happen to the bids that wheren't accepted
+
+                const status = this.getLatestStatus()
+
+                return status !== 'denied'
+                    && status !== 'canceled_by_customer'
+                    && status !== 'canceled_by_general'
+                    && status !== 'canceled_bid_task'
+                    && status !== 'paid'
+
+                // if (bid.job_task === null) {
+                //   return false
+                // }
+                // return (
+                //   this.subsBidHasBeenAccepted()
+                //   && (this.jobTaskHasBeenApproved() || this.jobHasBeenCompleted() || this.jobTaskHasBeenAccepted())
+                //   || (this.jobHasBeenSentToTheCustomer() || this.jobTaskHasBeenInitiated))
+            },
+
+            subsBidHasBeenAccepted() {
+                if (this.bid && this.bid.job_task) {
+                    return this.bid.id === this.bid.job_task.bid_id
+                }
+            },
+
+            jobTaskHasBeenApproved() {
+                if (this.bid && this.bid.job_task) {
+                    return bid.job_task.job.status === 'job.approved'
+                }
+            },
+
+            jobHasBeenCompleted() {
+                if (this.bid && this.bid.job_task) {
+                    return bid.job_task.job.status === 'job.completed'
+                }
+            },
+
+            jobTaskHasBeenAccepted() {
+                if (this.bid && this.bid.job_task) {
+                    return bid.job_task.status === 'bid_task.accepted'
+                }
+            },
+
+            jobHasBeenSentToTheCustomer() {
+                if (this.bid && this.bid.job_task) {
+                    return bid.job_task.status === 'bid_task.bid_sent'
+                }
+            },
+
+            jobTaskHasBeenInitiated() {
+                if (this.bid && this.bid.job_task) {
+                    return bid.job_task.status === 'bid_task.initiated'
+                }
+            },
+
+            getLabelClass(bidTask) {
+
+                if (bidTask && bidTask.job_task) {
+
+                    let status = this.getStatus(bidTask)
+
+                    return Format.statusLabel(
+                        status,
+                        this.isGeneral(bidTask),
+                        this.isCustomer(bidTask),
+                        bidTask
+                    )
+
+                    // if (this.isUserTheGeneral(bidTask)) {
+                    //   return Format.statusLabel(
+                    //     bidTask.job_task.status,
+                    //     this.isGeneral(bidTask),
+                    //     this.isCustomer(bidTask),
+                    //     bidTask
+                    //   )
+                    // } else {
+                    //   return Format.statusLabel(bidTask.status)
+                    // }
+                }
+
+            },
+            isGeneral(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return Spark.state.user.id === bidTask.job_task.contractor_id
+                }
+            },
+            isCustomer(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return Spark.state.user.usertype === 'customer'
+                }
+            },
+            status(bid_task) {
+                return User.status(bid_task.status, bid_task.job_task, false)
+            },
+
+            jobName(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return Format.jobName(bidTask.job_task.task.name)
+                }
+            },
+
+            prettyDate(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    let date = bidTask.job_task.start_date
+                    if (date == null)
+                        return ''
+                    // return the date and ignore the time
+                    date = date.split(' ')
+                    return date[0]
+                }
+            },
+
+            getTaskQuantity(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return bidTask.job_task.qty.toString()
+                }
+            },
+
+            isBidOpen(bid) {
+                const status = this.getLatestStatus();
+                if (
+                    status !== 'approved_by_customer'
+                    && status !== 'finished_job'
+                    && status !== 'finished_job_denied_by_contractor'
+                    && status !== 'customer_changes_finished_task'
+                    && status !== 'finished_job_approved_by_contractor'
+                    && status !== 'waiting_for_customer_payment'
+                    && status !== 'paid'
+                ) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            getAddress(bidTask) {
+
+                if (bidTask && bidTask.job_task) {
+                    if (bidTask.job_task.location !== null) {
+                        return bidTask.job_task.location.address_line_1 + ' ' +
+                            bidTask.job_task.location.address_line_2 + ' ' +
+                            bidTask.job_task.location.city + ' ' +
+                            bidTask.job_task.location.state + ' ' +
+                            bidTask.job_task.location.zip
+                    } else {
+                        return 'Address Not Available'
+                    }
+
+                    // return bidTask.job_task.location.address_line_1+" "+
+
+                    // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
+                    // let location_id = 0;
+                    // if (bidTask.job_task.location_id !== null) {
+                    //   location_id = bidTask.job_task.location_id;
+                    // } else {
+                    //   location_id = bidTask.job_task.job.location_id;
+                    // }
+                    // Customer.getAddress(location_id, this.location)
+                    // return this.location.location
+                }
+
+            },
+            showDeclinedMsg(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    let msg = bidTask.job_task.declined_message
+                    return msg !== null && msg !== ''
+                }
+            },
+
+            getDeclinedMessage(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return bidTask.job_task.declined_message
+                }
+            },
+
+            subHasMessage(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return bidTask.job_task.sub_message !== null && bidTask.job_task.sub_message != ''
+                }
+            },
+
+            getSubMessage(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return bidTask.job_task.sub_message
+                }
+            },
+
+            getJobTask(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return bidTask.job_task
+                }
+            },
+
+            getStatus(bidTask) {
+                if (bidTask && bidTask.job_task) {
+                    return bidTask.job_task.status
+                }
+            },
+
+            showFinishedBtn(bid) {
+                if (bid && bid.job_task) {
+                    return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied'
+                }
+            },
+            finished(bid) {
+                SubContractor.finishedTask(bid, this.disabled)
+            },
+            async getBid(id) {
+                try {
+                    const {
+                        data
+                    } = await axios.get('/job/' + id)
+                    if (data[0]) {
+                        this.bid = data[0]
+                        this.$store.commit('setJob', data[0])
+                    } else {
+                        this.bid = data
+                        this.$store.commit('setJob', data)
+                    }
+                    this.$store.commit('setJob', data)
+                } catch (error) {
+                    if (
+                        error.message === 'Not Authorized to access this resource/api' ||
+                        error.response !== undefined && error.response.status === 403
+                    ) {
+                        this.$router.push('/bids')
+                    }
+                    Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
+                }
+            }
         }
-      },
-
-      getLatestStatus() {
-        if (
-          this.bidTask
-          && this.bidTask.job_task
-          && this.bidTask.job_task.job
-          && this.bidTask.job_task.job.sub_status
-          && this.bidTask.job_task.job.sub_status.length > 0
-        ) {
-          return this.formatStatus(this.getSubStatus_latest(this.bidTask))
-        }
-      },
-      showTheTaskModal() {
-        $('#show-task-modal').modal('show')
-      },
-      showDeleteTaskModal(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          let job_task = bidTask.job_task
-          this.deleteTask.id = job_task.id
-          this.jobTask = job_task
-          $('#delete-task-modal').modal('show')
-        }
-      },
-      deleteTheTask(action) {
-        if (action === 'delete') {
-          this.deleteTheActualTask(this.deleteTask.id)
-        }
-        $('#delete-task-modal').modal('hide')
-      },
-      async deleteTheActualTask(id) {
-        try {
-          const data = await axios.post('/jobTask/delete/', {
-            id: id
-          })
-          this.getBid(this.job_task.job.id)
-        } catch (error) {
-          console.log(error)
-        }
-      },
-
-      zero() {
-        let zero = 0
-        return zero.toString()
-      },
-
-      update(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          let id = bidTask.id
-          // debugger;
-          let bid_price = $('#price-' + id).val()
-          bid_price = this.convertPriceToIntegers(bid_price)
-          let po = this.paymentType
-          this.disabled.submit = true
-          axios.post('/bid/task/', {
-            id: id,
-            bid_price: bid_price,
-            paymentType: po,
-            job_task_id: bidTask.job_task.id,
-            subId: bidTask.contractor_id,
-            generalId: bidTask.job_task.job.contractor_id
-          }).then((response) => {
-            // TODO: security review
-            Vue.toasted.success('Bid Sent.')
-            User.emitChange('bidUpdated')
-            this.disabled.submit = false
-          }).catch((error) => {
-            Vue.toasted.error(error.response.data.message)
-            this.disabled.submit = false
-          })
-        }
-      },
-      setPaymentType(value) {
-        this.paymentType = value
-      },
-      showBid(bid) {
-        // TODO: backend what should happen to the bids that wheren't accepted
-
-        const status = this.getLatestStatus()
-
-        return status !== 'denied'
-          && status !== 'canceled_by_customer'
-          && status !== 'canceled_by_general'
-          && status !== 'canceled_bid_task'
-          && status !== 'paid'
-
-        // if (bid.job_task === null) {
-        //   return false
-        // }
-        // return (
-        //   this.subsBidHasBeenAccepted()
-        //   && (this.jobTaskHasBeenApproved() || this.jobHasBeenCompleted() || this.jobTaskHasBeenAccepted())
-        //   || (this.jobHasBeenSentToTheCustomer() || this.jobTaskHasBeenInitiated))
-      },
-
-      subsBidHasBeenAccepted() {
-        if (this.bid && this.bid.job_task) {
-          return this.bid.id === this.bid.job_task.bid_id
-        }
-      },
-
-      jobTaskHasBeenApproved() {
-        if (this.bid && this.bid.job_task) {
-          return bid.job_task.job.status === 'job.approved'
-        }
-      },
-
-      jobHasBeenCompleted() {
-        if (this.bid && this.bid.job_task) {
-          return bid.job_task.job.status === 'job.completed'
-        }
-      },
-
-      jobTaskHasBeenAccepted() {
-        if (this.bid && this.bid.job_task) {
-          return bid.job_task.status === 'bid_task.accepted'
-        }
-      },
-
-      jobHasBeenSentToTheCustomer() {
-        if (this.bid && this.bid.job_task) {
-          return bid.job_task.status === 'bid_task.bid_sent'
-        }
-      },
-
-      jobTaskHasBeenInitiated() {
-        if (this.bid && this.bid.job_task) {
-          return bid.job_task.status === 'bid_task.initiated'
-        }
-      },
-
-      getLabelClass(bidTask) {
-
-        if (bidTask && bidTask.job_task) {
-
-          let status = this.getStatus(bidTask)
-
-          return Format.statusLabel(
-            status,
-            this.isGeneral(bidTask),
-            this.isCustomer(bidTask),
-            bidTask
-          )
-
-          // if (this.isUserTheGeneral(bidTask)) {
-          //   return Format.statusLabel(
-          //     bidTask.job_task.status,
-          //     this.isGeneral(bidTask),
-          //     this.isCustomer(bidTask),
-          //     bidTask
-          //   )
-          // } else {
-          //   return Format.statusLabel(bidTask.status)
-          // }
-        }
-
-      },
-      isGeneral(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return Spark.state.user.id === bidTask.job_task.contractor_id
-        }
-      },
-      isCustomer(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return Spark.state.user.usertype === 'customer'
-        }
-      },
-      status(bid_task) {
-        return User.status(bid_task.status, bid_task.job_task, false)
-      },
-
-      jobName(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return Format.jobName(bidTask.job_task.task.name)
-        }
-      },
-
-      prettyDate(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          let date = bidTask.job_task.start_date
-          if (date == null)
-            return ''
-          // return the date and ignore the time
-          date = date.split(' ')
-          return date[0]
-        }
-      },
-
-      getTaskQuantity(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return bidTask.job_task.qty.toString()
-        }
-      },
-
-      isBidOpen(bid) {
-        // if (bid && bid.job_task) {
-        //   let acceptedBid = bid.job_task.bid_id
-        //   // the contractor has not chosen a bid for the
-        //   // task yet
-        //   if (acceptedBid === null) {
-        //     return true
-        //   }
-        //
-        //   return false
-        // }
-        return true
-      },
-      getAddress(bidTask) {
-
-        if (bidTask && bidTask.job_task) {
-          if (bidTask.job_task.location !== null) {
-            return bidTask.job_task.location.address_line_1 + ' ' +
-              bidTask.job_task.location.address_line_2 + ' ' +
-              bidTask.job_task.location.city + ' ' +
-              bidTask.job_task.location.state + ' ' +
-              bidTask.job_task.location.zip
-          } else {
-            return 'Address Not Available'
-          }
-
-          // return bidTask.job_task.location.address_line_1+" "+
-
-          // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
-          // let location_id = 0;
-          // if (bidTask.job_task.location_id !== null) {
-          //   location_id = bidTask.job_task.location_id;
-          // } else {
-          //   location_id = bidTask.job_task.job.location_id;
-          // }
-          // Customer.getAddress(location_id, this.location)
-          // return this.location.location
-        }
-
-      },
-      showDeclinedMsg(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          let msg = bidTask.job_task.declined_message
-          return msg !== null && msg !== ''
-        }
-      },
-
-      getDeclinedMessage(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return bidTask.job_task.declined_message
-        }
-      },
-
-      subHasMessage(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return bidTask.job_task.sub_message !== null && bidTask.job_task.sub_message != ''
-        }
-      },
-
-      getSubMessage(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return bidTask.job_task.sub_message
-        }
-      },
-
-      getJobTask(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return bidTask.job_task
-        }
-      },
-
-      getStatus(bidTask) {
-        if (bidTask && bidTask.job_task) {
-          return bidTask.job_task.status
-        }
-      },
-
-      showFinishedBtn(bid) {
-        if (bid && bid.job_task) {
-          return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied'
-        }
-      },
-      finished(bid) {
-        SubContractor.finishedTask(bid, this.disabled)
-      },
-      async getBid(id) {
-        try {
-          const {
-            data
-          } = await axios.get('/job/' + id)
-          if (data[0]) {
-            this.bid = data[0]
-            this.$store.commit('setJob', data[0])
-          } else {
-            this.bid = data
-            this.$store.commit('setJob', data)
-          }
-          this.$store.commit('setJob', data)
-        } catch (error) {
-          if (
-            error.message === 'Not Authorized to access this resource/api' ||
-            error.response !== undefined && error.response.status === 403
-          ) {
-            this.$router.push('/bids')
-          }
-          Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
-        }
-      }
     }
-  }
 </script>
 
 <style scoped>

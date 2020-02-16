@@ -44,7 +44,7 @@ class HomeController extends Controller
         $user = Auth::user();
 
         // this is the home page
-        return view('home', compact('user'));
+        return view('/#/home/', compact('user'));
     }
 
     /**
@@ -181,6 +181,12 @@ class HomeController extends Controller
         $user->last_name = trim($request->last_name);
         $user->name = "$request->first_name $request->last_name";
         $user->phone = $this->digitsOnly($request->phone_number);
+        $user->billing_address = trim($request->address_line_1);
+        $user->billing_address_line_2 = trim($request->address_line_2);
+        $user->billing_city = trim($request->city);
+        $user->billing_state = trim($request->state);
+        $user->billing_zip = trim($request->zip);
+        $user->billing_country = 'US';
 
         try {
             $user->save();
@@ -196,7 +202,7 @@ class HomeController extends Controller
 
 
         if($user->usertype == 'contractor') {
-            return response()->json('/#/bids', 200);
+            return response()->json('/#/tasks', 200);
         } else {
             return response()->json('/#/bids', 200);
         }

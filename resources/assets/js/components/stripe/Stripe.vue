@@ -43,8 +43,11 @@
                                @click="dontShowAgain = !dontShowAgain">
                     </div>
                 </div>
-                <div class="modal-footer" v-else-if="isCustomer && notSignedUp">
-                    <signup-with-stripe>
+                <div class="modal-footer" style="justify-content: center !important"
+                     v-else-if="isCustomer && notSignedUp">
+                    <signup-with-stripe
+                        :bid="bid"
+                    >
                     </signup-with-stripe>
                 </div>
             </div>
@@ -59,7 +62,8 @@
 
   export default {
     props: {
-      user: Object
+      user: Object,
+      bid: Object
     },
     data() {
       return {
@@ -94,7 +98,7 @@
     },
     methods: {
       notAtThisTime() {
-        this.$emit('sendBid', true);
+        this.$emit('sendBid', true)
         if (this.dontShowAgain) {
           this.dontShowModalAgain()
         } else {

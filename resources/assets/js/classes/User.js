@@ -69,11 +69,23 @@ export default class User {
 
   getAllPayableTasks(jobTasks) {
     if (jobTasks !== undefined) {
-      return jobTasks.filter((jobTask) => {
-        return jobTask.status === 'bid_task.approved_by_general' || jobTask.status === 'bid_task.finished_by_general'
-      })
+
+      let payableTasks = [];
+
+      for (let i = 0; i < jobTasks.length; i++) {
+        if (
+            this.getLatestStatus(jobTasks[0].job_task_status) === 'approved_subs_work'
+            || this.getLatestStatus(jobTasks[0].job_task_status) === 'general_finished_work'
+        ) {
+          payableTasks.push(jobTasks[i])
+        }
+      }
+      return payableTasks;
     }
-    return []
+  }
+
+  getLatestStatus(jobTaskStatus) {
+    return jobTaskStatus[jobTaskStatus.length - 1].status
   }
 
   getAllUnpaidTasks(jobTasks) {

@@ -161,7 +161,7 @@ class CustomerController extends Controller
         if ($request->job_id != null) {
             return redirect('/job/' . $request->job_id . '/edit')->with('success', __('success.data.updated'));
         }
-        return view('home')->with('success', __('success.data.updated'));
+        return view('/#/home/')->with('success', __('success.data.updated'));
     }
 
     public function getAddress(Request $request)
@@ -203,7 +203,7 @@ class CustomerController extends Controller
             return QuickbooksCustomer::getAssociatedCustomers($query, Auth::user()->getAuthIdentifier());
         } else {
             $associatedUsers = ContractorCustomer::getAssociatedCustomers($users, Auth::user()->getAuthIdentifier());
-
+            $jobNumber = count(Auth::user()->jobs()->get());
             $users = [];
             foreach ($associatedUsers as $user) {
                 $u = User::select(['id', 'name', 'first_name', 'last_name', 'phone', 'email'])
@@ -211,6 +211,7 @@ class CustomerController extends Controller
                     ->toArray();
                 $u['payment_type'] = $user['quickbooks_id'];
                 $u['quickbooks_id'] = $user['quickbooks_id'];
+                $u['jobNumber'] = $jobNumber + 1;
                 array_push($users, $u);
             }
 

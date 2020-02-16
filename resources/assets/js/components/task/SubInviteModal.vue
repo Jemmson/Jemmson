@@ -90,330 +90,330 @@
 
 <script>
 
-  import { mapMutations, mapActions } from 'vuex'
-  import Phone from '../../components/mixins/Phone'
+    import {mapMutations, mapActions} from 'vuex'
+    import Phone from '../../components/mixins/Phone'
 
-  export default {
-    name: 'SubInviteModal',
-    props: {
-      bidPaymentType: String,
-      jobTask: Object,
-      jobTaskTask: Object,
-      jobTaskName: String,
-      id: Number,
-      bidId: Number
-    },
-    data() {
-      return {
-        comboResults: [{
-          text: '',
-          value: ''
-        }],
-        valid: true,
-        selected: null,
-        initiateBidForSubForm: new SparkForm({
-          task_id: 0,
-          email: '',
-          phone: '',
-          counter: 0,
-          name: '',
-          firstName: '',
-          lastName: '',
-          givenName: '',
-          familyName: '',
-          quickbooksId: '',
-          companyName: '',
-          paymentType: ''
-        }),
-        paymentTypeCash: false,
-        paymentTypeStripe: true,
-        phoneFormatError: true,
-        duplicateError: false,
-        companyName: '',
-        user: '',
-        subInvited: false,
-        phoneMask: '(###)-###-####',
-        search: null,
-        results: [],
-        disabled: {
-          accept: false,
-          invite: false
-        }
-      }
-    },
-    mixins: [Phone],
-
-    watch: {
-      search(subVal) {
-        if (subVal.length > 2) {
-          this.autoComplete()
-        }
-      },
-      selected(val) {
-        if (val !== null) {
-          const filteredComboResult = this.getComboResult(val)
-          this.fillFields(filteredComboResult)
-        }
-      }
-    },
-
-    methods: {
-      ...mapMutations(['setMobileResponse']),
-      ...mapActions(['checkMobileNumber']),
-
-      nameRules() {
-        return []
-      },
-
-      phoneRules() {
-        return []
-      },
-
-      phoneNumberMustBeMobile() {
-        return !this.phoneError()
-      },
-
-      phoneError() {
-
-        if (this.initiateBidForSubForm.phone.length > 13) {
-          return !(this.getMobileValidResponse[1] === 'mobile'
-            || this.getMobileValidResponse[1] === 'virtual')
-        }
-      },
-
-      phoneErrorMessages() {
-        if (this.phoneError() && this.getMobileValidResponse[1]) {
-          return this.getMobileValidResponse[1]
-        }
-      },
-
-      phoneMessages() {
-        if (!this.phoneError()) {
-          return this.getMobileValidResponse[1]
-        }
-      },
-
-      getComboResult(selected) {
-        for (let i = 0; i < this.results.length; i++) {
-          if (selected.value === this.results[i].id) {
-            return this.results[i]
-          }
-        }
-      },
-
-      async checkForDuplicateEmail(email) {
-        this.duplicateError = false
-        if (this.emailIsCorrectlyFormatted(email)) {
-          try {
-            const data = await axios.get('/email/duplicate/' + email)
-            if (data.data.exists) {
-              this.duplicateError = true
+    export default {
+        name: 'SubInviteModal',
+        props: {
+            bidPaymentType: String,
+            jobTask: Object,
+            jobTaskTask: Object,
+            jobTaskName: String,
+            id: Number,
+            bidId: Number
+        },
+        data() {
+            return {
+                comboResults: [{
+                    text: '',
+                    value: ''
+                }],
+                valid: true,
+                selected: null,
+                initiateBidForSubForm: new SparkForm({
+                    task_id: 0,
+                    email: '',
+                    phone: '',
+                    counter: 0,
+                    name: '',
+                    firstName: '',
+                    lastName: '',
+                    givenName: '',
+                    familyName: '',
+                    quickbooksId: '',
+                    companyName: '',
+                    paymentType: ''
+                }),
+                paymentTypeCash: false,
+                paymentTypeStripe: true,
+                phoneFormatError: true,
+                duplicateError: false,
+                companyName: '',
+                user: '',
+                subInvited: false,
+                phoneMask: '(###)-###-####',
+                search: null,
+                results: [],
+                disabled: {
+                    accept: false,
+                    invite: false
+                }
             }
-          } catch (error) {
-            console.log(error)
-          }
-        }
-      },
+        },
+        mixins: [Phone],
 
-      isContractor() {
-        if (Spark.state.user.usertype === 'contractor') {
-          return true
-        }
-        this.$router.push('/home')
-      },
-
-      emailIsCorrectlyFormatted(email) {
-        const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-        return email.match(mailformat) !== null
-      },
-      needsNewTask() {
-        this.subInvited = false
-        this.clearFields()
-      },
-      returnContractorsNotAlreadyAssignedToTask(subs) {
-
-        let filteredSubs = []
-        let assignedSubs = this.jobTask.bid_contractor_job_tasks
-
-        // TODO: need to filter on something more unique than name comparison but it is a start
-        for (let i = 0; i < subs.length; i++) {
-          let subExists = false
-          for (let j = 0; j < assignedSubs.length; j++) {
-            if (subs[i].name == assignedSubs[j].contractor.name) {
-              subExists = true
+        watch: {
+            search(subVal) {
+                if (subVal.length > 2) {
+                    this.autoComplete()
+                }
+            },
+            selected(val) {
+                if (val && val !== null) {
+                    const filteredComboResult = this.getComboResult(val)
+                    this.fillFields(filteredComboResult)
+                }
             }
-          }
-          if (!subExists) {
-            filteredSubs.push(subs[i])
-          }
-        }
+        },
 
-        return filteredSubs
+        methods: {
+            ...mapMutations(['setMobileResponse']),
+            ...mapActions(['checkMobileNumber']),
 
-      },
-      filterPhone() {
-        this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
-      },
-      async sendSubInviteToBidOnTask() {
-        await GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
-      },
-      clearAndCloseForm() {
-        this.clearFields()
-        this.companyName = ''
-        $('#sub-invite-modal_' + this.id).modal('hide')
-      },
-      clearFields() {
+            nameRules() {
+                return []
+            },
 
-        this.initiateBidForSubForm.id = ''
-        this.initiateBidForSubForm.email = ''
-        this.initiateBidForSubForm.phone = ''
-        this.initiateBidForSubForm.name = ''
-        this.initiateBidForSubForm.firstName = ''
-        this.initiateBidForSubForm.lastName = ''
-        this.initiateBidForSubForm.givenName = ''
-        this.initiateBidForSubForm.familyName = ''
-        this.initiateBidForSubForm.quickbooksId = ''
-        this.initiateBidForSubForm.companyName = ''
-        this.companyName = ''
+            phoneRules() {
+                return []
+            },
 
-      },
+            phoneNumberMustBeMobile() {
+                return !this.phoneError()
+            },
 
-      fillFields(result) {
+            phoneError() {
 
-        if (result) {
-          this.clearFields()
+                if (this.initiateBidForSubForm.phone.length > 13) {
+                    return !(this.getMobileValidResponse[1] === 'mobile'
+                        || this.getMobileValidResponse[1] === 'virtual')
+                }
+            },
 
-          this.initiateBidForSubForm.id = result.id
-          this.initiateBidForSubForm.email = result.email
-          this.initiateBidForSubForm.phone = result.phone
-          this.initiateBidForSubForm.name = result.name
-          if (result.first_name !== null && result.last_name !== null) {
+            phoneErrorMessages() {
+                if (this.phoneError() && this.getMobileValidResponse[1]) {
+                    return this.getMobileValidResponse[1]
+                }
+            },
 
-            if (result.given_name) {
-              this.initiateBidForSubForm.firstName = result.given_name
-              this.initiateBidForSubForm.lastName = result.family_name
-              this.initiateBidForSubForm.givenName = result.given_name
-              this.initiateBidForSubForm.familyName = result.family_name
-            } else if (result.first_name) {
-              this.initiateBidForSubForm.firstName = result.first_name
-              this.initiateBidForSubForm.lastName = result.last_name
-              this.initiateBidForSubForm.givenName = result.first_name
-              this.initiateBidForSubForm.familyName = result.last_name
+            phoneMessages() {
+                if (!this.phoneError()) {
+                    return this.getMobileValidResponse[1]
+                }
+            },
+
+            getComboResult(selected) {
+                for (let i = 0; i < this.results.length; i++) {
+                    if (selected.value === this.results[i].id) {
+                        return this.results[i]
+                    }
+                }
+            },
+
+            async checkForDuplicateEmail(email) {
+                this.duplicateError = false
+                if (this.emailIsCorrectlyFormatted(email)) {
+                    try {
+                        const data = await axios.get('/email/duplicate/' + email)
+                        if (data.data.exists) {
+                            this.duplicateError = true
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            },
+
+            isContractor() {
+                if (Spark.state.user.usertype === 'contractor') {
+                    return true
+                }
+                this.$router.push('/home')
+            },
+
+            emailIsCorrectlyFormatted(email) {
+                const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+                return email.match(mailformat) !== null
+            },
+            needsNewTask() {
+                this.subInvited = false
+                this.clearFields()
+            },
+            returnContractorsNotAlreadyAssignedToTask(subs) {
+
+                let filteredSubs = []
+                let assignedSubs = this.jobTask.bid_contractor_job_tasks
+
+                // TODO: need to filter on something more unique than name comparison but it is a start
+                for (let i = 0; i < subs.length; i++) {
+                    let subExists = false
+                    for (let j = 0; j < assignedSubs.length; j++) {
+                        if (subs[i].name == assignedSubs[j].contractor.name) {
+                            subExists = true
+                        }
+                    }
+                    if (!subExists) {
+                        filteredSubs.push(subs[i])
+                    }
+                }
+
+                return filteredSubs
+
+            },
+            filterPhone() {
+                this.initiateBidForSubForm.phone = Format.phone(this.initiateBidForSubForm.phone)
+            },
+            async sendSubInviteToBidOnTask() {
+                await GeneralContractor.sendSubInviteToBidOnTask(this.jobTask, this.initiateBidForSubForm, this.disabled, this.id)
+            },
+            clearAndCloseForm() {
+                this.clearFields()
+                this.companyName = ''
+                $('#sub-invite-modal_' + this.id).modal('hide')
+            },
+            clearFields() {
+
+                this.initiateBidForSubForm.id = ''
+                this.initiateBidForSubForm.email = ''
+                this.initiateBidForSubForm.phone = ''
+                this.initiateBidForSubForm.name = ''
+                this.initiateBidForSubForm.firstName = ''
+                this.initiateBidForSubForm.lastName = ''
+                this.initiateBidForSubForm.givenName = ''
+                this.initiateBidForSubForm.familyName = ''
+                this.initiateBidForSubForm.quickbooksId = ''
+                this.initiateBidForSubForm.companyName = ''
+                this.companyName = ''
+
+            },
+
+            fillFields(result) {
+
+                if (result) {
+                    this.clearFields()
+
+                    this.initiateBidForSubForm.id = result.id
+                    this.initiateBidForSubForm.email = result.email
+                    this.initiateBidForSubForm.phone = result.phone
+                    this.initiateBidForSubForm.name = result.name
+                    if (result.first_name !== null && result.last_name !== null) {
+
+                        if (result.given_name) {
+                            this.initiateBidForSubForm.firstName = result.given_name
+                            this.initiateBidForSubForm.lastName = result.family_name
+                            this.initiateBidForSubForm.givenName = result.given_name
+                            this.initiateBidForSubForm.familyName = result.family_name
+                        } else if (result.first_name) {
+                            this.initiateBidForSubForm.firstName = result.first_name
+                            this.initiateBidForSubForm.lastName = result.last_name
+                            this.initiateBidForSubForm.givenName = result.first_name
+                            this.initiateBidForSubForm.familyName = result.last_name
+                        }
+
+                    }
+                    if (this.initiateBidForSubForm.quickbooksId !== null) {
+                        this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
+                    }
+                    this.initiateBidForSubForm.companyName = result.contractor.company_name
+                    this.companyName = result.contractor.company_name
+                    this.initiateBidForSubForm.paymentType = this.bidPaymentType
+                    this.results = ''
+                    this.validateMobileNumber(this.initiateBidForSubForm.phone)
+                }
+
+            },
+
+            paymentMethod(paymentType) {
+                if (paymentType === 'cash') {
+                    this.initiateBidForSubForm.paymentType = 'cash'
+                    this.paymentTypeCash = true
+                    this.paymentTypeStripe = false
+                } else {
+                    this.initiateBidForSubForm.paymentType = 'stripe'
+                    this.paymentTypeCash = false
+                    this.paymentTypeStripe = true
+                }
+            },
+
+            async autoComplete() {
+                this.results = []
+                try {
+                    const data = await axios.get('/search/' + this.search)
+                    console.log('data', JSON.stringify(data.data))
+                    this.results = this.returnContractorsNotAlreadyAssignedToTask(data.data)
+                    this.comboResults = this.transformDataForComboBox(this.results)
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+
+            transformDataForComboBox(data) {
+                let customers = []
+                for (let i = 0; i < data.length; i++) {
+                    customers.push(
+                        {
+                            text: data[i].contractor.company_name,
+                            value: data[i].id
+                        }
+                    )
+                }
+                return customers
+            },
+
+            // autoComplete() {
+            //   this.results = []
+            //   let query = this.initiateBidForSubForm.companyName
+            //   console.log('checking for names')
+            //   if (query.length > 2) {
+            //     axios.get('/search/' + query).then(function(response) {
+            //       console.log('autocomplete', response.data)
+            //       this.results = this.returnContractorsNotAlreadyAssignedToTask(response.data)
+            //     }.bind(this))
+            //   }
+            // },
+
+            enableSubmit() {
+                return
+                (this.getMobileValidResponse[1] !== 'mobile'
+                    && this.getMobileValidResponse[1] !== 'virtual')
+                || this.duplicateError
+            },
+        },
+        computed: {
+            taskForSubInvite() {
+                // debugger;
+                return this.jobTaskTask
+            },
+            jobTaskNameForSubInvite() {
+                // debugger;
+                return this.jobTaskName
+            },
+            aResults() {
+                // if (this.results.length > 0) {
+                //     return this.results.filter((sub) => {
+                //         for (let bid of this.jobTask.bid_contractor_job_tasks) {
+                //             // if invited to bid do not show in dropdown list
+                //             if (bid.contractor_id !== sub.id && sub.id !== this.user.id) {
+                //                 return true;
+                //             }
+                //         }
+                //         // do not show self in dropdown list
+                //         // return sub.id !== this.user.id;
+                //     });
+                // }
+                // return [];
+                if (this.results.length > 0) {
+                    // return this.results.filter((sub) => {
+                    // }
+                    return this.results
+                } else {
+                    return []
+                }
+            },
+            isGeneralContractor() {
+                // General contractor is the one who created the bid
+                return this.jobTask.task.contractor_id === this.user.id
             }
-
-          }
-          if (this.initiateBidForSubForm.quickbooksId !== null) {
-            this.initiateBidForSubForm.quickbooksId = result.quickbooks_id
-          }
-          this.initiateBidForSubForm.companyName = result.contractor.company_name
-          this.companyName = result.contractor.company_name
-          this.initiateBidForSubForm.paymentType = this.bidPaymentType
-          this.results = ''
-          this.validateMobileNumber(this.initiateBidForSubForm.phone)
+        },
+        mounted: function () {
+            this.$store.commit('setPhoneLoadingValue')
+            this.user = Spark.state.user
+            Bus.$on('clearAndCloseForm', () => {
+                this.clearAndCloseForm()
+            })
         }
-
-      },
-
-      paymentMethod(paymentType) {
-        if (paymentType === 'cash') {
-          this.initiateBidForSubForm.paymentType = 'cash'
-          this.paymentTypeCash = true
-          this.paymentTypeStripe = false
-        } else {
-          this.initiateBidForSubForm.paymentType = 'stripe'
-          this.paymentTypeCash = false
-          this.paymentTypeStripe = true
-        }
-      },
-
-      async autoComplete() {
-        this.results = []
-        try {
-          const data = await axios.get('/search/' + this.search)
-          console.log('data', JSON.stringify(data.data))
-          this.results = this.returnContractorsNotAlreadyAssignedToTask(data.data)
-          this.comboResults = this.transformDataForComboBox(this.results)
-        } catch (error) {
-          console.log(error)
-        }
-      },
-
-      transformDataForComboBox(data) {
-        let customers = []
-        for (let i = 0; i < data.length; i++) {
-          customers.push(
-            {
-              text: data[i].contractor.company_name,
-              value: data[i].id
-            }
-          )
-        }
-        return customers
-      },
-
-      // autoComplete() {
-      //   this.results = []
-      //   let query = this.initiateBidForSubForm.companyName
-      //   console.log('checking for names')
-      //   if (query.length > 2) {
-      //     axios.get('/search/' + query).then(function(response) {
-      //       console.log('autocomplete', response.data)
-      //       this.results = this.returnContractorsNotAlreadyAssignedToTask(response.data)
-      //     }.bind(this))
-      //   }
-      // },
-
-      enableSubmit() {
-        return
-        (this.getMobileValidResponse[1] !== 'mobile'
-          && this.getMobileValidResponse[1] !== 'virtual')
-        || this.duplicateError
-      },
-    },
-    computed: {
-      taskForSubInvite() {
-        // debugger;
-        return this.jobTaskTask
-      },
-      jobTaskNameForSubInvite() {
-        // debugger;
-        return this.jobTaskName
-      },
-      aResults() {
-        // if (this.results.length > 0) {
-        //     return this.results.filter((sub) => {
-        //         for (let bid of this.jobTask.bid_contractor_job_tasks) {
-        //             // if invited to bid do not show in dropdown list
-        //             if (bid.contractor_id !== sub.id && sub.id !== this.user.id) {
-        //                 return true;
-        //             }
-        //         }
-        //         // do not show self in dropdown list
-        //         // return sub.id !== this.user.id;
-        //     });
-        // }
-        // return [];
-        if (this.results.length > 0) {
-          // return this.results.filter((sub) => {
-          // }
-          return this.results
-        } else {
-          return []
-        }
-      },
-      isGeneralContractor() {
-        // General contractor is the one who created the bid
-        return this.jobTask.task.contractor_id === this.user.id
-      }
-    },
-    mounted: function() {
-      this.$store.commit('setPhoneLoadingValue')
-      this.user = Spark.state.user
-      Bus.$on('clearAndCloseForm', () => {
-        this.clearAndCloseForm()
-      })
     }
-  }
 </script>
 
 <style scoped>

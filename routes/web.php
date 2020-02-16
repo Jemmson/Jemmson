@@ -97,7 +97,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('job/cancel', 'JobController@cancelJobBid');
     Route::get('/getContractor/{id}', 'ContractorController@getContractor');
     Route::get('/getCustomer/{id}', 'CustomerController@getCustomer');
-    Route::post('bid/task/', 'TaskController@updateBidContractorJobTask');
+    Route::post('/bid/task/', 'TaskController@updateBidContractorJobTask');
+    Route::post('/bidTask', 'TaskController@updateBidContractorJobTask');
     Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
     Route::post('/task/finished/sub', 'TaskController@taskFinishedBySubContractor');
     Route::post('/task/finished/general', 'TaskController@taskFinishedBGeneralContractor');
@@ -111,6 +112,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/stripe/express/task/payment', 'StripeController@sendExpressTaskPayment');
     Route::get('/stripe/hideModal', 'ContractorController@hideStripeModal');
     Route::get('/getStripeOauthUrl/{path}', 'StripeGatewayController@getStripeOauthUrl');
+
+    Route::post('/stripe/charge', 'StripeGatewayController@charge');
 
 
     Route::post('/stripe/customer', 'StripeController@saveCustomer');

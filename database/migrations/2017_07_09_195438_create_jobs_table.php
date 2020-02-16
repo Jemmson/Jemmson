@@ -27,6 +27,7 @@ class CreateJobsTable extends Migration
             $table->text('declined_message')->nullable();
             $table->string('job_name');
             $table->integer('location_id')->usigned()->nullable();
+            $table->boolean('paid_jemmson_cash_fee')->default(false);
             $table->string('paid_with_cash_message')->nullable();
             $table->string('payment_type')->default('cash');
             $table->string('qb_estimate_id')->default('NULL');

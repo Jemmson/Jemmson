@@ -202,8 +202,7 @@ $router->group(['middleware' => 'web'], function ($router) {
                 'addressLine1' => 'required',
                 'city' => 'required',
                 'state' => 'required',
-                'zip' => 'required',
-                'country' => 'required'
+                'zip' => 'required'
             ]);
 
             if ($validator->fails()) {

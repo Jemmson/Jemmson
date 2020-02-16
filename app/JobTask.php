@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\TaskFinished;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,12 +17,6 @@ class JobTask extends Model
 
     protected $table = "job_task";
     protected $guarded = [];
-
-    /**
-     * Get the task this bid belongs to
-     *
-     * @return Task
-     */
 
     /*
      * *********************************
@@ -239,6 +234,92 @@ class JobTask extends Model
         }
     }
 
+
+    public function makePayment()
+    {
+        return StripeExpress::makePayment($this);
+    }
+
+
+    public function subFinishesJobTask()
+    {
+        $task = $this->getTheTaskFromTheJobTask($this);
+        $status = __("bid_task.finished_by_sub");
+        if (!$this->updateStatus($status)) {
+            return response()->json(["message" => "Couldn't update job task.", "errors" => ["error" => ['']]], 422);
+        }
+        $this->setSubsFinishedStatus($this);
+        $this->notifyTheGeneralContractor($task->contractor_id, $task);
+        $this->resetDeclinedMessage();
+    }
+
+    public function getTheJobTask($id)
+    {
+        return JobTask::find($id);
+    }
+
+    public function getTheTaskFromTheJobTask($jobTask)
+    {
+        return $jobTask->task()->first();
+    }
+
+    public function setsGeneralsFinishedStatus($jobTask)
+    {
+        $this->setJobTaskStatus($jobTask->id, 'general_finished_work');
+    }
+
+    public function getJobTaskIdFromRequest($jobTaskId, $id)
+    {
+        if ($jobTaskId !== null) {
+            // request comes from the bid task page
+            // main object is not the task itself
+            return $jobTaskId;
+        } else {
+            return $id;
+        }
+    }
+
+    public function setSubsFinishedStatus($jobTask)
+    {
+        $this->setJobTaskStatus($jobTask->id, 'sub_finished_work');
+        $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job');
+    }
+
+    public function notifyTheGeneralContractor($contractor_id, $task)
+    {
+        $generalContractor = $this->getTheGeneralContractor($contractor_id);
+        $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
+    }
+
+    public function setJobTaskStatus($job_task_id, $status)
+    {
+        $jts = new JobTaskStatus();
+        $jts->setStatus($job_task_id, $status);
+    }
+
+    public function setSubStatus($user_id, $job_task_id, $status)
+    {
+        $ss = new SubStatus();
+        $ss->setStatus($user_id, $job_task_id, $status);
+    }
+
+    public function getTheGeneralContractor($contractor_id)
+    {
+        return User::find($contractor_id);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function updateLocation($request)
     {
         if ($this->location_id === null) {
@@ -387,5 +468,16 @@ class JobTask extends Model
         return JobTask::whereIn('job_id', $jobIds)
             ->where('status', '=', 'bid_task.accepted')
             ->select(['task_id'])->get()->toArray();
+    }
+
+    public static function totalAmountForAllPayableTasks($jobTasks)
+    {
+        $amount = 0;
+
+        foreach ($jobTasks as $jobTask) {
+            $amount = $amount + $jobTask->customer_final_price;
+        }
+
+        return $amount;
     }
 }

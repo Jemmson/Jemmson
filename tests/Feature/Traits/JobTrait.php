@@ -22,4 +22,20 @@ trait JobTrait
         return factory(Job::class)->create($params);
     }
 
+    public function customerApprovesBid(
+        $job,
+        $address,
+        $agreedStartDate,
+        $customerLocationId,
+        $jobLocationSameAsHome
+    )
+    {
+        $job->approveJob(
+            $address,
+            $agreedStartDate,
+            $customerLocationId,
+            $jobLocationSameAsHome
+        );
+    }
+
 }

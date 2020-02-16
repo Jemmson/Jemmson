@@ -114,12 +114,7 @@ class InitiateBidController extends Controller
                 ], 422);
         }
 
-        if ($this->setPaymentTypeAsDefault($request)
-            && $this->paymentTypeForContractorIsDifferentThanDBPaymentType(
-                $request->paymentType, $contractor->payment_type)
-        ) {
-            $this->updatePaymentType($contractor, $request->paymentType);
-        }
+        $this->updatePaymentType($contractor, $request->paymentTypeDefault);
 
         $js = new JobStatus();
         $js->setStatus($job->id, config("app.initiated"));
@@ -131,17 +126,6 @@ class InitiateBidController extends Controller
         $request->session()->flash('status', 'Your bid was created');
         return "Bid was created";
 
-    }
-
-    private function setPaymentTypeAsDefault($request)
-    {
-        return $request->paymentTypeDefault;
-    }
-
-    private function paymentTypeForContractorIsDifferentThanDBPaymentType(
-        $requestPaymentType, $contractorPaymentType)
-    {
-        return $requestPaymentType != $contractorPaymentType;
     }
 
     private function updatePaymentType($contractor, $requestPaymentType)

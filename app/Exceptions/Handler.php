@@ -41,7 +41,7 @@ class Handler extends ExceptionHandler
 //            dd('hello');
 //            dd('Sorry, the page you are looking for could not be found.');
 //            return redirect('home/dashboard');
-            return response()->view('errors.app', [], 500);
+//            return response()->view('errors.app', [], 500);
         }
 
         parent::report($exception);

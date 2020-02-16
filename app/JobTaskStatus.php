@@ -92,4 +92,9 @@ class JobTaskStatus extends Model
         }
     }
 
+    public static function getLastStatus($jobTaskStatus)
+    {
+        return $jobTaskStatus[count($jobTaskStatus) - 1]->status;
+    }
+
 }

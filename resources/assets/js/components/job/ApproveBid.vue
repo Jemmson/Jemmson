@@ -240,7 +240,6 @@
           : (this.showDeclineForm = true)
       },
       approve(data) {
-
         if (this.form.id && this.bid.status) {
           Customer.approveBid(this.form, this.disabled)
         } else {

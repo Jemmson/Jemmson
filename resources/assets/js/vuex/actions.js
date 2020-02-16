@@ -18,6 +18,10 @@ export const actCustomerName = ({commit}, payload) => {
   })
 }
 
+export const excludedActions = ({commit}, payload) => {
+  commit('excluded', payload)
+}
+
 function unformatNumber(number) {
   let unformattedNumber = ''
   for (let i = 0; i < number.length; i++) {

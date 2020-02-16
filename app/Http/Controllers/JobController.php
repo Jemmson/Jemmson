@@ -776,7 +776,7 @@ class JobController extends Controller
                 $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
                 $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
                 $jt->unit_price = $this->convertToDollars($jt->unit_price);
-                $jt->task->proposed_cust_price =  $this->convertToDollars($jt->task->proposed_cust_price);
+                $jt->task->proposed_cust_price = $this->convertToDollars($jt->task->proposed_cust_price);
                 $jt->task->proposed_sub_price = $this->convertToDollars($jt->task->proposed_sub_price);
                 $jt->contractor = $contractorResults[0];
 
@@ -852,8 +852,7 @@ class JobController extends Controller
      * @param \App\Job $job
      * @return \Illuminate\Http\Response
      */
-    public
-    function destroy(Request $request)
+    public function destroy(Request $request)
     {
 
 //        need to delete any bidcontrcontractorrecords
@@ -923,27 +922,42 @@ class JobController extends Controller
             ]);
         }
 
-        // TODO: what date needs to be updated here?
-        $job->agreed_start_date = $request->agreed_start_date;
-        $job->status = __('job.approved');
+        $address = [
+          "addressLine1" => $request->address_line_1,
+          "addressLine2" => $request->address_line_2,
+          "city" => $request->city,
+          "state" => $request->state,
+          "zip" => $request->zip
+        ];
 
-        $location_id = Auth::user()->customer()->first()->location_id;
+        $job->approveJob(
+            $address,
+            $request->agreed_start_date,
+            Auth::user()->customer()->first()->location_id,
+            $request->job_location_same_as_home
+    );
 
-        DB::transaction(function () use ($job, $request, $location_id) {
-            if ($request->job_location_same_as_home) {
-                $job->location_id = $location_id;
-            } else {
-                $job->newLocation($request);
-            }
-            $job->save();
-            // approve all tasks associated with this job, any exceptions?
-            JobTask::where('job_id', $job->id)
-                //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
-                ->update(['status' => __('bid_task.approved_by_customer')]);
-            JobTask::where('job_id', $job->id)
-                ->where('start_when_accepted', true)
-                ->update(['start_date' => Carbon::now()]);
-        });
+//        // TODO: what date needs to be updated here?
+//        $job->agreed_start_date = $request->agreed_start_date;
+//        $job->status = __('job.approved');
+//
+//        $location_id = Auth::user()->customer()->first()->location_id;
+//
+//        DB::transaction(function () use ($job, $request, $location_id) {
+//            if ($request->job_location_same_as_home) {
+//                $job->location_id = $location_id;
+//            } else {
+//                $job->newLocation($request);
+//            }
+//            $job->save();
+//            // approve all tasks associated with this job, any exceptions?
+//            JobTask::where('job_id', $job->id)
+//                //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+//                ->update(['status' => __('bid_task.approved_by_customer')]);
+//            JobTask::where('job_id', $job->id)
+//                ->where('start_when_accepted', true)
+//                ->update(['start_date' => Carbon::now()]);
+//        });
 
         $this->notifyAll($job);
 
@@ -962,8 +976,7 @@ class JobController extends Controller
      * @param Job $job
      * @return void
      */
-    protected
-    function notifyAll($job)
+    protected function notifyAll($job)
     {
         $generalContractor = $job->contractor()->first();
         $subContractors = $job->subs();
@@ -982,8 +995,7 @@ class JobController extends Controller
         }
     }
 
-    public
-    function action(Request $request)
+    public function action(Request $request)
     {
         $job = Job::find($request->job_id);
 

@@ -48,11 +48,27 @@
                         </tr>
                         <tr v-if="bidHasBeenSubmitted">
                             <td>Total Bid Price:</td>
-                            <td>{{ bidPrice }}</td>
+                            <td>
+                                {{ bidPrice }}
+                                <v-icon
+                                        color="primary"
+                                        @click="showFeeDialog()"
+                                        class="ml-1rem">mdi-information
+                                </v-icon>
+                            </td>
                         </tr>
                         </tbody>
                     </template>
                 </v-simple-table>
+
+
+                <info-modal
+                        :open-dialog="feeDialog"
+                        :is-customer="isCustomer"
+                        :estimated-fee="totalEstimatedFee()"
+                        :job-type="bid.payment_type"
+                        @closeFeeDialog="feeDialog = false"
+                ></info-modal>
 
 
                 <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less
@@ -82,7 +98,14 @@
                         </tr>
                         <tr>
                             <td>Total Bid Price:</td>
-                            <td>{{ bidPrice }}</td>
+                            <td>
+                                {{ bidPrice }}
+                                <v-icon
+                                        color="primary"
+                                        @click="showFeeDialog()"
+                                        class="ml-1rem">mdi-information
+                                </v-icon>
+                            </td>
                         </tr>
                         </tbody>
                     </template>
@@ -366,558 +389,603 @@
                 </main>
             </card>
         </section>
-        <stripe :user="getCurrentUser()">
+
+        <stripe
+                :bid="bid"
+                :user="getCurrentUser()">
         </stripe>
 
     </div>
 </template>
 
 <script>
-  import Info from '../shared/Info'
-  import HorizontalTable from '../shared/HorizontalTable'
-  import SubInviteModal from '../../components/task/SubInviteModal'
-  import Format from '../../classes/Format'
-  import Card from '../shared/Card'
-  import Stripe from '../stripe/Stripe'
-  import { mapGetters, mapMutations, mapActions, mapState } from 'vuex'
-  import ContentSection from '../shared/ContentSection'
-  import JobStepper from '../../components/shared/JobStepper'
-  import CompletedTasks from './CompletedTasks'
-  import ApproveBid from './ApproveBid'
-  import GeneralContractorBidActions from './GeneralContractorBidActions'
-  import Status from '../mixins/Status.js'
-  import Utilities from '../mixins/Utilities'
-  import TaskImages from '../../components/task/UploadJobImages'
+    import {mapGetters, mapMutations, mapActions, mapState} from 'vuex'
+    import ApproveBid from './ApproveBid'
+    import Card from '../shared/Card'
+    import CompletedTasks from './CompletedTasks'
+    import ContentSection from '../shared/ContentSection'
+    import GeneralContractorBidActions from './GeneralContractorBidActions'
+    import Format from '../../classes/Format'
+    import HorizontalTable from '../shared/HorizontalTable'
+    import Info from '../shared/Info'
+    import InfoModal from '../../components/documentation/InfoModal'
+    import JobStepper from '../../components/shared/JobStepper'
+    import Status from '../mixins/Status.js'
+    import Stripe from '../stripe/Stripe'
+    import SubInviteModal from '../../components/task/SubInviteModal'
+    import TaskImages from '../../components/task/UploadJobImages'
+    import Utilities from '../mixins/Utilities'
 
-  export default {
-    components: {
-      Card,
-      Stripe,
-      SubInviteModal,
-      Info,
-      ContentSection,
-      CompletedTasks,
-      HorizontalTable,
-      JobStepper,
-      TaskImages,
-      ApproveBid,
-      GeneralContractorBidActions
-    },
-    mixins: [Status, Utilities],
-    props: {
-      bid: Object,
-      isCustomer: Boolean,
-      customerName: String
-    },
-    created: function() {
-      Bus.$on('needsStripe', () => {
-        $('#stripe-modal').modal()
-      })
-      this.getUser()
-      document.body.scrollTop = 0 // For Safari
-      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
-    },
-    data() {
-      return {
-        el: 2,
-        area: {
-          area: ''
+    export default {
+        components: {
+            ApproveBid,
+            Card,
+            ContentSection,
+            CompletedTasks,
+            GeneralContractorBidActions,
+            HorizontalTable,
+            Info,
+            InfoModal,
+            JobStepper,
+            Stripe,
+            SubInviteModal,
+            TaskImages
         },
-        jobTaskItem: {},
-        addTaskStartDate: false,
-        addTaskBidPrice: false,
-        statuses: [
-          {
-            type: 'Bid Initiated',
-            description:
-              'Contractor has sent a bid but has not added a task to the job'
-          },
-          {
-            type: 'BID CHANGE REQUESTED - PLEASE REVIEW',
-            description:
-              'Customer has not approved the bid and is asking for a change to be made'
-          },
-          {
-            type: 'Bid In Progress',
-            description:
-              'Contractor has added tasks to the bid but has not yet submitted it to the customer'
-          },
-          {
-            type: 'Waiting on Customer Approval',
-            description:
-              'Contractor has submitted the finished bid and is now waiting for the customer to approve it'
-          },
-          {
-            type: 'In Progress',
-            description:
-              'The job is in progress and it is waiting for the contrator sub to finish the job'
-          },
-          {
-            type: 'Job Completed',
-            description:
-              'The Customer has paid for the job and the job is completed'
-          }
-        ],
-        subTaskWarning: false,
-        customerNotesMessage: '',
-        showPaidWithCashNotes: false,
-        disableCustomerNotesButton: false,
-        customerNotes: false,
-        customerNotes_contractor: false,
-        areaError: '',
-        payWithCashMessage: '',
-        successfulUpdate: '',
-        locationExists: false,
-        customerInfo: false,
-        paymentTypeCash: false,
-        paymentTypeStripe: true,
-        selectedPayment: 'creditCard',
-        submissionCard: false,
-        cancelBidCard: false,
-        disabled: {
-          cancelBid: false,
-          jobCompleted: false,
-          submitBid: false,
-          submitMessage: false,
-          finished: false
+        mixins: [Status, Utilities],
+        props: {
+            bid: Object,
+            isCustomer: Boolean,
+            customerName: String
         },
-        submittedMessage: false
-      }
-    },
-    computed: {
-      ...mapState({
-        selectedJob: state => state.job.model,
-      }),
-      ...mapGetters(['getCustomerName']),
-      agreedStartDate() {
-        if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
-          this.addTaskStartDate = false
-          let d = this.bid.agreed_start_date
-          let date = d.split(' ')
-          let format_date = date[0].split('-')
-          return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
-        } else {
-          if (this.isCustomer) {
-            return ''
-          } else {
-            this.addTaskStartDate = true
-            return 'Add A Task'
-          }
-
-        }
-      },
-      messageFromCustomer() {
-        if (this.bid && this.bid.customer) {
-          this.customerNotesMessage = this.bid.customer.customer.notes
-          return this.bid.customer.customer.notes
-        }
-      },
-      getPaidWithCashMessage() {
-        if (this.bid) {
-          if (this.bid.paid_with_cash_message) {
-            this.payWithCashMessage = this.bid.paid_with_cash_message
-            this.selectedPayment = 'cash'
-            return this.bid.paid_with_cash_message
-          }
-        }
-      },
-      bidPrice() {
-        if (
-          this.bid.bid_price &&
-          (this.bid.status === 'bid.initiated' ||
-            this.bid.status === 'bid.in_progress' ||
-            this.bid.status === 'job.approved' ||
-            this.bid.status === 'bid.declined' ||
-            this.bid.status === 'bid.sent'
-          )
-        ) {
-          this.addTaskBidPrice = false
-          let theBidPrice = this.bid.bid_price
-          return '$ ' + Format.decimal(theBidPrice)
-        } else {
-          if (this.isCustomer) {
-            return ''
-          } else {
-            this.addTaskBidPrice = true
-            return 'Add A Task'
-          }
-
-        }
-      },
-      showBidPrice() {
-        if (this.isCustomer) {
-          const status = this.bid.status
-          // if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
-          if (this.generalHasSentABid(this.bid)) {
-            return true
-          }
-          return false
-        }
-        return true
-      },
-      status() {
-        return User.status(this.bid.status, this.bid, Spark.state.user)
-      },
-      bidHasBeenSubmitted() {
-        // return this.bid.status !== 'bid.initiated' &&
-        //   this.bid.status !== 'bid.in_progress'
-        if (this.bid.status) {
-          return this.generalHasSentABid(this.bid)
-        }
-      },
-      showDeclinedMessage() {
-        if (this.bid && this.bid.declined_message) {
-          return (
-            !this.isCustomer &&
-            this.bid.declined_message !== null
-            && this.getJobStatus_latest(this.bid) === 'changed'
-            // && this.bid.status === 'bid.declined'
-          )
-        }
-      },
-
-      disableSubmitBid() {
-        // return this.bid.status === 'bid.sent'
-        return this.generalCanSubmitABid(this.bid)
-      },
-
-      showAddress() {
-        return (
-          this.bid.location_id !== undefined &&
-          this.bid.location_id !== null &&
-          this.bid.location !== null &&
-          !this.isCustomer
-        )
-      }
-    },
-    watch: {
-      bid: function() {
-        this.bid = this.bid
-      }
-    },
-    methods: {
-
-      bidSubmitted() {
-        this.submittedMessage = true
-      },
-
-      paid(jobTask) {
-        let status = this.getLatestJobTaskStatus(jobTask)
-
-        return status === 'paid'
-
-      },
-
-      subFinishedTask(item) {
-        let status = this.getLatestSubStatus(item)
-        return status === 'finished_job'
-      },
-
-      getLatestSubStatus(item) {
-        if (item && item.sub_statuses && item.sub_statuses.length > 0) {
-          return item.sub_statuses[item.sub_statuses.length - 1].status
-        }
-      },
-
-      approveSubsWork(jobTask) {
-        GeneralContractor.approveSubsTask(jobTask)
-      },
-
-      jobIsNotFinishedAndNotApproved(item) {
-        if (item) {
-          return !(item.status === 'job.approved'
-            || item.status === 'bid.paid')
-        }
-      },
-      showFinishedBtn(jobTask) {
-        if (this.isGeneral() &&
-          this.isAssignedToMe(jobTask, Spark.state.user.id) &&
-          (jobTask.status === 'bid_task.approved_by_customer'
-            || jobTask.status === 'bid.in_progress'
-            || jobTask.status === 'bid_task.reopened'
-            || jobTask.status === 'bid_task.finished_by_sub'
-            || jobTask.status === 'bid_task.denied'
-          )) {
-          return true
-        }
-        return false
-      },
-      openSubInvite(jobTaskId) {
-        $('#sub-invite-modal_' + jobTaskId).modal()
-      },
-      finishedTask(jobTask) {
-        GeneralContractor.finishedTask(jobTask, this.disabled)
-      },
-      isAssignedToMe(jobTask, userId) {
-        return userId === jobTask.contractor_id
-      },
-      approvedByCustomer(task) {
-        const latestStatus = this.getLatestJobTaskStatus(task)
-        return latestStatus !== 'general finished work'
-          && latestStatus !== 'sub finished work'
-          && latestStatus !== 'paid'
-      },
-      getLatestJobTaskStatus(task) {
-
-        if (task) {
-          if (task.job_task_statuses) {
-            return this.formatStatus(this.getJobTaskStatus_latest(task))
-          } else {
-            return this.formatStatus(this.getTheLatestJobTaskStatus(task.job_task_status))
-          }
-        }
-
-        if (task && task.job_task_statuses) {
-          return this.formatStatus(this.getJobTaskStatus_latest(task))
-        }
-      },
-      getSelectedJob() {
-        if (this.bid && this.bid.job_statuses) {
-          return this.bid.job_statuses[this.bid.job_statuses.length - 1].status
-        }
-        // if (this.selectedJob && this.selectedJob.length > 0) {
-        //   return this.selectedJob[0].status
-        // }
-      },
-      canAddATask() {
-        return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
-      },
-      viewContractorInfo() {
-        this.$router.push({name: 'contractor-info', params: {contractorId: this.bid.contractor.id}})
-      },
-
-      viewCustomerInfo() {
-        this.$router.push({name: 'customer-info', params: {customerId: this.bid.customer.id}})
-      },
-
-      jobTaskObject(jt) {
-        if (jt) {
-          return {
-            Name: jt.task ? jt.task.name : '',
-            Subs: jt.bid_contractor_job_tasks ? jt.bid_contractor_job_tasks.length : '',
-            Status: this.formatStatus(this.getJobTaskStatus_latest(jt)),
-            'Status Date': this.formatDate(this.dateOnly(this.getJobTaskCreationDate_latest(jt))),
-            Qty: jt.qty,
-            Price: jt.cust_final_price
-          }
-        }
-      },
-      currentStep() {
-        if (this.bid) {
-          this.step = this.getStatus(
-            this.bid.job_statuses[this.bid.job_statuses.length - 1],
-            this.bid.job_statuses[this.bid.job_statuses.length - 1],
-            this.bid.job_statuses[this.bid.job_statuses.length - 1]
-          )
-        }
-      },
-      needsApproval() {
-        // TODO: use regular status values to check these
-        return this.bid.status === 'bid.sent'
-      },
-      formatPrice(price) {
-        return '$ ' + Format.decimal(price)
-      },
-      customerHasCompletedTasks() {
-        let taskIsFinished = false
-        if ( this.bid && this.bid.job_tasks && this.bid.job_tasks.length > 0 ) {
-          for (let i = 0; i < this.bid.job_tasks.length; i++) {
-            let status = ''
-            if (this.bid.job_tasks[i].job_task_status
-              && this.bid.job_tasks[i].job_task_status.length > 0
-             ) {
-              status = this.bid.job_tasks[i].job_task_status[this.bid.job_tasks[i].job_task_status.length - 1].status
-            } else {
-              status = this.bid.job_tasks[i].job_task_statuses[this.bid.job_tasks[i].job_task_statuses.length - 1].status
+        created: function () {
+            Bus.$on('needsStripe', (excluded) => {
+                $('#stripe-modal').modal()
+            })
+            this.getUser()
+            document.body.scrollTop = 0 // For Safari
+            document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
+        },
+        data() {
+            return {
+                feeDialog: false,
+                el: 2,
+                area: {
+                    area: ''
+                },
+                jobTaskItem: {},
+                addTaskStartDate: false,
+                addTaskBidPrice: false,
+                statuses: [
+                    {
+                        type: 'Bid Initiated',
+                        description:
+                            'Contractor has sent a bid but has not added a task to the job'
+                    },
+                    {
+                        type: 'BID CHANGE REQUESTED - PLEASE REVIEW',
+                        description:
+                            'Customer has not approved the bid and is asking for a change to be made'
+                    },
+                    {
+                        type: 'Bid In Progress',
+                        description:
+                            'Contractor has added tasks to the bid but has not yet submitted it to the customer'
+                    },
+                    {
+                        type: 'Waiting on Customer Approval',
+                        description:
+                            'Contractor has submitted the finished bid and is now waiting for the customer to approve it'
+                    },
+                    {
+                        type: 'In Progress',
+                        description:
+                            'The job is in progress and it is waiting for the contrator sub to finish the job'
+                    },
+                    {
+                        type: 'Job Completed',
+                        description:
+                            'The Customer has paid for the job and the job is completed'
+                    }
+                ],
+                subTaskWarning: false,
+                customerNotesMessage: '',
+                showPaidWithCashNotes: false,
+                disableCustomerNotesButton: false,
+                customerNotes: false,
+                customerNotes_contractor: false,
+                areaError: '',
+                payWithCashMessage: '',
+                successfulUpdate: '',
+                locationExists: false,
+                customerInfo: false,
+                paymentTypeCash: false,
+                paymentTypeStripe: true,
+                selectedPayment: 'creditCard',
+                submissionCard: false,
+                cancelBidCard: false,
+                disabled: {
+                    cancelBid: false,
+                    jobCompleted: false,
+                    submitBid: false,
+                    submitMessage: false,
+                    finished: false
+                },
+                submittedMessage: false
             }
-            if (status === 'approved_subs_work' || status === 'general_finished_work') {
-              taskIsFinished = true
+        },
+        computed: {
+            ...mapState({
+                selectedJob: state => state.job.model,
+            }),
+            ...mapGetters(['getCustomerName']),
+            agreedStartDate() {
+                if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
+                    this.addTaskStartDate = false
+                    let d = this.bid.agreed_start_date
+                    let date = d.split(' ')
+                    let format_date = date[0].split('-')
+                    return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
+                } else {
+                    if (this.isCustomer) {
+                        return ''
+                    } else {
+                        this.addTaskStartDate = true
+                        return 'Add A Task'
+                    }
+
+                }
+            },
+            messageFromCustomer() {
+                if (this.getJob() && this.bid.customer) {
+                    this.customerNotesMessage = this.bid.customer.customer.notes
+                    return this.bid.customer.customer.notes
+                }
+            },
+            getPaidWithCashMessage() {
+                if (this.getJob()) {
+                    if (this.bid.paid_with_cash_message) {
+                        this.payWithCashMessage = this.bid.paid_with_cash_message
+                        this.selectedPayment = 'cash'
+                        return this.bid.paid_with_cash_message
+                    }
+                }
+            },
+            bidPrice() {
+                if (
+                    this.bid.bid_price &&
+                    (this.bid.status === 'bid.initiated' ||
+                        this.bid.status === 'bid.in_progress' ||
+                        this.bid.status === 'job.approved' ||
+                        this.bid.status === 'bid.declined' ||
+                        this.bid.status === 'bid.sent'
+                    )
+                ) {
+                    this.addTaskBidPrice = false
+                    let theBidPrice = this.bid.bid_price
+                    return '$ ' + Format.decimal(theBidPrice)
+                } else {
+                    if (this.isCustomer) {
+                        return ''
+                    } else {
+                        this.addTaskBidPrice = true
+                        return 'Add A Task'
+                    }
+
+                }
+            },
+            showBidPrice() {
+                if (this.isCustomer) {
+                    const status = this.bid.status
+                    // if (status !== 'bid.initiated' && status !== 'bid.in_progress') {
+                    if (this.generalHasSentABid(this.getJob())) {
+                        return true
+                    }
+                    return false
+                }
+                return true
+            },
+            status() {
+                return User.status(this.bid.status, this.bid, Spark.state.user)
+            },
+            bidHasBeenSubmitted() {
+                // return this.bid.status !== 'bid.initiated' &&
+                //   this.bid.status !== 'bid.in_progress'
+                if (this.bid.status) {
+                    return this.generalHasSentABid(this.bid)
+                }
+            },
+            showDeclinedMessage() {
+                if (this.bid && this.bid.declined_message) {
+                    return (
+                        !this.isCustomer &&
+                        this.bid.declined_message !== null
+                        && this.getJobStatus_latest(this.getJob()) === 'changed'
+                        // && this.bid.status === 'bid.declined'
+                    )
+                }
+            },
+
+            disableSubmitBid() {
+                // return this.bid.status === 'bid.sent'
+                return this.generalCanSubmitABid(this.getJob())
+            },
+
+            showAddress() {
+                return (
+                    this.bid.location_id !== undefined &&
+                    this.bid.location_id !== null &&
+                    this.bid.location !== null &&
+                    !this.isCustomer
+                )
             }
-          }
-        }
-        return this.isCustomer && taskIsFinished
-      },
-      getCompanyName() {
-        if (this.bid) {
-          if (this.bid.job_tasks && (this.bid.job_tasks.length !== 0)) {
-            if (this.bid.job_tasks[0].task && this.bid.job_tasks[0].task.contractor) {
-              return this.bid.job_tasks[0].task.contractor.company_name
+        },
+        watch: {
+            bid: function () {
+                this.bid = this.bid
             }
-            if (this.bid.contractor.contractor) {
-              return this.bid.contractor.contractor.company_name
+        },
+        methods: {
+
+            totalEstimatedFee() {
+                if (this.bid.payment_type === 'cash') {
+                    return 2.80;
+                } else {
+                    return (parseFloat(this.getBidPriceValue(this.bidPrice)) * .029) + this.getStripeFlatRateCharges() + 2.50
+                }
+            },
+
+            getBidPriceValue(bidPrice) {
+                const bp = bidPrice.split(' ')
+                return bp[1]
+            },
+
+            getStripeFlatRateCharges() {
+                return this.getNumberOfJobTasks() * .30
+            },
+
+            getNumberOfJobTasks() {
+                if (this.getJob() && this.getJobTasks()) {
+                    return this.bid.job_tasks.length
+                }
+            },
+
+            getJobTasks() {
+                if (this.getJob()) {
+                    return this.bid.job_tasks
+                }
+            },
+
+            getJob() {
+                return this.bid
+            },
+
+            showFeeDialog() {
+                this.feeDialog = true
+            },
+
+            bidSubmitted() {
+                this.submittedMessage = true
+            },
+
+            paid(jobTask) {
+                let status = this.getLatestJobTaskStatus(jobTask)
+
+                return status === 'paid'
+
+            },
+
+            subFinishedTask(item) {
+                let status = this.getLatestSubStatus(item)
+                return status === 'finished_job'
+            },
+
+            getLatestSubStatus(item) {
+                if (item && item.sub_statuses && item.sub_statuses.length > 0) {
+                    return item.sub_statuses[item.sub_statuses.length - 1].status
+                }
+            },
+
+            approveSubsWork(jobTask) {
+                GeneralContractor.approveSubsTask(jobTask)
+            },
+
+            jobIsNotFinishedAndNotApproved(item) {
+                if (item) {
+                    return !(item.status === 'job.approved'
+                        || item.status === 'bid.paid')
+                }
+            },
+            showFinishedBtn(jobTask) {
+                if (this.isGeneral() &&
+                    this.isAssignedToMe(jobTask, Spark.state.user.id) &&
+                    (jobTask.status === 'bid_task.approved_by_customer'
+                        || jobTask.status === 'bid.in_progress'
+                        || jobTask.status === 'bid_task.reopened'
+                        || jobTask.status === 'bid_task.finished_by_sub'
+                        || jobTask.status === 'bid_task.denied'
+                    )) {
+                    return true
+                }
+                return false
+            },
+            openSubInvite(jobTaskId) {
+                $('#sub-invite-modal_' + jobTaskId).modal()
+            },
+            finishedTask(jobTask) {
+                GeneralContractor.finishedTask(jobTask, this.disabled)
+            },
+            isAssignedToMe(jobTask, userId) {
+                return userId === jobTask.contractor_id
+            },
+            approvedByCustomer(task) {
+                const latestStatus = this.getLatestJobTaskStatus(task)
+                return latestStatus !== 'general finished work'
+                    && latestStatus !== 'sub finished work'
+                    && latestStatus !== 'paid'
+            },
+            getLatestJobTaskStatus(task) {
+
+                if (task) {
+                    if (task.job_task_statuses) {
+                        return this.formatStatus(this.getJobTaskStatus_latest(task))
+                    } else {
+                        return this.formatStatus(this.getTheLatestJobTaskStatus(task.job_task_status))
+                    }
+                }
+
+                if (task && task.job_task_statuses) {
+                    return this.formatStatus(this.getJobTaskStatus_latest(task))
+                }
+            },
+            getSelectedJob() {
+                if (this.getJob() && this.bid.job_statuses) {
+                    return this.bid.job_statuses[this.bid.job_statuses.length - 1].status
+                }
+                // if (this.selectedJob && this.selectedJob.length > 0) {
+                //   return this.selectedJob[0].status
+                // }
+            },
+            canAddATask() {
+                return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
+            },
+            viewContractorInfo() {
+                this.$router.push({name: 'contractor-info', params: {contractorId: this.bid.contractor.id}})
+            },
+
+            viewCustomerInfo() {
+                if (this.getJob()) {
+                    this.$router.push({name: 'customer-info', params: {customerId: this.bid.customer.id}})
+                }
+            },
+
+            jobTaskObject(jt) {
+                if (jt) {
+                    return {
+                        Name: jt.task ? jt.task.name : '',
+                        Subs: jt.bid_contractor_job_tasks ? jt.bid_contractor_job_tasks.length : '',
+                        Status: this.formatStatus(this.getJobTaskStatus_latest(jt)),
+                        'Status Date': this.formatDate(this.dateOnly(this.getJobTaskCreationDate_latest(jt))),
+                        Qty: jt.qty,
+                        Price: jt.cust_final_price
+                    }
+                }
+            },
+            currentStep() {
+                if (this.getJob()) {
+                    this.step = this.getStatus(
+                        this.bid.job_statuses[this.bid.job_statuses.length - 1],
+                        this.bid.job_statuses[this.bid.job_statuses.length - 1],
+                        this.bid.job_statuses[this.bid.job_statuses.length - 1]
+                    )
+                }
+            },
+            needsApproval() {
+                // TODO: use regular status values to check these
+                return this.bid.status === 'bid.sent'
+            },
+            formatPrice(price) {
+                return '$ ' + Format.decimal(price)
+            },
+            customerHasCompletedTasks() {
+                let taskIsFinished = false
+                if (this.getJob() && this.getJobTasks() && this.getNumberOfJobTasks() > 0) {
+                    for (let i = 0; i < this.getNumberOfJobTasks(); i++) {
+                        let status = ''
+                        if (this.bid.job_tasks[i].job_task_status
+                            && this.bid.job_tasks[i].job_task_status.length > 0
+                        ) {
+                            status = this.bid.job_tasks[i].job_task_status[this.bid.job_tasks[i].job_task_status.length - 1].status
+                        } else {
+                            status = this.bid.job_tasks[i].job_task_statuses[this.bid.job_tasks[i].job_task_statuses.length - 1].status
+                        }
+                        if (status === 'approved_subs_work' || status === 'general_finished_work') {
+                            taskIsFinished = true
+                        }
+                    }
+                }
+                return this.isCustomer && taskIsFinished
+            },
+            getCompanyName() {
+                if (this.getJob()) {
+                    if (this.getJobTasks() && (this.getNumberOfJobTasks() !== 0)) {
+                        if (this.bid.job_tasks[0].task && this.bid.job_tasks[0].task.contractor) {
+                            return this.bid.job_tasks[0].task.contractor.company_name
+                        }
+                        if (this.bid.contractor.contractor) {
+                            return this.bid.contractor.contractor.company_name
+                        }
+                    } else if (this.bid.contractor) {
+                        return this.bid.contractor.contractor.company_name
+                    }
+                }
+            },
+            bidHasNoTasks() {
+                if (this.getJobTasks()) {
+                    return this.getNumberOfJobTasks() === 0
+                }
+            },
+            getCurrentUser() {
+                if (Spark.state) {
+                    return Spark.state.user
+                }
+            },
+            cancelDialog() {
+                this.cancelBidCard = false
+                this.submissionCard = false
+                this.disabled.cancelBid = false
+                this.disabled.submitBid = false
+            },
+            getUser() {
+                switch (Spark.state.user.usertype) {
+                    case 'customer':
+                        return 'customer'
+                    case 'contractor':
+                        if (Spark.state.user.id === this.bid.contractor_id) {
+                            return 'general'
+                        } else {
+                            return 'sub'
+                        }
+                }
+            },
+            openCancelDialogCard() {
+                this.cancelBidCard = true
+                this.disabled.cancelBid = true
+            },
+            showPreApprovedActions() {
+                return this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed' && this.isGeneral(this.bid.contractor_id, Spark.state.user.id)
+            },
+            cancelTheBid() {
+                this.disabled.cancelBid = true
+                this.cancelBidCard = false
+                this.disabled.cancelBid = false
+            },
+            submitTheBid() {
+                this.submissionCard = false
+                this.disabled.submitBid = false
+                this.notifyCustomerOfFinishedBid()
+            },
+            showSubmissionCard() {
+                console.log('hello')
+                this.cancelBidCard = false
+                this.submissionCard = true
+                this.disabled.submitBid = true
+            },
+
+            showCancelCard() {
+                this.disabled.cancelBid = true
+                this.submissionCard = false
+                this.cancelBidCard = true
+            },
+
+            notifyCustomerOfFinishedBid() {
+
+                // go through each job task and compare the sub price to the contractor task price
+                // first check if there is a sub.
+                // check if the sub price is an accepted price
+                // compare the the accepted sub price to the contractor price
+                // if the accepted sub price is higher then throw an error
+
+                let subTaskWarning = false
+                for (let i = 0; i < this.getNumberOfJobTasks(); i++) {
+                    if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
+                        subTaskWarning = true
+                    }
+                }
+
+                if (!subTaskWarning) {
+                    this.subTaskWarning = false
+                    GeneralContractor.notifyCustomerOfFinishedBid(this.getJob(), this.disabled)
+                } else {
+                    console.log('subs price is higher than contractor price')
+                    this.subTaskWarning = true
+                }
+
+            },
+
+            isGeneral(contractor_id, user_id) {
+                if (this.getJob() !== null) {
+                    return contractor_id === user_id
+                }
+                return false
+            },
+            viewTasks() {
+                this.$router.push('/job/tasks')
+            },
+            paymentMethod(paymentType) {
+                if (paymentType === 'cash') {
+                    this.selectedPayment = 'cash'
+                    this.paymentTypeCash = true
+                    this.paymentTypeStripe = false
+                } else {
+                    this.selectedPayment = 'stripe'
+                    this.paymentTypeCash = false
+                    this.paymentTypeStripe = true
+                }
+            },
+            async submitPayWithCashMessage() {
+                this.disabled.submitMessage = true
+                try {
+                    const data = await axios.post('/paidWithCashMessage', {
+                        jobId: this.bid.id,
+                        paidWithCashMessage: this.payWithCashMessage
+                    })
+
+                    if (data.data.message) {
+                        this.successfulUpdate = 'true'
+                        setTimeout(function () {
+                            this.successfulUpdate = ''
+                            this.disabled.submitMessage = false
+                        }.bind(this), 2000)
+                    } else {
+                        this.successfulUpdate = 'false'
+                        setTimeout(function () {
+                            this.successfulUpdate = ''
+                            this.disabled.submitMessage = false
+                        }.bind(this), 2000)
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            getLabelClass(status) {
+                return Format.statusLabel(status)
+            },
+            showNotes() {
+                this.customerNotes = !this.customerNotes
+            },
+            ...mapMutations(['setCustomerName']),
+            ...mapActions(['actCustomerName']),
+            updateGeneralContractorNotes() {
+                Customer.updateNotesForJob(
+                    this.customerNotesMessage,
+                    this.bid.customer.id
+                )
+            },
+            updateArea() {
+                // Customer.updateArea (this.area.area, this.bid.id);
+            },
+            showArea() {
+                // console.log('user type: ' + User.isContractor())
+                return this.area.area !== '' && !this.isCustomer
+            },
+            initializePayWithCashMessageValue() {
+                if (this.getJob() && this.bid.paid_with_cash_message) {
+                    console.log('I am true')
+                    console.log(this.bid.paid_with_cash_message)
+                    this.payWithCashMessage = this.bid.paid_with_cash_message
+                    this.customerNotesMessage = this.bid.customer.customer.notes
+                }
+                if (this.getJob() && this.bid.customer) {
+                    console.log(this.bid.customer.customer.notes)
+                    this.customerNotesMessage = this.bid.customer.customer.notes
+                }
             }
-          } else if (this.bid.contractor) {
-            return this.bid.contractor.contractor.company_name
-          }
+        },
+        mounted() {
+            this.initializePayWithCashMessageValue()
         }
-      },
-      bidHasNoTasks() {
-        if (this.bid.job_tasks) {
-          return this.bid.job_tasks.length === 0
-        }
-      },
-      getCurrentUser() {
-        if (Spark.state) {
-          return Spark.state.user
-        }
-      },
-      cancelDialog() {
-        this.cancelBidCard = false
-        this.submissionCard = false
-        this.disabled.cancelBid = false
-        this.disabled.submitBid = false
-      },
-      getUser() {
-        switch (Spark.state.user.usertype) {
-          case 'customer':
-            return 'customer'
-          case 'contractor':
-            if (Spark.state.user.id === this.bid.contractor_id) {
-              return 'general'
-            } else {
-              return 'sub'
-            }
-        }
-      },
-      openCancelDialogCard() {
-        this.cancelBidCard = true
-        this.disabled.cancelBid = true
-      },
-      showPreApprovedActions() {
-        return this.bid.status !== 'job.approved' && this.bid.status !== 'job.completed' && this.isGeneral(this.bid.contractor_id, Spark.state.user.id)
-      },
-      cancelTheBid() {
-        this.disabled.cancelBid = true
-        this.cancelBidCard = false
-        this.disabled.cancelBid = false
-      },
-      submitTheBid() {
-        this.submissionCard = false
-        this.disabled.submitBid = false
-        this.notifyCustomerOfFinishedBid()
-      },
-      showSubmissionCard() {
-        console.log('hello')
-        this.cancelBidCard = false
-        this.submissionCard = true
-        this.disabled.submitBid = true
-      },
-
-      showCancelCard() {
-        this.disabled.cancelBid = true
-        this.submissionCard = false
-        this.cancelBidCard = true
-      },
-
-      notifyCustomerOfFinishedBid() {
-
-        // go through each job task and compare the sub price to the contractor task price
-        // first check if there is a sub.
-        // check if the sub price is an accepted price
-        // compare the the accepted sub price to the contractor price
-        // if the accepted sub price is higher then throw an error
-
-        let subTaskWarning = false
-        for (let i = 0; i < this.bid.job_tasks.length; i++) {
-          if (this.bid.job_tasks[i].sub_final_price > this.bid.job_tasks[i].cust_final_price) {
-            subTaskWarning = true
-          }
-        }
-
-        if (!subTaskWarning) {
-          this.subTaskWarning = false
-          GeneralContractor.notifyCustomerOfFinishedBid(this.bid, this.disabled)
-        } else {
-          console.log('subs price is higher than contractor price')
-          this.subTaskWarning = true
-        }
-
-      },
-
-      isGeneral(contractor_id, user_id) {
-        if (this.bid !== null) {
-          return contractor_id === user_id
-        }
-        return false
-      },
-      viewTasks() {
-        this.$router.push('/job/tasks')
-      },
-      paymentMethod(paymentType) {
-        if (paymentType === 'cash') {
-          this.selectedPayment = 'cash'
-          this.paymentTypeCash = true
-          this.paymentTypeStripe = false
-        } else {
-          this.selectedPayment = 'stripe'
-          this.paymentTypeCash = false
-          this.paymentTypeStripe = true
-        }
-      },
-      async submitPayWithCashMessage() {
-        this.disabled.submitMessage = true
-        try {
-          const data = await axios.post('/paidWithCashMessage', {
-            jobId: this.bid.id,
-            paidWithCashMessage: this.payWithCashMessage
-          })
-
-          if (data.data.message) {
-            this.successfulUpdate = 'true'
-            setTimeout(function() {
-              this.successfulUpdate = ''
-              this.disabled.submitMessage = false
-            }.bind(this), 2000)
-          } else {
-            this.successfulUpdate = 'false'
-            setTimeout(function() {
-              this.successfulUpdate = ''
-              this.disabled.submitMessage = false
-            }.bind(this), 2000)
-          }
-
-        } catch (error) {
-          console.log(error)
-        }
-      },
-      getLabelClass(status) {
-        return Format.statusLabel(status)
-      },
-      showNotes() {
-        this.customerNotes = !this.customerNotes
-      },
-      ...mapMutations(['setCustomerName']),
-      ...mapActions(['actCustomerName']),
-      updateGeneralContractorNotes() {
-        Customer.updateNotesForJob(
-          this.customerNotesMessage,
-          this.bid.customer.id
-        )
-      },
-      updateArea() {
-        // Customer.updateArea (this.area.area, this.bid.id);
-      },
-      showArea() {
-        // console.log('user type: ' + User.isContractor())
-        return this.area.area !== '' && !this.isCustomer
-      },
-      initializePayWithCashMessageValue() {
-        if (this.bid && this.bid.paid_with_cash_message) {
-          console.log('I am true')
-          console.log(this.bid.paid_with_cash_message)
-          this.payWithCashMessage = this.bid.paid_with_cash_message
-          this.customerNotesMessage = this.bid.customer.customer.notes
-        }
-        if (this.bid && this.bid.customer) {
-          console.log(this.bid.customer.customer.notes)
-          this.customerNotesMessage = this.bid.customer.customer.notes
-        }
-      }
-    },
-    mounted() {
-      this.initializePayWithCashMessageValue()
     }
-  }
 </script>
 
 <style lang="less" scoped>

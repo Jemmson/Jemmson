@@ -12,7 +12,6 @@
                         Back
                     </v-btn>
 
-
                     <h1 class="card-title">Details</h1>
                     <card>
                         <div class="row">
@@ -33,8 +32,7 @@
                                                @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                                     </div>
                                     <span :class="{ error: hasStartDateError }"
-                                          v-show="hasStartDateError">{{ startDateErrorMessage }}
-                                </span>
+                                          v-show="hasStartDateError">{{ startDateErrorMessage }}</span>
                                 </div>
                                 <div v-else>
                                     <div class="flex justify-content-between">
@@ -644,7 +642,7 @@
             <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
                               :job-task-task="jobTask ? jobTask.task : null"
                               :job-task-name="jobTask ? jobTask.task.name : null"
-                              :bid-payment-type="bid.payment_type"
+                              :bid-payment-type="jobTask.job.payment_type"
                               :id="jobTask ? jobTask.id : null">
             </sub-invite-modal>
 
@@ -1051,14 +1049,13 @@
       acceptSubBidForTask(bid, jobTask) {
 
         let generalId = null
-
         if (jobTask.task.contractor) {
           generalId = jobTask.task.contractor.id
         } else {
           generalId = jobTask.task.contractor_id
         }
-
         GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled, generalId)
+
       },
       showStripeToggle(jobTask) {
         return this.authUser.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===

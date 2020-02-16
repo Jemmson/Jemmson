@@ -29,3 +29,4 @@ nova/
 public/nova-assets
 /resources/assets/js/components/scratch
 /tests/JS/Scratch.spec.js
+*.icloud

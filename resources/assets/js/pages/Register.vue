@@ -135,7 +135,7 @@
                             <input id="addressLine2"
                                    name="addressLine2"
                                    autocomplete="on"
-                                   type="text" class="form-control "
+                                   type="text" class="form-control"
                                    v-model="registerForm.addressLine2">
                             <span class="help-block" v-show="registerForm.errors.addressLine2 !== ''">{{registerForm.errors.addressLine2}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
@@ -175,26 +175,6 @@
                                   v-show="registerForm.errors.zip !== ''">{{registerForm.errors.zip}}</span>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="country" class=" pt-3 pt-2">Country *</label>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    name="state"
-                                    id="country"
-                                    v-model="registerForm.country">
-                            <!--                            <select id="country"-->
-                            <!--                                    name="country"-->
-                            <!--                                    autocomplete="on"-->
-                            <!--                                    type="text" class="form-control "-->
-                            <!--                                    v-model="registerForm.country">-->
-                            <!--                                <option v-for="country in countries" :value="country">{{ country.name }}</option>-->
-                            <!--                            </select>-->
-                            <span class="help-block" v-show="registerForm.errors.country !== ''">{{registerForm.errors.country}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
-
 
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
@@ -675,7 +655,6 @@
         this.registerForm.city = location.locality
         this.registerForm.state = location.administrative_area_level_1
         this.registerForm.zip = location.postal_code
-        this.registerForm.country = location.country
       },
       goToCheckAccounting() {
         // have to check quickbooks is turned on

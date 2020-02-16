@@ -29,11 +29,6 @@ Vue.component('icon-header', require('./shared/IconHeader.vue'));
 Vue.component('main-header', require('./shared/Header.vue'));
 Vue.component('main-footer', require('./shared/Footer.vue'));
 
-
-
-
-
-
 // require('./Autocomplete.vue');
 
 // stripe

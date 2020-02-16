@@ -65,6 +65,7 @@ class StripeController extends Controller
 //            'grant_type' => "authorization_code"
 //        ];
 
+
         Log::debug(json_encode($request));
 
 //        Stripe::setApiKey('sk_test_ebg7SjOI3rsZkeV5SZsUkOxon');
@@ -199,80 +200,9 @@ class StripeController extends Controller
             'id' => 'required'
         ]);
 
-        // get modals and relevant variables 
         $jobTask = JobTask::find($request->id);
-        $task = $jobTask->task()->first();
-        $sub_contractor_id = $jobTask->contractor_id;
-        $general_contractor_id = $task->contractor_id;
 
-        // if not payable howd you get here?
-        if (!$jobTask->updatable(__('bid_task.customer_sent_payment'))) {
-            return response()->json(['message' => "Can't pay for this task yet."], 422);
-        }
-
-        // amounts
-        $subAmount = (int)$jobTask->sub_final_price;
-        $generalAmount = (int)$jobTask->cust_final_price - $subAmount;
-
-        // get stripe express modals
-        $sub_contractor = User::find($sub_contractor_id);
-        $general_contractor = User::find($general_contractor_id);
-        $sub_stripeExpress = $sub_contractor->contractor()->first()->stripeExpress()->first();
-        $general_stripeExpress = $general_contractor->contractor()->first()->stripeExpress()->first();
-
-        // do contractors have an express account with us?
-        if ($sub_stripeExpress === null && $sub_stripeExpress !== $general_stripeExpress) {
-            $sub_contractor->notify(new CustomerUnableToSendPaymentWithStripe());
-        }
-
-        if ($general_stripeExpress === null) {
-            $general_contractor->notify(new CustomerUnableToSendPaymentWithStripe());
-        }
-
-        if ($sub_stripeExpress === null || $general_stripeExpress === null) {
-            return response()->json(['message' => 'Not all contractors have Stripe'], 422);
-        }
-
-        // get stripe user ids
-        $sub_stripeUserId = $sub_stripeExpress->stripe_user_id;
-        $general_stripeUserId = $general_stripeExpress->stripe_user_id;
-
-        // charge results
-        $s_charge = [];
-        $g_charge = [];
-
-        // pay sub the sub amount on the job task
-        if ($subAmount > 0) {
-            $s_charge = \Stripe\Charge::create(array(
-                "amount" => $subAmount * 100,
-                "currency" => "usd",
-                "customer" => Auth::user()->stripe_id,
-                "destination" => array(
-                    "account" => $sub_stripeUserId,
-                ),
-            ));
-            //notify
-            $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
-        }
-
-        // pay the general the customer price - sub price 
-        if ($generalAmount > 0) {
-            $g_charge = \Stripe\Charge::create(array(
-                "amount" => (int)$generalAmount * 100,
-                "currency" => "usd",
-                "customer" => Auth::user()->stripe_id,
-                "destination" => array(
-                    "account" => $general_stripeUserId,
-                ),
-            ));
-            // notify
-            $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
-        }
-
-        // update task status
-        $jobTask->updateStatus(__('bid_task.customer_sent_payment'));
-
-        return response()->json([$s_charge, $g_charge], 200);
+        return $jobTask->makePayment();
     }
 
     /**
@@ -295,10 +225,7 @@ class StripeController extends Controller
 
 
         // get all tasks that haven't been paid for
-        $jobTasks = $job->
-        jobTasks()->
-        where('status', 'bid_task.finished_by_general')->
-        orWhere('status', 'bid_task.approved_by_general')->get();
+        $jobTasks = $this->getAllUnpaidTasks($job);
 
         if (count($jobTasks) < 1) {
             return response()->json(['message' => 'No Tasks'], 422);
@@ -307,49 +234,131 @@ class StripeController extends Controller
         $order = 'job.' . $job->id;
         $transfers = [];
 
+        $totalPrice = 0;
+
         foreach ($jobTasks as $jobTask) {
-            if (isset($excluded[$jobTask->id]) && $excluded[$jobTask->id]) {
+            if ($this->taskIsExcludedFromPayment($excluded, $jobTask)) {
                 continue;
             }
             $order .= '.' . $jobTask->id;
             $transfers[$jobTask->id] = $order . '.cash';
 
+            $totalPrice = $totalPrice + $jobTask->cust_final_price;
+
             // notify contractors that tasks were paid
-            $task = $jobTask->task()->first();
+            $task = $this->getTask($jobTask);
             $sub_contractor_id = $jobTask->contractor_id;
             $general_contractor_id = $task->contractor_id;
 
-            $general_contractor = User::find($general_contractor_id);
+            $general_contractor = $this->getGeneral($general_contractor_id);
 
-            if ($sub_contractor_id != $general_contractor_id) {
-                $sub_contractor = User::find($sub_contractor_id);
-                $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+            if ($this->isSub($sub_contractor_id, $general_contractor_id)) {
+                $sub_contractor = $this->getSub($sub_contractor_id);
+                $this->notifySub($sub_contractor, $task);
                 $this->setSubStatus($sub_contractor_id, $jobTask->id, 'paid');
             }
-            $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
+            $this->notifyGeneral($general_contractor, $task);
         }
 
         $this->setJobTaskStatus($jobTask->id, 'paid');
+
+        if(!$job->paid_jemmson_cash_fee){
+            $charge = $this->payJemmsonFees($general_contractor_id);
+            $this->markPaidJemmsonFee($job);
+        }
+
 
         $allJobTasks = $job->jobTasks()->get();
         $totalJobTasks = count($allJobTasks);
         $totalPaid = [];
         foreach ($allJobTasks as $jt) {
-            $status = $jt->jobTaskStatuses()->orderBy('created_at', 'asc')->get()->last()->status;
+            $status = $this->getLatestJobTaskStatus($jt);
             if ($status == 'paid') {
                 array_push($totalPaid, 'paid');
             }
         }
-        if (count($totalPaid) == $totalJobTasks) {
-            $this->setJobStatus($job->id, 'paid');
-        }
 
+        $this->markJobPaidIfAllTasksArePaid($totalPaid, $totalJobTasks, $job);
 
         $this->updateJobTasksAsPaid($jobTasks, $transfers, $excluded);
 
-        $job->setJobAsCompleted();
-
         return response()->json(['message' => "Payment Successful"], 200);
+    }
+
+    public function markPaidJemmsonFee($job)
+    {
+        $job->paid_jemmson_cash_fee = true;
+        $job->save();
+    }
+
+    public function payJemmsonFees($general_contractor_id)
+    {
+        return \Stripe\Charge::create([
+            "amount"   => 290,
+            "currency" => "usd",
+            "source" => $this->getGeneralsStripeAccountId($general_contractor_id)
+        ]);
+
+    }
+
+    public function getGeneralsStripeAccountId($general_contractor_id)
+    {
+        return StripeExpress::where('contractor_id', '=', $general_contractor_id)->get()->first()->stripe_user_id;
+    }
+
+    public function taskIsExcludedFromPayment($excluded, $jobTask)
+    {
+        return isset($excluded[$jobTask->id]) && $excluded[$jobTask->id];
+    }
+
+    public function markJobPaidIfAllTasksArePaid($totalPaid, $totalJobTasks, $job)
+    {
+        if (count($totalPaid) == $totalJobTasks) {
+            $this->setJobStatus($job->id, 'paid');
+        }
+    }
+
+    public function getLatestJobTaskStatus($jt)
+    {
+        return $jt->jobTaskStatuses()->orderBy('created_at', 'asc')->get()->last()->status;
+    }
+
+    public function getAllUnpaidTasks($job)
+    {
+        return $job->
+        jobTasks()->
+        where('status', 'bid_task.finished_by_general')->
+        orWhere('status', 'bid_task.approved_by_general')->get();
+    }
+
+    public function getTask($jobTask)
+    {
+        return $jobTask->task()->first();
+    }
+
+    public function notifyGeneral($general_contractor, $task)
+    {
+        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
+    }
+
+    public function isSub($sub_contractor_id, $general_contractor_id)
+    {
+        return $sub_contractor_id != $general_contractor_id;
+    }
+
+    public function getSub($sub_contractor_id)
+    {
+        return User::find($sub_contractor_id);
+    }
+
+    public function getGeneral($general_contractor_id)
+    {
+        return User::find($general_contractor_id);
+    }
+
+    public function notifySub($sub_contractor, $task)
+    {
+        $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
     }
 
     /**

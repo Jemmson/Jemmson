@@ -12,18 +12,25 @@
                 <div class="flex-1"></div>
             </div>
             <div class="flex pl-2 mb-2" v-for="jobTask in payableTasks" :key="jobTask.id">
-                <div class="flex-1">{{ jobTask.task.name }}</div>
-                <div class="flex-1 pl-1">{{ jobTask.qty }}</div>
-                <div class="flex-1 pl-1">${{ jobTask.unit_price }}</div>
-                <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.cust_final_price - jobTask.sub_final_price }}
+                <div class="flex-1 capitalize">{{ jobTask.task.name }}</div>
+                <div class="pl-1 mr-1rem">{{ jobTask.qty }}</div>
+                <div class="flex-1 pl-1">$ {{ jobTask.unit_price }}</div>
+                <div class="flex-1 pl-1" v-if="isContractor">$ {{ jobTask.cust_final_price - jobTask.sub_final_price }}
                 </div>
-                <div class="flex-1 pl-1" v-else>${{ jobTask.cust_final_price }}</div>
-                <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
                 <div class="flex-1 pl-1" v-else>
+                    <div v-if="bid.payment_type === 'cash'">
+                        $ {{ jobTask.cust_final_price }}
+                    </div>
+                    <div v-else>
+                        $ {{ totalTaskFee(jobTask.cust_final_price) }}
+                    </div>
+                </div>
+                <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
+                <div class="pl-1" v-else>
                     <input type="checkbox" name="exclude" :id="'exclude-' + jobTask.id"
                            @click="addJobTaskToExcludedList(jobTask)">
                 </div>
-                <div class="flex-1 pl-1" v-if="showReopenBtn(jobTask)">
+                <div class=" pl-1" v-if="showReopenBtn(jobTask)">
                     <v-btn
                             class="w-40"
                             color="primary"
@@ -37,7 +44,8 @@
                 <div class="flex-1 pl-1" v-else>
                     <v-btn
                             class="w-40"
-                            color="primary"
+                            color="red"
+                            text
                             v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                         Deny
                     </v-btn>
@@ -50,17 +58,23 @@
                 <div>Total: ${{ totalSubPrice }}</div>
                 <div></div>
             </div>
-            <div class="flex pl-2 mb-2 mt-4">
-                <div class="flex-1"></div>
-                <div class="flex-1"></div>
+            <div class="flex justify-between pl-2 mb-2 mt-4">
                 <div class="flex-1"></div>
                 <div class="flex-1">
                     <!--                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - -->
                     <!--                        subtractFromTotal}}</label>-->
-                    <label v-if="isCustomer">Total: ${{ totalPriceForAllCompletedTasks }}</label>
+                    <label class="w-full" v-if="isCustomer">
+
+                        <div class="w-full" style="text-align: right" v-if="bid.payment_type === 'cash'">
+                            Total: $ {{ totalTaskCashFee() }}
+                        </div>
+                        <div class="w-full" style="text-align: right" v-else>
+                            Total: $ {{ totalPriceForAllCompletedTasks }}
+                        </div>
+                    </label>
                 </div>
                 <div class="flex-1" v-if="isContractor">
-                    <label>Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
+                    <label class="w-full" style="text-align: right">Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
                 </div>
             </div>
         </div>
@@ -87,6 +101,7 @@
                 Pay With Credit Card
             </v-btn>
         </div>
+
         <transition name="slide-fade">
             <div v-show="paidCash">
                 <div class="form-group col-md-12">
@@ -128,171 +143,218 @@
 
 <script>
 
-  import Card from '../shared/Card'
-  import DenyTaskModal from '../task/DenyTaskModal'
+    import Card from '../shared/Card'
+    import DenyTaskModal from '../task/DenyTaskModal'
+    import {mapActions} from 'vuex'
 
-  export default {
-    props: {
-      bid: Object
-    },
-    components: {
-      Card,
-      DenyTaskModal
-    },
-    data() {
-      return {
-        instructions: [
-          'Pay In Person',
-          'Left Under The Mat',
-          'Check Is In The Mail'
-        ],
-        jTask: {},
-        excluded: {},
-        showPaidInCash: false,
-        subtractFromTotal: 0,
-        cashMessage: 'Pay In Person',
-        paidCash: false,
-        disableCashMessageButton: false,
-        disabled: {
-          payAll: false,
-          reopen: false,
-          payCash: false,
-        }
-      }
-    },
-    computed: {
-      totalPriceForAllCompletedTasks() {
-        let total = 0
-        let payableT = this.payableTasks
-        for (let i = 0; i < payableT.length; i++) {
-          total = total + payableT[i].cust_final_price
-        }
-        return total
-      },
-      totalCustomerPrice() {
-        let total = 0
-        if (this.payableTasks !== null) {
-          for (const task of this.payableTasks) {
-            total += (task.cust_final_price - task.sub_final_price)
-          }
-        }
-        return total
-      },
-      totalSubPrice() {
-        let total = 0
-        if (this.payableTasks !== null) {
-          for (const task of this.payableTasks) {
-            total += task.sub_final_price
-          }
-        }
-        return total
-      },
-      jobTasks() {
-        return this.bid.job_tasks
-      },
-      payableTasks() {
-        return User.getAllPayableTasks(this.jobTasks)
-      },
-      showPayWithStripeBtn() {
-        if (this.payableTasks.length > 0) {
-          return User.stripePaymentRequested(this.payableTasks)
-        }
-        return false
-      },
-      show() {
-        return this.payableTasks.length > 0
-      },
-      isContractor() {
-        return User.isContractor()
-      },
-      isCustomer() {
-        return User.isCustomer()
-      }
-    },
-    methods: {
+    export default {
+        props: {
+            bid: Object
+        },
+        components: {
+            Card,
+            DenyTaskModal
+        },
+        data() {
+            return {
+                instructions: [
+                    'Pay In Person',
+                    'Left Under The Mat',
+                    'Check Is In The Mail'
+                ],
+                jTask: {},
+                excluded: {},
+                showPaidInCash: false,
+                subtractFromTotal: 0,
+                cashMessage: 'Pay In Person',
+                paidCash: false,
+                disableCashMessageButton: false,
+                disabled: {
+                    payAll: false,
+                    reopen: false,
+                    payCash: false
+                }
+            }
+        },
+        computed: {
+            totalPriceForAllCompletedTasks() {
+                let total = 0
+                let payableT = this.payableTasks
+                for (let i = 0; i < payableT.length; i++) {
+                    total = total + this.totalTaskFee(payableT[i].cust_final_price)
+                }
+                return total
+            },
+            totalCustomerPrice() {
+                let total = 0
+                if (this.payableTasks !== null) {
+                    for (const task of this.payableTasks) {
+                        total += (task.cust_final_price - task.sub_final_price)
+                    }
+                }
+                return total
+            },
+            totalSubPrice() {
+                let total = 0
+                if (this.payableTasks !== null) {
+                    for (const task of this.payableTasks) {
+                        total += task.sub_final_price
+                    }
+                }
+                return total
+            },
+            jobTasks() {
+                return this.bid.job_tasks
+            },
+            payableTasks() {
+                return User.getAllPayableTasks(this.jobTasks)
+            },
+            showPayWithStripeBtn() {
+                if (this.payableTasks.length > 0) {
+                    return User.stripePaymentRequested(this.payableTasks)
+                }
+                return false
+            },
+            show() {
+                return this.payableTasks.length > 0
+            },
+            isContractor() {
+                return User.isContractor()
+            },
+            isCustomer() {
+                return User.isCustomer()
+            }
+        },
+        methods: {
+            ...mapActions(['excludedActions']),
 
-      cashJobOrNotSetupWithStripe() {
-        return this.cashJob() || this.needsStripe()
-      },
+            totalTaskFee(price) {
+                return Math.round((price + (parseFloat(price) * .029) + 2.50 + Number.EPSILON) * 100) / 100
+            },
 
-      creditCardJobAndContractorHasStripe(){
-        return this.creditCardJob() && this.hasStripe()
-      },
+            totalTaskCashFee() {
 
-      needsStripe() {
-        if (this.bid) {
-          return this.bid.contractor.contractor.stripe_id === false
+                if (this.atLeastOneTaskIsPaid()) {
+                    return this.totalPriceForAllCompletedTasksCash()
+                } else {
+                    return this.totalPriceForAllCompletedTasksCash() + 2.80
+                }
+
+            },
+
+            totalPriceForAllCompletedTasksCash() {
+                let total = 0
+                let payableT = this.payableTasks
+                for (let i = 0; i < payableT.length; i++) {
+                    total = total + payableT[i].cust_final_price
+                }
+                return total
+            },
+
+            atLeastOneTaskIsPaid() {
+                for (let i = 0; i < this.bid.job_tasks.length; i++) {
+                    if (this.getLatestStatus(this.bid.job_tasks[0].job_task_status) === 'paid') {
+                        return true
+                    }
+                }
+                return false
+            },
+
+            getLatestStatus(jobTaskStatus) {
+                return jobTaskStatus[jobTaskStatus.length - 1].status
+            },
+
+            cashJobOrNotSetupWithStripe() {
+                return this.cashJob() || this.needsStripe()
+            },
+
+            creditCardJobAndContractorHasStripe() {
+                return this.creditCardJob() && this.hasStripe()
+            },
+
+            needsStripe() {
+                if (this.bid) {
+                    return this.bid.contractor.contractor.stripe_id === false
+                }
+            },
+
+            hasStripe() {
+                if (this.bid) {
+                    return this.bid.contractor.contractor.stripe_id !== false
+                }
+            },
+
+            creditCardJob() {
+                return this.bid.payment_type === 'creditCard'
+            },
+
+            cashJob() {
+                return this.bid.payment_type === 'cash'
+            },
+
+            contractorIsSetupWithStripe() {
+                return this.bid.contractor.stripe_id
+            },
+            showDenyBtn(jobTask) {
+                const status = this.getLatestStatus(jobTask.job_task_status)
+                if (this.isCustomer) {
+                    return (status === 'approved_subs_work' || status === 'general_finished_work')
+                }
+            },
+            showReopenBtn(jobTask) {
+                if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
+                    'bid_task.approved_by_general')) {
+                    return true
+                }
+                return false
+            },
+            showPayCashForTaskBtn(jobTask) {
+                return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
+                    'bid_task.approved_by_general') &&
+                    User.isCustomer()
+            },
+            addJobTaskToExcludedList(jobTask) {
+                if (document.getElementById('exclude-' + jobTask.id).checked) {
+                    this.excluded[jobTask.id] = true
+                    this.subtractFromTotal += jobTask.cust_final_price
+                } else {
+                    this.excluded[jobTask.id] = false
+                    this.subtractFromTotal -= jobTask.cust_final_price
+                }
+            },
+            openDenyTaskForm(jobTask) {
+                this.jTask = jobTask
+                $('#deny-task-modal_' + jobTask.id).modal()
+            },
+
+            paidWithCash() {
+                // show message box to ask how contractor can pick up the cash
+                // in person is an option
+                // dropdown menu as well
+
+                // this.paidCash = !this.paidCash;
+                Customer.payAllPayableTasksWithCash(
+                    this.bid.id, this.excluded, this.disabled, this.cashMessage)
+            },
+            reopenTask(jobTask) {
+                SubContractor.reopenTask(jobTask, this.disabled)
+            },
+            payAllPayableTasks() {
+                console.log('excluded', this.excluded)
+                if (!User.isSignedUpWithStripe()) {
+                    Bus.$emit('needsStripe')
+                    this.excludedActions(this.excluded)
+                } else {
+                    this.selectWhichCreditCardToUse()
+                }
+                // Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)
+            },
+
+            selectWhichCreditCardToUse() {
+                this.ccmodal = true
+            }
         }
-      },
-
-      hasStripe(){
-        if (this.bid) {
-          return this.bid.contractor.contractor.stripe_id !== false
-        }
-      },
-
-      creditCardJob(){
-        return this.bid.payment_type === 'creditCard'
-      },
-
-      cashJob() {
-        return this.bid.payment_type === 'cash'
-      },
-
-      contractorIsSetupWithStripe() {
-        return this.bid.contractor.stripe_id
-      },
-      showDenyBtn(jobTask) {
-        const status = jobTask.status
-        if (this.isCustomer) {
-          return (status === 'bid_task.finished_by_general' || status === 'bid_task.approved_by_general')
-        }
-        return status === 'bid_task.finished_by_sub'
-      },
-      showReopenBtn(jobTask) {
-        if (this.isContractor && (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
-          'bid_task.approved_by_general')) {
-          return true
-        }
-        return false
-      },
-      showPayCashForTaskBtn(jobTask) {
-        return (jobTask.status === 'bid_task.finished_by_general' || jobTask.status ===
-          'bid_task.approved_by_general') &&
-          User.isCustomer()
-      },
-      addJobTaskToExcludedList(jobTask) {
-        if (document.getElementById('exclude-' + jobTask.id).checked) {
-          this.excluded[jobTask.id] = true
-          this.subtractFromTotal += jobTask.cust_final_price
-        } else {
-          this.excluded[jobTask.id] = false
-          this.subtractFromTotal -= jobTask.cust_final_price
-        }
-      },
-      openDenyTaskForm(jobTask) {
-        this.jTask = jobTask
-        $('#deny-task-modal_' + jobTask.id).modal()
-      },
-
-      paidWithCash() {
-        // show message box to ask how contractor can pick up the cash
-        // in person is an option
-        // dropdown menu as well
-
-        // this.paidCash = !this.paidCash;
-        Customer.payAllPayableTasksWithCash(
-          this.bid.id, this.excluded, this.disabled, this.cashMessage)
-      },
-      reopenTask(jobTask) {
-        SubContractor.reopenTask(jobTask, this.disabled)
-      },
-      payAllPayableTasks() {
-        Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)
-      }
-    },
-    mounted() {}
-  }
+    }
 </script>
 
 <style scoped>

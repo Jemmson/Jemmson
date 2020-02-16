@@ -1,10 +1,10 @@
 <template>
-    <form @submit="submit" method="post" id="payment-form" class="w-full">
-        <div class="flex flex-col text-left">
+    <form id="payment-form" class="w-full">
+        <div class="flex flex-col">
             <label for="card-element">
                 Sign Up With A Credit or Debit Card
             </label>
-            <div id="card-element">
+            <div id="card-element" ref="card">
                 <!-- a Stripe Element will be inserted here. -->
             </div>
 
@@ -12,22 +12,20 @@
             <div id="card-errors" role="alert"></div>
         </div>
         <br>
-        <v-btn
-                class="w-40"
-                color="primary"
-                style="float: right;"
-                @click="submit($event)"
-                :disabled="signup">
-            <span v-if="signup">
-                <i class="fa fa-btn fa-spinner fa-spin"></i>
-            </span>
-            Sign Up
-        </v-btn>
+        <button
+                @click="submit()">Sign Up
+        </button>
         <div style="clear:both;"></div>
     </form>
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
+  let stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`)
+  let elements = stripe.elements()
+  let card = undefined
+
   export default {
     data() {
       return {
@@ -55,106 +53,58 @@
       isCustomer() {
         return User.isCustomer()
       },
+      ...mapState({
+        excludedTaskIds: state => state.excluded
+      })
+    },
+    props: {
+      bid: Object
     },
     methods: {
-      async submit(event) {
-
-        // Handle form submission.
-        event.preventDefault()
-
-        let data = await this.stripe.createToken(this.card)
-
-        if (data.error) {
-          // Inform the user if there was an error.
-          var errorElement = document.getElementById('card-errors')
-          errorElement.textContent = result.error.message
-        } else {
-          // Send the token to your server.
-          this.stripeTokenHandler(result.token)
-        }
-
-        // // Insert the token ID into the form so it gets submitted to the server
-        // var form = document.getElementById('payment-form');
-        // var hiddenInput = document.createElement('input');
-        // hiddenInput.setAttribute('type', 'hidden');
-        // hiddenInput.setAttribute('name', 'stripeToken');
-        // hiddenInput.setAttribute('value', token.id);
-        // form.appendChild(hiddenInput);
-        //
-        // // Submit the form
-        // form.submit();
-
-        // event.preventDefault();
-        // this.signup = true;
-        // const {
-        //   token,
-        //   error
-        // } = await this.stripe.createToken(this.card);
-
-        // try {
-        //   const data = await this.stripe.createToken(this.card);
-        //   console.log(JSON.stringify(data));
-        // } catch (e) {
-        //   console.log(JSON.stringify(e));
-        // }
-        //
-        // if (error) {
-        //   // Inform the customer that there was an error
-        //   const errorElement = document.getElementById('card-errors');
-        //   errorElement.textContent = error.message;
-        //   this.signup = false;
-        // } else {
-        //   try {
-        //     // create stripe customer with token
-        //     this.signup = false;
-        //     $('#stripe-modal').modal('hide');
-        //     let response = await axios.post('/stripe/customer', token);
-        //     console.log('customer');
-        //     let data = response.data;
-        //     Bus.$emit('signedupStripe', data.id);
-        //     Spark.state.user.stripe_id = data.id;
-        //     Vue.toasted.success('You may now pay with stripe');
-        //   } catch (error) {
-        //     this.signup = false;
-        //     error = error.response.data;
-        //     Vue.toasted.error(error.message);
-        //   }
-        // }
+      submit() {
+        stripe.createToken(card).then(function(result) {
+          if (result.error) {
+            self.hasCardErrors = true;
+            self.$forceUpdate(); // Forcing the DOM to update so the Stripe Element can update.
+            return;
+          } else {
+            // Send the token to your server.
+            this.stripeTokenHandler(result.token)
+          }
+        }.bind(this))
       },
-
-      // Submit the form with the token ID.
-      stripeTokenHandler(token) {
-        // Insert the token ID into the form so it gets submitted to the server
-        var form = document.getElementById('payment-form')
-        var hiddenInput = document.createElement('input')
-        hiddenInput.setAttribute('type', 'hidden')
-        hiddenInput.setAttribute('name', 'stripeToken')
-        hiddenInput.setAttribute('value', token.id)
-        form.appendChild(hiddenInput)
-
-        // Submit the form
-        form.submit()
-      }
-    }
-    ,
+      async stripeTokenHandler(token) {
+        console.log('excludedTaskIds', this.excludedTaskIds)
+        const data = await axios.post('stripe/charge', {
+          token: token,
+          jobId: this.bid.id,
+          excluded: this.excludedTaskIds
+        })
+        console.log(JSON.stringify(data.data))
+      },
+    },
     mounted() {
-      this.stripe = Stripe(Spark.stripeKey)
-      const elements = this.stripe.elements()
-      // Create an instance of the card Element
-      this.card = elements.create('card', {
-        style: this.style
-      })
 
-      // Add an instance of the card Element into the `card-element` <div>
-      this.card.mount('#card-element')
-      this.card.addEventListener('change', ({error}) => {
-        const displayError = document.getElementById('card-errors')
-        if (error) {
-          displayError.textContent = error.message
-        } else {
-          displayError.textContent = ''
+      let style = {
+        base: {
+          border: '1px solid #D8D8D8',
+          borderRadius: '4px',
+          color: '#000',
+        },
+
+        invalid: {
+          // All of the error styles go inside of here.
         }
-      })
+
+      }
+
+     if (!card) {
+       // Create an instance of the card Element
+       card = elements.create('card', style)
+       // Add an instance of the card Element into the `card-element` <div>
+       card.mount("#card-element")
+       // card.mount(this.$refs.card)
+     }
     }
   }
 </script>
