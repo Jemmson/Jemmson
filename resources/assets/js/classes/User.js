@@ -74,8 +74,8 @@ export default class User {
 
       for (let i = 0; i < jobTasks.length; i++) {
         if (
-            this.getLatestStatus(jobTasks[0].job_task_status) === 'approved_subs_work'
-            || this.getLatestStatus(jobTasks[0].job_task_status) === 'general_finished_work'
+            this.getLatestStatus(jobTasks[i].job_task_status) === 'approved_subs_work'
+            || this.getLatestStatus(jobTasks[i].job_task_status) === 'general_finished_work'
         ) {
           payableTasks.push(jobTasks[i])
         }

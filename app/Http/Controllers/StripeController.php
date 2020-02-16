@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contractor;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Stripe\Account;
@@ -157,8 +158,8 @@ class StripeController extends Controller
         $pathString = "/";
 
         if (count($path) > 0) {
-            foreach ($pathArray as $p){
-                if ($p !== ""){
+            foreach ($pathArray as $p) {
+                if ($p !== "") {
                     $pathString = $pathString . $p . "/";
                 }
             }
@@ -258,15 +259,16 @@ class StripeController extends Controller
                 $this->setSubStatus($sub_contractor_id, $jobTask->id, 'paid');
             }
             $this->notifyGeneral($general_contractor, $task);
+            $this->setJobTaskStatus($jobTask->id, 'paid');
         }
 
-        $this->setJobTaskStatus($jobTask->id, 'paid');
 
-        if(!$job->paid_jemmson_cash_fee){
-            $charge = $this->payJemmsonFees($general_contractor_id);
-            $this->markPaidJemmsonFee($job);
+        if ($this->noFreeJobs($general_contractor_id)) {
+            if (!$job->paid_jemmson_cash_fee) {
+                $charge = $this->payJemmsonFees($general_contractor_id);
+                $this->markPaidJemmsonFee($job);
+            }
         }
-
 
         $allJobTasks = $job->jobTasks()->get();
         $totalJobTasks = count($allJobTasks);
@@ -285,6 +287,11 @@ class StripeController extends Controller
         return response()->json(['message' => "Payment Successful"], 200);
     }
 
+    public function noFreeJobs($general_contractor_id)
+    {
+        return Contractor::where('user_id', '=', $general_contractor_id)->get()->first()->free_jobs == 0;
+    }
+
     public function markPaidJemmsonFee($job)
     {
         $job->paid_jemmson_cash_fee = true;
@@ -294,7 +301,7 @@ class StripeController extends Controller
     public function payJemmsonFees($general_contractor_id)
     {
         return \Stripe\Charge::create([
-            "amount"   => 290,
+            "amount" => 290,
             "currency" => "usd",
             "source" => $this->getGeneralsStripeAccountId($general_contractor_id)
         ]);
