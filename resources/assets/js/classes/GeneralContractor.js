@@ -69,9 +69,9 @@ export default class GeneralContractor {
         })
     }
 
-    async approveSubsTask (jobTask) {
+    async approveSubsTask(jobTask) {
         try {
-            await axios.post ('task/approve', {
+            await axios.post('task/approve', {
                 id: jobTask.id
             });
             Vue.toasted.success('Task Has Been Approved and Customer Has Been Notified')
@@ -130,7 +130,7 @@ export default class GeneralContractor {
         console.log(bid.payment_type)
 
         if (bid.payment_type === 'stripe' &&
-          User.needsStripe()) {
+            User.needsStripe()) {
             disabled.finished = false;
             return false;
         }
@@ -146,15 +146,15 @@ export default class GeneralContractor {
             general = true;
 
         axios.post('task/finished/general', bid)
-          .then((response) => {
-              console.log(response)
-              // show a toast notification
-              User.emitChange('bidUpdated');
-              Vue.toasted.success(general ?
-                Language.lang().submit.job_finished.success.general :
-                Language.lang().submit.job_finished.success.sub);
-              disabled.finished = false;
-          }).catch((error) => {
+            .then((response) => {
+                console.log(response)
+                // show a toast notification
+                User.emitChange('bidUpdated');
+                Vue.toasted.success(general ?
+                    Language.lang().submit.job_finished.success.general :
+                    Language.lang().submit.job_finished.success.sub);
+                disabled.finished = false;
+            }).catch((error) => {
             console.error(error);
             // show a toast notification
             Vue.toasted.error('Error: ' + error.message);
@@ -169,9 +169,9 @@ export default class GeneralContractor {
             let errorMessage = ''
             let hasDateError = false
             if (
-              (pickerDate[0] < today[0]) ||
-              (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
-              (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
+                (pickerDate[0] < today[0]) ||
+                (pickerDate[0] === today[0] && pickerDate[1] < today[1]) ||
+                (pickerDate[0] === today[0] && pickerDate[1] === today[1] && pickerDate[2] < today[2])
             ) {
                 errorMessage = 'Start Date cannot be before today\'s date'
                 hasDateError = true
@@ -386,18 +386,6 @@ export default class GeneralContractor {
         this.user = user
     }
 
-    // async updateJobStartDate (date, jobId) {
-    //   try {
-    //     const data = await axios.post ('/api/task/updateJobStartDate', {
-    //       date: date,
-    //       jobId: jobId,
-    //     });
-    //     User.emitChange ('bidUpdated');
-    //     Vue.toasted.success (Language.lang ().bid_task.start_date.general);
-    //   } catch (error) {
-    //     Vue.toasted.error ('Error: ' + error.message);
-    //   }
-    // }
 }
 
 export var __useDefault = true

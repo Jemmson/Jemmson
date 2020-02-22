@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\JobTask;
 use App\Job;
+use App\User;
 use App\JobTaskStatus;
 use App\StripeExpress;
 use Illuminate\Http\Request;
-use oasis\names\specification\ubl\schema\xsd\CommonBasicComponents_2\Amount;
-use Symfony\Component\Routing\Annotation\Route;
 use Illuminate\Support\Facades\Auth;
-use function MongoDB\BSON\toJSON;
+use Illuminate\Support\Facades\Log;
+use App\TransferGroup;
 
 class StripeGatewayController extends Controller
 {
@@ -31,12 +31,14 @@ class StripeGatewayController extends Controller
         $stripeLanding = 'register';
         $stripeOauthEndpoint = 'https://connect.stripe.com/express/oauth/authorize';
         $state = "$path:" . uniqid() . "-" . uniqid() . "-" . uniqid() . "-" . uniqid();
+//        $capabilities = 'platform_payments';
 
         return "$stripeOauthEndpoint?response_type=$responseType" .
             "&stripe_landing=$stripeLanding" .
             "&redirect_uri=" . env('STRIPE_REDIRECT_URI') .
             "&client_id=$clientId" .
             "&scope=$scope" .
+//            "&suggested_capabilities[]=$capabilities" .
             "&stripe_user[email]=$user->email" .
             "&stripe_user[country]=$user->billing_country" .
             "&stripe_user[phone_number]=$user->phone" .
@@ -54,22 +56,29 @@ class StripeGatewayController extends Controller
 
     }
 
-    public function jobTasksExist($excluded)
+    public function jobTasksExist($excluded, $jobId)
     {
-        $jobTasks = [];
 
-        foreach ($excluded as $key => $item) {
-            if (!$item) {
-                $jobTask = JobTask::where("id", "=", $key)->get()->first();
-                if ($this->hasNotBeenPaid($jobTask)) {
-                    array_push($jobTasks, $jobTask);
+        $jobTaskArray = [];
+
+        $jobTasks = Job::where('id', '=', $jobId)->get()->first()->jobTasks()->get();
+
+        foreach ($jobTasks as $jobTask) {
+            $pay = true;
+            foreach ($excluded as $key => $item) {
+                if ($jobTask->id == $key) {
+                    $pay = false;
                 }
             }
+            if ($pay) {
+                array_push($jobTaskArray, $jobTask);
+            }
+
         }
 
         return [
-            "exists" => count($jobTasks) > 0,
-            "jobTasks" => $jobTasks
+            "exists" => count($jobTaskArray) > 0,
+            "jobTasks" => $jobTaskArray
         ];
     }
 
@@ -90,10 +99,61 @@ class StripeGatewayController extends Controller
         return $amount;
     }
 
+    public function getClientSecret(Request $request)
+    {
+        $jobTasks = $this->jobTasksExist($request->excluded, $request->jobId);
+
+        if ($jobTasks["exists"]) {
+            $totalAmount = JobTask::totalAmountForAllPayableTasks($jobTasks["jobTasks"]);
+        }
+
+        $generalId = Job::where('id', '=', $request->jobId)->get()->first()->contractor_id;
+
+        $transferGroupAttributes = [
+          'general_id' => $generalId,
+          'jemmson_amount' => $totalAmount,
+          'job_id' => $request->jobId,
+          'customer_id' => Auth::user()->getAuthIdentifier(),
+          'transfer_group_guid' => uniqid() . "-" . uniqid() . "-" . uniqid() . "-" . uniqid(),
+        ];
+
+        $transferGroup = new TransferGroup();
+        $transferGroup->createFromClientSecret($transferGroupAttributes);
+
+        // Set your secret key: remember to switch to your live secret key in production
+        // See your keys here: https://dashboard.stripe.com/account/apikeys
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        $intent = \Stripe\PaymentIntent::create([
+            'amount' => $totalAmount,
+            'currency' => 'usd',
+            'metadata' => [
+                'transferGroupId' => $transferGroup->id
+            ]
+        ]);
+
+        foreach ($jobTasks['jobTasks'] as $jobTask) {
+            $jobTask->payment_intent_id = $intent->id;
+            $jobTask->transfer_group_id = $transferGroup->id;
+            try {
+                $jobTask->save();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ], 200);
+            }        }
+
+        Log::debug(json_encode($intent));
+
+        return $intent['client_secret'];
+    }
+
     public function charge(Request $request)
     {
 
-        $jobTasks = $this->jobTasksExist($request->excluded);
+        $jobTasks = $this->jobTasksExist($request->excluded, $request->jobId);
 
         if ($jobTasks["exists"]) {
 
@@ -103,11 +163,11 @@ class StripeGatewayController extends Controller
             if ($totalAmount > 0) {
 
                 $job = Job::find($request->jobId);
-                $customer = User::where('customer_id', '=', $job->customer_id)->get()->first();
+                $customer = User::where('id', '=', $job->customer_id)->get()->first();
                 $stripeExpress = new StripeExpress();
 
 //                TOTALS
-                $stripeCustomer = $stripeExpress->createStripeCustomer($customer, $request->token);
+                $stripeCustomer = $stripeExpress->createStripeCustomer($customer, $job->contractor_id);
                 $charge = $this->payJemmson($request->token, $totalAmount);
                 $contractorAmount = $this->calculateContractorAmount($totalAmount, $jobTasks["jobTasks"]);
                 $this->transferAmountToGeneral($contractorAmount['contractorFee'], $job->contractor_id, $charge->id);
@@ -144,14 +204,16 @@ class StripeGatewayController extends Controller
 
     public function transferAmountToSub($amount, $subId, $chargeId)
     {
-            $accountId = StripeExpress::where('contractor_id', '=', $subId)
-                ->get()->first()->stripe_user_id;
-            return $this->transfer($amount, $accountId, $chargeId);
+        $accountId = StripeExpress::where('contractor_id', '=', $subId)
+            ->get()->first()->stripe_user_id;
+        return $this->transfer($amount, $accountId, $chargeId);
     }
 
     public function transfer($amount, $accountId, $chargeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
         return \Stripe\Transfer::create([
             'amount' => $amount,
             'currency' => 'usd',
@@ -206,12 +268,13 @@ class StripeGatewayController extends Controller
     public function payJemmson($token, $amount, $description = '')
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
 
-        return \Stripe\Charge::create([
+        $paymentIntent = \Stripe\PaymentIntent::create([
             'amount' => $amount,
             'currency' => 'usd',
-            'source' => $token,
-            'description' => $description
+            'payment_method_types' => ['card'],
+            'transfer_group' => '{ORDER10}',
         ]);
 
     }
@@ -223,6 +286,7 @@ class StripeGatewayController extends Controller
     public function createCharge($token)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
 
         return \Stripe\Charge::create([
             'amount' => 999,

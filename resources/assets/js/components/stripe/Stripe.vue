@@ -46,7 +46,8 @@
                 <div class="modal-footer" style="justify-content: center !important"
                      v-else-if="isCustomer && notSignedUp">
                     <signup-with-stripe
-                        :bid="bid"
+                            :bid="bid"
+                            :client-secret="clientSecret"
                     >
                     </signup-with-stripe>
                 </div>
@@ -57,74 +58,75 @@
 
 <script>
 
-  import SignupWithStripe from './SignupWithStripe'
-  import ConnectWithStripe from './ConnectWithStripe'
+    import SignupWithStripe from './SignupWithStripe'
+    import ConnectWithStripe from './ConnectWithStripe'
 
-  export default {
-    props: {
-      user: Object,
-      bid: Object
-    },
-    data() {
-      return {
-        dontShowAgain: false
-      }
-    },
-    components: {
-      SignupWithStripe,
-      ConnectWithStripe
-    },
-    computed: {
-      header() {
-        return 'Stripe'
-      },
-      notSignedUp() {
-        return !User.hasStripeId()
-      },
-      isContractor() {
-        return User.isContractor()
-      },
-      isCustomer() {
-        return User.isCustomer()
-      },
-      showStripeExpress() {
-        if (User.contractor === null)
-          return false
-        if (Spark.state.user.contractor) {
-          return Spark.state.user.contractor.stripe_express === null
-        }
+    export default {
+        props: {
+            user: Object,
+            bid: Object,
+            clientSecret: String
+        },
+        data() {
+            return {
+                dontShowAgain: false
+            }
+        },
+        components: {
+            SignupWithStripe,
+            ConnectWithStripe
+        },
+        computed: {
+            header() {
+                return 'Stripe'
+            },
+            notSignedUp() {
+                return !User.hasStripeId()
+            },
+            isContractor() {
+                return User.isContractor()
+            },
+            isCustomer() {
+                return User.isCustomer()
+            },
+            showStripeExpress() {
+                if (User.contractor === null)
+                    return false
+                if (Spark.state.user.contractor) {
+                    return Spark.state.user.contractor.stripe_express === null
+                }
 
-      }
-    },
-    methods: {
-      notAtThisTime() {
-        this.$emit('sendBid', true)
-        if (this.dontShowAgain) {
-          this.dontShowModalAgain()
-        } else {
-          this.exit()
+            }
+        },
+        methods: {
+            notAtThisTime() {
+                this.$emit('sendBid', true)
+                if (this.dontShowAgain) {
+                    this.dontShowModalAgain()
+                } else {
+                    this.exit()
+                }
+            },
+            exit() {
+                $('#stripe-modal').modal('hide')
+            },
+            async dontShowModalAgain() {
+                try {
+                    const data = await axios.get('/stripe/hideModal')
+                    this.exit()
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        },
+        mounted() {
+            axios.get('/user/current')
+                .then(response => {
+                    this.$store.commit('setUser', response.data)
+                    window.User.user = response.data
+                })
         }
-      },
-      exit() {
-        $('#stripe-modal').modal('hide')
-      },
-      async dontShowModalAgain() {
-        try {
-          const data = await axios.get('/stripe/hideModal')
-          this.exit()
-        } catch (error) {
-          console.log(error)
-        }
-      }
-    },
-    mounted() {
-      axios.get('/user/current')
-        .then(response => {
-          this.$store.commit('setUser', response.data)
-          window.User.user = response.data
-        })
     }
-  }
 </script>
 
 <style scoped>

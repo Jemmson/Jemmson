@@ -103,10 +103,9 @@
                                 color="primary"
                                 name="submit" id="submit" dusk="submitBid"
                                 @click.prevent="submit"
-                                :disabled="dataMustBeValid()">
-                              <span v-if="disabled.submit">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                              </span>
+                                :disabled="dataMustBeValid()"
+                                :loading="disabled.submit"
+                        >
                             Submit
                         </v-btn>
                     </v-card-actions>

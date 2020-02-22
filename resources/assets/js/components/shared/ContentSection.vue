@@ -2,7 +2,7 @@
     <section :class="totalSectionClasses" class="col-12 mb-half-rem-negative flex flex-col">
         <div class="flex justify-content-between">
             <label class="flex-1" :for="type">{{ label }}</label>
-            <strong class="flex-1 ta-right" :id="type" :class="inputClasses">
+            <strong class="flex-1 ta-right capitalize" :id="type" :class="inputClasses">
                 <span v-if="warning"><i class="fas fa-exclamation mr-half-rem"></i></span>
                 <i v-if="icon" :class="icon" class="mr-half-rem"></i>
                 <span v-if="dollarSign">$</span>

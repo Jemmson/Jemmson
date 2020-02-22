@@ -142,19 +142,19 @@ const routes = [
     component: Register
   },
   {
-    path: 'contractor-info',
+    path: '/contractor-info',
     component: ContractorInfo,
     name: 'contractor-info',
     props: true
   },
   {
-    path: 'customer-info',
+    path: '/customer-info',
     component: CustomerInfo,
     name: 'customer-info',
     props: true
   },
   {
-    path: 'documentation',
+    path: '/documentation',
     component: Documentation,
     name: 'documentation',
     props: true

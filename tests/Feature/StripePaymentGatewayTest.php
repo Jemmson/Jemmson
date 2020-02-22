@@ -256,6 +256,8 @@ class StripePaymentGatewayTest extends TestCase
     public function transfer($amount, $accountId, $chargeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
         return \Stripe\Transfer::create([
             'amount' => $amount,
             'currency' => 'usd',
@@ -290,12 +292,15 @@ class StripePaymentGatewayTest extends TestCase
     public function retrieveCustomer($customerStripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
         return \Stripe\Customer::retrieve($customerStripeId);
     }
 
     public function addStripeCustomer($address)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
 
         return \Stripe\Customer::create([
             'description' => 'My First Test Customer (created for API docs)',
@@ -352,6 +357,7 @@ class StripePaymentGatewayTest extends TestCase
     public function jemmsonIsPaidTheTask($token, $amount, $description = '')
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
 
         return \Stripe\Charge::create([
             'amount' => $amount,

@@ -9,7 +9,7 @@
         </v-btn>
 
         <stripe-express-dashboard
-            v-if="isContractor()"
+                v-if="isContractor()"
         >
         </stripe-express-dashboard>
 
@@ -84,7 +84,7 @@
 
 <script>
 
-    import { mapState } from 'vuex'
+    import {mapState} from 'vuex'
     import Feedback from '../components/shared/Feedback'
     import IconHeader from '../components/shared/IconHeader'
     import Card from '../components/shared/Card'
@@ -123,8 +123,8 @@
             })
         },
         created() {
-            document.body.scrollTop = 0 // For Safari
-            document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         },
         methods: {
             goToNewJob() {
@@ -136,7 +136,9 @@
                 }
             },
             isContractor() {
-                return this.theUser.usertype === 'contractor'
+                if (this.theUser) {
+                    return this.theUser.usertype === 'contractor'
+                }
             },
             checkContractorStripeIsValid() {
                 if (
@@ -168,7 +170,7 @@
                 }
             },
             bidData(message) {
-                let count = 0
+                let count = 0;
                 for (let i = 0; i < this.bids.length; i++) {
                     if (this.bids[i].status === message) {
                         count++
@@ -177,7 +179,7 @@
                 return count
             },
             bidTaskData(message) {
-                let count = 0
+                let count = 0;
                 for (let i = 0; i < this.tasks.length; i++) {
                     if (this.tasks[i].status === message) {
                         count++
@@ -186,7 +188,7 @@
                 return count
             },
             taskData(message) {
-                let count = 0
+                let count = 0;
                 for (let i = 0; i < this.tasks.length; i++) {
                     if (this.tasks[i].job_task.status === message) {
                         count++
@@ -195,46 +197,46 @@
                 return count
             }
         },
-        mounted: function() {
-            this.$store.commit('setCurrentPage', this.$router.history.current.path)
+        mounted: function () {
+            this.$store.commit('setCurrentPage', this.$router.history.current.path);
             axios.get('/jobs').then((response) => {
                 if (response.data !== undefined) {
-                    this.bids = response.data
-                    this.sBids = this.bids
+                    this.bids = response.data;
+                    this.sBids = this.bids;
                 } else {
-                    this.bids = []
-                    this.sBids = []
+                    this.bids = [];
+                    this.sBids = [];
                 }
-            })
+            });
             if (Spark.state.user && Spark.state.user.usertype === 'contractor') {
                 axios.post('/bid/tasks').then((response) => {
                     if (response.data !== undefined) {
-                        this.tasks = response.data
-                        this.sTasks = this.tasks
+                        this.tasks = response.data;
+                        this.sTasks = this.tasks;
                     } else {
-                        this.tasks = []
-                        this.sTasks = []
+                        this.tasks = [];
+                        this.sTasks = [];
                     }
                 })
             }
             axios.get('/invoices').then((response) => {
                 if (response.data !== undefined) {
-                    this.invoices = response.data
-                    this.sInvoices = this.invoices
+                    this.invoices = response.data;
+                    this.sInvoices = this.invoices;
                 } else {
-                    this.invoices = []
-                    this.sInvoices = []
+                    this.invoices = [];
+                    this.sInvoices = [];
                 }
 
-            })
+            });
             if (this.user.user === null || this.user.user === undefined) {
-                if (this.userFromState !== '') {
-                    this.theUser = this.userFromState
+                if (!this.userFromState) {
+                    this.theUser = this.userFromState;
                 } else {
-                    this.theUser = Spark.state.user
+                    this.theUser = Spark.state.user;
                 }
             } else {
-                this.theUser = this.user
+                this.theUser = this.user;
             }
             // console.log(this.bids)
             // console.log(JSON.stringify(this.bids))

@@ -65,10 +65,7 @@
                         <v-btn
                                 class="w-40"
                                 color="primary"
-                                @click="update" type="submit" :disabled="disabled.update">
-                            <span v-if="disabled.update">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>
+                                @click="update" type="submit" :loading="disabled.update">
                             Submit
                         </v-btn>
                     </div>

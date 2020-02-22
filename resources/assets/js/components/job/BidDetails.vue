@@ -392,7 +392,9 @@
 
         <stripe
                 :bid="bid"
-                :user="getCurrentUser()">
+                :client-secret="clientSecret"
+                :user="getCurrentUser()"
+        >
         </stripe>
 
     </div>
@@ -411,10 +413,10 @@
     import InfoModal from '../../components/documentation/InfoModal'
     import JobStepper from '../../components/shared/JobStepper'
     import Status from '../mixins/Status.js'
-    import Stripe from '../stripe/Stripe'
     import SubInviteModal from '../../components/task/SubInviteModal'
     import TaskImages from '../../components/task/UploadJobImages'
     import Utilities from '../mixins/Utilities'
+    import Stripe from '../stripe/Stripe'
 
     export default {
         components: {
@@ -438,7 +440,8 @@
             customerName: String
         },
         created: function () {
-            Bus.$on('needsStripe', (excluded) => {
+            Bus.$on('needsStripe', (clientSecret) => {
+                this.clientSecret = clientSecret
                 $('#stripe-modal').modal()
             })
             this.getUser()
@@ -447,6 +450,7 @@
         },
         data() {
             return {
+                clientSecret: null,
                 feeDialog: false,
                 el: 2,
                 area: {
@@ -625,6 +629,12 @@
             }
         },
         methods: {
+
+            getCurrentUser() {
+                if (Spark.state) {
+                    return Spark.state.user
+                }
+            },
 
             totalEstimatedFee() {
                 if (this.bid.payment_type === 'cash') {
@@ -822,11 +832,6 @@
             bidHasNoTasks() {
                 if (this.getJobTasks()) {
                     return this.getNumberOfJobTasks() === 0
-                }
-            },
-            getCurrentUser() {
-                if (Spark.state) {
-                    return Spark.state.user
                 }
             },
             cancelDialog() {

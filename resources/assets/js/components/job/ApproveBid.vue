@@ -68,11 +68,8 @@
                        class="w-full mb-half-rem"
                        color="primary"
                        @click.prevent="openModal('approveBid')"
-                       :disabled="disabled.approve"
+                       :loading="disabled.approve"
                        ref="approve">
-                <span v-if="disabled.approve">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
                    Approve
                </v-btn>
            </v-row>
@@ -82,11 +79,8 @@
                         class="w-40"
                         color="red"
                         @click.prevent="openModal('cancelBid')"
-                        :disabled="disabled.cancelBid"
+                        :loading="disabled.cancelBid"
                         ref="cancel">
-                <span v-if="disabled.cancelBid">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
                     Cancel
                 </v-btn>
                 <v-spacer></v-spacer>
@@ -114,11 +108,8 @@
                     <v-btn
                             class="w-40"
                             color="primary"
-                            @click.prevent="declineBid" :disabled="disabled.declineBid"
+                            @click.prevent="declineBid" :loading="disabled.declineBid"
                             ref="declineBid">
-                        <span v-if="disabled.declineBid">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
                         Change Bid
                     </v-btn>
                 </div>

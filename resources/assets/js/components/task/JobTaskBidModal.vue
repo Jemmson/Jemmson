@@ -141,10 +141,7 @@
                                     color="primary"
                                     v-if="isBidOpen(jobTask)"
                                     @click.prevent="update" v-bind:id="jobTask.id"
-                                    :disabled="disabled.submit">
-                  <span v-if="disabled.submit">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
+                                    :loading="disabled.submit">
                                 Submit
                             </v-btn>
                             <v-btn
@@ -152,10 +149,7 @@
                                     color="primary"
                                     v-if="showFinishedBtn(jobTask)"
                                     @click="finished(jobTask)"
-                                    :disabled="disabled.finished">
-                  <span v-if="disabled.finished">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
+                                    :loading="disabled.finished">
                                 Finished
                             </v-btn>
 

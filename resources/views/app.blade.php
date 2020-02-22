@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Jemmson</title>
@@ -65,7 +65,6 @@
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="/js/sweetalert.min.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
 
 {{--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2uX7JbkzcTpZ7Nb-_nu0CagS4lBSNdDw&libraries=places"></script>--}}
 {{--<script type="text/javascript" src="https://js.stripe.com/v3/"></script>--}}

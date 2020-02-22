@@ -373,11 +373,8 @@
                                                                     && checkIfBidHasBeenSent(bid)"
                                             @click="acceptSubBidForTask(bid, jobTask)"
                                             class="primary w-1/2"
-                                            :disabled="disabled.accept"
+                                            :loading="disabled.accept"
                                     >
-                                                        <span v-if="disabled.accept">
-                                                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                                        </span>
                                         Accept
                                     </v-btn>
 
@@ -530,11 +527,8 @@
                                         class="w-full mb-half-rem"
                                         color="primary"
                                         v-if="showFinishedBtn(jobTask)"
-                                        @click="finishedTask(jobTask)" :disabled="disabled.finished"
-                                >
-                                    <span v-if="disabled.finished">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                    </span>Click Me When Job Is Finished
+                                        @click="finishedTask(jobTask)" :loading="disabled.finished"
+                                >Click Me When Job Is Finished
                                 </v-btn>
                             </div>
                             <div v-if="contractorCanApproveSubsTask(jobTask)">
@@ -542,11 +536,9 @@
                                         class="w-full mb-half-rem"
                                         color="primary"
                                         @click="approveTaskHasBeenFinished(jobTask)"
-                                        :disabled="disabled.approve"
+                                        :loading="disabled.approve"
                                 >
-                                    <span v-if="disabled.approve">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                    </span>Approve
+                                    Approve
                                 </v-btn>
                             </div>
                             <div v-if="contractorWantsToChangeBid()">
@@ -563,11 +555,9 @@
                                         class="w-full mb-half-rem"
                                         color="red"
                                         @click="deleteTask(jobTask)"
-                                        :disabled="disabled.deleteTask"
+                                        :loading="disabled.deleteTask"
                                 >
-                                    <span v-if="disabled.deleteTask">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                    </span>Delete
+                                    Delete
                                 </v-btn>
                             </div>
                         </div>
@@ -589,11 +579,9 @@
                                         class="w-full mb-half-rem"
                                         color="red"
                                         @click="deleteTask(jobTask)"
-                                        :disabled="disabled.deleteTask"
+                                        :loading="disabled.deleteTask"
                                 >
-                                    <span v-if="disabled.deleteTask">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                    </span>Delete
+                                    Delete
                                 </v-btn>
                             </div>
                         </div>

@@ -16,13 +16,14 @@ class CreateTransferGroupTable extends Migration
         Schema::create('transfer_group', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('general_id');
-            $table->string('general_amount');
+            $table->string('general_amount')->nullable();
             $table->string('sub_amount')->nullable();
             $table->string('jemmson_amount');
-            $table->string('stripe_amount');
+            $table->string('stripe_amount')->nullable();
             $table->bigInteger('job_id');
-            $table->bigInteger('job_task_id');
+            $table->bigInteger('job_task_id')->nullable();
             $table->bigInteger('sub_id')->nullable();
+            $table->bigInteger('customer_id');
             $table->string('transfer_group_guid');
             $table->timestamps();
         });

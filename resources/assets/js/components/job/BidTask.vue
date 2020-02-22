@@ -190,10 +190,7 @@
                                         @click="acceptSubBidForTask(bid, jobTask)"
                                         class="w-40"
                                         color="primary"
-                                        :disabled="disabled.accept">
-                                            <span v-if="disabled.accept">
-                                              <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                            </span>
+                                        :loading="disabled.accept">
                                     Accept
                                 </v-btn>
                                 <div v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
@@ -221,10 +218,7 @@
                         class="w-40"
                         color="red"
                         v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
-                        :disabled="disabled.deleteTask">
-                  <span v-if="disabled.deleteTask">
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                  </span>
+                        :loading="disabled.deleteTask">
                     Delete
                 </v-btn>
 
@@ -243,10 +237,7 @@
                             class="w-40"
                             color="primary"
                             v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
-                            :disabled="disabled.finished">
-                              <span v-if="disabled.finished">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                              </span>
+                            :loading="disabled.finished">
                         Click Me When Job Is Finished
                     </v-btn>
 
@@ -255,10 +246,7 @@
                             color="primary"
                             v-if="showApproveBtn(jobTask)"
                             @click="approveTaskHasBeenFinished(jobTask)"
-                            :disabled="disabled.approve">
-                              <span v-if="disabled.approve">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                              </span>
+                            :loading="disabled.approve">
                         Approve
                     </v-btn>
 

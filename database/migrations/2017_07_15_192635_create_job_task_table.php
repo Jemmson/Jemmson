@@ -21,6 +21,8 @@ class CreateJobTaskTable extends Migration
             $table->increments('id');
             $table->integer('bid_id')->unsigned()->nullable();
             $table->integer('contractor_id')->nullable();
+            $table->string('payment_intent_id')->nullable();
+            $table->bigInteger('transfer_group_id')->nullable();
             $table->bigInteger('cust_final_price')->unsigned()->nullable();
             $table->text('customer_message')->nullable();
             $table->text('declined_message')->nullable();

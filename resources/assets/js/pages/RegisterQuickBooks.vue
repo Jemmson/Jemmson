@@ -388,9 +388,9 @@
                                     id="register" name=register
                                     @click.prevent="register"
                                     ref="register"
-                                    :disabled="registerForm.busy">
+                                    :loading="registerForm.busy">
                                     <span v-if="registerForm.busy">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>Registering
+                                        Registering
                                     </span>
                                     <span v-else>
                                         <i class="fa fa-btn fa-check-circle mr-2"></i>Register

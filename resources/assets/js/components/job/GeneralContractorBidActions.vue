@@ -12,7 +12,7 @@
                     ref="submitBid"
                     class="btn btn-normal-green btn-lg w-full"
                     @click="submitBid()"
-                    :disabled="disableSubmitBid"
+                    :loading="disableSubmitBid"
             >
                 Submit Bid
             </v-btn>

@@ -29,11 +29,8 @@
                         <v-btn class="w-full"
                                color="primary"
                                @click.prevent="denyTask"
-                               :disabled="disabled.deny"
+                               :loading="disabled.deny"
                                 ref="denyTaskBtn">
-                                        <span v-if="disabled.deny">
-                          <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
                             Deny Approval
                         </v-btn>
                     </div>

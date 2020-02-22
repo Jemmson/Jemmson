@@ -69,10 +69,9 @@
                                             class="w-full"
                                             color="primary"
                                             @click="sendSubInviteToBidOnTask" type="submit"
-                                            :disabled="enableSubmit()" ref="submit">
-                                      <span v-if="disabled.invite">
-                                        <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                      </span>
+                                            :disabled="enableSubmit()"
+                                            :loading="disabled.invite"
+                                            ref="submit">
                                         Submit
                                     </v-btn>
                                 </v-card-actions>

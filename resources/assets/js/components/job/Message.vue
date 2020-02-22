@@ -12,12 +12,11 @@
                     class="primary mt-1rem"
                     @click="updateMessage()"
                     :disabled="!shouldSendMessage"
+                    :loading="messageIsBeingSent"
             >
                 <span v-if="shouldSendMessage">Send Message</span>
                 <span v-else-if="messageIsSent" class="mr-2">Message Sent</span>
-                <span v-else-if="messageIsBeingSent" class="mr-2">Sending Message
-                    <i class="fa fa-btn fa-spinner fa-spin"></i>
-                </span>
+                <span v-else-if="messageIsBeingSent" class="mr-2">Sending Message</span>
             </v-btn>
     </div>   
 </template>

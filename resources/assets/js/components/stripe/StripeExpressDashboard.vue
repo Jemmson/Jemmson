@@ -4,15 +4,12 @@
           class="margins-1rem"
           v-if="showDashboardLoginBtn"
           @click="login"
-          :disabled="busy">
+          :loading="busy">
     <v-card-actions>
       <v-btn
         color="primary"
         text
       >
-        <span v-if="busy">
-      <i class="fa fa-btn fa-spinner fa-spin"></i>
-    </span>
         <span>Login into Stripe Dashboard</span>
       </v-btn>
     </v-card-actions>
@@ -30,9 +27,8 @@ export default {
   },
   computed: {
       showDashboardLoginBtn() {
-          if (Spark.state.user.contractor === null)
-            return false;
-          return Spark.state.user.contractor.stripe_express !== null;
+          return Spark.state.user.contractor !== null
+                  && Spark.state.user.contractor.stripe_id !== null
       }
   },
   methods: {

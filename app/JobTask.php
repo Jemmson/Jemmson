@@ -73,6 +73,11 @@ class JobTask extends Model
         return $this->belongsTo(Location::class);
     }
 
+    public function transferGroup()
+    {
+        return $this->belongsTo(TransferGroup::class);
+    }
+
     /*
  * *********************************
  * Methods
@@ -475,7 +480,7 @@ class JobTask extends Model
         $amount = 0;
 
         foreach ($jobTasks as $jobTask) {
-            $amount = $amount + $jobTask->customer_final_price;
+            $amount = $amount + $jobTask->cust_final_price;
         }
 
         return $amount;

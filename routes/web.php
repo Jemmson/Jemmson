@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Request;
 Route::get('/', 'WebController@index');
 Route::get('/home', 'WebController@index');
 Route::post('/loadFeatures/', 'LoadController@load');
+Route::post('/hooks', 'StripeHooksController@hooks');
 
 Route::get('/loggedIn', function () {
     if (Auth::check()) {
@@ -117,6 +118,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
 
 
     Route::post('/stripe/customer', 'StripeController@saveCustomer');
+    Route::post('/stripe/getClientSecret', 'StripeGatewayController@getClientSecret');
     Route::post('/stripe/customer/charge', 'StripeController@chargeCustomer');
     Route::post('/stripe/customer/pay/tasks', 'StripeController@payAllPayableTasks');
     Route::post('/stripe/customer/pay/tasks/cash', 'StripeController@payAllPayableTasksWithCash');
@@ -127,8 +129,10 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/paidWithCashMessage', 'JobController@paidWithCashMessage');
     Route::get('/email/duplicate/{email}', 'ContractorController@checkDuplicateEmail');
     Route::post('/jobTask/message', 'TaskController@setChangeMessage');
+
 }
 );
+
 
 
 Route::group(['middleware' => ['auth']], function () {

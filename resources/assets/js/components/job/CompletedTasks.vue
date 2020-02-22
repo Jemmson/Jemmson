@@ -34,10 +34,7 @@
                     <v-btn
                             class="w-40"
                             color="primary"
-                            @click.prevent="reopenTask(jobTask)" :disabled="disabled.reopen">
-                            <span v-if="disabled.reopen">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                            </span>
+                            @click.prevent="reopenTask(jobTask)" :loading="disabled.reopen">
                         Reopen
                     </v-btn>
                 </div>
@@ -84,20 +81,15 @@
                     v-if="cashJobOrNotSetupWithStripe()"
                     class="w-full"
                     color="primary"
-                    @click.prevent="paidCash = true" :disabled="disabled.payCash">
-                        <span v-if="disabled.payCash">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
+                    @click.prevent="paidCash = true" :loading="disabled.payCash">
                 Pay With Cash
             </v-btn>
             <v-btn
                     class="w-full"
                     color="primary"
                     v-if="creditCardJobAndContractorHasStripe()" @click.prevent="payAllPayableTasks()"
-                    :disabled="disabled.payAll">
-                        <span v-if="disabled.payAll">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
+                    :loading="payAll"
+                    >
                 Pay With Credit Card
             </v-btn>
         </div>
@@ -123,11 +115,8 @@
                             class="w-40"
                             color="primary"
                             @click.prevent="paidWithCash()"
-                            :disabled="disableCashMessageButton"
+                            :loading="disableCashMessageButton"
                             ref="cashMessage">
-                        <span v-if="disableCashMessageButton">
-                            <i class="fa fa-btn fa-spinner fa-spin"></i>
-                        </span>
                         Submit
                     </v-btn>
                 </div>
@@ -138,6 +127,14 @@
                 v-if="isCustomer"
                 :jobTask="jTask">
         </deny-task-modal>
+
+<!--        <stripe-->
+<!--                :bid="bid"-->
+<!--                :client-secret="theClientSecret"-->
+<!--                :user="getCurrentUser()"-->
+<!--        >-->
+<!--        </stripe>-->
+
     </div>
 </template>
 
@@ -145,6 +142,7 @@
 
     import Card from '../shared/Card'
     import DenyTaskModal from '../task/DenyTaskModal'
+    import Stripe from '../stripe/Stripe'
     import {mapActions} from 'vuex'
 
     export default {
@@ -153,7 +151,8 @@
         },
         components: {
             Card,
-            DenyTaskModal
+            DenyTaskModal,
+            Stripe
         },
         data() {
             return {
@@ -163,11 +162,13 @@
                     'Check Is In The Mail'
                 ],
                 jTask: {},
+                payAll: false,
                 excluded: {},
                 showPaidInCash: false,
                 subtractFromTotal: 0,
                 cashMessage: 'Pay In Person',
                 paidCash: false,
+                theClientSecret: null,
                 disableCashMessageButton: false,
                 disabled: {
                     payAll: false,
@@ -249,6 +250,12 @@
                     total = total + payableT[i].cust_final_price
                 }
                 return total
+            },
+
+            getCurrentUser() {
+                if (Spark.state) {
+                    return Spark.state.user
+                }
             },
 
             atLeastOneTaskIsPaid() {
@@ -339,14 +346,29 @@
             reopenTask(jobTask) {
                 SubContractor.reopenTask(jobTask, this.disabled)
             },
-            payAllPayableTasks() {
-                console.log('excluded', this.excluded)
+            async payAllPayableTasks() {
+            // payAllPayableTasks() {
+
+                this.payAll = true;
+
+                const clientSecretData = await axios.post('stripe/getClientSecret', {
+                    jobId: this.bid.id,
+                    excluded: this.excluded
+                });
+
+
+                this.theClientSecret = clientSecretData.data;
+
+
                 if (!User.isSignedUpWithStripe()) {
-                    Bus.$emit('needsStripe')
+                    // $('#stripe-modal').modal()
+                    Bus.$emit('needsStripe', clientSecretData.data);
                     this.excludedActions(this.excluded)
                 } else {
                     this.selectWhichCreditCardToUse()
                 }
+
+                this.payAll = false;
                 // Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)
             },
 

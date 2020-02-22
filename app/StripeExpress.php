@@ -5,12 +5,199 @@ namespace App;
 use App\Notifications\CustomerPaidForTask;
 use App\Notifications\CustomerUnableToSendPaymentWithStripe;
 use Illuminate\Database\Eloquent\Model;
+use \App\ContractorCustomer;
 
 class StripeExpress extends Model
 {
 
     protected $table = 'stripe_expresses';
     protected $guarded = [];
+
+
+    public function transferFunds($jobId, $jobTasks, $totalAmount, $chargeId, $transferGroupId)
+    {
+
+//            TODO :: Should throw an exception for amount not being greater than zero
+        if ($totalAmount > 0) {
+
+            $job = Job::find($jobId);
+            $generalId = $job->contractor_id;
+            $stripeFee = (int)round($totalAmount * .029 + 30);
+            $jemmsonFee = $this->getJemmsonFee();
+            $customerId = $job->contractor_id;
+            $subTotalAmounts = $this->getTotalSubAmount($jobTasks, $generalId);
+            $transferGroup = TransferGroup::find($transferGroupId);
+
+            $contractorProfit =
+                $totalAmount - $stripeFee - $jemmsonFee - $subTotalAmounts;
+
+            $transferToGeneral = $this->transferAmountToGeneral($contractorProfit, $generalId, $chargeId);
+            $this->transferAmountToSubs(
+                $jobTasks, $generalId, $chargeId, $contractorProfit, $stripeFee, $customerId, $transferGroup);
+
+            $customer = $this->getCustomer($customerId);
+            $this->createStripeCustomer($customer, $generalId);
+
+
+        } else {
+            return response()->json([
+                "error" => "Cannot Charge Tasks Must Total Greater Than 0"
+            ], 200);
+        }
+
+    }
+
+    public function getGeneral($generalId)
+    {
+        return User::find($generalId);
+    }
+
+    public function getCustomer($customerId)
+    {
+        return User::where('id', '=', $customerId)->get()->first();
+    }
+
+    public function updateTransferGroupTable($attributes, $transferGroupId)
+    {
+        $transferGroup = TransferGroup::where("id", "=", $transferGroupId)->get()->first();
+        $transferGroup->general_amount = $attributes['general_amount'];
+        $transferGroup->sub_amount = $attributes['sub_amount'];
+        $transferGroup->stripe_amount = $attributes['stripe_amount'];
+        $transferGroup->job_task_id = $attributes['job_task_id'];
+        $transferGroup->sub_id = $attributes['sub_id'];
+        $transferGroup->customer_id = $attributes['customer_id'];
+
+        try {
+            $transferGroup->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+    }
+
+    public function isASub($generalId, $jobTaskContractorId)
+    {
+        return $generalId !== $jobTaskContractorId;
+    }
+
+    public function transferAmountToSubs(
+        $jobTasks,
+        $generalId,
+        $chargeId,
+        $generalAmount,
+        $stripeAmount,
+        $customerId,
+        $transferGroupId
+    )
+    {
+        foreach ($jobTasks as $jobTask) {
+
+            $subId = $jobTask->contractor_id;
+
+            if ($this->isASub($generalId, $subId)) {
+                $stripeExpressId = $this->getStripeExpressId($subId);
+                $amount = $jobTask->sub_final_price;
+                $subAmount = $jobTask->sub_final_price;
+
+                if (!$this->hasTransferCapability($stripeExpressId)) {
+                    $this->updateTransferCapability($stripeExpressId);
+                }
+
+                $this->transfer($amount, $stripeExpressId, $chargeId);
+
+            }
+
+            $attributes = [
+                "general_amount" => $generalAmount,
+                "sub_amount" => $subAmount,
+                "stripe_amount" => $stripeAmount,
+                "job_task_id" => $jobTask->id,
+                "sub_id" => $subId,
+                "customer_id" => $customerId
+            ];
+            $this->updateTransferGroupTable($attributes, $transferGroupId);
+        }
+    }
+
+    public function getStripeExpressId($contractorId)
+    {
+        return StripeExpress::where('contractor_id', '=', $contractorId)
+            ->get()->first()->stripe_user_id;
+    }
+
+    public function transferAmountToGeneral($amount, $generalId, $chargeId)
+    {
+        $general = $this->getGeneral($generalId);
+        if ($this->hasTransferCapability($general->stripe_id)) {
+            $stripeId = $this->getStripeExpressId($generalId);
+            return $this->transfer($amount, $stripeId, $chargeId);
+        } else {
+            $this->updateTransferCapability($generalId);
+        }
+
+    }
+
+    public function transfer($amount, $accountId, $chargeId)
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        return \Stripe\Transfer::create([
+            'amount' => $amount,
+            'currency' => 'usd',
+            'destination' => $accountId,
+            "source_transaction" => $chargeId
+        ]);
+    }
+
+    public function hasTransferCapability($stripeId)
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        $transferCapability = \Stripe\Account::retrieveCapability(
+            $stripeId,
+            'transfers'
+        );
+
+        return $transferCapability != 'unrequested' && $transferCapability->status != 'inactive';
+
+    }
+
+    public function updateTransferCapability($stripeId)
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        $transferCapability = \Stripe\Account::updateCapability(
+            $stripeId,
+            'transfers',
+            ['requested' => true]
+        );
+
+        return $transferCapability->status == 'inactive' || $transferCapability->status == 'unrequested';
+
+    }
+
+    public function getJemmsonFee()
+    {
+        return env('JEMMSON_FLAT_RATE');
+    }
+
+    public function getTotalSubAmount($jobTasks, $generalId)
+    {
+        $amount = 0;
+
+        foreach ($jobTasks as $jobTask) {
+            if ($generalId !== $jobTask->contractor_id) {
+                $amount = $amount + $jobTask->sub_final_price;
+            }
+        }
+
+        return $amount;
+    }
+
 
     public static function makePayment($jobTask)
     {
@@ -20,7 +207,7 @@ class StripeExpress extends Model
         $sub_contractor_id = $jobTask->contractor_id;
         $general_contractor_id = $task->contractor_id;
 
-        // if not payable howd you get here?
+        // if not payable how'd you get here?
         if (!$jobTask->updatable(__('bid_task.customer_sent_payment'))) {
             return response()->json(['message' => "Can't pay for this task yet."], 422);
         }
@@ -90,15 +277,19 @@ class StripeExpress extends Model
         return response()->json([$s_charge, $g_charge], 200);
     }
 
-    public function createStripeCustomer($customer, $token)
+    public function createStripeCustomer($customer, $generalId)
     {
         if ($this->stripeCustomerDoesNotExist($customer)) {
-            return $this->addStripeToCustomer($customer, $token);
+            return $this->addStripeToCustomer($customer, $generalId);
         } else {
             return $this->retrieveCustomer($customer->stripe_id);
         }
     }
 
+    /*
+     * All customers are Jemmson customers and not customers of the contractors
+     *  as far as stripe is concerned
+     */
     public function stripeCustomerDoesNotExist($customer)
     {
         return $customer->stripe_id == null;
@@ -107,22 +298,25 @@ class StripeExpress extends Model
     public function retrieveCustomer($customerStripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
         return \Stripe\Customer::retrieve($customerStripeId);
     }
 
-    public function addStripeToCustomer($customer, $token)
+    public function addStripeToCustomer($customer, $generalId)
     {
 
-        $stripeCustomer = $this->addCustomerToStripe($customer, $token);
-        $this->addStripeIdToCustomer($customer, $stripeCustomer);
+        $stripeCustomer = $this->addCustomerToStripe($customer);
+        $this->addStripeIdToCustomer($customer, $stripeCustomer, $generalId);
 
         return $stripeCustomer;
 
     }
 
-    public function addCustomerToStripe($customer, $token)
+    public function addCustomerToStripe($customer)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
 
         return \Stripe\Customer::create([
             "address" => [
@@ -135,12 +329,11 @@ class StripeExpress extends Model
             ],
             "name" => $customer->name,
             "email" => $customer->email,
-            "phone" => $customer->phone,
-            "source" => $token
+            "phone" => $customer->phone
         ]);
     }
 
-    public function addStripeIdToCustomer($customer, $stripeCustomer)
+    public function addStripeIdToCustomer($customer, $stripeCustomer, $generalId)
     {
         $customer->stripe_id = $stripeCustomer->id;
 
@@ -154,6 +347,23 @@ class StripeExpress extends Model
                 'code' => $e->getCode()
             ], 200);
         }
+
+
+        $cc = ContractorCustomer::where('contractor_user_id', '=', $generalId)
+            ->where('customer_user_id', '=', $customer->id)
+            ->get()->first();
+
+        $cc->stripe_id = $stripeCustomer->id;
+
+        try {
+            $cc->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
     }
 
 }

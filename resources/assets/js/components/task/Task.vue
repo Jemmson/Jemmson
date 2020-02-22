@@ -105,10 +105,7 @@
                                         bottom
                                         outlined
                                         @click.prevent="update(bidTask)"
-                                        v-bind:id="bidTask ? bidTask.id: null" :disabled="disabled.submit">
-                                        <span v-if="disabled.submit">
-                                          <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                        </span>
+                                        v-bind:id="bidTask ? bidTask.id: null" :loading="disabled.submit">
                                     Submit
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -183,10 +180,7 @@
                                     color="primary"
                                     v-if="showFinishedBtn(bidTask)"
                                     @click="finished(bidTask)"
-                                    :disabled="disabled.finished">
-                                        <span v-if="disabled.finished">
-                                          <i class="fa fa-btn fa-spinner fa-spin"></i>
-                                        </span>
+                                    :loading="disabled.finished">
                                 Click Me When Task Is Finished
                             </v-btn>
                         </main>
@@ -503,12 +497,12 @@
             isBidOpen(bid) {
                 const status = this.getLatestStatus();
                 if (
-                    status !== 'approved_by_customer'
-                    && status !== 'finished_job'
-                    && status !== 'finished_job_denied_by_contractor'
-                    && status !== 'customer_changes_finished_task'
-                    && status !== 'finished_job_approved_by_contractor'
-                    && status !== 'waiting_for_customer_payment'
+                    status !== 'approved by customer'
+                    && status !== 'finished job'
+                    && status !== 'finished job denied by contractor'
+                    && status !== 'customer changes finished task'
+                    && status !== 'finished job approved by contractor'
+                    && status !== 'waiting for customer payment'
                     && status !== 'paid'
                 ) {
                     return true

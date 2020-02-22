@@ -10,6 +10,30 @@ class TransferGroup extends Model
     protected $table = 'transfer_group';
     protected $guarded = [];
 
+
+    public function jobTasks()
+    {
+        return $this->hasMany(JobTask::class);
+    }
+
+    public function createFromClientSecret($attributes)
+    {
+        $this->general_id = $attributes['general_id'];
+        $this->jemmson_amount = $attributes['jemmson_amount'];
+        $this->job_id = $attributes['job_id'];
+        $this->customer_id = $attributes['customer_id'];
+        $this->transfer_group_guid = $attributes['transfer_group_guid'];
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+    }
+
     public function create($attributes)
     {
         $this->general_id = $attributes['general_id'];
@@ -20,6 +44,7 @@ class TransferGroup extends Model
         $this->job_id = $attributes['job_id'];
         $this->job_task_id = $attributes['job_task_id'];
         $this->sub_id = $attributes['sub_id'];
+        $this->customer_id = $attributes['customer_id'];
         $this->transfer_group_guid = $attributes['transfer_group_guid'];
 
         try {

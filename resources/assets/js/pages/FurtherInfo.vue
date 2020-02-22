@@ -226,10 +226,9 @@
                                 type="submit"
                                 name="submit"
                                 @click.prevent="submitFurtherInfo()"
-                                :disabled="checkValidData()">
-                              <span v-if="disabled.submit">
-                                <i class="fa fa-btn fa-spinner fa-spin"></i>
-                              </span>
+                                :disabled="checkValidData()"
+                                :loading="disabled.submit"
+                        >
                             Register
                         </v-btn>
                     </form>
