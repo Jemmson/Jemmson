@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractorCustomer;
 use App\JobTask;
 use App\Job;
 use App\User;
@@ -23,6 +24,8 @@ class StripeGatewayController extends Controller
 //        redirect_uri=https://connect.stripe.com/connect/default/oauth/test
 //        &client_id=ca_32D88BD1qLklliziD7gYQvctJIhWBSQ7&state={STATE_VALUE}
 
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
         $user = Auth::user();
         $contractor = $user->contractor()->get()->first();
         $clientId = env('STRIPE_CLIENT_ID');
@@ -38,6 +41,7 @@ class StripeGatewayController extends Controller
             "&redirect_uri=" . env('STRIPE_REDIRECT_URI') .
             "&client_id=$clientId" .
             "&scope=$scope" .
+            "&api_version=2019-08-14" .
 //            "&suggested_capabilities[]=$capabilities" .
             "&stripe_user[email]=$user->email" .
             "&stripe_user[country]=$user->billing_country" .
@@ -105,49 +109,180 @@ class StripeGatewayController extends Controller
 
         if ($jobTasks["exists"]) {
             $totalAmount = JobTask::totalAmountForAllPayableTasks($jobTasks["jobTasks"]);
+            $generalId = Job::where('id', '=', $request->jobId)->get()->first()->contractor_id;
+            $general = User::find($generalId);
+
+            $transferGroup = $this->createTransferGroup($generalId, $totalAmount, $request->jobId);
+
+            // Set your secret key: remember to switch to your live secret key in production
+            // See your keys here: https://dashboard.stripe.com/account/apikeys
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+            $customerId = Job::where('id', '=', ($jobTasks["jobTasks"][0]->job_id))->get()->first()->customer_id;
+
+            $customer = $this->getCustomer($customerId);
+            $customerStripe = $this->getStripeCustomer($customer, $generalId);
+
+// TODO:: handle payment method. payment method should only be attached when the
+//            the customer has selected a payment method option on the client side
+//            this will indicate which payment method to use for payment
+//            if (\is_null($stripeId)) {
+//                return null;
+//            }
+//            return $this->getPaymentMethod();
+//            $paymentMethod = $this->getPaymentMethod($request->paymentMethod);
+
+            $generalCompanyName = $this->getGeneralCompanyName($jobTasks["jobTasks"][0]);
+
+            $intent = \Stripe\PaymentIntent::create([
+                'amount' => $totalAmount,
+                'currency' => 'usd',
+                'customer' => $customerStripe->id,
+                'payment_method' => null,
+                'receipt_email' => $customer->email,
+                'on_behalf_of' => $general->stripe_id,
+                'metadata' => [
+                    'transferGroupId' => $transferGroup->id
+                ]
+            ]);
+
+            foreach ($jobTasks['jobTasks'] as $jobTask) {
+                $jobTask->payment_intent_id = $intent->id;
+                $jobTask->transfer_group_id = $transferGroup->id;
+                try {
+                    $jobTask->save();
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                        'code' => $e->getCode()
+                    ], 200);
+                }
+            }
+
+            Log::debug(json_encode($intent));
+
+            return $intent['client_secret'];
+        } else {
+            return response()->json([
+                'error' => 'There were no payable tasks'
+            ], 200);
+        }
+    }
+
+    public function getGeneralCompanyName($jobTask)
+    {
+        return Job::find($jobTask->job_id)
+            ->get()->first()->contractor()
+            ->get()->first()->contractor()
+            ->get()->first()['company_name'];
+    }
+
+    public function getPaymentMethod($stripeId)
+    {
+
+    }
+
+    public function hasPaymentMethod()
+    {
+
+    }
+
+    public function getCustomer($customerId)
+    {
+        return User::find($customerId);
+    }
+
+    public function getStripeCustomer($customer, $generalId)
+    {
+
+        $customerStripe = $this->customerExists($customer->stripe_id);
+
+        if (\is_null($customerStripe)) {
+            $customerStripe = $this->createCustomer($customer, $generalId);
         }
 
-        $generalId = Job::where('id', '=', $request->jobId)->get()->first()->contractor_id;
+        return $customerStripe;
+    }
 
+    public function customerExists($customerStripeId)
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        if (\is_null($customerStripeId)) {
+            return null;
+        }
+
+        return \Stripe\Customer::retrieve($customerStripeId);
+    }
+
+    public function createCustomer($customer, $generalId)
+    {
+        $customerStripe = $this->createStripeCustomer($customer);
+        $this->updateCustomerStripeId($customer, $customerStripe->id);
+        $this->updateGeneralCustomerStripeId($customer->id, $generalId, $customerStripe->id);
+        return $customerStripe;
+    }
+
+    public function updateGeneralCustomerStripeId($customerId, $generalId, $customerStripeId)
+    {
+        $cc = ContractorCustomer::where('customer_user_id', '=', $customerId)
+            ->where('contractor_user_id', '=', $generalId)->get()->first();
+        $cc->stripe_id = $customerStripeId;
+
+        try {
+            $cc->save();
+        } catch (\Exception $e) {
+            Log::error('Could not save to contractor customer table: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Could not save to contractor customer table",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
+
+
+    }
+
+    public function updateCustomerStripeId($customer, $stripeId)
+    {
+        $customer->stripe_id = $stripeId;
+        $customer->save();
+    }
+
+    public function createStripeCustomer($customer)
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        return \Stripe\Customer::create([
+            "address" => [
+                'line1' => $customer->billing_address,
+                'line2' => $customer->billing_address_line_2,
+                'city' => $customer->billing_city,
+                'state' => $customer->billing_state,
+                'country' => 'US',
+                'postal_code' => $customer->billing_zip,
+            ],
+            'name' => $customer->name,
+            'phone' => $customer->phone,
+            'email' => $customer->email
+        ]);
+    }
+
+    public function createTransferGroup($generalId, $totalAmount, $jobId)
+    {
         $transferGroupAttributes = [
-          'general_id' => $generalId,
-          'jemmson_amount' => $totalAmount,
-          'job_id' => $request->jobId,
-          'customer_id' => Auth::user()->getAuthIdentifier(),
-          'transfer_group_guid' => uniqid() . "-" . uniqid() . "-" . uniqid() . "-" . uniqid(),
+            'general_id' => $generalId,
+            'jemmson_amount' => $totalAmount,
+            'job_id' => $jobId,
+            'customer_id' => Auth::user()->getAuthIdentifier(),
+            'transfer_group_guid' => uniqid() . "-" . uniqid() . "-" . uniqid() . "-" . uniqid(),
         ];
 
         $transferGroup = new TransferGroup();
         $transferGroup->createFromClientSecret($transferGroupAttributes);
 
-        // Set your secret key: remember to switch to your live secret key in production
-        // See your keys here: https://dashboard.stripe.com/account/apikeys
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
-
-        $intent = \Stripe\PaymentIntent::create([
-            'amount' => $totalAmount,
-            'currency' => 'usd',
-            'metadata' => [
-                'transferGroupId' => $transferGroup->id
-            ]
-        ]);
-
-        foreach ($jobTasks['jobTasks'] as $jobTask) {
-            $jobTask->payment_intent_id = $intent->id;
-            $jobTask->transfer_group_id = $transferGroup->id;
-            try {
-                $jobTask->save();
-            } catch (\Exception $e) {
-                return response()->json([
-                    'message' => $e->getMessage(),
-                    'code' => $e->getCode()
-                ], 200);
-            }        }
-
-        Log::debug(json_encode($intent));
-
-        return $intent['client_secret'];
+        return $transferGroup;
     }
 
     public function charge(Request $request)

@@ -122,5 +122,39 @@ class StripeGatewayTest extends TestCase
         $this->assertEquals(true, $sgc->hasNotBeenPaid($jobTask));
         
     }
-    
+
+    /**  @test */
+    function that_total_amount_returns_money_in_cents() {
+
+        // GIVEN
+        $jobTasks = $this->threeJobTasks();
+
+        // ACTION
+        $totalAmount = JobTask::totalAmountForAllPayableTasks($jobTasks["jobTasks"]);
+
+        // ASSERTION
+        $this->assertEquals(70200, $totalAmount);
+
+    }
+
+    /**  @test */
+    function assert_a_transfer_group_is_created_using_create_transfer_group_method() {
+
+        // GIVEN
+
+
+        // ACTION
+        $transferGroup = $this->createTransferGroup($generalId, $totalAmount, $request->jobId);
+
+
+        // ASSERTION
+        $this->assertDatabaseHas('transfer_group', [
+            'general_id' => $generalId,
+            'jemmson_amount' => $totalAmount,
+            'job_id' => $jobId,
+            'customer_id' => Auth::user()->getAuthIdentifier(),
+            'transfer_group_guid' => uniqid() . "-" . uniqid() . "-" . uniqid() . "-" . uniqid(),
+        ]);
+
+    }
 }

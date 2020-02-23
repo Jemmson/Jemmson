@@ -27,6 +27,24 @@ class StripeHooksController extends Controller
             case 'charge.succeeded':
                 $this->processChargeSucceeded($request);
                 break;
+            case 'transfer.created':
+                $this->transferCreated($request);
+                break;
+            case 'payment.created':
+                $this->paymentCreated($request);
+                break;
+            case 'invoice.upcoming':
+                $this->invoiceUpcoming($request);
+                break;
+            case 'account.application.authorized':
+                $this->accountApplicationAuthorized($request);
+                break;
+            case 'capability.updated':
+                $this->capabilityUpdated($request);
+                break;
+            case 'account.updated':
+                $this->accountUpdated($request);
+                break;
         }
     }
 
@@ -53,11 +71,39 @@ class StripeHooksController extends Controller
 
     }
 
+    public function capabilityUpdated($request)
+    {
+        return $request;
+    }
+
+    public function accountUpdated($request)
+    {
+        return $request;
+    }
+
     public function processChargeSucceeded($request)
     {
+        return $request;
+    }
 
-        // charge succeeded and funds should be available
+    public function transferCreated($request)
+    {
+        return $request;
+    }
 
+    public function paymentCreated($request)
+    {
+        return $request;
+    }
+
+    public function invoiceUpcoming($request)
+    {
+        return $request;
+    }
+
+    public function accountApplicationAuthorized($request)
+    {
+        return $request;
     }
 
 }
