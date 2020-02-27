@@ -20,10 +20,10 @@
                     <div>
                         <div class="flex flex-col mt-1rem mb-1rem">
                             <div class="flex space-between">
-                                <div class="f-bold mr-1rem">{{ card.card.brand }} Card</div>
+                                <div class="f-bold mr-1rem capitalize">{{ card.card.brand }} Card</div>
                                 <div>****{{ card.last4 }}</div>
                             </div>
-                            <div>{{ card.billing_details.name }}</div>
+                            <div>{{ getName(card) }}</div>
                             <div>Expires {{ card.card.exp_month }}/{{ card.card.exp_year }}</div>
                         </div>
                     </div>
@@ -46,10 +46,14 @@
             cards: Array,
             name: String
         },
-        computed: {
-
-        },
+        computed: {},
         methods: {
+            getName(card) {
+                if (card && card.billing_details.name) {
+                    return card.billing_details.name
+                }
+                return Spark.state.user.name
+            },
             selection(index) {
                 if (document.getElementsByTagName('input').valueOf()[index]) {
                     return document.getElementsByTagName('input').valueOf()[index].checked

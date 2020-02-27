@@ -1,6 +1,7 @@
 <template>
     <v-dialog
             width="500"
+            scrollable
             v-model="showModal"
     >
         <!--        list of available stripe payment methods -->
@@ -9,15 +10,23 @@
 
         <div style="display: none">{{ show }}</div>
 
-        <v-banner single-line
-                  v-if="paymentSucceeded"
-        >
-            Payment Succeeded!
-        </v-banner>
-
         <div
                 class="flex flex-column gray-background"
         >
+            <div
+                    style="background-color: green"
+                    class="banner"
+                    v-if="paymentSucceeded"
+            >
+                <h3 class="text-center">Payment Succeeded!</h3>
+            </div>
+            <div
+                    class="error banner"
+                    v-if="errors"
+            >
+                <h3 class="text-center">{{ errorMessage }}</h3>
+            </div>
+
             <v-btn
                     color="primary"
                     style="background-color: white"
@@ -36,15 +45,15 @@
             >
 
             </credit-card>
-<!--            <div class="textfield-spacing">-->
-<!--                <v-text-field-->
-<!--                        v-model="statementDescriptor"-->
-<!--                        label="Payment Description"-->
-<!--                        counter-->
-<!--                        :counter="22"-->
-<!--                        :rules="rules"-->
-<!--                ></v-text-field>-->
-<!--            </div>-->
+            <!--            <div class="textfield-spacing">-->
+            <!--                <v-text-field-->
+            <!--                        v-model="statementDescriptor"-->
+            <!--                        label="Payment Description"-->
+            <!--                        counter-->
+            <!--                        :counter="22"-->
+            <!--                        :rules="rules"-->
+            <!--                ></v-text-field>-->
+            <!--            </div>-->
 
             <!--            v-model="selected[i.id]"-->
 
@@ -65,6 +74,7 @@
 
 
                 <v-btn
+                        v-if="needsPayment"
                         color="primary"
                         outlined
                         style="background-color: white"
@@ -75,6 +85,19 @@
                 >
                     Pay
                 </v-btn>
+
+                <v-btn
+                        v-if="!needsPayment"
+                        color="primary"
+                        outlined
+                        style="background-color: white"
+                        text
+                        class="m-1rem"
+                        :disabled="true"
+                >
+                    Pay
+                </v-btn>
+
             </div>
 
 
@@ -105,6 +128,9 @@
             return {
                 statementDescriptor: 'Thank you for your payment!',
                 paymentSucceeded: false,
+                needsPayment: true,
+                errorMessage: '',
+                errors: false,
                 submitted: false,
                 selectedCard: {},
                 showModal: false,
@@ -112,42 +138,42 @@
                 rules: [v => v.length <= 25 || 'Max 25 characters'],
                 allCards: [
                     {
-                        "id": "pm_1GGW5d2eZvKYlo2C0pSNb4aQ",
+                        "id": "pm_1GGl36IX4qnobbHhgjqwn7FC",
                         "object": "payment_method",
                         "billing_details": {
                             "address": {
-                                "city": null,
-                                "country": null,
-                                "line1": null,
-                                "line2": null,
-                                "postal_code": null,
-                                "state": null
+                                "city": "Mesa",
+                                "country": "US",
+                                "line1": "2343 West Main Street",
+                                "line2": "",
+                                "postal_code": "42424",
+                                "state": "AZ"
                             },
-                            "email": null,
-                            "name": null,
-                            "phone": null
+                            "email": "pike.shawn@gmail.com",
+                            "name": "Shawn Pike",
+                            "phone": "4807034902"
                         },
                         "card": {
                             "brand": "visa",
                             "checks": {
-                                "address_line1_check": null,
-                                "address_postal_code_check": null,
-                                "cvc_check": null
+                                "address_line1_check": "pass",
+                                "address_postal_code_check": "pass",
+                                "cvc_check": "pass"
                             },
                             "country": "US",
-                            "exp_month": 8,
-                            "exp_year": 2021,
-                            "fingerprint": "Xt5EWLLDS7FJjR1c",
+                            "exp_month": 4,
+                            "exp_year": 2024,
+                            "fingerprint": "d882MNRAJ6CQ0m4r",
                             "funding": "credit",
                             "generated_from": null,
-                            "last4": "4242",
+                            "last4": "9995",
                             "three_d_secure_usage": {
                                 "supported": true
                             },
                             "wallet": null
                         },
-                        "created": 1582747361,
-                        "customer": null,
+                        "created": 1582804864,
+                        "customer": "cus_GoNoQwht70iWkQ",
                         "livemode": false,
                         "metadata": {},
                         "type": "card"
@@ -261,25 +287,37 @@
             //     ]
             // },
             submit() {
-                this.submitted = true;
-                console.log('excludedTaskIds', this.excludedTaskIds)
-                stripe.confirmCardPayment(this.clientSecret, {
-                    payment_method: this.selectedCard.id,
-                    receipt_email: Spark.state.user.email
-                }).then(function (result) {
-                    this.submitted = false;
-                    if (result.error) {
-                        // Show error to your customer (e.g., insufficient funds)
-                        console.log(result.error.message);
-                    } else {
-                        // The payment has been processed!
-                        if (result.paymentIntent.status === 'succeeded') {
+                if (Object.values(this.selectedCard).length > 0) {
+                    this.submitted = true;
+                    console.log('excludedTaskIds', this.excludedTaskIds)
+                    stripe.confirmCardPayment(this.clientSecret, {
+                        payment_method: this.selectedCard.id,
+                        receipt_email: Spark.state.user.email
+                    }).then(function (result) {
+                        this.submitted = false;
+                        if (result.error) {
+                            // Show error to your customer (e.g., insufficient funds)
+                            console.log(result.error.message);
+                            this.errorMessage = result.error.message;
+                            this.errors = true;
 
-                            this.paymentSucceeded = true;
+                            //  stripe errors
+                            //  No such PaymentMethod: pm_1GGW5d2eZvKYlo2C0pSNb4aQ
 
+
+                        } else {
+                            // The payment has been processed!
+                            if (result.paymentIntent.status === 'succeeded') {
+                                this.paymentSucceeded = true;
+                                this.needsPayment = false;
+                            }
                         }
-                    }
-                }.bind(this));
+                    }.bind(this));
+                } else {
+                    this.errorMessage = "Please select a card";
+                    this.submitted = false;
+                    this.errors = true;
+                }
             },
             close: function () {
                 this.showModal = false;
@@ -317,4 +355,17 @@
     .gray-background {
         background-color: lightgray
     }
+
+    .banner {
+        margin: 1rem;
+        border-radius: 8px;
+        padding: .75rem 0 .5rem 0;
+        width: 92%
+    }
+
+    .error {
+        background-color: #ff5252 !important;
+        border-color: #ff5252 !important;
+    }
+
 </style>
