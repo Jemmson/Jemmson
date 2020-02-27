@@ -71,7 +71,8 @@
                     </label>
                 </div>
                 <div class="flex-1" v-if="isContractor">
-                    <label class="w-full" style="text-align: right">Total: ${{ totalCustomerPrice + totalSubPrice }}</label>
+                    <label class="w-full" style="text-align: right">Total: ${{ totalCustomerPrice + totalSubPrice
+                        }}</label>
                 </div>
             </div>
         </div>
@@ -89,7 +90,7 @@
                     color="primary"
                     v-if="creditCardJobAndContractorHasStripe()" @click.prevent="payAllPayableTasks()"
                     :loading="payAll"
-                    >
+            >
                 Pay With Credit Card
             </v-btn>
         </div>
@@ -123,17 +124,25 @@
             </div>
         </transition>
 
+        <stripe-credit-card-modal
+            :open="showCreditCardModal"
+            @closeStripeCCModal="showCreditCardModal = false"
+            :client-secret="this.theClientSecret"
+        >
+
+        </stripe-credit-card-modal>
+
         <deny-task-modal
                 v-if="isCustomer"
                 :jobTask="jTask">
         </deny-task-modal>
 
-<!--        <stripe-->
-<!--                :bid="bid"-->
-<!--                :client-secret="theClientSecret"-->
-<!--                :user="getCurrentUser()"-->
-<!--        >-->
-<!--        </stripe>-->
+        <!--        <stripe-->
+        <!--                :bid="bid"-->
+        <!--                :client-secret="theClientSecret"-->
+        <!--                :user="getCurrentUser()"-->
+        <!--        >-->
+        <!--        </stripe>-->
 
     </div>
 </template>
@@ -143,6 +152,7 @@
     import Card from '../shared/Card'
     import DenyTaskModal from '../task/DenyTaskModal'
     import Stripe from '../stripe/Stripe'
+    import StripeCreditCardModal from '../stripe/StripeCreditCardModal'
     import {mapActions} from 'vuex'
 
     export default {
@@ -152,10 +162,12 @@
         components: {
             Card,
             DenyTaskModal,
+            StripeCreditCardModal,
             Stripe
         },
         data() {
             return {
+                showCreditCardModal: false,
                 instructions: [
                     'Pay In Person',
                     'Left Under The Mat',
@@ -347,7 +359,7 @@
                 SubContractor.reopenTask(jobTask, this.disabled)
             },
             async payAllPayableTasks() {
-            // payAllPayableTasks() {
+                // payAllPayableTasks() {
 
                 this.payAll = true;
 
@@ -356,9 +368,7 @@
                     excluded: this.excluded
                 });
 
-
                 this.theClientSecret = clientSecretData.data;
-
 
                 if (!User.isSignedUpWithStripe()) {
                     // $('#stripe-modal').modal()
@@ -373,7 +383,7 @@
             },
 
             selectWhichCreditCardToUse() {
-                this.ccmodal = true
+                this.showCreditCardModal = true
             }
         }
     }
