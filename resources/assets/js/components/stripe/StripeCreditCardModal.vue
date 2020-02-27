@@ -36,15 +36,15 @@
             >
 
             </credit-card>
-            <div class="textfield-spacing">
-                <v-text-field
-                        v-model="statementDescriptor"
-                        label="Payment Description"
-                        counter
-                        :counter="22"
-                        :rules="rules"
-                ></v-text-field>
-            </div>
+<!--            <div class="textfield-spacing">-->
+<!--                <v-text-field-->
+<!--                        v-model="statementDescriptor"-->
+<!--                        label="Payment Description"-->
+<!--                        counter-->
+<!--                        :counter="22"-->
+<!--                        :rules="rules"-->
+<!--                ></v-text-field>-->
+<!--            </div>-->
 
             <!--            v-model="selected[i.id]"-->
 

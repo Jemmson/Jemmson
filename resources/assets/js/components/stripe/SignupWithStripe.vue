@@ -12,7 +12,7 @@
                     class="error w-full banner"
                     v-if="errors"
             >
-                <h3 class="text-center">Errors!</h3>
+                <h3 class="text-center">{{ errorMessage }}</h3>
             </div>
             <label for="card-element">
                 Sign Up With A Credit or Debit Card
@@ -24,16 +24,16 @@
             <!-- Used to display Element errors -->
             <div id="card-errors" role="alert"></div>
         </div>
-        <div class="textfield-spacing">
-            <v-text-field
-                    v-model="statementDescriptor"
-                    label="Payment Description"
-                    counter
-                    :hint="hint()"
-                    :counter="22"
-                    :rules="rules"
-            ></v-text-field>
-        </div>
+<!--        <div class="textfield-spacing">-->
+<!--            <v-text-field-->
+<!--                    v-model="statementDescriptor"-->
+<!--                    label="Payment Description"-->
+<!--                    counter-->
+<!--                    :hint="hint()"-->
+<!--                    :counter="22"-->
+<!--                    :rules="rules"-->
+<!--            ></v-text-field>-->
+<!--        </div>-->
         <br>
         <v-btn
                 v-if="needsPayment"
@@ -66,6 +66,7 @@
                 needsPayment: true,
                 stripe: {},
                 card: {},
+                errorMessage: '',
                 errors: false,
                 rules: [v => v.length <= 25 || 'Max 25 characters'],
                 signup: false,
@@ -147,6 +148,8 @@
                         if (result.error) {
                             // Show error to your customer (e.g., insufficient funds)
                             console.log(result.error.message);
+                            this.errorMessage = result.error.message;
+                            this.errors = true;
                         } else {
                             // The payment has been processed!
                             if (result.paymentIntent.status === 'succeeded') {
