@@ -150,6 +150,93 @@ class StripeController extends Controller
 //        return redirect("/#" . $request->state . "?success=You may now submit the bid.");
     }
 
+    public function newCard(Request $request)
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        try {
+            $card = \Stripe\PaymentMethod::create([
+                'type' => 'card',
+                'card' => [
+                    'number' => $request->form['ccnumber'],
+                    'exp_month' => $request->form['month'],
+                    'exp_year' => $request->form['year'],
+                    'cvc' => $request->form['cvcnumber'],
+                ],
+                'billing_details' => [
+                    'name' => $request->form['name']
+                ]
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+               'error' => $exception->getMessage()
+            ], 200);
+        }
+
+        $customerStripeId = Auth::user()->stripe_id;
+
+        $this->attachPaymentMethod($card->id, $customerStripeId);
+
+        return $this->getAllPaymentMethods($customerStripeId);
+
+    }
+
+    public function attachPaymentMethod($paymentMethodId, $customerStripeId)
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        $payment_method = \Stripe\PaymentMethod::retrieve(
+            $paymentMethodId
+        );
+        $payment_method->attach([
+            'customer' => $customerStripeId,
+        ]);
+    }
+
+    public function updatePaymentMethod()
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        $payment_method = \Stripe\PaymentMethod::retrieve(
+            'pm_123456789'
+        );
+        $payment_method->attach([
+            'customer' => 'cus_GoEt20UcJ4cfTf',
+        ]);
+    }
+
+    public function detachPaymentMethod()
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+        $payment_method = \Stripe\PaymentMethod::retrieve(
+            'pm_123456789'
+        );
+        $payment_method->detach();
+    }
+
+
+    public function getAllPaymentMethods($customerStripeId)
+    {
+        try {
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+            return \Stripe\PaymentMethod::all([
+                'customer' => $customerStripeId,
+                'type' => 'card',
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => $exception->getMessage()
+            ], 200);
+        }
+    }
+
     private function extractState($state)
     {
         $path = explode(':', $state);

@@ -36,6 +36,9 @@ class StripeHooksController extends Controller
             case 'payment.attached':
                 $this->paymentAttached($request);
                 break;
+            case 'payment_method.attached':
+                $this->paymentMethodAttached($request);
+                break;
             case 'payment_intent.payment_failed':
                 $this->paymentIntentPaymentFailed($request);
                 break;
@@ -108,6 +111,11 @@ class StripeHooksController extends Controller
     }
 
     public function paymentAttached($request)
+    {
+        return $request;
+    }
+
+    public function paymentMethodAttached($request)
     {
         return $request;
     }

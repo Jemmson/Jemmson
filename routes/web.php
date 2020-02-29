@@ -123,6 +123,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/stripe/customer/pay/tasks', 'StripeController@payAllPayableTasks');
     Route::post('/stripe/customer/pay/tasks/cash', 'StripeController@payAllPayableTasksWithCash');
     Route::delete('/stripe/customer/card', 'StripeController@deleteCard');
+    Route::post('/stripe/customer/newcard', 'StripeController@newCard');
+    Route::get('/stripe/customer/getPaymentMethods/{customerStripeId}', 'StripeController@getAllPaymentMethods');
 
     // Tasks
     Route::post('/task/notify', 'TaskController@notify')->middleware('quickbook.token');

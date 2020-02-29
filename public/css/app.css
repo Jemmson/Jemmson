@@ -351,6 +351,9 @@ section {
 .w-95 {
   width: 95%;
 }
+.w-10 {
+  width: 10%;
+}
 .w-full {
   width: 100%;
 }

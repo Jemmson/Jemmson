@@ -21,7 +21,7 @@
                         <div class="flex flex-col mt-1rem mb-1rem">
                             <div class="flex space-between">
                                 <div class="f-bold mr-1rem capitalize">{{ card.card.brand }} Card</div>
-                                <div>****{{ card.last4 }}</div>
+                                <div>****{{ card.card.last4 }}</div>
                             </div>
                             <div>{{ getName(card) }}</div>
                             <div>Expires {{ card.card.exp_month }}/{{ card.card.exp_year }}</div>

@@ -11,7 +11,7 @@
                 <div class="flex-1" v-else>Exclude</div>
                 <div class="flex-1"></div>
             </div>
-            <div class="flex pl-2 mb-2" v-for="jobTask in payableTasks" :key="jobTask.id">
+            <div class="flex pl-2 mb-2" v-for="jobTask in getPayableTasks()" :key="jobTask.id">
                 <div class="flex-1 capitalize">{{ jobTask.task.name }}</div>
                 <div class="pl-1 mr-1rem">{{ jobTask.qty }}</div>
                 <div class="flex-1 pl-1">$ {{ jobTask.unit_price }}</div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
                 <div class="pl-1" v-else>
-                    <input type="checkbox" name="exclude" :id="'exclude-' + jobTask.id"
+                    <input v-if="showDenyBtn(jobTask)" type="checkbox" name="exclude" :id="'exclude-' + jobTask.id"
                            @click="addJobTaskToExcludedList(jobTask)">
                 </div>
                 <div class=" pl-1" v-if="showReopenBtn(jobTask)">
@@ -46,6 +46,7 @@
                             v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
                         Deny
                     </v-btn>
+
                 </div>
             </div>
             <div class="flex pl-2 mb-2" v-if="isContractor">
@@ -66,7 +67,7 @@
                             Total: $ {{ totalTaskCashFee() }}
                         </div>
                         <div class="w-full" style="text-align: right" v-else>
-                            Total: $ {{ totalPriceForAllCompletedTasks }}
+                            Total: $ {{ totalPriceForAllCompletedTasks() }}
                         </div>
                     </label>
                 </div>
@@ -125,9 +126,11 @@
         </transition>
 
         <stripe-credit-card-modal
-            :open="showCreditCardModal"
-            @closeStripeCCModal="showCreditCardModal = false"
-            :client-secret="this.theClientSecret"
+                :open="showCreditCardModal"
+                @closeStripeCCModal="showCreditCardModal = false"
+                :client-secret="theClientSecret"
+                :payment-methods="paymentMethods"
+                @paid="setTasksToPaid()"
         >
 
         </stripe-credit-card-modal>
@@ -167,6 +170,7 @@
         },
         data() {
             return {
+                paymentMethods: null,
                 showCreditCardModal: false,
                 instructions: [
                     'Pay In Person',
@@ -189,19 +193,12 @@
                 }
             }
         },
+
         computed: {
-            totalPriceForAllCompletedTasks() {
-                let total = 0
-                let payableT = this.payableTasks
-                for (let i = 0; i < payableT.length; i++) {
-                    total = total + this.totalTaskFee(payableT[i].cust_final_price)
-                }
-                return total
-            },
             totalCustomerPrice() {
                 let total = 0
-                if (this.payableTasks !== null) {
-                    for (const task of this.payableTasks) {
+                if (this.getPayableTasks() !== null) {
+                    for (const task of this.getPayableTasks()) {
                         total += (task.cust_final_price - task.sub_final_price)
                     }
                 }
@@ -209,8 +206,8 @@
             },
             totalSubPrice() {
                 let total = 0
-                if (this.payableTasks !== null) {
-                    for (const task of this.payableTasks) {
+                if (this.getPayableTasks() !== null) {
+                    for (const task of this.getPayableTasks()) {
                         total += task.sub_final_price
                     }
                 }
@@ -219,27 +216,68 @@
             jobTasks() {
                 return this.bid.job_tasks
             },
-            payableTasks() {
-                return User.getAllPayableTasks(this.jobTasks)
-            },
             showPayWithStripeBtn() {
-                if (this.payableTasks.length > 0) {
-                    return User.stripePaymentRequested(this.payableTasks)
+                if (this.getPayableTasks().length > 0) {
+                    return User.stripePaymentRequested(this.getPayableTasks())
                 }
                 return false
             },
             show() {
-                return this.payableTasks.length > 0
+                return this.getPayableTasks().length > 0
             },
             isContractor() {
                 return User.isContractor()
             },
             isCustomer() {
                 return User.isCustomer()
-            }
+            },
+            payableTasks() {
+                return User.getAllPayableTasks(this.jobTasks)
+            },
         },
         methods: {
             ...mapActions(['excludedActions']),
+
+            totalPriceForAllCompletedTasks() {
+                let total = 0
+                let payableT = this.getPayableTasks()
+                for (let i = 0; i < payableT.length; i++) {
+                    total = total + this.totalTaskFee(payableT[i].cust_final_price)
+                }
+                return total
+            },
+
+            setTasksToPaid() {
+
+                let ex = Object.keys(this.excluded);
+
+                let nextId = 0;
+
+                for (let i = 0; i < this.jobTasks.length; i++) {
+                    let excludedId = false;
+                    for (let j = 0; j < ex.length; j++) {
+                        if (this.jobTasks[i].id === parseInt(ex[j])) {
+                            excludedId = true;
+                        }
+                    }
+                    if (!excludedId) {
+                        let date = moment();
+                        this.jobTasks[i].job_task_status[
+                            this.jobTasks[i].job_task_status.length] = {
+                            job_task_id: this.jobTasks[i].id,
+                            status: 'paid',
+                            status_number: 12,
+                            sent_on: null,
+                            deleted_at: null,
+                            created_at: date._d,
+                            updated_at: date._d,
+                        }
+                        nextId -= 1;
+                        this.jobTasks[i].id = nextId;
+                    }
+                }
+                // this.$forceUpdate();
+            },
 
             totalTaskFee(price) {
                 return Math.round((price + (parseFloat(price) * .029) + 2.50 + Number.EPSILON) * 100) / 100
@@ -257,7 +295,7 @@
 
             totalPriceForAllCompletedTasksCash() {
                 let total = 0
-                let payableT = this.payableTasks
+                let payableT = this.getPayableTasks()
                 for (let i = 0; i < payableT.length; i++) {
                     total = total + payableT[i].cust_final_price
                 }
@@ -268,6 +306,10 @@
                 if (Spark.state) {
                     return Spark.state.user
                 }
+            },
+
+            getPayableTasks() {
+                return User.getAllPayableTasks(this.jobTasks)
             },
 
             atLeastOneTaskIsPaid() {
@@ -382,8 +424,16 @@
                 // Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)
             },
 
-            selectWhichCreditCardToUse() {
-                this.showCreditCardModal = true
+            async selectWhichCreditCardToUse() {
+
+                const {data} = await axios.get('stripe/customer/getPaymentMethods/' + Spark.state.user.stripe_id)
+
+                if (data.error) {
+                    console.log(data.error);
+                } else {
+                    this.paymentMethods = data.data;
+                    this.showCreditCardModal = true;
+                }
             }
         }
     }
