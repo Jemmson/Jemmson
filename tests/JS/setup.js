@@ -122,7 +122,8 @@ global.Spark = {
             id: 1,
             contractor: {
                 accounting_software: ''
-            }
+            },
+            usertype: 'customer'
         }
     }
 }

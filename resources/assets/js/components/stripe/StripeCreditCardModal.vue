@@ -15,13 +15,13 @@
             <div
                     class="flex flex-column gray-background"
             >
-                <div
-                        style="background-color: green"
-                        class="banner"
-                        v-if="paymentSucceeded"
-                >
-                    <h3 class="text-center">Payment Succeeded!</h3>
-                </div>
+                <!--                <div-->
+                <!--                        style="background-color: green"-->
+                <!--                        class="banner"-->
+                <!--                        v-if="paymentSucceeded"-->
+                <!--                >-->
+                <!--                    <h3 class="text-center">Payment Succeeded!</h3>-->
+                <!--                </div>-->
                 <div
                         class="error banner"
                         v-if="errors"
@@ -30,13 +30,26 @@
                 </div>
 
                 <v-btn
+                        v-if="needsPayment"
                         color="primary"
+                        outlined
                         style="background-color: white"
                         text
                         class="m-1rem"
-                        outlined
                         @click="submit()"
                         :loading="submitted"
+                >
+                    Pay
+                </v-btn>
+
+                <v-btn
+                        v-if="!needsPayment"
+                        color="primary"
+                        outlined
+                        style="background-color: white"
+                        text
+                        class="m-1rem"
+                        :disabled="true"
                 >
                     Pay
                 </v-btn>
@@ -232,8 +245,6 @@
 
     import CreditCard from './CreditCard.vue';
 
-    let stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`)
-
     export default {
         name: 'StripeCreditCardModal',
         components: {
@@ -241,6 +252,7 @@
         },
         data() {
             return {
+                stripe: null,
                 statementDescriptor: 'Thank you for your payment!',
                 paymentSucceeded: false,
                 needsPayment: true,
@@ -312,6 +324,7 @@
         computed: {
             show: function () {
                 this.showModal = this.open;
+                this.needsPayment = true;
             },
             attachedCards() {
                 this.allCards = this.paymentMethods;
@@ -387,7 +400,7 @@
             submit() {
                 if (Object.values(this.selectedCard).length > 0) {
                     this.submitted = true;
-                    stripe.confirmCardPayment(this.clientSecret, {
+                    this.stripe.confirmCardPayment(this.clientSecret, {
                         payment_method: this.selectedCard.id,
                         receipt_email: Spark.state.user.email
                     }).then(function (result) {
@@ -400,10 +413,9 @@
                         } else {
                             // The payment has been processed!
                             if (result.paymentIntent.status === 'succeeded') {
-                                this.paymentSucceeded = true;
                                 this.needsPayment = false;
-                                this.$emit('paid');
                                 this.showModal = false;
+                                this.$emit('paid');
                             }
                         }
                     }.bind(this));
@@ -441,6 +453,7 @@
             }
         },
         mounted() {
+            this.stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`);
         }
     }
 </script>

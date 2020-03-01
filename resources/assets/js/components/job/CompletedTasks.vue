@@ -1,152 +1,166 @@
 <template>
     <!-- / all tasks ready for payment -->
-    <div v-if="show"><!---->
-        <div class="flex flex-col">
-            <div class="flex space-between header-completed">
-                <div class="flex-1">Task</div>
-                <div class="flex-1">Qty</div>
-                <div class="flex-1">Price</div>
-                <div class="flex-1">Total</div>
-                <div class="flex-1" v-if="isContractor">Task Price (Sub Contractor)</div>
-                <div class="flex-1" v-else>Exclude</div>
-                <div class="flex-1"></div>
-            </div>
-            <div class="flex pl-2 mb-2" v-for="jobTask in getPayableTasks()" :key="jobTask.id">
-                <div class="flex-1 capitalize">{{ jobTask.task.name }}</div>
-                <div class="pl-1 mr-1rem">{{ jobTask.qty }}</div>
-                <div class="flex-1 pl-1">$ {{ jobTask.unit_price }}</div>
-                <div class="flex-1 pl-1" v-if="isContractor">$ {{ jobTask.cust_final_price - jobTask.sub_final_price }}
+    <div>
+        <div v-if="show"><!---->
+            <div class="flex flex-col">
+                <div
+                        style="background-color: green"
+                        class="banner"
+                        v-if="paymentSucceeded"
+                >
+                    <h3 class="text-center">Payment Succeeded!</h3>
                 </div>
-                <div class="flex-1 pl-1" v-else>
-                    <div v-if="bid.payment_type === 'cash'">
-                        $ {{ jobTask.cust_final_price }}
+                <div class="flex space-between header-completed">
+                    <div class="flex-1">Task</div>
+                    <div class="flex-1">Qty</div>
+                    <div class="flex-1">Price</div>
+                    <div class="flex-1">Total</div>
+                    <div class="flex-1" v-if="isContractor">Task Price (Sub Contractor)</div>
+                    <div class="flex-1" v-else>Exclude</div>
+                    <div class="flex-1"></div>
+                </div>
+                <div class="flex pl-2 mb-2" v-for="jobTask in getPayableTasks()" :key="jobTask.id">
+                    <div class="flex-1 capitalize">{{ jobTask && jobTask.task ? jobTask.task.name : null}}</div>
+                    <div class="pl-1 mr-1rem">{{ jobTask.qty }}</div>
+                    <div class="flex-1 pl-1">$ {{ jobTask.unit_price }}</div>
+                    <div class="flex-1 pl-1" v-if="isContractor">$ {{ jobTask.cust_final_price - jobTask.sub_final_price
+                        }}
                     </div>
-                    <div v-else>
-                        $ {{ totalTaskFee(jobTask.cust_final_price) }}
+                    <div class="flex-1 pl-1" v-else>
+                        <div v-if="bid ? bid.payment_type === 'cash' : false">
+                            $ {{ jobTask.cust_final_price }}
+                        </div>
+                        <div v-else>
+                            $ {{ totalTaskFee(jobTask.cust_final_price) }}
+                        </div>
+                    </div>
+                    <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
+                    <div class="pl-1" v-else>
+                        <input v-if="showDenyBtn(jobTask)" type="checkbox" name="exclude"
+                               :id="'exclude-' + jobTask.id"
+                               :ref="'exclude-' + jobTask.id"
+                               @click="addJobTaskToExcludedList(jobTask)">
+                    </div>
+
+                    <div class=" pl-1" v-if="showReopenBtn(jobTask)">
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                @click.prevent="reopenTask(jobTask)" :loading="disabled.reopen">
+                            Reopen
+                        </v-btn>
+                    </div>
+                    <div class="flex-1 pl-1" v-else>
+                        <v-btn
+                                class="w-40"
+                                color="red"
+                                text
+                                v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                            Deny
+                        </v-btn>
+
                     </div>
                 </div>
-                <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
-                <div class="pl-1" v-else>
-                    <input v-if="showDenyBtn(jobTask)" type="checkbox" name="exclude" :id="'exclude-' + jobTask.id"
-                           @click="addJobTaskToExcludedList(jobTask)">
+                <div class="flex pl-2 mb-2" v-if="isContractor">
+                    <div></div>
+                    <div></div>
+                    <div>Total: ${{ totalCustomerPrice }}</div>
+                    <div>Total: ${{ totalSubPrice }}</div>
+                    <div></div>
                 </div>
-                <div class=" pl-1" v-if="showReopenBtn(jobTask)">
-                    <v-btn
-                            class="w-40"
-                            color="primary"
-                            @click.prevent="reopenTask(jobTask)" :loading="disabled.reopen">
-                        Reopen
-                    </v-btn>
-                </div>
-                <div class="flex-1 pl-1" v-else>
-                    <v-btn
-                            class="w-40"
-                            color="red"
-                            text
-                            v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
-                        Deny
-                    </v-btn>
+                <div class="flex justify-between pl-2 mb-2 mt-4">
+                    <div class="flex-1"></div>
+                    <div class="flex-1">
+                        <!--                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - -->
+                        <!--                        subtractFromTotal}}</label>-->
+                        <label class="w-full" v-if="isCustomer">
 
+                            <div class="w-full" style="text-align: right"
+                                 v-if="bid ? bid.payment_type === 'cash' : false">
+                                Total: $ {{ totalTaskCashFee() }}
+                            </div>
+                            <div id="cctotal" class="w-full" style="text-align: right" v-else>
+                                Total: $ {{ totalPriceForAllCompletedTasks() }}
+                            </div>
+                        </label>
+                    </div>
+                    <div class="flex-1" v-if="isContractor">
+                        <label class="w-full" style="text-align: right">Total: ${{ totalCustomerPrice + totalSubPrice
+                            }}</label>
+                    </div>
                 </div>
             </div>
-            <div class="flex pl-2 mb-2" v-if="isContractor">
-                <div></div>
-                <div></div>
-                <div>Total: ${{ totalCustomerPrice }}</div>
-                <div>Total: ${{ totalSubPrice }}</div>
-                <div></div>
-            </div>
-            <div class="flex justify-between pl-2 mb-2 mt-4">
-                <div class="flex-1"></div>
-                <div class="flex-1">
-                    <!--                    <label v-if="isCustomer">Total: ${{ (totalCustomerPrice + totalSubPrice) - -->
-                    <!--                        subtractFromTotal}}</label>-->
-                    <label class="w-full" v-if="isCustomer">
 
-                        <div class="w-full" style="text-align: right" v-if="bid.payment_type === 'cash'">
-                            Total: $ {{ totalTaskCashFee() }}
-                        </div>
-                        <div class="w-full" style="text-align: right" v-else>
-                            Total: $ {{ totalPriceForAllCompletedTasks() }}
-                        </div>
-                    </label>
-                </div>
-                <div class="flex-1" v-if="isContractor">
-                    <label class="w-full" style="text-align: right">Total: ${{ totalCustomerPrice + totalSubPrice
-                        }}</label>
-                </div>
+            <div v-if="isCustomer" class="text-right">
+                <v-btn
+                        v-if="cashJobOrNotSetupWithStripe()"
+                        class="w-full"
+                        color="primary"
+                        @click.prevent="paidCash = true" :loading="disabled.payCash">
+                    Pay With Cash
+                </v-btn>
+                <v-btn
+                        class="w-full"
+                        color="primary"
+                        v-if="creditCardJobAndContractorHasStripe()" @click.prevent="payAllPayableTasks()"
+                        :loading="payAll"
+                >
+                    Pay With Credit Card
+                </v-btn>
             </div>
-        </div>
 
-        <div v-if="isCustomer" class="text-right">
-            <v-btn
-                    v-if="cashJobOrNotSetupWithStripe()"
-                    class="w-full"
-                    color="primary"
-                    @click.prevent="paidCash = true" :loading="disabled.payCash">
-                Pay With Cash
-            </v-btn>
-            <v-btn
-                    class="w-full"
-                    color="primary"
-                    v-if="creditCardJobAndContractorHasStripe()" @click.prevent="payAllPayableTasks()"
-                    :loading="payAll"
+            <transition name="slide-fade">
+                <div v-show="paidCash">
+                    <div class="form-group col-md-12">
+
+                        <v-combobox
+                                label="Instructions For Contractor"
+                                :items="instructions"
+                                v-model="cashMessage"
+                        ></v-combobox>
+
+                        <!--                    <label for="">Message</label>-->
+                        <!--                    <input type="text" class="form-control"-->
+                        <!--                           name="message"-->
+                        <!--                           v-model="cashMessage"-->
+                        <!--                           placeholder="Optional Message">-->
+                    </div>
+                    <div class="form-group col-md-12">
+                        <v-btn
+                                class="w-40"
+                                color="primary"
+                                @click.prevent="paidWithCash()"
+                                :loading="disableCashMessageButton"
+                                ref="cashMessage">
+                            Submit
+                        </v-btn>
+                    </div>
+                </div>
+            </transition>
+
+            <stripe-credit-card-modal
+                    :open="showCreditCardModal"
+                    @closeStripeCCModal="showCreditCardModal = false"
+                    :client-secret="theClientSecret"
+                    :payment-methods="paymentMethods"
+                    @paid="setTasksToPaid()"
             >
-                Pay With Credit Card
-            </v-btn>
+
+            </stripe-credit-card-modal>
+
+            <deny-task-modal
+                    v-if="isCustomer"
+                    :jobTask="jTask">
+            </deny-task-modal>
+
+            <!--        <stripe-->
+            <!--                :bid="bid"-->
+            <!--                :client-secret="theClientSecret"-->
+            <!--                :user="getCurrentUser()"-->
+            <!--        >-->
+            <!--        </stripe>-->
+
         </div>
-
-        <transition name="slide-fade">
-            <div v-show="paidCash">
-                <div class="form-group col-md-12">
-
-                    <v-combobox
-                            label="Instructions For Contractor"
-                            :items="instructions"
-                            v-model="cashMessage"
-                    ></v-combobox>
-
-                    <!--                    <label for="">Message</label>-->
-                    <!--                    <input type="text" class="form-control"-->
-                    <!--                           name="message"-->
-                    <!--                           v-model="cashMessage"-->
-                    <!--                           placeholder="Optional Message">-->
-                </div>
-                <div class="form-group col-md-12">
-                    <v-btn
-                            class="w-40"
-                            color="primary"
-                            @click.prevent="paidWithCash()"
-                            :loading="disableCashMessageButton"
-                            ref="cashMessage">
-                        Submit
-                    </v-btn>
-                </div>
-            </div>
-        </transition>
-
-        <stripe-credit-card-modal
-                :open="showCreditCardModal"
-                @closeStripeCCModal="showCreditCardModal = false"
-                :client-secret="theClientSecret"
-                :payment-methods="paymentMethods"
-                @paid="setTasksToPaid()"
-        >
-
-        </stripe-credit-card-modal>
-
-        <deny-task-modal
-                v-if="isCustomer"
-                :jobTask="jTask">
-        </deny-task-modal>
-
-        <!--        <stripe-->
-        <!--                :bid="bid"-->
-        <!--                :client-secret="theClientSecret"-->
-        <!--                :user="getCurrentUser()"-->
-        <!--        >-->
-        <!--        </stripe>-->
-
     </div>
 </template>
 
@@ -171,6 +185,7 @@
         data() {
             return {
                 paymentMethods: null,
+                paymentSucceeded: false,
                 showCreditCardModal: false,
                 instructions: [
                     'Pay In Person',
@@ -226,13 +241,13 @@
                 return this.getPayableTasks().length > 0
             },
             isContractor() {
-                return User.isContractor()
+                return Spark.state.user.usertype === 'contractor'
             },
             isCustomer() {
-                return User.isCustomer()
+                return Spark.state.user.usertype === 'customer'
             },
             payableTasks() {
-                return User.getAllPayableTasks(this.jobTasks)
+                return this.getAllPayableTasks(this.jobTasks)
             },
         },
         methods: {
@@ -242,14 +257,21 @@
                 let total = 0
                 let payableT = this.getPayableTasks()
                 for (let i = 0; i < payableT.length; i++) {
-                    total = total + this.totalTaskFee(payableT[i].cust_final_price)
+                    total = total + payableT[i].cust_final_price
                 }
-                return total
+
+                if (total - this.subtractFromTotal === 0) {
+                    return 0;
+                } else {
+                    return this.totalTaskFee(total - this.subtractFromTotal);
+                }
+
             },
 
             setTasksToPaid() {
 
                 let ex = Object.keys(this.excluded);
+                this.paymentSucceeded = true;
 
                 let nextId = 0;
 
@@ -276,11 +298,17 @@
                         this.jobTasks[i].id = nextId;
                     }
                 }
-                // this.$forceUpdate();
+                this.showCreditCardModal = false;
             },
 
             totalTaskFee(price) {
-                return Math.round((price + (parseFloat(price) * .029) + 2.50 + Number.EPSILON) * 100) / 100
+
+                if (this.atLeastOneTaskIsPaid()) {
+                    return Math.round((price + (parseFloat(price) * .029) + Number.EPSILON) * 100) / 100
+                } else {
+                    return Math.round((price + (parseFloat(price) * .029) + 2.50 + Number.EPSILON) * 100) / 100
+                }
+
             },
 
             totalTaskCashFee() {
@@ -309,7 +337,24 @@
             },
 
             getPayableTasks() {
-                return User.getAllPayableTasks(this.jobTasks)
+                return this.getAllPayableTasks(this.jobTasks)
+            },
+
+            getAllPayableTasks(jobTasks) {
+                if (jobTasks !== undefined) {
+
+                    let payableTasks = [];
+
+                    for (let i = 0; i < jobTasks.length; i++) {
+                        if (
+                            this.getLatestStatus(jobTasks[i].job_task_status) === 'approved_subs_work'
+                            || this.getLatestStatus(jobTasks[i].job_task_status) === 'general_finished_work'
+                        ) {
+                            payableTasks.push(jobTasks[i])
+                        }
+                    }
+                    return payableTasks;
+                }
             },
 
             atLeastOneTaskIsPaid() {
@@ -322,7 +367,9 @@
             },
 
             getLatestStatus(jobTaskStatus) {
-                return jobTaskStatus[jobTaskStatus.length - 1].status
+                if (jobTaskStatus) {
+                    return jobTaskStatus[jobTaskStatus.length - 1].status
+                }
             },
 
             cashJobOrNotSetupWithStripe() {
@@ -376,11 +423,11 @@
             },
             addJobTaskToExcludedList(jobTask) {
                 if (document.getElementById('exclude-' + jobTask.id).checked) {
-                    this.excluded[jobTask.id] = true
-                    this.subtractFromTotal += jobTask.cust_final_price
+                    this.excluded[jobTask.id] = true;
+                    this.subtractFromTotal += jobTask.cust_final_price;
                 } else {
-                    this.excluded[jobTask.id] = false
-                    this.subtractFromTotal -= jobTask.cust_final_price
+                    this.excluded[jobTask.id] = false;
+                    this.subtractFromTotal -= jobTask.cust_final_price;
                 }
             },
             openDenyTaskForm(jobTask) {

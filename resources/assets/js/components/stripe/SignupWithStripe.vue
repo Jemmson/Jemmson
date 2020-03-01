@@ -55,9 +55,9 @@
 <script>
     import {mapState} from 'vuex'
 
-    let stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`)
-    let elements = stripe.elements()
-    let card = undefined
+    let stripe = Stripe(Spark.stripeKey);
+    let elements = stripe.elements();
+    let card = undefined;
 
     export default {
         data() {
