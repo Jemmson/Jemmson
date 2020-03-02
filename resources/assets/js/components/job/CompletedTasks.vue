@@ -31,7 +31,7 @@
                             $ {{ jobTask.cust_final_price }}
                         </div>
                         <div v-else>
-                            $ {{ totalTaskFee(jobTask.cust_final_price) }}
+                            $ {{ jobTask.cust_final_price }}
                         </div>
                     </div>
                     <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
@@ -304,10 +304,15 @@
             totalTaskFee(price) {
 
                 if (this.atLeastOneTaskIsPaid()) {
-                    return Math.round((price + (parseFloat(price) * .029) + Number.EPSILON) * 100) / 100
+                    return Math.round((price + (parseFloat(price) * .029)
+                        + .30
+                        + Number.EPSILON) * 100) / 100;
                 } else {
-                    return Math.round((price + (parseFloat(price) * .029) + 2.50 + Number.EPSILON) * 100) / 100
+                    return Math.round((price + (parseFloat(price) * .029)
+                        + .30
+                        + this.jemmsonFee() + Number.EPSILON) * 100) / 100;
                 }
+
 
             },
 
@@ -319,6 +324,10 @@
                     return this.totalPriceForAllCompletedTasksCash() + 2.80
                 }
 
+            },
+
+            jemmsonFee() {
+                return 2.50
             },
 
             totalPriceForAllCompletedTasksCash() {

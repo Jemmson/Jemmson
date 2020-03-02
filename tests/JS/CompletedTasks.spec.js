@@ -179,9 +179,9 @@ describe('CompletedTasks', () => {
         expect(wrapper.vm.show).toBe(true)
     })
 
-    test('when neither task is checked then the total amount should be 107.90', () => {
+    test('when neither task is checked then the total amount should be 105.70', () => {
 
-        expect(wrapper.find("#cctotal").text()).toBe("Total: $ " + 105.40);
+        expect(wrapper.find("#cctotal").text()).toBe("Total: $ " + 105.70);
         
     })
 
@@ -198,6 +198,22 @@ describe('CompletedTasks', () => {
 
         let cctotal = wrapper.find("#cctotal");
         expect(cctotal.text()).toBe("Total: $ " + 56.45);
+    })
+
+    test.skip('if one task is selected and no payable tasks are paid then the total will reflect the payable tasks + fees', () => {
+
+        wrapper.setData({
+           excluded: {
+               1: false,
+               2: true
+           }
+        });
+
+        // const jobTask = wrapper.vm.bid.job_tasks;
+        // wrapper.vm.addJobTaskToExcludedList(jobTask[1]);
+
+        expect(wrapper.find("#cctotal").text()).toBe("Total: $ " + 54.25);
+
     })
 
 })
