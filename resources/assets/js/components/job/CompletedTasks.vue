@@ -140,7 +140,7 @@
 
             <stripe-credit-card-modal
                     :open="showCreditCardModal"
-                    @closeStripeCCModal="showCreditCardModal = false"
+                    @close-stripe-cc-modal="showCreditCardModal = false"
                     :client-secret="theClientSecret"
                     :payment-methods="paymentMethods"
                     @paid="setTasksToPaid()"

@@ -208,13 +208,20 @@ class StripeController extends Controller
         ]);
     }
 
-    public function detachPaymentMethod()
+    public function removeCard($paymentMethodId, $customerStripeId)
+    {
+        $this->detachPaymentMethod($paymentMethodId);
+
+        return $this->getAllPaymentMethods($customerStripeId);
+    }
+
+    public function detachPaymentMethod($paymentMethodId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         \Stripe\Stripe::$apiVersion = '2019-08-14';
 
         $payment_method = \Stripe\PaymentMethod::retrieve(
-            'pm_123456789'
+            $paymentMethodId
         );
         $payment_method->detach();
     }

@@ -57,6 +57,8 @@
                 <credit-card
                         @selected-card="selectCard($event)"
                         :cards="allCards"
+                        @close-modal="close()"
+                        @disable-pay-buttons="disablePayButtons()"
                 >
 
                 </credit-card>
@@ -127,8 +129,6 @@
             </div>
 
         </v-dialog>
-
-
         <v-dialog
                 width="500"
                 scrollable
@@ -425,9 +425,12 @@
                     this.errors = true;
                 }
             },
-            close: function () {
+            disablePayButtons(){
+                this.needsPayment = false
+            },
+            close () {
                 this.showModal = false;
-                this.$emit('closeModal')
+                this.$emit('close-stripe-cc-modal')
             },
             selectCard(card) {
                 this.selectedCard = card;
