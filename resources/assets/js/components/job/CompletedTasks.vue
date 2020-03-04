@@ -303,15 +303,17 @@
 
             totalTaskFee(price) {
 
-                if (this.atLeastOneTaskIsPaid()) {
-                    return Math.round((price + (parseFloat(price) * .029)
-                        + .30
-                        + Number.EPSILON) * 100) / 100;
-                } else {
-                    return Math.round((price + (parseFloat(price) * .029)
-                        + .30
-                        + this.jemmsonFee() + Number.EPSILON) * 100) / 100;
-                }
+                // if (this.atLeastOneTaskIsPaid()) {
+                //     return Math.round((price + (parseFloat(price) * .029)
+                //         + .30
+                //         + Number.EPSILON) * 100) / 100;
+                // } else {
+                //     return Math.round((price + (parseFloat(price) * .029)
+                //         + .30
+                //         + this.jemmsonFee() + Number.EPSILON) * 100) / 100;
+                // }
+
+                return price
 
 
             },

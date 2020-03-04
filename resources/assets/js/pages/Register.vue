@@ -721,10 +721,10 @@
                 let {data} = await axios.post('/registerContractor', this.registerForm)
                 console.log(data)
                 this.registerForm.busy = false
-                this.overlay = false
                 this.$store.commit('setUser', data.user)
                 Bus.$emit('updateUser')
                 this.$router.push('/home')
+                this.overlay = false
               } catch (error) {
                 console.log('errors', error)
                 let {errors} = error.response.data
@@ -737,10 +737,10 @@
                 let {data} = await axios.post('/registerCustomer', this.registerForm)
                 console.log(data)
                 this.registerForm.busy = false
-                this.overlay = false
                 this.$store.commit('setUser', data.user)
                 Bus.$emit('updateUser')
                 this.$router.push('/home')
+                this.overlay = false
               } catch (error) {
                 let {errors} = error.response.data
                 this.setErrors(errors)

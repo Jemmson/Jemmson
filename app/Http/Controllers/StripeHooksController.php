@@ -70,6 +70,7 @@ class StripeHooksController extends Controller
         $totalAmount = $request->data['object']['amount'];
         $chargeId = $request->data['object']['charges']['data'][0]['id'];
         $transferGroupId = $request->data['object']['metadata']['transferGroupId'];
+
         $stripeExpress->transferFunds(
             $jobId, $jobTasks, $totalAmount, $chargeId, $transferGroupId
         );

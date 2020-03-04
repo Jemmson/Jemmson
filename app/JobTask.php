@@ -6,6 +6,7 @@ use App\Notifications\TaskFinished;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\JobTaskStatus;
 
 use \App\Traits\ConvertPrices;
 
@@ -484,5 +485,60 @@ class JobTask extends Model
         }
 
         return $amount;
+    }
+
+    public static function allTasksArePaid($jobId)
+    {
+        $allJobTasks = JobTask::select('id')->where('job_id', '=', $jobId)->get();
+
+        $totalTasks = count($allJobTasks);
+
+        $paidTasks = 0;
+
+        foreach ($allJobTasks as $jobTask) {
+            $jts = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->where('status', '=', 'paid')->get()->first();
+            if ($jts) {
+                $paidTasks += 1;
+            }
+        }
+
+        return $totalTasks == $paidTasks;
+    }
+
+    public static function atLeastOnTaskIsPaid($jobId)
+    {
+        $allJobTasks = JobTask::select('id')->where('job_id', '=', $jobId)->get();
+
+        foreach ($allJobTasks as $jobTask) {
+            $jts = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->where('status', '=', 'paid')->get()->first();
+            if ($jts) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function markTasksAsPaid($jobTasks)
+    {
+        foreach ($jobTasks as $jobTask) {
+            $jts = new JobTaskStatus();
+            $jts->job_task_id = $jobTask->id;
+            $jts->status = 'paid';
+            $jts->status_number = 12;
+            $jts->sent_on = Carbon::now();
+            $jts->save();
+        }
+
+        $jobTaskId = $jobTasks[0]->id;
+        $jobId = JobTask::where('id', '=', $jobTaskId)->get()->first()->job_id;
+        $job = Job::find($jobId);
+
+        if (JobTask::allTasksArePaid($jobId)) {
+            $job->markJobAsPaid($jobId);
+        }
+
+
+        User::markSubJobTasksAsPaid($jobTasks, $jobId);
     }
 }

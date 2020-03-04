@@ -23,8 +23,8 @@ class StripeExpress extends Model
             $job = Job::find($jobId);
             $generalId = $job->contractor_id;
             $stripeFee = (int)round($totalAmount * .029 + 30);
-            $jemmsonFee = $this->getJemmsonFee();
-            $customerId = $job->contractor_id;
+            $jemmsonFee = $this->getJemmsonFee($jobId);
+            $customerId = $job->customer_id;
             $subTotalAmounts = $this->getTotalSubAmount($jobTasks, $generalId);
             $transferGroup = TransferGroup::find($transferGroupId);
 
@@ -38,6 +38,10 @@ class StripeExpress extends Model
             $customer = $this->getCustomer($customerId);
             $this->createStripeCustomer($customer, $generalId);
 
+            JobTask::markTasksAsPaid($jobTasks);
+
+            $this->notifyGeneralAndSubs($jobTasks, $generalId);
+
 
         } else {
             return response()->json([
@@ -45,6 +49,19 @@ class StripeExpress extends Model
             ], 200);
         }
 
+    }
+
+    public function notifyGeneralAndSubs($jobTasks, $generalId)
+    {
+        $general = User::find($generalId);
+        foreach ($jobTasks as $jobTask) {
+            $task = $jobTask->task()->get()->first();
+            if ($this->isASub($general->id, $jobTask->contractor_id)) {
+                $sub_contractor = User::find($jobTask->contractor_id);
+                $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+            }
+            $general->notify(new CustomerPaidForTask($task, $general));
+        }
     }
 
     public function getGeneral($generalId)
@@ -59,7 +76,7 @@ class StripeExpress extends Model
 
     public function updateTransferGroupTable($attributes, $transferGroupId)
     {
-        $transferGroup = TransferGroup::where("id", "=", $transferGroupId)->get()->first();
+        $transferGroup = TransferGroup::where("id", "=", $transferGroupId->id)->get()->first();
         $transferGroup->general_amount = $attributes['general_amount'];
         $transferGroup->sub_amount = $attributes['sub_amount'];
         $transferGroup->stripe_amount = $attributes['stripe_amount'];
@@ -95,6 +112,8 @@ class StripeExpress extends Model
         foreach ($jobTasks as $jobTask) {
 
             $subId = $jobTask->contractor_id;
+
+            $subAmount = 0;
 
             if ($this->isASub($generalId, $subId)) {
                 $stripeExpressId = $this->getStripeExpressId($subId);
@@ -180,9 +199,13 @@ class StripeExpress extends Model
 
     }
 
-    public function getJemmsonFee()
+    public function getJemmsonFee($jobId)
     {
-        return env('JEMMSON_FLAT_RATE');
+        if (JobTask::atLeastOnTaskIsPaid($jobId)) {
+            return 0;
+        } else {
+            return env('JEMMSON_FLAT_RATE');
+        }
     }
 
     public function getTotalSubAmount($jobTasks, $generalId)

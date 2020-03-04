@@ -668,4 +668,10 @@ class Job extends Model
         return Job::where('contractor_id', '=', $generalId)->select(['id'])->get()->toArray();
     }
 
+    public function markJobAsPaid($jobId)
+    {
+        $js = new JobStatus();
+        $js->setStatus($jobId, 'paid');
+    }
+
 }

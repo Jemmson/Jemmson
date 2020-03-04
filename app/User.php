@@ -8,6 +8,7 @@ use App\Notifications\NotifySubOfAcceptedBid;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Spark\User as SparkUser;
@@ -22,6 +23,7 @@ use App\Exceptions\SubHasAlreadyBeenInvitedForThisTaskException;
 use App\Exceptions\UnableToAddPreferredPaymentException;
 use App\Traits\Status;
 use App\Traits\ConvertPrices;
+use App\SubStatus;
 use App\Job;
 use App\JobTask;
 
@@ -924,6 +926,23 @@ class User extends SparkUser
         $this->addGeneralAndNewSubToContractorContractorTable($user, $quickbooksId);
 //        $this->addLocationToContractorFromQuickbooksContractorTable($request, $contractor, $user);
         return $user;
+    }
+
+    public static function markSubJobTasksAsPaid($jobTasks, $jobId)
+    {
+        $generalId = Job::where('id', '=', $jobId)->get()->first()->contractor_id;
+
+        foreach ($jobTasks as $jobTask) {
+            if ($jobTask->contractor_id !== $generalId) {
+                $ss = new SubStatus();
+                $ss->user_id = $jobTask->contractor_id;
+                $ss->job_task_id = $jobTask->id;
+                $ss->status = 'paid';
+                $ss->status_number = 12;
+                $ss->sent_on = Carbon::now();
+                $ss->save();
+            }
+        }
     }
 
 }
