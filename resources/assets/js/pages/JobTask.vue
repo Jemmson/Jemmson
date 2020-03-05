@@ -220,64 +220,54 @@
 
                             <!-- / location -->
                             <div class="col-12">
-
-                                <!--                                    <a target="_blank"-->
-                                <!--                                       :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, job)">-->
-                                <!--                                        <i class="fas fa-map-marker icon"></i>-->
-                                <!--                                        {{ location(jobTask, job) }}-->
-                                <!--                                    </a>-->
-                                <a
+                                <div
+                                        class="flex flex-col"
                                         v-if="getAddress() !== 'Address Not Available'"
-                                        target="_blank"
-                                        :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress()">
-                                    <!--                                    <i class="fas fa-map-marker icon"></i>-->
-                                    <div class="flex flex-col location" v-if="jobLocationHasBeenSet">
-                                        <div>
-                                            {{ getAddressLine1 }}
+                                    >
+                                    <card>
+
+                                        <div class="flex flex-col">
+                                            <div>
+                                                {{ getAddressLine1 }}
+                                            </div>
+                                            <div>
+                                                {{ getCity }}, {{ getLocationState }} {{ getZip }}
+                                            </div>
                                         </div>
-                                        <div>
-                                            {{ getCity }}, {{ getLocationState }} {{ getZip }}
-                                        </div>
+
+                                        <hr>
+
+                                        <main class="map-responsive">
+                                            <iframe
+                                                    width="450"
+                                                    height="250"
+                                                    frameborder="0" style="border:0"
+                                                    :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
+                                                        getAddressLine1 + ' ' +
+                                                        getCity + ' ' +
+                                                        getLocationState + ' ' +
+                                                        getZip
+                                                        " allowfullscreen>
+                                            </iframe>
+                                        </main>
+                                    </card>
+                                    <div class="flex flex-col">
+                                        <hr>
+                                        <v-btn
+                                                v-if="jobIsNotComplete()"
+                                                class="primary w-full"
+                                                @click="openUpdateTaskLocation(jobTask.id)"
+                                        >
+                                            <v-icon
+                                                    class="mr-1rem"
+                                            >mdi-home-edit</v-icon>
+                                            Change Task Location
+                                        </v-btn>
+
                                     </div>
-                                </a>
+                                </div>
                                 <div v-else class="location">
                                     Job Location Has Not Been Set
-                                </div>
-
-                                <hr>
-
-                                <div v-if="location(jobTask, job) === 'No Address Set Yet'">
-                                    <i class="fas fa-map-marker icon"></i>
-                                    {{ location(jobTask, job) }}
-                                </div>
-                                <div class="flex flex-col"
-                                     v-else-if="location(jobTask, job) === 'Same as Job Location'">
-
-
-                                    <v-btn
-                                            v-if="jobIsNotComplete()"
-                                            class="primary w-full"
-                                            @click="openUpdateTaskLocation(jobTask.id)"
-                                    >
-                                        <v-icon>mdi-home-edit</v-icon>
-                                        Change Task Location
-                                    </v-btn>
-
-                                </div>
-                                <div v-else class="flex flex-col">
-                                    <a target="_blank"
-                                       :href="'https://www.google.com/maps/search/?api=1&query=' + location(jobTask, job)">
-                                        <i class="fas fa-map-marker icon"></i>
-                                        {{ location(jobTask, job) }}
-                                    </a>
-
-                                    <v-btn
-                                            class="primary w-full"
-                                            @click="openUpdateTaskLocation(jobTask.id)"
-                                    >
-                                        <v-icon>mdi-home-edit</v-icon>
-                                    </v-btn>
-
                                 </div>
                             </div>
                         </div>
