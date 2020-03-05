@@ -228,6 +228,7 @@ $router->group(['middleware' => 'web'], function ($router) {
         $user->billing_zip = $request->zip;
         $user->billing_country = $request->country;
         $user->password_updated = true;
+        $user->terms = true;
         try {
             $user->save();
         } catch (\Exception $error) {
@@ -347,6 +348,7 @@ $router->group(['middleware' => 'web'], function ($router) {
         $user->billing_zip = $request->zip;
         $user->billing_country = $request->country;
         $user->password_updated = true;
+        $user->terms = true;
         try {
             $user->save();
         } catch (\Exception $error) {

@@ -1,6 +1,9 @@
 <template>
 
     <div class="container">
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
         <div class="row">
             <div class="col-12 mb-2">
                 <icon-header v-if="isContractor" icon="settings"
@@ -220,6 +223,25 @@
                                 </div>
                             </div>
                         </div>
+                        <hr style="margin-top: 2rem;">
+                        <div class="row mb-1rem"
+                             style="margin-left: 0rem; margin-right: 0rem;"
+                             :class="{'has-error': form.errors.has('terms')}">
+                            <input
+                                    type="checkbox"
+                                    class="mr-2"
+                                    name="terms"
+                                    style="align-self: center;"
+                                    @change="terms()">I Accept The
+                            <a href="/terms"
+                               style="margin-left: .2rem;"
+                               target="_blank"> Terms Of Service *</a>
+                            <span class="help-block"
+                                  v-show="form.errors.has('terms')">
+                                {{ form.errors.get('terms') }}</span>
+                        </div>
+
+
                         <v-btn
                                 class="w-full"
                                 color="primary"
@@ -227,7 +249,7 @@
                                 name="submit"
                                 @click.prevent="submitFurtherInfo()"
                                 :disabled="checkValidData()"
-                                :loading="disabled.submit"
+                                :loading="overlay"
                         >
                             Register
                         </v-btn>
@@ -261,6 +283,7 @@
         },
         data() {
             return {
+                overlay: false,
                 boxArray: [],
                 disabled: {
                     submit: false,
@@ -285,6 +308,7 @@
                     email_contact: true,
                     phone_contact: false,
                     sms_text: false,
+                    terms: null
                 }),
                 passwordsMatch: true,
                 states: [
@@ -373,6 +397,14 @@
                 'checkMobileNumber',
             ]),
 
+            terms() {
+                if (this.form.terms) {
+                    this.form.terms = null
+                } else {
+                    this.form.terms = true
+                }
+            },
+
             addLicenses(licenses) {
                 this.form.licenses = []
                 this.form.licenses[this.form.licenses.length] = licenses
@@ -399,12 +431,30 @@
                 this.passwordsMatch = true
             },
             submitFurtherInfo() {
+                this.overlay = true;
                 if (!this.passwordsMatch) {
                     return false
                 }
                 this.form.email = this.form.email.trim()
-                User.submitFurtherInfo(this.form, this.disabled)
+                this.getFurtherInfo()
             },
+
+            async getFurtherInfo() {
+                this.form.phone_number = Format.numbersOnly(this.form.phone_number)
+                try {
+                    const data = await Spark.post('/home', this.form)
+                    Vue.toasted.success('info updated')
+                    Bus.$emit('updateUser');
+                    this.$router.push(data);
+                } catch (error) {
+                    console.log(error)
+                    this.form.errors.errors = error.errors
+                    Vue.toasted.error(error.message)
+                    this.overlay = false;
+                }
+            },
+
+
             initAutocomplete() {
                 User.initAutocomplete('route')
             },

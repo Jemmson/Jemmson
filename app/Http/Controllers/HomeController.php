@@ -74,6 +74,7 @@ class HomeController extends Controller
                 'city' => 'required|min:2',
                 'state' => 'required|min:2',
                 'zip' => 'required|min:2',
+                'terms' => 'required'
             ]
         );
 
@@ -187,6 +188,7 @@ class HomeController extends Controller
         $user->billing_state = trim($request->state);
         $user->billing_zip = trim($request->zip);
         $user->billing_country = 'US';
+        $user->terms = true;
 
         try {
             $user->save();
@@ -202,9 +204,9 @@ class HomeController extends Controller
 
 
         if($user->usertype == 'contractor') {
-            return response()->json('/#/tasks', 200);
+            return response()->json('/tasks', 200);
         } else {
-            return response()->json('/#/bids', 200);
+            return response()->json('/bids', 200);
         }
 
 
