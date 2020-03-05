@@ -524,11 +524,7 @@
             ...mapGetters(['getCustomerName']),
             agreedStartDate() {
                 if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
-                    this.addTaskStartDate = false
-                    let d = this.bid.agreed_start_date
-                    let date = d.split(' ')
-                    let format_date = date[0].split('-')
-                    return format_date[1] + '/' + format_date[2] + '/' + format_date[0]
+                    return this.dateOnly(this.bid.agreed_start_date)
                 } else {
                     if (this.isCustomer) {
                         return ''
