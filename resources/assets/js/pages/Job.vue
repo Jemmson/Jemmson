@@ -37,7 +37,7 @@
                     <v-sheet class="capitalize"
                              ref="jobStatus"
                              color="status-bar lighten-2">{{ formatStatus(jobStatus.status) }} on {{
-                        formatDate(dateOnly(jobStatus.created_at)) }}
+                        dateOnly(jobStatus.created_at) }}
                     </v-sheet>
                 </div>
             </v-card-text>
