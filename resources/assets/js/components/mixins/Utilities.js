@@ -9,6 +9,14 @@ export default {
             }
         },
 
+        dateOnlyHyphen(datetime) {
+            if (datetime) {
+                let d = datetime.split(' ');
+                let time = moment.utc(d[0] + 'T' + d[1]);
+                return time.local().format('YYYY-MM-DD');
+            }
+        },
+
         localTime(time) {
             return moment(time)
                 .local()

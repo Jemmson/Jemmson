@@ -37,7 +37,7 @@
                                 <div v-else>
                                     <div class="flex justify-content-between">
                                         <label>Task Start Date</label>
-                                        <div><strong>{{ this.formatDate(prettyDate(jobTask.start_date)) }}</strong>
+                                        <div><strong>{{ getStartDate(jobTask.start_date) }}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -394,75 +394,75 @@
                 </section>
 
 
-<!--                <div class="col-12" v-show="showSubsPanel">-->
-<!--                    &lt;!&ndash;                    <h1 id="bids" class="card-title mt-4">Bids</h1>&ndash;&gt;-->
-<!--                    <card>-->
-<!--                        <div class="row">-->
-<!--                            &lt;!&ndash;show this box if the show button has been selected and if showSubsPanel is selected then show &ndash;&gt;-->
-<!--                            <div class="col-12">-->
-<!--                                <div v-if="showSubsPanel" class="mt-4">-->
-<!--                                    <div :id="jobTask ? 'task-divider-' + jobTask.id : 0" :key="1"></div>-->
-<!--                                    <div :id="jobTask ? 'task-subs-' + jobTask.id : 0"-->
-<!--                                         v-if="isGeneral() && this.jobHasSubs()"-->
-<!--                                         :key="3">-->
-<!--                                        <div class="flex flex-col">-->
-<!--                                            <div class="table-header">-->
-<!--                                                <div class="flex-1">Sub</div>-->
-<!--                                                <div class="flex-1">Bid Price</div>-->
-<!--                                                <div class="flex-1">Action</div>-->
-<!--                                            </div>-->
-<!--                                            <div class="flex mb-2 justify-content-between"-->
-<!--                                                 v-for="bid in jobTask.bid_contractor_job_tasks"-->
-<!--                                                 :key="jobTask ? bid.id : 0">-->
-<!--                                                <div class="flex-1 lookLikeALink"-->
-<!--                                                     @click="viewContractorInfo(bid.contractor_id)">{{-->
-<!--                                                    getCompanyName(bid) }}-->
-<!--                                                </div>-->
-<!--                                                &lt;!&ndash;                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>&ndash;&gt;-->
+                <!--                <div class="col-12" v-show="showSubsPanel">-->
+                <!--                    &lt;!&ndash;                    <h1 id="bids" class="card-title mt-4">Bids</h1>&ndash;&gt;-->
+                <!--                    <card>-->
+                <!--                        <div class="row">-->
+                <!--                            &lt;!&ndash;show this box if the show button has been selected and if showSubsPanel is selected then show &ndash;&gt;-->
+                <!--                            <div class="col-12">-->
+                <!--                                <div v-if="showSubsPanel" class="mt-4">-->
+                <!--                                    <div :id="jobTask ? 'task-divider-' + jobTask.id : 0" :key="1"></div>-->
+                <!--                                    <div :id="jobTask ? 'task-subs-' + jobTask.id : 0"-->
+                <!--                                         v-if="isGeneral() && this.jobHasSubs()"-->
+                <!--                                         :key="3">-->
+                <!--                                        <div class="flex flex-col">-->
+                <!--                                            <div class="table-header">-->
+                <!--                                                <div class="flex-1">Sub</div>-->
+                <!--                                                <div class="flex-1">Bid Price</div>-->
+                <!--                                                <div class="flex-1">Action</div>-->
+                <!--                                            </div>-->
+                <!--                                            <div class="flex mb-2 justify-content-between"-->
+                <!--                                                 v-for="bid in jobTask.bid_contractor_job_tasks"-->
+                <!--                                                 :key="jobTask ? bid.id : 0">-->
+                <!--                                                <div class="flex-1 lookLikeALink"-->
+                <!--                                                     @click="viewContractorInfo(bid.contractor_id)">{{-->
+                <!--                                                    getCompanyName(bid) }}-->
+                <!--                                                </div>-->
+                <!--                                                &lt;!&ndash;                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>&ndash;&gt;-->
 
 
-<!--                                                <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"-->
-<!--                                                >$ {{ getBidPrice(bid) }}-->
-<!--                                                </div>-->
+                <!--                                                <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"-->
+                <!--                                                >$ {{ getBidPrice(bid) }}-->
+                <!--                                                </div>-->
 
 
-<!--                                                <div class="flex-1">-->
-<!--                                                    &lt;!&ndash; <button v-if="showAcceptBtn(jobTask.status)" &ndash;&gt;-->
+                <!--                                                <div class="flex-1">-->
+                <!--                                                    &lt;!&ndash; <button v-if="showAcceptBtn(jobTask.status)" &ndash;&gt;-->
 
 
-<!--                                                    <v-btn-->
-<!--                                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)-->
-<!--                                                                    && checkIfBidHasBeenSent(bid)"-->
-<!--                                                            @click="acceptSubBidForTask(bid, jobTask)"-->
-<!--                                                            class="primary w-1/2"-->
-<!--                                                            :disabled="disabled.accept"-->
-<!--                                                    >-->
-<!--                                                        <span v-if="disabled.accept">-->
-<!--                                                            <i class="fa fa-btn fa-spinner fa-spin"></i>-->
-<!--                                                        </span>-->
-<!--                                                        Accept-->
-<!--                                                    </v-btn>-->
+                <!--                                                    <v-btn-->
+                <!--                                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)-->
+                <!--                                                                    && checkIfBidHasBeenSent(bid)"-->
+                <!--                                                            @click="acceptSubBidForTask(bid, jobTask)"-->
+                <!--                                                            class="primary w-1/2"-->
+                <!--                                                            :disabled="disabled.accept"-->
+                <!--                                                    >-->
+                <!--                                                        <span v-if="disabled.accept">-->
+                <!--                                                            <i class="fa fa-btn fa-spinner fa-spin"></i>-->
+                <!--                                                        </span>-->
+                <!--                                                        Accept-->
+                <!--                                                    </v-btn>-->
 
 
-<!--                                                    <div-->
-<!--                                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">-->
-<!--                                                        <strong>Accepted</strong>-->
-<!--                                                    </div>-->
-<!--                                                    <div-->
-<!--                                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">-->
-<!--                                                        <strong>Pending</strong></div>-->
-<!--                                                </div>-->
+                <!--                                                    <div-->
+                <!--                                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">-->
+                <!--                                                        <strong>Accepted</strong>-->
+                <!--                                                    </div>-->
+                <!--                                                    <div-->
+                <!--                                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">-->
+                <!--                                                        <strong>Pending</strong></div>-->
+                <!--                                                </div>-->
 
-<!--                                            </div>-->
+                <!--                                            </div>-->
 
 
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </card>-->
-<!--                </div>-->
+                <!--                                        </div>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </card>-->
+                <!--                </div>-->
 
 
                 <!--                <v-card v-if="checkIfThereAreMessaages(jobTask)"-->
@@ -654,822 +654,827 @@
 
 <script>
 
-  import SubInviteModal from '../components/task/SubInviteModal'
-  import DenyTaskModal from '../components/task/DenyTaskModal'
-  import UpdateTaskLocationModal from '../components/task/UpdateTaskLocationModal'
-  import Message from '../components/job/Message.vue'
-  import TaskImages from '../components/task/UploadTaskImages'
-  import Format from '../classes/Format'
-  import Card from '../components/shared/Card'
-  import ContentSection from '../components/shared/ContentSection'
-  import User from '../classes/User'
-  import Feedback from '../components/shared/Feedback'
-  import Status from '../components/mixins/Status'
-  import Currency from '../components/mixins/Currency'
-  import Utilities from '../components/mixins/Utilities'
+    import SubInviteModal from '../components/task/SubInviteModal'
+    import DenyTaskModal from '../components/task/DenyTaskModal'
+    import UpdateTaskLocationModal from '../components/task/UpdateTaskLocationModal'
+    import Message from '../components/job/Message.vue'
+    import TaskImages from '../components/task/UploadTaskImages'
+    import Format from '../classes/Format'
+    import Card from '../components/shared/Card'
+    import ContentSection from '../components/shared/ContentSection'
+    import User from '../classes/User'
+    import Feedback from '../components/shared/Feedback'
+    import Status from '../components/mixins/Status'
+    import Currency from '../components/mixins/Currency'
+    import Utilities from '../components/mixins/Utilities'
 
-  import { mapState } from 'vuex'
+    import {mapState} from 'vuex'
 
-  export default {
-    components: {
-      SubInviteModal,
-      DenyTaskModal,
-      Feedback,
-      Card,
-      Message,
-      ContentSection,
-      TaskImages,
-      UpdateTaskLocationModal
-    },
-    mixins: [
-      Status, Utilities, Currency
-    ],
-    data() {
-      return {
-        messages: false,
-        changeMessage: '',
-        dialog: false,
-        authUser: {},
-        user: {},
-        jobTask: null,
-        currentJobTask: {},
-        showDetails: false,
-        start_date: '',
-        start_when_accepted: true,
-        startDateErrorMessage: '',
-        hasStartDateError: false,
-        startDateChanged: false,
-        startDateError: false,
-        message: '',
-        sendSubMessage: true,
-        sendCustomerMessage: true,
-        customerMessage: '',
-        cust_final_price: -1,
-        unit_price: -1,
-        sub_final_price: -1,
-        errors: {
-          unit_price: false,
-          priceMustBeANumber: false
+    export default {
+        components: {
+            SubInviteModal,
+            DenyTaskModal,
+            Feedback,
+            Card,
+            Message,
+            ContentSection,
+            TaskImages,
+            UpdateTaskLocationModal
         },
-        disabled: {
-          showDenyForm: false,
-          pay: false,
-          finished: false,
-          approve: false,
-          reopen: false,
-          deny: false,
-          deleteTask: false,
-          payCash: false,
-          accept: false,
-        }
-      }
-    },
-    computed: {
-      ...mapState({
-        job: state => state.job.model,
-        jobStatus: state => state.job.model.status
-      }),
-      jobLocationHasBeenSet() {
-        if (this.jobTask && this.jobTask.location) {
-          return true
-        } else {
-          return false
-        }
-      },
-      getCustomerNotes() {
-        if (this.jobTask) {
-          if (this.jobTask.job.customer) {
-            return this.jobTask.job.customer.customer.notes
-          }
-          return this.jobTask.customer.customer.notes
-        }
-      },
-      getContractorNotesForCustomer() {
-        if (this.jobTask) {
-          return this.jobTask.customer_message
-        }
-      },
-      getAddressLine1() {
-        console.log('jobTask', this.jobTask)
-        if (this.jobTask && this.jobTask.location) {
-          return this.jobTask.location.address_line_1
-        }
-        return ''
-      },
-      getCity() {
-        if (this.jobTask && this.jobTask.location) {
-          return this.jobTask.location.city
-        }
-        return ''
-      },
-      getLocationState() {
-        if (this.jobTask && this.jobTask.location) {
-          return this.jobTask.location.state
-        }
-        return ''
-      },
-      getZip() {
-        if (this.jobTask && this.jobTask.location) {
-          return this.jobTask.location.zip
-        }
-        return ''
-      },
-      taskApproved() {
-        return this.jobTask.status === 'bid_task.approved_by_customer'
-      },
-      isCustomer() {
-        return this.authUser.isCustomer
-      },
-      // isContractor() {
-      //   return this.user.isContractor()
-      // },
-      showSubsPanel() {
-        return this.isContractor()
-          && this.jobHasNotBeenCompleted()
-          && this.jobHasSubs()
-          && this.isGeneral()
-      },
-
-      showSendSubInvite() {
-        if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress') {
-          return true
-        }
-        return false
-      },
-      generalTotalTaskPrice() {
-        let total = 0
-        for (const jobTask of this.job.job_tasks) {
-          if (jobTask !== null) {
-            total += cust_final_price
-          }
-        }
-        return total
-      },
-      subTotalTaskPrices() {
-        let total = 0
-        for (const jobTask of this.job.job_tasks) {
-          total += this.subTaskPrice(jobTask)
-        }
-        return total
-      },
-      disableMessages() {
-        return this.jobStatus === 'job.completed'
-      }
-    },
-    methods: {
-
-      subPriceHigherThanBidPrice(bid) {
-        return this.jobTask.cust_final_price < bid.bid_price
-      },
-
-      jobHasSubs() {
-        return this.jobTask.bid_contractor_job_tasks.length > 0
-      },
-
-      jobHasNotBeenCompleted() {
-        return this.jobStatus !== 'job.completed'
-      },
-
-      getMessage(jobTask) {
-
-        let status = this.getLatestJobTaskStatus(jobTask)
-
-        if (status === 'paid') {
-          return jobTask.job.paid_with_cash_message
-        } else if (jobTask && jobTask.task_messages && jobTask.task_messages.length > 0) {
-          return jobTask.task_messages[jobTask.task_messages.length - 1].message
-        }
-
-      },
-
-      checkIfThereAreMessaages(jobTask) {
-        if (jobTask && jobTask.messages) {
-          return jobTask.messages.length > 0
-        }
-      },
-
-      showTaskMessages(show) {
-        this.messages = show
-      },
-
-      createHyphenDate(date) {
-        if (date) {
-          const dateArray = date.split('/')
-          return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
-        }
-      },
-
-      setStartDate(jt) {
-        if (jt) {
-          return this.createHyphenDate(this.formatDate(this.prettyDate(jt.start_date)))
-        } else {
-          return 0
-        }
-      },
-
-      jobIsApproved() {
-        return this.getLatestJobStatusNumber() === 7
-      },
-
-      jobTaskIsFinished(jobTask) {
-        const status = this.getLatestJobTaskStatus(jobTask)
-        return status === 'general_finished_work' || status === 'sub_finished_work'
-      },
-
-      subHasFinishedWork(jobTask) {
-        if (jobTask && jobTask.job_task_statuses) {
-          const status = this.getJobTaskStatus_latest(jobTask)
-          return status === 'sub_finished_work'
-        }
-      },
-
-      contractorCanApproveSubsTask(jobTask) {
-        this.subHasFinishedWork(jobTask)
-      },
-
-      customerWantsToDeleteTheTask(jobTask) {
-        return this.taskHasNotBeenApproved(jobTask)
-      },
-
-      contractorWantsToDeleteTheTask(jobTask) {
-        return this.taskHasNotBeenApproved(jobTask)
-      },
-
-      taskHasNotBeenApproved(jobTask) {
-        return this.getLatestJobTaskStatusNumber(jobTask) < 6
-      },
-
-      getLatestJobTaskStatusNumber(jobTask) {
-        if (this.jobTask && (this.jobTask.job_task_statuses || this.jobTask.job_task_status)) {
-          return this.getJobTaskStatusNumber_latest(this.jobTask)
-        }
-      },
-
-      getLatestJobStatusNumber() {
-        if (this.job && (this.job.job_statuses || this.job.job_status)) {
-          return this.getJobStatusNumber_latest(this.job)
-        }
-      },
-
-      getLatestJobTaskStatus(jobTask) {
-        if (jobTask && (jobTask.job_task_statuses || jobTask.job_task_status)) {
-          return this.getJobTaskStatus_latest(jobTask)
-        }
-      },
-
-      getLatestJobStatus(jobTask) {
-        if (jobTask && jobTask.job && jobTask.job.job_statuses) {
-          return jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status
-        }
-      },
-
-      async sendMessageToContractor() {
-        try {
-          await axios.post('/jobTask/message', {
-            general_id: this.jobTask.general.id,
-            sub_id: this.jobTask.contractor.id,
-            customer_id: this.jobTask.customer.id,
-            job_task_id: this.jobTask.id,
-            message: this.changeMessage
-          })
-          Bus.$emit('bidUpdated')
-          this.dialog = false
-        } catch (error) {
-          console.log(error)
-        }
-      },
-
-      jobHasNotBeenApproved() {
-        const latestStatus = this.getJobStatus_latest(this.job)
-        return latestStatus === 'in_progress' || latestStatus === 'initiated'
-      },
-      jobIsNotComplete() {
-        const latestStatus = this.getLatestJobTaskStatus()
-        return latestStatus !== 'general finished work'
-          && latestStatus !== 'sub finished work'
-          && latestStatus !== 'paid'
-      },
-      getLatestJobTaskStatus() {
-        if (this.jobTask && this.jobTask.job_task_statuses) {
-          return this.formatStatus(this.getJobTaskStatus_latest(this.jobTask))
-        }
-      },
-      viewContractorInfo(id) {
-        this.$router.push({name: 'contractor-info', params: {contractorId: id}})
-      },
-      getBidPrice(bid) {
-        if (bid) {
-          return this.convertNumToString(bid.bid_price)
-        }
-      },
-      goBack() {
-        this.$router.go(-1)
-      },
-      getCompanyName(bid) {
-        if (bid.contractor.contractor) {
-          return bid.contractor.contractor.company_name
-        } else {
-          return bid.contractor.first_name + ' ' + bid.contractor.last_name
-        }
-      },
-      checkIfAnyBidHasBeenAccepted(jobTask) {
-        if (this.jobHasSubs()) {
-          for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
-            if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
-              return true
+        mixins: [
+            Status, Utilities, Currency
+        ],
+        data() {
+            return {
+                messages: false,
+                changeMessage: '',
+                dialog: false,
+                authUser: {},
+                user: {},
+                jobTask: null,
+                currentJobTask: {},
+                showDetails: false,
+                start_date: '',
+                start_when_accepted: true,
+                startDateErrorMessage: '',
+                hasStartDateError: false,
+                startDateChanged: false,
+                startDateError: false,
+                message: '',
+                sendSubMessage: true,
+                sendCustomerMessage: true,
+                customerMessage: '',
+                cust_final_price: -1,
+                unit_price: -1,
+                sub_final_price: -1,
+                errors: {
+                    unit_price: false,
+                    priceMustBeANumber: false
+                },
+                disabled: {
+                    showDenyForm: false,
+                    pay: false,
+                    finished: false,
+                    approve: false,
+                    reopen: false,
+                    deny: false,
+                    deleteTask: false,
+                    payCash: false,
+                    accept: false,
+                }
             }
-          }
-        } else {
-          return false
-        }
-      },
-      checkIfBidHasBeenSent(bid) {
-        return bid.updated_at !== null && bid.status === 'bid_task.bid_sent'
-      },
-      showSubMessage(msg) {
-        return (msg !== null &&
-          msg !== '' &&
-          msg !== ' ' &&
-          this.isContractor()) ||
-          (msg != null &&
-            msg !== '' &&
-            msg !== ' ' &&
-            this.isGeneral())
-      },
-      showCustomerMessage(msg) {
-        return (msg != null &&
-          msg !== '' &&
-          msg !== ' ' &&
-          this.isCustomer) ||
-          (msg != null &&
-            msg !== '' &&
-            msg !== ' ' &&
-            this.isGeneral())
-      },
-      showPanelActions(status) {
-        if (status !== 'bid_task.customer_sent_payment') {
-          return true
-        }
-        return false
-      },
-      showAcceptBtn(status) {
-        return status === 'bid_task.bid_sent'
-      },
-      openTaskBids(id) {
-        if ($('#task-options-' + id).hasClass('hidden') || this.isCustomer) {
-          $('#task-divider-' + id).toggleClass('hidden')
-        }
-        $('#task-subs-' + id).toggleClass('hidden')
-      },
-      openTaskActions(id) {
-        if ($('#task-subs-' + id).hasClass('hidden') || this.isCustomer) {
-          $('#task-divider-' + id).toggleClass('hidden')
-        }
-        $('#task-options-' + id).toggleClass('hidden')
-      },
-      preview(jobTask, subId) {
-        Bus.$emit('previewSubForTask', [
-          jobTask.job_id,
-          jobTask.id,
-          subId
-        ])
-      },
-      acceptSubBidForTask(bid, jobTask) {
+        },
+        computed: {
+            ...mapState({
+                job: state => state.job.model,
+                jobStatus: state => state.job.model.status
+            }),
+            jobLocationHasBeenSet() {
+                if (this.jobTask && this.jobTask.location) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            getCustomerNotes() {
+                if (this.jobTask) {
+                    if (this.jobTask.job.customer) {
+                        return this.jobTask.job.customer.customer.notes
+                    }
+                    return this.jobTask.customer.customer.notes
+                }
+            },
+            getContractorNotesForCustomer() {
+                if (this.jobTask) {
+                    return this.jobTask.customer_message
+                }
+            },
+            getAddressLine1() {
+                console.log('jobTask', this.jobTask)
+                if (this.jobTask && this.jobTask.location) {
+                    return this.jobTask.location.address_line_1
+                }
+                return ''
+            },
+            getCity() {
+                if (this.jobTask && this.jobTask.location) {
+                    return this.jobTask.location.city
+                }
+                return ''
+            },
+            getLocationState() {
+                if (this.jobTask && this.jobTask.location) {
+                    return this.jobTask.location.state
+                }
+                return ''
+            },
+            getZip() {
+                if (this.jobTask && this.jobTask.location) {
+                    return this.jobTask.location.zip
+                }
+                return ''
+            },
+            taskApproved() {
+                return this.jobTask.status === 'bid_task.approved_by_customer'
+            },
+            isCustomer() {
+                return this.authUser.isCustomer
+            },
+            // isContractor() {
+            //   return this.user.isContractor()
+            // },
+            showSubsPanel() {
+                return this.isContractor()
+                    && this.jobHasNotBeenCompleted()
+                    && this.jobHasSubs()
+                    && this.isGeneral()
+            },
 
-        let generalId = null
-        if (jobTask.task.contractor) {
-          generalId = jobTask.task.contractor.id
-        } else {
-          generalId = jobTask.task.contractor_id
-        }
-        GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled, generalId)
-
-      },
-      showStripeToggle(jobTask) {
-        return this.authUser.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
-          'bid.in_progress')
-      },
-      updateMessage(jobTaskId, currentMessage, actor) {
-        let message = document.getElementById('message-' + actor + '-' + jobTaskId)
-        message = message.value
-        if (message !== currentMessage) {
-          GeneralContractor.updateMessage(message, jobTaskId, actor)
-        }
-        if (actor === 'sub') {
-          this.sendSubMessage = false
-          setTimeout(function() {
-            this.sendSubMessage = true
-          }.bind(this), 2000)
-        } else {
-          this.sendCustomerMessage = false
-          setTimeout(function() {
-            this.sendCustomerMessage = true
-          }.bind(this), 2000)
-        }
-      },
-      userIsAGeneralContractor() {
-        return Spark.state.user.usertype === 'contractor'
-          && Spark.state.user.id === this.jobTask.job.contractor_id
-      },
-      userIsACustomer() {
-        return Spark.state.user.usertype === 'customer'
-      },
-      subHasFinishedTheJob() {
-        return this.jobTask.status === 'bid_task.finished_by_sub'
-      },
-      jobHasNotBeenSubmittedToTheCustomer() {
-        return this.jobTask.status !== 'bid_task.approved_by_general'
-      },
-      jobHasBeenApprovedByTheGeneral() {
-        return this.jobTask.status === 'bid_task.approved_by_general'
-      },
-      generalHasFinishedTheJob() {
-        return this.jobTask.status === 'bid_task.approved_by_general'
-      },
-      customerWantsToChangeTheBid() {
-        return !this.jobIsApproved()
-      },
-      contractorWantsToChangeBid(jobTask) {
-        if (jobTask) {
-          return this.jobHasSubs() && this.subHasFinishedWork(jobTask) && !this.jobIsApproved()
-        }
-      },
-      showDenyBtn(jobTask) {
-        if (jobTask) {
-          if (this.userIsAGeneralContractor()) {
-            if (this.jobHasSubs() && this.subHasFinishedTheJob() && this.jobHasNotBeenSubmittedToTheCustomer()) {
-              return true
-            } else {
-              return false
+            showSendSubInvite() {
+                if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress') {
+                    return true
+                }
+                return false
+            },
+            generalTotalTaskPrice() {
+                let total = 0
+                for (const jobTask of this.job.job_tasks) {
+                    if (jobTask !== null) {
+                        total += cust_final_price
+                    }
+                }
+                return total
+            },
+            subTotalTaskPrices() {
+                let total = 0
+                for (const jobTask of this.job.job_tasks) {
+                    total += this.subTaskPrice(jobTask)
+                }
+                return total
+            },
+            disableMessages() {
+                return this.jobStatus === 'job.completed'
             }
-          } else if (this.userIsACustomer()) {
-            if (this.jobHasBeenApprovedByTheGeneral) {
-              return true
-            } else {
-              return false
+        },
+        methods: {
+
+            getStartDate(date) {
+                return this.dateOnly(date)
+            },
+
+            subPriceHigherThanBidPrice(bid) {
+                return this.jobTask.cust_final_price < bid.bid_price
+            },
+
+            jobHasSubs() {
+                return this.jobTask.bid_contractor_job_tasks.length > 0
+            },
+
+            jobHasNotBeenCompleted() {
+                return this.jobStatus !== 'job.completed'
+            },
+
+            getMessage(jobTask) {
+
+                let status = this.getLatestJobTaskStatus(jobTask)
+
+                if (status === 'paid') {
+                    return jobTask.job.paid_with_cash_message
+                } else if (jobTask && jobTask.task_messages && jobTask.task_messages.length > 0) {
+                    return jobTask.task_messages[jobTask.task_messages.length - 1].message
+                }
+
+            },
+
+            checkIfThereAreMessaages(jobTask) {
+                if (jobTask && jobTask.messages) {
+                    return jobTask.messages.length > 0
+                }
+            },
+
+            showTaskMessages(show) {
+                this.messages = show
+            },
+
+            createHyphenDate(date) {
+                if (date) {
+                    const dateArray = date.split('/')
+                    return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
+                }
+            },
+
+            setStartDate(jt) {
+                if (jt) {
+                    return this.dateOnlyHyphen(jt.start_date)
+                    // return this.createHyphenDate(this.formatDate(this.prettyDate(jt.start_date)))
+                } else {
+                    return 0
+                }
+            },
+
+            jobIsApproved() {
+                return this.getLatestJobStatusNumber() === 7
+            },
+
+            jobTaskIsFinished(jobTask) {
+                const status = this.getLatestJobTaskStatus(jobTask)
+                return status === 'general_finished_work' || status === 'sub_finished_work'
+            },
+
+            subHasFinishedWork(jobTask) {
+                if (jobTask && jobTask.job_task_statuses) {
+                    const status = this.getJobTaskStatus_latest(jobTask)
+                    return status === 'sub_finished_work'
+                }
+            },
+
+            contractorCanApproveSubsTask(jobTask) {
+                this.subHasFinishedWork(jobTask)
+            },
+
+            customerWantsToDeleteTheTask(jobTask) {
+                return this.taskHasNotBeenApproved(jobTask)
+            },
+
+            contractorWantsToDeleteTheTask(jobTask) {
+                return this.taskHasNotBeenApproved(jobTask)
+            },
+
+            taskHasNotBeenApproved(jobTask) {
+                return this.getLatestJobTaskStatusNumber(jobTask) < 6
+            },
+
+            getLatestJobTaskStatusNumber(jobTask) {
+                if (this.jobTask && (this.jobTask.job_task_statuses || this.jobTask.job_task_status)) {
+                    return this.getJobTaskStatusNumber_latest(this.jobTask)
+                }
+            },
+
+            getLatestJobStatusNumber() {
+                if (this.job && (this.job.job_statuses || this.job.job_status)) {
+                    return this.getJobStatusNumber_latest(this.job)
+                }
+            },
+
+            getLatestJobTaskStatus(jobTask) {
+                if (jobTask && (jobTask.job_task_statuses || jobTask.job_task_status)) {
+                    return this.getJobTaskStatus_latest(jobTask)
+                }
+            },
+
+            getLatestJobStatus(jobTask) {
+                if (jobTask && jobTask.job && jobTask.job.job_statuses) {
+                    return jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status
+                }
+            },
+
+            async sendMessageToContractor() {
+                try {
+                    await axios.post('/jobTask/message', {
+                        general_id: this.jobTask.general.id,
+                        sub_id: this.jobTask.contractor.id,
+                        customer_id: this.jobTask.customer.id,
+                        job_task_id: this.jobTask.id,
+                        message: this.changeMessage
+                    })
+                    Bus.$emit('bidUpdated')
+                    this.dialog = false
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+
+            jobHasNotBeenApproved() {
+                const latestStatus = this.getJobStatus_latest(this.job)
+                return latestStatus === 'in_progress' || latestStatus === 'initiated'
+            },
+            jobIsNotComplete() {
+                const latestStatus = this.getLatestJobTaskStatus()
+                return latestStatus !== 'general finished work'
+                    && latestStatus !== 'sub finished work'
+                    && latestStatus !== 'paid'
+            },
+            getLatestJobTaskStatus() {
+                if (this.jobTask && this.jobTask.job_task_statuses) {
+                    return this.formatStatus(this.getJobTaskStatus_latest(this.jobTask))
+                }
+            },
+            viewContractorInfo(id) {
+                this.$router.push({name: 'contractor-info', params: {contractorId: id}})
+            },
+            getBidPrice(bid) {
+                if (bid) {
+                    return this.convertNumToString(bid.bid_price)
+                }
+            },
+            goBack() {
+                this.$router.go(-1)
+            },
+            getCompanyName(bid) {
+                if (bid.contractor.contractor) {
+                    return bid.contractor.contractor.company_name
+                } else {
+                    return bid.contractor.first_name + ' ' + bid.contractor.last_name
+                }
+            },
+            checkIfAnyBidHasBeenAccepted(jobTask) {
+                if (this.jobHasSubs()) {
+                    for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
+                        if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
+                            return true
+                        }
+                    }
+                } else {
+                    return false
+                }
+            },
+            checkIfBidHasBeenSent(bid) {
+                return bid.updated_at !== null && bid.status === 'bid_task.bid_sent'
+            },
+            showSubMessage(msg) {
+                return (msg !== null &&
+                    msg !== '' &&
+                    msg !== ' ' &&
+                    this.isContractor()) ||
+                    (msg != null &&
+                        msg !== '' &&
+                        msg !== ' ' &&
+                        this.isGeneral())
+            },
+            showCustomerMessage(msg) {
+                return (msg != null &&
+                    msg !== '' &&
+                    msg !== ' ' &&
+                    this.isCustomer) ||
+                    (msg != null &&
+                        msg !== '' &&
+                        msg !== ' ' &&
+                        this.isGeneral())
+            },
+            showPanelActions(status) {
+                if (status !== 'bid_task.customer_sent_payment') {
+                    return true
+                }
+                return false
+            },
+            showAcceptBtn(status) {
+                return status === 'bid_task.bid_sent'
+            },
+            openTaskBids(id) {
+                if ($('#task-options-' + id).hasClass('hidden') || this.isCustomer) {
+                    $('#task-divider-' + id).toggleClass('hidden')
+                }
+                $('#task-subs-' + id).toggleClass('hidden')
+            },
+            openTaskActions(id) {
+                if ($('#task-subs-' + id).hasClass('hidden') || this.isCustomer) {
+                    $('#task-divider-' + id).toggleClass('hidden')
+                }
+                $('#task-options-' + id).toggleClass('hidden')
+            },
+            preview(jobTask, subId) {
+                Bus.$emit('previewSubForTask', [
+                    jobTask.job_id,
+                    jobTask.id,
+                    subId
+                ])
+            },
+            acceptSubBidForTask(bid, jobTask) {
+
+                let generalId = null
+                if (jobTask.task.contractor) {
+                    generalId = jobTask.task.contractor.id
+                } else {
+                    generalId = jobTask.task.contractor_id
+                }
+                GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled, generalId)
+
+            },
+            showStripeToggle(jobTask) {
+                return this.authUser.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
+                    'bid.in_progress')
+            },
+            updateMessage(jobTaskId, currentMessage, actor) {
+                let message = document.getElementById('message-' + actor + '-' + jobTaskId)
+                message = message.value
+                if (message !== currentMessage) {
+                    GeneralContractor.updateMessage(message, jobTaskId, actor)
+                }
+                if (actor === 'sub') {
+                    this.sendSubMessage = false
+                    setTimeout(function () {
+                        this.sendSubMessage = true
+                    }.bind(this), 2000)
+                } else {
+                    this.sendCustomerMessage = false
+                    setTimeout(function () {
+                        this.sendCustomerMessage = true
+                    }.bind(this), 2000)
+                }
+            },
+            userIsAGeneralContractor() {
+                return Spark.state.user.usertype === 'contractor'
+                    && Spark.state.user.id === this.jobTask.job.contractor_id
+            },
+            userIsACustomer() {
+                return Spark.state.user.usertype === 'customer'
+            },
+            subHasFinishedTheJob() {
+                return this.jobTask.status === 'bid_task.finished_by_sub'
+            },
+            jobHasNotBeenSubmittedToTheCustomer() {
+                return this.jobTask.status !== 'bid_task.approved_by_general'
+            },
+            jobHasBeenApprovedByTheGeneral() {
+                return this.jobTask.status === 'bid_task.approved_by_general'
+            },
+            generalHasFinishedTheJob() {
+                return this.jobTask.status === 'bid_task.approved_by_general'
+            },
+            customerWantsToChangeTheBid() {
+                return !this.jobIsApproved()
+            },
+            contractorWantsToChangeBid(jobTask) {
+                if (jobTask) {
+                    return this.jobHasSubs() && this.subHasFinishedWork(jobTask) && !this.jobIsApproved()
+                }
+            },
+            showDenyBtn(jobTask) {
+                if (jobTask) {
+                    if (this.userIsAGeneralContractor()) {
+                        if (this.jobHasSubs() && this.subHasFinishedTheJob() && this.jobHasNotBeenSubmittedToTheCustomer()) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    } else if (this.userIsACustomer()) {
+                        if (this.jobHasBeenApprovedByTheGeneral) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    } else {
+                        return false
+                    }
+                }
+            },
+            showFinishedBtn(jobTask) {
+                if (this.isContractor() &&
+                    this.authUser.isAssignedToMe(jobTask, this.user.id) &&
+                    (jobTask.status === 'bid_task.approved_by_customer'
+                        || jobTask.status === 'bid_task.reopened'
+                        || jobTask.status === 'bid_task.finished_by_sub'
+                        || jobTask.status === 'bid_task.denied'
+                    )) {
+                    return true
+                }
+                return false
+            },
+            showApproveBtn(jobTask) {
+                if (this.isGeneral() &&
+                    !this.authUser.isAssignedToMe(jobTask, this.user.id) &&
+                    (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
+                ) {
+                    return true
+                }
+                return false
+            },
+            showDeleteBtn(jobTask) {
+                if (jobTask) {
+                    const status = jobTask.status
+                    if (this.isGeneral() && (
+                        status === 'bid_task.initiated'
+                        || status === 'bid_task.bid_sent'
+                        || this.jobStatus === 'bid.declined')) {
+                        return true
+                    }
+                    return false
+                }
+            },
+            async deleteTask(jobTask) {
+                await GeneralContractor.deleteTask(jobTask, this.disabled)
+                this.$router.push('/bid/' + this.job.id)
+            },
+            /**
+             * customer task price
+             */
+            subTaskPrice(jobTask) {
+                if (jobTask === null) {
+                    return 0
+                }
+                if (jobTask.bid_id === null) {
+                    return 0
+                } else {
+                    return this.authUser.findTaskBid(jobTask.bid_id, jobTask.bid_contractor_job_tasks)[0].bid_price
+                }
+            },
+            toggleStripePaymentOption(jobTask) {
+                jobTask.checked = $('#toggle-stripe-' + jobTask.id).is(':checked')
+                SubContractor.toggleStripePaymentOption(jobTask)
+            },
+            // payForTask(jobTask) {
+            //   Customer.payForTask(jobTask, this.disabled);
+            // },
+            // paidWithCashTask(jobTask) {
+            //   Customer.paidWithCashTask(jobTask, this.disabled);
+            // },
+            openTaskPanel(index) {
+                this.$emit('openTaskPanel', index)
+            },
+            finishedTask(jobTask) {
+                SubContractor.finishedTask(jobTask, this.disabled)
+            },
+            approveTaskHasBeenFinished(jobTask) {
+                GeneralContractor.approveTaskHasBeenFinished(jobTask, this.disabled)
+            },
+            checkIfBidHasBeenAccepted(jobTask, bid) {
+                // debugger;
+                if (bid) {
+                    return bid.accepted === 1
+                }
+                // try {
+                //   if (bid.accepted === 1) {
+                //     console.log(JSON.stringify(bid));
+                //     return true
+                //   } else {
+                //     console.log(JSON.stringify(bid));
+                //     return false
+                //   }
+                // } catch (e) {
+                //   debugger;
+                //   console.log(e)
+                // }
+
+                // if (jobTask.bid_contractor_job_tasks.length > 0) {
+                //   for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
+                //     if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
+                //       return true
+                //     }
+                //   }
+                // } else {
+                //   return false
+                // }
+            },
+            isGeneral() {
+                if (this.jobTask && this.jobTask.task) {
+                    return this.jobTask.task.contractor_id === this.user.id
+                }
+            },
+            prettyDate(date) {
+                if (date == null)
+                    return ''
+                // return the date and ignore the time
+                date = date.split(' ')
+                return date[0]
+            },
+            showTaskStartDate() {
+                return true
+            },
+            updateTaskStartDate(date, jobTaskId) {
+                if (date !== '') {
+                    let dateArray = GeneralContractor.checkDateIsTodayorLater(date, this.job.created_at)
+                    this.startDateErrorMessage = dateArray[0]
+                    this.hasStartDateError = dateArray[1]
+
+                    if (!this.hasStartDateError) {
+                        GeneralContractor.updateTaskStartDate(date, jobTaskId)
+                    } else {
+                        this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
+                    }
+
+                }
+            },
+            openUpdateTaskLocation(jobTaskId) {
+                $('#update-task-location-modal_' + jobTaskId).modal()
+            },
+            changeTaskDialog() {
+                this.dialog = true
+            },
+            openDenyTaskForm(jobTaskId) {
+                $('#deny-task-modal_' + jobTaskId).modal('show')
+            },
+            openSubInvite(jobTaskId) {
+                // debugger;
+                // this.currentJobTask = jobTask;
+                $('#sub-invite-modal_' + jobTaskId).modal('show')
+            },
+            location(jobTask, bid) {
+                if (this.job && jobTask && jobTask.location) {
+                    // debugger;
+                    const task_location = jobTask.location_id
+                    const job_location = this.job.location_id
+                    if (task_location === null && job_location === null) {
+                        return 'No Address Set Yet'
+                    } else if (job_location === job_location) {
+                        return 'Same as Job Location'
+                    } else if (task_location !== null) {
+                        return jobTask.location.address_line_1
+                    } else if (job_location) {
+                        return bid.location.address_line_1
+                    }
+                }
+            },
+            getAddress() {
+                if (this.jobTask && this.jobTask.location) {
+                    console.log(JSON.stringify(this.jobTask.location))
+                    if (this.jobTask.location !== null) {
+                        return this.jobTask.location.address_line_1 + ' ' +
+                            this.jobTask.location.address_line_2 + ' ' +
+                            this.jobTask.location.city + ' ' +
+                            this.jobTask.location.state + ' ' +
+                            this.jobTask.location.zip
+                    } else {
+                        return 'Address Not Available'
+                    }
+                }
+
+                // return bidTask.job_task.location.address_line_1+" "+
+
+                // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
+                // let location_id = 0;
+                // if (bidTask.job_task.location_id !== null) {
+                //   location_id = bidTask.job_task.location_id;
+                // } else {
+                //   location_id = bidTask.job_task.job.location_id;
+                // }
+                // Customer.getAddress(location_id, this.location)
+                // return this.location.location
+            },
+            updateCustomerTaskPrice(price, jobTaskId, bidId) {
+
+                if (isNaN(price)) {
+                    price = this.removeDollarSigns(price)
+                }
+
+                if (this.unit_price !== parseFloat(price)) {
+
+                    this.errors.priceMustBeANumber = price !== '' && isNaN(price)
+                    this.errors.unit_price = this.sub_final_price > price
+
+                    this.unit_price = price
+                    this.cust_final_price = price * this.jobTask.qty
+
+                    if ((this.sub_final_price <= price && !this.errors.priceMustBeANumber)) {
+                        GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
+                    }
+                } else {
+                    this.errors.priceMustBeANumber = price !== '' && isNaN(price)
+                    this.errors.unit_price = this.sub_final_price > price
+                }
+            },
+            isContractor() {
+                return this.user.usertype === 'contractor'
+            },
+            showTheJobTaskDetails(value) {
+                if (value === 'show') {
+                    this.showDetails = true
+                } else {
+                    this.showDetails = false
+                }
+            },
+            status(status) {
+                return this.authUser.status(status, this.job)
+            },
+            getLabelClass(status) {
+                return Format.statusLabel(status)
+            },
+            showTaskPriceInput() {
+                return this.isGeneral()
+                // return this.isGeneral() &&
+                //   (this.jobStatus === 'bid.in_progress' ||
+                //     this.jobStatus === 'bid.initiated' ||
+                //     this.jobStatus === 'bid.declined')
+            },
+            showTaskQuantityInput() {
+                return this.isGeneral() && (this.jobTask.status === 'bid_task.initiated')
+            },
+            updateCustomerTaskQuantity(quantity, taskId, currentQuantityValue) {
+
+                quantity = Number(quantity)
+
+                this.jobTask.qty = quantity
+
+                if (quantity != currentQuantityValue) {
+                    GeneralContractor.updateCustomerTaskQuantity(quantity, taskId)
+
+                    let totalPrice = this.unit_price * quantity
+
+                    this.cust_final_price = totalPrice.toFixed(2)
+                }
+
+            },
+            removeDollarSigns(price) {
+                return price.replace(/[$]+/g, '')
+            },
+            taskCustFinalPrice(price, sub, total = false) {
+
+                if (this.jobTask) {
+                    if (typeof price === 'string') {
+                        price = this.removeDollarSigns(price)
+                    }
+
+                    price = parseFloat(price)
+
+                    let priceCheck = this.unit_price * this.jobTask.qty
+
+                    if (!this.isCustomer) {
+                        if (!sub && (this.cust_final_price !== priceCheck)) {
+                            this.cust_final_price = this.unit_price * this.jobTask.qty
+
+                            if (this.job[0]) {
+                                GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job[0].id)
+                            } else if (this.job) {
+                                GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id)
+                            }
+
+                        } else if (sub && total) {
+                            price = price * this.jobTask.qty
+                        }
+                    }
+
+                    if (price === 0) {
+                        return '$0.00'
+                    }
+
+                    if (price) {
+                        let priceString = price.toString()
+                        if (priceString.indexOf('.') === -1) {
+                            price = '$' + price + '.00'
+                        } else {
+                            price = '$' + price
+                        }
+                        return price
+                    }
+                }
+
+            },
+            async getTask() {
+                try {
+                    const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id + '/' + this.user.id)
+                    this.jobTask = data.data[0]
+
+                    if (this.isContractor()) {
+                        this.sub_final_price = this.jobTask.sub_final_price
+                    }
+
+                } catch (error) {
+                    console.log(error.message)
+                }
+            },
+            checkThatThereIsAContractorPrice() {
+
+                if (
+                    parseInt(this.cust_final_price) <= 0 &&
+                    this.jobTask.qty > 0 &&
+                    this.unit_price > 0
+                ) {
+                    this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.job.id)
+                    return false
+                }
+
+                return true
             }
-          } else {
-            return false
-          }
-        }
-      },
-      showFinishedBtn(jobTask) {
-        if (this.isContractor() &&
-          this.authUser.isAssignedToMe(jobTask, this.user.id) &&
-          (jobTask.status === 'bid_task.approved_by_customer'
-            || jobTask.status === 'bid_task.reopened'
-            || jobTask.status === 'bid_task.finished_by_sub'
-            || jobTask.status === 'bid_task.denied'
-          )) {
-          return true
-        }
-        return false
-      },
-      showApproveBtn(jobTask) {
-        if (this.isGeneral() &&
-          !this.authUser.isAssignedToMe(jobTask, this.user.id) &&
-          (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
-        ) {
-          return true
-        }
-        return false
-      },
-      showDeleteBtn(jobTask) {
-        if (jobTask) {
-          const status = jobTask.status
-          if (this.isGeneral() && (
-            status === 'bid_task.initiated'
-            || status === 'bid_task.bid_sent'
-            || this.jobStatus === 'bid.declined')) {
-            return true
-          }
-          return false
-        }
-      },
-      async deleteTask(jobTask) {
-        await GeneralContractor.deleteTask(jobTask, this.disabled)
-        this.$router.push('/bid/' + this.job.id)
-      },
-      /**
-       * customer task price
-       */
-      subTaskPrice(jobTask) {
-        if (jobTask === null) {
-          return 0
-        }
-        if (jobTask.bid_id === null) {
-          return 0
-        } else {
-          return this.authUser.findTaskBid(jobTask.bid_id, jobTask.bid_contractor_job_tasks)[0].bid_price
-        }
-      },
-      toggleStripePaymentOption(jobTask) {
-        jobTask.checked = $('#toggle-stripe-' + jobTask.id).is(':checked')
-        SubContractor.toggleStripePaymentOption(jobTask)
-      },
-      // payForTask(jobTask) {
-      //   Customer.payForTask(jobTask, this.disabled);
-      // },
-      // paidWithCashTask(jobTask) {
-      //   Customer.paidWithCashTask(jobTask, this.disabled);
-      // },
-      openTaskPanel(index) {
-        this.$emit('openTaskPanel', index)
-      },
-      finishedTask(jobTask) {
-        SubContractor.finishedTask(jobTask, this.disabled)
-      },
-      approveTaskHasBeenFinished(jobTask) {
-        GeneralContractor.approveTaskHasBeenFinished(jobTask, this.disabled)
-      },
-      checkIfBidHasBeenAccepted(jobTask, bid) {
-        // debugger;
-        if (bid) {
-          return bid.accepted === 1
-        }
-        // try {
-        //   if (bid.accepted === 1) {
-        //     console.log(JSON.stringify(bid));
-        //     return true
-        //   } else {
-        //     console.log(JSON.stringify(bid));
-        //     return false
-        //   }
-        // } catch (e) {
-        //   debugger;
-        //   console.log(e)
-        // }
+        },
+        mounted() {
 
-        // if (jobTask.bid_contractor_job_tasks.length > 0) {
-        //   for (let i = 0; i < jobTask.bid_contractor_job_tasks.length; i++) {
-        //     if (jobTask.bid_contractor_job_tasks[i].accepted === 1) {
-        //       return true
-        //     }
-        //   }
-        // } else {
-        //   return false
-        // }
-      },
-      isGeneral() {
-        if (this.jobTask && this.jobTask.task) {
-          return this.jobTask.task.contractor_id === this.user.id
-        }
-      },
-      prettyDate(date) {
-        if (date == null)
-          return ''
-        // return the date and ignore the time
-        date = date.split(' ')
-        return date[0]
-      },
-      showTaskStartDate() {
-        return true
-      },
-      updateTaskStartDate(date, jobTaskId) {
-        if (date !== '') {
-          let dateArray = GeneralContractor.checkDateIsTodayorLater(date, this.job.created_at)
-          this.startDateErrorMessage = dateArray[0]
-          this.hasStartDateError = dateArray[1]
+            Bus.$on('bidUpdated', () => {
+                this.getTask()
+            })
 
-          if (!this.hasStartDateError) {
-            GeneralContractor.updateTaskStartDate(date, jobTaskId)
-          } else {
-            this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
-          }
-
-        }
-      },
-      openUpdateTaskLocation(jobTaskId) {
-        $('#update-task-location-modal_' + jobTaskId).modal()
-      },
-      changeTaskDialog() {
-        this.dialog = true
-      },
-      openDenyTaskForm(jobTaskId) {
-        $('#deny-task-modal_' + jobTaskId).modal('show')
-      },
-      openSubInvite(jobTaskId) {
-        // debugger;
-        // this.currentJobTask = jobTask;
-        $('#sub-invite-modal_' + jobTaskId).modal('show')
-      },
-      location(jobTask, bid) {
-        if (this.job && jobTask && jobTask.location) {
-          // debugger;
-          const task_location = jobTask.location_id
-          const job_location = this.job.location_id
-          if (task_location === null && job_location === null) {
-            return 'No Address Set Yet'
-          } else if (job_location === job_location) {
-            return 'Same as Job Location'
-          } else if (task_location !== null) {
-            return jobTask.location.address_line_1
-          } else if (job_location) {
-            return bid.location.address_line_1
-          }
-        }
-      },
-      getAddress() {
-        if (this.jobTask && this.jobTask.location) {
-          console.log(JSON.stringify(this.jobTask.location))
-          if (this.jobTask.location !== null) {
-            return this.jobTask.location.address_line_1 + ' ' +
-              this.jobTask.location.address_line_2 + ' ' +
-              this.jobTask.location.city + ' ' +
-              this.jobTask.location.state + ' ' +
-              this.jobTask.location.zip
-          } else {
-            return 'Address Not Available'
-          }
-        }
-
-        // return bidTask.job_task.location.address_line_1+" "+
-
-        // <a target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=3140 Talon Track Apt. 800  McCulloughton Utah 42620-5408">
-        // let location_id = 0;
-        // if (bidTask.job_task.location_id !== null) {
-        //   location_id = bidTask.job_task.location_id;
-        // } else {
-        //   location_id = bidTask.job_task.job.location_id;
-        // }
-        // Customer.getAddress(location_id, this.location)
-        // return this.location.location
-      },
-      updateCustomerTaskPrice(price, jobTaskId, bidId) {
-
-        if (isNaN(price)) {
-          price = this.removeDollarSigns(price)
-        }
-
-        if (this.unit_price !== parseFloat(price)) {
-
-          this.errors.priceMustBeANumber = price !== '' && isNaN(price)
-          this.errors.unit_price = this.sub_final_price > price
-
-          this.unit_price = price
-          this.cust_final_price = price * this.jobTask.qty
-
-          if ((this.sub_final_price <= price && !this.errors.priceMustBeANumber)) {
-            GeneralContractor.updateCustomerPrice(price, jobTaskId, bidId)
-          }
-        } else {
-          this.errors.priceMustBeANumber = price !== '' && isNaN(price)
-          this.errors.unit_price = this.sub_final_price > price
-        }
-      },
-      isContractor() {
-        return this.user.usertype === 'contractor'
-      },
-      showTheJobTaskDetails(value) {
-        if (value === 'show') {
-          this.showDetails = true
-        } else {
-          this.showDetails = false
-        }
-      },
-      status(status) {
-        return this.authUser.status(status, this.job)
-      },
-      getLabelClass(status) {
-        return Format.statusLabel(status)
-      },
-      showTaskPriceInput() {
-        return this.isGeneral()
-        // return this.isGeneral() &&
-        //   (this.jobStatus === 'bid.in_progress' ||
-        //     this.jobStatus === 'bid.initiated' ||
-        //     this.jobStatus === 'bid.declined')
-      },
-      showTaskQuantityInput() {
-        return this.isGeneral() && (this.jobTask.status === 'bid_task.initiated')
-      },
-      updateCustomerTaskQuantity(quantity, taskId, currentQuantityValue) {
-
-        quantity = Number(quantity)
-
-        this.jobTask.qty = quantity
-
-        if (quantity != currentQuantityValue) {
-          GeneralContractor.updateCustomerTaskQuantity(quantity, taskId)
-
-          let totalPrice = this.unit_price * quantity
-
-          this.cust_final_price = totalPrice.toFixed(2)
-        }
-
-      },
-      removeDollarSigns(price) {
-        return price.replace(/[$]+/g, '')
-      },
-      taskCustFinalPrice(price, sub, total = false) {
-
-        if (this.jobTask) {
-          if (typeof price === 'string') {
-            price = this.removeDollarSigns(price)
-          }
-
-          price = parseFloat(price)
-
-          let priceCheck = this.unit_price * this.jobTask.qty
-
-          if (!this.isCustomer) {
-            if (!sub && (this.cust_final_price !== priceCheck)) {
-              this.cust_final_price = this.unit_price * this.jobTask.qty
-
-              if (this.job[0]) {
-                GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job[0].id)
-              } else if (this.job) {
-                GeneralContractor.updateCustomerPrice(price, this.jobTask.id, this.job.id)
-              }
-
-            } else if (sub && total) {
-              price = price * this.jobTask.qty
+            if (this.$store.state.job.model.job_tasks) {
+                this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
+            } else if (this.$store.state.job.model[0].job_tasks) {
+                this.jobTask = this.$store.state.job.model[0].job_tasks[this.$route.params.index]
             }
-          }
 
-          if (price === 0) {
-            return '$0.00'
-          }
+            if (this.jobTask) {
+                this.cust_final_price = this.jobTask.cust_final_price
+                this.sub_final_price = this.jobTask.sub_final_price
+                this.unit_price = this.jobTask.unit_price
 
-          if (price) {
-            let priceString = price.toString()
-            if (priceString.indexOf('.') === -1) {
-              price = '$' + price + '.00'
-            } else {
-              price = '$' + price
+                if (
+                    parseInt(this.cust_final_price) <= 0 &&
+                    this.jobTask.qty > 0 &&
+                    this.unit_price > 0
+                ) {
+
+                    if (this.$store.state.job.model[0].id > 0) {
+                        this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
+                    } else if (this.$store.state.job.id !== '') {
+                        this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
+                    }
+
+                }
             }
-            return price
-          }
+            this.user = Spark.state.user
+
+        },
+        created() {
+            document.body.scrollTop = 0 // For Safari
+            document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
+            this.authUser = new User()
         }
-
-      },
-      async getTask() {
-        try {
-          const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id + '/' + this.user.id)
-          this.jobTask = data.data[0]
-
-          if (this.isContractor()) {
-            this.sub_final_price = this.jobTask.sub_final_price
-          }
-
-        } catch (error) {
-          console.log(error.message)
-        }
-      },
-      checkThatThereIsAContractorPrice() {
-
-        if (
-          parseInt(this.cust_final_price) <= 0 &&
-          this.jobTask.qty > 0 &&
-          this.unit_price > 0
-        ) {
-          this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.job.id)
-          return false
-        }
-
-        return true
-      }
-    },
-    mounted() {
-
-      Bus.$on('bidUpdated', () => {
-        this.getTask()
-      })
-
-      if (this.$store.state.job.model.job_tasks) {
-        this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
-      } else if (this.$store.state.job.model[0].job_tasks) {
-        this.jobTask = this.$store.state.job.model[0].job_tasks[this.$route.params.index]
-      }
-
-      if (this.jobTask) {
-        this.cust_final_price = this.jobTask.cust_final_price
-        this.sub_final_price = this.jobTask.sub_final_price
-        this.unit_price = this.jobTask.unit_price
-
-        if (
-          parseInt(this.cust_final_price) <= 0 &&
-          this.jobTask.qty > 0 &&
-          this.unit_price > 0
-        ) {
-
-          if (this.$store.state.job.model[0].id > 0) {
-            this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
-          } else if (this.$store.state.job.id !== '') {
-            this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
-          }
-
-        }
-      }
-      this.user = Spark.state.user
-
-    },
-    created() {
-      document.body.scrollTop = 0 // For Safari
-      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
-      this.authUser = new User()
     }
-  }
 </script>
 
 <style scoped>
