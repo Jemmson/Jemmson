@@ -2,6 +2,9 @@
     <div class="w-full">
         <div class="flex flex-col">
             <hr>
+
+            <h4 class="text-center">License and Bonding</h4>
+
             <v-btn
                     class="w-full"
                     color="primary"
@@ -22,6 +25,7 @@
             <v-btn
                     class="uppercase"
                     color="red"
+                    text
                     @click="removeLicense(license)"
             >
                 delete
@@ -69,12 +73,16 @@
                 <v-card-actions>
                     <v-btn
                             color="red"
+                            class="w-40"
+                            text
                             @click="showLicense = false"
                     >Cancel
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
-                            color="red"
+                            color="blue"
+                            class="w-40"
+                            text
                             id="addLicense"
                             @click="addLicense()"
                     >Add
