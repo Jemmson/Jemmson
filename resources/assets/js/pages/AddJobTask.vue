@@ -220,6 +220,7 @@
                 <v-btn
                         class="w-40"
                         color="primary"
+                        :disabled="addingTheTask"
                         @click.prevent="goBack()">
                     Back
                 </v-btn>
@@ -228,7 +229,7 @@
                         class="w-40"
                         color="primary"
                         @click.prevent="changeTask('Add')"
-                        :disabled="checkErrors()"
+                        :disabled="addingTheTask"
                         ref="add_task"
                         :loading="addTask"
                 >Add Task
@@ -236,6 +237,9 @@
             </div>
 
         </card>
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
         <feedback
                 page="AddJobTask"
         ></feedback>
@@ -257,6 +261,8 @@
         },
         data() {
             return {
+                addingTheTask: false,
+                overlay: false,
                 addTask: false,
                 addNewTaskForm: new SparkForm({
                     area: '',
@@ -754,11 +760,12 @@
             },
 
             changeTask(message) {
+                this.addingTheTask = true;
                 let taskIsNewOrNeedsToBeAdded = {
                     'New': true,
                     'Add': true
                 }
-                taskIsNewOrNeedsToBeAdded[message] ? this.createNewDontUpdate() : ''
+                taskIsNewOrNeedsToBeAdded[message] ? this.createNewDontUpdate() : this.addingTheTask = false;
             },
 
             checkForExistingTaskChanges() {
@@ -793,22 +800,24 @@
 
                     this.addNewTask()
 
-                    this.setDefaultStartDate()
-
-                    this.goBack()
-
                 } else {
                     this.errors.general.errorExists = true
                 }
             },
             async addNewTask() {
+                this.overlay = true;
                 // TODO:: I want task submitted varaiable to be true after the addNewTaskToBid method is caled
                 try {
                     this.addTask = true;
                     await GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
                     this.taskSubmitted = true
+                    this.overlay = false;
+                    this.setDefaultStartDate();
+                    this.goBack();
                 } catch (error) {
                     console.log(error)
+                    this.overlay = false;
+                    this.addingTheTask = false;
                 }
                 this.addTask = false
             },
