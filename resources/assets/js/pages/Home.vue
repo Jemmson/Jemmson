@@ -138,6 +138,8 @@
             isContractor() {
                 if (this.theUser) {
                     return this.theUser.usertype === 'contractor'
+                } else {
+                    this.theUser = Spark.state.user
                 }
             },
             checkContractorStripeIsValid() {
