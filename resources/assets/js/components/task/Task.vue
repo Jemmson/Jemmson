@@ -6,6 +6,12 @@
                     v-if="showBid(bidTask)"
                     class="mb-1rem"
             >
+                <div
+                    v-if="needsStripe()"
+                    class="bg-color-red f-bold fa-1x pb-1 pl-1 pt-3"
+                >
+                    You will need to set up a credit card to bid on this job
+                </div>
                 <v-card-title
                         class="uppercase pb-0"
                         v-if="showBid(bidTask)"
@@ -59,7 +65,9 @@
             <div v-show="showTheTask">
                 <v-container>
                     <h1 class="card-title">Task Details</h1>
-                    <v-card>
+                    <v-card
+                        :disabled="needsStripe()"
+                    >
                         <v-card-text>
                             <v-row
                                     class="justify-content-around mt-1rem"
@@ -261,6 +269,13 @@
             bidTask: Object
         },
         methods: {
+
+            needsStripe(){
+                if (Spark.state.user) {
+                    return Spark.state.user.stripe_id === null
+                        && this.bidTask.payment_type !== 'cash'
+                }
+            },
 
             getCurrencyMask() {
                 return this.currencyMask(this.bidPrice)
