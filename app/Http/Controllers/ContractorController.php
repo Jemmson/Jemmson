@@ -131,7 +131,9 @@ class ContractorController extends Controller
 
         $user['user']['licenses'] = User::find($id)->contractor()->get()->first()->licenses()->select([
             'name',
-            'value'
+            'number',
+            'state',
+            'type'
         ])->get();
 
 //        $user['user'] = User::find($id);
