@@ -3,7 +3,7 @@
         <div>
             <v-btn
                     @click="connectWithStripe($route.path)"
-                    class="w-full"
+                    class="w-full mt-6"
                     color="aliceblue"
                     elevation="2"
                     single-line

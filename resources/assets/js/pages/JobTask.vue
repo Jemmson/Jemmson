@@ -326,7 +326,7 @@
                 <!-- Subcontractor bids -->
 
 
-                <section class="col-12" v-show="showSubsPanel">
+                <section class="col-12" id="subs" v-show="showSubsPanel">
                     <h1 id="bids" class="card-title mt-4">Bids</h1>
                     <v-card
                             :id="jobTask ? 'task-subs-' + jobTask.id : 0"
@@ -1431,32 +1431,36 @@
                 this.getTask()
             })
 
-            if (this.$store.state.job.model.job_tasks) {
-                this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
-            } else if (this.$store.state.job.model[0].job_tasks) {
-                this.jobTask = this.$store.state.job.model[0].job_tasks[this.$route.params.index]
-            }
-
-            if (this.jobTask) {
-                this.cust_final_price = this.jobTask.cust_final_price
-                this.sub_final_price = this.jobTask.sub_final_price
-                this.unit_price = this.jobTask.unit_price
-
-                if (
-                    parseInt(this.cust_final_price) <= 0 &&
-                    this.jobTask.qty > 0 &&
-                    this.unit_price > 0
-                ) {
-
-                    if (this.$store.state.job.model[0].id > 0) {
-                        this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
-                    } else if (this.$store.state.job.id !== '') {
-                        this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
-                    }
-
+            if (!this.$store.state.job.model) {
+                this.$router.push('/bids');
+            } else {
+                if (this.$store.state.job.model.job_tasks) {
+                    this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
+                } else if (this.$store.state.job.model[0].job_tasks) {
+                    this.jobTask = this.$store.state.job.model[0].job_tasks[this.$route.params.index]
                 }
+
+                if (this.jobTask) {
+                    this.cust_final_price = this.jobTask.cust_final_price
+                    this.sub_final_price = this.jobTask.sub_final_price
+                    this.unit_price = this.jobTask.unit_price
+
+                    if (
+                        parseInt(this.cust_final_price) <= 0 &&
+                        this.jobTask.qty > 0 &&
+                        this.unit_price > 0
+                    ) {
+
+                        if (this.$store.state.job.model[0].id > 0) {
+                            this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
+                        } else if (this.$store.state.job.id !== '') {
+                            this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
+                        }
+
+                    }
+                }
+                this.user = Spark.state.user
             }
-            this.user = Spark.state.user
 
         },
         created() {
