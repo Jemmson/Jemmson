@@ -154,11 +154,21 @@
         }
       },
       async getCustomer() {
+
+          let customerId = this.customerId;
+
+          if (!customerId) {
+              customerId = localStorage.getItem('currentCustomer');
+              this.$store.commit('setCurrentPage', '/customer-info')
+          } else {
+              localStorage.setItem('currentCustomer', customerId);
+          }
+
         try {
-          const data = await axios.get('/getCustomer/' + this.customerId)
-          this.customer = data.data
+          const data = await axios.get('/getCustomer/' + customerId);
+          this.customer = data.data;
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
     }

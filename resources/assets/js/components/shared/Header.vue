@@ -1,9 +1,12 @@
 <template>
     <nav>
 
-<!--        <app-bar></app-bar>-->
+        <!--        <app-bar></app-bar>-->
 
-        <section v-if="onHomePage()">
+        <section v-if="onHomePage()
+                || onCustomerInfo ()
+                || onContractorInfo ()
+        ">
             <header-bio
                     ref="homePage"
                     :name="user.first_name + ' ' + user.last_name"
@@ -68,115 +71,121 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import HeaderBio from '../header/HeaderBio'
-  import HeaderBackButton from '../header/HeaderBackButton'
-  import HeaderJobNameSettingsLogout from '../header/HeaderJobNameSettingsLogout'
-  import HeaderJobToggle from '../header/HeaderJobToggle'
-  import AppBar from '../header/AppBar'
+    import {mapState} from 'vuex'
+    import HeaderBio from '../header/HeaderBio'
+    import HeaderBackButton from '../header/HeaderBackButton'
+    import HeaderJobNameSettingsLogout from '../header/HeaderJobNameSettingsLogout'
+    import HeaderJobToggle from '../header/HeaderJobToggle'
+    import AppBar from '../header/AppBar'
 
-  export default {
-    name: 'Header',
-    components: {
-      AppBar,
-      HeaderBio,
-      HeaderBackButton,
-      HeaderJobNameSettingsLogout,
-      HeaderJobToggle
-    },
-    props: ['user'],
-    data() {
-      return {
-        drawer:false,
-        currentUser: ''
-      }
-    },
-    computed: {
-      ...mapState({
-        page: state => state.page,
-        // userFromState: state => state.user.user,
-        // userType: (state) => {
-        //   if (state.user.user !== undefined && state.user.user !== null) {
-        //     return state.user.user.usertype
-        //   }
-        //   return null
-        // },
-        // bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
-      }),
-      getCompanyName() {
-        if (this.user.contractor) {
-          return this.user.contractor.company_name
-        }
-      }
-    },
-    methods: {
-      onHomePage() {
-        return this.page === '/home' || this.page === '/home/'
-      },
-      onJobsPage() {
-        return this.page === '/bids' || this.page === '/bids/' || this.page === '/bids/subs'
-      },
-      onParticularJobPage() {
-        return this.page.split('/')[1] === 'bid'
-      },
-      onJobTaskPage() {
-        return this.page === '/job/tasks' || this.page === '/job/tasks/'
-      },
-      onTasksPage() {
-        return this.page === '/tasks' || this.page === '/tasks/'
-      },
-      onInvoicesPage() {
-        return this.page === '/invoices' || this.page === '/invoices/'
-      },
-      onParticularInvoicePage() {
-        return this.page.split('/')[1] === 'invoice' ||
-          this.page.split('/')[2] === 'invoice'
-      },
-      onSettingsPage() {
-        return this.page === '/settings' || this.page === '/settings/'
-      },
-      onAddTaskPage() {
-        return this.page === '/job/add/task' || this.page === '/job/add/task/'
-      },
-      onImageAssociationPage() {
-        return this.page === '/image-association'
-      },
-      onAddSubPage() {
-        return false
-        // return this.page === '/home' || this.page === '/home/'
-      },
-      onInitiateBidPage() {
-        return this.page === '/initiate-bid' || this.page === '/initiate-bid/'
-      },
-      onRegisterPage() {
-        return this.page === '/register' || this.page === '/register/'
-      },
-      onFurtherInfoPage() {
-        return this.page === '/furtherInfo' || this.page === '/furtherInfo/'
-      },
-      onRegisterQuickbooksPage() {
-        return this.page === '/registerQuickBooks' || this.page === '/registerQuickBooks/'
-      },
-      onImagesPage() {
-        return this.page.split('/')[3] === 'images'
-      },
-      onPublicHomePage() {
-        return this.page === '/home' || this.page === '/home/'
-      },
-      isCustomer() {
-        return this.user.usertype === 'customer'
-      },
-    },
-    mounted() {
-      if (
-        this.user.user !== undefined &&
-        this.user.user !== null &&
-        this.userFromState !== '') {
-        this.$store.commit('setUser', this.user)
-        this.currentUser = this.user
-      }
-    },
-  }
+    export default {
+        name: 'Header',
+        components: {
+            AppBar,
+            HeaderBio,
+            HeaderBackButton,
+            HeaderJobNameSettingsLogout,
+            HeaderJobToggle
+        },
+        props: ['user'],
+        data() {
+            return {
+                drawer: false,
+                currentUser: ''
+            }
+        },
+        computed: {
+            ...mapState({
+                page: state => state.page,
+                // userFromState: state => state.user.user,
+                // userType: (state) => {
+                //   if (state.user.user !== undefined && state.user.user !== null) {
+                //     return state.user.user.usertype
+                //   }
+                //   return null
+                // },
+                // bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
+            }),
+            getCompanyName() {
+                if (this.user.contractor) {
+                    return this.user.contractor.company_name
+                }
+            }
+        },
+        methods: {
+            onHomePage() {
+                return this.page === '/home' || this.page === '/home/'
+            },
+            onCustomerInfo() {
+                return this.page === '/customer-info' || this.page === '/customer-info/'
+            },
+            onContractorInfo() {
+                return this.page === '/contractor-info' || this.page === '/contractor-info/'
+            },
+            onJobsPage() {
+                return this.page === '/bids' || this.page === '/bids/' || this.page === '/bids/subs'
+            },
+            onParticularJobPage() {
+                return this.page.split('/')[1] === 'bid'
+            },
+            onJobTaskPage() {
+                return this.page === '/job/tasks' || this.page === '/job/tasks/'
+            },
+            onTasksPage() {
+                return this.page === '/tasks' || this.page === '/tasks/'
+            },
+            onInvoicesPage() {
+                return this.page === '/invoices' || this.page === '/invoices/'
+            },
+            onParticularInvoicePage() {
+                return this.page.split('/')[1] === 'invoice' ||
+                    this.page.split('/')[2] === 'invoice'
+            },
+            onSettingsPage() {
+                return this.page === '/settings' || this.page === '/settings/'
+            },
+            onAddTaskPage() {
+                return this.page === '/job/add/task' || this.page === '/job/add/task/'
+            },
+            onImageAssociationPage() {
+                return this.page === '/image-association'
+            },
+            onAddSubPage() {
+                return false
+                // return this.page === '/home' || this.page === '/home/'
+            },
+            onInitiateBidPage() {
+                return this.page === '/initiate-bid' || this.page === '/initiate-bid/'
+            },
+            onRegisterPage() {
+                return this.page === '/register' || this.page === '/register/'
+            },
+            onFurtherInfoPage() {
+                return this.page === '/furtherInfo' || this.page === '/furtherInfo/'
+            },
+            onRegisterQuickbooksPage() {
+                return this.page === '/registerQuickBooks' || this.page === '/registerQuickBooks/'
+            },
+            onImagesPage() {
+                return this.page.split('/')[3] === 'images'
+            },
+            onPublicHomePage() {
+                return this.page === '/home' || this.page === '/home/'
+            },
+            isCustomer() {
+                return this.user.usertype === 'customer'
+            },
+        },
+        mounted() {
+            if (
+                this.user.user !== undefined &&
+                this.user.user !== null &&
+                this.userFromState !== '') {
+                this.$store.commit('setUser', this.user)
+                this.currentUser = this.user
+            }
+        },
+    }
 </script>
 
 <style lang="less" scoped>
