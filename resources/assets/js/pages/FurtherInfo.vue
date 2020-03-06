@@ -391,7 +391,8 @@
         mixins: [Phone],
         methods: {
             ...mapMutations([
-                'setMobileResponse'
+                'setMobileResponse',
+                'setCurrentPage'
             ]),
             ...mapActions([
                 'checkMobileNumber',
@@ -445,6 +446,7 @@
                     const data = await Spark.post('/home', this.form)
                     Vue.toasted.success('info updated')
                     Bus.$emit('updateUser');
+                    this.$store.commit('setCurrentPage', data);
                     this.$router.push(data);
                 } catch (error) {
                     console.log(error)
