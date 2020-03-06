@@ -18,24 +18,33 @@
                             <div class="col-12">
                                 Job Task Name:
                                 <!-- task name-->
-                                <div class="float-right font-weight-bold capitalize">
-                                    {{ jobTask ? jobTask.task.name : '' }}
+                                <div
+                                        id="taskName"
+                                        class="float-right font-weight-bold capitalize">
+                                    {{ jobTask ? jobTask.task.name : ''}}
                                 </div>
+
                             </div>
                             <div class="col-12">
                                 <div v-if="jobIsNotComplete()">
-                                    <div class="flex justify-content-between">
+                                    <div
+                                            id="uncompletedJob"
+                                            class="flex justify-content-between">
                                         <label>Task Start Date</label>
-                                        <input type="date" class="form-control form-control-sm w-50" style=""
-                                               v-if="showTaskStartDate()"
-                                               :value="setStartDate(jobTask)"
-                                               @blur="updateTaskStartDate($event.target.value, jobTask.id)">
+                                        <input
+                                                id="inputDate"
+                                                type="date" class="form-control form-control-sm w-50" style=""
+                                                v-if="showTaskStartDate()"
+                                                :value="setStartDate(jobTask)"
+                                                @blur="updateTaskStartDate($event.target.value, jobTask.id)">
                                     </div>
                                     <span :class="{ error: hasStartDateError }"
                                           v-show="hasStartDateError">{{ startDateErrorMessage }}</span>
                                 </div>
                                 <div v-else>
-                                    <div class="flex justify-content-between">
+                                    <div
+                                            id="completedJob"
+                                            class="flex justify-content-between">
                                         <label>Task Start Date</label>
                                         <div><strong>{{ getStartDate(jobTask.start_date) }}</strong>
                                         </div>
@@ -91,11 +100,14 @@
                                                 icon="fas fa-money-bill-alt icon"
                                                 :warning="cust_final_price < sub_final_price"
                                                 warning-message="Sub price is higher than your price"
-                                                type="totalTaskPrice"></content-section>
+                                                type="totalTaskPrice">
+                                        </content-section>
+
 
                                         <content-section
                                                 v-if="!isContractor()"
                                                 label="Total Task Price:"
+                                                id="totalTaskPrice"
                                                 ref="totalTaskPrice"
                                                 :content="cust_final_price ? taskCustFinalPrice(cust_final_price, false) : '0'"
                                                 section-classes="ph-zero"
@@ -223,7 +235,7 @@
                                 <div
                                         class="flex flex-col"
                                         v-if="getAddress() !== 'Address Not Available'"
-                                    >
+                                >
                                     <card>
 
                                         <div class="flex flex-col">
@@ -260,7 +272,8 @@
                                         >
                                             <v-icon
                                                     class="mr-1rem"
-                                            >mdi-home-edit</v-icon>
+                                            >mdi-home-edit
+                                            </v-icon>
                                             Change Task Location
                                         </v-btn>
 
@@ -740,7 +753,6 @@
                 }
             },
             getAddressLine1() {
-                console.log('jobTask', this.jobTask)
                 if (this.jobTask && this.jobTask.location) {
                     return this.jobTask.location.address_line_1
                 }
@@ -1221,18 +1233,18 @@
                 return true
             },
             updateTaskStartDate(date, jobTaskId) {
-                if (date !== '') {
-                    let dateArray = GeneralContractor.checkDateIsTodayorLater(date, this.job.created_at)
-                    this.startDateErrorMessage = dateArray[0]
-                    this.hasStartDateError = dateArray[1]
+                // if (date !== '') {
+                //     let dateArray = GeneralContractor.checkDateIsTodayorLater(date, this.job.created_at)
+                //     this.startDateErrorMessage = dateArray[0]
+                //     this.hasStartDateError = dateArray[1]
 
-                    if (!this.hasStartDateError) {
-                        GeneralContractor.updateTaskStartDate(date, jobTaskId)
-                    } else {
-                        this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
-                    }
+                // if (!this.hasStartDateError) {
+                GeneralContractor.updateTaskStartDate(date, jobTaskId)
+                // } else {
+                //     this.startDateErrorMessage = 'Task Date Cannot Be Before Bid Creation Date'
+                // }
 
-                }
+                // }
             },
             openUpdateTaskLocation(jobTaskId) {
                 $('#update-task-location-modal_' + jobTaskId).modal()
@@ -1386,6 +1398,12 @@
                         return '$0.00'
                     }
 
+                    const minimumPrice = price * .029 + .30 + 2.5;
+
+                    if (this.jobTask) {
+
+                    }
+
                     if (price) {
                         let priceString = price.toString()
                         if (priceString.indexOf('.') === -1) {
@@ -1424,7 +1442,8 @@
 
                 return true
             }
-        },
+        }
+        ,
         mounted() {
 
             Bus.$on('bidUpdated', () => {
@@ -1462,7 +1481,8 @@
                 this.user = Spark.state.user
             }
 
-        },
+        }
+        ,
         created() {
             document.body.scrollTop = 0 // For Safari
             document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
