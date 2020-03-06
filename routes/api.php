@@ -77,7 +77,6 @@ Route::post('/task/updateTaskName', 'TaskController@updateTaskName');
 Route::post('/task/updateTaskQuantity', 'TaskController@updateTaskQuantity');
 Route::post('/task/updateMessage', 'TaskController@updateMessage');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
-Route::post('/task/accept', 'TaskController@accept');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
 Route::post('/task/updateTaskStartDate', function (Request $request) {
 

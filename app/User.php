@@ -5,6 +5,7 @@ namespace App;
 use App\ContractorContractor;
 use App\Notifications\NotifyContractorOfSubBid;
 use App\Notifications\NotifySubOfAcceptedBid;
+use App\Notifications\NotifySubOfBidNotAcceptedBid;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Services\RandomPasswordService;
 use App\Services\SanatizeService;
@@ -142,8 +143,6 @@ class User extends SparkUser
 
     public function checkIfContractorSetBidForATask($subcontractorId, $jobTaskId)
     {
-
-
         if (empty(
         BidContractorJobTask::where('contractor_id', '=', $subcontractorId)
             ->where('job_task_id', '=', $jobTaskId)
@@ -296,7 +295,7 @@ class User extends SparkUser
         $task = $jobTask->task()->first();
         self::changeSubStatus($jobTaskId, $subId);
         self::updateJobTaskWithAcceptedBid($jobTask, $price, $subId, $bidId);
-        self::notifySubOfAcceptedBid($subId, $task);
+        self::notifySubOfAcceptedBid($subId, $task, Auth::user()->getAuthIdentifier());
     }
 
     public function changeSubStatus(
@@ -304,7 +303,6 @@ class User extends SparkUser
     )
     {
         self::changeBidContractorSubStatus($subId, $jobTaskId);
-        self::changeSubStatusTable($subId, $jobTaskId);
     }
 
     public function changeBidContractorSubStatus($subId, $jobTaskId)
@@ -316,11 +314,14 @@ class User extends SparkUser
             if ($jt->contractor_id == $subId) {
                 $jt->accepted = true;
                 $jt->status = 'bid_task.accepted';
+                $this->setSubStatus($jt->contractor_id, $jobTaskId, 'accepted');
             } else {
                 $jt->accepted = false;
                 if ($jt->status == 'bid_task.accepted') {
                     $jt->status = 'bid_task.bid_sent';
                 }
+                $this->setSubStatus($jt->contractor_id, $jobTaskId, 'denied');
+                self::notifySubOfBidNotAcceptedBid($subId, $jt->jobTask()->get()->first()->task()->get()->first());
             }
             try {
                 $jt->save();
@@ -331,11 +332,6 @@ class User extends SparkUser
                 ], 200);
             }
         }
-    }
-
-    public function changeSubStatusTable($subId, $jobTaskId)
-    {
-        $this->setSubStatus($subId, $jobTaskId, 'accepted');
     }
 
     public function updateJobTaskWithAcceptedBid(
@@ -360,10 +356,17 @@ class User extends SparkUser
         }
     }
 
-    public function notifySubOfAcceptedBid($subId, $task)
+    public function notifySubOfAcceptedBid($subId, $task, $generalId)
     {
         $user = User::find($subId);
-        $user->notify(new NotifySubOfAcceptedBid($task, $user));
+        $general = User::find($generalId);
+        $user->notify(new NotifySubOfAcceptedBid($task, $user, $general));
+    }
+
+    public function notifySubOfBidNotAcceptedBid($subId, $task)
+    {
+        $user = User::find($subId);
+        $user->notify(new NotifySubOfBidNotAcceptedBid($task, $user));
     }
 
     public function subSendsBidToGeneral(

@@ -138,13 +138,29 @@
                 <v-card v-for="(item, i) in bid.job_tasks"
                         :key="i"
                         class="card-positioning"
+                        :class="i % 2 === 0 ? 'b-brown': 'b-blue'"
                 >
                     <v-card-title
-                            class="uppercase"
+                            class="uppercase mb-0 pb-0"
+                            style="font-size: 12pt"
                     >{{ jobTaskObject(item).Name }}
                         <v-spacer></v-spacer>
+
+                        <v-btn
+                                v-if="item.sub_statuses.length > 0"
+                                text
+                                class="btn-size btn-weight"
+                                :class="i % 2 === 0 ? 'primary--text': 'white--text'"
+                                :to="'/job/task/' + i"
+                        >{{ notificationMessage(item) }}
+                        </v-btn>
+                        <v-spacer
+                                v-if="item.sub_statuses.length > 0"
+                        ></v-spacer>
+                        <div></div>
                         <v-card-subtitle
                                 class="uppercase"
+                                style="font-size: 10pt"
                         >{{ jobTaskObject(item).Status }}
                         </v-card-subtitle>
                     </v-card-title>
@@ -152,9 +168,16 @@
                     <v-row
                             class="justify-content-around"
                     >
-                        <strong class="uppercase">Subs</strong>
-                        <strong class="uppercase">Quantity</strong>
-                        <strong class="uppercase">Price</strong>
+
+                        <strong class="uppercase"
+                                style="font-size: 10pt"
+                        >Subs</strong>
+                        <strong class="uppercase"
+                                style="font-size: 10pt"
+                        >Quantity</strong>
+                        <strong class="uppercase"
+                                style="font-size: 10pt"
+                        >Price</strong>
                     </v-row>
                     <v-row
                             class="justify-content-around mb-15"
@@ -170,31 +193,31 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-btn
-                                color="primary"
                                 class="btn-size btn-weight"
+                                :class="i % 2 === 0 ? 'primary--text': 'white--text'"
                                 :to="'/job/task/' + i"
                                 text
-                        >Edit <span class="btn-size btn-weight spacer-grey">|</span>
+                        >Edit
                         </v-btn>
                         <v-btn
                                 v-if="isGeneral() && approvedByCustomer(item)"
                                 @click="openSubInvite(item.id)"
                                 class="btn-size btn-weight"
-                                color="primary"
+                                :class="i % 2 === 0 ? 'primary--text': 'white--text'"
                                 text
-                        >Add Sub <span class="btn-size btn-weight spacer-grey">|</span>
+                        >Add Sub
                         </v-btn>
                         <v-btn
                                 v-if="isGeneral() && subFinishedTask(item)"
                                 @click="approveSubsWork(item)"
                                 class="btn-size btn-weight"
-                                color="primary"
+                                :class="i % 2 === 0 ? 'primary--text': 'white--text'"
                                 text
                         >
-                            Approve Subs Work <span class="btn-size btn-weight spacer-grey">|</span>
+                            Approve Subs Work
                         </v-btn>
                         <v-btn
-                                color="primary"
+                                :class="i % 2 === 0 ? 'primary--text': 'white--text'"
                                 v-if="isGeneral() && showFinishedBtn(item)"
                                 @click="finishedTask(item)"
                                 class="btn-size btn-weight"
@@ -626,6 +649,37 @@
         },
         methods: {
 
+            notificationMessage(item) {
+                let initiated = false;
+                let accepted = false;
+                let sent_a_bid = false;
+                if (item.sub_statuses) {
+                    for (let i = 0; i < item.sub_statuses.length; i++) {
+                        if (item.sub_statuses[i].status == 'initiated') {
+                            initiated = true;
+                        }
+                        if (item.sub_statuses[i].status == 'accepted') {
+                            accepted = true;
+                        }
+                        if (item.sub_statuses[i].status == 'sent_a_bid') {
+                            sent_a_bid = true;
+                        }
+                    }
+                }
+
+                if (accepted) {
+                    return "Accepted Bid"
+                }
+
+                if (sent_a_bid) {
+                    return "Sent Bids"
+                }
+
+                if (initiated) {
+                    return "No Sent Bids"
+                }
+            },
+
             getCurrentUser() {
                 if (Spark.state) {
                     return Spark.state.user
@@ -990,6 +1044,14 @@
 </script>
 
 <style lang="less" scoped>
+
+    .b-brown {
+        background-color: beige;
+    }
+
+    .b-blue {
+        background-color: cornflowerblue;
+    }
 
     .paid {
         background-color: red;

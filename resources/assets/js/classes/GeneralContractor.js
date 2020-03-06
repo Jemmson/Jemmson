@@ -6,7 +6,7 @@ export default class GeneralContractor {
     acceptSubBidForTask(jobTask, bid, disabled, generalId) {
         console.log('acceptSubBidForTask', jobTask)
         disabled.accept = true
-        axios.post('/api/task/accept', {
+        axios.post('/task/accept', {
             jobId: jobTask.job_id,
             jobTaskId: jobTask.id,
             contractorId: bid.contractor_id,
