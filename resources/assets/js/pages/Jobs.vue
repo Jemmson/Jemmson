@@ -18,7 +18,7 @@
                     >mdi-cash
                     </v-icon>
                     <v-icon
-                            v-else
+                            v-else-if="bid.payment_type === 'creditCard'"
                     >mdi-credit-card
                     </v-icon>
                     <div class="mr-1rem ml-half-rem">{{ jobName(bid.job_name) }}</div>

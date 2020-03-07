@@ -21,7 +21,7 @@
                     >mdi-cash
                     </v-icon>
                     <v-icon
-                            v-else
+                            v-else-if="bidTask.payment_type === 'creditCard'"
                     >mdi-credit-card
                     </v-icon>
 
