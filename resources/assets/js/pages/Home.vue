@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <v-btn
-                class="w-full"
+                class="w-full mb-4"
                 color="primary"
                 v-if="isContractor()"
                 @click="goToNewJob()"
@@ -9,7 +9,7 @@
         </v-btn>
 
         <stripe-express-dashboard
-                v-if="isContractor()"
+                v-if="isContractor() && needsStripe()"
         >
         </stripe-express-dashboard>
 
@@ -142,6 +142,12 @@
                     this.theUser = Spark.state.user
                 }
             },
+            needsStripe(){
+                if (this.theUser) {
+                    return this.theUser.stripe_id !== null
+                }
+            },
+
             checkContractorStripeIsValid() {
                 if (
                     this.theUser !== undefined &&
