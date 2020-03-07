@@ -17,11 +17,11 @@
                         v-if="showBid(bidTask)"
                 >
                     <v-icon
-                            v-if="bidTask.payment_type === 'cash'"
+                            v-if="bidTask.job_task.job.payment_type === 'cash'"
                     >mdi-cash
                     </v-icon>
                     <v-icon
-                            v-else-if="bidTask.payment_type === 'creditCard'"
+                            v-else-if="bidTask.job_task.job.payment_type === 'creditCard'"
                     >mdi-credit-card
                     </v-icon>
 
@@ -273,7 +273,7 @@
             needsStripe(){
                 if (Spark.state.user) {
                     return Spark.state.user.stripe_id === null
-                        && this.bidTask.payment_type !== 'cash'
+                        && this.bidTask.job_task.job.payment_type === 'creditCard'
                 }
             },
 

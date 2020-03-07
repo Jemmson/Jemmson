@@ -142,6 +142,7 @@ class TaskController extends Controller
             $bcjtask['job_task']['job'] = $bcjtask->jobTask()->get()->first()->job()->select([
                 'id',
                 'contractor_id',
+                'payment_type',
                 'status'
             ])->get()->first();
 
