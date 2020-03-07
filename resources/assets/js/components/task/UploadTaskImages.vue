@@ -8,7 +8,8 @@
             <a class="lightbox-target" :id="jobTask ? 'image' + jobTask.images[jobTask.images.length - 1].id : ''">
                 <img :src="jobTask.images[jobTask.images.length - 1].url"
                      :id="'image-img' + jobTask.images[jobTask.images.length - 1].id">
-                <a class="lightbox-close" :id="jobTask ? 'image-close' + jobTask.images[jobTask.images.length - 1].id : ''"
+                <a class="lightbox-close"
+                   :id="jobTask ? 'image-close' + jobTask.images[jobTask.images.length - 1].id : ''"
                    @click.prevent="closeImage(jobTask.images[jobTask.images.length - 1].id)"></a>
             </a>
         </div>
@@ -21,7 +22,8 @@
             <a class="lightbox-target" :id="jobTask ? 'image' + jobTask.images[jobTask.images.length - 2].id : ''">
                 <img :src="jobTask.images[jobTask.images.length - 2].url"
                      :id="jobTask ? 'image-img' + jobTask.images[jobTask.images.length - 2].id : ''">
-                <a class="lightbox-close" :id="jobTask ? 'image-close' + jobTask.images[jobTask.images.length - 2].id : ''"
+                <a class="lightbox-close"
+                   :id="jobTask ? 'image-close' + jobTask.images[jobTask.images.length - 2].id : ''"
                    @click.prevent="closeImage(jobTask.images[jobTask.images.length - 2].id)"></a>
             </a>
         </div>
@@ -49,89 +51,90 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-  export default {
-    name: 'UploadTaskImages',
-    props: {
-      jobTask: Object,
-      job: Object,
-      type: String
-    },
-    data() {
-      return {
-        disabled: {
-          uploadTaskImageBtn: false
+    import {mapState} from 'vuex'
+
+    export default {
+        name: 'UploadTaskImages',
+        props: {
+            jobTask: Object,
+            job: Object,
+            type: String
         },
-        loading: false
-      }
-    },
-    computed: {
-      ...mapState({
+        data() {
+            return {
+                disabled: {
+                    uploadTaskImageBtn: false
+                },
+                loading: false
+            }
+        },
+        computed: {
+            ...mapState({}),
+            closeLink() {
+                if (this.type === 'sub') {
+                    return '#/tasks'
+                }
 
-      }),
-      closeLink() {
-        if (this.type === 'sub') {
-          return '#/tasks'
+                return '#/bid/' + this.jobTask.job_id
+            }
+        },
+        methods: {
+            triggerFileInput(id) {
+                console.log('trigger file', id)
+
+                $('#task_photo_' + id).click()
+            },
+            openImage(imageId) {
+                console.log(imageId)
+                $('#image' + imageId).addClass('lightbox-open')
+                $('#image-img' + imageId).addClass('lightbox-open-image')
+                $('#image-close' + imageId).addClass('lightbox-open-close')
+
+            },
+            closeImage(imageId) {
+                console.log(imageId)
+                $('#image' + imageId).removeClass('lightbox-open')
+                $('#image-img' + imageId).removeClass('lightbox-open-image')
+                $('#image-close' + imageId).removeClass('lightbox-open-close')
+
+            },
+            showTaskImage1(jobTask) {
+                // first most recent
+                if (jobTask && jobTask.images && jobTask.images.length > 0) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            showTaskImage2(jobTask) {
+                // second most recent
+                if (jobTask && jobTask.images && jobTask.images.length > 1) {
+                    return true
+                } else {
+                    return false
+                }
+
+            },
+            showMoreImagesBtn(jobTask) {
+                if (jobTask && jobTask.images) {
+                    return jobTask.images.length > 0
+                }
+            },
+            async uploadTaskImage(jobTaskId) {
+                if (this.jobTask && this.jobTask.job) {
+                    this.loading = true;
+                    const data = new FormData();
+                    console.log(this.$refs['task_photo_' + this.jobTask.id]);
+                    data.append('photo', this.$refs['task_photo_' + this.jobTask.id].files[0]);
+                    data.append('jobTaskId', this.jobTask.id);
+
+                    this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id);
+                    const disabled = await User.uploadTaskImage(data, this.disabled);
+                    this.loading = disabled;
+                }
+            },
         }
-
-        return '#/bid/' + this.jobTask.job_id
-      }
-    },
-    methods: {
-      triggerFileInput(id) {
-        console.log('trigger file', id)
-
-        $('#task_photo_' + id).click()
-      },
-      openImage(imageId) {
-        console.log(imageId)
-        $('#image' + imageId).addClass('lightbox-open')
-        $('#image-img' + imageId).addClass('lightbox-open-image')
-        $('#image-close' + imageId).addClass('lightbox-open-close')
-
-      },
-      closeImage(imageId) {
-        console.log(imageId)
-        $('#image' + imageId).removeClass('lightbox-open')
-        $('#image-img' + imageId).removeClass('lightbox-open-image')
-        $('#image-close' + imageId).removeClass('lightbox-open-close')
-
-      },
-      showTaskImage1(jobTask) {
-        // first most recent
-        if (jobTask) {
-          const length = jobTask.images.length
-          return length > 0 && jobTask.images[length - 1] !== undefined
-        }
-      },
-      showTaskImage2(jobTask) {
-        // second most recent
-        if (jobTask) {
-          const length = jobTask.images.length
-          return length > 1 && jobTask.images[length - 2] !== undefined
-        }
-
-      },
-      showMoreImagesBtn(jobTask) {
-        if (jobTask) {
-          return jobTask.images.length > 0
-        }
-      },
-      async uploadTaskImage(jobTaskId) {
-        if (this.jobTask && this.jobTask.job) {
-          this.loading = true
-          const data = new FormData()
-          console.log(this.$refs['task_photo_' + jobTaskId])
-          data.append('photo', this.$refs['task_photo_' + jobTaskId].files[0])
-          data.append('jobTaskId', jobTaskId)
-
-          this.jobTask.job_id ? data.append('jobId', this.jobTask.job_id) : data.append('jobId', this.jobTask.job.id)
-          const disabled = await User.uploadTaskImage(data, this.disabled)
-          this.loading = disabled;
-        }
-      },
     }
-  }
 </script>
 
 <style lang="less" scoped>

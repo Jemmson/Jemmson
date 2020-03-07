@@ -225,7 +225,7 @@
                 </div>
 
                 <!-- location -->
-                <div class="col-12">
+                <div class="col-12" v-if="getAddressLine1 !== ''">
                     <h1 class="card-title mt-4">Job Task Location</h1>
                     <card>
                         <div class="row">
