@@ -7,7 +7,7 @@
                     class="mb-1rem"
             >
                 <div
-                    v-if="needsStripe()"
+                    v-if="needsStripe() && isCreditCardJob()"
                     class="bg-color-red f-bold fa-1x pb-1 pl-1 pt-3"
                 >
                     You will need to set up a credit card to bid on this job
@@ -66,7 +66,7 @@
                 <v-container>
                     <h1 class="card-title">Task Details</h1>
                     <v-card
-                        :disabled="needsStripe()"
+                        :disabled="needsStripe() && isCreditCardJob()"
                     >
                         <v-card-text>
                             <v-row
@@ -273,8 +273,16 @@
             needsStripe(){
                 if (Spark.state.user) {
                     return Spark.state.user.stripe_id === null
-                        && this.bidTask.job_task.job.payment_type === 'creditCard'
                 }
+            },
+
+            isCreditCardJob(){
+              if (this.bidTask.job_task
+                && this.bidTask.job_task
+                && this.bidTask.job_task.job
+              ) {
+                    return this.bidTask.job_task.job.payment_type === 'creditCard'
+              }
             },
 
             getCurrencyMask() {
