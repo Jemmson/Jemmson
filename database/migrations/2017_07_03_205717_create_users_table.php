@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('usertype')->default('customer');
             $table->string('password', 60);
             $table->boolean('password_updated')->default(1);
+            $table->boolean('terms')->default(0);
             $table->rememberToken();
             $table->text('photo_url')->nullable();
             $table->text('logo_url')->nullable();

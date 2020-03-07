@@ -18,7 +18,6 @@ class CreateTeamsTable extends Migration
             $table->string('name');
             $table->string('slug')->nullable()->unique();
             $table->text('photo_url')->nullable();
-            $table->string('stripe_id')->nullable();
             $table->string('current_billing_plan')->nullable();
             $table->string('card_brand')->nullable();
             $table->string('card_last_four')->nullable();
