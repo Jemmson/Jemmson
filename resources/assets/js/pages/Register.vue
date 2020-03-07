@@ -199,7 +199,7 @@
 
                         <hr style="margin-top: 3rem">
 
-                        <div class="row pt-3 pt-2 ">
+                        <div class="row pt-3 pt-2 mb-2">
                             <input
                                     type="checkbox"
 
