@@ -1,6 +1,19 @@
 <template>
     <div class="row">
 
+        <div v-if="showDeclinedMessage"
+            class="ml-3 mr-3 w-100"
+        >
+            <h1 class="card-title mt-4">Job Change Message</h1>
+            <card>
+                <v-card-title
+                        style="background-color: lightcoral"
+                >
+                    {{ bid.declined_message }}
+                </v-card-title>
+            </card>
+        </div>
+
         <v-col cols="5">
             <job-stepper
                     :status="getSelectedJob()"
@@ -10,10 +23,6 @@
         </v-col>
 
         <v-col cols="7">
-            <card v-if="showDeclinedMessage"
-                  style="background-color: lightcoral">
-                {{ bid.declined_message }}
-            </card>
             <v-card>
                 <v-card-title>Details</v-card-title>
 
@@ -655,7 +664,7 @@
         },
         methods: {
 
-            hasTaskMessages(jt){
+            hasTaskMessages(jt) {
                 return jt && jt.task_messages && jt.task_messages.length > 0
             },
 
