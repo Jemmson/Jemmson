@@ -56,160 +56,162 @@
 
 <script>
 
-  import SearchBar from '../components/shared/SearchBar'
-  import Feedback from '../components/shared/Feedback'
-  import Stripe from '../components/stripe/Stripe'
-  import Card from '../components/shared/Card'
-  import Task from '../components/task/Task'
-  import StripeMixin from '../components/mixins/StripeMixin'
-  import Phone from '../components/mixins/Phone'
+    import SearchBar from '../components/shared/SearchBar'
+    import Feedback from '../components/shared/Feedback'
+    import Stripe from '../components/stripe/Stripe'
+    import Card from '../components/shared/Card'
+    import Task from '../components/task/Task'
+    import StripeMixin from '../components/mixins/StripeMixin'
+    import Phone from '../components/mixins/Phone'
 
-  export default {
-    name: 'Tasks',
-    props: {
-      user: Object
-    },
-    components: {
-      SearchBar,
-      Feedback,
-      Stripe,
-      Card,
-      Task
-    },
-    data() {
-      return {
-        showTasks: {},
-        paginate: ['sTasks'],
-        address: '',
-        location: {
-          location: []
+    export default {
+        name: 'Tasks',
+        props: {
+            user: Object
         },
-        localArea: '',
-        area: {
-          area: ''
+        components: {
+            SearchBar,
+            Feedback,
+            Stripe,
+            Card,
+            Task
         },
-        hello: 'world',
-        tasks: [],
-        sTasks: [],
-        price: '',
-        searchTerm: '',
-      }
-    },
-    mixins: [Phone, StripeMixin],
-    methods: {
-      goBack() {
-        this.$router.go(-1)
-      },
-      showTheTask(index, action) {
-
-        if (action === 'show') {
-          let a = window.document.getElementById('showTask' + index)
-          a.setAttribute('style', '')
-          // return true
-        } else {
-          let a = window.document.getElementById('showTask' + index)
-          a.setAttribute('style', 'display:none;')
-        }
-
-        // for (let i = 0; i < this.tasks.length; i++) {
-        // }
-      },
-      getLabelClass(status) {
-        return Format.statusLabel(status)
-      },
-      search() {
-        this.sTasks = this.tasks.filter((task) => {
-          if (this.searchTerm == '' || this.searchTerm.length <= 1) {
-            return true
-          }
-          return this.task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
-        })
-        if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
-          this.$refs.paginator.goToPage(1)
-        }
-      },
-      showBid(bid) {
-        // TODO: backend what should happen to the bids that wheren't accepted
-        if (bid.job_task === null) {
-          return false
-        }
-        return (bid.id === bid.job_task.bid_id && (bid.job_task.job.status === 'job.approved' || bid.job_task.job.status === 'job.completed' || bid.job_task.status === 'bid_task.accepted')) || (bid.job_task.status ===
-          'bid_task.bid_sent' || bid.job_task.status === 'bid_task.initiated')
-      },
-      getArea(bidTask) {
-        // console.log(bidTask)
-        // debugger
-        // Customer.getArea(bidTask.job_id, this.area)
-        // this.localArea = this.area
-
-        // return this.localArea.area
-      },
-
-      hasStripe() {
-        return this.bid.contractor.stripe_id === null
-      },
-
-      needsStripe(){
-        if (Spark.state.user) {
-          return Spark.state.user.stripe_id === null
-        }
-      },
-
-      showAddress(bidTask) {
-        const status = bidTask.job_task.status
-        return status !== 'bid_task.initiated' && status !== 'bid_task.bid_sent' && status !== 'bid_task.finished_by_sub'
-      },
-      showStripeToggle(jobTask) {
-        return jobTask.contractor_id === User.getId() && (jobTask.job.status === 'bid.initiated' || jobTask.job.status === 'bid.in_progress')
-      },
-      toggleStripePaymentOption(jobTask) {
-        SubContractor.toggleStripePaymentOption(jobTask)
-      },
-      getTasks() {
-        if (Spark.state.user.usertype === 'contractor') {
-          console.log('getTasks')
-          axios.post('/bid/tasks').then((response) => {
-            if (response.data) {
-              this.tasks = response.data
-              this.sTasks = this.tasks
+        data() {
+            return {
+                showTasks: {},
+                paginate: ['sTasks'],
+                address: '',
+                location: {
+                    location: []
+                },
+                localArea: '',
+                area: {
+                    area: ''
+                },
+                hello: 'world',
+                tasks: [],
+                sTasks: [],
+                price: '',
+                searchTerm: '',
             }
-          })
+        },
+        mixins: [Phone, StripeMixin],
+        methods: {
+            goBack() {
+                this.$router.go(-1)
+            },
+            showTheTask(index, action) {
+
+                if (action === 'show') {
+                    let a = window.document.getElementById('showTask' + index)
+                    a.setAttribute('style', '')
+                    // return true
+                } else {
+                    let a = window.document.getElementById('showTask' + index)
+                    a.setAttribute('style', 'display:none;')
+                }
+
+                // for (let i = 0; i < this.tasks.length; i++) {
+                // }
+            },
+            getLabelClass(status) {
+                return Format.statusLabel(status)
+            },
+            search() {
+                this.sTasks = this.tasks.filter((task) => {
+                    if (this.searchTerm == '' || this.searchTerm.length <= 1) {
+                        return true
+                    }
+                    return this.task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+                })
+                if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
+                    this.$refs.paginator.goToPage(1)
+                }
+            },
+            showBid(bid) {
+                // TODO: backend what should happen to the bids that wheren't accepted
+                if (bid.job_task === null) {
+                    return false
+                }
+                return (bid.id === bid.job_task.bid_id && (bid.job_task.job.status === 'job.approved' || bid.job_task.job.status === 'job.completed' || bid.job_task.status === 'bid_task.accepted')) || (bid.job_task.status ===
+                    'bid_task.bid_sent' || bid.job_task.status === 'bid_task.initiated')
+            },
+            getArea(bidTask) {
+                // console.log(bidTask)
+                // debugger
+                // Customer.getArea(bidTask.job_id, this.area)
+                // this.localArea = this.area
+
+                // return this.localArea.area
+            },
+
+            hasStripe() {
+                return this.bid.contractor.stripe_id === null
+            },
+
+            needsStripe() {
+                if (Spark.state.user) {
+                    return Spark.state.user.stripe_id === null
+                }
+            },
+
+            showAddress(bidTask) {
+                const status = bidTask.job_task.status
+                return status !== 'bid_task.initiated' && status !== 'bid_task.bid_sent' && status !== 'bid_task.finished_by_sub'
+            },
+            showStripeToggle(jobTask) {
+                return jobTask.contractor_id === User.getId() && (jobTask.job.status === 'bid.initiated' || jobTask.job.status === 'bid.in_progress')
+            },
+            toggleStripePaymentOption(jobTask) {
+                SubContractor.toggleStripePaymentOption(jobTask)
+            },
+            getTasks() {
+                if (Spark.state.user.usertype === 'contractor') {
+                    console.log('getTasks');
+                    axios.post('/bid/tasks').then((response) => {
+                        if (response.data) {
+                            this.tasks = response.data;
+                            this.sTasks = this.tasks;
+                        }
+                    })
+                }
+            }
+        },
+        created: function () {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            this.getTasks();
+            Bus.$on('bidUpdated', (payload) => {
+                this.getTasks();
+            });
+            Bus.$on('needsStripe', () => {
+                $('#stripe-modal').modal();
+            });
+
+            window.Echo.private('');
+
+        },
+        mounted() {
+
+            this.$store.commit('setCurrentPage', '/tasks');
+
+            for (let j = 0; j < this.tasks.length; j++) {
+                this.showTasks[j] = false;
+            }
+
+            const taskId = User.getParameterByName('taskId');
+            if (taskId !== null && taskId !== '') {
+                $('#task_' + taskId).addClass('info');
+            }
+            let success = this.$route.query.success;
+            if (success !== undefined) {
+                success = Language.lang().sub.stripe_success;
+                Vue.toasted.success(success);
+            }
+            const error = this.$route.query.error;
+            Vue.toasted.error(error);
         }
-      }
-    },
-    created: function() {
-      document.body.scrollTop = 0 // For Safari
-      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
-      this.getTasks()
-      Bus.$on('bidUpdated', (payload) => {
-        this.getTasks()
-      })
-      Bus.$on('needsStripe', () => {
-        $('#stripe-modal').modal()
-      })
-
-      window.Echo.private('')
-
-    },
-    mounted() {
-
-      for (let j = 0; j < this.tasks.length; j++) {
-        this.showTasks[j] = false
-      }
-
-      const taskId = User.getParameterByName('taskId')
-      if (taskId !== null && taskId !== '') {
-        $('#task_' + taskId).addClass('info')
-      }
-      let success = this.$route.query.success
-      if (success !== undefined) {
-        success = Language.lang().sub.stripe_success
-        Vue.toasted.success(success)
-      }
-      const error = this.$route.query.error
-      Vue.toasted.error(error)
     }
-  }
 </script>
 
 <style scoped>

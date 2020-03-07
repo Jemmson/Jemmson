@@ -602,7 +602,7 @@
                                 class="headline grey lighten-2"
                                 primary-title
                         >
-                            What About This Task Would You Like For The Contractor To Change?
+                            Describe Change Here?
                         </v-card-title>
 
                         <v-card-text style="margin-top: 1.25rem">
@@ -931,18 +931,34 @@
             },
 
             async sendMessageToContractor() {
-                try {
-                    await axios.post('/jobTask/message', {
-                        general_id: this.jobTask.general.id,
-                        sub_id: this.jobTask.contractor.id,
-                        customer_id: this.jobTask.customer.id,
-                        job_task_id: this.jobTask.id,
-                        message: this.changeMessage
-                    })
-                    Bus.$emit('bidUpdated')
-                    this.dialog = false
-                } catch (error) {
-                    console.log(error)
+                if (Spark.state.user.usertype === 'customer') {
+                    try {
+                        await axios.post('/jobTask/message', {
+                            general_id: this.jobTask.job.contractor_id,
+                            sub_id: this.jobTask.contractor_id,
+                            customer_id: Spark.state.user.id,
+                            job_task_id: this.jobTask.id,
+                            message: this.changeMessage
+                        });
+                        Bus.$emit('bidUpdated')
+                        this.dialog = false
+                    } catch (error) {
+                        console.log(error)
+                    }
+                } else if (Spark.state.user.usertype === 'contractor') {
+                    try {
+                        await axios.post('/jobTask/message', {
+                            general_id: this.jobTask.general.id,
+                            sub_id: this.jobTask.contractor.id,
+                            customer_id: this.jobTask.customer.id,
+                            job_task_id: this.jobTask.id,
+                            message: this.changeMessage
+                        })
+                        Bus.$emit('bidUpdated')
+                        this.dialog = false
+                    } catch (error) {
+                        console.log(error)
+                    }
                 }
             },
 

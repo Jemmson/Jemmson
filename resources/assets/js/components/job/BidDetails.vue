@@ -145,7 +145,14 @@
                             style="font-size: 12pt"
                     >{{ jobTaskObject(item).Name }}
                         <v-spacer></v-spacer>
-
+                        <div></div>
+                        <v-card-subtitle
+                                class="uppercase"
+                                style="font-size: 10pt"
+                        >{{ jobTaskObject(item).Status }}
+                        </v-card-subtitle>
+                    </v-card-title>
+                    <v-card-title>
                         <v-btn
                                 v-if="item.sub_statuses.length > 0"
                                 text
@@ -154,15 +161,13 @@
                                 :to="'/job/task/' + i"
                         >{{ notificationMessage(item) }}
                         </v-btn>
-                        <v-spacer
-                                v-if="item.sub_statuses.length > 0"
-                        ></v-spacer>
-                        <div></div>
-                        <v-card-subtitle
-                                class="uppercase"
-                                style="font-size: 10pt"
-                        >{{ jobTaskObject(item).Status }}
-                        </v-card-subtitle>
+                    </v-card-title>
+                    <v-card-title v-if="hasTaskMessages(item)">
+                        <ul>
+                            <li v-for="(message, index) in item.task_messages" :key="index">
+                                {{ message.message }}
+                            </li>
+                        </ul>
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-row
@@ -545,6 +550,7 @@
                 selectedJob: state => state.job.model,
             }),
             ...mapGetters(['getCustomerName']),
+
             agreedStartDate() {
                 if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
                     return this.dateOnly(this.bid.agreed_start_date)
@@ -648,6 +654,10 @@
             }
         },
         methods: {
+
+            hasTaskMessages(jt){
+                return jt && jt.task_messages && jt.task_messages.length > 0
+            },
 
             notificationMessage(item) {
                 let initiated = false;
