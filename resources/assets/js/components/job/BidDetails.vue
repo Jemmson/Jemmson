@@ -2,7 +2,7 @@
     <div class="row">
 
         <div v-if="showDeclinedMessage"
-            class="ml-3 mr-3 w-100"
+             class="ml-3 mr-3 w-100"
         >
             <h1 class="card-title mt-4">Job Change Message</h1>
             <card>
@@ -75,7 +75,7 @@
                         :open-dialog="feeDialog"
                         :is-customer="isCustomer"
                         :estimated-fee="totalEstimatedFee()"
-                        :job-type="bid.payment_type"
+                        :job-type="bid ? bid.payment_type : null"
                         @closeFeeDialog="feeDialog = false"
                 ></info-modal>
 
@@ -138,13 +138,13 @@
 
 
         <section ref="job_tasks" class="col-12"
-                 v-if="bid.job_tasks !== undefined"
+                 v-if="getJobTasks() !== undefined"
         >
-            <div v-if="!isCustomer && bid.job_tasks.length > 0">
+            <div v-if="!isCustomer && bid && getJobTasks().length > 0">
 
                 <h1 class="card-title mt-4">Job Tasks</h1>
 
-                <v-card v-for="(item, i) in bid.job_tasks"
+                <v-card v-for="(item, i) in getJobTasks()"
                         :key="i"
                         class="card-positioning"
                         :class="i % 2 === 0 ? 'b-brown': 'b-blue'"
@@ -244,7 +244,7 @@
                     <sub-invite-modal v-if="isGeneral()" :job-task="item"
                                       :job-task-task="item ? item.task : null"
                                       :job-task-name="item ? item.task.name : null"
-                                      :bid-payment-type="bid.payment_type"
+                                      :bid-payment-type="bid ? bid.payment_type : null"
                                       :id="item ? item.id : null">
                     </sub-invite-modal>
                 </v-card>
@@ -256,7 +256,7 @@
                     <v-row>
                         <div>
                                 <span class="">
-                                    (<b ref="job_task_length_customer">{{bid.job_tasks.length}}</b>)
+                                    (<b ref="job_task_length_customer">{{getJobTasks().length}}</b>)
                                 </span> Total
                         </div>
 
@@ -281,7 +281,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="jt in bid.job_tasks">
+                        <template v-for="jt in getJobTasks()">
                             <tr
                                     :class="paid(jt) ? 'paid' : ''">
                                 <td colspan="4"
@@ -649,12 +649,14 @@
             },
 
             showAddress() {
-                return (
-                    this.bid.location_id !== undefined &&
-                    this.bid.location_id !== null &&
-                    this.bid.location !== null &&
-                    !this.isCustomer
-                )
+                if (this.getJob()) {
+                    return (
+                        this.bid.location_id !== undefined &&
+                        this.bid.location_id !== null &&
+                        this.bid.location !== null &&
+                        !this.isCustomer
+                    )
+                }
             }
         },
         watch: {
@@ -706,10 +708,12 @@
             },
 
             totalEstimatedFee() {
-                if (this.bid.payment_type === 'cash') {
-                    return 2.80;
-                } else {
-                    return (parseFloat(this.getBidPriceValue(this.bidPrice)) * .029) + this.getStripeFlatRateCharges() + 2.50
+                if (this.bid) {
+                    if (this.bid.payment_type === 'cash') {
+                        return 2.80;
+                    } else {
+                        return (parseFloat(this.getBidPriceValue(this.bidPrice)) * .029) + this.getStripeFlatRateCharges() + 2.50
+                    }
                 }
             },
 
@@ -825,7 +829,9 @@
                 // }
             },
             canAddATask() {
-                return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
+                if (this.bid) {
+                    return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
+                }
             },
             viewContractorInfo() {
                 this.$router.push({name: 'contractor-info', params: {contractorId: this.bid.contractor.id}})

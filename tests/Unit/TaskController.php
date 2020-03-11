@@ -21,7 +21,5 @@ class TaskController extends TestCase
     /**  @test */
     function status_changes_when_task_is_finished_by_subcontractor() {
         //
-
-
     }
 }

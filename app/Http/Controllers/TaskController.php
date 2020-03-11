@@ -1667,6 +1667,7 @@ class TaskController extends Controller
         $jobTask = JobTask::find($request->job_task_id);
         $job = Job::find($jobTask->job_id);
         $this->setJobStatus($job->id, 'changed');
+        $this->setJobTaskStatus($jobTask->id, 'changed');
         $customer = Auth::user();
         $sub = User::find($request->sub_id);
         $contractor = User::find($request->general_id);

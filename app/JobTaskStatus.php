@@ -68,26 +68,29 @@ class JobTaskStatus extends Model
             case 'canceled_by_general':
                 return 5;
                 break;
-            case 'approved_by_customer':
+            case 'changed':
                 return 6;
                 break;
-            case 'general_finished_work':
+            case 'approved_by_customer':
                 return 7;
                 break;
-            case 'sub_finished_work':
+            case 'general_finished_work':
                 return 8;
                 break;
-            case 'declined_subs_work':
+            case 'sub_finished_work':
                 return 9;
                 break;
-            case 'approved_subs_work':
+            case 'declined_subs_work':
                 return 10;
                 break;
-            case 'customer_changes_finished_task':
+            case 'approved_subs_work':
                 return 11;
                 break;
-            case 'paid':
+            case 'customer_changes_finished_task':
                 return 12;
+                break;
+            case 'paid':
+                return 13;
                 break;
         }
     }
