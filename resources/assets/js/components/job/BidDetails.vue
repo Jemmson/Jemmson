@@ -14,7 +14,7 @@
             </card>
         </div>
 
-        <v-col cols="5">
+        <v-col cols="12">
             <job-stepper
                     :status="getSelectedJob()"
                     :user="getUser()"
@@ -22,7 +22,7 @@
             ></job-stepper>
         </v-col>
 
-        <v-col cols="7">
+        <v-col cols="12">
             <v-card>
                 <v-card-title>Details</v-card-title>
 

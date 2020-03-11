@@ -25,7 +25,7 @@
                         </figcaption>
                     </figure>
                 </div>
-                <div v-if="userType === 'contractor'" class="col d-flex align-items-center">
+                <div v-if="userType === 'contractor'" id="newJob" class="col d-flex align-items-center">
                     <figure @click.prevent="goTo('/initiate-bid')" class="item mx-auto text-center"
                             :class="isCurrentPage('/initiate-bid', '/initiate-bid/')">
                         <i class="fas fa-plus-circle sm-icon"></i>

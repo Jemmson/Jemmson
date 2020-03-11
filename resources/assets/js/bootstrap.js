@@ -46,7 +46,7 @@ if (Spark.state.user !== null) {
           Bus.$emit('bidUpdated');
           break;
         case "App\\Notifications\\JobBidDeclined":
-          Vue.toasted.info('A Bid Has Been Declined!');
+          Vue.toasted.info('Your Requests A Change to The Bid!');
           Bus.$emit('bidUpdated');
           break;
         case "App\\Notifications\\CustomerUnableToSendPaymentWithStripe":

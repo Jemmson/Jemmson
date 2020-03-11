@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ContractorSubcontractorPreferredPayment;
 use App\JobStatus;
+use App\Notifications\NotifyContractorThatCustomerChangesBid;
 use App\Notifications\NotifySubOfTaskToBid;
 use App\Notifications\NotifySubOfAcceptedBid;
 use App\Notifications\NotifySubOfBidNotAcceptedBid;
@@ -1666,7 +1667,31 @@ class TaskController extends Controller
         $jobTask = JobTask::find($request->job_task_id);
         $job = Job::find($jobTask->job_id);
         $this->setJobStatus($job->id, 'changed');
+        $customer = Auth::user();
+        $sub = User::find($request->sub_id);
+        $contractor = User::find($request->general_id);
 
+        $task = $jobTask->task()->get()->first();
+
+        if ($this->isASub($request->sub_id, $request->general_id)) {
+//            $this->notifyMessageChange($customer, $sub, $task, $message, $jobTask);
+            $this->notifyMessageChange($customer, $contractor, $task, $message, $jobTask);
+        } else {
+            $this->notifyMessageChange($customer, $contractor, $task, $message, $jobTask);
+        }
+
+    }
+
+    public function notifyMessageChange($customer, $contractor, $task, $message, $jobTask)
+    {
+
+        $customer->notify(new NotifyContractorThatCustomerChangesBid($task, $contractor, $customer, $jobTask, $message));
+
+    }
+
+    public function isASub($contractorId, $generalId)
+    {
+        return $contractorId != $generalId;
     }
 
     public function getAllTaskIdsForJob($jobId)

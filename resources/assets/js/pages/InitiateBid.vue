@@ -7,6 +7,7 @@
                 <v-container>
 
                     <v-combobox
+                            id="customerName"
                             v-model="selected"
                             label="Customer Name"
                             :search-input.sync="search"
@@ -16,6 +17,7 @@
                     </v-combobox>
 
                     <v-text-field
+                            id="firstName"
                             v-model="form.firstName"
                             required
                             :rules="nameRules()"
@@ -25,6 +27,7 @@
                     </v-text-field>
 
                     <v-text-field
+                            id="lastName"
                             v-model="form.lastName"
                             @change="lastName()"
                             required
@@ -35,6 +38,7 @@
                     </v-text-field>
 
                     <v-text-field
+                            id="phone"
                             v-model="form.phone"
                             required
                             v-mask="phoneMask"
@@ -51,6 +55,7 @@
                     </v-text-field>
 
                     <v-text-field
+                            id="jobName"
                             v-model="form.jobName"
                             label="Job Name"
                     >
@@ -162,10 +167,7 @@
                 },
                 numberType: '',
                 firstName: '',
-                comboResults: [{
-                    text: '',
-                    value: ''
-                }]
+                comboResults: []
             }
         },
         mixins: [Phone, StripeMixin],

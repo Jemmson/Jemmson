@@ -1,9 +1,9 @@
 <template>
 
     <div class="container">
-        <v-overlay :value="overlay">
-            <v-progress-circular indeterminate size="64"></v-progress-circular>
-        </v-overlay>
+<!--        <v-overlay :value="overlay">-->
+<!--            <v-progress-circular indeterminate size="64"></v-progress-circular>-->
+<!--        </v-overlay>-->
         <div class="row">
             <div class="col-12 mb-2">
                 <icon-header v-if="isContractor" icon="settings"

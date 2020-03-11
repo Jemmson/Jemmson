@@ -11,6 +11,7 @@
                     class="h-full w-full"
             >
                 <v-stepper-step
+                        style="font-size: 1.75rem;"
                         class="w-full"
                         :complete="step > 0" step="1"
                         @click="openDialog(1)"
@@ -95,7 +96,7 @@
                 <v-stepper-step
                         :complete="step > 4"
                         @click="openDialog(4)"
-                        step="3"><small>Please Pay</small>
+                        step="4"><small>Please Pay</small>
                 </v-stepper-step>
 
             </v-stepper>

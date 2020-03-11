@@ -35,6 +35,7 @@
                 Documentation
             </v-btn>
             <v-btn
+                    id="registerLogin"
                     class="btn-color title"
                     text
                     @click="emit('login')"

@@ -218,8 +218,8 @@
 
             <div class="flex mb-1rem">
                 <v-btn
-                        class="w-40"
-                        color="primary"
+                        class="w-40"a
+                        color="red"
                         :disabled="addingTheTask"
                         @click.prevent="goBack()">
                     Back
@@ -258,6 +258,9 @@
             Card,
             Feedback,
             IconHeader
+        },
+        beforeRouteUpdate (to, from, next) {
+            this.goToTop();
         },
         data() {
             return {

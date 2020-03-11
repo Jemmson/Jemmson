@@ -8,6 +8,7 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - mysql
+#      - mysqlTest
       - redis
     env_file:
       - .docker.env
@@ -55,6 +56,18 @@ services:
       MYSQL_PASSWORD: secret
     ports:
       - 23306:3306
+#  mysqlTest:
+#    container_name: jemmson-mysqlTest
+#    image: mysql:5.7
+#    volumes:
+#      - jemmson-mysql-test:/var/lib/mysql
+#    environment:
+#      MYSQL_DATABASE: jemmsonTest
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_USER: jemmson
+#      MYSQL_PASSWORD: secret
+#    ports:
+#      - 23307:3306
   redis:
     container_name: jemmson-redis
     image: redis:4-alpine
@@ -66,5 +79,7 @@ services:
 volumes:
   jemmson-mysql:
     driver: "local"
+#  jemmson-mysql-test:
+#    driver: "local"
   jemmson-redis:
     driver: "local"

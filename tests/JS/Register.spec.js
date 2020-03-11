@@ -1,9 +1,6 @@
 import { createLocalVue, shallowMount, mount, config } from '@vue/test-utils'
 import Register from '../../resources/assets/js/pages/Register'
-import Status from '../../resources/assets/js/components/mixins/Status'
-import Utilities from '../../resources/assets/js/components/mixins/Utilities'
 import Vuex from 'vuex'
-import VueRouter from 'vue-router'
 import Vue from 'vue'
 
 require('./setup')

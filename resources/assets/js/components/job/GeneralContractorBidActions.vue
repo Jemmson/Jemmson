@@ -10,10 +10,11 @@
             <v-btn
                     v-if="jobHasNotBeenSubmittedOrAChangeIsRequested()"
                     ref="submitBid"
+                    color="green"
                     class="btn btn-normal-green btn-lg w-full"
                     @click="submitBid()"
-                    :disabled="disableSubmitBid"
-                    :loading="submitted"
+                    :disabled="disabled.submitBid"
+                    :loading="disabled.submitBid"
             >
                 Submit Bid
             </v-btn>
@@ -61,13 +62,17 @@
         watch: {
             submitTheBid: function () {
                 this.notifyCustomerOfFinishedBid(this.bid, this.disabled)
+                this.disabled.submit = true;
+                setTimeout(() => {
+                    this.disabled.submit = false;
+                }, 5000)
             }
         },
         data() {
             return {
                 subTaskWarning: false,
                 disabled: {
-                    submitBid: true
+                    submitBid: false
                 },
                 submitted: false,
                 disableSubmitBid: true

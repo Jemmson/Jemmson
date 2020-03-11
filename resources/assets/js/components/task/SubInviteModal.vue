@@ -1,90 +1,88 @@
 <template>
     <!-- Modal -->
-    <div v-if="isContractor()" class="modal h-100 modal-background-gray" :id="'sub-invite-modal_' + id" tabindex="-1"
-         role="dialog"
-         aria-labelledby="stripe-modal"
-         aria-hidden="false">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
 
-                    <div class="flex flex-column">
-                        <h6 v-if="initiateBidForSubForm.counter <= 0" class="modal-title">Invite A Subcontractor - {{
-                            taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}</h6>
-                    </div>
+    <div
+            v-if="isContractor()" class="h-100 modal modal-background-gray pl-4 pr-4 pt-10 show" :id="'sub-invite-modal_' + id" tabindex="-1"
+            role="dialog"
+            aria-labelledby="stripe-modal"
+            aria-hidden="false"
+    >
+        <v-card >
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <v-card>
-                        <v-form v-model="valid">
-                            <v-container>
-                                <v-combobox
-                                        v-model="selected"
-                                        label="Company Name *"
-                                        :search-input.sync="search"
-                                        :items="comboResults"
-                                        :value="initiateBidForSubForm.companyName"
-                                >
-                                </v-combobox>
+            <button type="button" class="close mr-3 pt-2" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
 
-                                <v-text-field
-                                        v-model="initiateBidForSubForm.firstName"
-                                        required
-                                        :rules="nameRules()"
-                                        :counter="20"
-                                        label="First Name *"
-                                >
-                                </v-text-field>
+            <v-card-title class="flex flex-column pt-6"
+                          v-if="initiateBidForSubForm.counter <= 0">Invite A Subcontractor - {{
+                taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}
+            </v-card-title>
 
-                                <v-text-field
-                                        v-model="initiateBidForSubForm.lastName"
-                                        required
-                                        :rules="nameRules()"
-                                        :counter="20"
-                                        label="Last Name *"
-                                >
-                                </v-text-field>
+            <hr>
 
-                                <v-text-field
-                                        v-model="initiateBidForSubForm.phone"
-                                        required
-                                        v-mask="phoneMask"
-                                        :rules="phoneRules()"
-                                        :counter="14"
-                                        label="Mobile Phone Number *"
-                                        @change="validateMobileNumber($event)"
-                                        :error="phoneError()"
-                                        :error-messages="phoneErrorMessages()"
-                                        :loading="loading"
-                                        :disabled="loading"
-                                        :messages="phoneMessages()"
-                                >
-                                </v-text-field>
+            <v-form v-model="valid">
+                <v-container>
+                    <v-combobox
+                            v-model="selected"
+                            label="Company Name *"
+                            :search-input.sync="search"
+                            :items="comboResults"
+                            :value="initiateBidForSubForm.companyName"
+                    >
+                    </v-combobox>
 
-                                <v-card-actions>
-                                    <v-btn
-                                            class="w-full"
-                                            color="primary"
-                                            @click="sendSubInviteToBidOnTask" type="submit"
-                                            :disabled="enableSubmit()"
-                                            :loading="disabled.invite"
-                                            ref="submit">
-                                        Submit
-                                    </v-btn>
-                                </v-card-actions>
+                    <v-text-field
+                            v-model="initiateBidForSubForm.firstName"
+                            required
+                            :rules="nameRules()"
+                            :counter="20"
+                            label="First Name *"
+                    >
+                    </v-text-field>
 
-                            </v-container>
-                        </v-form>
-                    </v-card>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div>
-        </div>
+                    <v-text-field
+                            v-model="initiateBidForSubForm.lastName"
+                            required
+                            :rules="nameRules()"
+                            :counter="20"
+                            label="Last Name *"
+                    >
+                    </v-text-field>
+
+                    <v-text-field
+                            v-model="initiateBidForSubForm.phone"
+                            required
+                            v-mask="phoneMask"
+                            :rules="phoneRules()"
+                            :counter="14"
+                            label="Mobile Phone Number *"
+                            @change="validateMobileNumber($event)"
+                            :error="phoneError()"
+                            :error-messages="phoneErrorMessages()"
+                            :loading="loading"
+                            :disabled="loading"
+                            :messages="phoneMessages()"
+                    >
+                    </v-text-field>
+
+                    <v-card-actions>
+                        <v-btn
+                                id="submit"
+                                class="w-full"
+                                color="primary"
+                                @click="sendSubInviteToBidOnTask" type="submit"
+                                :disabled="enableSubmit()"
+                                :loading="disabled.invite"
+                                ref="submit">
+                            Submit
+                        </v-btn>
+                    </v-card-actions>
+
+                </v-container>
+            </v-form>
+        </v-card>
     </div>
+
 </template>
 
 <script>
@@ -104,10 +102,7 @@
         },
         data() {
             return {
-                comboResults: [{
-                    text: '',
-                    value: ''
-                }],
+                comboResults: [],
                 valid: true,
                 selected: null,
                 initiateBidForSubForm: new SparkForm({
@@ -151,7 +146,11 @@
             selected(val) {
                 if (val && val !== null) {
                     const filteredComboResult = this.getComboResult(val)
-                    this.fillFields(filteredComboResult)
+                    if (filteredComboResult) {
+                        this.fillFields(filteredComboResult)
+                    } else {
+                        this.initiateBidForSubForm.companyName = val;
+                    }
                 }
             }
         },
@@ -363,11 +362,32 @@
             // },
 
             enableSubmit() {
-                return
-                (this.getMobileValidResponse[1] !== 'mobile'
-                    && this.getMobileValidResponse[1] !== 'virtual')
-                || this.duplicateError
+
+                return !(
+                    this.hasMobileNumber()
+                    && this.hasFirstName()
+                    && this.hasLastName()
+                    && this.hasCompanyName()
+                );
             },
+
+            hasMobileNumber(){
+                return this.getMobileValidResponse[1] === 'mobile'
+                    || this.getMobileValidResponse[1] === 'virtual'
+            },
+
+            hasFirstName() {
+                return this.initiateBidForSubForm.firstName !== ''
+            },
+
+            hasLastName() {
+                return this.initiateBidForSubForm.lastName !== ''
+            },
+
+            hasCompanyName(){
+                return this.initiateBidForSubForm.companyName !== ''
+            }
+
         },
         computed: {
             taskForSubInvite() {

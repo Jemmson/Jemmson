@@ -4,17 +4,31 @@
             v-model="showLogin"
     >
         <v-card width="445" class="mx-auto mt-5">
-            <v-card-title class="pb-0">
-                <h1>Login</h1>
+            <v-card-title class="pb-0 flex flex-col">
+                <template
+                        style="font-size: 1.5rem;"
+                >Login Or
+                    <v-btn
+                            id="register"
+                            to="/register"
+                            width="40%"
+                            text
+                            class="capitalize"
+                            color="success">
+                        Click here to Register
+                    </v-btn>
+                </template>
             </v-card-title>
             <v-card-text>
                 <v-form>
                     <v-text-field
+                            id="username"
                             label="Email"
                             v-model="form.username"
                             prepend-icon="mdi-account-circle"
                     />
                     <v-text-field
+                            id="password"
                             :type="showPassword ? 'text' : 'password'"
                             v-model="form.password"
                             label="Password"
@@ -24,17 +38,11 @@
                     />
                 </v-form>
             </v-card-text>
-            <v-divider></v-divider>
             <v-card-actions>
-                <v-btn
-                        id="register"
-                        to="/register"
-                        width="40%"
-                        color="success">
-                    Register
-                </v-btn>
+                <div></div>
                 <v-spacer></v-spacer>
                 <v-btn
+                        id="submit"
                         color="info"
                         :loading="form.busy"
                         width="40%"
@@ -43,7 +51,6 @@
                 </v-btn>
             </v-card-actions>
             <v-divider></v-divider>
-
             <v-col cols="12" class="text-center">
                 <v-row justify="center" align-content="center">
                     <v-checkbox
@@ -66,35 +73,35 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+    import {mapActions} from 'vuex'
 
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        showLogin: true,
-        showPassword: false,
-        form: {
-          username: '',
-          password: '',
-          remember: null,
-          error: null,
-          busy: false
+    export default {
+        name: 'Login',
+        data() {
+            return {
+                showLogin: true,
+                showPassword: false,
+                form: {
+                    username: '',
+                    password: '',
+                    remember: null,
+                    error: null,
+                    busy: false
+                },
+            }
         },
-      }
-    },
-    methods: {
-      ...mapActions([
-        'login'
-      ]),
-      close(){
-        this.showLogin = false
-      },
-      logIntoApp(form){
-        this.login(form)
-      },
+        methods: {
+            ...mapActions([
+                'login'
+            ]),
+            close() {
+                this.showLogin = false
+            },
+            logIntoApp(form) {
+                this.login(form)
+            },
+        }
     }
-  }
 </script>
 
 <style>
