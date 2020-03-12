@@ -188,9 +188,9 @@ class TaskController extends Controller
                 ])->get()->first();
             }
 
-            return $bcjtasks;
-
         }
+
+        return $bcjtasks;
 
     }
 
@@ -1381,14 +1381,15 @@ class TaskController extends Controller
             if ($this->taskUsesAsub($jobTask, $task)) {
                 $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'customer_changes_finished_task');
                 $this->notifyGeneral($jobTask, $request->message);
-                $this->notifySub($jobTask->contractor_id, $task, $request->message);
+                $this->notifySub($jobTask->contractor_id, $jobTask, $request->message);
             } else {
                 $this->notifyGeneral($jobTask, $request->message);
             }
 
         } else if ($this->iAmAGeneral($task)) {
-            $this->notifySub($jobTask->contractor_id, $task, $request->message);
+            $this->notifySub($jobTask->contractor_id, $jobTask, $request->message);
             $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job_denied_by_contractor');
+            $this->setJobTaskStatus($jobTask->id, 'declined_subs_work');
         }
 
         $jobTask->setDeclinedMessage($request->message);
@@ -1402,10 +1403,10 @@ class TaskController extends Controller
         $contractor->notify(new TaskWasNotApproved($jobTask, $contractor, $message));
     }
 
-    public function notifySub($contractor_id, $task, $message)
+    public function notifySub($contractor_id, $jobTask, $message)
     {
         $subContractor = User::find($contractor_id);
-        $subContractor->notify(new TaskWasNotApproved($task, $subContractor, $message));
+        $subContractor->notify(new TaskWasNotApproved($jobTask, $subContractor, $message));
     }
 
     public function taskUsesASub($jobTask, $task)

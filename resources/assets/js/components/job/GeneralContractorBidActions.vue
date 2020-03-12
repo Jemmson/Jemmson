@@ -151,6 +151,8 @@
                 //     disabled.submitBid = false
                 //     return false
                 // }
+                this.$emit('remove-notification');
+
                 console.log('notifyCustomerOfFinishedBid', bid)
                 axios.post('/api/task/finishedBidNotification', {
                     jobId: bid.id,
@@ -160,7 +162,7 @@
                     disabled.submitBid = false
                     User.emitChange('bidUpdated')
                     Vue.toasted.success('Bid has been submitted and notification sent!')
-                    this.$emit('bidSubmitted');
+                    this.$emit('bid-submitted');
                 }).catch((error) => {
                     console.error(error)
                     disabled.submitBid = false

@@ -610,9 +610,26 @@
 
             showFinishedBtn(bid) {
                 if (bid && bid.job_task) {
-                    return bid.job_task.status === 'bid_task.approved_by_customer' || bid.job_task.status === 'bid_task.denied'
+                    let status = this.getLatestJobTaskStatus1(bid.job_task);
+                    return status === 'approved by customer'
+                    || status === 'declined subs work'
                 }
             },
+
+            getLatestJobTaskStatus1(task) {
+
+                if (task) {
+                    if (task.job && task.job.job_task_statuses) {
+                        status = this.formatStatus(this.getJobTaskStatus_latest(task.job))
+                    } else {
+                        status = this.formatStatus(this.getTheLatestJobTaskStatus(task.job.job_task_status))
+                    }
+                }
+
+                return status
+            },
+
+
             finished(bid) {
                 SubContractor.finishedTask(bid, this.disabled)
             },

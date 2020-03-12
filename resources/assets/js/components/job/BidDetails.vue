@@ -205,7 +205,9 @@
                         <div v-else>Price Not Set</div>
                     </v-row>
                     <v-divider></v-divider>
-                    <v-card-actions>
+                    <v-card-actions
+                        class="space-evenly"
+                    >
                         <v-btn
                                 class="btn-size btn-weight"
                                 :class="i % 2 === 0 ? 'primary--text': 'white--text'"
@@ -221,15 +223,31 @@
                                 text
                         >Add Sub
                         </v-btn>
-                        <v-btn
-                                v-if="isGeneral() && subFinishedTask(item)"
-                                @click="approveSubsWork(item)"
-                                class="btn-size btn-weight"
-                                :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                                text
+                        <div class="flex flex-col"
+                             v-if="isGeneral() && subFinishedTask(item)"
                         >
-                            Approve Subs Work
-                        </v-btn>
+                            <div class="text-center"
+                                 :class="i % 2 === 0 ? 'primary--text': 'white--text'"
+                            >Sub Has Finished</div>
+                            <div class="flex space-evenly">
+                                <v-btn
+                                        @click="approveSubsWork(item)"
+                                        class="btn-size btn-weight"
+                                        :class="i % 2 === 0 ? 'primary--text': 'white--text'"
+                                        text
+                                >
+                                    Approve
+                                </v-btn>
+                                <v-btn
+                                        class="btn-size btn-weight"
+                                        :class="i % 2 === 0 ? 'error--text': 'error--text'"
+                                        text
+                                        @click="openDenyTaskForm(item)"
+                                >
+                                    Change Task
+                                </v-btn>
+                            </div>
+                        </div>
                         <v-btn
                                 :class="i % 2 === 0 ? 'primary--text': 'white--text'"
                                 v-if="isGeneral() && showFinishedBtn(item)"
@@ -239,6 +257,13 @@
                                 text
                         >Mark Finished
                         </v-btn>
+                        <div
+                                :class="i % 2 === 0 ? 'primary--text': 'white--text'"
+                                v-if="isGeneral() && subHasNotFinishedTask(item)"
+                        ><span
+                            style="color: black"
+                        >Waiting For Sub</span>
+                        </div>
                     </v-card-actions>
 
                     <sub-invite-modal v-if="isGeneral()" :job-task="item"
@@ -267,7 +292,7 @@
                                 id="viewTasks"
                                 class="w-40"
                                 color="primary"
-                                v-if="taskHasChanged"
+                                v-if="!taskHasChanged"
                                 @click.prevent="viewTasks()"
                         >
                             View Tasks
@@ -350,7 +375,8 @@
                 </v-sheet>
 
                 <general-contractor-bid-actions
-                        @bidSubmitted="bidSubmitted()"
+                        @bid-submitted="bidSubmitted()"
+                        @remove-notification="removeSubmittedNotification()"
                         :bid="bid" v-if="!isCustomer">
                 </general-contractor-bid-actions>
             </card>
@@ -438,6 +464,11 @@
         >
         </stripe>
 
+        <deny-task-modal v-if="!isCustomer"
+                         :job-task="currentJobTask"
+                         :id="currentJobTaskId">
+        </deny-task-modal>
+
     </div>
 </template>
 
@@ -458,6 +489,7 @@
     import TaskImages from '../../components/task/UploadJobImages'
     import Utilities from '../mixins/Utilities'
     import Stripe from '../stripe/Stripe'
+    import DenyTaskModal from '../../components/task/DenyTaskModal'
 
     export default {
         components: {
@@ -465,6 +497,7 @@
             Card,
             ContentSection,
             CompletedTasks,
+            DenyTaskModal,
             GeneralContractorBidActions,
             HorizontalTable,
             Info,
@@ -485,6 +518,11 @@
                 this.clientSecret = clientSecret
                 $('#stripe-modal').modal()
             })
+
+            // if (!this.bid) {
+            //     this.bid = localStorage.getItem('getCurrentBid');
+            // }
+
             this.getUser()
             document.body.scrollTop = 0 // For Safari
             document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
@@ -497,6 +535,8 @@
                 area: {
                     area: ''
                 },
+                currentJobTaskId: null,
+                currentJobTask: {},
                 taskHasChanged: false,
                 jobTaskItem: {},
                 addTaskStartDate: false,
@@ -671,6 +711,37 @@
         },
         methods: {
 
+            async getBids() {
+                let url = ''
+                if (User.isCustomer()) {
+                    url = 'getJobsForCustomer'
+                } else {
+                    url = 'jobs'
+                }
+                await axios.get(url).then((response) => {
+                    if (Array.isArray(response.data)) {
+                        return response.data;
+                    }
+                })
+            },
+
+            openDenyTaskForm(item) {
+                this.currentJobTask = item;
+                this.currentJobTaskId = item.id;
+                $('#deny-task-modal_' + item.id).modal('show')
+            },
+
+            subHasNotFinishedTask(item) {
+                if (this.isASub(item.contractor_id, this.bid.contractor_id)) {
+                    return this.getLatestJobTaskStatus1(item) === 'approved by customer'
+                    || this.getLatestJobTaskStatus1(item) === 'declined subs work'
+                }
+            },
+
+            isASub(subId, generalId){
+              return subId !== generalId;
+            },
+
             getJobTasksLength() {
                 let jobTasks = this.getJobTasks()
                 return jobTasks.length
@@ -769,6 +840,10 @@
                 this.submittedMessage = true
             },
 
+            removeSubmittedNotification() {
+                this.submittedMessage = false
+            },
+
             paid(jobTask) {
                 let status = this.getLatestJobTaskStatus(jobTask)
 
@@ -798,17 +873,10 @@
                 }
             },
             showFinishedBtn(jobTask) {
-                if (this.isGeneral() &&
+                let status = this.getLatestJobTaskStatus1(jobTask);
+                return this.isGeneral() &&
                     this.isAssignedToMe(jobTask, Spark.state.user.id) &&
-                    (jobTask.status === 'bid_task.approved_by_customer'
-                        || jobTask.status === 'bid.in_progress'
-                        || jobTask.status === 'bid_task.reopened'
-                        || jobTask.status === 'bid_task.finished_by_sub'
-                        || jobTask.status === 'bid_task.denied'
-                    )) {
-                    return true
-                }
-                return false
+                    status === 'approved by customer'
             },
             openSubInvite(jobTaskId) {
                 $('#sub-invite-modal_' + jobTaskId).modal()
@@ -870,10 +938,9 @@
             getSelectedJob() {
                 if (this.getJob() && this.bid.job_statuses) {
                     return this.bid.job_statuses[this.bid.job_statuses.length - 1].status
+                } else if (this.getJob() && this.bid.job_status) {
+                    return this.bid.job_status[this.bid.job_status.length - 1].status
                 }
-                // if (this.selectedJob && this.selectedJob.length > 0) {
-                //   return this.selectedJob[0].status
-                // }
             },
             canAddATask() {
                 if (this.bid) {
@@ -1111,6 +1178,10 @@
         },
         mounted() {
             this.initializePayWithCashMessageValue()
+
+            // if (this.bid) {
+            //     this.bid = localStorage.setItem('getCurrentBid', this.bid);
+            // }
         }
     }
 </script>

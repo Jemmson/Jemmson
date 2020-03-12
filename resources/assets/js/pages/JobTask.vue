@@ -553,6 +553,11 @@
                                     Change Task
                                 </v-btn>
                             </div>
+                            <div v-if="subHasNotFinishedTask(jobTask)">
+                                <h5
+                                    class="text-center"
+                                >Waiting For Sub</h5>
+                            </div>
                             <div v-if="contractorWantsToDeleteTheTask(jobTask)">
                                 <v-btn
                                         class="w-full mb-half-rem"
@@ -820,6 +825,30 @@
         },
         methods: {
 
+            subHasNotFinishedTask(item) {
+                if (this.isASub(item.contractor_id, item.job.contractor_id)) {
+                    return this.getLatestJobTaskStatus1(item) === 'approved by customer'
+                        || this.getLatestJobTaskStatus1(item) === 'declined subs work'
+                }
+            },
+
+            isASub(subId, generalId){
+                return subId !== generalId;
+            },
+
+            getLatestJobTaskStatus1(task) {
+
+                if (task) {
+                    if (task.job_task_statuses) {
+                        status = this.formatStatus(this.getJobTaskStatus_latest(task))
+                    } else {
+                        status = this.formatStatus(this.getTheLatestJobTaskStatus(task.job_task_status))
+                    }
+                }
+
+                return status
+            },
+
             getStartDate(date) {
                 return this.dateOnly(date)
             },
@@ -880,7 +909,7 @@
 
             jobTaskIsFinished(jobTask) {
                 const status = this.getLatestJobTaskStatus(jobTask)
-                return status === 'general_finished_work' || status === 'sub_finished_work'
+                return status === 'general finished work' || status === 'sub finished work'
             },
 
             subHasFinishedWork(jobTask) {
@@ -1114,7 +1143,7 @@
             },
             contractorWantsToChangeBid(jobTask) {
                 if (jobTask) {
-                    return this.jobHasSubs() && this.subHasFinishedWork(jobTask) && !this.jobIsApproved()
+                    return this.jobHasSubs() && this.subHasFinishedWork(jobTask)
                 }
             },
             showDenyBtn(jobTask) {

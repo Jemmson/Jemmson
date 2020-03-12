@@ -1,10 +1,11 @@
 <template>
     <!-- Modal -->
-    <div class="modal h-100 modal-background-gray" :id="'deny-task-modal_'+jobTask.id" tabindex="-1" role="dialog" aria-labelledby="deny-task-modal"
+    <div class="modal h-100 modal-background-gray" :id="'deny-task-modal_'+jobTask.id" tabindex="-1" role="dialog"
+         aria-labelledby="deny-task-modal"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content styled">
-                <div class="modal-header">
+                <div class="modal-header flex flex-col">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -30,7 +31,7 @@
                                color="primary"
                                @click.prevent="denyTask"
                                :loading="disabled.deny"
-                                ref="denyTaskBtn">
+                               ref="denyTaskBtn">
                             Deny Approval
                         </v-btn>
                     </div>
@@ -41,34 +42,34 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      jobTask: Object,
-      id: Number
-    },
-    data() {
-      return {
-        denyForm: {
-          job_task_id: 0,
-          message: '',
+    export default {
+        props: {
+            jobTask: Object,
+            id: Number
         },
-        user: '',
-        disabled: {
-          deny: false,
+        data() {
+            return {
+                denyForm: {
+                    job_task_id: 0,
+                    message: '',
+                },
+                user: '',
+                disabled: {
+                    deny: false,
+                }
+            }
+        },
+        methods: {
+            denyTask() {
+                this.denyForm.user_id = User.getId()
+                this.denyForm.job_task_id = this.jobTask.id
+                Customer.denyTask(this.denyForm, this.disabled)
+            },
+        },
+        mounted: function () {
+            this.user = Spark.state.user
         }
-      }
-    },
-    methods: {
-      denyTask() {
-        this.denyForm.user_id = User.getId()
-        this.denyForm.job_task_id = this.jobTask.id
-        Customer.denyTask(this.denyForm, this.disabled)
-      },
-    },
-    mounted: function() {
-      this.user = Spark.state.user
     }
-  }
 </script>
 
 <style scoped>

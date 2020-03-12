@@ -23,24 +23,13 @@ class JobTaskStatus extends Model
 
     public function setStatus($job_task_id, $status)
     {
-
-        $jts = JobTaskStatus::where('job_task_id', '=', $job_task_id)
-            ->orderBy('created_at', 'desc')
-            ->get()->first();
-
-        if (empty($this->checkStatus($job_task_id, $status)) || $jts['status'] != $status ) {
-            $statusNumber = $this->getStatusNumber($status);
-            $this->fill([
-                'job_task_id' => $job_task_id,
-                'status_number' => $statusNumber,
-                'status' => $status
-            ]);
-            $this->save();
-        } else {
-            $date = Carbon::now();
-            $jts->sent_on = $date->format('yy-m-d h:m:s');
-            $jts->save();
-        }
+        $statusNumber = $this->getStatusNumber($status);
+        $this->fill([
+            'job_task_id' => $job_task_id,
+            'status_number' => $statusNumber,
+            'status' => $status
+        ]);
+        $this->save();
     }
 
     private function checkStatus($job_task_id, $status)
@@ -52,7 +41,7 @@ class JobTaskStatus extends Model
 
     public function getStatusNumber($status)
     {
-        switch ($status){
+        switch ($status) {
             case 'initiated':
                 return 1;
                 break;
