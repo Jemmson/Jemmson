@@ -57,7 +57,7 @@ class TaskFinished extends Notification implements ShouldQueue
             $subStatus = 'finished_job';
         }
         return (new MailMessage)
-                    ->line("The task: " . $this->task->name . " has been finished.")
+                    ->line("The task: " . $this->task->name . " has been finished. ")
                     ->line($custom)
                     ->action(' View Task ', url('/login/mix/' .
                         $this->task->jobTask()->first()->job_id . '/' .
@@ -82,16 +82,16 @@ class TaskFinished extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         if ($this->customer) {
-            $custom = "Please approve the task";
+            $custom = "Please approve the task ";
             $generalStatus = 'general_finished_work';
             $subStatus = '';
         } else {
-            $custom = "Please review the finished task.";
+            $custom = "Please review the finished task. ";
             $generalStatus = 'sub_finished_work';
             $subStatus = 'finished_job';
         }
         $text = "The task: " . $this->task->name . " has been finished."
-            . " $custom "
+            . $custom
             . ' View Task '
             . url('/login/mix/' .
                 $this->task->jobTask()->first()->job_id . '/' .
