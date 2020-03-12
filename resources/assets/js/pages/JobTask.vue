@@ -544,15 +544,15 @@
                                     Approve
                                 </v-btn>
                             </div>
-                            <div v-if="contractorWantsToChangeBid()">
-                                <v-btn
-                                        class="w-full mb-half-rem"
-                                        color="warning"
-                                        @click="openDenyTaskForm(jobTask.id)"
-                                >
-                                    Change Task
-                                </v-btn>
-                            </div>
+<!--                            <div v-if="contractorWantsToChangeBid()">-->
+<!--                                <v-btn-->
+<!--                                        class="w-full mb-half-rem"-->
+<!--                                        color="warning"-->
+<!--                                        @click="openDenyTaskForm(jobTask.id)"-->
+<!--                                >-->
+<!--                                    Change Task-->
+<!--                                </v-btn>-->
+<!--                            </div>-->
                             <div v-if="subHasNotFinishedTask(jobTask)">
                                 <h5
                                     class="text-center"

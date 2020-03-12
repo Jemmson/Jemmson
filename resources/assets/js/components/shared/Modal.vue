@@ -20,14 +20,16 @@
                     <div class="flex w-full">
                         <v-btn type="button"
                                class="w-40"
-                               color="primary"
+                               color="red"
+                               text
                                data-dismiss="modal">{{ no }}
                         </v-btn>
                         <v-spacer></v-spacer>
                         <v-btn type="button"
-                                class="w-40"
-                                color="primary"
-                                @click="$emit('modal', modalId)">{{ yes }}
+                               class="w-40"
+                               color="primary"
+                               text
+                               @click="$emit('modal', modalId)">{{ yes }}
                         </v-btn>
                     </div>
                 </div>
@@ -37,13 +39,13 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      modalId: String,
-      header: String,
-      body: String,
-      no: String,
-      yes: String
+    export default {
+        props: {
+            modalId: String,
+            header: String,
+            body: String,
+            no: String,
+            yes: String
+        }
     }
-  }
 </script>
