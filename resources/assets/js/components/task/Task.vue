@@ -151,6 +151,7 @@
                             <content-section
                                     v-if="showDeclinedMsg(bidTask)"
                                     label="Declined Reason:"
+                                    style="background-color: lightcoral"
                                     :content="getDeclinedMessage(bidTask)"
                                     type="declinedReason"></content-section>
                             <content-section

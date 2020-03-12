@@ -1,4 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=5870150e8be56583634f",
-    "/css/app.css": "/css/app.css?id=2966bbc631a993e88c08"
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/sweetalert.min.js": "/js/sweetalert.min.js",
+    "/css/sweetalert.css": "/css/sweetalert.css"
 }
