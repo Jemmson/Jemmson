@@ -33,47 +33,46 @@ const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 mix.extend('vuetify', new class {
 
-    // webpackRules() {
-    //   return {
-    //     test: /\.s(c|a)ss$/,
-    //     use: [
-    //       'vue-style-loader',
-    //       'css-loader',
-    //       {
-    //         loader: 'sass-loader',
-    //         options: {
-    //           implementation: require('sass'),
-    //           sassOptions: {
-    //             fiber: require('fibers'),
-    //             indentedSyntax: true
-    //           },
-    //         },
-    //       },
-    //     ],
-    //   }
-    // }
+        // webpackRules() {
+        //   return {
+        //     test: /\.s(c|a)ss$/,
+        //     use: [
+        //       'vue-style-loader',
+        //       'css-loader',
+        //       {
+        //         loader: 'sass-loader',
+        //         options: {
+        //           implementation: require('sass'),
+        //           sassOptions: {
+        //             fiber: require('fibers'),
+        //             indentedSyntax: true
+        //           },
+        //         },
+        //       },
+        //     ],
+        //   }
+        // }
 
-    webpackPlugins(){
-      return new VuetifyLoaderPlugin()
-    }
+        webpackPlugins() {
+            return new VuetifyLoaderPlugin()
+        }
 
-  }()
+    }()
 );
 
+// .copy('node_modules/sweetalert/dist/sweetalert.min.js', 'public/js/sweetalert.min.js')
+//     .copy('node_modules/sweetalert/dist/sweetalert.css', 'public/css/sweetalert.css')
 
 mix.less('resources/assets/less/app.less', 'public/css')
-  .copy('node_modules/sweetalert/dist/sweetalert.min.js', 'public/js/sweetalert.min.js')
-  .copy('node_modules/sweetalert/dist/sweetalert.css', 'public/css/sweetalert.css')
-  .js('resources/assets/js/app.js', 'public/js')
-  .browserSync('localhost:9500')
-  .webpackConfig({
-    resolve: {
-      modules: [
-        path.resolve(__dirname, 'vendor/laravel/spark/resources/assets/js'),
-        'node_modules'
-      ],
-      alias: {
-        'vue$': 'vue/dist/vue.js'
-      }
-    }
-  })
+    .js('resources/assets/js/app.js', 'public/js').version()
+    .webpackConfig({
+        resolve: {
+            modules: [
+                path.resolve(__dirname, 'vendor/laravel/spark/resources/assets/js'),
+                'node_modules'
+            ],
+            alias: {
+                'vue$': 'vue/dist/vue.js'
+            }
+        }
+    })
