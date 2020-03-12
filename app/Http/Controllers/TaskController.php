@@ -1676,7 +1676,7 @@ class TaskController extends Controller
         $task = $jobTask->task()->get()->first();
 
         if ($this->isASub($request->sub_id, $request->general_id)) {
-//            $this->notifyMessageChange($customer, $sub, $task, $message, $jobTask);
+            $this->notifyMessageChange($customer, $sub, $task, $message, $jobTask);
             $this->notifyMessageChange($customer, $contractor, $task, $message, $jobTask);
         } else {
             $this->notifyMessageChange($customer, $contractor, $task, $message, $jobTask);
