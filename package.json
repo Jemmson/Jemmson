@@ -41,6 +41,7 @@
     "popper.js": "^1.16.0",
     "pusher-js": "^5.0.3",
     "stripe": "^8.24.0",
+    "sweetalert": "^2.1.2",
     "underscore": "^1.9.1",
     "urijs": "^1.19.2",
     "v-mask": "^2.0.2",
