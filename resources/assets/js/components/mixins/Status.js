@@ -65,7 +65,8 @@ export default {
     },
 
     generalHasSentABid(bid) {
-      return this.getJobStatusNumber_latest(bid) > 2
+      return true
+      // return this.getJobStatusNumber_latest(bid) > 2
     },
 
     generalCanSubmitABid(bid) {

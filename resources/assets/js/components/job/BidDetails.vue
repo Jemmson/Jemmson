@@ -140,7 +140,7 @@
         <section ref="job_tasks" class="col-12"
                  v-if="getJobTasks() !== undefined"
         >
-            <div v-if="!isCustomer && bid && getJobTasks().length > 0">
+            <div v-if="!isCustomer && bid && getJobTasksLength() > 0">
 
                 <h1 class="card-title mt-4">Job Tasks</h1>
 
@@ -250,21 +250,24 @@
                 </v-card>
             </div>
             <div v-else-if="generalHasSentABid(bid)">
+                <div id="general">General</div>
                 <h1 class="card-title mt-4">Job Tasks</h1>
                 <card>
 
                     <v-row>
                         <div>
                                 <span class="">
-                                    (<b ref="job_task_length_customer">{{getJobTasks().length}}</b>)
+                                    (<b ref="job_task_length_customer">{{ getJobTasksLength() }}</b>)
                                 </span> Total
                         </div>
 
                         <v-spacer></v-spacer>
 
                         <v-btn
+                                id="viewTasks"
                                 class="w-40"
                                 color="primary"
+                                v-if="taskHasChanged"
                                 @click.prevent="viewTasks()"
                         >
                             View Tasks
@@ -281,10 +284,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="jt in getJobTasks()">
+                        <template v-for="(jt, index) in getJobTasks()">
                             <tr
                                     :class="paid(jt) ? 'paid' : ''">
                                 <td colspan="4"
+                                    :id="'jobTaskStatus-' + index"
                                     class="uppercase text-center"
                                 >
                                     {{ getLatestJobTaskStatus(jt) }}
@@ -493,6 +497,7 @@
                 area: {
                     area: ''
                 },
+                taskHasChanged: false,
                 jobTaskItem: {},
                 addTaskStartDate: false,
                 addTaskBidPrice: false,
@@ -666,6 +671,20 @@
         },
         methods: {
 
+            getJobTasksLength() {
+                let jobTasks = this.getJobTasks()
+                return jobTasks.length
+            },
+
+            atleastOnetaskHasChanged(){
+                const jobTasks = this.getJobTasks()
+                for (let i = 0; i < jobTasks.length; i++) {
+                    if (this.getLatestJobTaskStatus(jobTasks[i]) === 'changed'){
+                        this.taskHasChanged = true;
+                    }
+                }
+            },
+
             hasTaskMessages(jt) {
                 return jt && jt.task_messages && jt.task_messages.length > 0
             },
@@ -806,19 +825,47 @@
                     && latestStatus !== 'sub finished work'
                     && latestStatus !== 'paid'
             },
+
+
+
             getLatestJobTaskStatus(task) {
+
+                let status = '';
+                let taskHasChanged = false;
 
                 if (task) {
                     if (task.job_task_statuses) {
-                        return this.formatStatus(this.getJobTaskStatus_latest(task))
+                        status = this.formatStatus(this.getJobTaskStatus_latest(task))
                     } else {
-                        return this.formatStatus(this.getTheLatestJobTaskStatus(task.job_task_status))
+                        status = this.formatStatus(this.getTheLatestJobTaskStatus(task.job_task_status))
                     }
                 }
 
-                if (task && task.job_task_statuses) {
-                    return this.formatStatus(this.getJobTaskStatus_latest(task))
+                const jobTasks = this.getJobTasks()
+                for (let i = 0; i < jobTasks.length; i++) {
+                    if (this.getLatestJobTaskStatus1(jobTasks[i]) === 'changed'){
+                        taskHasChanged = true;
+                    }
                 }
+
+                if (taskHasChanged && status === 'waiting for customer approval' ) {
+                    return 'WAITING ON BID SUBMISSION'
+                }
+
+                return status
+            },
+
+            getLatestJobTaskStatus1(task) {
+
+                if (task) {
+                    if (task.job_task_statuses) {
+                        status = this.formatStatus(this.getJobTaskStatus_latest(task))
+                    } else {
+                        status = this.formatStatus(this.getTheLatestJobTaskStatus(task.job_task_status))
+                    }
+                }
+
+                return status
             },
             getSelectedJob() {
                 if (this.getJob() && this.bid.job_statuses) {
