@@ -544,15 +544,15 @@
                                     Approve
                                 </v-btn>
                             </div>
-<!--                            <div v-if="contractorWantsToChangeBid()">-->
-<!--                                <v-btn-->
-<!--                                        class="w-full mb-half-rem"-->
-<!--                                        color="warning"-->
-<!--                                        @click="openDenyTaskForm(jobTask.id)"-->
-<!--                                >-->
-<!--                                    Change Task-->
-<!--                                </v-btn>-->
-<!--                            </div>-->
+                            <div v-if="contractorWantsToChangeBid()">
+                                <v-btn
+                                        class="w-full mb-half-rem"
+                                        color="warning"
+                                        @click="openDenyTaskForm(jobTask.id)"
+                                >
+                                    Change Task
+                                </v-btn>
+                            </div>
                             <div v-if="subHasNotFinishedTask(jobTask)">
                                 <h5
                                     class="text-center"
@@ -571,17 +571,17 @@
                         </div>
 
                         <div v-else class="w-full">
-                            <div v-if="customerWantsToChangeTheBid()">
-                                <v-btn
-                                        id="changeTask"
-                                        class="w-full mb-half-rem"
-                                        color="warning"
-                                        @click="changeTaskDialog()"
-                                >
-                                    <!--                                    @click="openDenyTaskForm(jobTask.id)"-->
-                                    Change Task
-                                </v-btn>
-                            </div>
+<!--                            <div v-if="customerWantsToChangeTheBid()">-->
+<!--                                <v-btn-->
+<!--                                        id="changeTask"-->
+<!--                                        class="w-full mb-half-rem"-->
+<!--                                        color="warning"-->
+<!--                                        @click="changeTaskDialog()"-->
+<!--                                >-->
+<!--                                    &lt;!&ndash;                                    @click="openDenyTaskForm(jobTask.id)"&ndash;&gt;-->
+<!--                                    Change Task-->
+<!--                                </v-btn>-->
+<!--                            </div>-->
                             <div v-if="customerWantsToDeleteTheTask(jobTask)">
                                 <v-btn
                                         class="w-full mb-half-rem"
