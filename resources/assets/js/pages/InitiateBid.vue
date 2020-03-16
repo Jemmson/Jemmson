@@ -1,8 +1,19 @@
 <template>
     <div class="container" v-if="isContractor()">
-        <icon-header icon="jobs" mainHeader="Add New Job" subHeader="Initiate a new job with a customer.">
-        </icon-header>
         <v-card>
+
+            <div class="flex justify-content-between">
+                <v-card-title>
+                    <img :src="'/img/jobs.svg'" alt="" srcset="" class="pr-1 float-left">
+                    <div class="ml-2">Create A Job</div>
+                </v-card-title>
+                <v-icon
+                        color="primary"
+                        @click="showModal('createJob')"
+                        class="mr-5">mdi-information
+                </v-icon>
+            </div>
+            <hr>
             <v-form v-model="valid">
                 <v-container>
 
@@ -62,7 +73,14 @@
                     </v-text-field>
 
                     <v-row class="flex-col payment-section">
-                        <h5 class="text-center">Select Payment Type For Job</h5>
+                        <div class="align-baseline flex justify-center">
+                            <h5 class="text-center">Select Payment Type For Job</h5>
+                            <v-icon
+                                    color="primary"
+                                    @click="showModal('paymentType')"
+                                    class="ml-1rem">mdi-information
+                            </v-icon>
+                        </div>
                         <v-radio-group
                                 v-model="form.paymentType"
                                 row
@@ -122,6 +140,23 @@
                 </v-container>
             </v-form>
         </v-card>
+
+        <info-modal-generic
+                :text="modalText.paymentTypeText"
+                title="Payment Types"
+                :open-dialog="modal.paymentTypeInfoDialog"
+                modal="paymentType"
+                @close-modal="closeModal($event)">
+        </info-modal-generic>
+
+        <info-modal-generic
+                :text="modalText.createJobText"
+                title="Create A New Job"
+                :open-dialog="modal.createJobDialog"
+                modal="createJob"
+                @close-modal="closeModal($event)">
+        </info-modal-generic>
+
     </div>
 </template>
 
@@ -131,15 +166,29 @@
     import IconHeader from '../components/shared/IconHeader'
     import Phone from '../components/mixins/Phone'
     import StripeMixin from '../components/mixins/StripeMixin'
+    import InfoModalGeneric from '../components/documentation/InfoModalGeneric'
 
     export default {
         components: {
             Card,
             Feedback,
-            IconHeader
+            IconHeader,
+            InfoModalGeneric
         },
         data() {
             return {
+                modal: {
+                    paymentTypeInfoDialog: false,
+                    createJobDialog: false,
+                },
+                modalText: {
+                    paymentTypeText: `Every job is either a cash job or a credit card job.
+                        To handle credit payments you will need to setup with Stripe. Stripe handles all of our
+                        credit card processing. You will have an account with stripe and you will collect payments there.
+                        If you have a stripe account already then you will connect to your existing stripe account.
+                    `,
+                    createJobText: `Create A New Job Here`
+                },
                 radioGroup: 1,
                 selected: null,
                 query: '',
@@ -196,10 +245,24 @@
             }
         },
 
-        computed: {
-        },
+        computed: {},
 
         methods: {
+
+            showModal(modal) {
+                if (modal === 'paymentType') {
+                    this.modal.paymentTypeInfoDialog = true;
+                } else if (modal === 'createJob') {
+                    this.modal.createJobDialog = true;
+                }
+            },
+            closeModal(modal) {
+                if (modal === 'paymentType') {
+                    this.modal.paymentTypeInfoDialog = false;
+                } else if (modal === 'createJob') {
+                    this.modal.createJobDialog = false;
+                }
+            },
 
             lastName() {
                 this.selected = this.form.firstName + ' ' + this.form.lastName;

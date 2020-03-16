@@ -1,133 +1,192 @@
 <template>
     <div>
-
-
-        <app-bar></app-bar>
-
-
-        <v-container fluid
-                     style="margin-top: 4rem"
-                     v-if="$vuetify.breakpoint.smAndDown"
+        <v-app-bar
+                color="#95ca97"
+                fixed
+                height="62px"
         >
-            <v-row class="main">
-                <h2 class="text-center">Subcontract Work</h2>
-                <p>How often at a job do you run into work that you do not do or work you dont have time for?
-                    How often do you simply lose income because you either call someone to handle the job for
-                    you or
-                    just tell the customer to find someone else? Now with this app you can easily create a task
-                    and then
-                    subcontract that task, mark up the task, and then easily get paid for the work.</p>
-            </v-row>
-            <v-row class="pricing">
-                <h2 class="text-center" style="color:black">Invoice Customers</h2>
-                <p style="color:black">You can create an invoice at the beginning of a job and then use that as
-                    a
-                    commmunication tool
-                    throughout the jobs life cycle. You simply initiate a bid for all jobs. Then construct that
-                    bid,
-                    subcontract any of those tasks, and then submit the bid to the customer. The customer then
-                    has
-                    the ability to approve the bid. Once the bid has been approve then the work can be
-                    performed. Once
-                    the
-                    work has been performed the customer can now approve the finish work and pay using Stripe or
-                    cash.
+            <!--            <v-img-->
+            <!--                src="img/premiumlogo/onlinelogomaker-031420-0923-4133-2000-transparent.png"-->
+            <!--                max-height="62px"-->
+            <!--            >-->
+            <!--            </v-img>-->
+            <img src="img/premiumlogo/onlinelogomaker-031420-0923-4133-2000-transparent.png"
+                 style="max-height:50px"
+            >
+            <v-spacer></v-spacer>
+            <v-app-bar-nav-icon
+                    @click="openMenu()"
+            ></v-app-bar-nav-icon>
+        </v-app-bar>
+        <section
+                class="section1-background flex align-center justify-center section-height"
+        >
+            <v-btn
+                    color="white"
+                    class="formatting"
+                    @click="openMenu()"
+            >Sub A Job And Get Paid
+            </v-btn>
+        </section>
+
+        <section class="flex flex-wrap justify-center section-height">
+            <div class="flex flex-col subsection-features">
+                <img :src="'/img/jobs.svg'" alt="" srcset="" class="img-height mb-2">
+                <h5 class="text-center f-bold">Initiate Jobs</h5>
+                <p class="text-center" style="color: black; margin: 0 auto; width: 20rem;">
+                    Initiate a job with a customer EASILY
                 </p>
-            </v-row>
-            <v-row class="features">
-                <h2 class="text-center">Get Paid Easily</h2>
-                <p>How much money is wasted chasing down a check? How much of a pain is it to have to write a
-                    check
-                    to a subcontractor after a job has been finished? With Stripe this will happen easily.
-                    The customer pays the invoice and then the money is automatically split between the
-                    contractor
-                    and the sub.</p>
-            </v-row>
-        </v-container>
+            </div>
+            <div class="flex flex-col subsection-features">
+                <img :src="'/img/tasks.svg'" alt="" srcset="" class="img-height mb-2">
+                <h5 class="text-center f-bold">Sub It Out In A Snap</h5>
+                <p class="text-center" style="color: black; margin: 0 auto; width: 20rem;">
+                    Sub Out A Job In a snap. Wait for a bid. mark it up for a quick profit.
+                </p>
+            </div>
+            <div class="flex flex-col subsection-features">
+                <img :src="'/img/invoices.svg'" alt="" srcset="" class="img-height mb-2">
+                <h5 class="text-center f-bold">Get Paid Quickly</h5>
+                <p class="text-center" style="color: black; margin: 0 auto; width: 20rem;">
+                    We do payment processing through stripe. a fast, secure, industry leading payment processing company
+                </p>
+            </div>
+        </section>
 
-        <v-container fluid
-                     style="margin-top: 4rem"
-                     v-if="$vuetify.breakpoint.mdAndUp"
+        <section class="flex flex-wrap justify-center section-height bg-black">
+            <div class="subsection">
+                <h4 class="subsection-title">Features</h4>
+                <div class="subsection-item">Invoicing</div>
+                <div class="subsection-item">Payments</div>
+                <div class="subsection-item">Subbing</div>
+                <div class="subsection-item">Maps</div>
+                <div class="subsection-item">Estimating</div>
+            </div>
+
+            <div class="subsection">
+                <h4 class="subsection-title">Company</h4>
+                <div class="subsection-item">About</div>
+            </div>
+
+            <div class="subsection">
+                <h4 class="subsection-title">Resources</h4>
+                <div class="subsection-item">Pricing</div>
+            </div>
+        </section>
+
+        <v-dialog
+                v-model="menu"
+                width="500"
+                fullscreen
+                hide-overlay
         >
-            <v-row>
-                <v-col cols="4" class="main">
-                    <h2 class="text-center">Subcontract Work</h2>
-                    <p>How often at a job do you run into work that you do not do or work you dont have time for?
-                        How often do you simply lose income because you either call someone to handle the job for
-                        you or
-                        just tell the customer to find someone else? Now with this app you can easily create a task
-                        and then
-                        subcontract that task, mark up the task, and then easily get paid for the work.</p>
-                </v-col>
-                <v-col cols="4" class="pricing">
-                    <h2 class="text-center" style="color:black">Invoice Customers</h2>
-                    <p style="color:black">You can create an invoice at the beginning of a job and then use that as
-                        a
-                        commmunication tool
-                        throughout the jobs life cycle. You simply initiate a bid for all jobs. Then construct that
-                        bid,
-                        subcontract any of those tasks, and then submit the bid to the customer. The customer then
-                        has
-                        the ability to approve the bid. Once the bid has been approve then the work can be
-                        performed. Once
-                        the
-                        work has been performed the customer can now approve the finish work and pay using Stripe or
-                        cash.
-                    </p>
-                </v-col>
-                <v-col cols="4" class="features">
-                    <h2 class="text-center">Get Paid Easily</h2>
-                    <p>How much money is wasted chasing down a check? How much of a pain is it to have to write a
-                        check
-                        to a subcontractor after a job has been finished? With Stripe this will happen easily.
-                        The customer pays the invoice and then the money is automatically split between the
-                        contractor
-                        and the sub.</p>
-                </v-col>
+            <v-card>
+                <login></login>
+            </v-card>
+        </v-dialog>
 
-            </v-row>
-        </v-container>
     </div>
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
-  import AppBar from '../components/header/AppBar'
+    import {mapActions} from 'vuex'
+    import AppBar from '../components/header/AppBar'
+    import Login from '../components/public/Login'
 
-  export default {
-    computed: {
-      csrf() {
-        if (document.querySelector('meta[name="csrf-token"]')) {
-          return document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    export default {
+        computed: {
+            csrf() {
+                if (document.querySelector('meta[name="csrf-token"]')) {
+                    return document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
-        }
-      }
-    },
-    components: {
-      AppBar
-    },
-    data() {
-      return {
-        currentWindow: window.location.origin,
-        disabled: false
-      }
-    },
-    methods: {
-      route(value) {
-        if (value === 'login') {
-          window.location = '/login'
-        } else if (value === 'register') {
-          window.location = '/#/register'
-        }
-      },
-    },
-    mounted() {
-      this.$store.commit('setCurrentPage', this.$router.history.current.path)
-    },
-  }
+                }
+            }
+        },
+        components: {
+            AppBar,
+            Login
+        },
+        data() {
+            return {
+                menu: false,
+                currentWindow: window.location.origin,
+                disabled: false
+            }
+        },
+        methods: {
+            openMenu() {
+                this.menu = !this.menu
+            },
+            route(value) {
+                if (value === 'login') {
+                    window.location = '/login'
+                } else if (value === 'register') {
+                    window.location = '/#/register'
+                }
+            },
+        },
+        mounted() {
+            this.$store.commit('setCurrentPage', this.$router.history.current.path)
+        },
+    }
 </script>
 
-<style scoped>
+<style>
+
+    .bg-black {
+        background-color: black;
+    }
+
+    .subsection-features {
+        min-width: 150px;
+        margin-top: 3rem;
+    }
+
+    .subsection {
+        width: 116px;
+        margin-top: 3rem;
+    }
+
+    .subsection-title {
+        color: grey;
+        font-size: 14pt;
+    }
+
+    .subsection-item {
+        color: grey;
+    }
+
+    .section-height {
+        height: 900px
+    }
+
+    .graphic-margins {
+        margin-top: 60px;
+    }
+
+    .img-height {
+        height: 7rem;
+    }
+
+    .formatting {
+        color: white;
+        font-size: x-large;
+        font-weight: bolder;
+    }
+
+    .section1-background {
+        /*background-image: url("https://res.cloudinary.com/jemmson-inc/image/upload/v1584213763/IMG_0054_c44cch.jpg");*/
+        background-image: url(https://res.cloudinary.com/jemmson-inc/image/upload/a_360,h_900/v1584213763/IMG_0054_c44cch.jpg) !important;
+        /*background-image: url(https://res.cloudinary.com/jemmson-inc/image/upload/v1584213763/IMG_0054_c44cch.jpg) !important;*/
+        background-color: #666;
+        background-size: auto auto;
+        min-height: 800px;
+        padding-bottom: 90px;
+    }
+
+    .v-dialog--fullscreen {
+        margin-top: 62px !important;
+    }
 
     .header-items {
         display: flex;

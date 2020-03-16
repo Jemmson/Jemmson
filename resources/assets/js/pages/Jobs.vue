@@ -7,12 +7,27 @@
                 <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
             </search-bar>
 
+            <info-modal-generic
+                    :text="modalText.jobs"
+                    title="Jobs"
+                    modal="jobs"
+                    :open-dialog="modal.jobs"
+                    @close-modal="closeModal($event)"
+            >
+            </info-modal-generic>
 
             <v-card
                     v-for="bid in sBids" v-bind:key="bid.id"
                     class="margins-quarter-rem"
             >
-                <v-card-title class="uppercase pb-0">
+                <v-icon
+                        color="primary"
+                        @click="showModal('jobs', getJobStatus(bid))"
+                        class="mt-3 pr-3 w-95 justify-content-end">mdi-information
+                </v-icon>
+                <v-card-title class="uppercase pb-0"
+                              style="margin-top: -1.5rem"
+                >
                     <v-icon
                             v-if="bid.payment_type === 'cash'"
                     >mdi-cash
@@ -83,192 +98,220 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex'
-  import Tasks from './Tasks'
-  import SearchBar from '../components/shared/SearchBar'
-  import Card from '../components/shared/Card'
-  import DeleteTaskModal from '../components/job/DeleteTaskModal'
-  import Feedback from '../components/shared/Feedback'
-  import Status from '../components/mixins/Status'
+    import {mapState, mapMutations} from 'vuex'
+    import Tasks from './Tasks'
+    import SearchBar from '../components/shared/SearchBar'
+    import Card from '../components/shared/Card'
+    import DeleteTaskModal from '../components/job/DeleteTaskModal'
+    import Feedback from '../components/shared/Feedback'
+    import Status from '../components/mixins/Status'
+    import InfoModalGeneric from '../components/documentation/InfoModalGeneric'
 
-  export default {
-    name: 'Jobs',
-    components: {
-      Tasks,
-      Card,
-      SearchBar,
-      Feedback,
-      DeleteTaskModal
-    },
-    mixins: [
-      Status
-    ],
-    props: {
-      user: Object
-    },
-    data() {
-      return {
-        bids: [],
-        sBids: [],
-        showBid: false,
-        bidIndex: 0,
-        searchTerm: '',
-        paginate: ['sBids'],
-        disabled: {
-          deleteJob: false
+    export default {
+        name: 'Jobs',
+        components: {
+            Tasks,
+            Card,
+            SearchBar,
+            Feedback,
+            InfoModalGeneric,
+            DeleteTaskModal
         },
-        deleteJob: {
-          id: ''
+        mixins: [
+            Status
+        ],
+        props: {
+            user: Object
         },
-        job: {}
-      }
-    },
-    watch: {
-      '$route'(to, from) {
-        // get the bids
-        this.getBids()
-      }
-    },
-    computed: {
-      ...mapState({
-        page: state => state.page,
-        bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
-      })
-    },
-    methods: {
-      ...mapMutations([
-        'toggleBidsContractor'
-      ]),
-      getJobStatus(bid) {
-        const status = this.formatStatus(this.getJobStatus_latest(bid))
-
-        if (status === 'sent' && this.isCustomer()) {
-          return 'Job has been submitted. Please approve the bid.'
-        } else {
-          return status
-        }
-      },
-      showDeleteJobModal(job) {
-        this.deleteJob.id = job.id
-        this.job = job
-        $('#delete-task-modal').modal('show')
-      },
-      deleteTheJob(action) {
-        if (action === 'delete') {
-          this.deleteTheActualJob(this.deleteJob.id)
-        }
-        $('#delete-task-modal').modal('hide')
-      },
-      async deleteTheActualJob(id) {
-        try {
-          const data = await axios.post('/job/delete/', {
-            id: id
-          })
-          this.getBids()
-        } catch (error) {
-          console.log(error)
-        }
-      },
-      isContractor() {
-        if (this.user) {
-          return this.user.usertype === 'contractor'
-        }
-
-      },
-      totalNumberOfSubsBiddingForTheJob(jobTasks) {
-        if (jobTasks) {
-          let total = 0
-          for (let i = 0; i < jobTasks.length; i++) {
-            if (jobTasks[i].bid_contractor_job_tasks) {
-              total = total + jobTasks[i].bid_contractor_job_tasks.length
+        data() {
+            return {
+                modal: {
+                    jobs: false
+                },
+                modalText: {
+                    jobs: ''
+                },
+                bids: [],
+                sBids: [],
+                showBid: false,
+                bidIndex: 0,
+                searchTerm: '',
+                paginate: ['sBids'],
+                disabled: {
+                    deleteJob: false
+                },
+                deleteJob: {
+                    id: ''
+                },
+                job: {}
             }
-          }
-          return total
-        }
-      },
-      search() {
-        this.sBids = this.bids.filter((bid) => {
-          if (this.searchTerm === '' || this.searchTerm.length <= 1) {
-            return true
-          }
-          return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
-        })
-        if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
-          this.$refs.paginator.goToPage(1)
-        }
-      },
-      getLabelClass(bid) {
-        return Format.statusLabel(bid.status, User.isCustomer, this.isGeneral(bid))
-      },
-      jobName(name) {
-        return Format.jobName(name)
-      },
-      isGeneral(bid) {
-        if (bid !== null && this.user) {
-          return bid.contractor_id === this.user.id
-        }
-        return false
-      },
-      isCustomer() {
-        return this.spark.state.user.usertype === 'customer'
-      },
-      status(bid) {
-        if (bid !== null && this.user !== undefined) {
-          return User.status(bid.status, bid, this.user)
-        }
-      },
-      prettyDate(date) {
-        if (date == null)
-          return ''
-        // return the date and ignore the time
-        date = date.split(' ')
-        return date[0]
-      },
-      goToJob(id) {
-        this.$router.push('/bid/' + id)
-      },
-      getBids() {
-        let url = ''
-        if (User.isCustomer()) {
-          url = 'getJobsForCustomer'
-        } else {
-          url = 'jobs'
-        }
-        axios.get(url).then((response) => {
-          if (Array.isArray(response.data)) {
-            this.bids = response.data
-            this.sBids = this.bids
-          }
-        })
-      },
-      previewSubForTask(bidId, jobTaskId, subBidId) {
-        console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
-      }
-    },
-    mounted() {
+        },
+        watch: {
+            '$route'(to, from) {
+                // get the bids
+                this.getBids()
+            }
+        },
+        computed: {
+            ...mapState({
+                page: state => state.page,
+                bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
+            })
+        },
+        methods: {
+            ...mapMutations([
+                'toggleBidsContractor'
+            ]),
 
-      if (this.$route.path === '/bids/subs') {
-        this.toggleBidsContractor(false)
-      }
+            setModalText(status){
+                if (status === 'changed') {
+                    this.modalText.jobs = `Job Has Changed`
+                }
+            },
 
-      this.$store.commit('setCurrentPage', this.$router.history.current.path)
-    },
-    created() {
-      document.body.scrollTop = 0 // For Safari
-      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
-      this.getBids()
-      Bus.$on('bidUpdated', (payload) => {
-        this.getBids()
-      })
-      Bus.$on('jobCanceled', (payload) => {
-        this.getBids()
-      })
-      Bus.$on('previewSubForTask', (payload) => {
-        this.previewSubForTask(payload[0], payload[1], payload[2])
-      })
+            showModal(modal, status) {
+                if (modal === 'jobs') {
+                    this.setModalText(status)
+                    this.modal.jobs = true;
+                }
+            },
 
-    },
-  }
+            closeModal(modal) {
+                if (modal === 'jobs') {
+                    this.modal.jobs = false;
+                }
+            },
+
+            getJobStatus(bid) {
+                const status = this.formatStatus(this.getJobStatus_latest(bid))
+
+                if (status === 'sent' && this.isCustomer()) {
+                    return 'Job has been submitted. Please approve the bid.'
+                } else {
+                    return status
+                }
+            },
+            showDeleteJobModal(job) {
+                this.deleteJob.id = job.id
+                this.job = job
+                $('#delete-task-modal').modal('show')
+            },
+            deleteTheJob(action) {
+                if (action === 'delete') {
+                    this.deleteTheActualJob(this.deleteJob.id)
+                }
+                $('#delete-task-modal').modal('hide')
+            },
+            async deleteTheActualJob(id) {
+                try {
+                    const data = await axios.post('/job/delete/', {
+                        id: id
+                    })
+                    this.getBids()
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            isContractor() {
+                if (this.user) {
+                    return this.user.usertype === 'contractor'
+                }
+
+            },
+            totalNumberOfSubsBiddingForTheJob(jobTasks) {
+                if (jobTasks) {
+                    let total = 0
+                    for (let i = 0; i < jobTasks.length; i++) {
+                        if (jobTasks[i].bid_contractor_job_tasks) {
+                            total = total + jobTasks[i].bid_contractor_job_tasks.length
+                        }
+                    }
+                    return total
+                }
+            },
+            search() {
+                this.sBids = this.bids.filter((bid) => {
+                    if (this.searchTerm === '' || this.searchTerm.length <= 1) {
+                        return true
+                    }
+                    return bid.job_name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+                })
+                if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
+                    this.$refs.paginator.goToPage(1)
+                }
+            },
+            getLabelClass(bid) {
+                return Format.statusLabel(bid.status, User.isCustomer, this.isGeneral(bid))
+            },
+            jobName(name) {
+                return Format.jobName(name)
+            },
+            isGeneral(bid) {
+                if (bid !== null && this.user) {
+                    return bid.contractor_id === this.user.id
+                }
+                return false
+            },
+            isCustomer() {
+                return this.spark.state.user.usertype === 'customer'
+            },
+            status(bid) {
+                if (bid !== null && this.user !== undefined) {
+                    return User.status(bid.status, bid, this.user)
+                }
+            },
+            prettyDate(date) {
+                if (date == null)
+                    return ''
+                // return the date and ignore the time
+                date = date.split(' ')
+                return date[0]
+            },
+            goToJob(id) {
+                this.$router.push('/bid/' + id)
+            },
+            getBids() {
+                let url = ''
+                if (User.isCustomer()) {
+                    url = 'getJobsForCustomer'
+                } else {
+                    url = 'jobs'
+                }
+                axios.get(url).then((response) => {
+                    if (Array.isArray(response.data)) {
+                        this.bids = response.data
+                        this.sBids = this.bids
+                    }
+                })
+            },
+            previewSubForTask(bidId, jobTaskId, subBidId) {
+                console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
+            }
+        },
+        mounted() {
+
+            if (this.$route.path === '/bids/subs') {
+                this.toggleBidsContractor(false)
+            }
+
+            this.$store.commit('setCurrentPage', this.$router.history.current.path)
+        },
+        created() {
+            document.body.scrollTop = 0 // For Safari
+            document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
+            this.getBids()
+            Bus.$on('bidUpdated', (payload) => {
+                this.getBids()
+            })
+            Bus.$on('jobCanceled', (payload) => {
+                this.getBids()
+            })
+            Bus.$on('previewSubForTask', (payload) => {
+                this.previewSubForTask(payload[0], payload[1], payload[2])
+            })
+
+        },
+    }
 </script>
 
 <style lang="less" scoped>
