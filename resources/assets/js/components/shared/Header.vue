@@ -39,6 +39,7 @@
             <div v-if="!isCustomer()">
                 <header-job-toggle
                         ref="headerJobToggle"
+                        :name="user.first_name + ' ' + user.last_name"
                 ></header-job-toggle>
             </div>
 

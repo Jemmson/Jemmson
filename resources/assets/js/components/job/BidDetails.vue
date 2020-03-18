@@ -161,7 +161,9 @@
                         >{{ jobTaskObject(item).Status }}
                         </v-card-subtitle>
                     </v-card-title>
-                    <v-card-title>
+                    <v-card-title
+                        v-if="notificationMessage(item)"
+                    >
                         <v-btn
                                 v-if="item.sub_statuses.length > 0"
                                 text
@@ -386,7 +388,11 @@
             <h1 class="card-title mt-4">Completed Tasks</h1>
             <card>
                 <main class="row w-full ml-0">
-                    <completed-tasks class="w-full" :bid="bid">
+                    <completed-tasks
+                            class="w-full"
+                            :bid="bid"
+                            :paid="checkIfPaid()"
+                    >
                     </completed-tasks>
                 </main>
             </card>
@@ -461,6 +467,7 @@
                 :bid="bid"
                 :client-secret="clientSecret"
                 :user="getCurrentUser()"
+                @paid="paidFromSignUp()"
         >
         </stripe>
 
@@ -529,6 +536,7 @@
         },
         data() {
             return {
+                isPaid: false,
                 clientSecret: null,
                 feeDialog: false,
                 el: 2,
@@ -710,6 +718,14 @@
             }
         },
         methods: {
+
+            checkIfPaid(){
+                return this.isPaid;
+            },
+
+            paidFromSignUp () {
+              this.isPaid = true;
+            },
 
             async getBids() {
                 let url = ''

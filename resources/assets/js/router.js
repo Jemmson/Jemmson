@@ -22,6 +22,7 @@ import Tasks from './pages/Tasks'
 import Invoices from './pages/Invoices'
 import Invoice from './pages/Invoice'
 import SubInvoice from './pages/SubInvoice'
+import Settings from './pages/Settings'
 import FurtherInfo from './pages/FurtherInfo'
 import TaskImages from './pages/TaskImages'
 import JobImages from './pages/JobImages'
@@ -140,6 +141,10 @@ const routes = [
   {
     path: '/register',
     component: Register
+  },
+  {
+    path: '/settings',
+    component: Settings
   },
   {
     path: '/contractor-info',

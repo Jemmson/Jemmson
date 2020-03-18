@@ -60,6 +60,31 @@ class StripeGatewayController extends Controller
 
     }
 
+    public function jobTaskHasNotBeenExcluded($excluded, $jobTask)
+    {
+        foreach ($excluded as $key => $item) {
+            if ($jobTask->id == $key) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function jobTaskHasBeenApprovedByContractor($latestStatus)
+    {
+        return $latestStatus == 'approved_subs_work';
+    }
+
+    public function JobTaskHasBeenCompletedByGeneral($latestStatus)
+    {
+        return $latestStatus == 'general_finished_work';
+    }
+
+    public function JobTaskHasNotBeenPaid($latestStatus)
+    {
+        return $latestStatus != 'paid';
+    }
+
     public function jobTasksExist($excluded, $jobId)
     {
 
@@ -68,16 +93,20 @@ class StripeGatewayController extends Controller
         $jobTasks = Job::where('id', '=', $jobId)->get()->first()->jobTasks()->get();
 
         foreach ($jobTasks as $jobTask) {
-            $pay = true;
-            foreach ($excluded as $key => $item) {
-                if ($jobTask->id == $key) {
-                    $pay = false;
-                }
-            }
-            if ($pay) {
+            $jtNotExcluded = $this->jobTaskHasNotBeenExcluded($excluded, $jobTask);
+
+            $jt = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->get();
+            $latestStatus = JobTaskStatus::getLastStatus($jt);
+
+            $jtApproved = $this->jobTaskHasBeenApprovedByContractor($latestStatus);
+            $jtCompleted = $this->JobTaskHasBeenCompletedByGeneral($latestStatus);
+            $jtNotPaid = $this->JobTaskHasNotBeenPaid($latestStatus);
+
+            if ($jtNotExcluded
+                && ($jtApproved || $jtCompleted)
+                && $jtNotPaid) {
                 array_push($jobTaskArray, $jobTask);
             }
-
         }
 
         return [
@@ -210,7 +239,7 @@ class StripeGatewayController extends Controller
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         \Stripe\Stripe::$apiVersion = '2019-08-14';
 
-        if (\is_null($customerStripeId)) {
+        if (\is_null($customerStripeId) || $customerStripeId == '') {
             return null;
         }
 

@@ -48,6 +48,7 @@
                     <signup-with-stripe
                             :bid="bid"
                             :client-secret="clientSecret"
+                            @close-modal="exit()"
                     >
                     </signup-with-stripe>
                 </div>
@@ -108,6 +109,7 @@
                 }
             },
             exit() {
+                this.$emit('paid');
                 $('#stripe-modal').modal('hide')
             },
             async dontShowModalAgain() {

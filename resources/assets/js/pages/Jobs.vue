@@ -1,6 +1,6 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
-    <div class="container-fluid">
+    <div class="container-fluid" style="margin-top: -62px">
 
         <div v-if="bidsContractorSectionPicked" ref="jobs">
             <search-bar>
@@ -19,6 +19,7 @@
             <v-card
                     v-for="bid in sBids" v-bind:key="bid.id"
                     class="margins-quarter-rem"
+                    v-if="getJobStatus(bid) !== 'paid'"
             >
                 <v-icon
                         color="primary"

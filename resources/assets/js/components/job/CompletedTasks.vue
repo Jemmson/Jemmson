@@ -102,7 +102,8 @@
                 <v-btn
                         class="w-full"
                         color="primary"
-                        v-if="creditCardJobAndContractorHasStripe()" @click.prevent="payAllPayableTasks()"
+                        v-if="creditCardJobAndContractorHasStripe()"
+                        @click.prevent="payAllPayableTasks()"
                         :loading="payAll"
                 >
                     Pay With Credit Card
@@ -174,13 +175,22 @@
 
     export default {
         props: {
-            bid: Object
+            bid: Object,
+            paid: Boolean
         },
         components: {
             Card,
             DenyTaskModal,
             StripeCreditCardModal,
             Stripe
+        },
+
+        watch: {
+            paid: function (val){
+                if (val) {
+                    this.setTasksToPaid()
+                }
+            }
         },
         data() {
             return {
@@ -473,10 +483,11 @@
                 if (!User.isSignedUpWithStripe()) {
                     // $('#stripe-modal').modal()
                     Bus.$emit('needsStripe', clientSecretData.data);
-                    this.excludedActions(this.excluded)
                 } else {
                     this.selectWhichCreditCardToUse()
                 }
+
+                this.excludedActions(this.excluded)
 
                 this.payAll = false;
                 // Customer.payAllPayableTasks(this.bid.id, this.excluded, this.disabled)

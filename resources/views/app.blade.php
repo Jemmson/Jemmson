@@ -40,7 +40,7 @@
 <!-- Main Content -->
 <transition name="fade">
     <!-- <router-view :user='user'></router-view> -->
-    <v-app style="height: 10000px;">
+    <v-app style="height: 5000px; margin-top: 75px">
 
         <router-view :user='user'></router-view>
     </v-app>

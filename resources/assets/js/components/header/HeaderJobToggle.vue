@@ -1,24 +1,54 @@
 <template>
-    <div class="container-fluid">
-        <div ref="job_toggle"
-             class="row bg-white bids-row spacing">
-<!--            <div class="col-12 pt-3" style="height: 40px;">-->
-<!--                <i class="fas fa-search text-primary float-left sm-icon"></i>-->
-<!--                <i class="fas fa-plus text-primary float-right sm-icon"></i>-->
-<!--            </div>-->
-            <div ref="toggle_contractors" @click.prevent="toggleBidsContractor(true)"
-                 class="col pr-0 pl-0 text-center text-uppercase align-self-end"
-                 :class="bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                <p class="bids-toggle text-primary f-size-13pt">
-                    Contractor
-                </p>
-            </div>
-            <div ref="toggle_subContractors" @click.prevent="toggleBidsContractor(false)"
-                 class="col pr-0 pl-0 text-center text-uppercase align-self-end"
-                 :class="!bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                <p class="bids-toggle text-primary f-size-13pt">
-                    Subcontractor
-                </p>
+
+    <div class="flex flex-col">
+        <v-app-bar
+                color="#95ca97"
+                fixed
+                height="62px"
+                class="mb-1rem"
+        >
+            <img src="img/premiumlogo/onlinelogomaker-031420-0923-4133-2000-transparent.png"
+                 style="max-height:50px"
+            >
+            <v-spacer></v-spacer>
+
+            <div>{{ name }}</div>
+
+            <v-spacer></v-spacer>
+
+            <v-btn
+                    icon
+                    @click="logout()"
+            >
+                <v-icon>mdi-login</v-icon>
+            </v-btn>
+
+            <v-btn
+                    @click="settings()"
+                    icon
+            >
+                <v-icon>mdi-settings</v-icon>
+            </v-btn>
+
+        </v-app-bar>
+
+        <div class="container-fluid" style="margin-top: 40px">
+            <div ref="job_toggle"
+                 class="row bg-white bids-row spacing">
+                <div ref="toggle_contractors" @click.prevent="toggleBidsContractor(true)"
+                     class="col pr-0 pl-0 text-center text-uppercase align-self-end"
+                     :class="bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
+                    <p class="bids-toggle text-primary f-size-13pt text-center">
+                        General Jobs
+                    </p>
+                </div>
+                <div ref="toggle_subContractors" @click.prevent="toggleBidsContractor(false)"
+                     class="col pr-0 pl-0 text-center text-uppercase align-self-end"
+                     :class="!bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
+                    <p class="bids-toggle text-primary f-size-13pt text-center">
+                        Sub Jobs
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -26,33 +56,36 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex'
+    import {mapState, mapMutations} from 'vuex'
 
-  export default {
-    name: 'HeaderJobToggle',
-    computed: {
-      ...mapState({
-        // userFromState: state => state.user.user,
-        // userType: (state) => {
-        //   if (state.user.user !== undefined && state.user.user !== null) {
-        //     return state.user.user.usertype
-        //   }
-        //   return null
-        // },
-        bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
-      })
-    },
-    methods: {
-      ...mapMutations([
-        'toggleBidsContractor'
-      ]),
+    export default {
+        name: 'HeaderJobToggle',
+        props: {
+            name: String
+        },
+        computed: {
+            ...mapState({
+                // userFromState: state => state.user.user,
+                // userType: (state) => {
+                //   if (state.user.user !== undefined && state.user.user !== null) {
+                //     return state.user.user.usertype
+                //   }
+                //   return null
+                // },
+                bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
+            })
+        },
+        methods: {
+            ...mapMutations([
+                'toggleBidsContractor'
+            ]),
+        }
     }
-  }
 </script>
 
 <style scoped>
-.spacing {
-    height: 54px;
-    padding-bottom: 4px;
-}
+    .spacing {
+        height: 54px;
+        padding-bottom: 4px;
+    }
 </style>

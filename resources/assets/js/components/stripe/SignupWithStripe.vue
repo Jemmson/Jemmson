@@ -155,6 +155,7 @@
                             if (result.paymentIntent.status === 'succeeded') {
                                 this.paymentSucceeded = true;
                                 this.needsPayment = false;
+                                this.$emit('close-modal');
                             }
                         }
                     }.bind(this));
