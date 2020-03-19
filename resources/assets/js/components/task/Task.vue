@@ -1,69 +1,107 @@
 <template>
-    <v-content>
-        <div>
 
-            <v-card
-                    v-if="showBid(bidTask)"
-                    class="mb-1rem"
+    <v-container>
+
+        <v-card
+                v-if="showBid(bidTask)"
+                class="mb-1rem"
+        >
+            <div
+                    v-if="needsStripe() && isCreditCardJob()"
+                    class="bg-color-red f-bold fa-1x pb-1 pl-1 pt-3"
             >
-                <div
-                        v-if="needsStripe() && isCreditCardJob()"
-                        class="bg-color-red f-bold fa-1x pb-1 pl-1 pt-3"
-                >
-                    You will need to set up a credit card to bid on this job
-                </div>
-                <v-card-title
-                        class="uppercase pb-0"
-                        v-if="showBid(bidTask)"
-                >
-                    <v-icon
-                            v-if="getPaymentType('cash')"
-                    >mdi-cash
-                    </v-icon>
-                    <v-icon
-                            v-else-if="getPaymentType('creditCard')"
-                    >mdi-credit-card
-                    </v-icon>
+                You will need to set up a credit card to bid on this job
+            </div>
+            <v-card-title
+                    class="uppercase pb-0"
+                    v-if="showBid(bidTask)"
+            >
+                <v-icon
+                        v-if="getPaymentType('cash')"
+                >mdi-cash
+                </v-icon>
+                <v-icon
+                        v-else-if="getPaymentType('creditCard')"
+                >mdi-credit-card
+                </v-icon>
 
-                    <div class="mr-1rem ml-half-rem">{{ jobName(bidTask) }}</div>
-                    <v-spacer></v-spacer>
-                    <v-card-subtitle
-                            class="ml-1rem capitalize"
-                            :class="getLabelClass(bidTask)"
-                    > {{ getLatestStatus() }}
-                    </v-card-subtitle>
-                </v-card-title>
-                <v-divider></v-divider>
-                <v-card-actions>
-                    <v-btn
-                            v-show="!showTheTask"
-                            text
-                            color="primary"
-                            @click="showTheTask = !showTheTask"
-                            width="40%"
-                    >Show
-                    </v-btn>
-                    <v-btn
-                            v-show="showTheTask"
-                            color="primary"
-                            text
-                            @click="showTheTask = !showTheTask"
-                            width="40%"
-                    >Hide
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                            text
-                            color="red"
-                            width="40%"
-                            @click="showDeleteTaskModal(bidTask)"
-                    >DELETE
-                    </v-btn>
+                <div class="mr-1rem ml-half-rem">{{ jobName(bidTask) }}</div>
+                <v-spacer></v-spacer>
+                <v-card-subtitle
+                        class="ml-1rem capitalize"
+                        :class="getLabelClass(bidTask)"
+                > {{ getLatestStatus() }}
+                </v-card-subtitle>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-btn
+                        v-show="!showTheTask"
+                        text
+                        color="primary"
+                        @click="showTheTask = !showTheTask"
+                        width="40%"
+                >Show
+                </v-btn>
+                <v-btn
+                        v-show="showTheTask"
+                        color="primary"
+                        text
+                        @click="showTheTask = !showTheTask"
+                        width="40%"
+                >Hide
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                        text
+                        color="red"
+                        width="40%"
+                        @click="showDeleteTaskModal(bidTask)"
+                >DELETE
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+
+        <div v-show="showTheTask">
+
+
+            <v-card>
+                <v-card-actions
+                        class="flex flex-col"
+                >
+                    <div class="flex justify-content-around w-full">
+                        <v-btn
+                                class="nav-btn-position"
+                                @click="showSection('details')"
+                        >Details
+                        </v-btn>
+                        <v-btn
+                                class="nav-btn-position"
+                                @click="showSection('location')"
+                        >Location
+                        </v-btn>
+                    </div>
+                    <div class="flex justify-content-around w-full">
+                        <v-btn
+                                v-if="showDeclinedMsg(bidTask) && subHasMessage(bidTask)"
+                                class="nav-btn-position"
+                                @click="showSection('messages')"
+                        >Messages
+                        </v-btn>
+                        <v-btn
+                                class="nav-btn-position"
+                                @click="showSection('images')"
+                        >Images
+                        </v-btn>
+                    </div>
                 </v-card-actions>
             </v-card>
 
+
             <div v-show="showTheTask">
-                <v-container>
+                <section class="col-12"
+                        v-if="show.details"
+                >
                     <h1 class="card-title">Task Details</h1>
                     <v-card
                             :disabled="needsStripe() && isCreditCardJob()"
@@ -120,9 +158,11 @@
                             </v-row>
                         </v-card-text>
                     </v-card>
-                </v-container>
+                </section>
 
-                <section class="col-12">
+                <section class="col-12"
+                         v-if="show.location"
+                >
                     <h1 class="card-title">Job Address</h1>
                     <card>
                         <main class="row">
@@ -143,8 +183,9 @@
                     </card>
                 </section>
 
-
-                <section class="col-12">
+                <section class="col-12"
+                         v-if="show.messages"
+                >
                     <h1 class="card-title">Messages</h1>
                     <card>
                         <main class="row">
@@ -163,7 +204,9 @@
                     </card>
                 </section>
 
-                <section class="col-12">
+                <section class="col-12"
+                         v-if="show.images"
+                >
                     <h1 class="card-title">Images</h1>
                     <card>
                         <main class="row">
@@ -195,22 +238,26 @@
                         </main>
                     </card>
                 </section>
-
             </div>
 
-            <delete-task-modal
-                    @action="deleteTheTask($event)"
-                    title="Do You Wish To Delete This Task?"
-            >
-            </delete-task-modal>
-
-            <show-task-modal
-                    :job-task="bidTask"
-            >
-            </show-task-modal>
 
         </div>
-    </v-content>
+
+
+        <delete-task-modal
+                @action="deleteTheTask($event)"
+                title="Do You Wish To Delete This Task?"
+        >
+        </delete-task-modal>
+
+        <show-task-modal
+                :job-task="bidTask"
+        >
+        </show-task-modal>
+
+
+    </v-container>
+
 </template>
 
 <script>
@@ -251,6 +298,12 @@
         },
         data() {
             return {
+                show: {
+                  details: false,
+                  messages: false,
+                  images: false,
+                  location: false
+                },
                 paymentType: 'cash',
                 showTheTask: false,
                 disabled: {
@@ -270,6 +323,26 @@
             bidTask: Object
         },
         methods: {
+
+            showSection(section) {
+                this.hideAllSections();
+                if (section === 'details') {
+                    this.show.details = true;
+                } else if (section === 'messages') {
+                    this.show.taskStatus = true;
+                } else if (section === 'images') {
+                    this.show.images = true;
+                } else if (section === 'location') {
+                    this.show.location = true;
+                }
+            },
+
+            hideAllSections() {
+                this.show.details = false;
+                this.show.messages = false;
+                this.show.images = false;
+                this.show.location = false;
+            },
 
             needsStripe() {
                 if (Spark.state.user) {
@@ -662,6 +735,11 @@
 </script>
 
 <style scoped>
+
+    .nav-btn-position {
+        width: 46%;
+        margin-bottom: .25rem;
+    }
 
     .th-font {
         font-size: 12pt;

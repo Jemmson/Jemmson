@@ -1,663 +1,609 @@
 <template>
-    <div>
-        <div class="container" ref="jobTask">
-            <div class="row">
-                <!-- details -->
-                <div class="col-12">
+    <v-container>
 
+        <div class="col-12">
+            <v-btn
+                    class="w-full primary mb-1rem"
+                    @click.prevent="goBack()"
+            >
+                Back
+            </v-btn>
+        </div>
+
+        <v-card>
+            <v-card-actions
+                    class="flex flex-col"
+            >
+                <div class="flex justify-content-around w-full">
                     <v-btn
-                            class="w-full primary mb-1rem"
-                            @click.prevent="goBack()"
-                    >
-                        Back
+                            class="nav-btn-position"
+                            @click="showSection('details')"
+                    >Details
                     </v-btn>
-
-                    <h1 class="card-title">Details</h1>
-                    <card>
-                        <div class="row">
-                            <div class="col-12">
-                                Job Task Name:
-                                <!-- task name-->
-                                <div
-                                        id="taskName"
-                                        class="float-right font-weight-bold capitalize">
-                                    {{ jobTask ? jobTask.task.name : ''}}
-                                </div>
-
-                            </div>
-                            <div class="col-12">
-                                <div v-if="jobIsNotComplete()">
-                                    <div
-                                            id="uncompletedJob"
-                                            class="flex justify-content-between">
-                                        <label>Task Start Date</label>
-                                        <input
-                                                id="inputDate"
-                                                type="date" class="form-control form-control-sm w-50" style=""
-                                                v-if="showTaskStartDate()"
-                                                :value="setStartDate(jobTask)"
-                                                @blur="updateTaskStartDate($event.target.value, jobTask.id)">
-                                    </div>
-                                    <span :class="{ error: hasStartDateError }"
-                                          v-show="hasStartDateError">{{ startDateErrorMessage }}</span>
-                                </div>
-                                <div v-else>
-                                    <div
-                                            id="completedJob"
-                                            class="flex justify-content-between">
-                                        <label>Task Start Date</label>
-                                        <div><strong>{{ getStartDate(jobTask.start_date) }}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </card>
-
-                    <h1 class="card-title">Task Status</h1>
-                    <card>
-                        <div class="row">
-                            <div class="col-12">
-                                Status:
-                                <div class="float-right font-weight-bold capitalize"
-                                     :class="jobTask ? getLabelClass(jobTask.status) : 0">
-                                    {{ getLatestJobStatus(jobTask) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div v-show="jobTask ? jobTask.declined_message !== '' : false">
-                            <hr>
-                            <div class="row">
-                                <div class="col-12">
-                                    Message:
-                                    <div class="float-right font-weight-bold">
-                                        {{ getMessage(jobTask) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </card>
-
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('taskStatus')"
+                    >Task Status
+                    </v-btn>
                 </div>
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('prices')"
+                    >Prices
+                    </v-btn>
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('images')"
+                    >Images
+                    </v-btn>
+                </div>
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('location')"
+                    >Location
+                    </v-btn>
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('specialInstructions')"
+                    >Special Instructions
+                    </v-btn>
+                </div>
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            v-if="show.subsPanel"
+                            class="nav-btn-position"
+                            @click="showSection('subPanel')"
+                    >Subs
+                    </v-btn>
+                </div>
+            </v-card-actions>
+        </v-card>
 
-                <!-- prices -->
-                <div class="col-12">
-                    <h1 class="card-title mt-4">Prices</h1>
-                    <card>
+        <div
+            v-if="show.details"
+            class="cmt-4"
+        >
+            <h1 class="card-title">Details</h1>
+            <card>
+                <div class="row">
+                    <div class="col-12">
+                        Job Task Name:
+                        <!-- task name-->
+                        <div
+                                id="taskName"
+                                class="float-right font-weight-bold capitalize">
+                            {{ jobTask ? jobTask.task.name : ''}}
+                        </div>
+
+                    </div>
+                    <div class="col-12">
+                        <div v-if="jobIsNotComplete()">
+                            <div
+                                    id="uncompletedJob"
+                                    class="flex justify-content-between">
+                                <label>Task Start Date</label>
+                                <input
+                                        id="inputDate"
+                                        type="date" class="form-control form-control-sm w-50" style=""
+                                        v-if="showTaskStartDate()"
+                                        :value="setStartDate(jobTask)"
+                                        @blur="updateTaskStartDate($event.target.value, jobTask.id)">
+                            </div>
+                            <span :class="{ error: hasStartDateError }"
+                                  v-show="hasStartDateError">{{ startDateErrorMessage }}</span>
+                        </div>
+                        <div v-else>
+                            <div
+                                    id="completedJob"
+                                    class="flex justify-content-between">
+                                <label>Task Start Date</label>
+                                <div><strong>{{ getStartDate(jobTask.start_date) }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </card>
+        </div>
+
+        <div
+                v-if="show.taskStatus"
+                class="mt-4"
+        >
+            <h1 class="card-title">Task Status</h1>
+            <card>
+                <div class="row">
+                    <div class="col-12">
+                        Status:
+                        <div class="float-right font-weight-bold capitalize"
+                             :class="jobTask ? getLabelClass(jobTask.status) : 0">
+                            {{ getLatestJobStatus(jobTask) }}
+                        </div>
+                    </div>
+                </div>
+                <div v-show="jobTask ? jobTask.declined_message !== '' : false">
+                    <hr>
+                    <div class="row">
+                        <div class="col-12">
+                            Message:
+                            <div class="float-right font-weight-bold">
+                                {{ getMessage(jobTask) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </card>
+        </div>
+
+        <!-- prices -->
+        <div class="col-12"
+            v-if="show.prices"
+        >
+            <h1 class="card-title mt-4">Prices</h1>
+            <card>
+                <div class="row">
+
+                    <!-- / price/date -->
+                    <div class="col-12" ref="prices">
                         <div class="row">
-
-                            <!-- / price/date -->
-                            <div class="col-12" ref="prices">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <!--                                    v-if="parseInt(cust_final_price) > 0"-->
-                                        <content-section
-                                                v-if="isContractor()"
-                                                label="Total Task Price:"
-                                                ref="totalTaskPrice"
-                                                :content="cust_final_price ? taskCustFinalPrice(cust_final_price, false) : '0'"
-                                                section-classes="ph-zero"
-                                                icon="fas fa-money-bill-alt icon"
-                                                :warning="cust_final_price < sub_final_price"
-                                                warning-message="Sub price is higher than your price"
-                                                type="totalTaskPrice">
-                                        </content-section>
+                            <div class="col-12">
+                                <!--                                    v-if="parseInt(cust_final_price) > 0"-->
+                                <content-section
+                                        v-if="isContractor()"
+                                        label="Total Task Price:"
+                                        ref="totalTaskPrice"
+                                        :content="cust_final_price ? taskCustFinalPrice(cust_final_price, false) : '0'"
+                                        section-classes="ph-zero"
+                                        icon="fas fa-money-bill-alt icon"
+                                        :warning="cust_final_price < sub_final_price"
+                                        warning-message="Sub price is higher than your price"
+                                        type="totalTaskPrice">
+                                </content-section>
 
 
-                                        <content-section
-                                                v-if="!isContractor()"
-                                                label="Total Task Price:"
-                                                id="totalTaskPrice"
-                                                ref="totalTaskPrice"
-                                                :content="cust_final_price ? taskCustFinalPrice(cust_final_price, false) : '0'"
-                                                section-classes="ph-zero"
-                                                icon="fas fa-money-bill-alt icon"
-                                                type="totalTaskPrice"></content-section>
+                                <content-section
+                                        v-if="!isContractor()"
+                                        label="Total Task Price:"
+                                        id="totalTaskPrice"
+                                        ref="totalTaskPrice"
+                                        :content="cust_final_price ? taskCustFinalPrice(cust_final_price, false) : '0'"
+                                        section-classes="ph-zero"
+                                        icon="fas fa-money-bill-alt icon"
+                                        type="totalTaskPrice"></content-section>
 
-                                        <!--                                    <content-section-->
-                                        <!--                                            v-if="parseInt(this.cust_final_price) <= 0"-->
-                                        <!--                                            label="Total Task Price:"-->
-                                        <!--                                            content="Price Not Set"-->
-                                        <!--                                            section-classes="ph-zero"-->
-                                        <!--                                            icon="fas fa-money-bill-alt icon"-->
-                                        <!--                                            type="totalTaskPrice"></content-section>-->
-                                        <!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
+                                <!--                                    <content-section-->
+                                <!--                                            v-if="parseInt(this.cust_final_price) <= 0"-->
+                                <!--                                            label="Total Task Price:"-->
+                                <!--                                            content="Price Not Set"-->
+                                <!--                                            section-classes="ph-zero"-->
+                                <!--                                            icon="fas fa-money-bill-alt icon"-->
+                                <!--                                            type="totalTaskPrice"></content-section>-->
+                                <!--                                    v-if="isContractor() && parseInt(sub_final_price) > 0"-->
 
-                                        <content-section
-                                                v-if="isContractor()"
-                                                label="Total Sub Price:"
-                                                :content="sub_final_price ? taskCustFinalPrice(sub_final_price, true, true) : '0'"
-                                                section-classes="ph-zero"
-                                                icon="fas fa-user icon"
-                                                type="totalTaskPrice"></content-section>
+                                <content-section
+                                        v-if="isContractor()"
+                                        label="Total Sub Price:"
+                                        :content="sub_final_price ? taskCustFinalPrice(sub_final_price, true, true) : '0'"
+                                        section-classes="ph-zero"
+                                        icon="fas fa-user icon"
+                                        type="totalTaskPrice"></content-section>
 
-                                        <content-section
-                                                v-if="isContractor()"
-                                                label="Sub Unit Price:"
-                                                :content="sub_final_price ? taskCustFinalPrice(sub_final_price, true) : '0'"
-                                                section-classes="ph-zero"
-                                                icon="fas fa-user icon"
-                                                type="totalTaskPrice"></content-section>
+                                <content-section
+                                        v-if="isContractor()"
+                                        label="Sub Unit Price:"
+                                        :content="sub_final_price ? taskCustFinalPrice(sub_final_price, true) : '0'"
+                                        section-classes="ph-zero"
+                                        icon="fas fa-user icon"
+                                        type="totalTaskPrice"></content-section>
 
-                                        <!--                                    <content-section-->
-                                        <!--                                            v-if="isContractor() && parseInt(sub_final_price) <= 0"-->
-                                        <!--                                            label="Total Task Sub Price:"-->
-                                        <!--                                            content="Price Not Set"-->
-                                        <!--                                            section-classes="ph-zero"-->
-                                        <!--                                            icon="fas fa-user icon"-->
-                                        <!--                                            type="totalTaskPrice"></content-section>-->
-                                    </div>
+                                <!--                                    <content-section-->
+                                <!--                                            v-if="isContractor() && parseInt(sub_final_price) <= 0"-->
+                                <!--                                            label="Total Task Sub Price:"-->
+                                <!--                                            content="Price Not Set"-->
+                                <!--                                            section-classes="ph-zero"-->
+                                <!--                                            icon="fas fa-user icon"-->
+                                <!--                                            type="totalTaskPrice"></content-section>-->
+                            </div>
 
-                                    <div class="col-12">
+                            <div class="col-12">
 
-                                        <div class="form-group" v-if="isContractor()">
-                                            <div class="flex justify-content-between mt-1rem">
-                                                <label class="">Quantity:</label>
-                                                <input v-if="showTaskQuantityInput()"
-                                                       type="text"
-                                                       ref="quantity"
-                                                       class="form-control form-control-sm w-40"
-                                                       :value="jobTask.qty"
-                                                       @blur="updateCustomerTaskQuantity(
+                                <div class="form-group" v-if="isContractor()">
+                                    <div class="flex justify-content-between mt-1rem">
+                                        <label class="">Quantity:</label>
+                                        <input v-if="showTaskQuantityInput()"
+                                               type="text"
+                                               ref="quantity"
+                                               class="form-control form-control-sm w-40"
+                                               :value="jobTask.qty"
+                                               @blur="updateCustomerTaskQuantity(
                                                            $event.target.value,
                                                            jobTask.id,
                                                            jobTask.qty)"
-                                                >
-                                                <div v-else class="mt-1">
-                                                    <strong>{{ jobTask ? jobTask.qty : ''}}</strong>
-                                                </div>
-                                            </div>
+                                        >
+                                        <div v-else class="mt-1">
+                                            <strong>{{ jobTask ? jobTask.qty : ''}}</strong>
                                         </div>
-                                        <div v-else>
-                                            <div class="flex justify-content-between mt-1rem">
-                                                <label class="">Quantity:</label>
-                                                <strong>{{ jobTask ? jobTask.qty : ''}}</strong>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group" ref="unitPrice" v-if="isContractor()">
-
-                                            <div v-if="!jobIsApproved()">
-                                                <div class="flex justify-content-between">
-                                                    <label class="">Unit Price:</label>
-                                                    <div v-if="showTaskPriceInput()" class="flex flex-row ml-2rem">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text">$</span>
-                                                        </div>
-                                                        <input type="text" ref="price"
-                                                               class="form-control form-control-sm w-full"
-                                                               :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
-                                                               :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
-                                                               @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
-                                                    </div>
-                                                    <div v-else class="mt-1">
-                                                        <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price)
-                                                            }}</strong>
-                                                    </div>
-                                                </div>
-                                                <div class="errorClass" v-if="errors.unit_price">
-                                                    Your Contractor Task Price Must Be Higher The Sub Price
-                                                </div>
-                                                <div class="errorClass" v-if="errors.priceMustBeANumber">
-                                                    Your Input Must Be A Number
-                                                </div>
-                                            </div>
-                                            <div v-else>
-                                                <div class="flex justify-content-between">
-                                                    <label class="">Unit Price:</label>
-                                                    <div><strong>{{ taskCustFinalPrice(unit_price) }}</strong></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <button v-if="isContractor()" class="btn btn-green btn-large m-t-3" v-show="
-                                    jobTask.status === 'bid_task.reopened' ||
-                                    jobStatus === 'bid.initiated' ||
-                                    jobStatus === 'bid.in_progress' ||
-                                    jobStatus === 'bid.declined'
-                                ">Update
-                                </button> -->
                                     </div>
-
                                 </div>
-                            </div>
-                        </div>
-                    </card>
-                </div>
+                                <div v-else>
+                                    <div class="flex justify-content-between mt-1rem">
+                                        <label class="">Quantity:</label>
+                                        <strong>{{ jobTask ? jobTask.qty : ''}}</strong>
+                                    </div>
+                                </div>
 
-                <!-- location -->
-                <div class="col-12" v-if="getAddressLine1 !== ''">
-                    <h1 class="card-title mt-4">Job Task Location</h1>
-                    <card>
-                        <div class="row">
+                                <div class="form-group" ref="unitPrice" v-if="isContractor()">
 
-                            <!-- / location -->
-                            <div class="col-12">
-                                <div
-                                        class="flex flex-col"
-                                        v-if="getAddress() !== 'Address Not Available'"
-                                >
-                                    <card>
-
-                                        <div class="flex flex-col">
-                                            <div>
-                                                {{ getAddressLine1 }}
+                                    <div v-if="!jobIsApproved()">
+                                        <div class="flex justify-content-between">
+                                            <label class="">Unit Price:</label>
+                                            <div v-if="showTaskPriceInput()" class="flex flex-row ml-2rem">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" ref="price"
+                                                       class="form-control form-control-sm w-full"
+                                                       :value="unit_price ? taskCustFinalPrice(unit_price) : '0'"
+                                                       :class="(errors.unit_price || errors.priceMustBeANumber) ? 'box-error': ''"
+                                                       @blur="updateCustomerTaskPrice($event.target.value, jobTask.id, job.id)">
                                             </div>
-                                            <div>
-                                                {{ getCity }}, {{ getLocationState }} {{ getZip }}
+                                            <div v-else class="mt-1">
+                                                <strong v-if="unit_price">{{ taskCustFinalPrice(unit_price)
+                                                    }}</strong>
                                             </div>
                                         </div>
+                                        <div class="errorClass" v-if="errors.unit_price">
+                                            Your Contractor Task Price Must Be Higher The Sub Price
+                                        </div>
+                                        <div class="errorClass" v-if="errors.priceMustBeANumber">
+                                            Your Input Must Be A Number
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <div class="flex justify-content-between">
+                                            <label class="">Unit Price:</label>
+                                            <div><strong>{{ taskCustFinalPrice(unit_price) }}</strong></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <button v-if="isContractor()" class="btn btn-green btn-large m-t-3" v-show="
+                            jobTask.status === 'bid_task.reopened' ||
+                            jobStatus === 'bid.initiated' ||
+                            jobStatus === 'bid.in_progress' ||
+                            jobStatus === 'bid.declined'
+                        ">Update
+                        </button> -->
+                            </div>
 
-                                        <hr>
+                        </div>
+                    </div>
+                </div>
+            </card>
+        </div>
 
-                                        <main class="map-responsive">
-                                            <iframe
-                                                    width="450"
-                                                    height="250"
-                                                    frameborder="0" style="border:0"
-                                                    :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
+
+        <!-- location -->
+        <div class="col-12" v-if="getAddressLine1 !== '' && show.location"
+        >
+            <h1 class="card-title mt-4">Job Task Location</h1>
+            <card>
+                <div class="row">
+
+                    <!-- / location -->
+                    <div class="col-12">
+                        <div
+                                class="flex flex-col"
+                                v-if="getAddress() !== 'Address Not Available'"
+                        >
+                            <card>
+
+                                <div class="flex flex-col">
+                                    <div>
+                                        {{ getAddressLine1 }}
+                                    </div>
+                                    <div>
+                                        {{ getCity }}, {{ getLocationState }} {{ getZip }}
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <main class="map-responsive">
+                                    <iframe
+                                            width="450"
+                                            height="250"
+                                            frameborder="0" style="border:0"
+                                            :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
                                                         getAddressLine1 + ' ' +
                                                         getCity + ' ' +
                                                         getLocationState + ' ' +
                                                         getZip
                                                         " allowfullscreen>
-                                            </iframe>
-                                        </main>
-                                    </card>
-                                    <div class="flex flex-col">
-                                        <hr>
-                                        <v-btn
-                                                v-if="jobIsNotComplete()"
-                                                class="primary w-full"
-                                                @click="openUpdateTaskLocation(jobTask.id)"
-                                        >
-                                            <v-icon
-                                                    class="mr-1rem"
-                                            >mdi-home-edit
-                                            </v-icon>
-                                            Change Task Location
-                                        </v-btn>
+                                    </iframe>
+                                </main>
+                            </card>
+                            <div class="flex flex-col">
+                                <hr>
+                                <v-btn
+                                        v-if="jobIsNotComplete()"
+                                        class="primary w-full"
+                                        @click="openUpdateTaskLocation(jobTask.id)"
+                                >
+                                    <v-icon
+                                            class="mr-1rem"
+                                    >mdi-home-edit
+                                    </v-icon>
+                                    Change Task Location
+                                </v-btn>
 
-                                    </div>
-                                </div>
-                                <div v-else class="location">
-                                    Job Location Has Not Been Set
-                                </div>
                             </div>
                         </div>
-                    </card>
+                        <div v-else class="location">
+                            Job Location Has Not Been Set
+                        </div>
+                    </div>
                 </div>
+            </card>
+        </div>
 
-                <!-- images -->
-                <div class="col-12">
-                    <h1 class="card-title mt-4">Images</h1>
-                    <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>
-                    <card>
-                        <div class="row">
 
-                            <div class="col-12">
-                                <task-images :jobTask="jobTask" type="notsub">
-                                </task-images>
-                            </div>
-                        </div>
-                    </card>
+        <!-- images -->
+        <div class="col-12"
+            v-if="show.images"
+        >
+            <h1 class="card-title mt-4">Images</h1>
+<!--            <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>-->
+            <card>
+                <div class="row">
+
+                    <div class="col-12">
+                        <task-images :jobTask="jobTask" type="notsub">
+                        </task-images>
+                    </div>
                 </div>
+            </card>
+        </div>
 
-                <!-- special instructions -->
-                <div class="col-12">
-                    <h1 class="card-title mt-4">Special Instructions</h1>
-                    <card>
-                        <div class="row">
 
-                            <div class="col-12">
-                                <div class="flex flex-col">
-                                    <div class="flex flex-col mb-3" v-if="isContractor()">
-                                        <message label="Notes for Subcontractor" :jobId="jobTask ? jobTask.id : -1"
-                                                 :server-message="jobTask && jobTask.sub_message ? jobTask.sub_message : ''"
-                                                 actor='sub'
-                                                 :disable-messages="disableMessages">
-                                        </message>
-                                    </div>
-                                    <div class="flex flex-col" v-if="isContractor()">
-                                        <message label="Notes For Customer" :jobId="jobTask ? jobTask.id : -1"
-                                                 :server-message="jobTask ? jobTask.customer_message : null"
-                                                 actor='customer'
-                                                 :disable-messages="disableMessages"></message>
-                                    </div>
+        <!-- special instructions -->
+        <div class="col-12"
+             v-if="show.specialInstructions"
+        >
+            <h1 class="card-title mt-4">Special Instructions</h1>
+            <card>
+                <div class="row">
 
-                                    <div class="flex flex-col" v-if="!isContractor()">
-                                        <span class="label mb-2">Notes from Contractor</span>
-                                        <textarea cols="0" rows="0" class="form-control" disabled
-                                                  :value="getContractorNotesForCustomer"
-                                                  style="color: black;"></textarea>
-                                    </div>
-                                </div>
+                    <div class="col-12">
+                        <div class="flex flex-col">
+                            <div class="flex flex-col mb-3" v-if="isContractor()">
+                                <message label="Notes for Subcontractor" :jobId="jobTask ? jobTask.id : -1"
+                                         :server-message="jobTask && jobTask.sub_message ? jobTask.sub_message : ''"
+                                         actor='sub'
+                                         :disable-messages="disableMessages">
+                                </message>
                             </div>
-                        </div>
-                    </card>
-                </div>
-
-                <!-- Subcontractor bids -->
-
-
-                <section class="col-12" id="subs" v-show="showSubsPanel">
-                    <h1 id="bids" class="card-title mt-4">Bids</h1>
-                    <v-card
-                            :id="jobTask ? 'task-subs-' + jobTask.id : 0"
-                            v-if="isGeneral() && jobHasSubs()"
-                    >
-
-                        <v-card-text>
-                            <v-row
-                                    class="justify-content-between"
-                            >
-                                <strong class="uppercase">Sub</strong>
-                                <strong class="uppercase">Bid Price</strong>
-                                <strong class="uppercase">Action</strong>
-                            </v-row>
-                            <v-divider></v-divider>
-
-                            <v-row class="flex mb-2 justify-content-between"
-                                   v-for="bid in jobTask.bid_contractor_job_tasks"
-                                   :key="jobTask ? bid.id : 0">
-
-                                <div class="flex-1 lookLikeALink"
-                                     @click="viewContractorInfo(bid.contractor_id)">{{
-                                    getCompanyName(bid) }}
-                                </div>
-                                <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"
-                                >$ {{ getBidPrice(bid) }}
-                                </div>
-                                <div>
-                                    <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
-
-
-                                    <v-btn
-                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
-                                                                    && checkIfBidHasBeenSent(bid)"
-                                            @click="acceptSubBidForTask(bid, jobTask)"
-                                            class="primary w-1/2"
-                                            :loading="disabled.accept"
-                                    >
-                                        Accept
-                                    </v-btn>
-
-
-                                    <div
-                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
-                                        <strong>Accepted</strong>
-                                    </div>
-                                    <div
-                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
-                                        <strong>Pending</strong></div>
-                                </div>
-                            </v-row>
-                        </v-card-text>
-
-                    </v-card>
-                </section>
-
-
-                <!--                <div class="col-12" v-show="showSubsPanel">-->
-                <!--                    &lt;!&ndash;                    <h1 id="bids" class="card-title mt-4">Bids</h1>&ndash;&gt;-->
-                <!--                    <card>-->
-                <!--                        <div class="row">-->
-                <!--                            &lt;!&ndash;show this box if the show button has been selected and if showSubsPanel is selected then show &ndash;&gt;-->
-                <!--                            <div class="col-12">-->
-                <!--                                <div v-if="showSubsPanel" class="mt-4">-->
-                <!--                                    <div :id="jobTask ? 'task-divider-' + jobTask.id : 0" :key="1"></div>-->
-                <!--                                    <div :id="jobTask ? 'task-subs-' + jobTask.id : 0"-->
-                <!--                                         v-if="isGeneral() && this.jobHasSubs()"-->
-                <!--                                         :key="3">-->
-                <!--                                        <div class="flex flex-col">-->
-                <!--                                            <div class="table-header">-->
-                <!--                                                <div class="flex-1">Sub</div>-->
-                <!--                                                <div class="flex-1">Bid Price</div>-->
-                <!--                                                <div class="flex-1">Action</div>-->
-                <!--                                            </div>-->
-                <!--                                            <div class="flex mb-2 justify-content-between"-->
-                <!--                                                 v-for="bid in jobTask.bid_contractor_job_tasks"-->
-                <!--                                                 :key="jobTask ? bid.id : 0">-->
-                <!--                                                <div class="flex-1 lookLikeALink"-->
-                <!--                                                     @click="viewContractorInfo(bid.contractor_id)">{{-->
-                <!--                                                    getCompanyName(bid) }}-->
-                <!--                                                </div>-->
-                <!--                                                &lt;!&ndash;                                            <div class="flex-1 uppercase">{{ bid.payment_type }}</div>&ndash;&gt;-->
-
-
-                <!--                                                <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"-->
-                <!--                                                >$ {{ getBidPrice(bid) }}-->
-                <!--                                                </div>-->
-
-
-                <!--                                                <div class="flex-1">-->
-                <!--                                                    &lt;!&ndash; <button v-if="showAcceptBtn(jobTask.status)" &ndash;&gt;-->
-
-
-                <!--                                                    <v-btn-->
-                <!--                                                            v-if="!checkIfBidHasBeenAccepted(jobTask, bid)-->
-                <!--                                                                    && checkIfBidHasBeenSent(bid)"-->
-                <!--                                                            @click="acceptSubBidForTask(bid, jobTask)"-->
-                <!--                                                            class="primary w-1/2"-->
-                <!--                                                            :disabled="disabled.accept"-->
-                <!--                                                    >-->
-                <!--                                                        <span v-if="disabled.accept">-->
-                <!--                                                            <i class="fa fa-btn fa-spinner fa-spin"></i>-->
-                <!--                                                        </span>-->
-                <!--                                                        Accept-->
-                <!--                                                    </v-btn>-->
-
-
-                <!--                                                    <div-->
-                <!--                                                            v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">-->
-                <!--                                                        <strong>Accepted</strong>-->
-                <!--                                                    </div>-->
-                <!--                                                    <div-->
-                <!--                                                            v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">-->
-                <!--                                                        <strong>Pending</strong></div>-->
-                <!--                                                </div>-->
-
-                <!--                                            </div>-->
-
-
-                <!--                                        </div>-->
-                <!--                                    </div>-->
-                <!--                                </div>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                    </card>-->
-                <!--                </div>-->
-
-
-                <!--                <v-card v-if="checkIfThereAreMessaages(jobTask)"-->
-                <!--                        style="width: 95%;-->
-                <!--                            margin-left: auto;-->
-                <!--                            margin-right: auto;"-->
-                <!--                >-->
-
-                <!--                    <v-card-title>-->
-                <!--                        Change Messages to the contractor-->
-                <!--                    </v-card-title>-->
-                <!--                    <v-card-text v-show="messages">-->
-                <!--                        <v-list-item v-for="i in jobTask.messages" :key="i.id"-->
-                <!--                                     style="border: black solid thin;-->
-                <!--                                        border-radius: 10px;-->
-                <!--                                        background-color: aliceblue;-->
-                <!--                                        margin-bottom: .15rem;-->
-                <!--                                        margin-top: .15rem;"-->
-                <!--                        >-->
-                <!--                            <v-list-item-content>-->
-                <!--                                <v-list-item-title>{{ i.message }}</v-list-item-title>-->
-                <!--                            </v-list-item-content>-->
-                <!--                        </v-list-item>-->
-                <!--                    </v-card-text>-->
-
-                <!--                    <v-btn-->
-                <!--                            color="primary w-full"-->
-                <!--                            @click="showTaskMessages(false)"-->
-                <!--                            v-show="messages"-->
-                <!--                    >-->
-                <!--                        Hide-->
-                <!--                    </v-btn>-->
-                <!--                    <v-btn-->
-                <!--                            color="primary w-full"-->
-                <!--                            @click="showTaskMessages(true)"-->
-                <!--                            v-show="!messages"-->
-                <!--                    >-->
-                <!--                        Show-->
-                <!--                    </v-btn>-->
-
-                <!--                </v-card>-->
-
-                <!-- Task Actions -->
-                <div class="col-12 mb-4">
-                    <h1 class="card-title mt-4"></h1>
-                    <div class="flex space-between">
-
-
-                        <div v-if="isGeneral()" class="w-full">
-                            <div v-if="jobIsNotComplete()">
-                                <v-btn
-                                        class="w-full mb-half-rem"
-                                        color="primary"
-                                        ref="addASubButton"
-                                        @click.prevent="openSubInvite(jobTask.id)"
-                                >
-                                    Add A Sub
-                                </v-btn>
+                            <div class="flex flex-col" v-if="isContractor()">
+                                <message label="Notes For Customer" :jobId="jobTask ? jobTask.id : -1"
+                                         :server-message="jobTask ? jobTask.customer_message : null"
+                                         actor='customer'
+                                         :disable-messages="disableMessages"></message>
                             </div>
-                            <div v-if="jobTaskIsFinished(jobTask)">
-                                <v-btn
-                                        class="w-full mb-half-rem"
-                                        color="primary"
-                                        v-if="showFinishedBtn(jobTask)"
-                                        @click="finishedTask(jobTask)" :loading="disabled.finished"
-                                >Click Me When Job Is Finished
-                                </v-btn>
-                            </div>
-                            <div v-if="contractorCanApproveSubsTask(jobTask)">
-                                <v-btn
-                                        class="w-full mb-half-rem"
-                                        color="primary"
-                                        @click="approveTaskHasBeenFinished(jobTask)"
-                                        :loading="disabled.approve"
-                                >
-                                    Approve
-                                </v-btn>
-                            </div>
-                            <div v-if="contractorWantsToChangeBid()">
-                                <v-btn
-                                        class="w-full mb-half-rem"
-                                        color="warning"
-                                        @click="openDenyTaskForm(jobTask.id)"
-                                >
-                                    Change Task
-                                </v-btn>
-                            </div>
-                            <div v-if="subHasNotFinishedTask(jobTask)">
-                                <h5
-                                    class="text-center"
-                                >Waiting For Sub</h5>
-                            </div>
-                            <div v-if="contractorWantsToDeleteTheTask(jobTask)">
-                                <v-btn
-                                        class="w-full mb-half-rem"
-                                        color="red"
-                                        @click="deleteTask(jobTask)"
-                                        :loading="disabled.deleteTask"
-                                >
-                                    Delete
-                                </v-btn>
-                            </div>
-                        </div>
 
-                        <div v-else class="w-full">
-<!--                            <div v-if="customerWantsToChangeTheBid()">-->
-<!--                                <v-btn-->
-<!--                                        id="changeTask"-->
-<!--                                        class="w-full mb-half-rem"-->
-<!--                                        color="warning"-->
-<!--                                        @click="changeTaskDialog()"-->
-<!--                                >-->
-<!--                                    &lt;!&ndash;                                    @click="openDenyTaskForm(jobTask.id)"&ndash;&gt;-->
-<!--                                    Change Task-->
-<!--                                </v-btn>-->
-<!--                            </div>-->
-                            <div v-if="customerWantsToDeleteTheTask(jobTask)">
-                                <v-btn
-                                        class="w-full mb-half-rem"
-                                        color="red"
-                                        @click="deleteTask(jobTask)"
-                                        :loading="disabled.deleteTask"
-                                >
-                                    Delete
-                                </v-btn>
+                            <div class="flex flex-col" v-if="!isContractor()">
+                                <span class="label mb-2">Notes from Contractor</span>
+                                <textarea cols="0" rows="0" class="form-control" disabled
+                                          :value="getContractorNotesForCustomer"
+                                          style="color: black;"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="text-center">
-                <v-dialog
-                        v-model="dialog"
-                        width="500"
-                >
-                    <v-card>
-                        <v-card-title
-                                class="headline grey lighten-2"
-                                primary-title
-                        >
-                            Describe Change Here?
-                        </v-card-title>
-
-                        <v-card-text style="margin-top: 1.25rem">
-                            <v-textarea
-                                    outlined
-                                    name="contractorMessage"
-                                    label="Message To Contractor"
-                                    v-model="changeMessage"
-                            ></v-textarea>
-                        </v-card-text>
-
-                        <v-divider></v-divider>
-
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                    color="primary"
-                                    text
-                                    @click="sendMessageToContractor()"
-                            >
-                                Submit
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </div>
-
-            <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
-                              :job-task-task="jobTask ? jobTask.task : null"
-                              :job-task-name="jobTask ? jobTask.task.name : null"
-                              :bid-payment-type="jobTask.job.payment_type"
-                              :id="jobTask ? jobTask.id : null">
-            </sub-invite-modal>
-
-            <deny-task-modal v-if="isContractor()"
-                             :job-task="jobTask"
-                             :id="jobTask ? jobTask.id : null">
-            </deny-task-modal>
-
-            <update-task-location-modal
-                    v-show="isContractor()"
-                    :job-task="jobTask"
-                    :id="jobTask ? jobTask.id : null">
-            </update-task-location-modal>
-
+            </card>
         </div>
-        <feedback
-                page="JobTask"
-        ></feedback>
-    </div>
+
+        <section class="col-12" id="subs" v-show="showSubsPanel && show.subPanel">
+            <h1 id="bids" class="card-title mt-4">Bids</h1>
+            <v-card
+                    :id="jobTask ? 'task-subs-' + jobTask.id : 0"
+                    v-if="isGeneral() && jobHasSubs()"
+            >
+
+                <v-card-text>
+                    <v-row
+                            class="justify-content-between"
+                    >
+                        <strong class="uppercase">Sub</strong>
+                        <strong class="uppercase">Bid Price</strong>
+                        <strong class="uppercase">Action</strong>
+                    </v-row>
+                    <v-divider></v-divider>
+
+                    <v-row class="flex mb-2 justify-content-between"
+                           v-for="bid in jobTask.bid_contractor_job_tasks"
+                           :key="jobTask ? bid.id : 0">
+
+                        <div class="flex-1 lookLikeALink"
+                             @click="viewContractorInfo(bid.contractor_id)">{{
+                            getCompanyName(bid) }}
+                        </div>
+                        <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"
+                        >$ {{ getBidPrice(bid) }}
+                        </div>
+                        <div>
+                            <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
+
+
+                            <v-btn
+                                    v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
+                                                                    && checkIfBidHasBeenSent(bid)"
+                                    @click="acceptSubBidForTask(bid, jobTask)"
+                                    class="primary w-1/2"
+                                    :loading="disabled.accept"
+                            >
+                                Accept
+                            </v-btn>
+
+
+                            <div
+                                    v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
+                                <strong>Accepted</strong>
+                            </div>
+                            <div
+                                    v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                <strong>Pending</strong></div>
+                        </div>
+                    </v-row>
+                </v-card-text>
+            </v-card>
+        </section>
+
+        <div class="col-12 mb-4">
+            <h1 class="card-title mt-4"></h1>
+            <div class="flex space-between">
+
+
+                <div v-if="isGeneral()" class="w-full">
+                    <div v-if="jobIsNotComplete()">
+                        <v-btn
+                                class="w-full mb-half-rem"
+                                color="primary"
+                                ref="addASubButton"
+                                @click.prevent="openSubInvite(jobTask.id)"
+                        >
+                            Add A Sub
+                        </v-btn>
+                    </div>
+                    <div v-if="jobTaskIsFinished(jobTask)">
+                        <v-btn
+                                class="w-full mb-half-rem"
+                                color="primary"
+                                v-if="showFinishedBtn(jobTask)"
+                                @click="finishedTask(jobTask)" :loading="disabled.finished"
+                        >Click Me When Job Is Finished
+                        </v-btn>
+                    </div>
+                    <div v-if="contractorCanApproveSubsTask(jobTask)">
+                        <v-btn
+                                class="w-full mb-half-rem"
+                                color="primary"
+                                @click="approveTaskHasBeenFinished(jobTask)"
+                                :loading="disabled.approve"
+                        >
+                            Approve
+                        </v-btn>
+                    </div>
+                    <div v-if="contractorWantsToChangeBid()">
+                        <v-btn
+                                class="w-full mb-half-rem"
+                                color="warning"
+                                @click="openDenyTaskForm(jobTask.id)"
+                        >
+                            Change Task
+                        </v-btn>
+                    </div>
+                    <div v-if="subHasNotFinishedTask(jobTask)">
+                        <h5
+                                class="text-center"
+                        >Waiting For Sub</h5>
+                    </div>
+                    <div v-if="contractorWantsToDeleteTheTask(jobTask)">
+                        <v-btn
+                                class="w-full mb-half-rem"
+                                color="red"
+                                @click="deleteTask(jobTask)"
+                                :loading="disabled.deleteTask"
+                        >
+                            Delete
+                        </v-btn>
+                    </div>
+                </div>
+
+                <div v-else class="w-full">
+                    <!--                            <div v-if="customerWantsToChangeTheBid()">-->
+                    <!--                                <v-btn-->
+                    <!--                                        id="changeTask"-->
+                    <!--                                        class="w-full mb-half-rem"-->
+                    <!--                                        color="warning"-->
+                    <!--                                        @click="changeTaskDialog()"-->
+                    <!--                                >-->
+                    <!--                                    &lt;!&ndash;                                    @click="openDenyTaskForm(jobTask.id)"&ndash;&gt;-->
+                    <!--                                    Change Task-->
+                    <!--                                </v-btn>-->
+                    <!--                            </div>-->
+                    <div v-if="customerWantsToDeleteTheTask(jobTask)">
+                        <v-btn
+                                class="w-full mb-half-rem"
+                                color="red"
+                                @click="deleteTask(jobTask)"
+                                :loading="disabled.deleteTask"
+                        >
+                            Delete
+                        </v-btn>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <v-dialog
+                    v-model="dialog"
+                    width="500"
+            >
+                <v-card>
+                    <v-card-title
+                            class="headline grey lighten-2"
+                            primary-title
+                    >
+                        Describe Change Here?
+                    </v-card-title>
+
+                    <v-card-text style="margin-top: 1.25rem">
+                        <v-textarea
+                                outlined
+                                name="contractorMessage"
+                                label="Message To Contractor"
+                                v-model="changeMessage"
+                        ></v-textarea>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="primary"
+                                text
+                                @click="sendMessageToContractor()"
+                        >
+                            Submit
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
+
+        <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
+                          :job-task-task="jobTask ? jobTask.task : null"
+                          :job-task-name="jobTask ? jobTask.task.name : null"
+                          :bid-payment-type="jobTask.job.payment_type"
+                          :id="jobTask ? jobTask.id : null">
+        </sub-invite-modal>
+
+        <deny-task-modal v-if="isContractor()"
+                         :job-task="jobTask"
+                         :id="jobTask ? jobTask.id : null">
+        </deny-task-modal>
+
+        <update-task-location-modal
+                v-show="isContractor()"
+                :job-task="jobTask"
+                :id="jobTask ? jobTask.id : null">
+        </update-task-location-modal>
+
+
+    </v-container>
 </template>
 
 <script>
@@ -694,6 +640,15 @@
         ],
         data() {
             return {
+                show:{
+                    details: false,
+                    taskStatus: false,
+                    prices: false,
+                    images: false,
+                    location: false,
+                    specialInstructions: false,
+                    subPanel: false,
+                },
                 messages: false,
                 changeMessage: '',
                 dialog: false,
@@ -824,6 +779,35 @@
             }
         },
         methods: {
+
+            showSection(section) {
+                this.hideAllSections();
+                if (section === 'details') {
+                    this.show.details = true;
+                } else if (section === 'taskStatus') {
+                    this.show.taskStatus = true;
+                } else if (section === 'prices') {
+                    this.show.prices = true;
+                } else if (section === 'images') {
+                    this.show.images = true;
+                } else if (section === 'location') {
+                    this.show.location = true;
+                } else if (section === 'specialInstructions') {
+                    this.show.specialInstructions = true;
+                } else if (section === 'subPanel') {
+                    this.show.subPanel = true;
+                }
+            },
+
+            hideAllSections() {
+                this.show.details = false;
+                this.show.taskStatus = false;
+                this.show.prices = false;
+                this.show.subPanel = false;
+                this.show.images = false;
+                this.show.location = false;
+                this.show.specialInstructions = false;
+            },
 
             subHasNotFinishedTask(item) {
                 if (this.isASub(item.contractor_id, item.job.contractor_id)) {
@@ -1537,6 +1521,11 @@
 </script>
 
 <style scoped>
+
+    .nav-btn-position {
+        width: 46%;
+        margin-bottom: .25rem;
+    }
 
     .bid-price-error {
         color: red;

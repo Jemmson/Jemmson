@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <v-container>
 
         <div v-if="showDeclinedMessage"
              class="ml-3 mr-3 w-100"
@@ -14,7 +14,64 @@
             </card>
         </div>
 
-        <v-col cols="12">
+        <v-card>
+            <v-card-actions
+                    class="flex flex-col"
+            >
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('jobStepper')"
+                    >Workflow
+                    </v-btn>
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('details')"
+                    >Details
+                    </v-btn>
+                </div>
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('jobTask')"
+                    >JobTasks
+                    </v-btn>
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('images')"
+                    >Images
+                    </v-btn>
+                </div>
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('location')"
+                    >Location
+                    </v-btn>
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('notes')"
+                    >Job Notes
+                    </v-btn>
+                </div>
+                <div class="flex flex-end">
+                    <v-btn
+                            v-if="canAddATask() && !isCustomer"
+                            class="w-100 btn btn-sm btn-normal flex-1"
+                            width="100%"
+                            name="addTaskToBid"
+                            id="addTaskToBid"
+                            @click="$router.push('/job/add/task')"
+                    >
+                        Add A Task
+                    </v-btn>
+                </div>
+            </v-card-actions>
+        </v-card>
+
+        <v-col cols="12"
+               v-show="show.jobStepper"
+        >
             <job-stepper
                     :status="getSelectedJob()"
                     :user="getUser()"
@@ -22,7 +79,9 @@
             ></job-stepper>
         </v-col>
 
-        <v-col cols="12">
+        <v-col cols="12"
+               v-show="show.details"
+        >
             <v-card>
                 <v-card-title>Details</v-card-title>
 
@@ -119,26 +178,12 @@
                         </tbody>
                     </template>
                 </v-simple-table>
-
-                <v-btn
-                        v-if="canAddATask() && !isCustomer"
-                        class="w-100 btn btn-sm btn-normal flex-1"
-                        width="100%"
-                        name="addTaskToBid"
-                        id="addTaskToBid"
-                        @click="$router.push('/job/add/task')"
-                >
-                    Add A Task
-                </v-btn>
-
             </v-card>
-
-
         </v-col>
-
 
         <section ref="job_tasks" class="col-12"
                  v-if="getJobTasks() !== undefined"
+                 v-show="show.jobTask"
         >
             <div v-if="!isCustomer && bid && getJobTasksLength() > 0">
 
@@ -162,7 +207,7 @@
                         </v-card-subtitle>
                     </v-card-title>
                     <v-card-title
-                        v-if="notificationMessage(item)"
+                            v-if="notificationMessage(item)"
                     >
                         <v-btn
                                 v-if="item.sub_statuses.length > 0"
@@ -208,7 +253,7 @@
                     </v-row>
                     <v-divider></v-divider>
                     <v-card-actions
-                        class="space-evenly"
+                            class="space-evenly"
                     >
                         <v-btn
                                 class="btn-size btn-weight"
@@ -263,7 +308,7 @@
                                 :class="i % 2 === 0 ? 'primary--text': 'white--text'"
                                 v-if="isGeneral() && subHasNotFinishedTask(item)"
                         ><span
-                            style="color: black"
+                                style="color: black"
                         >Waiting For Sub</span>
                         </div>
                     </v-card-actions>
@@ -345,7 +390,9 @@
         </section>
 
         <!-- images -->
-        <div class="col-12">
+        <div class="col-12"
+             v-show="show.images"
+        >
             <h1 class="card-title mt-4">Images</h1>
             <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>
             <card>
@@ -360,6 +407,75 @@
                 </div>
             </card>
         </div>
+
+        <section ref="job_address" class="col-12" v-if="showAddress"
+                 v-show="show.location"
+        >
+            <h1 class="card-title mt-4">Job Address</h1>
+            <card>
+
+                <div class="flex flex-col">
+                    <div>
+                        {{ bid.location.address_line_1 }}
+                    </div>
+                    <div>
+                        {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <main class="map-responsive">
+                    <iframe
+                            width="450"
+                            height="250"
+                            frameborder="0" style="border:0"
+                            :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
+                            bid.location.address_line_1 + ' ' +
+                            bid.location.city + ' ' +
+                            bid.location.state + ' ' +
+                            bid.location.zip
+                            " allowfullscreen>
+                    </iframe>
+                </main>
+            </card>
+        </section>
+
+        <section class="col-12"
+                 v-show="show.notes"
+        >
+            <h1 v-if="isCustomer" class="card-title mt-4">Special Notes For The Job</h1>
+            <h1 v-else class="card-title mt-4">Special Notes From Customer</h1>
+            <card>
+                <main class="row">
+                    <section class="col-12">
+
+                        <div style="display: none;">{{ messageFromCustomer }}</div>
+                        <div style="display: none;">{{ getPaidWithCashMessage }}</div>
+
+
+                        <textarea ref="message_text_area"
+                                  v-model="customerNotesMessage"
+                                  name="notes" id="notes" cols="30" rows="10"
+                                  class="form-control"
+                                  :disabled="!isCustomer"
+                        >
+
+                            </textarea>
+
+                        <v-btn
+                                v-if="isCustomer"
+                                class="mt-1rem"
+                                color="primary"
+                                ref="update_customer_notes_button"
+                                @click="updateGeneralContractorNotes"
+                        >Submit
+                        </v-btn>
+
+                    </section>
+                </main>
+            </card>
+        </section>
 
         <!-- / tasks -->
 
@@ -398,71 +514,6 @@
             </card>
         </section>
 
-        <section ref="job_address" class="col-12" v-if="showAddress">
-            <h1 class="card-title mt-4">Job Address</h1>
-            <card>
-
-                <div class="flex flex-col">
-                    <div>
-                        {{ bid.location.address_line_1 }}
-                    </div>
-                    <div>
-                        {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
-                    </div>
-                </div>
-
-                <hr>
-
-                <main class="map-responsive">
-                    <iframe
-                            width="450"
-                            height="250"
-                            frameborder="0" style="border:0"
-                            :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
-                            bid.location.address_line_1 + ' ' +
-                            bid.location.city + ' ' +
-                            bid.location.state + ' ' +
-                            bid.location.zip
-                            " allowfullscreen>
-                    </iframe>
-                </main>
-            </card>
-        </section>
-
-        <section class="col-12">
-            <h1 v-if="isCustomer" class="card-title mt-4">Special Notes For The Job</h1>
-            <h1 v-else class="card-title mt-4">Special Notes From Customer</h1>
-            <card>
-                <main class="row">
-                    <section class="col-12">
-
-                        <div style="display: none;">{{ messageFromCustomer }}</div>
-                        <div style="display: none;">{{ getPaidWithCashMessage }}</div>
-
-
-                        <textarea ref="message_text_area"
-                                  v-model="customerNotesMessage"
-                                  name="notes" id="notes" cols="30" rows="10"
-                                  class="form-control"
-                                  :disabled="!isCustomer"
-                        >
-
-                            </textarea>
-
-                        <v-btn
-                                v-if="isCustomer"
-                                class="mt-1rem"
-                                color="primary"
-                                ref="update_customer_notes_button"
-                                @click="updateGeneralContractorNotes"
-                        >Submit
-                        </v-btn>
-
-                    </section>
-                </main>
-            </card>
-        </section>
-
         <stripe
                 :bid="bid"
                 :client-secret="clientSecret"
@@ -476,7 +527,7 @@
                          :id="currentJobTaskId">
         </deny-task-modal>
 
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -536,6 +587,13 @@
         },
         data() {
             return {
+                show: {
+                    jobStepper: false,
+                    details: false,
+                    jobTask: false,
+                    location: false,
+                    images: false
+                },
                 isPaid: false,
                 clientSecret: null,
                 feeDialog: false,
@@ -719,12 +777,38 @@
         },
         methods: {
 
-            checkIfPaid(){
+            showSection(section) {
+                this.hideAllSections();
+                if (section === 'jobStepper') {
+                    this.show.jobStepper = true;
+                } else if (section === 'details') {
+                    this.show.details = true;
+                } else if (section === 'jobTask') {
+                    this.show.jobTask = true;
+                } else if (section === 'images') {
+                    this.show.images = true;
+                } else if (section === 'location') {
+                    this.show.location = true;
+                } else if (section === 'notes') {
+                    this.show.notes = true;
+                }
+            },
+
+            hideAllSections() {
+                this.show.details = false;
+                this.show.jobStepper = false;
+                this.show.jobTask = false;
+                this.show.images = false;
+                this.show.location = false;
+                this.show.notes = false;
+            },
+
+            checkIfPaid() {
                 return this.isPaid;
             },
 
-            paidFromSignUp () {
-              this.isPaid = true;
+            paidFromSignUp() {
+                this.isPaid = true;
             },
 
             async getBids() {
@@ -750,12 +834,12 @@
             subHasNotFinishedTask(item) {
                 if (this.isASub(item.contractor_id, this.bid.contractor_id)) {
                     return this.getLatestJobTaskStatus1(item) === 'approved by customer'
-                    || this.getLatestJobTaskStatus1(item) === 'declined subs work'
+                        || this.getLatestJobTaskStatus1(item) === 'declined subs work'
                 }
             },
 
-            isASub(subId, generalId){
-              return subId !== generalId;
+            isASub(subId, generalId) {
+                return subId !== generalId;
             },
 
             getJobTasksLength() {
@@ -763,10 +847,10 @@
                 return jobTasks.length
             },
 
-            atleastOnetaskHasChanged(){
+            atleastOnetaskHasChanged() {
                 const jobTasks = this.getJobTasks()
                 for (let i = 0; i < jobTasks.length; i++) {
-                    if (this.getLatestJobTaskStatus(jobTasks[i]) === 'changed'){
+                    if (this.getLatestJobTaskStatus(jobTasks[i]) === 'changed') {
                         this.taskHasChanged = true;
                     }
                 }
@@ -911,7 +995,6 @@
             },
 
 
-
             getLatestJobTaskStatus(task) {
 
                 let status = '';
@@ -927,12 +1010,12 @@
 
                 const jobTasks = this.getJobTasks()
                 for (let i = 0; i < jobTasks.length; i++) {
-                    if (this.getLatestJobTaskStatus1(jobTasks[i]) === 'changed'){
+                    if (this.getLatestJobTaskStatus1(jobTasks[i]) === 'changed') {
                         taskHasChanged = true;
                     }
                 }
 
-                if (taskHasChanged && status === 'waiting for customer approval' ) {
+                if (taskHasChanged && status === 'waiting for customer approval') {
                     return 'WAITING ON BID SUBMISSION'
                 }
 
@@ -958,11 +1041,16 @@
                     return this.bid.job_status[this.bid.job_status.length - 1].status
                 }
             },
+
+
+
             canAddATask() {
                 if (this.bid) {
                     return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
                 }
             },
+
+
             viewContractorInfo() {
                 this.$router.push({name: 'contractor-info', params: {contractorId: this.bid.contractor.id}})
             },
@@ -1203,6 +1291,11 @@
 </script>
 
 <style lang="less" scoped>
+
+    .nav-btn-position {
+        width: 46%;
+        margin-bottom: .25rem;
+    }
 
     .b-brown {
         background-color: beige;
