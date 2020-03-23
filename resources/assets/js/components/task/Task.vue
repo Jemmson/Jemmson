@@ -8,7 +8,7 @@
         >
             <div
                     v-if="needsStripe() && isCreditCardJob()"
-                    class="bg-color-red f-bold fa-1x pb-1 pl-1 pt-3"
+                    class="bg-color-red f-bold fa-1x pb-1 pl-1 pt-3 w-break"
             >
                 You will need to set up a credit card to bid on this job
             </div>
@@ -85,6 +85,7 @@
                         <v-btn
                                 v-if="showDeclinedMsg(bidTask) && subHasMessage(bidTask)"
                                 class="nav-btn-position"
+                                color="error"
                                 @click="showSection('messages')"
                         >Messages
                         </v-btn>

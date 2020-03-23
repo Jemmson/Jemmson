@@ -188,12 +188,14 @@ describe('BidDetails', function () {
         expect(wrapper.find({ref: 'location'}).exists()).toBe(false);
     })
 
-    test('that if a customer looks at a bid that has been initiated then the subtitle for details should say' +
-        ' Please wait while Bid is being submitted', async () => {
+    test('that if a customer looks at a bid that has been initiated or in progress' +
+        ' then the subtitle for details should say' +
+        ' PLEASE WAIT UNTIL YOUR CONTRACTOR SUBMITS BID', async () => {
 
         const wrapper = mount(BidDetails, {
             localVue,
             vuetify,
+            router,
             store,
             stubs: [
                 'approve-bid'
@@ -231,7 +233,7 @@ describe('BidDetails', function () {
                     },
                     job_status: [
                         {
-                            status: 'initiated'
+                            status: 'in_progress'
                         }
                     ]
                 },
@@ -246,7 +248,7 @@ describe('BidDetails', function () {
         })
 
         expect(wrapper.find({ref: 'details-subtitle'})
-            .text()).toBe('Please Wait While Bid Is Being Submitted')
+            .text()).toBe('PLEASE WAIT UNTIL YOUR CONTRACTOR SUBMITS BID')
 
     })
 

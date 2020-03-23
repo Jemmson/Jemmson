@@ -1091,8 +1091,7 @@ class JobController extends Controller
             foreach ($jobs as $j) {
                 $j['job_statuses'] = $j->jobStatuses()->get();
                 $j['job_tasks'] = $j->jobTasks()->select(['id'])->get();
-                $j['job_tasks
-                _length'] = count($j['job_tasks']);
+                $j['job_tasks_length'] = count($j['job_tasks']);
                 foreach ($j['job_tasks'] as $jt) {
                     $j['job_tasks']['messages'] = $jt->taskMessages()->get();
                     $j['job_tasks']['bid_contractor_job_tasks'] =

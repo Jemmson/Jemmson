@@ -1,7 +1,7 @@
 <template>
     <div>
         <div ref="subTaskWarning"
-             class="text-white bg-red rounded p-3 mt-2 mb-2 text-center"
+             class="text-white bg-red rounded p-3 mt-2 mb-2 text-center w-break"
              style="font-weight: 700"
              v-if="subTaskWarning">
             PLEASE CHECK TASKS. SOME TASKS HAVE SUB PRICES HIGHER THAN CONTRACTOR PRICE
@@ -19,7 +19,8 @@
                 Submit Bid
             </v-btn>
             <div v-else-if="jobIsApproved()">
-                <span class="capitalize">Bid Has Been Approved By The Customer. Please refer to individual tasks for Task Completion.</span>
+                <span class="capitalize w-break"
+                >Bid Has Been Approved By The Customer. Please refer to individual tasks for Task Completion.</span>
             </div>
             <div v-if="notSignedUpModalIsHidden()"
             >

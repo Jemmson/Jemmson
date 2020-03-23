@@ -435,6 +435,237 @@ describe('JobTask', () => {
 
     })
 
+    test('should show a counter after the images text if there are more than one image', async () => {
+        let wrapper = createWrapper();
+        wrapper.setData({
+            show: {
+                subPanel: true,
+            },
+            jobTask: {
+                images: [{},{}],
+                contractor_id: 1,
+                job: {
+                    contractor_id: 1,
+                    payment_type: 'cash'
+                },
+                qty: 0,
+                task: {
+                    contractor_id: 1
+                },
+                job_task_statuses: [
+                    {
+                        status_number: 1
+                    }
+                ],
+                bid_contractor_job_tasks: [
+                    {
+                        contractor: {
+                            contractor: {
+                                company_name: 'Acme'
+                            }
+                        }
+                    }
+                ]
+            },
+            user: {
+                id: 1,
+                usertype: 'contractor'
+            },
+            job: {
+                job_statuses: [
+                    {
+                        id: 1,
+                        job_id: 1,
+                        status: 'initiated',
+                        status_number: 1,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:15:18',
+                        updated_at: '2019-12-05 22:15:18'
+                    },
+                    {
+                        id: 2,
+                        job_id: 1,
+                        status: 'in_progress',
+                        status_number: 2,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:17:17',
+                        updated_at: '2019-12-05 22:17:17'
+                    },
+                    {
+                        id: 3,
+                        job_id: 1,
+                        status: 'sent',
+                        status_number: 3,
+                        deleted_at: null,
+                        created_at: '2019-12-06 21:52:13',
+                        updated_at: '2019-12-06 21:52:13'
+                    }
+                ]
+            }
+        })
+
+        wrapper.vm.$store.state.job.model.status = 'job.initiated'
+
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.find({ref: 'jobTaskNavImage'}).text()).toBe('Images (2)')
+
+    })
+
+    test('should not show a counter after the images text if there are no images', async () => {
+        let wrapper = createWrapper();
+        wrapper.setData({
+            show: {
+                subPanel: true,
+            },
+            jobTask: {
+                images: [],
+                contractor_id: 1,
+                job: {
+                    contractor_id: 1,
+                    payment_type: 'cash'
+                },
+                qty: 0,
+                task: {
+                    contractor_id: 1
+                },
+                job_task_statuses: [
+                    {
+                        status_number: 1
+                    }
+                ],
+                bid_contractor_job_tasks: [
+                    {
+                        contractor: {
+                            contractor: {
+                                company_name: 'Acme'
+                            }
+                        }
+                    }
+                ]
+            },
+            user: {
+                id: 1,
+                usertype: 'contractor'
+            },
+            job: {
+                job_statuses: [
+                    {
+                        id: 1,
+                        job_id: 1,
+                        status: 'initiated',
+                        status_number: 1,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:15:18',
+                        updated_at: '2019-12-05 22:15:18'
+                    },
+                    {
+                        id: 2,
+                        job_id: 1,
+                        status: 'in_progress',
+                        status_number: 2,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:17:17',
+                        updated_at: '2019-12-05 22:17:17'
+                    },
+                    {
+                        id: 3,
+                        job_id: 1,
+                        status: 'sent',
+                        status_number: 3,
+                        deleted_at: null,
+                        created_at: '2019-12-06 21:52:13',
+                        updated_at: '2019-12-06 21:52:13'
+                    }
+                ]
+            }
+        })
+
+        wrapper.vm.$store.state.job.model.status = 'job.initiated'
+
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.find({ref: 'jobTaskNavImage'}).text()).toBe('Images')
+
+    })
+
+    test('should show a counter after the show subs text if there are more than one sub', async () => {
+        let wrapper = createWrapper();
+        wrapper.setData({
+            show: {
+                subPanel: true,
+            },
+            jobTask: {
+                images: [{},{}],
+                contractor_id: 1,
+                job: {
+                    contractor_id: 1,
+                    payment_type: 'cash'
+                },
+                qty: 0,
+                task: {
+                    contractor_id: 1
+                },
+                job_task_statuses: [
+                    {
+                        status_number: 1
+                    }
+                ],
+                bid_contractor_job_tasks: [
+                    {
+                        contractor: {
+                            contractor: {
+                                company_name: 'Acme'
+                            }
+                        }
+                    }
+                ]
+            },
+            user: {
+                id: 1,
+                usertype: 'contractor'
+            },
+            job: {
+                job_statuses: [
+                    {
+                        id: 1,
+                        job_id: 1,
+                        status: 'initiated',
+                        status_number: 1,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:15:18',
+                        updated_at: '2019-12-05 22:15:18'
+                    },
+                    {
+                        id: 2,
+                        job_id: 1,
+                        status: 'in_progress',
+                        status_number: 2,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:17:17',
+                        updated_at: '2019-12-05 22:17:17'
+                    },
+                    {
+                        id: 3,
+                        job_id: 1,
+                        status: 'sent',
+                        status_number: 3,
+                        deleted_at: null,
+                        created_at: '2019-12-06 21:52:13',
+                        updated_at: '2019-12-06 21:52:13'
+                    }
+                ]
+            }
+        })
+
+        wrapper.vm.$store.state.job.model.status = 'job.initiated'
+
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.find({ref: 'subsNavButton'}).text()).toBe('Show Subs (1)')
+
+    })
+
     function createWrapper() {
         let actions
         let mutations

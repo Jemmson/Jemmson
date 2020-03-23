@@ -42,7 +42,9 @@
                         </span>
 
                         <span v-else>
-                            Job Tasks <span>({{ getJobTasksLength() }})</span>
+                            Job Tasks<span
+                            v-if="getJobTasksLength() > 0"
+                        > ({{ getJobTasksLength() }})</span>
                         </span>
 
                     </v-btn>
@@ -103,9 +105,15 @@
                 <v-card-title>Details</v-card-title>
 
                 <v-card-subtitle
-                        v-if="getJobStatus_latest(bid) === 'initiated'"
+                        v-if="
+                        isCustomer
+                        && (
+                            getJobStatus_latest(bid) === 'initiated'
+                            || getJobStatus_latest(bid) === 'in_progress'
+                        )"
                         ref="details-subtitle"
-                >Please Wait While Bid Is Being Submitted</v-card-subtitle>
+                        class="w-break"
+                >PLEASE WAIT UNTIL YOUR CONTRACTOR SUBMITS BID</v-card-subtitle>
 
                 <v-simple-table v-if="isCustomer">
                     <template v-slot:default>
@@ -345,7 +353,6 @@
                 </v-card>
             </div>
             <div v-else-if="generalHasSentABid(bid)">
-                <div id="general">General</div>
                 <h1 class="card-title mt-4">Job Tasks</h1>
                 <card>
 

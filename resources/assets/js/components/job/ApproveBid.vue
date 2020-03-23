@@ -107,7 +107,7 @@
             <div v-if="showDeclineForm" ref="decline-form" class="top">
                 <!-- deny message -->
                 <div class="form-group col-md-12" :class="{'has-error': form.errors.has('message')}">
-                    <div class="text-center title" for="">Please input what you would like to change</div>
+                    <div class="text-center title w-break" for="">Please input what you would like to change</div>
                     <input type="text" class="form-control" name="message" v-model="form.message"
                            placeholder="Optional Message">
                     <span class="help-block" v-show="form.errors.has('message')">

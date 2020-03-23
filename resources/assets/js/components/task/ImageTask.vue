@@ -1,6 +1,6 @@
 <template>
     <v-card class="margins">
-        <v-card-title class="capitalize">Please Associate the Image to a Task</v-card-title>
+        <v-card-title class="capitalize w-break">Please Associate the Image to a Task</v-card-title>
         <v-img
                 :src="image ? image.url : null"
                 height="200px"

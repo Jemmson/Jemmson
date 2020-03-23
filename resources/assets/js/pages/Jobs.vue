@@ -39,7 +39,7 @@
                     </v-icon>
                     <div class="mr-1rem ml-half-rem">{{ jobName(bid.job_name) }}</div>
                     <v-spacer></v-spacer>
-                    <v-card-subtitle class="uppercase">{{ getJobStatus(bid) }}</v-card-subtitle>
+                    <v-card-subtitle class="uppercase w-break">{{ getJobStatus(bid) }}</v-card-subtitle>
                 </v-card-title>
 
                 <v-card-text>
@@ -220,14 +220,8 @@
 
             },
             totalNumberOfSubsBiddingForTheJob(jobTasks) {
-                if (jobTasks) {
-                    let total = 0
-                    for (let i = 0; i < jobTasks.length; i++) {
-                        if (jobTasks[i].bid_contractor_job_tasks) {
-                            total = total + jobTasks[i].bid_contractor_job_tasks.length
-                        }
-                    }
-                    return total
+                if (jobTasks && jobTasks.bid_contractor_job_tasks) {
+                    return jobTasks.bid_contractor_job_tasks.length
                 }
             },
             search() {

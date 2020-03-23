@@ -33,9 +33,13 @@
                     >Prices
                     </v-btn>
                     <v-btn
+                            ref="jobTaskNavImage"
                             class="nav-btn-position"
                             @click="showSection('images')"
-                    >Images
+                    >Images<span
+                            v-if="getImagesLength() > 0"
+                    > ({{ getImagesLength() }})</span>
+
                     </v-btn>
                 </div>
                 <div class="flex justify-content-around w-full">
@@ -52,18 +56,19 @@
                 </div>
                 <div class="flex justify-content-around w-full">
                     <v-btn
+                            ref="subsNavButton"
                             v-if="showSubsPanel()"
                             class="nav-btn-position"
                             @click="showSection('subPanel')"
-                    >Show Subs
+                    >Show Subs<span> ({{ getSubsLength() }})</span>
                     </v-btn>
                 </div>
             </v-card-actions>
         </v-card>
 
         <div
-            v-if="show.details"
-            class="col-12"
+                v-if="show.details"
+                class="col-12"
         >
             <h1 class="card-title mt-4">Details</h1>
             <card>
@@ -138,7 +143,7 @@
 
         <!-- prices -->
         <div class="col-12"
-            v-if="show.prices"
+             v-if="show.prices"
         >
             <h1 class="card-title mt-4">Prices</h1>
             <card>
@@ -350,10 +355,10 @@
 
         <!-- images -->
         <div class="col-12"
-            v-if="show.images"
+             v-if="show.images"
         >
             <h1 class="card-title mt-4">Images</h1>
-<!--            <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>-->
+            <!--            <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>-->
             <card>
                 <div class="row">
 
@@ -644,7 +649,7 @@
         ],
         data() {
             return {
-                show:{
+                show: {
                     details: false,
                     taskStatus: false,
                     prices: true,
@@ -778,6 +783,18 @@
         },
         methods: {
 
+            getImagesLength() {
+                if (this.jobTask && this.jobTask.images) {
+                    return this.jobTask.images.length
+                }
+            },
+
+            getSubsLength() {
+                if (this.jobTask && this.jobTask.bid_contractor_job_tasks) {
+                    return this.jobTask.bid_contractor_job_tasks.length
+                }
+            },
+
             showSubsPanel() {
                 return this.isContractor()
                     && this.jobHasNotBeenCompleted()
@@ -821,7 +838,7 @@
                 }
             },
 
-            isASub(subId, generalId){
+            isASub(subId, generalId) {
                 return subId !== generalId;
             },
 
@@ -850,7 +867,7 @@
                 if (
                     this.jobTask
                     && this.jobTask.bid_contractor_job_tasks
-                ){
+                ) {
                     return this.jobTask.bid_contractor_job_tasks.length > 0
                 }
             },

@@ -40,20 +40,20 @@
                         is
                         missing
                     </div>
-                    <div class="text-center uppercase" style="color:red;" v-show="errors.address_line_1">The address
+                    <div class="text-center uppercase w-break" style="color:red;" v-show="errors.address_line_1">The address
                         line 1
                         field
                         is missing
                     </div>
-                    <div class="text-center uppercase" style="color:red;" v-show="errors.city">The city field is
+                    <div class="text-center uppercase w-break" style="color:red;" v-show="errors.city">The city field is
                         missing
                     </div>
-                    <div class="text-center uppercase" style="color:red;" v-show="errors.state">The state field is
+                    <div class="text-center uppercase w-break" style="color:red;" v-show="errors.state">The state field is
                         missing
                     </div>
-                    <div class="text-center uppercase" style="color:red;" v-show="errors.zip">The zip field is missing
+                    <div class="text-center uppercase w-break" style="color:red;" v-show="errors.zip">The zip field is missing
                     </div>
-                    <div class="text-center uppercase" style="color:red;" v-show="errors.terms">please accept the terms
+                    <div class="text-center uppercase w-break" style="color:red;" v-show="errors.terms">please accept the terms
                         of
                         agreement
                     </div>
