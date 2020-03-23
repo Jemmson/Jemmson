@@ -13,7 +13,7 @@
                     color="green"
                     class="btn btn-normal-green btn-lg w-full"
                     @click="submitBid()"
-                    :disabled="disabled.submitBid"
+                    :disabled="disabled.submitBid || disableButton"
                     :loading="disabled.submitBid"
             >
                 Submit Bid
@@ -56,7 +56,8 @@
         },
         props: {
             submitTheBid: Boolean,
-            bid: Object
+            bid: Object,
+            disableButton: Boolean
         },
         mixins: [Status, StripeMixin],
         watch: {

@@ -47,15 +47,15 @@
                     <v-btn
                             class="nav-btn-position"
                             @click="showSection('specialInstructions')"
-                    >Special Instructions
+                    >Instructions
                     </v-btn>
                 </div>
                 <div class="flex justify-content-around w-full">
                     <v-btn
-                            v-if="show.subsPanel"
+                            v-if="showSubsPanel()"
                             class="nav-btn-position"
                             @click="showSection('subPanel')"
-                    >Subs
+                    >Show Subs
                     </v-btn>
                 </div>
             </v-card-actions>
@@ -63,9 +63,9 @@
 
         <div
             v-if="show.details"
-            class="cmt-4"
+            class="col-12"
         >
-            <h1 class="card-title">Details</h1>
+            <h1 class="card-title mt-4">Details</h1>
             <card>
                 <div class="row">
                     <div class="col-12">
@@ -76,7 +76,6 @@
                                 class="float-right font-weight-bold capitalize">
                             {{ jobTask ? jobTask.task.name : ''}}
                         </div>
-
                     </div>
                     <div class="col-12">
                         <div v-if="jobIsNotComplete()">
@@ -110,9 +109,9 @@
 
         <div
                 v-if="show.taskStatus"
-                class="mt-4"
+                class="col-12"
         >
-            <h1 class="card-title">Task Status</h1>
+            <h1 class="card-title mt-4">Task Status</h1>
             <card>
                 <div class="row">
                     <div class="col-12">
@@ -403,13 +402,16 @@
             </card>
         </div>
 
-        <section class="col-12" id="subs" v-show="showSubsPanel && show.subPanel">
+        <section
+                class="col-12"
+                id="subs"
+                ref="subPanelSection"
+                v-if="showSubsPanel() && show.subPanel">
             <h1 id="bids" class="card-title mt-4">Bids</h1>
             <v-card
                     :id="jobTask ? 'task-subs-' + jobTask.id : 0"
                     v-if="isGeneral() && jobHasSubs()"
             >
-
                 <v-card-text>
                     <v-row
                             class="justify-content-between"
@@ -512,6 +514,7 @@
                         <v-btn
                                 class="w-full mb-half-rem"
                                 color="red"
+                                ref="generalCanDeleteTask"
                                 @click="deleteTask(jobTask)"
                                 :loading="disabled.deleteTask"
                         >
@@ -536,6 +539,7 @@
                         <v-btn
                                 class="w-full mb-half-rem"
                                 color="red"
+                                ref="deleteTask"
                                 @click="deleteTask(jobTask)"
                                 :loading="disabled.deleteTask"
                         >
@@ -587,7 +591,7 @@
         <sub-invite-modal v-if="isContractor()" :job-task="jobTask"
                           :job-task-task="jobTask ? jobTask.task : null"
                           :job-task-name="jobTask ? jobTask.task.name : null"
-                          :bid-payment-type="jobTask.job.payment_type"
+                          :bid-payment-type="jobTask && jobTask.job ? jobTask.job.payment_type : null"
                           :id="jobTask ? jobTask.id : null">
         </sub-invite-modal>
 
@@ -643,7 +647,7 @@
                 show:{
                     details: false,
                     taskStatus: false,
-                    prices: false,
+                    prices: true,
                     images: false,
                     location: false,
                     specialInstructions: false,
@@ -745,12 +749,6 @@
             // isContractor() {
             //   return this.user.isContractor()
             // },
-            showSubsPanel() {
-                return this.isContractor()
-                    && this.jobHasNotBeenCompleted()
-                    && this.jobHasSubs()
-                    && this.isGeneral()
-            },
 
             showSendSubInvite() {
                 if (this.jobStatus === 'bid.initiated' || this.jobStatus === 'bid.in_progress') {
@@ -779,6 +777,13 @@
             }
         },
         methods: {
+
+            showSubsPanel() {
+                return this.isContractor()
+                    && this.jobHasNotBeenCompleted()
+                    && this.jobHasSubs()
+                    && this.isGeneral()
+            },
 
             showSection(section) {
                 this.hideAllSections();
@@ -842,7 +847,12 @@
             },
 
             jobHasSubs() {
-                return this.jobTask.bid_contractor_job_tasks.length > 0
+                if (
+                    this.jobTask
+                    && this.jobTask.bid_contractor_job_tasks
+                ){
+                    return this.jobTask.bid_contractor_job_tasks.length > 0
+                }
             },
 
             jobHasNotBeenCompleted() {
@@ -920,8 +930,8 @@
             },
 
             getLatestJobTaskStatusNumber(jobTask) {
-                if (this.jobTask && (this.jobTask.job_task_statuses || this.jobTask.job_task_status)) {
-                    return this.getJobTaskStatusNumber_latest(this.jobTask)
+                if (jobTask && (jobTask.job_task_statuses || jobTask.job_task_status)) {
+                    return this.getJobTaskStatusNumber_latest(jobTask)
                 }
             },
 
@@ -1307,7 +1317,6 @@
             },
             getAddress() {
                 if (this.jobTask && this.jobTask.location) {
-                    console.log(JSON.stringify(this.jobTask.location))
                     if (this.jobTask.location !== null) {
                         return this.jobTask.location.address_line_1 + ' ' +
                             this.jobTask.location.address_line_2 + ' ' +
@@ -1521,11 +1530,6 @@
 </script>
 
 <style scoped>
-
-    .nav-btn-position {
-        width: 46%;
-        margin-bottom: .25rem;
-    }
 
     .bid-price-error {
         color: red;

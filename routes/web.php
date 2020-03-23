@@ -127,6 +127,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/stripe/customer/newcard', 'StripeController@newCard');
     Route::get('/stripe/customer/removeCard/{paymentMethodId}/{customerId}', 'StripeController@removeCard');
     Route::get('/stripe/customer/getPaymentMethods/{customerStripeId}', 'StripeController@getAllPaymentMethods');
+    Route::get('/stripe/contractor/getPaymentMethods/{customerStripeId}', 'StripeController@getAllContractorPaymentMethods');
 
     // Tasks
     Route::post('/task/notify', 'TaskController@notify')->middleware('quickbook.token');

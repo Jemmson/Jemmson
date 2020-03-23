@@ -32,18 +32,33 @@
                 </div>
                 <div class="flex justify-content-around w-full">
                     <v-btn
+                            ref="jobTaskNavButton"
+                            :disabled="noJobTasks()"
                             class="nav-btn-position"
                             @click="showSection('jobTask')"
-                    >JobTasks
+                    >
+                        <span v-if="noJobTasks()">
+                            Need Tasks
+                        </span>
+
+                        <span v-else>
+                            Job Tasks <span>({{ getJobTasksLength() }})</span>
+                        </span>
+
                     </v-btn>
                     <v-btn
+                            ref="imagesNavButton"
                             class="nav-btn-position"
                             @click="showSection('images')"
-                    >Images
+                    >Images <span
+                        v-if="getNumberOfImages() > 0"
+                    >({{ getNumberOfImages() }})</span>
                     </v-btn>
                 </div>
                 <div class="flex justify-content-around w-full">
                     <v-btn
+                            v-if="!isCustomer"
+                            ref="location"
                             class="nav-btn-position"
                             @click="showSection('location')"
                     >Location
@@ -56,6 +71,7 @@
                 </div>
                 <div class="flex flex-end">
                     <v-btn
+                            ref="job-add-task"
                             v-if="canAddATask() && !isCustomer"
                             class="w-100 btn btn-sm btn-normal flex-1"
                             width="100%"
@@ -72,6 +88,7 @@
         <v-col cols="12"
                v-show="show.jobStepper"
         >
+            <h1 class="card-title mt-4">Current Step In Workflow</h1>
             <job-stepper
                     :status="getSelectedJob()"
                     :user="getUser()"
@@ -85,6 +102,11 @@
             <v-card>
                 <v-card-title>Details</v-card-title>
 
+                <v-card-subtitle
+                        v-if="getJobStatus_latest(bid) === 'initiated'"
+                        ref="details-subtitle"
+                >Please Wait While Bid Is Being Submitted</v-card-subtitle>
+
                 <v-simple-table v-if="isCustomer">
                     <template v-slot:default>
                         <thead>
@@ -96,7 +118,7 @@
                         <tbody>
                         <tr>
                             <td>Job Name:</td>
-                            <td class="capitalize">{{ bid.job_name }}</td>
+                            <td class="capitalize">{{ bid ? bid.job_name : '' }}</td>
                         </tr>
                         <tr @click="viewContractorInfo()">
                             <td>Contractor Name:</td>
@@ -154,7 +176,7 @@
                         <tbody>
                         <tr>
                             <td>Job Name:</td>
-                            <td class="capitalize">{{ bid.job_name }}</td>
+                            <td class="capitalize">{{ bid ? bid.job_name : '' }}</td>
                         </tr>
                         <tr @click="viewCustomerInfo()">
                             <td>Customer Name:</td>
@@ -275,7 +297,8 @@
                         >
                             <div class="text-center"
                                  :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                            >Sub Has Finished</div>
+                            >Sub Has Finished
+                            </div>
                             <div class="flex space-evenly">
                                 <v-btn
                                         @click="approveSubsWork(item)"
@@ -335,11 +358,13 @@
 
                         <v-spacer></v-spacer>
 
+                        <pre v-show="false">{{ atleastOnetaskHasChanged() }}</pre>
+
                         <v-btn
                                 id="viewTasks"
                                 class="w-40"
                                 color="primary"
-                                v-if="!taskHasChanged"
+                                v-if="taskHasChanged"
                                 @click.prevent="viewTasks()"
                         >
                             View Tasks
@@ -360,14 +385,14 @@
                             <tr
                                     :class="paid(jt) ? 'paid' : ''">
                                 <td colspan="4"
-                                    :id="'jobTaskStatus-' + index"
+                                    :ref="'jobTaskStatus-' + index"
                                     class="uppercase text-center"
                                 >
                                     {{ getLatestJobTaskStatus(jt) }}
                                 </td>
                             </tr>
                             <tr>
-                                <td class="capitalize">
+                                <td class="uppercase">
                                     {{ jt.task.name }}
                                 </td>
                                 <td>
@@ -394,7 +419,7 @@
              v-show="show.images"
         >
             <h1 class="card-title mt-4">Images</h1>
-            <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>
+            <!--            <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>-->
             <card>
                 <div class="row">
 
@@ -479,23 +504,32 @@
 
         <!-- / tasks -->
 
-        <section class="col-12" v-if="(isCustomer && needsApproval()) || !isCustomer">
+        <section class="col-12"
+                 v-if="(isCustomer && needsApproval()) || !isCustomer"
+        >
             <h1 class="card-title mt-4">Actions</h1>
             <card class="mb-4">
                 <!-- /customer approve bid form -->
-                <approve-bid v-if="isCustomer && needsApproval()" :bid="bid">
+                <approve-bid
+                        v-if="isCustomer && needsApproval()"
+                        :bid="bid"
+                >
                 </approve-bid>
 
                 <v-sheet
                         class="text-center uppercase successful-submit"
                         v-if="submittedMessage"
-                >You have successfully submitted a bid
+                >
+                    You have successfully submitted a bid
                 </v-sheet>
 
                 <general-contractor-bid-actions
+                        ref="generalBidContractorActions"
+                        :disable-button="noJobTasks()"
                         @bid-submitted="bidSubmitted()"
                         @remove-notification="removeSubmittedNotification()"
-                        :bid="bid" v-if="!isCustomer">
+                        :bid="bid"
+                        v-if="!isCustomer">
                 </general-contractor-bid-actions>
             </card>
         </section>
@@ -589,7 +623,7 @@
             return {
                 show: {
                     jobStepper: false,
-                    details: false,
+                    details: true,
                     jobTask: false,
                     location: false,
                     images: false
@@ -672,7 +706,7 @@
             ...mapGetters(['getCustomerName']),
 
             agreedStartDate() {
-                if (this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
+                if (this.getJob() && this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
                     return this.dateOnly(this.bid.agreed_start_date)
                 } else {
                     if (this.isCustomer) {
@@ -701,12 +735,13 @@
             },
             bidPrice() {
                 if (
-                    this.bid.bid_price &&
-                    (this.bid.status === 'bid.initiated' ||
-                        this.bid.status === 'bid.in_progress' ||
-                        this.bid.status === 'job.approved' ||
-                        this.bid.status === 'bid.declined' ||
-                        this.bid.status === 'bid.sent'
+                    this.getJob()
+                    && this.bid.bid_price
+                    && (this.bid.status === 'bid.initiated'
+                        || this.bid.status === 'bid.in_progress'
+                        || this.bid.status === 'job.approved'
+                        || this.bid.status === 'bid.declined'
+                        || this.bid.status === 'bid.sent'
                     )
                 ) {
                     this.addTaskBidPrice = false
@@ -749,7 +784,6 @@
                         !this.isCustomer &&
                         this.bid.declined_message !== null
                         && this.getJobStatus_latest(this.getJob()) === 'changed'
-                        // && this.bid.status === 'bid.declined'
                     )
                 }
             },
@@ -776,6 +810,16 @@
             }
         },
         methods: {
+
+            getNumberOfImages(){
+              if (this.getJob() && this.bid.images) {
+                  return this.bid.images.length
+              }
+            },
+
+            noJobTasks(){
+              return this.bid && this.bid.job_tasks && this.bid.job_tasks.length === 0
+            },
 
             showSection(section) {
                 this.hideAllSections();
@@ -813,7 +857,7 @@
 
             async getBids() {
                 let url = ''
-                if (User.isCustomer()) {
+                if (this.isCustomer) {
                     url = 'getJobsForCustomer'
                 } else {
                     url = 'jobs'
@@ -844,7 +888,9 @@
 
             getJobTasksLength() {
                 let jobTasks = this.getJobTasks()
-                return jobTasks.length
+                if (jobTasks) {
+                    return jobTasks.length
+                }
             },
 
             atleastOnetaskHasChanged() {
@@ -1024,6 +1070,8 @@
 
             getLatestJobTaskStatus1(task) {
 
+                let status = ''
+
                 if (task) {
                     if (task.job_task_statuses) {
                         status = this.formatStatus(this.getJobTaskStatus_latest(task))
@@ -1041,7 +1089,6 @@
                     return this.bid.job_status[this.bid.job_status.length - 1].status
                 }
             },
-
 
 
             canAddATask() {
@@ -1291,11 +1338,6 @@
 </script>
 
 <style lang="less" scoped>
-
-    .nav-btn-position {
-        width: 46%;
-        margin-bottom: .25rem;
-    }
 
     .b-brown {
         background-color: beige;

@@ -99,8 +99,8 @@
 
 
             <div v-show="showTheTask">
-                <section class="col-12"
-                        v-if="show.details"
+                <section class="col-12 mt-4"
+                         v-if="show.details"
                 >
                     <h1 class="card-title">Task Details</h1>
                     <v-card
@@ -217,16 +217,19 @@
                     </card>
                 </section>
 
-                <section class="col-12">
+                <section class="col-12"
+                         ref="actionSection"
+                         v-if="jobTaskHasBeenApproved()"
+                >
                     <h1 class="card-title">Actions</h1>
                     <card>
                         <main class="row">
-                            <content-section
-                                    label="Job Status:"
-                                    :content="getLatestStatus()"
-                                    :input-classes="getLabelClass(bidTask)"
-                                    :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"
-                                    type="startOn"></content-section>
+                            <!--                            <content-section-->
+                            <!--                                    label="Job Status:"-->
+                            <!--                                    :content="getLatestStatus()"-->
+                            <!--                                    :input-classes="getLabelClass(bidTask)"-->
+                            <!--                                    :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"-->
+                            <!--                                    type="startOn"></content-section>-->
                             <v-btn
                                     class="w-full mt-1rem"
                                     color="primary"
@@ -299,10 +302,10 @@
         data() {
             return {
                 show: {
-                  details: false,
-                  messages: false,
-                  images: false,
-                  location: false
+                    details: true,
+                    messages: false,
+                    images: false,
+                    location: false
                 },
                 paymentType: 'cash',
                 showTheTask: false,
@@ -329,7 +332,7 @@
                 if (section === 'details') {
                     this.show.details = true;
                 } else if (section === 'messages') {
-                    this.show.taskStatus = true;
+                    this.show.messages = true;
                 } else if (section === 'images') {
                     this.show.images = true;
                 } else if (section === 'location') {
@@ -504,38 +507,41 @@
             },
 
             subsBidHasBeenAccepted() {
-                if (this.bid && this.bid.job_task) {
-                    return this.bid.id === this.bid.job_task.bid_id
+                if (this.bidTask && this.bidTask.job_task) {
+                    return this.bidTask.id === this.bidTask.job_task.bid_id
                 }
             },
 
             jobTaskHasBeenApproved() {
-                if (this.bid && this.bid.job_task) {
-                    return bid.job_task.job.status === 'job.approved'
+                if (this.bidTask && this.bidTask.job_task) {
+                    const status = this.getLatestJobTaskStatus1(this.bidTask.job_task);
+                    return status == 'approved by customer'
+                        || status == 'declined subs work'
+                        || status == 'customer changes finished_task'
                 }
             },
 
             jobHasBeenCompleted() {
-                if (this.bid && this.bid.job_task) {
-                    return bid.job_task.job.status === 'job.completed'
+                if (this.bidTask && this.bidTask.job_task) {
+                    return this.bidTask.job_task.job.status === 'job.completed'
                 }
             },
 
             jobTaskHasBeenAccepted() {
-                if (this.bid && this.bid.job_task) {
-                    return bid.job_task.status === 'bid_task.accepted'
+                if (this.bidTask && this.bidTask.job_task) {
+                    return this.bidTask.job_task.status === 'bid_task.accepted'
                 }
             },
 
             jobHasBeenSentToTheCustomer() {
-                if (this.bid && this.bid.job_task) {
-                    return bid.job_task.status === 'bid_task.bid_sent'
+                if (this.bidTask && this.bidTask.job_task) {
+                    return this.bidTask.job_task.status === 'bid_task.bid_sent'
                 }
             },
 
             jobTaskHasBeenInitiated() {
-                if (this.bid && this.bid.job_task) {
-                    return bid.job_task.status === 'bid_task.initiated'
+                if (this.bidTask && this.bidTask.job_task) {
+                    return this.bidTask.job_task.status === 'bid_task.initiated'
                 }
             },
 
@@ -686,11 +692,13 @@
                 if (bid && bid.job_task) {
                     let status = this.getLatestJobTaskStatus1(bid.job_task);
                     return status === 'approved by customer'
-                    || status === 'declined subs work'
+                        || status === 'declined subs work'
                 }
             },
 
             getLatestJobTaskStatus1(task) {
+
+                let status = null;
 
                 if (task) {
                     if (task.job && task.job.job_task_statuses) {
@@ -713,10 +721,10 @@
                         data
                     } = await axios.get('/job/' + id)
                     if (data[0]) {
-                        this.bid = data[0]
+                        this.bidTask = data[0]
                         this.$store.commit('setJob', data[0])
                     } else {
-                        this.bid = data
+                        this.bidTask = data
                         this.$store.commit('setJob', data)
                     }
                     this.$store.commit('setJob', data)
@@ -735,11 +743,6 @@
 </script>
 
 <style scoped>
-
-    .nav-btn-position {
-        width: 46%;
-        margin-bottom: .25rem;
-    }
 
     .th-font {
         font-size: 12pt;

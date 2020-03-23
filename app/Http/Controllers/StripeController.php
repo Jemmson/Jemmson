@@ -244,6 +244,23 @@ class StripeController extends Controller
         }
     }
 
+    public function getAllContractorPaymentMethods($contractorStripeId)
+    {
+        try {
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Stripe::$apiVersion = '2019-08-14';
+
+            return \Stripe\PaymentMethod::all([
+                'customer' => $contractorStripeId,
+                'type' => 'card',
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => $exception->getMessage()
+            ], 200);
+        }
+    }
+
     private function extractState($state)
     {
         $path = explode(':', $state);

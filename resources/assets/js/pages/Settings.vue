@@ -1,20 +1,104 @@
 <template>
     <v-container>
-        <v-tabs
-                show-arrows
-                grow
+
+<!--        <pre>{{ user }}</pre>-->
+
+        <div class="h1 text-center">Settings</div>
+        <v-card>
+            <v-card-actions
+                    class="flex flex-col"
+            >
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('profile')"
+                    >Profile
+                    </v-btn>
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('changePassword')"
+                    >Change Password
+                    </v-btn>
+                </div>
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('subscription')"
+                    >Subscription
+                    </v-btn>
+                </div>
+            </v-card-actions>
+        </v-card>
+
+        <section
+                v-if="show.profile"
         >
-            <v-tab>Profile</v-tab>
-            <v-tab>Change Password</v-tab>
-            <v-tab>Subscription</v-tab>
-            <v-tab>Payment Method</v-tab>
-        </v-tabs>
+            <profile
+                    :user="user"
+            >
+
+            </profile>
+        </section>
+
+        <section
+                v-if="show.changePassword"
+        >
+            <change-password></change-password>
+        </section>
+
+        <section
+                v-if="show.subscription"
+        >
+            <subscription></subscription>
+        </section>
+
     </v-container>
 </template>
 
 <script>
+
+    import Profile from "./Profile";
+    import ChangePassword from "./ChangePassword";
+    import Subscription from "./Subscription";
+
     export default {
-        name: 'Settings'
+        name: 'Settings',
+        components: {
+            Profile,
+            ChangePassword,
+            Subscription
+        },
+        data() {
+            return {
+                show: {
+                    profile: false,
+                    changePassword: false,
+                    subscription: false,
+                },
+                user: this.$attrs.user
+            }
+        },
+        methods: {
+            showSection(section) {
+                this.hideAllSections();
+                if (section === 'profile') {
+                    this.show.profile = true;
+                } else if (section === 'changePassword') {
+                    this.show.changePassword = true;
+                } else if (section === 'subscription') {
+                    this.show.subscription = true;
+                }
+            },
+
+            hideAllSections() {
+                this.show.profile = false;
+                this.show.changePassword = false;
+                this.show.subscription = false;
+            },
+        },
+        mounted() {
+            this.$store.commit('setCurrentPage', '/settings');
+        }
     }
 </script>
 

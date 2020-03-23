@@ -6,6 +6,7 @@
         <section v-if="onHomePage()
                 || onCustomerInfo ()
                 || onContractorInfo ()
+                || onSettingsPage ()
         ">
             <header-bio
                     ref="homePage"

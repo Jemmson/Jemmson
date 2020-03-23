@@ -1,5 +1,5 @@
 <template>
-    <div class="main flex flex-col justify-between">
+    <div class="main flex flex-col justify-between mt-1">
         <div>
             <v-btn
                     @click="connectWithStripe($route.path)"
