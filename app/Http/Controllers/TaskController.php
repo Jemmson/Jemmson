@@ -639,6 +639,17 @@ class TaskController extends Controller
         }
     }
 
+    public function updateTaskStartDate(Request $request)
+    {
+        if (!empty($request->date)) {
+            $jt = JobTask::find($request->jobTaskId);
+            $jt->updateTaskStartDate($request->date);
+            $earliestDate = JobTask::findEarliestStartDate($jt->job_id);
+            $job = Job::find($jt->job_id);
+            $job->updateJobAgreedStartDate($earliestDate);
+        }
+    }
+
     /**
      * Send an invite to a sub to bid for a task
      *
@@ -653,6 +664,12 @@ class TaskController extends Controller
         ]);
 
         $jobTask = JobTask::where('id', '=', $request->jobTaskId)->get()->first();
+
+//        dd($request);
+//        dd(User::all()); // persisted
+//        dd(Job::all()); // did not persist
+//        dd(Task::all());  // persisted
+//        dd(JobTask::all()); // did not persist
 
         return Auth::user()->inviteSub(
             $request->id,

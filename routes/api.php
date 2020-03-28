@@ -22,20 +22,8 @@ use App\Task;
 Route::group([
     'middleware' => 'auth:api'
 ], function () {
-    //
-
-    Route::get('/test', function () {
-        return ['name' => 'Shawn'];
-    });
-
-    Route::get('/search', function () {
-        $query = Input::get('query');
-        $users = \App\User::where([
-            ['name', 'like', '%' . $query . '%'],
-            ['usertype', '=', 'customer'],
-        ])->get();
-        return $users;
-    });
+    Route::get('/test', 'UserController@test');
+    Route::get('/search', 'UserController@search');
 });
 
 // TODO: need to lock these routes down
@@ -78,17 +66,7 @@ Route::post('/task/updateTaskQuantity', 'TaskController@updateTaskQuantity');
 Route::post('/task/updateMessage', 'TaskController@updateMessage');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
-Route::post('/task/updateTaskStartDate', function (Request $request) {
-
-    if (!empty($request->date)) {
-        $jt = JobTask::find($request->jobTaskId);
-        $jt->updateTaskStartDate($request->date);
-        $earliestDate = JobTask::findEarliestStartDate($jt->job_id);
-        $job = Job::find($jt->job_id);
-        $job->updateJobAgreedStartDate($earliestDate);
-    }
-
-});
+Route::post('/task/updateTaskStartDate', 'TaskController@updateTaskStartDate');
 
 //Route::post('/task/updateJobStartDate', function (Request $request) {
 //
@@ -101,16 +79,7 @@ Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/togglestripe', 'TaskController@toggleStripe');
 Route::post('/task/checkStripeForJob', 'TaskController@checkStripeForJob');
 
-
-Route::post('/user/validatePhoneNumber', function (Request $request) {
-//    dd($request->num);
-    $user = User::select()->where("phone", "=", $request->num)->get()->first();
-    if (empty($user)) {
-        return User::validatePhoneNumber($request->num);
-    } else {
-        return ['success', 'mobile', 'mobile', 'alreadyExists'];
-    }
-});
+Route::post('/user/validatePhoneNumber', 'UserController@validateThePhoneNumber');
 
 Route::post('/job/updateArea', 'JobController@updateArea');
 Route::post('/job/getArea', 'JobController@getArea');

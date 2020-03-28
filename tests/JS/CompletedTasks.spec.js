@@ -179,16 +179,16 @@ describe('CompletedTasks', () => {
         expect(wrapper.vm.show).toBe(true)
     })
 
-    test('when neither task is checked then the total amount should be 105.70', () => {
+    test('when neither task is checked then the total amount should be 100', () => {
 
-        expect(wrapper.find("#cctotal").text()).toBe("Total: $ " + 105.70);
+        expect(wrapper.find("#cctotal").text()).toBe("Total: $ " + 100);
         
     })
 
     test.skip('that when one of the two tasks is excluded then the total for the customer only show the total for the nonexcluded tasks', () => {
 
         //TODO: DONT KNOW WHY document.getElementById('exclude-' + jobTask.id).checked
-        // is not recognized in bu-test-utils. it works fine in the browser but not n here
+        // is not recognized in vue-test-utils. it works fine in the browser but not n here
         // when I put this in debug mode then i dont seem to get the dom at all. interesting
 
         let cb = wrapper.find('#exclude-1');

@@ -21,26 +21,9 @@ Route::get('/home', 'WebController@index');
 Route::post('/loadFeatures/', 'LoadController@load');
 Route::post('/hooks', 'StripeHooksController@hooks');
 
-Route::get('/loggedIn', function () {
-    if (Auth::check()) {
-        return response()->json([
-            'user' => Auth::user()
-        ], 200);
+Route::get('/loggedIn', 'UserController@loggedIn');
 
-    }
-});
-
-Route::get('checkAuth', function () {
-    if (Auth::check()) {
-        return response()->json([
-            'auth' => true
-        ], 200);
-    } else {
-        return response()->json([
-            'auth' => false
-        ], 200);
-    }
-});
+Route::get('checkAuth', 'UserController@checkAuth');
 
 Route::get('/welcome', 'WelcomeController@show');
 
@@ -143,15 +126,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::post('/home', 'HomeController@create');
     Route::post('/', 'HomeController@create');
-    Route::get(
-        '/furtherInfo', function () {
-
-//        dd('further Info');
-
-        return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
-    }
-    )->middleware('block.further.info');
-
+    Route::get('/furtherInfo', 'UserController@furtherInfo')->middleware('block.further.info');
     // home controller
     Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
 }

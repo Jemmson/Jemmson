@@ -22,6 +22,60 @@ class UserController extends Controller
         );
     }
 
+    public function test()
+    {
+        return ['name' => 'Shawn'];
+    }
+
+    public function validatePhoneNumber(Request $request)
+    {
+        //    dd($request->num);
+        $user = User::select()->where("phone", "=", $request->num)->get()->first();
+        if (empty($user)) {
+            return User::validatePhoneNumber($request->num);
+        } else {
+            return ['success', 'mobile', 'mobile', 'alreadyExists'];
+        }
+    }
+
+    public function search()
+    {
+        $query = Input::get('query');
+        $users = \App\User::where([
+            ['name', 'like', '%' . $query . '%'],
+            ['usertype', '=', 'customer'],
+        ])->get();
+        return $users;
+    }
+
+    public function loggedIn()
+    {
+        if (Auth::check()) {
+            return response()->json([
+                'user' => Auth::user()
+            ], 200);
+
+        }
+    }
+
+    public function furtherInfo()
+    {
+        return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);
+    }
+
+    public function checkAuth()
+    {
+        if (Auth::check()) {
+            return response()->json([
+                'auth' => true
+            ], 200);
+        } else {
+            return response()->json([
+                'auth' => false
+            ], 200);
+        }
+    }
+
     /**
      * Get the current user of the application.
      *
@@ -32,7 +86,7 @@ class UserController extends Controller
         return Spark::interact(UserRepository::class.'@current');
     }
 
-    public function validatePhoneNumber(Request $request)
+    public function validateThePhoneNumber(Request $request)
     {
         return User::validatePhoneNumber($request->number);
     }

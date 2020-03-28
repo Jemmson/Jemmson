@@ -534,5 +534,11 @@ describe('BidDetails', function () {
             .text()).toBe('Images')
 
     })
+    
+    test('that the emit button', async () => {
+        await wrapper.vm.$nextTick()
+        expect()
+        
+    })
 
 })

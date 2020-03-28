@@ -109,6 +109,16 @@ class User extends SparkUser
         return $this->hasOne(Customer::class);
     }
 
+    public function stripeEvent()
+    {
+        return $this->hasOne(StripeEvent::class);
+    }
+
+    public function stripeAccountVerification()
+    {
+        return $this->hasOne(StripeEvent::class);
+    }
+
     public function contractor()
     {
         return $this->hasOne(Contractor::class);
@@ -141,17 +151,11 @@ class User extends SparkUser
         return User::select()->where('phone', '=', $phone)->get()->first();
     }
 
-    public function checkIfContractorSetBidForATask($subcontractorId, $jobTaskId)
+    public function getTheSubsBid($subcontractorId, $jobTaskId)
     {
-        if (empty(
-        BidContractorJobTask::where('contractor_id', '=', $subcontractorId)
+        return BidContractorJobTask::where('contractor_id', '=', $subcontractorId)
             ->where('job_task_id', '=', $jobTaskId)
-            ->get()->first())) {
-            return true;
-//            DB::table('bid_contractor_job_task')->select('job_task_id')->where('contractor_id', '=', 3)->where('job_task_id', '=', 3)->get()[0];
-        } else {
-            return false;
-        }
+            ->get()->first();
     }
 
     public function addContractorToBidForJobTable($subcontractorId, $jobTaskId, $taskId, $paymentType = null)
@@ -191,6 +195,9 @@ class User extends SparkUser
         $jobTask
     )
     {
+
+//        dd('hello');
+
         $sub = self::getContractorByPhone($phone, $id);
 
         if (\is_null($sub)) {
@@ -488,10 +495,11 @@ class User extends SparkUser
 
     protected function addBidEntryForTheSubContractor($subcontractor, $jobTaskId, $taskId, $paymentType = null)
     {
-        if ($subcontractor->checkIfContractorSetBidForATask($subcontractor->id, $jobTaskId)) {
+        $bid = $subcontractor->getTheSubsBid($subcontractor->id, $jobTaskId);
+        if (empty($bid)) {
             return $subcontractor->addContractorToBidForJobTable($subcontractor->id, $jobTaskId, $taskId, $paymentType);
         } else {
-            return false;
+            return $bid;
         }
     }
 

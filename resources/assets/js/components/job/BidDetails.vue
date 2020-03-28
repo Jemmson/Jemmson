@@ -87,7 +87,7 @@
             </v-card-actions>
         </v-card>
 
-        <v-col cols="12"
+        <section class="mt-1rem"
                v-show="show.jobStepper"
         >
             <h1 class="card-title mt-4">Current Step In Workflow</h1>
@@ -96,9 +96,9 @@
                     :user="getUser()"
                     style="padding: 0;"
             ></job-stepper>
-        </v-col>
+        </section>
 
-        <v-col cols="12"
+        <section class="mt-1rem"
                v-show="show.details"
         >
             <v-card>
@@ -209,9 +209,9 @@
                     </template>
                 </v-simple-table>
             </v-card>
-        </v-col>
+        </section>
 
-        <section ref="job_tasks" class="col-12"
+        <section ref="job_tasks" class="mt-1rem"
                  v-if="getJobTasks() !== undefined"
                  v-show="show.jobTask"
         >
@@ -422,7 +422,7 @@
         </section>
 
         <!-- images -->
-        <div class="col-12"
+        <section class="mt-1rem"
              v-show="show.images"
         >
             <h1 class="card-title mt-4">Images</h1>
@@ -438,9 +438,9 @@
                     </div>
                 </div>
             </card>
-        </div>
+        </section>
 
-        <section ref="job_address" class="col-12" v-if="showAddress"
+        <section ref="job_address" class="mt-1rem" v-if="showAddress"
                  v-show="show.location"
         >
             <h1 class="card-title mt-4">Job Address</h1>
@@ -473,7 +473,7 @@
             </card>
         </section>
 
-        <section class="col-12"
+        <section class="mt-1rem"
                  v-show="show.notes"
         >
             <h1 v-if="isCustomer" class="card-title mt-4">Special Notes For The Job</h1>
@@ -511,7 +511,7 @@
 
         <!-- / tasks -->
 
-        <section class="col-12"
+        <section class="mt-4"
                  v-if="(isCustomer && needsApproval()) || !isCustomer"
         >
             <h1 class="card-title mt-4">Actions</h1>
@@ -541,7 +541,7 @@
             </card>
         </section>
 
-        <section class="col-12" v-if="customerHasCompletedTasks()">
+        <section class="mt-4" v-if="customerHasCompletedTasks()">
             <h1 class="card-title mt-4">Completed Tasks</h1>
             <card>
                 <main class="row w-full ml-0">

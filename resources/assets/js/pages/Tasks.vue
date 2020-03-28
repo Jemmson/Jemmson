@@ -10,9 +10,7 @@
                     sticky
                     style="background-color: cornflowerblue; font-size: 9pt;"
                     v-show="needsStripe()"
-            >
-                Click To Accept Credit Cards
-            </v-btn>
+            ><span style="color: white">Click To Accept Credit Cards</span></v-btn>
             <search-bar>
                 <input type="text" class="form-control" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
             </search-bar>

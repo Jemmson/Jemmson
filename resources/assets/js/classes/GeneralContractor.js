@@ -75,6 +75,7 @@ export default class GeneralContractor {
                 id: jobTask.id
             });
             Vue.toasted.success('Task Has Been Approved and Customer Has Been Notified')
+            Bus.$on('bidUpdated');
         } catch (error) {
             console.log('error');
         }

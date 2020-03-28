@@ -19,7 +19,12 @@ trait JobTrait
             "location_id" => $location_id,
             "status" => $status
         ];
-        return factory(Job::class)->create($params);
+        return factory(Job::class)->create([
+            "customer_id" => 1,
+            "contractor_id" => 2,
+            "location_id" => 2,
+            "status" => 'initiated'
+        ]);
     }
 
     public function customerApprovesBid(

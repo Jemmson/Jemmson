@@ -1,5 +1,4 @@
 <template>
-
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -65,7 +64,6 @@
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
 
-
                         <div class="row" v-if="registerForm.usertype === 'contractor'">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="companyName" class=" pt-3 pt-2">Company Name *</label>
@@ -81,7 +79,6 @@
                             ></add-license-box>
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
-
 
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
@@ -167,6 +164,7 @@
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="postal_code" class=" pt-3 pt-2">Zip Code *</label>
                             <input id="postal_code"
+                                   v-mask="'#####-####'"
                                    name="zip"
                                    autocomplete="on"
                                    type="text" class="form-control "

@@ -65,13 +65,6 @@
         },
         computed: {
             ...mapState({
-                // userFromState: state => state.user.user,
-                // userType: (state) => {
-                //   if (state.user.user !== undefined && state.user.user !== null) {
-                //     return state.user.user.usertype
-                //   }
-                //   return null
-                // },
                 bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
             })
         },
@@ -79,6 +72,12 @@
             ...mapMutations([
                 'toggleBidsContractor'
             ]),
+            logout(){
+                window.location.href = '/logout';
+            },
+            settings(){
+                window.location.href = '/settings';
+            }
         }
     }
 </script>

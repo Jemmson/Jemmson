@@ -25,7 +25,7 @@
                     </v-icon>
                 </div>
             </v-card-title>
-            <hr>
+            <hr class="mb-0 mt-0">
             <v-card-text>
                 <h3
                         class="mr-1rem ml-half-rem text-center"

@@ -112,7 +112,7 @@
                                 elevation="2"
                                 single-line
                                 sticky
-                                style="background-color: cornflowerblue; font-size: 9pt;"
+                                style="background-color: cornflowerblue; font-size: 9pt; color: white"
                                 v-show="!hasSetupStripe()"
                         >
                             Click To Accept Credit Cards

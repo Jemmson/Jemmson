@@ -8,10 +8,10 @@
         >
             <div
                     v-if="needsStripe() && isCreditCardJob()"
-                    class="bg-color-red f-bold fa-1x pb-1 pl-1 pt-3 w-break"
-            >
-                You will need to set up a credit card to bid on this job
-            </div>
+                    class="w-break text-center uppercase error--text p-2"
+                    style="color: black"
+            >You will need to set up a credit card to bid on this job</div>
+            <hr>
             <v-card-title
                     class="uppercase pb-0"
                     v-if="showBid(bidTask)"
@@ -100,7 +100,7 @@
 
 
             <div v-show="showTheTask">
-                <section class="col-12 mt-4"
+                <section class="mt-1rem"
                          v-if="show.details"
                 >
                     <h1 class="card-title">Task Details</h1>
@@ -161,30 +161,46 @@
                     </v-card>
                 </section>
 
-                <section class="col-12"
+                <section class="mt-1rem"
                          v-if="show.location"
                 >
                     <h1 class="card-title">Job Address</h1>
-                    <card>
-                        <main class="row">
-                            <div class="address-adjust">
-                                <p v-if="getAddress(bidTask) !== 'Address Not Available'">
-                                    <a target="_blank"
-                                       :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
-                                        <i class="fas fa-map-marker icon"></i>
-                                        {{ getAddress(bidTask) }}
-                                    </a>
-                                </p>
-                                <p v-else>
+
+                    <v-card>
+                        <div>
+                            <div
+                                v-if="getAddress(bidTask) !== 'Address Not Available'"
+                            >
+                                <a target="_blank"
+                                   :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
                                     <i class="fas fa-map-marker icon"></i>
                                     {{ getAddress(bidTask) }}
-                                </p>
+                                </a>
                             </div>
-                        </main>
-                    </card>
+                            <div v-else>
+                                <div class="w-break text-center uppercase error--text p-2" style="color:black;">Address to Job is Not currently Available</div>
+                            </div>
+                        </div>
+                    </v-card>
+
+
+
+<!--                    <card>-->
+<!--                        <main class="row">-->
+<!--                            <div class="address-adjust">-->
+<!--                                <p v-if="getAddress(bidTask) !== 'Address Not Available'">-->
+
+<!--                                </p>-->
+<!--                                <p v-else>-->
+<!--                                    <i class="fas fa-map-marker icon"></i>-->
+<!--                                    {{ getAddress(bidTask) }}-->
+<!--                                </p>-->
+<!--                            </div>-->
+<!--                        </main>-->
+<!--                    </card>-->
                 </section>
 
-                <section class="col-12"
+                <section class="mt-1rem"
                          v-if="show.messages"
                 >
                     <h1 class="card-title">Messages</h1>
@@ -205,7 +221,7 @@
                     </card>
                 </section>
 
-                <section class="col-12"
+                <section class="mt-1rem"
                          v-if="show.images"
                 >
                     <h1 class="card-title">Images</h1>
@@ -218,7 +234,7 @@
                     </card>
                 </section>
 
-                <section class="col-12"
+                <section class="mt-1rem"
                          ref="actionSection"
                          v-if="jobTaskHasBeenApproved()"
                 >
@@ -518,7 +534,7 @@
                     const status = this.getLatestJobTaskStatus1(this.bidTask.job_task);
                     return status == 'approved by customer'
                         || status == 'declined subs work'
-                        || status == 'customer changes finished_task'
+                        || status == 'customer changes finished task'
                 }
             },
 
@@ -692,8 +708,9 @@
             showFinishedBtn(bid) {
                 if (bid && bid.job_task) {
                     let status = this.getLatestJobTaskStatus1(bid.job_task);
-                    return status === 'approved by customer'
-                        || status === 'declined subs work'
+                    return status == 'approved by customer'
+                        || status == 'declined subs work'
+                        || status == 'customer changes finished task'
                 }
             },
 

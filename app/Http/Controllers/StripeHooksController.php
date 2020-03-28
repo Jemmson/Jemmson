@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\StripeAccountVerification;
+use App\StripeEvent;
 use App\StripeExpress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -86,8 +88,36 @@ class StripeHooksController extends Controller
         return $request;
     }
 
+    /*
+     * https://stripe.com/docs/connect/identity-verification-api
+     * - will receive an accounts object -> https://stripe.com/docs/api/accounts/retrieve
+     *
+     * */
+
     public function accountUpdated($request)
     {
+//        look at the response
+//        ‌Your destination account needs to have at least one of the following capabilities enabled: transfers, legacy_payments
+
+//        $verification = $this->getVerificationFromRequest($request);
+//        $this->storeVerification($verification);
+
+        $stripeVerification = StripeAccountVerification::get($request->account);
+        $stripeVerification->updateTable($request->account, $request->data['object']['requirements']);
+
+
+        $stripeEvent = StripeEvent::get($request->account);
+        $stripeEvent->updateTable($request->account, json_encode($request->json()), 'account_updated');
+
+    }
+
+    public function accountApplicationAuthorized($request)
+    {
+//        look at the response
+//        ‌Your destination account needs to have at least one of the following capabilities enabled: transfers, legacy_payments
+
+//        echo $request;
+
         return $request;
     }
 
@@ -122,11 +152,6 @@ class StripeHooksController extends Controller
     }
 
     public function invoiceUpcoming($request)
-    {
-        return $request;
-    }
-
-    public function accountApplicationAuthorized($request)
     {
         return $request;
     }
