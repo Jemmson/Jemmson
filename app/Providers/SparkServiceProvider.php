@@ -136,7 +136,7 @@ class SparkServiceProvider extends ServiceProvider
                 if (Auth::user() != null) 
                     return Auth::user()->load('subscriptions',
                         'contractor.stripeExpress', 'customer',
-                        'contractor.location', 'customer.location');
+                        'contractor.location', 'customer.location', 'stripeAccountVerification');
                 else
                     return null;
             }

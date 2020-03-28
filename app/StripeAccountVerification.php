@@ -13,7 +13,7 @@ class StripeAccountVerification extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'stripe_id', 'account_id');
     }
 
     public static function get($accountId)

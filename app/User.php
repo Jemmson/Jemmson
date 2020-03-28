@@ -116,7 +116,7 @@ class User extends SparkUser
 
     public function stripeAccountVerification()
     {
-        return $this->hasOne(StripeEvent::class);
+        return $this->hasOne(StripeAccountVerification::class, 'account_id', 'stripe_id');
     }
 
     public function contractor()
