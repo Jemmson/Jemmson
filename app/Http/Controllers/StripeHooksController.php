@@ -11,57 +11,79 @@ use App\JobTask;
 
 class StripeHooksController extends Controller
 {
-    //
-
     public function hooks(Request $request)
     {
-//        Log::debug(json_encode($request));
-        Log::debug($request);
+        \Stripe\Stripe::setApiKey('sk_test_ebg7SjOI3rsZkeV5SZsUkOon');
 
-        $event = $request->type;
+        $endpoint_secret = 'whsec_OJY1Mxu5fPM86Yj4imiQCWq4o4RPBRLT';
 
-        switch ($event) {
-            case 'payment_intent.created':
-                break;
-            case 'payment_intent.succeeded':
-                $this->processPaymentIntentSucceeded($request);
-                break;
-            case 'charge.succeeded':
-                $this->processChargeSucceeded($request);
-                break;
-            case 'transfer.created':
-                $this->transferCreated($request);
-                break;
-            case 'payment.created':
-                $this->paymentCreated($request);
-                break;
-            case 'payment.attached':
-                $this->paymentAttached($request);
-                break;
-            case 'payment_method.attached':
-                $this->paymentMethodAttached($request);
-                break;
-            case 'payment_intent.payment_failed':
-                $this->paymentIntentPaymentFailed($request);
-                break;
-            case 'invoice.upcoming':
-                $this->invoiceUpcoming($request);
-                break;
-            case 'account.application.authorized':
-                $this->accountApplicationAuthorized($request);
-                break;
-            case 'capability.updated':
-                $this->capabilityUpdated($request);
-                break;
-            case 'account.updated':
-                $this->accountUpdated($request);
-                break;
+        $sig_header = $request->headers->get('stripe-signature');
+
+        $payload = $request->getContent();
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Invalid payload
+            return response([], 400);
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // Invalid signature
+            return response([], 400);
+        };
+
+        if ($this->checkForDuplicateEvent($event->id)) {
+            // Handle the event
+            switch ($event->type) {
+                case 'payment_intent.created':
+                    break;
+                case 'payment_intent.succeeded':
+                    $this->processPaymentIntentSucceeded($event);
+                    break;
+                case 'charge.succeeded':
+                    $this->processChargeSucceeded($event);
+                    break;
+                case 'transfer.created':
+                    $this->transferCreated($event);
+                    break;
+                case 'payment.created':
+                    $this->paymentCreated($event);
+                    break;
+                case 'payment.attached':
+                    $this->paymentAttached($event);
+                    break;
+                case 'payment_method.attached':
+                    $this->paymentMethodAttached($event);
+                    break;
+                case 'payment_intent.payment_failed':
+                    $this->paymentIntentPaymentFailed($event);
+                    break;
+                case 'invoice.upcoming':
+                    $this->invoiceUpcoming($event);
+                    break;
+                case 'account.application.authorized':
+                    $this->accountApplicationAuthorized($event);
+                    break;
+                case 'capability.updated':
+                    $this->capabilityUpdated($event);
+                    break;
+                case 'account.updated':
+                    $this->accountUpdated($event);
+                    break;
+                default:
+                    // Unexpected event type
+                    return response([], 400);
+            }
         }
+
+        return response([], 200);
+
     }
 
-    public function processPaymentIntentSucceeded($request)
+    public function processPaymentIntentSucceeded($event)
     {
-        $paymentIntentId = $request->data['object']['id'];
+        $paymentIntentId = $event->data->object['id'];
 
         $jobTasks = JobTask::where('payment_intent_id', '=', $paymentIntentId)->get();
 
@@ -69,9 +91,9 @@ class StripeHooksController extends Controller
 
         $stripeExpress = new StripeExpress();
 
-        $totalAmount = $request->data['object']['amount'];
-        $chargeId = $request->data['object']['charges']['data'][0]['id'];
-        $transferGroupId = $request->data['object']['metadata']['transferGroupId'];
+        $totalAmount = $event->data->object['amount'];
+        $chargeId = $event->data->object['charges']['data'][0]['id'];
+        $transferGroupId = $event->data->object['metadata']['transferGroupId'];
 
         $stripeExpress->transferFunds(
             $jobId, $jobTasks, $totalAmount, $chargeId, $transferGroupId
@@ -94,20 +116,14 @@ class StripeHooksController extends Controller
      *
      * */
 
-    public function accountUpdated($request)
+    public function accountUpdated($event)
     {
-//        look at the response
-//        ‌Your destination account needs to have at least one of the following capabilities enabled: transfers, legacy_payments
 
-//        $verification = $this->getVerificationFromRequest($request);
-//        $this->storeVerification($verification);
+        $stripeVerification = StripeAccountVerification::get($event->account);
+        $stripeVerification->updateTable($event->account, $event->data->object['requirements']);
 
-        $stripeVerification = StripeAccountVerification::get($request->account);
-        $stripeVerification->updateTable($request->account, $request->data['object']['requirements']);
-
-
-        $stripeEvent = StripeEvent::get($request->account);
-        $stripeEvent->updateTable($request->account, json_encode($request->json()), 'account_updated');
+        $stripeEvent = StripeEvent::get($event->account);
+        $stripeEvent->updateTable($event->account, json_encode($event), 'account_updated');
 
     }
 
@@ -154,6 +170,19 @@ class StripeHooksController extends Controller
     public function invoiceUpcoming($request)
     {
         return $request;
+    }
+
+    public function checkForDuplicateEvent($eventId)
+    {
+
+        $eventIdentifier = StripeAccountVerification::get($eventId);
+        if ($eventIdentifier !== false) {
+            $eventIdentifier->updateTable($eventId);
+            return true;
+        }
+
+        return false;
+
     }
 
 }
