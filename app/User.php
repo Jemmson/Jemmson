@@ -705,6 +705,12 @@ class User extends SparkUser
             $number = '1' . $number;
             $client = new Client();
 
+            Log::debug('getting variables start');
+            Log::debug(env('NEXMO_KEY'));
+            Log::debug(env('NEXMO_SECRET'));
+            Log::debug('getting variables end');
+
+
             $res = $client->request('POST', 'https://api.nexmo.com/ni/advanced/json', [
                 'json' => [
                     'api_key' => env('NEXMO_KEY'),

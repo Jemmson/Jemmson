@@ -18,13 +18,8 @@ use App\JobTask;
 use App\Job;
 use App\Task;
 
-
-Route::group([
-    'middleware' => 'auth:api'
-], function () {
-    Route::get('/test', 'UserController@test');
-    Route::get('/search', 'UserController@search');
-});
+Route::get('/test', 'UserController@test')->middleware('auth:api');
+Route::get('/search', 'UserController@search')->middleware('auth:api');
 
 // TODO: need to lock these routes down
 // based on user and the resources they
@@ -79,7 +74,7 @@ Route::post('/task/delete', 'TaskController@destroy');
 Route::post('/task/togglestripe', 'TaskController@toggleStripe');
 Route::post('/task/checkStripeForJob', 'TaskController@checkStripeForJob');
 
-Route::post('/user/validatePhoneNumber', 'UserController@validateThePhoneNumber');
+Route::post('/user/validatePhoneNumber', 'UserController@validatePhoneNumber');
 
 Route::post('/job/updateArea', 'JobController@updateArea');
 Route::post('/job/getArea', 'JobController@getArea');

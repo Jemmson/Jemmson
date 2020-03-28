@@ -16,6 +16,7 @@ use App\Quickbook;
 use App\Http\Controllers\QuickBooksController;
 use Laravel\Spark\User;
 use App\Traits\Utilities;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {

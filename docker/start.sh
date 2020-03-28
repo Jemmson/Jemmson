@@ -5,7 +5,7 @@ set -e
 env=${APP_ENV:-production}
 role=${CONTAINER_ROLE:-app}
 
-if [ "$env" != "local" ]; then
+if [ "$env" != "testing" ]; then
 
     (
         cd /var/www/html &&

@@ -246,8 +246,6 @@
             } else {
                 this.theUser = this.user;
             }
-            // console.log(this.bids)
-            // console.log(JSON.stringify(this.bids))
         }
     }
 </script>
