@@ -68,8 +68,8 @@
                 class="btn btn-normal ml-2 mt-4"
                 style="width: 95%"
                 :id="job ? 'task_photo_' + job.id : ''"
-                type="file" @change="uploadTaskImage(job.id)">
-
+                type="file" @change="uploadTaskImage(job.id)"
+        >
 
         <v-progress-linear
                 :active="loading"

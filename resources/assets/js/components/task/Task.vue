@@ -10,7 +10,14 @@
                     v-if="needsStripe() && isCreditCardJob()"
                     class="w-break text-center uppercase error--text p-2"
                     style="color: black"
-            >You will need to set up a credit card to bid on this job</div>
+            >You will need to set up a credit card to bid on this job
+            </div>
+            <stripe-verification-required
+                    v-if="requiresVerification()"
+                    ref="warningMessageAccountDisabled"
+                    :verification="user.stripe_account_verification"
+                    @verified="accountVerified($event)"
+            ></stripe-verification-required>
             <hr>
             <v-card-title
                     class="uppercase pb-0"
@@ -169,7 +176,7 @@
                     <v-card>
                         <div>
                             <div
-                                v-if="getAddress(bidTask) !== 'Address Not Available'"
+                                    v-if="getAddress(bidTask) !== 'Address Not Available'"
                             >
                                 <a target="_blank"
                                    :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
@@ -178,26 +185,27 @@
                                 </a>
                             </div>
                             <div v-else>
-                                <div class="w-break text-center uppercase error--text p-2" style="color:black;">Address to Job is Not currently Available</div>
+                                <div class="w-break text-center uppercase error--text p-2" style="color:black;">Address
+                                    to Job is Not currently Available
+                                </div>
                             </div>
                         </div>
                     </v-card>
 
 
+                    <!--                    <card>-->
+                    <!--                        <main class="row">-->
+                    <!--                            <div class="address-adjust">-->
+                    <!--                                <p v-if="getAddress(bidTask) !== 'Address Not Available'">-->
 
-<!--                    <card>-->
-<!--                        <main class="row">-->
-<!--                            <div class="address-adjust">-->
-<!--                                <p v-if="getAddress(bidTask) !== 'Address Not Available'">-->
-
-<!--                                </p>-->
-<!--                                <p v-else>-->
-<!--                                    <i class="fas fa-map-marker icon"></i>-->
-<!--                                    {{ getAddress(bidTask) }}-->
-<!--                                </p>-->
-<!--                            </div>-->
-<!--                        </main>-->
-<!--                    </card>-->
+                    <!--                                </p>-->
+                    <!--                                <p v-else>-->
+                    <!--                                    <i class="fas fa-map-marker icon"></i>-->
+                    <!--                                    {{ getAddress(bidTask) }}-->
+                    <!--                                </p>-->
+                    <!--                            </div>-->
+                    <!--                        </main>-->
+                    <!--                    </card>-->
                 </section>
 
                 <section class="mt-1rem"
@@ -248,6 +256,8 @@
                             <!--                                    :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"-->
                             <!--                                    type="startOn"></content-section>-->
                             <v-btn
+                                    ref="markJobFinishedButton"
+                                    :disabled="!stripeVerified"
                                     class="w-full mt-1rem"
                                     color="primary"
                                     v-if="showFinishedBtn(bidTask)"
@@ -289,6 +299,7 @@
     import Status from '../../components/mixins/Status'
     import Card from '../shared/Card'
     import Currency from '../../components/mixins/Currency'
+    import StripeVerificationRequired from '../../components/stripe/StripeVerificationRequired'
 
     export default {
         name: 'Task',
@@ -297,7 +308,8 @@
             ContentSection,
             ShowTaskModal,
             DeleteTaskModal,
-            Card
+            Card,
+            StripeVerificationRequired
         },
         mixins: [
             Status,
@@ -318,6 +330,7 @@
         },
         data() {
             return {
+                stripeVerified: true,
                 show: {
                     details: true,
                     messages: false,
@@ -340,9 +353,35 @@
             }
         },
         props: {
-            bidTask: Object
+            bidTask: Object,
+            user: Object
         },
         methods: {
+
+            requiresVerification() {
+                if (Spark.state.user.stripe_account_verification) {
+                    let verification = Spark.state.user.stripe_account_verification;
+                    if (
+                        verification.disabled_reason === null
+                        && verification.currently_due === null
+                        && verification.eventually_due === null
+                        && verification.past_due === null
+                        && verification.pending_verification === null
+                    ) {
+                        return false
+                    } else {
+                        return true
+                    }
+                }
+            },
+
+            accountVerified(verification) {
+                if (verification) {
+                    this.stripeVerified = true
+                } else {
+                    this.stripeVerified = false
+                }
+            },
 
             showSection(section) {
                 this.hideAllSections();

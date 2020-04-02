@@ -99,6 +99,11 @@ class StripeExpress extends Model
         return $generalId !== $jobTaskContractorId;
     }
 
+    public static function getAPIKey($accountId)
+    {
+        return StripeExpress::where('stripe_user_id', '=', $accountId)->get()->first()->access_token;
+    }
+
     public function transferAmountToSubs(
         $jobTasks,
         $generalId,

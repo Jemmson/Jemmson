@@ -22,8 +22,17 @@ class StripeAccountVerification extends Model
         if (\is_null($sav)) {
             return new StripeAccountVerification();
         }
-
         return $sav;
+    }
+
+    public static function exists($eventId)
+    {
+
+    }
+
+    public function stripeUploadedFiles()
+    {
+        return $this->hasMany(StripeUploadedFiles::class, 'account_id', 'account_id');
     }
 
     public function updateTable($account_id, $verificationDetails)

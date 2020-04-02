@@ -90,7 +90,7 @@ class StripePaymentGatewayTest extends TestCase
 
         // Set your secret key: remember to change this to your live secret key in production
         // See your keys here: https://dashboard.stripe.com/account/apikeys
-        \Stripe\Stripe::setApiKey('sk_test_ebg7SjOI3rsZkeV5SZsUkOon');
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $response = \Stripe\OAuth::token([
             'grant_type' => 'authorization_code',
@@ -376,7 +376,7 @@ class StripePaymentGatewayTest extends TestCase
 
         // Set your secret key: remember to change this to your live secret key in production
 // See your keys here: https://dashboard.stripe.com/account/apikeys
-        \Stripe\Stripe::setApiKey('sk_test_ebg7SjOI3rsZkeV5SZsUkOon');
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
 // Create a PaymentIntent:
         $paymentIntent = \Stripe\PaymentIntent::create([

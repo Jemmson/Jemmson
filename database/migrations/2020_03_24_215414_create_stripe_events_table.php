@@ -15,9 +15,9 @@ class CreateStripeEventsTable extends Migration
     {
         Schema::create('stripe_events', function (Blueprint $table) {
             $table->string('account_id');
-            $table->json('capability_updated')->nullable();
-            $table->json('account_updated')->nullable();
-            $table->bigInteger('user_id')->nullable();
+            $table->string('event_id');
+            $table->string('event_type');
+            $table->string('event_payload');
             $table->timestamps();
         });
     }

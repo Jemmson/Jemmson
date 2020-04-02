@@ -13,12 +13,12 @@ class StripeEvent extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'stripe_id', 'account_id');
     }
 
-    public static function get($accountId)
+    public static function get($eventId)
     {
-        $stripeEvent = StripeEvent::where('account_id', '=', $accountId)->get()->first();
+        $stripeEvent = StripeEvent::where('event_id', '=', $eventId)->get()->first();
         if (\is_null($stripeEvent)) {
             return new StripeEvent();
         }
@@ -26,12 +26,23 @@ class StripeEvent extends Model
         return $stripeEvent;
     }
 
-    public function updateTable($accountId, $event, $eventType)
+    public static function exists($eventId)
     {
-        $this->account_id = $accountId;
-        if ($eventType == 'account_updated') {
-            $this->account_updated = $event;
+        $stripeEvent = StripeEvent::where('eventId', '=', $eventId)->get()->first();
+
+        if (\is_null($stripeEvent)) {
+            return new StripeEvent();
         }
+
+        return $stripeEvent;
+    }
+
+    public function updateTable($event)
+    {
+        $this->account_id = $event->account_id;
+        $this->event_id = $event->id;
+        $this->event_type = $event->type;
+        $this->event_payload = $event;
 
         try {
             $this->save();

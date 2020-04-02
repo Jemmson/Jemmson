@@ -752,67 +752,67 @@
         }
       },
       setErrors(errors) {
-        if (errors.first_name !== undefined) {
+        if (errors && errors.first_name !== undefined) {
           this.registerForm.errors.first_name = errors.first_name[0]
         } else {
           this.registerForm.errors.first_name = ''
         }
 
-        if (errors.last_name !== undefined) {
+        if (errors && errors.last_name !== undefined) {
           this.registerForm.errors.last_name = errors.last_name[0]
         } else {
           this.registerForm.errors.last_name = ''
         }
 
-        if (errors.email !== undefined) {
+        if (errors && errors.email !== undefined) {
           this.registerForm.errors.email = errors.email[0]
         } else {
           this.registerForm.errors.email = ''
         }
 
-        if (errors.password !== undefined) {
+        if (errors && errors.password !== undefined) {
           this.registerForm.errors.password = errors.password[0]
         } else {
           this.registerForm.errors.password = ''
         }
 
-        if (errors.terms) {
+        if (errors && errors.terms) {
           this.registerForm.errors.terms = errors.terms[0]
         } else {
           this.registerForm.errors.terms = false
         }
 
-        if (errors.companyName !== undefined) {
+        if (errors && errors.companyName !== undefined) {
           this.registerForm.errors.companyName = errors.companyName[0]
         } else {
           this.registerForm.errors.companyName = ''
         }
 
-        if (errors.phoneNumber !== undefined) {
+        if (errors && errors.phoneNumber !== undefined) {
           this.registerForm.errors.phoneNumber = errors.phoneNumber[0]
         } else {
           this.registerForm.errors.phoneNumber = ''
         }
 
-        if (errors.addressLine1 !== undefined) {
+        if (errors && errors.addressLine1 !== undefined) {
           this.registerForm.errors.addressLine1 = errors.addressLine1[0]
         } else {
           this.registerForm.errors.addressLine1 = ''
         }
 
-        if (errors.city !== undefined) {
+        if (errors && errors.city !== undefined) {
           this.registerForm.errors.city = errors.city[0]
         } else {
           this.registerForm.errors.city = ''
         }
 
-        if (errors.state !== undefined) {
+        if (errors && errors.state !== undefined) {
           this.registerForm.errors.state = errors.state[0]
         } else {
           this.registerForm.errors.state = ''
         }
 
-        if (errors.zip !== undefined) {
+        if (errors && errors.zip !== undefined) {
           this.registerForm.errors.zip = errors.zip[0]
         } else {
           this.registerForm.errors.zip = ''

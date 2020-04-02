@@ -111,7 +111,7 @@ class User extends SparkUser
 
     public function stripeEvent()
     {
-        return $this->hasOne(StripeEvent::class);
+        return $this->hasMany(StripeEvent::class, 'account_id', 'stripe_id');
     }
 
     public function stripeAccountVerification()

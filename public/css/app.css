@@ -171,6 +171,12 @@ h4 {
 .p-0 {
   padding: 0;
 }
+.mt-25rem {
+  margin-top: 0.25rem;
+}
+.mb-25rem {
+  margin-bottom: 0.25rem;
+}
 .margins {
   margin-left: 1rem;
   margin-right: 1rem;

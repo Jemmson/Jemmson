@@ -28,6 +28,7 @@
                     >
                         <task
                                 :bidTask="bidTask"
+                                :user="current_user"
                         ></task>
                     </div>
                 </paginate>
@@ -76,6 +77,7 @@
         },
         data() {
             return {
+                current_user: null,
                 showTasks: {},
                 paginate: ['sTasks'],
                 address: '',
@@ -208,6 +210,10 @@
             }
             const error = this.$route.query.error;
             Vue.toasted.error(error);
+
+            if (!this.user) {
+                this.current_user = Spark.state.user
+            }
         }
     }
 </script>

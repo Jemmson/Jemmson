@@ -39,6 +39,9 @@ Route::post('/task/addTask', 'TaskController@addTask');
 Route::get('login', 'Auth\LoginController@show');
 Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
 
+//Route::post('/verification/supportingDocs', 'StripeExpressController@supportingDocs');
+//Route::get('/verification/supporting', 'StripeExpressController@supporting');
+
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 
     Route::get('/feedback', 'FeedbackController@show');
@@ -46,6 +49,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/customer/search', 'CustomerController@getCustomerAssociatedToContractor');
 
     Route::post('/search/task', 'TaskController@getTasks');
+    Route::post('/verification/supportingDocs', 'StripeExpressController@supportingDocs');
 
     Route::get('/quickbooks/getCompanyInfo', 'QuickbooksController@getCompanyInfo');
 

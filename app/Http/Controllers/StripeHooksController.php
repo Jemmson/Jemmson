@@ -13,7 +13,7 @@ class StripeHooksController extends Controller
 {
     public function hooks(Request $request)
     {
-        \Stripe\Stripe::setApiKey('sk_test_ebg7SjOI3rsZkeV5SZsUkOon');
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $endpoint_secret = 'whsec_OJY1Mxu5fPM86Yj4imiQCWq4o4RPBRLT';
 
@@ -33,7 +33,7 @@ class StripeHooksController extends Controller
             return response([], 400);
         };
 
-        if ($this->checkForDuplicateEvent($event->id)) {
+        if ($this->checkForDuplicateEvent($event)) {
             // Handle the event
             switch ($event->type) {
                 case 'payment_intent.created':
@@ -172,17 +172,10 @@ class StripeHooksController extends Controller
         return $request;
     }
 
-    public function checkForDuplicateEvent($eventId)
+    public function checkForDuplicateEvent($event)
     {
-
-        $eventIdentifier = StripeAccountVerification::get($eventId);
-        if ($eventIdentifier !== false) {
-            $eventIdentifier->updateTable($eventId);
-            return true;
-        }
-
-        return false;
-
+        $eventIdentifier = StripeEvent::get($event->id);
+        $eventIdentifier->updateTable($event);
     }
 
 }
