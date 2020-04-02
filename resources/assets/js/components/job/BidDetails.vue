@@ -371,7 +371,6 @@
                                 id="viewTasks"
                                 class="w-40"
                                 color="primary"
-                                v-if="taskHasChanged"
                                 @click.prevent="viewTasks()"
                         >
                             View Tasks

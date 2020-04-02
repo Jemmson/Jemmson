@@ -174,6 +174,9 @@
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
 
+                        <hr>
+                        <h5 class="capitalize text-center font-bold red--text fa-1x">Password must be atleast 6 characters long</h5>
+
                         <div class="row">
                             <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
                             <label for="password"

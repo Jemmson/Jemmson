@@ -76,7 +76,8 @@
                 window.location.href = '/logout';
             },
             settings(){
-                window.location.href = '/settings';
+                // window.location.href = '/settings';
+                this.$router.push('/settings')
             }
         }
     }

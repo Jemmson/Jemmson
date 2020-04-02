@@ -192,6 +192,8 @@
 
                         </div>
 
+                        <hr>
+                        <h5 class="capitalize text-center font-bold red--text fa-1x">Password must be atleast 6 characters long</h5>
 
                         <h3>Create Password</h3>
                         <div class="update_password" style="">

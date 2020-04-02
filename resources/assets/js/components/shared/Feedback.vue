@@ -12,8 +12,19 @@
         </v-btn>
         <v-dialog
                 v-model="dialog"
+                fullscreen
                 width="400">
             <v-card>
+
+                <div class="flex flex-end">
+                    <v-icon
+                            class="m-1rem"
+                            size="x-large"
+                            color="red"
+                            @click="dialog=false"
+                    >mdi-location-exit</v-icon>
+                </div>
+
                 <v-card-actions
                         align="center"
                         justify="center"

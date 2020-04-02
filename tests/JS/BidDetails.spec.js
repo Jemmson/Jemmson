@@ -157,7 +157,11 @@ describe('BidDetails', function () {
         const wrapper = shallowMount(BidDetails, {
             localVue,
             propsData: {
+
                 bid: {
+                    job_status: [{
+                        status_number: 1,
+                    }],
                     status: 'bid.sent',
                     job_tasks: [
                         {
@@ -183,6 +187,16 @@ describe('BidDetails', function () {
                 },
                 isCustomer: true
             }
+        });
+
+        wrapper.setData({
+            show: {
+                jobStepper: false,
+                details: false,
+                jobTask: false,
+                location: true,
+                images: false
+            },
         });
 
         expect(wrapper.find({ref: 'location'}).exists()).toBe(false);
@@ -265,6 +279,9 @@ describe('BidDetails', function () {
             ],
             propsData: {
                 bid: {
+                    job_status: [{
+                        status_number: 1,
+                    }],
                     job_tasks: [],
                 },
                 isCustomer: false
@@ -288,11 +305,25 @@ describe('BidDetails', function () {
             ],
             propsData: {
                 bid: {
+                    job_status: [{
+                        status_number: 1,
+                    }],
                     job_tasks: [],
                 },
                 isCustomer: false
             }
         });
+
+        wrapper.setData({
+            show: {
+                jobStepper: false,
+                details: false,
+                jobTask: true,
+                location: false,
+                images: false
+            },
+        });
+
         await wrapper.vm.$nextTick()
         expect(wrapper.find({ref: 'jobTaskNavButton'})
             .attributes().disabled).toBe('disabled')
@@ -311,6 +342,9 @@ describe('BidDetails', function () {
             ],
             propsData: {
                 bid: {
+                    job_status: [{
+                        status_number: 1,
+                    }],
                     job_tasks: [{
                         unit_price: 1,
                         cust_final_price: 123,
@@ -352,6 +386,9 @@ describe('BidDetails', function () {
             ],
             propsData: {
                 bid: {
+                    job_status: [{
+                        status_number: 1,
+                    }],
                     job_tasks: [],
                 },
                 isCustomer: false

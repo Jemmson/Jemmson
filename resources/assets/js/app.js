@@ -26,6 +26,7 @@ window.Echo = new Echo({
 
 require('spark-bootstrap')
 
+// https://github.com/shakee93/vue-toasted
 import Toasted from 'vue-toasted'
 import Vue from 'vue'
 

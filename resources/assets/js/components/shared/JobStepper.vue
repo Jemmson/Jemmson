@@ -48,8 +48,6 @@
                     <v-card-title v-else-if="infoStep === 2">Waiting on Customer Approval</v-card-title>
                     <v-card-title v-else-if="infoStep === 3">Begin Job</v-card-title>
                     <v-card-title v-else>Job Is Complete</v-card-title>
-
-
                     <v-card-text v-if="infoStep === 1">
                         This is the initial step of the workflow. You will
                         add tasks to your bid. Each of these tasks can be
@@ -84,7 +82,7 @@
                 <v-stepper-step
                         :complete="step > 2"
                         @click="openDialog(2)"
-                        step="2"><small>Please Approve</small>
+                        step="2"><small>Bid Has Been Submitted - Please Approve</small>
                 </v-stepper-step>
 
                 <v-stepper-step
