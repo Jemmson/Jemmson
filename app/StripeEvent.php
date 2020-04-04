@@ -10,6 +10,7 @@ class StripeEvent extends Model
     //
     protected $table = 'stripe_events';
     protected $guarded = [];
+    public $primaryKey = 'event_id';
 
     public function user()
     {
@@ -37,12 +38,32 @@ class StripeEvent extends Model
         return $stripeEvent;
     }
 
+    public function getAccountId($event)
+    {
+        $account = [
+            "transfer.created" => $event->data->object->destination,
+            "payment.created" => $event->account,
+            "payment_intent.created" => $event->data->object->on_behalf_of,
+            "charge.succeeded" => $event->data->object->on_behalf_of,
+            "payment_intent.succeeded" => $event->data->object->on_behalf_of,
+            "customer.created" => $event->data->object->id,
+            "payment_method.attached" => $event->data->object->customer,
+            "account.application.authorized" => $event->account,
+            "account.updated" => $event->account,
+            "capability.updated" => $event->account
+        ];
+
+        return $account[$event->type];
+    }
+
     public function updateTable($event)
     {
-        $this->account_id = $event->account_id;
+        $this->customer_id = $event->data->object->customer;
         $this->event_id = $event->id;
         $this->event_type = $event->type;
         $this->event_payload = $event;
+
+        $this->account_id = $this->getAccountId($event);
 
         try {
             $this->save();

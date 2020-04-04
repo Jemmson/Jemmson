@@ -11,32 +11,31 @@
                     class="h-full w-full"
             >
                 <v-stepper-step
-                        style="font-size: 1.75rem;"
                         class="w-full"
                         :complete="step > 0" step="1"
                         @click="openDialog(1)"
-                ><small>Prepare</small>
+                ><span>Prepare</span>
                 </v-stepper-step>
 
                 <v-stepper-step
                         class="w-full"
                         :complete="step > 1"
                         @click="openDialog(2)"
-                        step="2"><small>Sent</small>
+                        step="2"><span>Sent</span>
                 </v-stepper-step>
 
                 <v-stepper-step
                         class="w-full"
                         :complete="step > 2"
                         @click="openDialog(3)"
-                        step="3"><small>Approved</small>
+                        step="3"><span>Approved</span>
                 </v-stepper-step>
 
                 <v-stepper-step
                         class="w-full"
                         :complete="step > 3"
                         @click="openDialog(4)"
-                        step="4"><small>Paid</small>
+                        step="4"><span>Paid</span>
                 </v-stepper-step>
             </v-stepper>
             <v-dialog
@@ -76,25 +75,31 @@
                 <v-stepper-step
                         :complete="step > 1" step="1"
                         @click="openDialog(1)"
-                ><small>Waiting For Bid</small>
+                ><span>Waiting For Bid</span>
                 </v-stepper-step>
 
                 <v-stepper-step
                         :complete="step > 2"
                         @click="openDialog(2)"
-                        step="2"><small>Bid Has Been Submitted - Please Approve</small>
+                        step="2"><span>Bid Has Been Submitted - Please Approve</span>
                 </v-stepper-step>
 
                 <v-stepper-step
                         :complete="step > 3"
                         @click="openDialog(3)"
-                        step="3"><small>Waiting For Completion</small>
+                        step="3"><span>Waiting For Completion</span>
                 </v-stepper-step>
 
                 <v-stepper-step
                         :complete="step > 4"
                         @click="openDialog(4)"
-                        step="4"><small>Please Pay</small>
+                        step="4"><span>Please Pay</span>
+                </v-stepper-step>
+
+                <v-stepper-step
+                        :complete="step > 5"
+                        @click="openDialog(5)"
+                        step="5"><span>Job Paid</span>
                 </v-stepper-step>
 
             </v-stepper>

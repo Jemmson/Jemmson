@@ -6,6 +6,7 @@ use App\StripeAccountVerification;
 use App\StripeEvent;
 use App\StripeExpress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\JobTask;
 
@@ -122,8 +123,8 @@ class StripeHooksController extends Controller
         $stripeVerification = StripeAccountVerification::get($event->account);
         $stripeVerification->updateTable($event->account, $event->data->object['requirements']);
 
-        $stripeEvent = StripeEvent::get($event->account);
-        $stripeEvent->updateTable($event->account, json_encode($event), 'account_updated');
+        $stripeEvent = StripeEvent::get($event->id);
+        $stripeEvent->updateTable($event);
 
     }
 
@@ -175,7 +176,9 @@ class StripeHooksController extends Controller
     public function checkForDuplicateEvent($event)
     {
         $eventIdentifier = StripeEvent::get($event->id);
+        $newEvent = $eventIdentifier->event_id;
         $eventIdentifier->updateTable($event);
+        return \is_null($newEvent);
     }
 
 }

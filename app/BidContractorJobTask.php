@@ -46,4 +46,30 @@ class BidContractorJobTask extends Model
         return $this->hasOne(ContractorSubcontractorPreferredPayment::class);
     }
 
+    public static function markAsDeleted($jobTasks, $generalId)
+    {
+        foreach ($jobTasks as $jobTask) {
+            if (
+                !self::isASub($generalId, $jobTask->id)
+                ){
+                $subTasks = self::getSubTasks();
+                if (!\is_null($subTasks)) {
+                    foreach ($subTasks as $subTask) {
+                        $subTask->destroy();
+                    }
+                }
+            }
+        }
+    }
+
+    public static function isASub($generalId, $jobTaskContractorId)
+    {
+        return $generalId !== $jobTaskContractorId;
+    }
+
+    public static function getSubTasks($jobTaskId)
+    {
+        return BidContractorJobTask::where('job_task_id', '=', $jobTaskId)->get();
+    }
+
 }

@@ -59,19 +59,42 @@
                     <label for="supportingDocumentUploads"
                            class="verification-title"
                     >Please Upload Your Supporting Documents Here</label>
-                    <div><i>* File Must Be Less Than 10 MB</i></div>
-                    <div><i>* Must be smaller than 8000px by 8000px</i></div>
-                    <input
-                            ref="supportingDoc"
-                            type="file"
-                            id="supportingDocumentUploads"
-                            @change="uploadSupportingDocument()"
-                            accept="image/png, image/jpeg"
-                    >
-                    <v-btn
-                            v-on:click="submitFile()">
-                        Submit
-                    </v-btn>
+
+
+                    <hr>
+
+                    <section v-if="showReason('ID Number')">
+                        <div class="flex justify-content-between">
+                            <v-card-title>
+                                ID Number
+                            </v-card-title>
+
+                            <div>
+                                <label style="color: green" v-if="successfulUpload">Successfully Uploaded</label>
+                                <label style="color: red" v-if="unSuccessfulUpload">There was a problem. Please try again</label>
+                            </div>
+                        </div>
+
+                        A document showing address, either a passport, local ID card, or utility bill from a well-known
+                        utility company.
+
+                        <div><i>* File Must Be Less Than 10 MB</i></div>
+                        <div><i>* Must be smaller than 8000px by 8000px</i></div>
+
+                        <input
+                                ref="supportingDoc"
+                                type="file"
+                                id="supportingDocumentUploads"
+                                @change="uploadSupportingDocument()"
+                                :accept="acceptableTypes()"
+                        >
+                        <v-btn
+                                v-on:click="submitFile()">
+                            Submit
+                        </v-btn>
+
+                        <hr>
+                    </section>
 
                 </v-card-text>
 
@@ -97,13 +120,20 @@
         data() {
             return {
                 dialog: false,
-                file: ''
+                file: '',
+                reasons: [],
+                unSuccessfulUpload: false,
+                successfulUpload: false
             }
         },
         props: {
             verification: Object
         },
         methods: {
+
+            acceptableTypes() {
+                return 'image/png, image/jpeg';
+            },
 
             async uploadSupportingDocument() {
                 this.file = this.$refs['supportingDoc'].files[0];
@@ -122,8 +152,12 @@
                     }
                 ).then(function () {
                     console.log('SUCCESS!!');
+                    this.successfulUpload = true
+                    this.unSuccessfulUpload = false
                 }).catch(function () {
                     console.log('FAILURE!!');
+                    this.successfulUpload = false
+                    this.unSuccessfulUpload = true
                 });
 
             },
@@ -153,7 +187,24 @@
                     }
                 }
 
+                this.reasons = values;
+
                 return values
+
+            },
+
+            showReason(reason) {
+                console.log('getValues', this.getValues('currently_due'));
+
+                const reasons = this.getValues('currently_due');
+
+                for (let i = 0; i < reasons.length; i++) {
+                    if (reasons[i] === reason) {
+                        return true;
+                    }
+                }
+
+                return false;
 
             },
 

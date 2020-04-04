@@ -1,6 +1,6 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
-    <div class="container-fluid" style="margin-top: -62px">
+    <div class="container-fluid" :class="getTopMargin()">
 
         <div v-if="bidsContractorSectionPicked" ref="jobs">
             <search-bar>
@@ -160,6 +160,11 @@
             })
         },
         methods: {
+
+            getTopMargin(){
+              return this.isCustomer() ? 'customer-top-margin' : 'contractor-top-margin'
+            },
+
             ...mapMutations([
                 'toggleBidsContractor'
             ]),
@@ -310,6 +315,14 @@
 </script>
 
 <style lang="less" scoped>
+
+    .customer-top-margin {
+        margin-top: 10px
+    }
+
+    .contractor-top-margin {
+        margin-top: -62px
+    }
 
     .list-card {
         margin-left: 0px;

@@ -1028,7 +1028,10 @@
                 let status = this.getLatestJobTaskStatus1(jobTask);
                 return this.isGeneral() &&
                     this.isAssignedToMe(jobTask, Spark.state.user.id) &&
-                    status === 'approved by customer'
+                    (
+                        status === 'approved by customer'
+                        || status === 'customer changes finished task'
+                    )
             },
             openSubInvite(jobTaskId) {
                 $('#sub-invite-modal_' + jobTaskId).modal()
@@ -1154,7 +1157,9 @@
                         } else {
                             status = this.bid.job_tasks[i].job_task_statuses[this.bid.job_tasks[i].job_task_statuses.length - 1].status
                         }
-                        if (status === 'approved_subs_work' || status === 'general_finished_work') {
+                        if (status === 'approved_subs_work'
+                            || status === 'general_finished_work'
+                            || status === 'customer_changes_finished_task') {
                             taskIsFinished = true
                         }
                     }

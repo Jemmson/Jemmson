@@ -39,6 +39,7 @@ class StripeExpress extends Model
             $this->createStripeCustomer($customer, $generalId);
 
             JobTask::markTasksAsPaid($jobTasks);
+            BidContractorJobTask::markAsDeleted($jobTasks, $generalId);
 
             $this->notifyGeneralAndSubs($jobTasks, $generalId);
 

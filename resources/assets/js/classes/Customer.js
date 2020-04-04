@@ -83,7 +83,9 @@ export default class Customer {
    * @param {Object} jobTask
    */
   async denyTask(denyForm, disabled) {
-    disabled.deny = true
+    if (disabled.deny) {
+      disabled.deny = true
+    }
     try {
       await axios.post('/task/deny', {
         job_task_id: denyForm.job_task_id,
@@ -92,13 +94,17 @@ export default class Customer {
       })
       User.emitChange('bidUpdated')
       Vue.toasted.success('Task Denied & Notification Sent')
-      disabled.deny = false
-      disabled.showDenyForm = false
+      if (disabled.deny) {
+        disabled.deny = false
+        disabled.showDenyForm = false
+      }
       $('#deny-task-modal').modal('hide')
     } catch (error) {
       error = error.response.data
       Vue.toasted.error(error.message)
-      disabled.deny = false
+      if (disabled.deny) {
+        disabled.deny = false
+      }
     }
   }
 

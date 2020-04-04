@@ -4,11 +4,13 @@
         <div v-if="show"><!---->
             <div class="flex flex-col">
                 <div
-                        style="background-color: green"
                         class="banner"
+                        :class="setPaymentColor()"
                         v-if="paymentSucceeded"
                 >
-                    <h3 class="text-center">Payment Succeeded!</h3>
+                    <h3 class="text-center" ref="fullPayment" v-if="allTasksCompleted()">Payment Succeeded!</h3>
+                    <h3 class="text-center" ref="partialPayment"
+                        v-else-if="someTasksArePaidFor()">Partial Payment Completed!</h3>
                 </div>
                 <div class="flex space-between header-completed">
                     <div class="flex-1">Task</div>
@@ -16,10 +18,10 @@
                     <div class="flex-1">Price</div>
                     <div class="flex-1">Total</div>
                     <div class="flex-1" v-if="isContractor">Task Price (Sub Contractor)</div>
-                    <div class="flex-1" v-else>Exclude</div>
+                    <!--                    <div class="flex-1" v-else>Exclude</div>-->
                     <div class="flex-1"></div>
                 </div>
-                <div class="flex pl-2 mb-2" v-for="jobTask in getPayableTasks()" :key="jobTask.id">
+                <div class="flex pl-2 mb-2" v-for="(jobTask, index) in getPayableTasks()" :key="jobTask.id">
                     <div class="flex-1 capitalize">{{ jobTask && jobTask.task ? jobTask.task.name : null}}</div>
                     <div class="pl-1 mr-1rem">{{ jobTask.qty }}</div>
                     <div class="flex-1 pl-1">$ {{ jobTask.unit_price }}</div>
@@ -35,12 +37,12 @@
                         </div>
                     </div>
                     <div class="flex-1 pl-1" v-if="isContractor">${{ jobTask.sub_final_price }}</div>
-                    <div class="pl-1" v-else>
-                        <input v-if="showDenyBtn(jobTask)" type="checkbox" name="exclude"
-                               :id="'exclude-' + jobTask.id"
-                               :ref="'exclude-' + jobTask.id"
-                               @click="addJobTaskToExcludedList(jobTask)">
-                    </div>
+                    <!--                    <div class="pl-1" v-else>-->
+                    <!--                        <input v-if="showDenyBtn(jobTask)" type="checkbox" name="exclude"-->
+                    <!--                               :id="'exclude-' + jobTask.id"-->
+                    <!--                               :ref="'exclude-' + jobTask.id"-->
+                    <!--                               @click="addJobTaskToExcludedList(jobTask)">-->
+                    <!--                    </div>-->
 
                     <div class=" pl-1" v-if="showReopenBtn(jobTask)">
                         <v-btn
@@ -50,14 +52,27 @@
                             Reopen
                         </v-btn>
                     </div>
+                    <div
+                            style="width: 6rem"
+                            v-else-if="getLatestStatus(jobTask.job_task_status) === 'paid'">
+                        Paid
+                    </div>
+                    <div
+                            style="width: 6rem"
+                            v-else-if="getLatestStatus(jobTask.job_task_status) === 'customer_changes_finished_task'">
+                        Paid
+                    </div>
                     <div class="flex-1 pl-1" v-else>
                         <v-btn
                                 class="w-40"
                                 color="red"
+                                :ref="'deny' + jobTask.id"
                                 text
-                                v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask)">
+                                v-if="showDenyBtn(jobTask)"
+                                @click="openDenyTaskForm(jobTask)">
                             Deny
                         </v-btn>
+
 
                     </div>
                 </div>
@@ -139,6 +154,54 @@
                 </div>
             </transition>
 
+            <v-dialog
+                    v-model="changeTask.show"
+                    ref="denyDialog"
+                    fullscreen
+            >
+
+                <v-card>
+                    <v-card-title>
+                        Request Change For <span class="capitalize">{{ this.changeTask.taskName }}</span>
+                    </v-card-title>
+
+                    <v-card-text>
+
+                        <v-textarea
+                                outlined
+                                label="Reason for Change"
+                                v-model="changeTask.message"
+                        ></v-textarea>
+
+                    </v-card-text>
+
+                    <v-card-actions
+                            class="justify-content-between"
+                    >
+                        <v-btn
+                                width="50%"
+                                color="red"
+                                text
+                                @click="changeTask.show = false"
+                        >
+                            Cancel
+                        </v-btn>
+                        <v-btn
+                                :disabled="changeTask.disabled"
+                                width="50%"
+                                color="blue"
+                                text
+                                @click="requestChange()"
+                        >
+                            Submit
+                        </v-btn>
+                    </v-card-actions>
+
+                </v-card>
+
+            </v-dialog>
+
+
             <stripe-credit-card-modal
                     :open="showCreditCardModal"
                     @close-stripe-cc-modal="showCreditCardModal = false"
@@ -172,6 +235,7 @@
     import Stripe from '../stripe/Stripe'
     import StripeCreditCardModal from '../stripe/StripeCreditCardModal'
     import {mapActions} from 'vuex'
+    import Status from "../mixins/Status";
 
     export default {
         props: {
@@ -186,12 +250,13 @@
         },
 
         watch: {
-            paid: function (val){
+            paid: function (val) {
                 if (val) {
                     this.setTasksToPaid()
                 }
             }
         },
+        mixins: [Status],
         data() {
             return {
                 paymentMethods: null,
@@ -206,6 +271,14 @@
                 payAll: false,
                 excluded: {},
                 showPaidInCash: false,
+                changeTask: {
+                    user_id: Spark.state.user.id,
+                    disabled: false,
+                    show: false,
+                    taskName: null,
+                    job_task_id: null,
+                    message: null
+                },
                 subtractFromTotal: 0,
                 cashMessage: 'Pay In Person',
                 paidCash: false,
@@ -261,6 +334,43 @@
             },
         },
         methods: {
+
+            requestChange() {
+                this.changeTask.disabled = true;
+                Customer.denyTask(this.changeTask, this.changeTask.disabled);
+                this.changeTask.disabled = false;
+                this.changeTask.show = false;
+            },
+
+            setPaymentColor() {
+                if (this.allTasksCompleted()) {
+                    return 'green-background'
+                }
+                return 'yellow-background'
+            },
+
+            allTasksCompleted() {
+                let jtFinished = true
+                for (let i = 0; i < this.bid.job_tasks.length; i++) {
+                    let status = this.getLatestStatus(this.bid.job_tasks[i].job_task_status)
+                    if (status !== 'paid') {
+                        jtFinished = false
+                    }
+                }
+                return jtFinished
+            },
+
+            someTasksArePaidFor() {
+                let jtFinished = false
+                for (let i = 0; i < this.bid.job_tasks.length; i++) {
+                    let status = this.getLatestStatus(this.bid.job_tasks[i].job_task_status)
+                    if (status !== 'paid') {
+                        jtFinished = true
+                    }
+                }
+                return jtFinished
+            },
+
             ...mapActions(['excludedActions']),
 
             totalPriceForAllCompletedTasks() {
@@ -370,6 +480,7 @@
                         if (
                             this.getLatestStatus(jobTasks[i].job_task_status) === 'approved_subs_work'
                             || this.getLatestStatus(jobTasks[i].job_task_status) === 'general_finished_work'
+                            || this.getLatestStatus(jobTasks[i].job_task_status) === 'paid'
                         ) {
                             payableTasks.push(jobTasks[i])
                         }
@@ -452,8 +563,11 @@
                 }
             },
             openDenyTaskForm(jobTask) {
-                this.jTask = jobTask
-                $('#deny-task-modal_' + jobTask.id).modal()
+                this.changeTask.show = true;
+                this.changeTask.job_task_id = jobTask.id;
+                this.changeTask.taskName = jobTask.task.name;
+                // this.jTask = jobTask
+                // $('#deny-task-modal_' + jobTask.id).modal()
             },
 
             paidWithCash() {
@@ -509,6 +623,19 @@
 </script>
 
 <style scoped>
+
+    .green-background {
+        background-color: green;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .yellow-background {
+        background-color: yellow;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
     .header-completed {
         font-size: 14pt;
         background-color: #80808054;
