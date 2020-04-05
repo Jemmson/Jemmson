@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Cloudinary;
 
 class UserController extends Controller
 {
@@ -61,5 +62,47 @@ class UserController extends Controller
             ['usertype', '=', 'customer'],
         ])->get();
         return $users;
+    }
+
+    public function uploadProfileImage(Request $request)
+    {
+        // get the file
+//        $file = $request->profilePhoto;
+
+        $photo = $request->files->get('profilePhoto');
+
+        // create a hash name for storage and retrieval
+//        $path = $photo->hashName('profilePhoto');
+
+        $image = Cloudinary\Uploader::upload($photo, [
+            "public_id" => 'dslksdlkdslksdlk'
+        ]);
+
+        if (empty($image)) {
+            return response()->json(['message' => 'Error Uploading Image. Please Try Again'], 400);
+        }
+
+//         store the file
+//        $disk = Storage::disk('public');
+//        $disk->put(
+//            $path, $this->formatImage($file)
+//        );
+
+        $user = User::find(Auth::user()->getAuthIdentifier());
+        $user->photo_url = $image['secure_url'];
+//        Auth::user()->photo_url = $image['secure_url'];
+
+
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            Log::error('Saving User Image: ' . $e->getMessage());
+//            if (preg_match('/logos\/(.*)$/', $url, $matches)) {
+//                $disk->delete('tasks/' . $matches[1]);
+//            }
+            return response()->json(['message' => 'error uploading image', errors => [$e->getMessage]], 400);
+        }
+
+        return $image['secure_url'];
     }
 }

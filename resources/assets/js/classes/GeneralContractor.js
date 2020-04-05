@@ -250,7 +250,7 @@ export default class GeneralContractor {
             console.log(error.message)
             disabled.submit = false
             if (error.errors['no_free_jobs'] !== undefined) {
-                window.location = '/settings#/subscription'
+                router.push('/settings')
             }
         }
     }

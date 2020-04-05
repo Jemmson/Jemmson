@@ -75,8 +75,7 @@
                             </div>
                         </div>
 
-                        A document showing address, either a passport, local ID card, or utility bill from a well-known
-                        utility company.
+                        The government-issued ID number of the individual, as appropriate for the representative’s country. (Examples are a Social Security Number in the U.S., or a Social Insurance Number in Canada). Instead of the number itself, you can also provide a PII token created with Stripe.js.
 
                         <div><i>* File Must Be Less Than 10 MB</i></div>
                         <div><i>* Must be smaller than 8000px by 8000px</i></div>
@@ -154,11 +153,11 @@
                     console.log('SUCCESS!!');
                     this.successfulUpload = true
                     this.unSuccessfulUpload = false
-                }).catch(function () {
+                }.bind(this)).catch(function () {
                     console.log('FAILURE!!');
                     this.successfulUpload = false
                     this.unSuccessfulUpload = true
-                });
+                }.bind(this));
 
             },
 

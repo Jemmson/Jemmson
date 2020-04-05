@@ -26,8 +26,15 @@ class UpdateContactInformation implements Contract
     {
         $user->forceFill([
             'name' => $data['name'],
+            'first_name' => $data['fname'],
+            'last_name' => $data['lname'],
             'email' => $data['email'],
-            'phone' => $data['phone']
+            'phone' => $data['phone'],
+            'billing_address' => $data['addressline1'],
+            'billing_address_line_2' => $data['addressline2'],
+            'billing_city' => $data['city'],
+            'billing_state' => $data['state'],
+            'billing_zip' => $data['zip']
         ])->save();
 
         event(new ContactInformationUpdated($user));

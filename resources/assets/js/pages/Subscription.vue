@@ -8,12 +8,12 @@
                     <v-btn
                             class="nav-btn-position subscription-btn-width"
                             @click="showSubscription()"
-                    >Subscription Plan
+                    >Plans
                     </v-btn>
                     <v-btn
                             class="nav-btn-position subscription-btn-width"
                             @click="openCancelConfirmationDialog()"
-                    >Cancel Subscription
+                    >Cancel
                     </v-btn>
                 </div>
             </v-card-actions>
@@ -22,16 +22,22 @@
         <section
                 v-if="show.subscriptions"
         >
-            Current Plan {{ currentPlan }}
-            <v-card>
-                <v-card-title>
-                    Monthly Plan
-                </v-card-title>
+            <v-card class="mb-4 mt-1">
+                <div class="flex justify-content-between">
+                    <v-card-title>
+                        Monthly Plan
+                    </v-card-title>
+                    <div
+                            class="green--text m-1rem"
+                            v-if="selectedPlan() === 'monthly'">Current Plan</div>
+                </div>
                 <v-card-text>
                     50$ per month + $1 per job
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
+                            :disabled="hasStripe()"
+                            @click="selectPlan('monthly')"
                             color="primary"
                     >Select
                     </v-btn>
@@ -39,14 +45,22 @@
             </v-card>
 
             <v-card>
-                <v-card-title>
-                    Yearly Plan
-                </v-card-title>
+                <div class="flex justify-content-between">
+                    <v-card-title>
+                        Yearly Plan
+                    </v-card-title>
+                    <div
+                            class="green--text m-1rem"
+                            v-if="selectedPlan() === 'yearly'">Current Plan</div>
+                </div>
                 <v-card-text>
-                    45$ per month + $1 per job
+                    <div>540$ per year + $1 per job</div>
+                    <div><small>Same as -> 45$ per month + $1 per job</small></div>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
+                            :disabled="hasStripe()"
+                            @click="selectPlan('yearly')"
                             color="primary"
                     >Select
                     </v-btn>
@@ -93,6 +107,20 @@
             }
         },
         methods: {
+
+            hasStripe() {
+                return Spark.state.user.stripe_id === null
+            },
+
+            selectPlan(plan){
+            //    check if user is setup with stripe
+            //    if not then route them to setup with stripe
+            //    if they are then check if they have this plan already
+            },
+
+            selectedPlan(){
+              return Spark.state.user.plan
+            },
 
             closeCancelation() {
                 this.show.confirmCancelationModal = false;

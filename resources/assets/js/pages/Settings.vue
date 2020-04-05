@@ -26,6 +26,11 @@
                             @click="showSection('subscription')"
                     >Subscription
                     </v-btn>
+                    <v-btn
+                            class="nav-btn-position"
+                            @click="showSection('manageCreditCard')"
+                    >Credit Card
+                    </v-btn>
                 </div>
             </v-card-actions>
         </v-card>
@@ -52,6 +57,12 @@
             <subscription></subscription>
         </section>
 
+        <section
+                v-if="show.manageCreditCard"
+        >
+            <manage-credit-card></manage-credit-card>
+        </section>
+
     </v-container>
 </template>
 
@@ -60,12 +71,14 @@
     import Profile from "./Profile";
     import ChangePassword from "./ChangePassword";
     import Subscription from "./Subscription";
+    import ManageCreditCard from "./ManageCreditCard";
 
     export default {
         name: 'Settings',
         components: {
             Profile,
             ChangePassword,
+            ManageCreditCard,
             Subscription
         },
         data() {
@@ -73,6 +86,7 @@
                 show: {
                     profile: false,
                     changePassword: false,
+                    manageCreditCard: false,
                     subscription: false,
                 },
                 user: this.$attrs.user
@@ -87,6 +101,8 @@
                     this.show.changePassword = true;
                 } else if (section === 'subscription') {
                     this.show.subscription = true;
+                } else if (section === 'manageCreditCard') {
+                    this.show.manageCreditCard = true;
                 }
             },
 
@@ -94,6 +110,7 @@
                 this.show.profile = false;
                 this.show.changePassword = false;
                 this.show.subscription = false;
+                this.show.manageCreditCard = false;
             },
         },
         mounted() {
