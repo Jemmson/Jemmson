@@ -31,6 +31,12 @@ class UserController extends Controller
         }
     }
 
+    public function savePhoto(Request $request)
+    {
+        Auth::user()->photo_url = $request->photo;
+        Auth::user()->save();
+    }
+
     public function furtherInfo()
     {
         return view('auth.furtherInfo', ['password_updated' => Auth::user()->password_updated]);

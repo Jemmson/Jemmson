@@ -11,9 +11,9 @@ class StripeAccountVerification extends Model
     protected $table = 'stripe_account_verification';
     protected $guarded = [];
 
-    public function user()
+    public function stripeExpress()
     {
-        return $this->belongsTo(User::class, 'stripe_id', 'account_id');
+        return $this->belongsTo(User::class, 'stripe_user_id', 'account_id');
     }
 
     public static function get($accountId)

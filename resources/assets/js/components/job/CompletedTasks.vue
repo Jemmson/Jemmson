@@ -115,9 +115,10 @@
                     Pay With Cash
                 </v-btn>
                 <v-btn
+                        ref='payWithCreditCard'
                         class="w-full"
                         color="primary"
-                        v-if="creditCardJobAndContractorHasStripe()"
+                        v-if="creditCardJob()"
                         @click.prevent="payAllPayableTasks()"
                         :loading="payAll"
                 >
@@ -236,6 +237,7 @@
     import StripeCreditCardModal from '../stripe/StripeCreditCardModal'
     import {mapActions} from 'vuex'
     import Status from "../mixins/Status";
+    import StripeMixin from "../mixins/StripeMixin";
 
     export default {
         props: {
@@ -256,7 +258,7 @@
                 }
             }
         },
-        mixins: [Status],
+        mixins: [Status, StripeMixin],
         data() {
             return {
                 paymentMethods: null,
@@ -505,23 +507,11 @@
             },
 
             cashJobOrNotSetupWithStripe() {
-                return this.cashJob() || this.needsStripe()
+                return this.cashJob() || this.needsStripeForCreditCardPayments()
             },
 
             creditCardJobAndContractorHasStripe() {
-                return this.creditCardJob() && this.hasStripe()
-            },
-
-            needsStripe() {
-                if (this.bid) {
-                    return this.bid.contractor.contractor.stripe_id === false
-                }
-            },
-
-            hasStripe() {
-                if (this.bid) {
-                    return this.bid.contractor.contractor.stripe_id !== false
-                }
+                return this.creditCardJob() && this.needsStripeForCreditCardPayments()
             },
 
             creditCardJob() {
@@ -532,9 +522,6 @@
                 return this.bid.payment_type === 'cash'
             },
 
-            contractorIsSetupWithStripe() {
-                return this.bid.contractor.stripe_id
-            },
             showDenyBtn(jobTask) {
                 const status = this.getLatestStatus(jobTask.job_task_status)
                 if (this.isCustomer) {
@@ -608,9 +595,8 @@
             },
 
             async selectWhichCreditCardToUse() {
-
-                const {data} = await axios.get('stripe/customer/getPaymentMethods/' + Spark.state.user.stripe_id)
-
+                const {data} =
+                    await axios.get('stripe/customer/getPaymentMethods/' + Spark.state.user.customer_stripe_id)
                 if (data.error) {
                     console.log(data.error);
                 } else {

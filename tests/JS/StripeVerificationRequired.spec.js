@@ -1,7 +1,17 @@
 import {createLocalVue, shallowMount} from '@vue/test-utils'
 import StripeVerificationRequired from '../../resources/assets/js/components/stripe/StripeVerificationRequired'
 import Vuetify from 'vuetify'
-
+global.Spark = {
+    state: {
+        user: {
+            id: 1,
+            contractor: {
+                accounting_software: ''
+            },
+            usertype: 'customer'
+        }
+    }
+}
 require('./setup')
 
 const localVue = createLocalVue()

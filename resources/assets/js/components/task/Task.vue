@@ -7,7 +7,7 @@
                 class="mb-1rem"
         >
             <div
-                    v-if="needsStripe() && isCreditCardJob()"
+                    v-if="needsStripeForCreditCardPayments() && isCreditCardJob()"
                     class="w-break text-center uppercase error--text p-2"
                     style="color: black"
             >You will need to set up a credit card to bid on this job
@@ -15,7 +15,7 @@
             <stripe-verification-required
                     v-if="requiresVerification()"
                     ref="warningMessageAccountDisabled"
-                    :verification="user.stripe_account_verification"
+                    :verification="getVerification()"
                     @verified="accountVerified($event)"
             ></stripe-verification-required>
             <hr>
@@ -112,7 +112,7 @@
                 >
                     <h1 class="card-title">Task Details</h1>
                     <v-card
-                            :disabled="needsStripe() && isCreditCardJob()"
+                            :disabled="needsStripeForCreditCardPayments() && isCreditCardJob()"
                     >
                         <v-card-text>
                             <v-row
@@ -300,6 +300,7 @@
     import Card from '../shared/Card'
     import Currency from '../../components/mixins/Currency'
     import StripeVerificationRequired from '../../components/stripe/StripeVerificationRequired'
+    import StripeMixin from "../mixins/StripeMixin";
 
     export default {
         name: 'Task',
@@ -313,6 +314,7 @@
         },
         mixins: [
             Status,
+            StripeMixin,
             Currency
         ],
         updated() {
@@ -358,9 +360,13 @@
         },
         methods: {
 
+            getVerification(){
+              return Spark.state.user.contractor.stripe_express.stripe_account_verification
+            },
+
             requiresVerification() {
-                if (Spark.state.user.stripe_account_verification) {
-                    let verification = Spark.state.user.stripe_account_verification;
+                if (Spark.state.user.contractor.stripe_express.stripe_account_verification) {
+                    let verification = Spark.state.user.contractor.stripe_express.stripe_account_verification;
                     if (
                         verification.disabled_reason === null
                         && verification.currently_due === null
@@ -401,12 +407,6 @@
                 this.show.messages = false;
                 this.show.images = false;
                 this.show.location = false;
-            },
-
-            needsStripe() {
-                if (Spark.state.user) {
-                    return Spark.state.user.stripe_id === null
-                }
             },
 
             isCreditCardJob() {

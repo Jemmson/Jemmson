@@ -3,6 +3,18 @@ import InitiateBid from '../../resources/assets/js/pages/InitiateBid'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+global.Spark = {
+  state: {
+    user: {
+      id: 1,
+      contractor: {
+        accounting_software: ''
+      },
+      usertype: 'customer'
+    }
+  }
+}
+
 require('./setup')
 
 // window.Vue = Vue

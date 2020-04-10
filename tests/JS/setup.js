@@ -116,18 +116,6 @@ if (global.$ === undefined || global.jQuery === undefined) {
 //     "usesStripe": true
 // };
 
-global.Spark = {
-    state: {
-        user: {
-            id: 1,
-            contractor: {
-                accounting_software: ''
-            },
-            usertype: 'customer'
-        }
-    }
-}
-
 /**
  * Initialize the Spark form extension points.
  */

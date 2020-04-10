@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('country_code', 10)->nullable();
             $table->string('phone', 25)->nullable();
             $table->string('plan', 25)->nullable();
+            $table->string('customer_stripe_id')->nullable();
             $table->date('plan_start_date', 25)->nullable();
             $table->string('two_factor_reset_code', 100)->nullable();
             $table->integer('current_team_id')->nullable();

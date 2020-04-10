@@ -4,6 +4,18 @@ import Vuetify from "vuetify"
 import Vue from 'vue'
 global.Bus = new Vue()
 
+global.Spark = {
+    state: {
+        user: {
+            id: 1,
+            contractor: {
+                accounting_software: ''
+            },
+            usertype: 'customer'
+        }
+    }
+}
+
 require('./setup')
 
 const localVue = createLocalVue()

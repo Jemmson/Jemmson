@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class StripeEvent extends Model
@@ -12,9 +13,9 @@ class StripeEvent extends Model
     protected $guarded = [];
     public $primaryKey = 'event_id';
 
-    public function user()
+    public function stripeExpress()
     {
-        return $this->belongsTo(User::class, 'stripe_id', 'account_id');
+        return $this->belongsTo(User::class, 'stripe_user_id', 'account_id');
     }
 
     public static function get($eventId)
@@ -50,7 +51,9 @@ class StripeEvent extends Model
             "payment_method.attached" => $event->data->object->customer,
             "account.application.authorized" => $event->account,
             "account.updated" => $event->account,
-            "capability.updated" => $event->account
+            "capability.updated" => $event->account,
+            "setup_intent.created" => null,
+            "setup_intent.succeeded" => null
         ];
 
         return $account[$event->type];

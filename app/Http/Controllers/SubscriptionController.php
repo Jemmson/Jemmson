@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
@@ -26,5 +27,19 @@ class SubscriptionController extends Controller
 //        they will have to go through setting up stripe again if they do not have the funds
 //        should be alot quicker since their account is setup already
     }
+
+    public function getPaymentIntent()
+    {
+        return Auth::user()->createSetupIntent();
+    }
+
+    public function setPaymentMethod(Request $request)
+    {
+        $stripeCustomer = Auth::user()->createOrGetStripeCustomer();
+        $stripeCustomer->addPaymentMethod($request->paymentMethod);
+
+
+    }
+    
 
 }

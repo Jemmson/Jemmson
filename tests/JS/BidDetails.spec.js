@@ -7,6 +7,18 @@ import VueRouter from 'vue-router'
 
 import Vue from 'vue'
 
+global.Spark = {
+    state: {
+        user: {
+            id: 1,
+            contractor: {
+                accounting_software: ''
+            },
+            usertype: 'customer'
+        }
+    }
+}
+
 require('./setup')
 
 const localVue = createLocalVue()
@@ -437,7 +449,7 @@ describe('BidDetails', function () {
         });
         await wrapper.vm.$nextTick()
         expect(wrapper.find({ref: 'jobTaskNavButton'})
-            .text()).toBe('Job Tasks (1)')
+            .text()).toBe('View Tasks (1) / Add A Sub')
 
     })
 
@@ -518,7 +530,7 @@ describe('BidDetails', function () {
         });
         await wrapper.vm.$nextTick()
         expect(wrapper.find({ref: 'jobTaskNavButton'})
-            .text()).toBe('Job Tasks (3)')
+            .text()).toBe('View Tasks (3) / Add A Sub')
 
     })
 

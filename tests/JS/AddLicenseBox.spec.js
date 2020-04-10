@@ -3,6 +3,18 @@ import AddLicenseBox from '../../resources/assets/js/components/user/AddLicenseB
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 
+global.Spark = {
+  state: {
+    user: {
+      id: 1,
+      contractor: {
+        accounting_software: ''
+      },
+      usertype: 'customer'
+    }
+  }
+}
+
 require('./setup')
 
 const localVue = createLocalVue()

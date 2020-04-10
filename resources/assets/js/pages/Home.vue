@@ -9,7 +9,8 @@
         </v-btn>
 
         <stripe-express-dashboard
-                v-if="isContractor() && needsStripe()"
+                ref="stripeExpressDashboard"
+                v-if="isContractor() && needsStripeForCreditCardPayments()"
         >
         </stripe-express-dashboard>
 
@@ -91,6 +92,7 @@
     import List from '../components/shared/List'
     import ListItem from '../components/shared/ListItem'
     import StripeExpressDashboard from '../components/stripe/StripeExpressDashboard';
+    import StripeMixin from "../components/mixins/StripeMixin";
 
     export default {
         name: 'Home',
@@ -105,6 +107,7 @@
             StripeExpressDashboard,
             Card
         },
+        mixins: [StripeMixin],
         data() {
             return {
                 bids: '',
@@ -127,6 +130,16 @@
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         },
         methods: {
+
+            needsStripeForCreditCardPayments() {
+                if (
+                    Spark.state.user.contractor
+                    && Spark.state.user.contractor.stripe_express
+                ) {
+                    return Spark.state.user.contractor.stripe_express.stripe_user_id !== null;
+                }
+            },
+
             goToNewJob() {
                 this.$router.push('/initiate-bid')
             },
@@ -136,15 +149,8 @@
                 }
             },
             isContractor() {
-                if (this.theUser) {
-                    return this.theUser.usertype === 'contractor'
-                } else {
-                    this.theUser = Spark.state.user
-                }
-            },
-            needsStripe(){
-                if (this.theUser) {
-                    return this.theUser.stripe_id !== null
+                if (Spark.state.user) {
+                    return Spark.state.user.usertype === 'contractor'
                 }
             },
 

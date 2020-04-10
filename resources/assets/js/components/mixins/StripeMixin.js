@@ -16,6 +16,21 @@ export default {
       window.location = data.data
     },
 
+    needsStripe() {
+      if (this.theUser) {
+        return this.theUser.stripe_id !== null
+      }
+    },
+
+    needsStripeForCreditCardPayments() {
+      if (
+          Spark.state.user
+          && Spark.state.user.contractor
+      ) {
+        return Spark.state.user.contractor.stripe_express === null;
+      }
+    },
+
     formatPathVariable(path) {
       const pathArray = path.split('/')
 

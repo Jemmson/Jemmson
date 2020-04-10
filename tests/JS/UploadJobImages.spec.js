@@ -3,6 +3,19 @@ import UploadJobImages from '../../resources/assets/js/components/task/UploadJob
 const localVue = createLocalVue()
 
 import Vuetify from 'vuetify'
+
+global.Spark = {
+  state: {
+    user: {
+      id: 1,
+      contractor: {
+        accounting_software: ''
+      },
+      usertype: 'customer'
+    }
+  }
+}
+
 require('./setup');
 localVue.use(Vuetify, {})
 

@@ -3,6 +3,18 @@ import Register from '../../resources/assets/js/pages/Register'
 import Vuex from 'vuex'
 import Vue from 'vue'
 
+global.Spark = {
+  state: {
+    user: {
+      id: 1,
+      contractor: {
+        accounting_software: ''
+      },
+      usertype: 'customer'
+    }
+  }
+}
+
 require('./setup')
 import Vuetify from 'vuetify'
 

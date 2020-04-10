@@ -1,5 +1,18 @@
 import { shallowMount } from '@vue/test-utils'
 import AddJobTask from '../../resources/assets/js/pages/AddJobTask'
+
+global.Spark = {
+  state: {
+    user: {
+      id: 1,
+      contractor: {
+        accounting_software: ''
+      },
+      usertype: 'customer'
+    }
+  }
+}
+
 require('./setup');
 
 describe('AddJobTask', () => {

@@ -3,6 +3,18 @@ import Feedback from '../../resources/assets/js/components/shared/Feedback'
 import Vuetify from 'vuetify'
 import Vue from 'vue'
 
+global.Spark = {
+  state: {
+    user: {
+      id: 1,
+      contractor: {
+        accounting_software: ''
+      },
+      usertype: 'customer'
+    }
+  }
+}
+
 require('./setup')
 
 

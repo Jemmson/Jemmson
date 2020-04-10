@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Spark\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+//use App\Traits\Auth\AuthenticateUsers;
 use Laravel\Spark\Contracts\Interactions\Settings\Security\VerifyTwoFactorAuthToken as Verify;
 
 class LoginController extends Controller

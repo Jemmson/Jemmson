@@ -74,6 +74,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('user/profileImage', 'UserController@uploadProfileImage');
 
     Route::post('subscription/plan', 'SubscriptionController@plan');
+    Route::post('subscriptions/setPaymentMethod', 'SubscriptionController@setPaymentMethod');
+    Route::get('subscription/getPaymentIntent', 'SubscriptionController@getPaymentIntent');
 
     // JobController
     Route::resource('/job', 'JobController');
@@ -135,6 +137,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/home', 'HomeController@create');
     Route::post('/', 'HomeController@create');
     Route::get('/furtherInfo', 'UserController@furtherInfo')->middleware('block.further.info');
+    Route::post('/user/savePhoto', 'UserController@savePhoto');
     // home controller
     Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
 }

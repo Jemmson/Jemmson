@@ -6,6 +6,18 @@ import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 
+global.Spark = {
+    state: {
+        user: {
+            id: 1,
+            contractor: {
+                accounting_software: ''
+            },
+            usertype: 'customer'
+        }
+    }
+}
+
 require('./setup')
 
 // window.Vue = Vue

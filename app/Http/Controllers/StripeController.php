@@ -96,17 +96,17 @@ class StripeController extends Controller
             return redirect("/#" . $state . "?error=Sorry we couldn't create your express account at this time");
         }
 
-        $user = Auth::user();
-        $user->stripe_id = $response->stripe_user_id;
-
-        try {
-            $user->save();
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'code' => $e->getCode()
-            ], 200);
-        }
+//        $user = Auth::user();
+//        $user->stripe_id = $response->stripe_user_id;
+//
+//        try {
+//            $user->save();
+//        } catch (\Exception $e) {
+//            return response()->json([
+//                'message' => $e->getMessage(),
+//                'code' => $e->getCode()
+//            ], 200);
+//        }
 
 //        //open connection
 //        $ch = curl_init();

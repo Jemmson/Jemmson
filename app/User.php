@@ -92,31 +92,14 @@ class User extends SparkUser
 
     protected $userData = [];
 
-//    public function __construct($userData, array $attributes = [])
-//    {
-//        parent::__construct($attributes);
-//        $this->userData = $userData;
-//    }
-//
-//    public function add()
-//    {
-//        $this->fill($this->userData);
-//        $this->save();
-//    }
-
     public function customer()
     {
         return $this->hasOne(Customer::class);
     }
 
-    public function stripeEvent()
+    public function stripeExpress()
     {
-        return $this->hasMany(StripeEvent::class, 'account_id', 'stripe_id');
-    }
-
-    public function stripeAccountVerification()
-    {
-        return $this->hasOne(StripeAccountVerification::class, 'account_id', 'stripe_id');
+        return $this->hasOne(StripeExpress::class);
     }
 
     public function contractor()
@@ -557,7 +540,7 @@ class User extends SparkUser
             return false;
         }
 
-        $this->stripe_id = $id;
+        $this->customer_stripe_id = $id;
 
         try {
             $this->save();

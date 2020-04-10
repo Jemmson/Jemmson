@@ -13,6 +13,21 @@ class StripeExpress extends Model
     protected $table = 'stripe_expresses';
     protected $guarded = [];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function stripeEvent()
+    {
+        return $this->hasMany(StripeEvent::class, 'account_id', 'stripe_user_id');
+    }
+
+    public function stripeAccountVerification()
+    {
+        return $this->hasOne(StripeAccountVerification::class, 'account_id', 'stripe_user_id');
+    }
+
 
     public function transferFunds($jobId, $jobTasks, $totalAmount, $chargeId, $transferGroupId)
     {

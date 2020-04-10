@@ -9,7 +9,7 @@
                     single-line
                     sticky
                     style="background-color: cornflowerblue; font-size: 9pt;"
-                    v-show="needsStripe()"
+                    v-show="needsStripeForCreditCardPayments() && oneOpenBidIsACreditCardJob()"
             ><span style="color: white">Click To Accept Credit Cards</span></v-btn>
             <search-bar>
                 <input type="text" class="form-control" placeholder="Search Tasks" v-model="searchTerm" @keyup="search">
@@ -62,6 +62,7 @@
     import Task from '../components/task/Task'
     import StripeMixin from '../components/mixins/StripeMixin'
     import Phone from '../components/mixins/Phone'
+    import Status from "../components/mixins/Status";
 
     export default {
         name: 'Tasks',
@@ -95,8 +96,21 @@
                 searchTerm: '',
             }
         },
-        mixins: [Phone, StripeMixin],
+        mixins: [Phone, StripeMixin, Status],
         methods: {
+
+            oneOpenBidIsACreditCardJob(){
+                for (let i = 0; i < this.tasks.length; i++) {
+                    if (
+                        this.tasks[i].job_task.job.payment_type === 'creditCard'
+                        && this.tasks[i].job_task.job.sub_status[0].status === 'initiated'
+                    ) {
+                        return true
+                    }
+                }
+                return false
+            },
+
             goBack() {
                 this.$router.go(-1)
             },
@@ -147,12 +161,6 @@
 
             hasStripe() {
                 return this.bid.contractor.stripe_id === null
-            },
-
-            needsStripe() {
-                if (Spark.state.user) {
-                    return Spark.state.user.stripe_id === null
-                }
             },
 
             showAddress(bidTask) {

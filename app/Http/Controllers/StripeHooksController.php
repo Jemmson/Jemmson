@@ -72,6 +72,11 @@ class StripeHooksController extends Controller
                 case 'account.updated':
                     $this->accountUpdated($event);
                     break;
+                case 'setup_intent.succeeded':
+                    $this->setupIntentSucceeded($event);
+                    break;
+                case 'setup_intent.created':
+                    break;
                 default:
                     // Unexpected event type
                     return response([], 400);
@@ -136,6 +141,16 @@ class StripeHooksController extends Controller
 //        echo $request;
 
         return $request;
+    }
+
+    public function setupIntentSucceeded($event)
+    {
+        // does customer exist then update otherwise create
+
+
+        // add the payment method
+
+
     }
 
     public function paymentIntentPaymentFailed($request)

@@ -92,7 +92,7 @@
                             ></v-radio>
                             <v-spacer></v-spacer>
                             <v-radio
-                                    :disabled="!hasSetupStripe()"
+                                    :disabled="needsStripeForCreditCardPayments()"
                                     label="Credit Card"
                                     value="creditCard"
                             ></v-radio>
@@ -113,7 +113,7 @@
                                 single-line
                                 sticky
                                 style="background-color: cornflowerblue; font-size: 9pt; color: white"
-                                v-show="!hasSetupStripe()"
+                                v-show="needsStripeForCreditCardPayments()"
                         >
                             Click To Accept Credit Cards
                         </v-btn>
@@ -310,11 +310,6 @@
 
                 }
                 return lastName.trimLeft()
-            },
-
-
-            hasSetupStripe() {
-                return Spark.state.user.stripe_id !== null
             },
 
             dataMustBeValid() {

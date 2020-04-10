@@ -6,6 +6,21 @@ import Format from "../../resources/assets/js/classes/Format";
 
 global.Format = Format;
 
+global.Spark = {
+    state: {
+        user: {
+            id: 1,
+            contractor: {
+                accounting_software: '',
+                stripe_express: {
+                    stripe_account_verification: {}
+                }
+            },
+            usertype: 'customer'
+        }
+    }
+}
+
 require('./setup')
 
 const localVue = createLocalVue()

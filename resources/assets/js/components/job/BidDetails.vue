@@ -35,26 +35,20 @@
                             ref="jobTaskNavButton"
                             :disabled="noJobTasks()"
                             class="nav-btn-position"
+                            style="width: 96%;"
                             @click="showSection('jobTask')"
                     >
                         <span v-if="noJobTasks()">
                             Need Tasks
                         </span>
 
-                        <span v-else>
-                            Job Tasks<span
-                            v-if="getJobTasksLength() > 0"
-                        > ({{ getJobTasksLength() }})</span>
-                        </span>
+                        <div v-else>
+                            <div>View Tasks<span
+                                        v-if="getJobTasksLength() > 0"
+                                > ({{ getJobTasksLength() }})</span> / Add A Sub
+                            </div>
+                        </div>
 
-                    </v-btn>
-                    <v-btn
-                            ref="imagesNavButton"
-                            class="nav-btn-position"
-                            @click="showSection('images')"
-                    >Images <span
-                        v-if="getNumberOfImages() > 0"
-                    >({{ getNumberOfImages() }})</span>
                     </v-btn>
                 </div>
                 <div class="flex justify-content-around w-full">
@@ -71,12 +65,19 @@
                     >Job Notes
                     </v-btn>
                 </div>
-                <div class="flex flex-end">
+                <div class="flex justify-content-around w-full">
+                    <v-btn
+                            ref="imagesNavButton"
+                            class="nav-btn-position"
+                            @click="showSection('images')"
+                    >Images <span
+                            v-if="getNumberOfImages() > 0"
+                    >({{ getNumberOfImages() }})</span>
+                    </v-btn>
                     <v-btn
                             ref="job-add-task"
                             v-if="canAddATask() && !isCustomer"
-                            class="w-100 btn btn-sm btn-normal flex-1"
-                            width="100%"
+                            class="nav-btn-position"
                             name="addTaskToBid"
                             id="addTaskToBid"
                             @click="$router.push('/job/add/task')"

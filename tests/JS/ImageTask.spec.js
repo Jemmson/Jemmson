@@ -1,5 +1,18 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import ImageTask from '../../resources/assets/js/components/task/ImageTask'
+
+global.Spark = {
+  state: {
+    user: {
+      id: 1,
+      contractor: {
+        accounting_software: ''
+      },
+      usertype: 'customer'
+    }
+  }
+}
+
 require('./setup');
 import Vuetify from 'vuetify'
 

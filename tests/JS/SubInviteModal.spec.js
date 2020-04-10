@@ -7,6 +7,18 @@ import VueRouter from 'vue-router'
 import Vue from 'vue'
 import Register from "../../resources/assets/js/pages/Register";
 
+global.Spark = {
+    state: {
+        user: {
+            id: 1,
+            contractor: {
+                accounting_software: ''
+            },
+            usertype: 'customer'
+        }
+    }
+}
+
 require('./setup')
 
 const localVue = createLocalVue()

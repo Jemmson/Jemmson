@@ -19,6 +19,42 @@
             </v-card-actions>
         </v-card>
 
+
+        <v-card v-show="show.creditCardDialog" class="mt-1">
+            <v-card-title>
+                Add A Payment Method
+            </v-card-title>
+            <v-card-text>
+                <v-text-field
+                        style="margin-bottom: -1.5rem"
+                        id="cardHolderName"
+                        type="text"
+                        v-model="cardHolderName"
+                        label="Name On Card"
+                />
+
+                <input id="card-holder-name" type="text">
+
+                <!-- Stripe Elements Placeholder -->
+                <div id="card-element"></div>
+
+                <v-btn id="card-button"
+                       @click="submit()"
+                       color="primary"
+                       :loading="submitted"
+                       class="mt-4 v-btn"
+                       :data-secret="paymentIntent.clientSecret">
+                    Update Payment Method
+                </v-btn>
+
+                <!--                class="mt-4 v-btn v-btn&#45;&#45;contained theme&#45;&#45;light v-size&#45;&#45;default primary"-->
+
+            </v-card-text>
+
+            <v-card-actions>
+            </v-card-actions>
+        </v-card>
+
         <section
                 v-if="show.subscriptions"
         >
@@ -29,14 +65,15 @@
                     </v-card-title>
                     <div
                             class="green--text m-1rem"
-                            v-if="selectedPlan() === 'monthly'">Current Plan</div>
+                            v-if="selectedPlan() === 'monthly'">Current Plan
+                    </div>
                 </div>
                 <v-card-text>
                     50$ per month + $1 per job
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
-                            :disabled="hasStripe()"
+                            :loading="loadingPlan"
                             @click="selectPlan('monthly')"
                             color="primary"
                     >Select
@@ -51,7 +88,8 @@
                     </v-card-title>
                     <div
                             class="green--text m-1rem"
-                            v-if="selectedPlan() === 'yearly'">Current Plan</div>
+                            v-if="selectedPlan() === 'yearly'">Current Plan
+                    </div>
                 </div>
                 <v-card-text>
                     <div>540$ per year + $1 per job</div>
@@ -59,7 +97,6 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
-                            :disabled="hasStripe()"
                             @click="selectPlan('yearly')"
                             color="primary"
                     >Select
@@ -95,15 +132,24 @@
 </template>
 
 <script>
+
     export default {
         name: "Subscription",
         data() {
             return {
                 show: {
                     subscriptions: false,
-                    confirmCancelationModal: false
+                    confirmCancelationModal: false,
+                    createCreditCard: true,
+                    creditCardDialog: false
                 },
-                currentPlan: 'Monthly Plan'
+                cardHolderName: null,
+                paymentIntent: {
+                    clientSecret: null
+                },
+                submitted: false,
+                currentPlan: null,
+                loadingPlan: false
             }
         },
         methods: {
@@ -112,14 +158,83 @@
                 return Spark.state.user.stripe_id === null
             },
 
-            selectPlan(plan){
-            //    check if user is setup with stripe
-            //    if not then route them to setup with stripe
-            //    if they are then check if they have this plan already
+            selectPlan(plan) {
+                //    check if user is a stripe customer and open a dialog if they are not
+                if (Spark.state.user.subscriptions.length === 0) {
+                    this.loadingPlan = true;
+                    this.getPaymentIntent();
+                }
+
             },
 
-            selectedPlan(){
-              return Spark.state.user.plan
+            async getPaymentIntent() {
+                const {data} = await axios.get('subscription/getPaymentIntent')
+
+                if (data.error) {
+                    console.log(data.error);
+                } else {
+                    this.show.creditCardDialog = true;
+                    this.paymentIntent.clientSecret = data.client_secret;
+                    console.log('success', data.data)
+                }
+                this.loadingPlan = false;
+            },
+
+            async submit() {
+                this.submitted = true;
+
+                const {setupIntent, error} = await stripe.confirmCardSetup(
+                    this.paymentIntent.clientSecret, {
+                        payment_method: {
+                            card: card,
+                            billing_details: {
+                                name: this.cardHolderName,
+                                phone: Spark.state.user.phone,
+                                email: Spark.state.user.email
+                            },
+                            metadata: {
+                                userId: Spark.state.user.id
+                            }
+                        }
+                    }
+                );
+
+                if (error) {
+                    // Display "error.message" to the user...
+                } else {
+                    // The card has been verified successfully...
+                    this.sendPaymentMethodToServer(setupIntent.payment_method)
+                }
+
+                this.show.creditCardDialog = false
+
+                this.submitted = false;
+
+            },
+
+            async sendPaymentMethodToServer(paymentMethod) {
+                const {data} = await axios.post('subscriptions/setPaymentMethod', {
+                    paymentMethod
+                })
+
+                if (data.error) {
+                    // Display "error.message" to the user...
+                } else {
+                    // The card has been verified successfully...
+                    this.sendPaymentIntentToServer()
+                }
+            },
+
+            closeCreditCardWindow() {
+                this.show.creditCardDialog = false;
+            },
+
+            openCreditCardWindow() {
+                this.show.creditCardDialog = true;
+            },
+
+            selectedPlan() {
+                return Spark.state.user.plan
             },
 
             closeCancelation() {
@@ -142,6 +257,45 @@
                 this.show.confirmCancelationModal = false;
                 this.show.subscriptions = false;
             },
+        },
+        mounted() {
+
+            let stripe = Stripe(Spark.stripeKey);
+            let elements = stripe.elements();
+            let card = undefined;
+
+
+            let style = {
+                base: {
+                    color: '#32325d',
+                    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '16px',
+                    '::placeholder': {
+                        color: '#aab7c4'
+                    }
+                },
+                invalid: {
+                    color: '#fa755a',
+                    iconColor: '#fa755a'
+                }
+            };
+
+            if (!card) {
+                // Create an instance of the card Element
+                card = elements.create('card', style)
+                // Add an instance of the card Element into the `card-element` <div>
+                card.mount("#card-element")
+                // card.mount(this.$refs.card)
+                card.addEventListener('change', function (event) {
+                    var displayError = document.getElementById('card-errors');
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                    } else {
+                        displayError.textContent = '';
+                    }
+                });
+            }
         }
     }
 </script>

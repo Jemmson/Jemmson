@@ -6,7 +6,20 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import Feedback from "../../resources/assets/js/components/shared/Feedback";
 
+global.Spark = {
+    state: {
+        user: {
+            id: 1,
+            contractor: {
+                accounting_software: ''
+            },
+            usertype: 'customer'
+        }
+    }
+}
+
 require('./setup')
+require('./stripeSetup')
 
 const localVue = createLocalVue()
 

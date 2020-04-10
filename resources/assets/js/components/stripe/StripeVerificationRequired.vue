@@ -59,10 +59,7 @@
                     <label for="supportingDocumentUploads"
                            class="verification-title"
                     >Please Upload Your Supporting Documents Here</label>
-
-
                     <hr>
-
                     <section v-if="showReason('ID Number')">
                         <div class="flex justify-content-between">
                             <v-card-title>
@@ -71,11 +68,14 @@
 
                             <div>
                                 <label style="color: green" v-if="successfulUpload">Successfully Uploaded</label>
-                                <label style="color: red" v-if="unSuccessfulUpload">There was a problem. Please try again</label>
+                                <label style="color: red" v-if="unSuccessfulUpload">There was a problem. Please try
+                                    again</label>
                             </div>
                         </div>
 
-                        The government-issued ID number of the individual, as appropriate for the representative’s country. (Examples are a Social Security Number in the U.S., or a Social Insurance Number in Canada). Instead of the number itself, you can also provide a PII token created with Stripe.js.
+                        The government-issued ID number of the individual, as appropriate for the representative’s
+                        country. (Examples are a Social Security Number in the U.S., or a Social Insurance Number in
+                        Canada). Instead of the number itself, you can also provide a PII token created with Stripe.js.
 
                         <div><i>* File Must Be Less Than 10 MB</i></div>
                         <div><i>* Must be smaller than 8000px by 8000px</i></div>
@@ -209,7 +209,11 @@
 
             getReason() {
                 if (this.verification.disabled_reason) {
-                    return 'Your Requirements Are Past Due'
+                    const disabledReason = {
+                        "requirements.pending_verification": "Verification Pending",
+                        "requirements.past_due": "Past Due"
+                    };
+                    return disabledReason[this.verification.disabled_reason];
                 }
             },
 
