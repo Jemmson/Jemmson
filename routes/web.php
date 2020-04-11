@@ -74,6 +74,8 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('user/profileImage', 'UserController@uploadProfileImage');
 
     Route::post('subscription/plan', 'SubscriptionController@plan');
+    Route::post('subscription/changePlan', 'SubscriptionController@changePlan');
+    Route::post('subscription/cancelPlan', 'SubscriptionController@cancelPlan');
     Route::post('subscriptions/setPaymentMethod', 'SubscriptionController@setPaymentMethod');
     Route::get('subscription/getPaymentIntent', 'SubscriptionController@getPaymentIntent');
 

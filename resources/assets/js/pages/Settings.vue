@@ -46,19 +46,19 @@
         </section>
 
         <section
-                v-if="show.changePassword"
+                v-show="show.changePassword"
         >
             <change-password></change-password>
         </section>
 
         <section
-                v-if="show.subscription"
+                v-show="show.subscription"
         >
             <subscription></subscription>
         </section>
 
         <section
-                v-if="show.manageCreditCard"
+                v-show="show.manageCreditCard"
         >
             <manage-credit-card></manage-credit-card>
         </section>
