@@ -38,14 +38,24 @@
                 <!-- Stripe Elements Placeholder -->
                 <div id="card-element"></div>
 
-                <v-btn id="card-button"
-                       @click="submit()"
-                       color="primary"
-                       :loading="submitted"
-                       class="mt-4 v-btn"
-                       :data-secret="paymentIntent.clientSecret">
-                    Update Payment Method
-                </v-btn>
+                <div class="flex justify-content-between">
+                    <v-btn id="card-button"
+                           @click="submit()"
+                           color="primary"
+                           :loading="submitted"
+                           class="mt-4 v-btn"
+                           :data-secret="paymentIntent.clientSecret">
+                        Update Payment Method
+                    </v-btn>
+
+                    <v-btn
+                            @click="cancelAddingPaymentMethod()"
+                            color="error"
+                            class="mt-4 v-btn"
+                    >
+                        Cancel
+                    </v-btn>
+                </div>
 
                 <!--                class="mt-4 v-btn v-btn&#45;&#45;contained theme&#45;&#45;light v-size&#45;&#45;default primary"-->
 
@@ -58,7 +68,9 @@
         <section
                 v-if="show.subscriptions"
         >
-            <v-card class="mb-4 mt-1">
+            <v-card class="mb-4 mt-1"
+                    :disabled="disablePlans"
+            >
                 <div class="flex justify-content-between">
                     <v-card-title>
                         Monthly Plan
@@ -81,7 +93,9 @@
                 </v-card-actions>
             </v-card>
 
-            <v-card>
+            <v-card
+                    :disabled="disablePlans"
+            >
                 <div class="flex justify-content-between">
                     <v-card-title>
                         Yearly Plan
@@ -143,6 +157,7 @@
                     createCreditCard: true,
                     creditCardDialog: false
                 },
+                disablePlans: false,
                 cardHolderName: null,
                 paymentIntent: {
                     clientSecret: null
@@ -154,6 +169,12 @@
         },
         methods: {
 
+            cancelAddingPaymentMethod() {
+                this.loadingPlan = false;
+                this.disablePlans = false;
+                this.show.creditCardDialog = false;
+            },
+
             hasStripe() {
                 return Spark.state.user.stripe_id === null
             },
@@ -162,6 +183,7 @@
                 //    check if user is a stripe customer and open a dialog if they are not
                 if (Spark.state.user.subscriptions.length === 0) {
                     this.loadingPlan = true;
+                    this.disablePlans = true;
                     this.getPaymentIntent();
                 }
 
