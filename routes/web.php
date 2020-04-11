@@ -138,6 +138,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/', 'HomeController@create');
     Route::get('/furtherInfo', 'UserController@furtherInfo')->middleware('block.further.info');
     Route::post('/user/savePhoto', 'UserController@savePhoto');
+    Route::post('/user/changePassword', 'UserController@changePassword');
     // home controller
     Route::post('/settings/logo', 'HomeController@uploadCompanyLogo');
 }

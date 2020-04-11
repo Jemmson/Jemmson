@@ -52,7 +52,6 @@
                 <v-img
                         v-if="checkForPhoto()"
                         ref="userProfilePhoto"
-                        :class="rotated()"
                         :src="getPhotoUrl()" aspect-ratio="1.7"></v-img>
 
                 <v-card-actions class="flex flex-col">
@@ -288,20 +287,6 @@
 
         methods: {
 
-            rotated() {
-
-                // if (this.degree === 0) {
-                //     return 'rotate360'
-                // } else if (this.degree === 1) {
-                //     return 'rotate90'
-                // } else if (this.degree === 2) {
-                //     return 'rotate180'
-                // } else if (this.degree === 3) {
-                //     return 'rotate270'
-                // }
-
-            },
-
             rotateImage() {
 
                 this.degree = this.degree + 1;
@@ -310,40 +295,6 @@
                     this.degree = 0;
                 }
 
-                // const urlsplit = this.photoUrl.split('/');
-                // console.log('urlsplit', urlsplit);
-                //
-                // this.degree = this.degree + 1;
-                //
-                // if (this.degree === 5) {
-                //     this.degree = 0;
-                // }
-                //
-                // const rotationCase = [
-                //     'a_90',
-                //     'a_180',
-                //     'a_270',
-                //     'a_360'
-                // ];
-                //
-                // let newUrl =
-                //     urlsplit[0] + '//' +
-                //     urlsplit[2] + '/' +
-                //     urlsplit[3] + '/' +
-                //     urlsplit[4] + '/' +
-                //     urlsplit[5] + '/' +
-                //     rotationCase[this.degree] + '/' +
-                //     urlsplit[6] + '/' +
-                //     urlsplit[7];
-                //
-                // this.photoUrl = newUrl;
-                //
-                // console.log('newUrl', this.photoUrl);
-
-                // const degree = 'a_90';
-                //
-                // this.photoUrl = 'https://res.cloudinary.com/jemmson-inc/image/upload/' + degree + '/v1586043293/dslksdlkdslksdlk.jpg';
-                // this.photoUrl = 'https://res.cloudinary.com/jemmson-inc/image/upload/v1586043293/dslksdlkdslksdlk.jpg';
             },
 
             async saveNewUrl() {

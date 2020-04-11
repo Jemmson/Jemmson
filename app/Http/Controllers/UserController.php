@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Cloudinary;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -35,6 +36,24 @@ class UserController extends Controller
     {
         Auth::user()->photo_url = $request->photo;
         Auth::user()->save();
+    }
+
+    public function changePassword(Request $request)
+    {
+
+         $same = Hash::check($request->currentPassword, Auth::user()->password);
+
+        if (!$same) {
+            return response()->json([
+                'error' => 'You Entered The Wrong Current Password'
+            ]);
+        } else {
+            Auth::user()->password = Hash::make($request->password);
+            Auth::user()->save();
+            return response()->json([
+                'success' => 'Password Was Successfully Updated'
+            ], 200);
+        }
     }
 
     public function furtherInfo()
