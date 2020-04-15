@@ -47,6 +47,9 @@
                             <v-icon>mdi-face</v-icon>
                         </div>
                     </div>
+                </div>
+                <hr>
+                <div class="flex justify-content-around w-full">
                     <v-icon
                             v-if="!isCustomer"
                             ref="location"
