@@ -4,7 +4,15 @@ export default {
         dateOnly(datetime) {
             if (datetime) {
                 let d = datetime.split(' ');
-                let time = moment.utc(d[0] + 'T' + d[1]);
+
+                let time = '';
+
+                if (d.length === 1) {
+                    time = moment.utc(d[0]);
+                } else {
+                    time = moment.utc(d[0] + 'T' + d[1]);
+                }
+
                 return time.local().format('MM/DD/YYYY');
             }
         },

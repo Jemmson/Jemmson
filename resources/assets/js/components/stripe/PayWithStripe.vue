@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         hasStripe() {
-            if (this.stripe_id !== null) {
+            if (this.customer_stripe_id !== null) {
                 return true;
             }
             return false;
@@ -70,7 +70,7 @@ export default {
             let amount = this.amount;
             // if we don't have a stripe id for this customer create one
             // then charge them when we have the id
-            if (this.stripe_id === null) {
+            if (this.customer_stripe_id === null) {
                 // create stripe token
                 const {
                     token,
@@ -87,7 +87,7 @@ export default {
                         let response = await axios.post('/stripe/customer', token);
                         console.log('customer');
                         let data = response.data;
-                        this.stripe_id = data.id;
+                        this.customer_stripe_id = data.id;
                         
                         try {
                             // charge customer
@@ -118,7 +118,7 @@ export default {
         },
     },
     mounted() {
-        this.stripe_id = Spark.state.user.stripe_id;
+        this.customer_stripe_id = Spark.state.user.customer_stripe_id;
 
         this.stripe = Stripe(this.stripeKey);
         const elements = this.stripe.elements();

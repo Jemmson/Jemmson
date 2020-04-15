@@ -24,7 +24,7 @@ class StripeGatewayController extends Controller
 //        redirect_uri=https://connect.stripe.com/connect/default/oauth/test
 //        &client_id=ca_32D88BD1qLklliziD7gYQvctJIhWBSQ7&state={STATE_VALUE}
 
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         $user = Auth::user();
         $contractor = $user->contractor()->get()->first();
@@ -146,7 +146,7 @@ class StripeGatewayController extends Controller
             // Set your secret key: remember to switch to your live secret key in production
             // See your keys here: https://dashboard.stripe.com/account/apikeys
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            \Stripe\Stripe::$apiVersion = '2019-08-14';
+            \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
             $customerId = Job::where('id', '=', ($jobTasks["jobTasks"][0]->job_id))->get()->first()->customer_id;
 
@@ -170,7 +170,7 @@ class StripeGatewayController extends Controller
                 'customer' => $customerStripe->id,
                 'payment_method' => null,
                 'receipt_email' => $customer->email,
-                'on_behalf_of' => $general->stripe_id,
+                'on_behalf_of' => $general->customer_stripe_id,
                 'metadata' => [
                     'transferGroupId' => $transferGroup->id
                 ]
@@ -225,7 +225,7 @@ class StripeGatewayController extends Controller
     public function getStripeCustomer($customer, $generalId)
     {
 
-        $customerStripe = $this->customerExists($customer->stripe_id);
+        $customerStripe = $this->customerExists($customer->customer_stripe_id);
 
         if (\is_null($customerStripe)) {
             $customerStripe = $this->createCustomer($customer, $generalId);
@@ -237,7 +237,7 @@ class StripeGatewayController extends Controller
     public function customerExists($customerStripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         if (\is_null($customerStripeId) || $customerStripeId == '') {
             return null;
@@ -258,7 +258,7 @@ class StripeGatewayController extends Controller
     {
         $cc = ContractorCustomer::where('customer_user_id', '=', $customerId)
             ->where('contractor_user_id', '=', $generalId)->get()->first();
-        $cc->stripe_id = $customerStripeId;
+        $cc->customer_stripe_id = $customerStripeId;
 
         try {
             $cc->save();
@@ -274,14 +274,14 @@ class StripeGatewayController extends Controller
 
     public function updateCustomerStripeId($customer, $stripeId)
     {
-        $customer->stripe_id = $stripeId;
+        $customer->customer_stripe_id = $stripeId;
         $customer->save();
     }
 
     public function createStripeCustomer($customer)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Customer::create([
             "address" => [
@@ -376,7 +376,7 @@ class StripeGatewayController extends Controller
     public function transfer($amount, $accountId, $chargeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Transfer::create([
             'amount' => $amount,
@@ -432,7 +432,7 @@ class StripeGatewayController extends Controller
     public function payJemmson($token, $amount, $description = '')
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         $paymentIntent = \Stripe\PaymentIntent::create([
             'amount' => $amount,
@@ -450,7 +450,7 @@ class StripeGatewayController extends Controller
     public function createCharge($token)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Charge::create([
             'amount' => 999,

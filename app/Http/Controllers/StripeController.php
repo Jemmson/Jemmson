@@ -96,64 +96,25 @@ class StripeController extends Controller
             return redirect("/#" . $state . "?error=Sorry we couldn't create your express account at this time");
         }
 
-//        $user = Auth::user();
-//        $user->stripe_id = $response->stripe_user_id;
-//
-//        try {
-//            $user->save();
-//        } catch (\Exception $e) {
-//            return response()->json([
-//                'message' => $e->getMessage(),
-//                'code' => $e->getCode()
-//            ], 200);
-//        }
+        $user = Auth::user();
+        $user->customer_stripe_id = $response->stripe_user_id;
 
-//        //open connection
-//        $ch = curl_init();
-//
-//        //set the url, number of POST vars, POST data
-//        curl_setopt($ch,CURLOPT_URL, $url);
-//        curl_setopt($ch,CURLOPT_POST, count($data));
-//        curl_setopt($ch,CURLOPT_POSTFIELDS, $data);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        //execute post
-//        $result = json_decode(curl_exec($ch));
-//        //close connection
-//        curl_close($ch);
-//
-//        //$re = '{ "access_token": "sk_test_SGRDUquogKpdiWrN2qqaUCsf",
-//        //"livemode": false,
-//        //"refresh_token": "rt_CEYH4vUDPftWVnOfQc85DiHOpwBxBE86eIfSkWJfRi4wIsWr",
-//        //"token_type": "bearer", "stripe_publishable_key": "",
-//        //"stripe_user_id": "acct_1Bq5AlHwoZeFcla2", "scope": "express" }';
-//
-//        if (isset($result->error)) {
-//            Log::error('Stripe Express Auth: ' . $result->error_description);
-//            return redirect("/#/" . $request->state . "?error=" . $result->error_description);
-//        }
-//
-//        $stripeExpress = new StripeExpress();
-//        $stripeExpress->access_token = $result->access_token;
-//        $stripeExpress->refresh_token = $result->refresh_token;
-//        $stripeExpress->stripe_user_id = $result->stripe_user_id;
-//        $stripeExpress->contractor_id = Auth::user()->id;
-//
-//        try {
-//            $stripeExpress->save();
-//        } catch (\Exception $e) {
-//            Log::error('New StripeExpress: ' . $e->getMessage());
-//            return redirect("/#" . $request->state . "?error=Sorry we couldn't create your express account at this time");
-//        }
-//
+        try {
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
 
         return redirect("/#" . $state . "?success=Congratulations You Have Successfully Signed Up For Stripe");
-//        return redirect("/#" . $request->state . "?success=You may now submit the bid.");
     }
 
     public function newCard(Request $request)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         try {
             $card = \Stripe\PaymentMethod::create([
@@ -174,7 +135,7 @@ class StripeController extends Controller
             ], 200);
         }
 
-        $customerStripeId = Auth::user()->stripe_id;
+        $customerStripeId = Auth::user()->customer_stripe_id;
 
         $this->attachPaymentMethod($card->id, $customerStripeId);
 
@@ -185,7 +146,7 @@ class StripeController extends Controller
     public function attachPaymentMethod($paymentMethodId, $customerStripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         $payment_method = \Stripe\PaymentMethod::retrieve(
             $paymentMethodId
@@ -198,7 +159,7 @@ class StripeController extends Controller
     public function updatePaymentMethod()
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         $payment_method = \Stripe\PaymentMethod::retrieve(
             'pm_123456789'
@@ -218,7 +179,7 @@ class StripeController extends Controller
     public function detachPaymentMethod($paymentMethodId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         $payment_method = \Stripe\PaymentMethod::retrieve(
             $paymentMethodId
@@ -231,7 +192,7 @@ class StripeController extends Controller
     {
         try {
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            \Stripe\Stripe::$apiVersion = '2019-08-14';
+            \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
             return \Stripe\PaymentMethod::all([
                 'customer' => $customerStripeId,
@@ -248,7 +209,7 @@ class StripeController extends Controller
     {
         try {
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            \Stripe\Stripe::$apiVersion = '2019-08-14';
+            \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
             return \Stripe\PaymentMethod::all([
                 'customer' => $contractorStripeId,
@@ -497,7 +458,7 @@ class StripeController extends Controller
         // job tasks excluded from this payment [jobtask ids => true]
         $excluded = $request->excluded;
 
-        $customerId = Auth::user()->stripe_id;
+        $customerId = Auth::user()->customer_stripe_id;
 
         if ($customerId === null) {
             return response()->json(['message' => 'No Card On File'], 422);
@@ -794,7 +755,7 @@ class StripeController extends Controller
         ]);
 
         $amount = $request->amount;
-        $id = Auth::user()->stripe_id;
+        $id = Auth::user()->customer_stripe_id;
 
         if ($id === null) {
             return response()->json(['message' => 'Customer not in stripe yet'], 422);
@@ -828,8 +789,8 @@ class StripeController extends Controller
         ]);
 
         // customer exists already returns its id
-        if (Auth::user()->stripe_id !== null) {
-            return response()->json(['id' => Auth::user()->stripe_id], 200);
+        if (Auth::user()->customer_stripe_id !== null) {
+            return response()->json(['id' => Auth::user()->customer_stripe_id], 200);
         }
 
         try {
@@ -888,10 +849,10 @@ class StripeController extends Controller
     {
         $user = Auth::user();
 
-        $cards = \Stripe\Customer::retrieve($user->stripe_id)->sources->all(array(
+        $cards = \Stripe\Customer::retrieve($user->customer_stripe_id)->sources->all(array(
             'limit' => 1, 'object' => 'card'));
         $card = $cards->data[0];
-        $customer = \Stripe\Customer::retrieve($user->stripe_id);
+        $customer = \Stripe\Customer::retrieve($user->customer_stripe_id);
         $response = $customer->sources->retrieve($card->id)->delete();
 
         $user->deleteCard();

@@ -540,7 +540,7 @@ class User extends SparkUser
             return false;
         }
 
-        $this->customer_stripe_id = $id;
+        $this->stripe_id = $id;
 
         try {
             $this->save();

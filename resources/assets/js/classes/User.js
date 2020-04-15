@@ -121,7 +121,7 @@ export default class User {
   }
 
   hasStripeId() {
-    return this.user.stripe_id !== undefined && this.user.stripe_id !== null
+    return this.user.customer_stripe_id !== undefined && this.user.customer_stripe_id !== null
   }
 
   hello() {
@@ -177,7 +177,7 @@ export default class User {
   }
 
   isSignedUpWithStripe() {
-    return this.user.stripe_id !== undefined && this.user.stripe_id !== null
+    return this.user.customer_stripe_id !== undefined && this.user.customer_stripe_id !== null
   }
 
   isSub(bid, usertype, userId = null) {
@@ -287,7 +287,7 @@ export default class User {
       Vue.toasted.error(error.message)
       return false
     } else {
-      this.stripe_id = customer.id
+      this.customer_stripe_id = customer.id
       return true
     }
   }

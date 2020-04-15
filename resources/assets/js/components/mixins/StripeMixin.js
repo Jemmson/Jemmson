@@ -18,7 +18,7 @@ export default {
 
     needsStripe() {
       if (this.theUser) {
-        return this.theUser.stripe_id !== null
+        return this.theUser.customer_stripe_id !== null
       }
     },
 

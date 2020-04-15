@@ -170,7 +170,7 @@ class StripeExpress extends Model
     public function transferAmountToGeneral($amount, $generalId, $chargeId)
     {
         $general = $this->getGeneral($generalId);
-        if ($this->hasTransferCapability($general->stripe_id)) {
+        if ($this->hasTransferCapability($general->customer_stripe_id)) {
             $stripeId = $this->getStripeExpressId($generalId);
             return $this->transfer($amount, $stripeId, $chargeId);
         } else {
@@ -182,7 +182,7 @@ class StripeExpress extends Model
     public function transfer($amount, $accountId, $chargeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Transfer::create([
             'amount' => $amount,
@@ -195,7 +195,7 @@ class StripeExpress extends Model
     public function hasTransferCapability($stripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
         $transferCapability = \Stripe\Account::retrieveCapability(
             $stripeId,
             'transfers'
@@ -208,7 +208,7 @@ class StripeExpress extends Model
     public function updateTransferCapability($stripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         $transferCapability = \Stripe\Account::updateCapability(
             $stripeId,
@@ -292,7 +292,7 @@ class StripeExpress extends Model
             $s_charge = \Stripe\Charge::create(array(
                 "amount" => $subAmount * 100,
                 "currency" => "usd",
-                "customer" => Auth::user()->stripe_id,
+                "customer" => Auth::user()->customer_stripe_id,
                 "destination" => array(
                     "account" => $sub_stripeUserId,
                 ),
@@ -306,7 +306,7 @@ class StripeExpress extends Model
             $g_charge = \Stripe\Charge::create(array(
                 "amount" => (int)$generalAmount * 100,
                 "currency" => "usd",
-                "customer" => Auth::user()->stripe_id,
+                "customer" => Auth::user()->customer_stripe_id,
                 "destination" => array(
                     "account" => $general_stripeUserId,
                 ),
@@ -326,7 +326,7 @@ class StripeExpress extends Model
         if ($this->stripeCustomerDoesNotExist($customer)) {
             return $this->addStripeToCustomer($customer, $generalId);
         } else {
-            return $this->retrieveCustomer($customer->stripe_id);
+            return $this->retrieveCustomer($customer->customer_stripe_id);
         }
     }
 
@@ -336,13 +336,13 @@ class StripeExpress extends Model
      */
     public function stripeCustomerDoesNotExist($customer)
     {
-        return $customer->stripe_id == null;
+        return $customer->customer_stripe_id == null;
     }
 
     public function retrieveCustomer($customerStripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Customer::retrieve($customerStripeId);
     }
@@ -360,7 +360,7 @@ class StripeExpress extends Model
     public function addCustomerToStripe($customer)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Customer::create([
             "address" => [
@@ -379,7 +379,7 @@ class StripeExpress extends Model
 
     public function addStripeIdToCustomer($customer, $stripeCustomer, $generalId)
     {
-        $customer->stripe_id = $stripeCustomer->id;
+        $customer->customer_stripe_id = $stripeCustomer->id;
 
         // TODO :: Should throw an exception for when a customer should be saved
 
@@ -397,7 +397,7 @@ class StripeExpress extends Model
             ->where('customer_user_id', '=', $customer->id)
             ->get()->first();
 
-        $cc->stripe_id = $stripeCustomer->id;
+        $cc->customer_stripe_id = $stripeCustomer->id;
 
         try {
             $cc->save();

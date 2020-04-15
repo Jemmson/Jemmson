@@ -49,10 +49,8 @@ class BidContractorJobTask extends Model
     public static function markAsDeleted($jobTasks, $generalId)
     {
         foreach ($jobTasks as $jobTask) {
-            if (
-                !self::isASub($generalId, $jobTask->id)
-                ){
-                $subTasks = self::getSubTasks();
+            if (!self::isASub($generalId, $jobTask->id)){
+                $subTasks = self::getSubTasks($jobTask->id);
                 if (!\is_null($subTasks)) {
                     foreach ($subTasks as $subTask) {
                         $subTask->destroy();

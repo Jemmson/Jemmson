@@ -615,7 +615,7 @@
         created: function () {
             Bus.$on('needsStripe', (clientSecret) => {
                 this.clientSecret = clientSecret
-                $('#stripe-modal').modal()
+                $('#stripe-modal').modal('show')
             })
 
             // if (!this.bid) {

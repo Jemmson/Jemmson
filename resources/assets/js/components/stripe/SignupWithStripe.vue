@@ -55,6 +55,10 @@
 <script>
     import {mapState} from 'vuex'
 
+    let stripe = Stripe(Spark.stripeKey);
+    let elements = stripe.elements();
+    let card = undefined;
+
     export default {
         data() {
             return {
@@ -163,10 +167,6 @@
         },
 
         mounted() {
-
-            let stripe = Stripe(Spark.stripeKey);
-            let elements = stripe.elements();
-            let card = undefined;
 
             let style = {
                 base: {

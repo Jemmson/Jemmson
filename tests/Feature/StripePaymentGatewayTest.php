@@ -209,8 +209,8 @@ class StripePaymentGatewayTest extends TestCase
         $cc = ContractorCustomer::where('contractor_user_id', '=', $generalId)
             ->where('customer_user_id', '=', $customerId)->get()->first();
 
-        if (\is_null($cc->stripe_id)) {
-            $cc->stripe_id = $stripeCustomerId;
+        if (\is_null($cc->customer_stripe_id)) {
+            $cc->customer_stripe_id = $stripeCustomerId;
             try {
                 $cc->save();
             } catch (\Exception $e) {
@@ -256,7 +256,7 @@ class StripePaymentGatewayTest extends TestCase
     public function transfer($amount, $accountId, $chargeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Transfer::create([
             'amount' => $amount,
@@ -280,19 +280,19 @@ class StripePaymentGatewayTest extends TestCase
         if ($this->stripeCustomerDoesNotExist($customer)) {
             return $this->addStripeCustomer($address);
         } else {
-            return $this->retrieveCustomer($customer->stripe_id);
+            return $this->retrieveCustomer($customer->customer_stripe_id);
         }
     }
 
     public function stripeCustomerDoesNotExist($customer)
     {
-        return $customer->stripe_id == null;
+        return $customer->customer_stripe_id == null;
     }
 
     public function retrieveCustomer($customerStripeId)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Customer::retrieve($customerStripeId);
     }
@@ -300,7 +300,7 @@ class StripePaymentGatewayTest extends TestCase
     public function addStripeCustomer($address)
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Customer::create([
             'description' => 'My First Test Customer (created for API docs)',
@@ -357,7 +357,7 @@ class StripePaymentGatewayTest extends TestCase
     public function jemmsonIsPaidTheTask($token, $amount, $description = '')
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        \Stripe\Stripe::$apiVersion = '2019-08-14';
+        \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         return \Stripe\Charge::create([
             'amount' => $amount,

@@ -20,7 +20,7 @@ class CreateContractorCustomerTable extends Migration
             $table->increments('id');
             $table->integer('contractor_user_id');
             $table->integer('customer_user_id');
-            $table->string('stripe_id')->nullable();
+            $table->string('customer_stripe_id')->nullable();
             $table->softDeletes();
             $table->bigInteger('quickbooks_id')->nullable();
             $table->timestamps();

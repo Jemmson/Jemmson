@@ -28,7 +28,7 @@ export default {
   computed: {
       showDashboardLoginBtn() {
           return Spark.state.user.contractor !== null
-                  && Spark.state.user.contractor.stripe_id !== null
+                  && Spark.state.user.contractor.customer_stripe_id !== null
       }
   },
   methods: {

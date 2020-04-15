@@ -26,11 +26,11 @@
                             @click="showSection('subscription')"
                     >Subscription
                     </v-btn>
-                    <v-btn
-                            class="nav-btn-position"
-                            @click="showSection('manageCreditCard')"
-                    >Credit Card
-                    </v-btn>
+<!--                    <v-btn-->
+<!--                            class="nav-btn-position"-->
+<!--                            @click="showSection('manageCreditCard')"-->
+<!--                    >Credit Card-->
+<!--                    </v-btn>-->
                 </div>
             </v-card-actions>
         </v-card>
@@ -57,11 +57,12 @@
             <subscription></subscription>
         </section>
 
-        <section
-                v-show="show.manageCreditCard"
-        >
-            <manage-credit-card></manage-credit-card>
-        </section>
+
+<!--        <section-->
+<!--                v-show="show.manageCreditCard"-->
+<!--        >-->
+<!--            <manage-credit-card></manage-credit-card>-->
+<!--        </section>-->
 
     </v-container>
 </template>

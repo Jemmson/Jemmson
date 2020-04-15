@@ -15,7 +15,7 @@
                 <h3 class="text-center">{{ errorMessage }}</h3>
             </div>
             <label for="card-element">
-                Please Add A New Credit Card Below
+                Please Add A New Credit Card Bel
             </label>
             <div id="card-element" ref="card">
                 <!-- a Stripe Element will be inserted here. -->
@@ -55,7 +55,7 @@
 <script>
     import {mapState} from 'vuex'
 
-    let stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`)
+    let stripe = Stripe(Spark.stripeKey);
     let elements = stripe.elements()
     let card = undefined
 

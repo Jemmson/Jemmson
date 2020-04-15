@@ -200,7 +200,7 @@
             },
 
             hasStripe() {
-                return Spark.state.user.stripe_id === null
+                return Spark.state.user.customer_stripe_id === null
             },
 
             selectPlan(plan) {

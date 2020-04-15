@@ -64,7 +64,7 @@ class StripeEvent extends Model
         $this->customer_id = $event->data->object->customer;
         $this->event_id = $event->id;
         $this->event_type = $event->type;
-        $this->event_payload = $event;
+        $this->event_payload = json_encode($event);
 
         $this->account_id = $this->getAccountId($event);
 
