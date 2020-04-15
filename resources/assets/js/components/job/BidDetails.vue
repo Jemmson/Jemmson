@@ -19,62 +19,55 @@
                     class="flex flex-col"
             >
                 <div class="flex justify-content-around w-full">
-                    <v-btn
+                    <v-icon
                             class="nav-btn-position"
                             @click="showSection('jobStepper')"
-                    >Workflow
-                    </v-btn>
-                    <v-btn
+                    >mdi-page-next
+                    </v-icon>
+                    <v-icon
                             class="nav-btn-position"
                             @click="showSection('details')"
-                    >Details
-                    </v-btn>
-                </div>
-                <div class="flex justify-content-around w-full">
-                    <v-btn
+                    >mdi-details
+                    </v-icon>
+                    <div
                             ref="jobTaskNavButton"
                             :disabled="noJobTasks()"
                             class="nav-btn-position"
-                            style="width: 96%;"
                             @click="showSection('jobTask')"
                     >
-                        <span v-if="noJobTasks()">
-                            Need Tasks
-                        </span>
-
-                        <div v-else>
-                            <div>View Tasks<span
-                                        v-if="getJobTasksLength() > 0"
-                                > ({{ getJobTasksLength() }})</span> / Add A Sub
-                            </div>
+                        <div v-if="noJobTasks()">
+                            NeedsTasks
                         </div>
-
-                    </v-btn>
-                </div>
-                <div class="flex justify-content-around w-full">
-                    <v-btn
+                        <div v-else>
+                            <v-icon>mdi-service
+                                <span v-if="getJobTasksLength() > 0">
+                                    ({{ getJobTasksLength() }})
+                                </span>
+                            </v-icon>
+                            <v-icon>mdi-face</v-icon>
+                        </div>
+                    </div>
+                    <v-icon
                             v-if="!isCustomer"
                             ref="location"
                             class="nav-btn-position"
                             @click="showSection('location')"
-                    >Location
-                    </v-btn>
-                    <v-btn
+                    >mdi-map-marker
+                    </v-icon>
+                    <v-icon
                             class="nav-btn-position"
                             @click="showSection('notes')"
-                    >Job Notes
-                    </v-btn>
-                </div>
-                <div class="flex justify-content-around w-full">
-                    <v-btn
+                    >mdi-note-text-outline
+                    </v-icon>
+                    <v-icon
                             ref="imagesNavButton"
                             class="nav-btn-position"
                             @click="showSection('images')"
-                    >Images <span
+                    >mdi-image<span
                             v-if="getNumberOfImages() > 0"
                     >({{ getNumberOfImages() }})</span>
-                    </v-btn>
-                    <v-btn
+                    </v-icon>
+                    <v-icon
                             ref="job-add-task"
                             v-if="canAddATask() && !isCustomer"
                             class="nav-btn-position"
@@ -82,8 +75,8 @@
                             id="addTaskToBid"
                             @click="$router.push('/job/add/task')"
                     >
-                        Add A Task
-                    </v-btn>
+                        mdi-plus-thick
+                    </v-icon>
                 </div>
             </v-card-actions>
         </v-card>

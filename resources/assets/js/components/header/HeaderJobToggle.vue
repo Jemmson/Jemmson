@@ -32,25 +32,34 @@
 
         </v-app-bar>
 
-        <div class="container-fluid" style="margin-top: 40px">
-            <div ref="job_toggle"
-                 class="row bg-white bids-row spacing">
-                <div ref="toggle_contractors" @click.prevent="toggleBidsContractor(true)"
-                     class="col pr-0 pl-0 text-center text-uppercase align-self-end"
-                     :class="bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                    <p class="bids-toggle text-primary f-size-13pt text-center">
-                        General Jobs
-                    </p>
-                </div>
-                <div ref="toggle_subContractors" @click.prevent="toggleBidsContractor(false)"
-                     class="col pr-0 pl-0 text-center text-uppercase align-self-end"
-                     :class="!bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">
-                    <p class="bids-toggle text-primary f-size-13pt text-center">
-                        Sub Jobs
-                    </p>
-                </div>
-            </div>
-        </div>
+        <v-tabs class="justify-content-between" style="margin-top: 3.5rem;">
+            <v-tab class="w-full"
+                   @click.prevent="toggleBidsContractor(true)"
+            >General Jobs</v-tab>
+            <v-tab class="w-full"
+                   @click.prevent="toggleBidsContractor(false)"
+            >Sub Jobs</v-tab>
+        </v-tabs>
+
+<!--        <div class="container-fluid" style="margin-top: 40px">-->
+<!--            <div ref="job_toggle"-->
+<!--                 class="row bg-white bids-row spacing">-->
+<!--                <div ref="toggle_contractors" @click.prevent="toggleBidsContractor(true)"-->
+<!--                     class="col pr-0 pl-0 text-center text-uppercase align-self-end"-->
+<!--                     :class="bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">-->
+<!--                    <p class="bids-toggle text-primary f-size-13pt text-center">-->
+<!--                        General Jobs-->
+<!--                    </p>-->
+<!--                </div>-->
+<!--                <div ref="toggle_subContractors" @click.prevent="toggleBidsContractor(false)"-->
+<!--                     class="col pr-0 pl-0 text-center text-uppercase align-self-end"-->
+<!--                     :class="!bidsContractorSectionPicked ? 'border-bottom border-primary' : ''">-->
+<!--                    <p class="bids-toggle text-primary f-size-13pt text-center">-->
+<!--                        Sub Jobs-->
+<!--                    </p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 
 </template>

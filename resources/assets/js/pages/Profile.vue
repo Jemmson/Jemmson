@@ -347,7 +347,8 @@
 
             checkForPhoto() {
                 if (this.user) {
-                    return this.user.photo_url !== null;
+                    const urlsplit = this.photoUrl.split('/');
+                    return this.user.photo_url !== null && urlsplit[2] !== 'www.gravatar.com';
                 }
             },
 
@@ -355,32 +356,37 @@
 
                 if (this.photoUrl) {
                     const urlsplit = this.photoUrl.split('/');
-                    const baseUrl = 'https://res.cloudinary.com/jemmson-inc/image/upload/';
 
-                    let hash = ''
-                    let imageName = ''
-
-                    if (urlsplit.length === 8) {
-                        hash = urlsplit[6];
-                        imageName = urlsplit[7];
+                    if (urlsplit[2] === 'www.gravatar.com') {
+                        return this.photoUrl
                     } else {
-                        hash = urlsplit[7];
-                        imageName = urlsplit[8];
-                    }
+                        const baseUrl = 'https://res.cloudinary.com/jemmson-inc/image/upload/';
+
+                        let hash = ''
+                        let imageName = ''
+
+                        if (urlsplit.length === 8) {
+                            hash = urlsplit[6];
+                            imageName = urlsplit[7];
+                        } else {
+                            hash = urlsplit[7];
+                            imageName = urlsplit[8];
+                        }
 
 
-                    if (this.degree === 0) {
-                        this.currentPhoto = baseUrl + 'a_360/' + hash + '/' + imageName;
-                        return this.currentPhoto;
-                    } else if (this.degree === 1) {
-                        this.currentPhoto = baseUrl + 'a_90/' + hash + '/' + imageName;
-                        return this.currentPhoto;
-                    } else if (this.degree === 2) {
-                        this.currentPhoto = baseUrl + 'a_180/' + hash + '/' + imageName;
-                        return this.currentPhoto;
-                    } else if (this.degree === 3) {
-                        this.currentPhoto = baseUrl + 'a_270/' + hash + '/' + imageName;
-                        return this.currentPhoto;
+                        if (this.degree === 0) {
+                            this.currentPhoto = baseUrl + 'a_360/' + hash + '/' + imageName;
+                            return this.currentPhoto;
+                        } else if (this.degree === 1) {
+                            this.currentPhoto = baseUrl + 'a_90/' + hash + '/' + imageName;
+                            return this.currentPhoto;
+                        } else if (this.degree === 2) {
+                            this.currentPhoto = baseUrl + 'a_180/' + hash + '/' + imageName;
+                            return this.currentPhoto;
+                        } else if (this.degree === 3) {
+                            this.currentPhoto = baseUrl + 'a_270/' + hash + '/' + imageName;
+                            return this.currentPhoto;
+                        }
                     }
                 }
 
