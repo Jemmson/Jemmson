@@ -1,14 +1,12 @@
 <template>
     <v-container>
 
-        <div class="flex flex-end">
-            <v-icon
-                    color="red"
-                    right
-                    @click="showVerificationDialog()"
-            >mdi-alert-circle
-            </v-icon>
-        </div>
+        <v-icon
+                color="red"
+                right
+                @click="showVerificationDialog()"
+        >mdi-alert-circle
+        </v-icon>
 
         <v-dialog
                 v-model="dialog"
@@ -55,45 +53,50 @@
 
                     <hr>
 
-                    <!-- https://stripe.com/docs/file-upload -->
-                    <label for="supportingDocumentUploads"
-                           class="verification-title"
-                    >Please Upload Your Supporting Documents Here</label>
-                    <hr>
-                    <section v-if="showReason('ID Number')">
-                        <div class="flex justify-content-between">
-                            <v-card-title>
-                                ID Number
-                            </v-card-title>
+                    <stripe-express-dashboard
+                            ref="stripeExpressDashboard"
+                    >
+                    </stripe-express-dashboard>
 
-                            <div>
-                                <label style="color: green" v-if="successfulUpload">Successfully Uploaded</label>
-                                <label style="color: red" v-if="unSuccessfulUpload">There was a problem. Please try
-                                    again</label>
-                            </div>
-                        </div>
+                    <!--                    &lt;!&ndash; https://stripe.com/docs/file-upload &ndash;&gt;-->
+                    <!--                    <label for="supportingDocumentUploads"-->
+                    <!--                           class="verification-title"-->
+                    <!--                    >Please Upload Your Supporting Documents Here</label>-->
+                    <!--                    <hr>-->
+                    <!--                    <section v-if="showReason('ID Number')">-->
+                    <!--                        <div class="flex justify-content-between">-->
+                    <!--                            <v-card-title>-->
+                    <!--                                ID Number-->
+                    <!--                            </v-card-title>-->
 
-                        The government-issued ID number of the individual, as appropriate for the representative’s
-                        country. (Examples are a Social Security Number in the U.S., or a Social Insurance Number in
-                        Canada). Instead of the number itself, you can also provide a PII token created with Stripe.js.
+                    <!--                            <div>-->
+                    <!--                                <label style="color: green" v-if="successfulUpload">Successfully Uploaded</label>-->
+                    <!--                                <label style="color: red" v-if="unSuccessfulUpload">There was a problem. Please try-->
+                    <!--                                    again</label>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
 
-                        <div><i>* File Must Be Less Than 10 MB</i></div>
-                        <div><i>* Must be smaller than 8000px by 8000px</i></div>
+                    <!--                        The government-issued ID number of the individual, as appropriate for the representative’s-->
+                    <!--                        country. (Examples are a Social Security Number in the U.S., or a Social Insurance Number in-->
+                    <!--                        Canada). Instead of the number itself, you can also provide a PII token created with Stripe.js.-->
 
-                        <input
-                                ref="supportingDoc"
-                                type="file"
-                                id="supportingDocumentUploads"
-                                @change="uploadSupportingDocument()"
-                                :accept="acceptableTypes()"
-                        >
-                        <v-btn
-                                v-on:click="submitFile()">
-                            Submit
-                        </v-btn>
+                    <!--                        <div><i>* File Must Be Less Than 10 MB</i></div>-->
+                    <!--                        <div><i>* Must be smaller than 8000px by 8000px</i></div>-->
 
-                        <hr>
-                    </section>
+                    <!--                        <input-->
+                    <!--                                ref="supportingDoc"-->
+                    <!--                                type="file"-->
+                    <!--                                id="supportingDocumentUploads"-->
+                    <!--                                @change="uploadSupportingDocument()"-->
+                    <!--                                :accept="acceptableTypes()"-->
+                    <!--                        >-->
+                    <!--                        <v-btn-->
+                    <!--                                v-on:click="submitFile()">-->
+                    <!--                            Submit-->
+                    <!--                        </v-btn>-->
+
+                    <!--                        <hr>-->
+                    <!--                    </section>-->
 
                 </v-card-text>
 
@@ -114,8 +117,13 @@
 </template>
 
 <script>
+    import StripeExpressDashboard from "./StripeExpressDashboard";
+
     export default {
         name: "StripeVerificationRequired",
+        components: {
+            StripeExpressDashboard
+        },
         data() {
             return {
                 dialog: false,

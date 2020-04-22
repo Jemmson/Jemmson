@@ -185,7 +185,7 @@
       },
       async deleteTheActualTask(id) {
         try {
-          const data = await axios.post('/jobTask/delete/', {
+          const data = await axios.post('/jobTask/delete', {
             id: id
           })
           this.getBid(this.jobTask.job.id)

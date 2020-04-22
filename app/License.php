@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class License extends Model
 {
+
+    protected $guarded = [];
     //
     public function contractor()
     {
-        return $this->belongsTo(Contractor::class);
+        return $this->belongsTo(Contractor::class, 'user_id', 'contractor_id');
     }
 
     public static function addLicenses($licenses, $user)

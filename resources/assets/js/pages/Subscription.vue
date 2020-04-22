@@ -1,21 +1,23 @@
 <template>
     <v-container>
         <v-card>
+            <v-card-title>Manage Subscription</v-card-title>
             <v-card-actions
-                    class="flex flex-col"
+                    class="flex"
             >
-                <div class="flex justify-content-around w-full">
-                    <v-btn
-                            class="nav-btn-position subscription-btn-width"
-                            @click="showSubscription()"
-                    >Plans
-                    </v-btn>
-                    <v-btn
-                            class="nav-btn-position subscription-btn-width"
-                            @click="openCancelConfirmationDialog()"
-                    >Cancel
-                    </v-btn>
-                </div>
+                <v-spacer></v-spacer>
+                <v-icon
+                        class="nav-btn-position subscription-btn-width"
+                        @click="showSubscription()"
+                >mdi-floor-plan
+                </v-icon>
+                <v-spacer></v-spacer>
+                <v-icon
+                        class="nav-btn-position subscription-btn-width"
+                        @click="openCancelConfirmationDialog()"
+                >mdi-cancel
+                </v-icon>
+                <v-spacer></v-spacer>
             </v-card-actions>
         </v-card>
 

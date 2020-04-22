@@ -6,41 +6,44 @@
                 v-if="showBid(bidTask)"
                 class="mb-1rem"
         >
-            <div
+            <v-card-title
                     v-if="needsStripeForCreditCardPayments() && isCreditCardJob()"
                     class="w-break text-center uppercase error--text p-2"
                     style="color: black"
             >You will need to set up a credit card to bid on this job
-            </div>
-            <stripe-verification-required
-                    v-if="requiresVerification()"
-                    ref="warningMessageAccountDisabled"
-                    :verification="getVerification()"
-                    @verified="accountVerified($event)"
-            ></stripe-verification-required>
-            <hr>
-            <v-card-title
-                    class="uppercase pb-0"
-                    v-if="showBid(bidTask)"
-            >
-                <v-icon
-                        v-if="getPaymentType('cash')"
-                >mdi-cash
-                </v-icon>
-                <v-icon
-                        v-else-if="getPaymentType('creditCard')"
-                >mdi-credit-card
-                </v-icon>
-
-                <div class="mr-1rem ml-half-rem">{{ jobName(bidTask) }}</div>
-                <v-spacer></v-spacer>
-                <v-card-subtitle
-                        class="ml-1rem capitalize"
-                        :class="getLabelClass(bidTask)"
-                > {{ getLatestStatus() }}
-                </v-card-subtitle>
             </v-card-title>
-            <v-divider></v-divider>
+            <div class="flex justify-content-between">
+                <div>
+                    <v-card-title
+                            class="uppercase"
+                            v-if="showBid(bidTask)"
+                    >
+                        {{ jobName(bidTask) }}
+                    </v-card-title>
+                    <v-card-subtitle> {{ getLatestStatus() }}</v-card-subtitle>
+                </div>
+                <div class="flex flex-end" style="margin-right: 1rem;">
+                    <stripe-verification-required
+                            style="width: 0%;
+                                margin-right: 2rem;
+                                margin-bottom: 0rem;
+                                height: 0rem;
+                                margin-top: 1rem;"
+                            v-if="requiresVerification()"
+                            ref="warningMessageAccountDisabled"
+                            :verification="getVerification()"
+                            @verified="accountVerified($event)"
+                    ></stripe-verification-required>
+                    <v-icon
+                            v-if="getPaymentType('cash')"
+                    >mdi-cash
+                    </v-icon>
+                    <v-icon
+                            v-else-if="getPaymentType('creditCard')"
+                    >mdi-credit-card
+                    </v-icon>
+                </div>
+            </div>
             <v-card-actions>
                 <v-btn
                         v-show="!showTheTask"
@@ -70,37 +73,33 @@
         </v-card>
 
         <div v-show="showTheTask">
-
-
             <v-card>
                 <v-card-actions
-                        class="flex flex-col"
+                        class="flex"
                 >
                     <div class="flex justify-content-around w-full">
-                        <v-btn
+                        <v-icon
                                 class="nav-btn-position"
                                 @click="showSection('details')"
-                        >Details
-                        </v-btn>
-                        <v-btn
+                        >mdi-details
+                        </v-icon>
+                        <v-icon
                                 class="nav-btn-position"
                                 @click="showSection('location')"
-                        >Location
-                        </v-btn>
-                    </div>
-                    <div class="flex justify-content-around w-full">
-                        <v-btn
+                        >mdi-google-maps
+                        </v-icon>
+                        <v-icon
                                 v-if="showDeclinedMsg(bidTask) && subHasMessage(bidTask)"
                                 class="nav-btn-position"
                                 color="error"
                                 @click="showSection('messages')"
-                        >Messages
-                        </v-btn>
-                        <v-btn
+                        >mdi-message
+                        </v-icon>
+                        <v-icon
                                 class="nav-btn-position"
                                 @click="showSection('images')"
-                        >Images
-                        </v-btn>
+                        >mdi-image
+                        </v-icon>
                     </div>
                 </v-card-actions>
             </v-card>
@@ -110,10 +109,10 @@
                 <section class="mt-1rem"
                          v-if="show.details"
                 >
-                    <h1 class="card-title">Task Details</h1>
                     <v-card
                             :disabled="needsStripeForCreditCardPayments() && isCreditCardJob()"
                     >
+                        <v-card-title>Task Details</v-card-title>
                         <v-card-text>
                             <v-row
                                     class="justify-content-around mt-1rem"
@@ -171,49 +170,55 @@
                 <section class="mt-1rem"
                          v-if="show.location"
                 >
-                    <h1 class="card-title">Job Address</h1>
-
                     <v-card>
-                        <div>
-                            <div
-                                    v-if="getAddress(bidTask) !== 'Address Not Available'"
-                            >
-                                <a target="_blank"
-                                   :href="'https://www.google.com/maps/search/?api=1&query=' + getAddress(bidTask)">
-                                    <i class="fas fa-map-marker icon"></i>
-                                    {{ getAddress(bidTask) }}
-                                </a>
-                            </div>
-                            <div v-else>
-                                <div class="w-break text-center uppercase error--text p-2" style="color:black;">Address
-                                    to Job is Not currently Available
-                                </div>
-                            </div>
-                        </div>
+                        <v-card-title>Location</v-card-title>
+                        <v-card-text v-if="getAddress(bidTask) !== 'Address Not Available'">
+                            <v-list dense>
+                                <v-list-item>
+                                    <v-list-item-content>Address:</v-list-item-content>
+                                    <v-list-item-content class="align-end">
+                                        <div>{{ getAddressLine1(bidTask) }}</div>
+                                        <div class="flex">
+                                            <div>{{ getCity(bidTask) }},</div>
+                                            <div
+                                                    style="margin-left: .2rem;"
+                                            >{{ getLocationState(bidTask) }}
+                                            </div>
+                                            <div
+                                                    style="margin-left: .2rem;"
+                                            >{{ getZip(bidTask) }}
+                                            </div>
+                                        </div>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                            <hr>
+                            <main class="map-responsive">
+                                <iframe
+                                        width="450"
+                                        height="250"
+                                        frameborder="0" style="border:0"
+                                        :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
+                            bidTask.job_task.location.address_line_1 + ' ' +
+                            bidTask.job_task.location.city + ' ' +
+                            bidTask.job_task.location.state + ' ' +
+                            bidTask.job_task.location.zip
+                            " allowfullscreen>
+                                </iframe>
+                            </main>
+                        </v-card-text>
+
                     </v-card>
 
-
-                    <!--                    <card>-->
-                    <!--                        <main class="row">-->
-                    <!--                            <div class="address-adjust">-->
-                    <!--                                <p v-if="getAddress(bidTask) !== 'Address Not Available'">-->
-
-                    <!--                                </p>-->
-                    <!--                                <p v-else>-->
-                    <!--                                    <i class="fas fa-map-marker icon"></i>-->
-                    <!--                                    {{ getAddress(bidTask) }}-->
-                    <!--                                </p>-->
-                    <!--                            </div>-->
-                    <!--                        </main>-->
-                    <!--                    </card>-->
                 </section>
 
                 <section class="mt-1rem"
                          v-if="show.messages"
                 >
-                    <h1 class="card-title">Messages</h1>
-                    <card>
-                        <main class="row">
+                    <v-card>
+                        <v-card-title>Messages</v-card-title>
+
+                        <v-card-text>
                             <content-section
                                     v-if="showDeclinedMsg(bidTask)"
                                     label="Declined Reason:"
@@ -225,36 +230,34 @@
                                     label="Sub Instructions:"
                                     :content="getSubMessage(bidTask)"
                                     type="subInstructions"></content-section>
-                        </main>
-                    </card>
+                        </v-card-text>
+
+                    </v-card>
                 </section>
 
                 <section class="mt-1rem"
                          v-if="show.images"
                 >
-                    <h1 class="card-title">Images</h1>
-                    <card>
-                        <main class="row">
+
+                    <v-card>
+                        <v-card-title>Images</v-card-title>
+                        <v-card-text>
                             <task-images class="images w-full ml-one-quarter-negative" :jobTask="getJobTask(bidTask)"
                                          type="sub">
                             </task-images>
-                        </main>
-                    </card>
+                        </v-card-text>
+                    </v-card>
+
                 </section>
 
                 <section class="mt-1rem"
                          ref="actionSection"
                          v-if="jobTaskHasBeenApproved()"
                 >
-                    <h1 class="card-title">Actions</h1>
-                    <card>
-                        <main class="row">
-                            <!--                            <content-section-->
-                            <!--                                    label="Job Status:"-->
-                            <!--                                    :content="getLatestStatus()"-->
-                            <!--                                    :input-classes="getLabelClass(bidTask)"-->
-                            <!--                                    :section-classes="(isBidOpen(bidTask) || showFinishedBtn(bidTask)) ? 'border-bottom-thick-black' : ''"-->
-                            <!--                                    type="startOn"></content-section>-->
+
+                    <v-card>
+                        <v-card-title>Actions</v-card-title>
+                        <v-card-actions>
                             <v-btn
                                     ref="markJobFinishedButton"
                                     :disabled="!stripeVerified"
@@ -265,8 +268,9 @@
                                     :loading="disabled.finished">
                                 Click Me When Task Is Finished
                             </v-btn>
-                        </main>
-                    </card>
+                        </v-card-actions>
+                    </v-card>
+
                 </section>
             </div>
 
@@ -360,12 +364,21 @@
         },
         methods: {
 
-            getVerification(){
-              return Spark.state.user.contractor.stripe_express.stripe_account_verification
+            getVerification() {
+                if (
+                    Spark.state.user.contractor
+                    && Spark.state.user.contractor.stripe_express
+                ) {
+                    return Spark.state.user.contractor.stripe_express.stripe_account_verification
+                }
             },
 
             requiresVerification() {
-                if (Spark.state.user.contractor.stripe_express.stripe_account_verification) {
+                if (
+                    Spark.state.user.contractor
+                    && Spark.state.user.contractor.stripe_express
+                    && Spark.state.user.contractor.stripe_express.stripe_account_verification
+                ) {
                     let verification = Spark.state.user.contractor.stripe_express.stripe_account_verification;
                     if (
                         verification.disabled_reason === null
@@ -488,7 +501,7 @@
             },
             async deleteTheActualTask(id) {
                 try {
-                    const data = await axios.post('/jobTask/delete/', {
+                    const data = await axios.post('/jobTask/delete', {
                         id: id
                     })
                     this.getBid(this.job_task.job.id)
@@ -680,6 +693,45 @@
                     return false
                 }
             },
+            getAddress(bidTask) {
+                if (bidTask.job_task && bidTask.job_task.location) {
+                    if (bidTask.job_task.location !== null) {
+                        return bidTask.job_task.location.address_line_1 + ' ' +
+                            bidTask.job_task.location.address_line_2 + ' ' +
+                            bidTask.job_task.location.city + ' ' +
+                            bidTask.job_task.location.state + ' ' +
+                            bidTask.job_task.location.zip
+                    } else {
+                        return 'Address Not Available'
+                    }
+                }
+            },
+
+            getAddressLine1(bidTask) {
+                if (bidTask.job_task && bidTask.job_task.location) {
+                    return bidTask.job_task.location.address_line_1
+                }
+                return ''
+            },
+            getCity(bidTask) {
+                if (bidTask.job_task && bidTask.job_task.location) {
+                    return bidTask.job_task.location.city
+                }
+                return ''
+            },
+            getLocationState(bidTask) {
+                if (bidTask.job_task && bidTask.job_task.location) {
+                    return bidTask.job_task.location.state
+                }
+                return ''
+            },
+            getZip(bidTask) {
+                if (bidTask.job_task && bidTask.job_task.location) {
+                    return bidTask.job_task.location.zip
+                }
+                return ''
+            },
+
             getAddress(bidTask) {
 
                 if (bidTask && bidTask.job_task) {

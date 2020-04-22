@@ -27,26 +27,26 @@
                     >
                     </v-combobox>
 
-                    <v-text-field
-                            id="firstName"
-                            v-model="form.firstName"
-                            required
-                            :rules="nameRules()"
-                            :counter="20"
-                            label="First Name *"
-                    >
-                    </v-text-field>
+<!--                    <v-text-field-->
+<!--                            id="firstName"-->
+<!--                            v-model="form.firstName"-->
+<!--                            required-->
+<!--                            :rules="nameRules()"-->
+<!--                            :counter="20"-->
+<!--                            label="First Name *"-->
+<!--                    >-->
+<!--                    </v-text-field>-->
 
-                    <v-text-field
-                            id="lastName"
-                            v-model="form.lastName"
-                            @change="lastName()"
-                            required
-                            :rules="nameRules()"
-                            :counter="20"
-                            label="Last Name *"
-                    >
-                    </v-text-field>
+<!--                    <v-text-field-->
+<!--                            id="lastName"-->
+<!--                            v-model="form.lastName"-->
+<!--                            @change="lastName()"-->
+<!--                            required-->
+<!--                            :rules="nameRules()"-->
+<!--                            :counter="20"-->
+<!--                            label="Last Name *"-->
+<!--                    >-->
+<!--                    </v-text-field>-->
 
                     <v-text-field
                             id="phone"
@@ -75,11 +75,6 @@
                     <v-row class="flex-col payment-section">
                         <div class="align-baseline flex justify-center">
                             <h5 class="text-center">Select Payment Type For Job</h5>
-                            <v-icon
-                                    color="primary"
-                                    @click="showModal('paymentType')"
-                                    class="ml-1rem">mdi-information
-                            </v-icon>
                         </div>
                         <v-radio-group
                                 v-model="form.paymentType"
@@ -110,6 +105,7 @@
                                 class="margins-1rem"
                                 color="aliceblue"
                                 elevation="2"
+                                text
                                 single-line
                                 sticky
                                 style="background-color: cornflowerblue; font-size: 9pt; color: white"
@@ -127,6 +123,7 @@
                                 name="submit" id="submit" dusk="submitBid"
                                 @click.prevent="submit"
                                 :disabled="dataMustBeValid()"
+                                text
                                 :loading="disabled.submit"
                         >
                             Submit

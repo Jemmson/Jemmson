@@ -10,9 +10,7 @@ use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 class PasswordController extends Controller
 {
-    use SendsPasswordResetEmails, ResetsPasswords {
-        SendsPasswordResetEmails::broker insteadof ResetsPasswords;
-    }
+    use SendsPasswordResetEmails, ResetsPasswords;
 
     /**
      * Create a new password controller instance.

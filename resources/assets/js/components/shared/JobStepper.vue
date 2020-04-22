@@ -4,7 +4,8 @@
     >
         <div v-show="false">{{ this.status }}</div>
 
-        <div v-if="user === 'general'" class="h-full">
+        <v-card v-if="user === 'general'" class="h-full">
+            <v-card-title>Current Step In Workflow</v-card-title>
             <v-stepper
                     v-model="step"
                     vertical
@@ -66,7 +67,7 @@
                     </v-card-text>
                 </v-card>
             </v-dialog>
-        </div>
+        </v-card>
         <div v-else-if="user === 'customer'" class="h-full">
             <v-stepper
                     v-model="step"

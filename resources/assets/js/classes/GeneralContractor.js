@@ -358,7 +358,7 @@ export default class GeneralContractor {
 
     async updateMessage(message, jobTaskId, actor) {
         try {
-            const data = await axios.post('/api/task/updateMessage/', {
+            const data = await axios.post('/task/updateMessage', {
                 message: message,
                 jobTaskId: jobTaskId,
                 actor: actor

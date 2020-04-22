@@ -137,6 +137,7 @@ class SparkServiceProvider extends ServiceProvider
                     return Auth::user()->load('subscriptions',
                         'contractor.stripeExpress', 'customer',
                         'contractor.location',
+                        'contractor.licenses',
                         'customer.location',
                         'contractor.stripeExpress.stripeAccountVerification');
                 else

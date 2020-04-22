@@ -1,6 +1,6 @@
 <template>
     <!-- Modal -->
-    <div class="modal h-100 modal-background-gray" :id="'deny-task-modal_'+jobTask.id" tabindex="-1" role="dialog"
+    <div class="modal h-100 modal-background-gray" :id="'deny-task-modal_'+ getJobTaskId()" tabindex="-1" role="dialog"
          aria-labelledby="deny-task-modal"
          aria-hidden="false">
         <div class="modal-dialog" role="document">
@@ -60,6 +60,11 @@
             }
         },
         methods: {
+            getJobTaskId(){
+              if (this.jobTask) {
+                  return this.jobTask.id
+              }
+            },
             denyTask() {
                 this.denyForm.user_id = User.getId()
                 this.denyForm.job_task_id = this.jobTask.id

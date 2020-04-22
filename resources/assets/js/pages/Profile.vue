@@ -1,23 +1,24 @@
 <template>
     <v-container>
         <v-card>
+            <v-card-title>Profile Settings</v-card-title>
             <v-card-actions
-                    class="flex flex-col"
+                    class="flex"
             >
-                <div class="flex justify-content-around w-full">
-                    <v-btn
+                <v-spacer></v-spacer>
+                <v-icon
                             class="nav-btn-position"
                             ref="showPhotoSection"
                             @click="showSection('photo')"
-                    >Upload Photo
-                    </v-btn>
-                    <v-btn
+                    >mdi-image-edit
+                    </v-icon>
+                <v-spacer></v-spacer>
+                    <v-icon
                             class="nav-btn-position"
                             @click="showSection('contactInformation')"
-                    >Contact Info
-                    </v-btn>
-                </div>
-
+                    >mdi-contacts
+                    </v-icon>
+                <v-spacer></v-spacer>
             </v-card-actions>
         </v-card>
 

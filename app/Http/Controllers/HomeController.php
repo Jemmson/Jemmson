@@ -204,7 +204,7 @@ class HomeController extends Controller
 
 
         if($user->usertype == 'contractor') {
-            return response()->json('/tasks', 200);
+            return response()->json('/bids', 200);
         } else {
             return response()->json('/bids', 200);
         }

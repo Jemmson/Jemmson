@@ -210,7 +210,7 @@
             },
             async deleteTheActualJob(id) {
                 try {
-                    const data = await axios.post('/job/delete/', {
+                    const data = await axios.post('/job/delete', {
                         id: id
                     })
                     this.getBids()

@@ -9,23 +9,21 @@
                     class="flex flex-col"
             >
                 <div class="flex justify-content-around w-full">
-                    <v-btn
+                    <v-icon
                             class="nav-btn-position"
                             @click="showSection('profile')"
-                    >Profile
-                    </v-btn>
-                    <v-btn
+                    >mdi-face-profile
+                    </v-icon>
+                    <v-icon
                             class="nav-btn-position"
                             @click="showSection('changePassword')"
-                    >Change Password
-                    </v-btn>
-                </div>
-                <div class="flex justify-content-around w-full">
-                    <v-btn
+                    >mdi-onepassword
+                    </v-icon>
+                    <v-icon
                             class="nav-btn-position"
                             @click="showSection('subscription')"
-                    >Subscription
-                    </v-btn>
+                    >mdi-youtube-subscription
+                    </v-icon>
 <!--                    <v-btn-->
 <!--                            class="nav-btn-position"-->
 <!--                            @click="showSection('manageCreditCard')"-->

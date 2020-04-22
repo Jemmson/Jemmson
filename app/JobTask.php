@@ -129,25 +129,65 @@ class JobTask extends Model
 
     }
 
-    public function createJobTask($request)
+    public function addJobTask($request)
+    {
+        self::createJobTask(
+            $request->jobId,
+            $request->taskId,
+            $request->contractorId,
+            $request->qty,
+            $request->taskPrice,
+            $request->subTaskPrice,
+            $request->customer_message,
+            $request->sub_message,
+            $request->useStripe
+        );
+    }
+
+    public function addJobTaskFromNewJob($jobId, $taskId, $request)
+    {
+        self::createJobTask(
+            $jobId,
+            $taskId,
+            $request->contractorId,
+            $request->qty,
+            $request->taskPrice,
+            $request->subTaskPrice,
+            $request->customer_message,
+            $request->sub_message,
+            $request->useStripe
+        );
+    }
+
+    public function createJobTask(
+        $jobId,
+        $taskId,
+        $contractorId,
+        $qty,
+        $taskPrice,
+        $subTaskPrice,
+        $customer_message,
+        $sub_message,
+        $useStripe
+    )
     {
         // standard task column = new column value
-        $this->job_id = $request->jobId;
-        $this->task_id = $request->taskId;
+        $this->job_id = $jobId;
+        $this->task_id = $taskId;
         $this->status = 'bid_task.initiated';
-        $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $this->convertToCents($request->qty * $request->taskPrice);
-        $this->sub_final_price = $this->convertToCents($request->subTaskPrice);
-        if (empty($request->start_date)) {
+        $this->contractor_id = $contractorId;
+        $this->cust_final_price = $this->convertToCents($qty * $taskPrice);
+        $this->sub_final_price = $this->convertToCents($subTaskPrice);
+        if (empty($start_date)) {
             $this->start_date = \Carbon\Carbon::now();
         } else {
-            $this->start_date = $request->start_date;
+            $this->start_date = $start_date;
         }
-        $this->customer_message = $request->customer_message;
-        $this->sub_message = $request->sub_message;
-        $this->stripe = $request->useStripe;
-        $this->qty = (int)$request->qty;
-        $this->unit_price = $this->convertToCents($request->taskPrice);
+        $this->customer_message = $customer_message;
+        $this->sub_message = $sub_message;
+        $this->stripe = $useStripe;
+        $this->qty = (int)$qty;
+        $this->unit_price = $this->convertToCents($taskPrice);
 
         try {
             $this->save();
@@ -164,36 +204,6 @@ class JobTask extends Model
         if ($job->location_id != null) {
             $this->location_id = $job->location_id;
             $this->save();
-        }
-    }
-
-    public function addToJobTask(String $jobId, String $taskId, $request)
-    {
-        // standard task column = new column value
-        $this->job_id = $jobId;
-        $this->task_id = $taskId;
-        $this->status = 'bid_task.initiated';
-        $this->contractor_id = $request->contractorId;
-        $this->cust_final_price = $this->convertToCents($request->qty * $request->taskPrice);
-        $this->sub_final_price = $this->convertToCents($request->subTaskPrice);
-        if (empty($request->start_date)) {
-            $this->start_date = \Carbon\Carbon::now();
-        } else {
-            $this->start_date = $request->start_date;
-        }
-        $this->customer_message = $request->customer_message;
-        $this->sub_message = $request->sub_message;
-        $this->stripe = $request->useStripe;
-        $this->qty = (int)$request->qty;
-        $this->unit_price = $this->convertToCents($request->taskPrice);
-
-        try {
-            $this->save();
-        } catch (\Exception $e) {
-            Log::error('Add Job Task: ' . $e->getMessage());
-            return response()->json([
-                "message" => "Couldn't add Job Task.",
-                "errors" => ["error" => [$e->getMessage()]]], 404);
         }
     }
 

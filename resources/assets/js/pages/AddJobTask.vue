@@ -1,225 +1,86 @@
 <template>
     <!-- Modal -->
     <div class="container" id="top" v-if="isContractor()">
-        <icon-header icon="tasks" mainHeader="Add New Task"
-                     :subHeader="'This adds a new task to the job so you can sub out a portion of the job.'">
-        </icon-header>
-        <card class="mb-4">
+        <v-card>
 
-            <form role="form" class="wrapper">
-                <h1 class="text-center error-lg" v-show="errors.general.errorExists">
-                    {{ errors.general.message }}
-                </h1>
-                <!--Task Name-->
-                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('taskName')}">
-                    <label for="taskName">Task Description *</label>
+            <v-card-title>Add New Task</v-card-title>
+            <v-card-subtitle>This adds a new task to the job so you can sub out a portion of the job.</v-card-subtitle>
 
-                    <input type="text"
-                           class="form-control bat-input mb-1"
-                           id="taskName" name="taskName"
-                           autofocus
-                           v-model="addNewTaskForm.taskName" autocomplete="off"
-                           @blur="checkIfNameExistsInDB($event.target.value)"
-                           @focus="checkIfNameExistsInDB($event.target.value)"
-                           @keyup="getExistingTask($event.target.value)">
+            <v-card-title ref="errorMessage"
+                          class="text-center error-lg" v-show="errors.general.errorExists">
+                {{ errors.general.message }}
+            </v-card-title>
 
-                    <span class="help-block" v-show="addNewTaskForm.errors.has('taskName')">
-                            {{ addNewTaskForm.errors.get('taskName') }}
-                        </span>
-                    <div class="flex flex-col" v-if="taskResults.length && showTaskResults">
-                        <v-btn
-                                class="w-full m-15"
-                                color="primary"
-                                v-for="result in taskResults"
-                                v-bind:key="result.id" @click.prevent="fillTaskValues(result)">
-                            {{ result.name }}
-                        </v-btn>
-                    </div>
-                </div>
+            <v-card-text>
+                <v-combobox
+                        label="Task Description *"
+                        id="taskNameComboBox"
+                        v-model="selected"
+                        :search-input.sync="search"
+                        :rules="[
+                           taskNameExistsRule()
+                       ]"
+                        :items="comboResults"
+                        :value="selected">
+                </v-combobox>
 
-                <div
-                        v-if="taskExistsInJob"
-                        style="color: red; font-size: 10pt;"
-                        class="uppercase">
-                    This Task already exists for this job
-                </div>
+                <v-text-field
+                        v-model="addNewTaskForm.taskPrice"
+                        label="Task Price"
+                        :rules="[
+                            taskPriceIsNotEmptyRule()
+                       ]"
+                        id="custTaskPrice"
+                        v-mask="getCurrencyMask()"
+                        name="taskPrice"
+                        ref="task_price"></v-text-field>
 
-                <div class="form-row">
-
-                    <!--Task Price-->
-                    <div class="form-group col-6" :class="{'has-error': addNewTaskForm.errors.has('taskPrice')}">
-                        <label for="custTaskPrice">Price</label>
-                        <div class="flex items-center">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">$</span>
-                            </div>
-                            <input
-                                    @blur="verifyInputIsANumber($event.target.value, 'price')"
-                                    @focus="hideTaskResults"
-                                    @keyup="checkIfPriceChanged($event.target.value)"
-                                    autocomplete="text"
-                                    class="form-control bat-input"
-                                    :class="(errors.subPriceTooHigh.exists || errors.notANumber.price) ? 'box-error': ''"
-                                    :disabled="taskExistsInJob"
-                                    id="custTaskPrice" name="taskPrice"
-                                    ref="task_price"
-                                    type="text"
-                                    v-model="addNewTaskForm.taskPrice"
-                            >
-                        </div>
-                        <span :class="{ error: errors.notANumber.price }" v-show="errors.notANumber.price">Customer
-                            Price
-                            {{ errors.notANumber.message }}
-                        </span>
-                        <span class="help-block" v-show="addNewTaskForm.errors.has('taskPrice')">
-                            {{ addNewTaskForm.errors.get('taskPrice') }}
-                        </span>
-                    </div>
+                <v-text-field
+                        v-model="addNewTaskForm.qty"
+                        label="Quantity"
+                        v-mask="'#########'"
+                        id="qty"
+                        name="qty"
+                        :rules="[
+                        quantityIsGreaterThanZeroRule()
+                       ]"
+                        ref="qty"></v-text-field>
 
 
-                    <!--Quantity-->
-                    <div class="form-group col-6" :class="{'has-error': addNewTaskForm.errors.has('qty')}">
-                        <label for="qty">Quantity</label>
-                        <input type="number" class="form-control bat-input" min="1" id="qty" name="qty" required
-                               :disabled="taskExistsInJob" @focus="hideTaskResults"
-                               @blur="verifyInputIsANumber($event.target.value, 'quantity')"
-                               v-model="addNewTaskForm.qty">
-                        <span :class="{ error: errors.notANumber.quantity }"
-                              v-show="errors.notANumber.quantity">Quantity
-                            {{ errors.notANumber.message }}
-                        </span>
-                        <span class="help-block" v-show="addNewTaskForm.errors.has('qty')">
-                            {{ addNewTaskForm.errors.get('qty') }}
-                        </span>
-                    </div>
-                </div>
+                <v-text-field
+                        v-model="addNewTaskForm.qtyUnit"
+                        label="Quantity Unit"
+                        placeholder="ex. ft, sq. ft, etc."
+                        id="qtyUnit"
+                        name="qtyUnit"
+                        ref="qtyUnit"></v-text-field>
 
+                <v-textarea
+                        v-model="addNewTaskForm.customer_message"
+                        id="customer_message"
+                        name="customer_message"
+                        auto-grow
+                        clearable
+                        clear-icon="mdi-cancel"
+                        label="Instructions For The Customer"
+                ></v-textarea>
 
-                <!--Quantity Unit-->
-                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('qtyUnit')}">
-                    <label for="qtyUnit">Quantity Description</label>
-                    <input type="text" class="form-control bat-input" min="1" id="qtyUnit"
-                           placeholder="ex. ft, sq. ft, etc." name="qtyUnit" v-model="addNewTaskForm.qtyUnit"
-                           :disabled="taskExistsInJob" @blur="validateInput()" @focus="hideTaskResults"
-                           @keyup="checkIfQuantityUnitHasChanged($event.target.value)">
-                    <span :class="{ error: addNewTaskForm.hasQtyUnitError }"
-                          v-show="addNewTaskForm.hasQtyUnitError">{{ addNewTaskForm.qtyUnitErrorMessage }}
-                        </span>
-                    <span class="help-block" v-show="addNewTaskForm.errors.has('qtyUnit')">
-                            {{ addNewTaskForm.errors.get('qtyUnit') }}
-                        </span>
-                </div>
+                <v-textarea
+                        v-model="addNewTaskForm.sub_message"
+                        id="sub_message"
+                        name="sub_message"
+                        auto-grow
+                        clearable
+                        clear-icon="mdi-cancel"
+                        label="Instructions For Sub Contractor"
+                ></v-textarea>
+            </v-card-text>
 
-                <!--Start Date-->
-                <div class="form-group" :class="{'has-error': addNewTaskForm.errors.has('start_date')}">
-                    <label for="start_date">Start Date</label>
-                    <!--<span class="help-block" v-show="addNewTaskForm.errors.has('start_date')">-->
-                    <!--{{ addNewTaskForm.errors.get('start_date') }}-->
-                    <!--</span>-->
-                    <input
-                            @blur="checkDateIsTodayorLater($event.target.value)"
-                            class="form-control bat-input"
-                            :disabled="taskExistsInJob"
-                            @focus="hideTaskResults"
-                            id="start_date"
-                            name="start_date"
-                            ref="start_date"
-                            required
-                            type="date"
-                            v-model="addNewTaskForm.start_date">
-
-                    <span :class="{ error: addNewTaskForm.hasStartDateError }"
-                          v-show="addNewTaskForm.hasStartDateError">{{ addNewTaskForm.startDateErrorMessage }}
-                        </span>
-                    <!--<span class="help-block" v-show="addNewTaskForm.errors.has('startDate')">-->
-                    <!--{{ addNewTaskForm.errors.get('startDate') }}-->
-                    <!--</span>-->
-
-                </div>
-                <!-- <div class="flex flex-col ml-2 items-center">
-                          <label>Start Date <br> To Be Determined</label>
-                          <input type="checkbox" :checked="checked">
-                        </div> -->
-
-                <!--                 <div v-if="user.contractor.accounting_software === 'quickbooks'">-->
-                <div v-if="checkIfUserUsesQuickbooks()">
-                    <!--                <div>-->
-                    <!--<div class="m-auto">Income Account Ref</div>-->
-                    <div class="form-group">
-                        <input type="text" class="form-control bat-input "
-                               v-model="addNewTaskForm.incomeAccountRef.name" placeholder="Income Account name">
-                        <input type="text" class="form-control bat-input "
-                               v-model="addNewTaskForm.incomeAccountRef.value" placeholder="Income Account value">
-                    </div>
-
-                    <!--<div class="m-auto">Expense Account Ref</div>-->
-                    <div class="form-group">
-                        <input type="text" class="form-control bat-input "
-                               v-model="addNewTaskForm.expenseAccountRef.name" placeholder="Expense Account name">
-                        <input type="text" class="form-control bat-input "
-                               v-model="addNewTaskForm.expenseAccountRef.value" placeholder="Expense Account value">
-                    </div>
-
-                    <!--<div class="m-auto">Asset Account Ref</div>-->
-                    <div class="form-group">
-                        <input type="text" class="form-control bat-input "
-                               v-model="addNewTaskForm.assetAccountRef.name" placeholder="Asset Account name">
-                        <input type="text" class="form-control bat-input "
-                               v-model="addNewTaskForm.assetAccountRef.value" placeholder="Asset Account value">
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control bat-input " v-model="addNewTaskForm.type"
-                               placeholder="Type">
-                        <input type="text" class="form-control bat-input " v-model="addNewTaskForm.invStartDate"
-                               placeholder="Item Added Date">
-                    </div>
-
-                    <div class="form-group">
-                        <div class="flex">
-                            <div class="small mr-2">Track Qty On Hand</div>
-                            <input type="checkbox" class="bat-input ml-2" :checked="addNewTaskForm.trackQtyOnHand"
-                                   v-model="addNewTaskForm.trackQtyOnHand">
-                        </div>
-                        <input type="text" class="form-control w-1/4 bat-input ml-2" v-model="addNewTaskForm.qtyOnHand"
-                               placeholder="Quantity On Hand">
-                    </div>
-                </div>
-
-
-                <!--Customer Message-->
-                <div class="form-group customer-notes"
-                     :class="{'has-error': addNewTaskForm.errors.has('customer_message')}">
-                    <label for="customer_message">Instructions For The Customer</label>
-                    <textarea cols="5" rows="10" class="form-control ta-input" id="customer_message"
-                              name="customer_message"
-                              :disabled="taskExistsInJob" v-model="addNewTaskForm.customer_message"
-                              @focus="hideTaskResults" @keyup="checkIfCustomerMessageHasChanged($event.target.value)">
-                                </textarea>
-                    <span class="help-block" v-show="addNewTaskForm.errors.has('customer_message')">
-                                {{ addNewTaskForm.errors.get('customer_message') }}
-                            </span>
-                </div>
-
-                <!--Sub Message-->
-                <div class="form-group sub-notes"
-                     :class="{'has-error': addNewTaskForm.errors.has('sub_message')}">
-                    <label for="sub_message">Subcontractor Instructions</label>
-                    <textarea cols="30" rows="10" class="form-control ta-input" id="sub_message" name="sub_message"
-                              :disabled="taskExistsInJob" v-model="addNewTaskForm.sub_message"
-                              @focus="hideTaskResults" @keyup="checkIfSubMessageHasChanged($event.target.value)">
-                                </textarea>
-                    <span class="help-block" v-show="addNewTaskForm.errors.has('sub_message')">
-                                {{ addNewTaskForm.errors.get('sub_message') }}
-                            </span>
-                </div>
-            </form>
-            <!-- /end col-md-6 -->
-
-            <div class="flex mb-1rem">
+            <v-card-actions>
                 <v-btn
-                        class="w-40"a
+                        class="w-40" a
                         color="red"
+                        text
                         :disabled="addingTheTask"
                         @click.prevent="goBack()">
                     Back
@@ -228,15 +89,15 @@
                 <v-btn
                         class="w-40"
                         color="primary"
+                        text
                         @click.prevent="changeTask('Add')"
                         :disabled="addingTheTask"
                         ref="add_task"
-                        :loading="addTask"
+                        :loading="addingTheTask"
                 >Add Task
                 </v-btn>
-            </div>
-
-        </card>
+            </v-card-actions>
+        </v-card>
         <v-overlay :value="overlay">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
@@ -251,6 +112,7 @@
     import IconHeader from '../components/shared/IconHeader'
     import Card from '../components/shared/Card'
     import Feedback from '../components/shared/Feedback'
+    import Currency from "../components/mixins/Currency";
 
     export default {
         name: 'AddJobTask',
@@ -259,8 +121,9 @@
             Feedback,
             IconHeader
         },
-        beforeRouteUpdate (to, from, next) {
-            this.goToTop();
+        mixins: [Currency],
+        beforeRouteUpdate(to, from, next) {
+            // this.goToTop();
         },
         data() {
             return {
@@ -301,14 +164,16 @@
                     subTaskPrice: 0,
                     taskExists: '',
                     taskId: 0,  // if -1 then the task did not come from the drop down
-                    taskPrice: 0,
+                    taskPrice: 0.00,
                     taskName: '',
                     trackQtyOnHand: true,
                     type: 'Inventory',
                     updateTask: false,
                     useStripe: false
                 }),
+                comboResults: [],
                 checked: 'checked',
+                search: null,
                 result: {
                     resultReturned: false,
                     taskName: '',
@@ -338,6 +203,7 @@
                 },
                 dropDownSelectedNameIsDifferent: false,
                 taskResultsChange: false,
+
                 taskResults: [],
 
                 valueChanged: false,
@@ -347,7 +213,7 @@
                 showTaskResults: false,
                 taskExistsInJob: false,
                 currentTasks: [],
-
+                selected: null,
                 priceChanged: false,
                 quantityChanged: false,
                 quantityUnitChanged: false,
@@ -361,12 +227,50 @@
                 bid: {},
             }
         },
+        watch: {
+            search(val) {
+                if (val) {
+                    let tasks = this.getExistingTask()
+                    if (tasks === undefined) {
+                        this.addNewTaskForm.taskName = val
+                    }
+                }
+            },
+            selected(val) {
+                if (val) {
+                    const result = this.getComboResult(val)
+                    console.log('result', result)
+                    this.fillTaskValues(result)
+                }
+            }
+        },
         computed: {
             newTask() {
                 return this.addNewTaskForm.taskName !== this.result.taskName
             }
         },
         methods: {
+
+            getCurrencyMask() {
+                // return '######'
+                if(this.taskPriceIsNotEmpty()){
+                    return this.currencyMask(this.addNewTaskForm.taskPrice);
+                } else {
+                    return '$ .##';
+                }
+            },
+
+            setFormData(result) {
+                this.addNewTaskForm.taskName = result.name
+            },
+
+            getComboResult(selected) {
+                for (let i = 0; i < this.taskResults.length; i++) {
+                    if (selected.value === this.taskResults[i].id) {
+                        return this.taskResults[i]
+                    }
+                }
+            },
 
             isContractor() {
                 return Spark.state.user.usertype === 'contractor'
@@ -589,36 +493,43 @@
                 }
 
             },
+            transformDataForComboBox(data) {
+                let tasks = []
+                for (let i = 0; i < data.length; i++) {
+                    tasks.push(
+                        {
+                            text: data[i].name,
+                            value: data[i].id
+                        }
+                    )
+                }
+                return tasks
+            },
             getExistingTask(message) {
                 this.taskResults = []
-                this.submitted = false
-
-                this.checkIfNameExistsInDB(this.addNewTaskForm.taskName)
+                // this.submitted = false
+                console.log('getExistingTask is called',)
 
                 // debugger;
-                if (this.addNewTaskForm.taskName.length > 1) {
-                    axios.post('/search/task', {
-                        taskname: this.addNewTaskForm.taskName,
-                        jobId: this.bid.id
-                    }).then(response => {
-                        // debugger;
-                        console.log(response.data)
-                        if (response.data.length > 0) {
-                            let filteredResults = this.filterResultsSoOnlyTasksNotCurrentlyInJobAreInDropdown(response.data)
-                            this.currentTasks = filteredResults
-                            this.taskResults = filteredResults
-                            this.showTaskResults = true
-                        } else {
-                            // if there are no results returned then the task results array should be empty and
-                            // the name does not exist in the database
-                            this.taskResults = []
-                            this.nameExistsInDB = false
-                        }
-                    })
-                } else {
-                    // if the task description box is empty then obviously the name does not exist in the database
-                    this.nameExistsInDB = false
-                }
+                axios.post('/search/task', {
+                    taskname: this.addNewTaskForm.taskName,
+                    jobId: this.bid.id
+                }).then(response => {
+                    // debugger;
+                    console.log(response.data)
+                    if (response.data.length > 0) {
+                        // let filteredResults = this.filterResultsSoOnlyTasksNotCurrentlyInJobAreInDropdown(response.data)
+                        this.comboResults = this.transformDataForComboBox(response.data);
+                        this.currentTasks = response.data
+                        this.taskResults = response.data
+                        this.showTaskResults = true
+                    } else {
+                        // if there are no results returned then the task results array should be empty and
+                        // the name does not exist in the database
+                        this.taskResults = []
+                        this.nameExistsInDB = false
+                    }
+                })
 
             },
             filterResultsSoOnlyTasksNotCurrentlyInJobAreInDropdown(results) {
@@ -641,74 +552,75 @@
                 this.showTaskResults = false
             },
             fillTaskValues(result) {  // this method fills values of the form when a drop down item is selected  x
-                console.log(result)
+                if (result) {
+                    console.log(result)
 
-                // since the user selected a drop down option then the name automatically exists in the database
-                this.nameExistsInDB = true
-                this.dropdownSelected = true
-                this.taskExists = true
-                this.result.resultReturned = true
-                this.addNewTaskForm.taskId = result.id
+                    // since the user selected a drop down option then the name automatically exists in the database
+                    this.nameExistsInDB = true
+                    this.dropdownSelected = true
+                    this.taskExists = true
+                    this.result.resultReturned = true
+                    this.addNewTaskForm.taskId = result.id
 
-                // Task Name
-                this.addNewTaskForm.taskName = result.name
-                this.result.taskName = result.name
+                    // Task Name
+                    this.addNewTaskForm.taskName = result.name
+                    this.result.taskName = result.name
 
-                // Task Price
-                if (result.proposed_cust_price === null) {
-                    this.addNewTaskForm.taskPrice = 0
-                    this.result.standardCustomerTaskPrice = 0
-                } else {
-                    this.addNewTaskForm.taskPrice = result.proposed_cust_price
-                    this.result.standardCustomerTaskPrice = result.proposed_cust_price
+                    // Task Price
+                    if (result.proposed_cust_price === null) {
+                        this.addNewTaskForm.taskPrice = 0
+                        this.result.standardCustomerTaskPrice = 0
+                    } else {
+                        this.addNewTaskForm.taskPrice = result.proposed_cust_price
+                        this.result.standardCustomerTaskPrice = result.proposed_cust_price
+                    }
+
+                    this.addNewTaskForm.qty = 1
+                    this.result.quantity = 1
+
+                    // Quantity Unit
+                    if (result.qtyUnit !== null) {
+                        this.addNewTaskForm.qtyUnit = result.qtyUnit
+                        this.result.quantityUnit = result.qtyUnit
+                    } else {
+                        this.addNewTaskForm.qtyUnit = ''
+                        this.result.quantityUnit = ''
+                    }
+
+                    // // Sub price
+                    // if (result.proposed_sub_price === null) {
+                    //     this.addNewTaskForm.subTaskPrice = 0
+                    //     this.result.standardSubTaskPrice = 0
+                    // } else {
+                    //     this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
+                    //     this.result.standardSubTaskPrice = result.proposed_sub_price
+                    // }
+
+                    // Sub Instructions
+                    if (result.sub_instructions === null) {
+                        this.addNewTaskForm.sub_message = ''
+                        this.result.sub_instructions = ''
+                    } else {
+                        this.addNewTaskForm.sub_message = result.sub_instructions
+                        this.result.sub_instructions = result.sub_instructions
+                    }
+
+                    if (result.customer_instructions === null) {
+                        this.addNewTaskForm.customer_message = ''
+                        this.result.customer_instructions = ''
+                    } else {
+                        this.addNewTaskForm.customer_message = result.customer_instructions
+                        this.result.customer_instructions = result.customer_instructions
+                    }
+
+                    this.addNewTaskForm.customer_id = this.bid.customer_id
+
+                    this.addNewTaskForm.item_id = result.item_id
+
+                    this.priceChange = false
+                    this.messageChange = false
+                    this.taskResults = []
                 }
-
-                this.addNewTaskForm.qty = 1
-                this.result.quantity = 1
-
-                // Quantity Unit
-                if (result.qtyUnit !== null) {
-                    this.addNewTaskForm.qtyUnit = result.qtyUnit
-                    this.result.quantityUnit = result.qtyUnit
-                } else {
-                    this.addNewTaskForm.qtyUnit = ''
-                    this.result.quantityUnit = ''
-                }
-
-                // Sub price
-                if (result.proposed_sub_price === null) {
-                    this.addNewTaskForm.subTaskPrice = 0
-                    this.result.standardSubTaskPrice = 0
-                } else {
-                    this.addNewTaskForm.subTaskPrice = result.proposed_sub_price
-                    this.result.standardSubTaskPrice = result.proposed_sub_price
-                }
-
-                // Sub Instructions
-                if (result.sub_instructions === null) {
-                    this.addNewTaskForm.sub_message = ''
-                    this.result.sub_instructions = ''
-                } else {
-                    this.addNewTaskForm.sub_message = result.sub_instructions
-                    this.result.sub_instructions = result.sub_instructions
-                }
-
-                // Sub price
-                if (result.customer_instructions === null) {
-                    this.addNewTaskForm.customer_message = ''
-                    this.result.customer_instructions = ''
-                } else {
-                    this.addNewTaskForm.customer_message = result.customer_instructions
-                    this.result.customer_instructions = result.customer_instructions
-                }
-
-                this.addNewTaskForm.customer_id = this.bid.customer_id
-
-                this.addNewTaskForm.item_id = result.item_id
-
-                this.priceChange = false
-                this.messageChange = false
-                this.taskResults = []
             },
             clearTaskResults() {
                 this.taskResults = []
@@ -755,7 +667,7 @@
                 this.addNewTaskForm.updateTask = false
                 this.addNewTaskForm.createNew = true
                 this.addNewTaskToBid()
-                this.goToTop();
+                // this.goToTop();
             },
 
             goToTop() {
@@ -763,7 +675,6 @@
             },
 
             changeTask(message) {
-                this.addingTheTask = true;
                 let taskIsNewOrNeedsToBeAdded = {
                     'New': true,
                     'Add': true
@@ -808,21 +719,59 @@
                 }
             },
             async addNewTask() {
-                this.overlay = true;
-                // TODO:: I want task submitted varaiable to be true after the addNewTaskToBid method is caled
-                try {
-                    this.addTask = true;
-                    await GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm)
-                    this.taskSubmitted = true
-                    this.overlay = false;
-                    this.setDefaultStartDate();
-                    this.goBack();
-                } catch (error) {
-                    console.log(error)
-                    this.overlay = false;
-                    this.addingTheTask = false;
+                if (
+                    this.quantityIsGreaterThanZero()
+                    && this.taskNameExists()
+                    && this.taskPriceIsNotEmpty()
+                ) {
+                    if (this.selected.text) {
+                        this.addNewTaskForm.taskName = this.selected.text
+                    } else {
+                        this.addNewTaskForm.taskName = this.selected
+                    }
+                    this.overlay = true;
+                    // TODO:: I want task submitted variable to be true after the addNewTaskToBid method is called
+                    try {
+                        this.addTask = true;
+                        this.addingTheTask = true;
+                        await GeneralContractor.addNewTaskToBid(this.bid, this.addNewTaskForm);
+                        this.taskSubmitted = true;
+                        this.overlay = false;
+                        this.setDefaultStartDate();
+                        this.goBack();
+                    } catch (error) {
+                        console.log(error);
+                        this.overlay = false;
+                        this.addingTheTask = false;
+                    }
+                    this.addTask = false;
                 }
-                this.addTask = false
+            },
+            taskNameExists() {
+                return (this.selected !== null && this.selected.length > 0) || (this.selected && this.selected.text && this.selected.text.length > 0);
+            },
+            taskPriceIsNotEmpty() {
+                return this.addNewTaskForm.taskPrice.length > 0
+            },
+            quantityIsGreaterThanZeroRule() {
+                return this.quantityIsGreaterThanZero() || 'Quantity Must Be Greater Than Zero'
+            },
+            taskNameExistsRule() {
+                return this.taskNameExists() || 'Must Have A Task Name'
+            },
+            taskPriceIsNotEmptyRule() {
+                return this.taskPriceIsNotEmpty() || 'Task Price Cannot Be Empty'
+            },
+            quantityIsGreaterThanZero() {
+                if (
+                    this.addNewTaskForm.qty < 1
+                    || this.addNewTaskForm.qty === '0'
+                    || this.addNewTaskForm.qty === ''
+                ) {
+                    return false
+                } else {
+                    return true
+                }
             },
             toggleStripePaymentOption() {
                 this.addNewTaskForm.useStripe = !this.addNewTaskForm.useStripe

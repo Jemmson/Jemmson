@@ -69,6 +69,7 @@
                         <v-btn
                                 id="submit"
                                 class="w-full"
+                                text
                                 color="primary"
                                 @click="sendSubInviteToBidOnTask" type="submit"
                                 :disabled="enableSubmit()"
@@ -392,29 +393,18 @@
         computed: {
             taskForSubInvite() {
                 // debugger;
-                return this.jobTaskTask
+                if (this.jobTask) {
+                    return this.jobTaskTask
+                }
             },
             jobTaskNameForSubInvite() {
                 // debugger;
-                return this.jobTaskName
+                if (this.jobTask) {
+                    return this.jobTaskName
+                }
             },
             aResults() {
-                // if (this.results.length > 0) {
-                //     return this.results.filter((sub) => {
-                //         for (let bid of this.jobTask.bid_contractor_job_tasks) {
-                //             // if invited to bid do not show in dropdown list
-                //             if (bid.contractor_id !== sub.id && sub.id !== this.user.id) {
-                //                 return true;
-                //             }
-                //         }
-                //         // do not show self in dropdown list
-                //         // return sub.id !== this.user.id;
-                //     });
-                // }
-                // return [];
                 if (this.results.length > 0) {
-                    // return this.results.filter((sub) => {
-                    // }
                     return this.results
                 } else {
                     return []

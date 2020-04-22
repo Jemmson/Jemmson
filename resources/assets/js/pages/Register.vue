@@ -1,100 +1,108 @@
 <template>
     <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <card>
-                    <h3 class="text-center">Who Are You?</h3>
-                    <div class="row w-full justify-content-between">
-                        <v-btn
-                                class="w-1/2"
-                                color="primary"
-                                ref="customerButton"
-                                :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
-                                v-on:click="userSelected('customer')">Customer
-                        </v-btn>
 
-                        <v-btn
-                                class="w-1/2"
-                                color="primary"
-                                ref="contractorButton"
-                                :class="userTypeSelected === 'contractor' ? 'selected-button' : ''"
-                                v-on:click="userSelected('contractor')">Contractor
-                        </v-btn>
-                    </div>
 
-                    <div v-show="showRegistration">
+        <v-container>
+            <v-card>
+                <v-card-title>Who Are You?</v-card-title>
+                <v-card-actions>
+                    <v-btn
+                            class="w-1/2"
+                            color="primary"
+                            text
+                            ref="customerButton"
+                            :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
+                            v-on:click="userSelected('customer')">Customer
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            class="w-1/2"
+                            color="primary"
+                            text
+                            ref="contractorButton"
+                            :class="userTypeSelected === 'contractor' ? 'selected-button' : ''"
+                            v-on:click="userSelected('contractor')">Contractor
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
 
-                        <hr style="margin-top: 3rem">
+            <div v-show="showRegistration" class="mt-1rem">
+                <v-card>
+                    <v-card-text>
+                        <v-text-field
+                                id="firstName"
+                                v-model="registerForm.first_name"
+                                label="First Name *">
+                        </v-text-field>
+                        <span
+                                ref="emailError"
+                                class="help-block"
+                                v-show="this.registerForm.errors.first_name !== ''">
+                                          {{ this.registerForm.errors.first_name }}
+                        </span>
 
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('first_name')">-->
-                            <label for="firstName" class="pt-1 pt-2">First Name *</label>
-                            <input
-                                    id="firstName"
-                                    type="text"
-                                    name="fname"
-                                    autocomplete="on"
-                                    class="form-control"
-                                    ref="first_name"
-                                    v-model="registerForm.first_name">
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('first_name')"></span>-->
-                            <span class="help-block"
-                                  v-show="registerForm.errors ? registerForm.errors.first_name !== '' : ''">{{ registerForm.errors ? registerForm.errors.first_name : ''}}</span>
-                        </div>
+                        <v-text-field
+                                id="lastName"
+                                v-model="registerForm.last_name"
+                                label="Last Name *"
+                        >
+                        </v-text-field>
+                        <span
+                                ref="emailError"
+                                class="help-block"
+                                v-show="this.registerForm.errors.last_name !== ''">
+                                          {{ this.registerForm.errors.last_name }}
+                        </span>
 
-                        <div class="row">
-                            <label for="lastName" class=" pt-3 pt-2">Last Name *</label>
-                            <input id="lastName"
-                                   name="lname"
-                                   autocomplete="on"
-                                   type="text" class="form-control "
-                                   v-model="registerForm.last_name">
-                            <span class="help-block" v-show="registerForm.errors.last_name !== ''">{{registerForm.errors.last_name}}</span>
-                        </div>
+                        <v-text-field
+                                id="email"
+                                v-model="registerForm.email"
+                                label="Email *"
+                        >
+                        </v-text-field>
+                        <span
+                                ref="emailError"
+                                class="help-block"
+                                v-show="this.registerForm.errors.email !== ''">
+                                          {{ this.registerForm.errors.email }}
+                        </span>
 
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="email" class=" pt-3 pt-2">E-Mail Address *</label>
-                            <input id="email"
-                                   name="email"
-                                   autocomplete="on"
-                                   type="text" class="form-control "
-                                   v-model="registerForm.email">
-                            <span class="help-block" v-show="registerForm.errors.email !== ''">{{registerForm.errors.email}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
+                        <v-text-field
+                                id="companyName"
+                                v-model="registerForm.companyName"
+                                label="Company Name *"
+                                v-if="registerForm.usertype === 'contractor'"
+                        >
+                        </v-text-field>
+                        <span
+                                ref="emailError"
+                                class="help-block"
+                                v-show="this.registerForm.errors.companyName !== ''">
+                                          {{ this.registerForm.errors.companyName }}
+                        </span>
 
-                        <div class="row" v-if="registerForm.usertype === 'contractor'">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="companyName" class=" pt-3 pt-2">Company Name *</label>
-                            <input id="companyName"
-                                   name="companyname"
-                                   autocomplete="on"
-                                   type="text" class="form-control "
-                                   v-model="registerForm.companyName">
-                            <span class="help-block" v-show="registerForm.errors.companyName !== ''">{{registerForm.errors.companyName}}</span>
-                            <add-license-box
-                                    width="100%"
-                                    @add="addLicenses($event)"
-                            ></add-license-box>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
+                        <add-license-box
+                                width="100%"
+                                @add="addLicenses($event)"
+                                v-if="registerForm.usertype === 'contractor'"
+                        ></add-license-box>
 
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="phoneNumber" class=" pt-3 pt-2">Mobile Phone Number *</label>
-                            <div v-show="phoneFormatError" class="formatErrorLabel">The phone number must be 10
-                                numbers
-                            </div>
-                            <input id="phoneNumber"
-                                   type="text"
-                                   name="phone"
-                                   autocomplete="on"
-                                   :disabled="loading"
-                                   class="form-control "
-                                   @blur="validateMobileNumber($event.target.value)"
-                                   @keyup="filterPhone"
-                                   v-model="registerForm.phoneNumber">
+                        <div>
+                            <v-text-field
+                                    id="phoneNumber"
+                                    v-model="registerForm.phoneNumber"
+                                    label="Mobile Phone Number *"
+                                    :disabled="loading"
+                                    @blur="validateMobileNumber($event.target.value)"
+                                    @keyup="filterPhone"
+                            >
+                            </v-text-field>
+                            <span
+                                    ref="emailError"
+                                    class="help-block"
+                                    v-show="this.registerForm.errors.phoneNumber !== ''">
+                                          {{ this.registerForm.errors.phoneNumber  }}
+                        </span>
                             <v-progress-linear
                                     :active="loading"
                                     :indeterminate="loading"
@@ -113,110 +121,91 @@
                             <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
                         </div>
 
+                        <input type="hidden" name="street_number" id="street_number">
+                        <v-text-field
+                                id="route"
+                                v-model="registerForm.addressLine1"
+                                label="Address Line 1 *"
+                        >
+                        </v-text-field>
+                        <span class="help-block" v-show="registerForm.errors.addressLine1 !== ''">{{registerForm.errors.addressLine1}}</span>
 
-                        <div class="row">
-                            <input type="hidden" name="street_number" id="street_number">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="route" class=" pt-3 pt-2">Address Line 1 *</label>
-                            <input id="route"
-                                   name="addressLine1"
-                                   autocomplete="on"
-                                   type="text" class="form-control"
-                                   v-model="registerForm.addressLine1">
-                            <span class="help-block" v-show="registerForm.errors.addressLine1 !== ''">{{registerForm.errors.addressLine1}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="addressLine2" class=" pt-3 pt-2">Address Line 2</label>
-                            <input id="addressLine2"
-                                   name="addressLine2"
-                                   autocomplete="on"
-                                   type="text" class="form-control"
-                                   v-model="registerForm.addressLine2">
-                            <span class="help-block" v-show="registerForm.errors.addressLine2 !== ''">{{registerForm.errors.addressLine2}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="administrative_area_level_1" class=" pt-3 pt-2">City *</label>
-                            <input id="administrative_area_level_1"
-                                   name="city"
-                                   autocomplete="on"
-                                   type="text" class="form-control "
-                                   v-model="registerForm.city">
-                            <span class="help-block" v-show="registerForm.errors.city !== ''">{{registerForm.errors.city}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="locality" class=" pt-3 pt-2">State *</label>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    name="state"
-                                    id="locality"
-                                    v-model="registerForm.state">
-                            <span class="help-block" v-show="registerForm.errors.state !== ''">{{registerForm.errors.state}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="postal_code" class=" pt-3 pt-2">Zip Code *</label>
-                            <input id="postal_code"
-                                   v-mask="'#####-####'"
-                                   name="zip"
-                                   autocomplete="on"
-                                   type="text" class="form-control "
-                                   v-model="registerForm.zip">
-                            <span class="help-block"
-                                  v-show="registerForm.errors.zip !== ''">{{registerForm.errors.zip}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
+                        <v-text-field
+                                id="addressLine2"
+                                v-model="registerForm.addressLine2"
+                                label="Address Line 2 *"
+                        >
+                        </v-text-field>
+                        <span class="help-block" v-show="registerForm.errors.addressLine2 !== ''">{{registerForm.errors.addressLine2}}</span>
 
-                        <hr>
-                        <h5 class="capitalize text-center font-bold red--text fa-1x">Password must be atleast 6
-                            characters long</h5>
+                        <v-text-field
+                                id="administrative_area_level_1"
+                                v-model="registerForm.city"
+                                label="City *"
+                        >
+                        </v-text-field>
+                        <span class="help-block"
+                              v-show="registerForm.errors.city !== ''">{{registerForm.errors.city}}</span>
 
-                        <div class="row">
-                            <!--            <div class="flex flex-col mt-2 mb-2" :class="{'has-error': registerForm.errors.has('email')">-->
-                            <label for="password"
-                                   class=" pt-3 pt-2">Password *</label>
-                            <input id="password"
-                                   type="password" class="form-control "
-                                   v-model="registerForm.password">
-                            <span class="help-block" v-show="registerForm.errors.password !== ''">{{registerForm.errors.password}}</span>
-                            <!--                <span class="help-block" v-show="registerForm.errors.has('email')"></span>-->
-                        </div>
+                        <v-text-field
+                                id="locality"
+                                v-model="registerForm.state"
+                                label="State *"
+                        >
+                        </v-text-field>
+                        <span class="help-block"
+                              v-show="registerForm.errors.state !== ''">{{registerForm.errors.state}}</span>
 
-                        <div class="row">
-                            <label for="password_confirmation" class=" pt-3 pt-2">Confirm
-                                Password *</label>
-                            <input id="password_confirmation"
-                                   @keyup="verifyPassword()"
-                                   type="password" class="form-control "
-                                   v-model="registerForm.password_confirmation">
-                            <span class="help-block" v-show="registerForm.errors.password_confirmation !== ''">{{registerForm.errors.password_confirmation}}</span>
-                        </div>
+                        <v-text-field
+                                id="postal_code"
+                                v-model="registerForm.zip"
+                                label="Zip Code *"
+                        >
+                        </v-text-field>
+                        <span class="help-block"
+                              v-show="registerForm.errors.zip !== ''">{{registerForm.errors.zip}}</span>
+
+                        <v-text-field
+                                :type="showPassword ? 'text' : 'password'"
+                                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                @click:append="showPassword = !showPassword"
+                                id="password"
+                                v-model="registerForm.password"
+                                label="Password *"
+                        >
+                        </v-text-field>
+                        <span class="help-block" v-show="registerForm.errors.password !== ''">{{registerForm.errors.password}}</span>
+
+                        <v-text-field
+                                :type="showConfirmPassword ? 'text' : 'password'"
+                                :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                @click:append="showConfirmPassword = !showConfirmPassword"
+                                id="password_confirmation"
+                                v-model="registerForm.password_confirmation"
+                                label="Confirm Password *"
+                        >
+                        </v-text-field>
+                        <span class="help-block" v-show="registerForm.errors.password_confirmation !== ''">{{registerForm.errors.password_confirmation}}</span>
 
                         <hr style="margin-top: 3rem">
 
-                        <div class="row pt-3 pt-2 mb-2">
-                            <input
-                                    type="checkbox"
+                        <v-switch
+                                v-model="registerForm.terms"
+                                label="I Accept The Terms Of Service *"
+                        ></v-switch>
+                        <a href="/terms" target="_blank">Terms</a>
+                        <span class="help-block"
+                              v-show="registerForm.errors.terms">You Must Accept The Terms Of Service</span>
 
-                                    class="mr-2"
-                                    name="terms"
-                                    style="align-self: center;"
-                                    v-model="registerForm.terms">I Accept The
-                            <a href="/terms" target="_blank">Terms Of Service *</a>
-                            <span class="help-block" v-show="registerForm.errors.terms">You Must Accept The Terms Of Service</span>
-                        </div>
+                    </v-card-text>
 
+                    <v-card-actions>
                         <v-btn
                                 class="w-full"
                                 color="primary"
-                                id="register" name=register
+                                id="register"
+                                name=register
+                                text
                                 @click.prevent="register"
                                 :disabled="registerForm.disabled">
                             <span v-if="registerForm.busy">
@@ -226,17 +215,13 @@
                                 <i class="fa fa-btn fa-check-circle mr-2"></i>Register
                             </span>
                         </v-btn>
-
-                        <div style="height: 10rem; width: 100%">
-
-                        </div>
+                    </v-card-actions>
 
 
-                    </div>
-
-                </card>
+                </v-card>
             </div>
-        </div>
+
+        </v-container>
 
         <v-overlay :value="overlay">
             <v-progress-circular indeterminate size="64"></v-progress-circular>
@@ -260,6 +245,8 @@
         },
         data() {
             return {
+                showPassword: false,
+                showConfirmPassword: false,
                 registerForm: {
                     first_name: '',
                     last_name: '',

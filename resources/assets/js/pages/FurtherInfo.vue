@@ -1,265 +1,219 @@
 <template>
 
-    <div class="container">
-<!--        <v-overlay :value="overlay">-->
-<!--            <v-progress-circular indeterminate size="64"></v-progress-circular>-->
-<!--        </v-overlay>-->
-        <div class="row">
-            <div class="col-12 mb-2">
-                <icon-header v-if="isContractor" icon="settings"
-                             mainHeader="Register Your Company"
-                             subHeader="Additional information needed">
-                </icon-header>
-                <icon-header v-if="!isContractor" icon="settings"
-                             mainHeader="Additional Information"
-                             subHeader="Additional information needed">
-                </icon-header>
-            </div>
-            <div class="col-12">
-                <card class="mb-2">
-                    <form>
-                        <div class="form-group" :class="{'has-error': form.errors.has('email')}">
-                            <label for="email">Update Login Email: *</label>
-                            <div>
-                                <input id="email" type="text" class="form-control" name="email" v-model="form.email"
-                                       autofocus required>
-                                <span ref="emailError" class="help-block" v-show="form.errors.has('email')">
+    <v-container>
+        <v-card>
+            <v-card-title v-if="isContractor">Register Your Company</v-card-title>
+            <v-card-title v-if="!isContractor">Additional Information</v-card-title>
+            <v-card-subtitle>Additional information needed</v-card-subtitle>
+            
+            <v-card-text>
+                <v-text-field
+                    id="email"
+                    ref="email"
+                    v-model="form.email"
+                    :class="{'has-error': form.errors.has('email')}"
+                    label="Update Login Email: *"
+                >
+                </v-text-field>
+                <span
+                        ref="emailError"
+                        class="help-block"
+                        v-show="form.errors.has('email')">
                   {{ form.errors.get('email') }}
                 </span>
-                            </div>
-                        </div>
 
-                        <!-- Name -->
-                        <div class="form-group"
-                             :class="{'has-error': (form.errors.has('first_name') || form.errors.has('last_name'))}">
-                            <label for="first_name">First Name *</label>
-                            <div>
-                                <input id="first_name" type="text" class="form-control" name="name"
-                                       v-model="form.first_name" required>
-                                <span ref="first_name_error" class="help-block" v-show="form.errors.has('name')">
-                  {{ form.errors.get('first_name') }}
+                <v-text-field
+                        id="first_name"
+                        ref="first_name"
+                        v-model="form.first_name"
+                        :class="{'has-error': form.errors.has('name')}"
+                        label="First Name: *"
+                >
+                </v-text-field>
+                <span ref="emailError" class="help-block" v-show="form.errors.has('name')">
+                  {{ form.errors.get('name') }}
                 </span>
-                            </div>
-                            <label for="last_name">Last Name *</label>
-                            <div>
-                                <input id="last_name" type="text" class="form-control" name="name"
-                                       v-model="form.last_name" required>
-                                <span ref="last_name_error" class="help-block" v-show="form.errors.has('name')">
+
+                <v-text-field
+                        id="last_name"
+                        ref="last_name"
+                        v-model="form.last_name"
+                        :class="{'has-error': form.errors.has('last_name')}"
+                        label="Last Name: *"
+                >
+                </v-text-field>
+                <span ref="emailError" class="help-block" v-show="form.errors.has('last_name')">
                   {{ form.errors.get('last_name') }}
                 </span>
-                            </div>
-                        </div>
 
-                        <!-- Company Name -->
-                        <div class="form-group" :class="{'has-error': form.errors.has('company_name')}"
-                             v-if="isContractor">
-                            <label for="company_name">Company Name *</label>
-                            <div class="">
-                                <input id="company_name" type="text" class="form-control" name="company_name"
-                                       v-model="form.company_name">
-                                <span ref="companyNameError" class="help-block"
-                                      v-show="form.errors.has('company_name')">
+                <v-text-field
+                        v-if="isContractor"
+                        id="company_name"
+                        ref="company_name"
+                        v-model="form.company_name"
+                        :class="{'has-error': form.errors.has('company_name')}"
+                        label="Company Name: *"
+                >
+                </v-text-field>
+                <span v-if="isContractor" ref="emailError" class="help-block" v-show="form.errors.has('company_name')">
                   {{ form.errors.get('company_name') }}
                 </span>
-                            </div>
-                        </div>
-
-                        <!-- Phone Number -->
-                        <div class="form-group" :class="{'has-error': form.errors.has('phone_number')}">
-                            <label for="phone">Mobile Phone Number *</label>
-                            <input
-                                    type="tel" id="phone"
-                                    :disabled="loading"
-                                    class="form-control"
-                                    name="phone_number"
-                                    maxlength="10"
-                                    v-model="form.phone_number"
-                                    @blur="validateMobileNumber($event.target.value)"
-                                    @keyup="filterPhone">
-                            <div v-if="checkThatNumberIsMobile()"
-                                 style="color: green">{{ this.getMobileValidResponse[1] }}
-                            </div>
-                            <div v-if="checkLandLineNumber()" style="color: red">
-                                {{ this.getMobileValidResponse[1] }}
-                            </div>
-                            <span ref="phoneNumberError" class="help-block"
-                                  v-show="form.errors.has('phone_number')">
+                
+                <v-text-field
+                        id="phone_number"
+                        ref="phone_number"
+                        maxlength="10"
+                        v-model="form.phone_number"
+                        :class="{'has-error': form.errors.has('phone_number')}"
+                        label="Mobile Phone Number: *"
+                        @blur="validateMobileNumber($event.target.value)"
+                        @keyup="filterPhone"
+                >
+                </v-text-field>
+                <span
+                        ref="emailError"
+                        class="help-block"
+                        v-show="form.errors.has('phone_number')">
+                    {{ form.errors.get('phone_number') }}
+                </span>
+                <div v-if="checkThatNumberIsMobile()"
+                style="color: green">{{ this.getMobileValidResponse[1] }}
+                </div>
+                <div v-if="checkLandLineNumber()" style="color: red">
+                    {{ this.getMobileValidResponse[1] }}
+                </div>
+                <span ref="phoneNumberError" class="help-block"
+                      v-show="form.errors.has('phone_number')">
                                         {{ form.errors.get('phone_number') }}
                                 </span>
-                            <v-progress-linear
-                                    :active="loading"
-                                    :indeterminate="loading"
-                                    absolute
-                                    bottom
-                                    color="deep-purple accent-4"
-                            ></v-progress-linear>
-                        </div>
+                <v-progress-linear
+                        :active="loading"
+                        :indeterminate="loading"
+                        absolute
+                        bottom
+                        color="deep-purple accent-4"
+                ></v-progress-linear>
 
 
-                        <!-- Address Line 1 -->
-                        <div class="form-group" :class="{'has-error': form.errors.has('address_line_1')}">
-                            <input type="hidden" name="street_number" id="street_number">
-                            <label for="route">Address Line 1 *</label>
-                            <div class="">
-                                <input id="route"
-                                       name="addressLine1"
-                                       autocomplete="on"
-                                       type="text" class="form-control"
-                                       v-model="form.address_line_1"
-                                >
-                                <span ref="addressLine1Error" class="help-block"
-                                      v-show="form.errors.has('address_line_1')">
-                  {{ form.errors.get('address_line_1') }}
-                </span>
-                            </div>
-                        </div>
+                <input type="hidden" name="street_number" id="street_number">
+                <v-text-field
+                        id="route"
+                        :class="{'has-error': form.errors.has('address_line_1')}"
+                        v-model="form.address_line_1"
+                        label="Address Line 1 *"
+                >
+                </v-text-field>
+                <span ref="addressLine1Error" class="help-block" v-show="form.errors.has('address_line_1')">{{ form.errors.get('address_line_1') }}</span>
 
-                        <!-- Address Line 2 -->
-                        <div class="form-group">
-                            <label for="addressLine2">Address Line 2</label>
-                            <div class="">
-                                <input
-                                        id="addressLine2"
-                                        name="addressLine2"
-                                        autocomplete="on"
-                                        type="text" class="form-control"
-                                        v-model="form.address_line_2">
-                            </div>
-                        </div>
+                <v-text-field
+                        id="addressLine2"
+                        v-model="form.address_line_2"
+                        label="Address Line 2 *"
+                >
+                </v-text-field>
 
-                        <!-- City -->
-                        <div class="form-group" :class="{'has-error': form.errors.has('city')}">
-                            <label for="administrative_area_level_1">City *</label>
-                            <div class="">
-                                <input
-                                        id="administrative_area_level_1"
-                                        name="city"
-                                        autocomplete="on"
-                                        type="text" class="form-control "
-                                        v-model="form.city">
-                                <span ref="cityError" class="help-block" v-show="form.errors.has('city')">
-                  {{ form.errors.get('city') }}
-                </span>
-                            </div>
-                        </div>
+                <v-text-field
+                        id="administrative_area_level_1"
+                        :class="{'has-error': form.errors.has('city')}"
+                        v-model="form.city"
+                        label="City *"
+                >
+                </v-text-field>
+                <span ref="cityError" class="help-block" v-show="form.errors.has('city')">{{ form.errors.get('city') }}</span>
 
-                        <!-- State -->
+                <v-text-field
+                        id="locality"
+                        :class="{'has-error': form.errors.has('state')}"
+                        v-model="form.state"
+                        label="State *"
+                >
+                </v-text-field>
+                <span ref="stateError" class="help-block" v-show="form.errors.has('state')">{{ form.errors.get('state') }}</span>
 
-                        <div class="form-group" :class="{'has-error': form.errors.has('state')}">
-                            <label for="locality" style="font-size: 1rem">State *</label>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    name="state"
-                                    id="locality"
-                                    v-model="form.state">
-                            <span ref="stateError" class="help-block" v-show="form.errors.has('state')">
-                {{ form.errors.get('state') }}
-              </span>
-                        </div>
+                <v-text-field
+                        id="postal_code"
+                        :class="{'has-error': form.errors.has('zip')}"
+                        v-model="form.zip"
+                        label="Zip Code *"
+                >
+                </v-text-field>
+                <span ref="zipError" class="help-block" v-show="form.errors.has('zip')">{{ form.errors.get('zip') }}</span>
 
-                        <!-- Zip Code -->
-                        <div class="form-group" :class="{'has-error': form.errors.has('zip')}">
-                            <label for="postal_code">ZipCode *</label>
+                <v-textarea
+                        v-if="!isContractor"
+                        v-model="form.notes"
+                        :auto-grow="true"
+                        :clearable="true"
+                        label="General Instructions For All Contractor"
+                ></v-textarea>
 
-                            <input
-                                    id="postal_code"
-                                    name="zip"
-                                    autocomplete="on"
-                                    type="text" class="form-control "
-                                    v-model="form.zip">
-                            <span ref="zipError" class="help-block" v-show="form.errors.has('zip')">
-                {{ form.errors.get('zip') }}
-              </span>
-                        </div>
+                <div v-if="isContractor">
 
-                        <!-- Notes -->
-                        <div class="form-group" v-if="!isContractor">
-                            <label for="notes">General Instructions For All Contractors</label>
-                            <div class="">
-                <textarea name="notes" id="notes" v-model="form.notes" cols="30" rows="10"
-                          class="form-control"></textarea>
-                            </div>
-                        </div>
+                    <add-license-box
+                            @add="addLicenses($event)"
+                    >
+                    </add-license-box>
+                    
+                </div>
 
 
-                        <div v-if="isContractor">
+                <v-text-field
+                        id="password"
+                        :type="showPassword ? 'text' : 'password'"
+                        v-model="form.password"
+                        label="Password *"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        @click:append="showPassword = !showPassword"
+                        :class="{'has-error': form.errors.has('password')}"
+                >
+                </v-text-field>
+                <span class="help-block" v-show="form.errors.has('password')">{{ form.errors.get('password') }}</span>
 
-                            <add-license-box
-                                    @add="addLicenses($event)"
-                            >
-                            </add-license-box>
-
-                        </div>
-
-                        <hr>
-                        <h5 class="capitalize text-center font-bold red--text fa-1x">Password must be atleast 6 characters long</h5>
-
-                        <h3>Create Password</h3>
-                        <div class="update_password" style="">
-                            <!-- Update password -->
-                            <div class="form-group" :class="{'has-error': form.errors.has('password')}">
-                                <label for="password">Password *</label>
-
-                                <div class="">
-                                    <input id="password" class="form-control" type="password" name="password"
-                                           ref="password"
-                                           v-model="form.password">
-                                    <span class="help-block" v-show="form.errors.has('password')">
-                      {{ form.errors.get('password') }}
-                    </span>
-                                </div>
-                            </div>
-
-                            <div class="form-group" :class="{'has-error': form.errors.has('password_confirmation')}">
-                                <label for="password_confirmation">Confirm Password *</label>
-
-                                <div class="">
-                                    <input id="password_confirmation" class="form-control" type="password"
-                                           name="password_confirmation"
-                                           ref="password_confirmation" v-model="form.password_confirmation"
-                                           @keyup="confirmPassword">
-                                    <span class="help-block" v-show="form.errors.has('password_confirmation')">
-                      {{ form.errors.get('password_confirmation') }}
-                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <hr style="margin-top: 2rem;">
-                        <div class="row mb-1rem"
-                             style="margin-left: 0rem; margin-right: 0rem;"
-                             :class="{'has-error': form.errors.has('terms')}">
-                            <input
-                                    type="checkbox"
-                                    class="mr-2"
-                                    name="terms"
-                                    style="align-self: center;"
-                                    @change="terms()">I Accept The
-                            <a href="/terms"
-                               style="margin-left: .2rem;"
-                               target="_blank"> Terms Of Service *</a>
-                            <span class="help-block"
-                                  v-show="form.errors.has('terms')">
-                                {{ form.errors.get('terms') }}</span>
-                        </div>
+                <v-text-field
+                        id="password_confirmation"
+                        :type="showConfirmPassword ? 'text' : 'password'"
+                        v-model="form.password_confirmation"
+                        :class="{'has-error': form.errors.has('password_confirmation')}"
+                        label="Confirm Password *"
+                        :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        @click:append="showConfirmPassword = !showConfirmPassword"
+                        @keyup="confirmPassword"
+                >
+                </v-text-field>
+                <span class="help-block" v-show="form.errors.has('password_confirmation')">{{ form.errors.get('password_confirmation') }}</span>
 
 
-                        <v-btn
-                                class="w-full"
-                                color="primary"
-                                type="submit"
-                                name="submit"
-                                @click.prevent="submitFurtherInfo()"
-                                :disabled="checkValidData()"
-                                :loading="overlay"
-                        >
-                            Register
-                        </v-btn>
-                    </form>
-                </card>
-            </div>
-        </div>
-    </div>
+
+
+                <hr style="margin-top: 3rem">
+
+                <v-switch
+                        v-model="form.terms"
+                        :class="{'has-error': form.errors.has('terms')}"
+                        label="I Accept The Terms Of Service *"
+                ></v-switch>
+                <a href="/terms" target="_blank">Terms</a>
+                <span class="help-block" v-show="form.errors.has('terms')">{{ form.errors.get('terms') }}</span>
+
+                <v-card-actions>
+                    <v-btn
+                            class="w-full"
+                            color="primary"
+                            type="submit"
+                            name="submit"
+                            @click.prevent="submitFurtherInfo()"
+                            :disabled="checkValidData()"
+                            :loading="overlay"
+                    >
+                        Register
+                    </v-btn>
+                </v-card-actions>
+                
+
+            </v-card-text>
+            
+        </v-card>
+    </v-container>
 
 </template>
 
@@ -285,6 +239,8 @@
         },
         data() {
             return {
+                showConfirmPassword: false,
+                showPassword: false,
                 overlay: false,
                 boxArray: [],
                 disabled: {
@@ -551,5 +507,13 @@
         background-color: green;
         margin-bottom: .5rem;
     }
+
+    .help-block {
+        display: block;
+        margin-bottom: 10px;
+        color: red;
+        /*color: lighten(@text-color, 25%); // lighten the text some for contrast*/
+    }
+
 
 </style>

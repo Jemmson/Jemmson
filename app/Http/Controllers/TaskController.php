@@ -381,6 +381,70 @@ class TaskController extends Controller
         return $jobTasks;
     }
 
+    public function show(Request $request)
+    {
+        $this->validateRequest($request, [
+            'message' => 'required|string',
+            'jobTaskId' => 'required|numeric',
+            'actor' => 'required|string'
+        ]);
+
+        $message = $request->message;
+        $jobTaskId = $request->jobTaskId;
+        $actor = $request->actor;
+
+        $jobTask = JobTask::find($jobTaskId);
+        $job = Job::find($jobTask->job_id);
+        $customer = Customer::find($job->customer_id);
+
+        // are there subs for this task?
+
+        //has the job been accepted
+        // check if the contractor_id on the jobtask table equals the contractor_id of the jobs table
+
+
+        if ($actor == 'sub') {
+            $b = new BidContractorJobTask();
+            $contractors = $b->select('contractor_id')->where('job_task_id', '=', $jobTask->job_id)->get();
+            Log::debug("actor: $actor");
+            Log::debug("contractors: $contractors");
+            $jobTask->sub_message = $message;
+            Log::debug("job->contractor_id: $job->contractor_id");
+            Log::debug("jobTask->contractor_id: $jobTask->contractor_id");
+            Log::debug("jobTask->status: $jobTask->status");
+
+            // checks if the job has been accepted then it sends the notification to just that contractor
+            // if the job has not been accepted then the notification gets sent to all subs
+            // who have been triggered to bid on the job
+            if ($job->contractor_id != $jobTask->contractor_id && $jobTask->status == 'bid_task.accepted') {
+                Log::debug("A single contractor has been called");
+                Log::debug("jobTask->contractor_id: $jobTask->contractor_id");
+                $contractor = User::find($jobTask->contractor_id);
+                $contractor->notify(new NotifySubOfUpdatedMessage);
+            } else if (!empty($contractors)) {
+                Log::debug("multiple contractors are being called");
+                Log::debug("contractors: $contractors");
+                foreach ($contractors as $c) {
+                    Log::debug("jobTask->contractor_id: $jobTask->contractor_id");
+                    $contractor = User::find($c->contractor_id);
+                    $contractor->notify(new NotifySubOfUpdatedMessage);
+                }
+            }
+        } else {
+            Log::debug("actor: $actor");
+            $customer = User::find($job->customer_id);
+            $jobTask->customer_message = $message;
+            $customer->notify(new NotifyCustomerOfUpdatedMessage);
+        }
+
+        try {
+            $jobTask->save();
+        } catch (\Excpetion $e) {
+            Log::error('Updating JobTask: ' . $e->getMessage);
+            return 'Updating JobTask: ' . $e->getMessage;
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -513,6 +577,13 @@ class TaskController extends Controller
         } catch (\Excpetion $e) {
             Log::error('Deleteing JobTask: ' . $e->getMessage());
             return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
+        }
+
+//        remove all invites to subs
+        $bcjts = BidContractorJobTask::where('job_task_id', '=', $request->jobTaskId)->get();
+
+        foreach ($bcjts as $bcjt) {
+            $bcjt->delete();
         }
 
         $job->jobTotal();
@@ -1126,8 +1197,6 @@ class TaskController extends Controller
 
     public function updateMessage(Request $request)
     {
-
-
         $this->validateRequest($request, [
             'message' => 'required|string',
             'jobTaskId' => 'required|numeric',
@@ -1184,9 +1253,14 @@ class TaskController extends Controller
 
         try {
             $jobTask->save();
+            return response()->json([
+                'success' => $jobTask
+            ], 200);
         } catch (\Excpetion $e) {
             Log::error('Updating JobTask: ' . $e->getMessage);
-            return 'Updating JobTask: ' . $e->getMessage;
+            return response()->json([
+                'error' => $e->getMessage
+            ], 200);
         }
 
     }
@@ -1324,7 +1398,7 @@ class TaskController extends Controller
 
         if (!empty($task)) {
             $jobTask = new JobTask();
-            $jobTask->createJobTask($request);
+            $jobTask->addJobTask($request);
             if ($task->isTaskAQBLineItem($request->item_id)) {
                 if ($job->hasAQuickbookEstimateBeenCreated()) {
                     $job->updateQuickBooksEstimate($task, $job, $jobTask);
@@ -1338,7 +1412,7 @@ class TaskController extends Controller
             $task = new Task();
             $task->createTask($request);
             $jobTask = new JobTask();
-            $jobTask->addToJobTask($job->id, $task->id, $request);
+            $jobTask->addJobTaskFromNewJob($job->id, $task->id, $request);
 
             $qb = new Quickbook();
             if ($qb->isContractorThatUsesQuickbooks()) {

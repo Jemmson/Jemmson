@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Request;
 
 Route::get('/', 'WebController@index');
 Route::get('/home', 'WebController@index');
-Route::post('/loadFeatures/', 'LoadController@load');
+Route::post('/loadFeatures', 'LoadController@load');
 Route::post('/hooks', 'StripeHooksController@hooks');
 
 Route::get('/loggedIn', 'UserController@loggedIn');
@@ -30,7 +30,7 @@ Route::get('/welcome', 'WelcomeController@show');
 Route::get('/search/{company_name}', 'ContractorController@getContractors');
 
 Route::get('/quickbooks/getAuthUrl/{state}', 'QuickbooksController@getAuthUrl');
-Route::get('/quickbooks/processToken/', 'QuickbooksController@processToken');
+Route::get('/quickbooks/processToken', 'QuickbooksController@processToken');
 Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCompanyInfo');
 Route::post('/register/contractor', 'RegisterController@registerContractor');
 Route::post('/task/addTask', 'TaskController@addTask');
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/bid/tasks/reopen', 'TaskController@reopenTask');
     Route::post('/task/deny', 'TaskController@denyTask');
     Route::post('/task/accept', 'TaskController@accept');
-    Route::post('/jobTask/delete/', 'TaskController@deleteJobTask');
+    Route::post('/jobTask/delete', 'TaskController@deleteJobTask');
     Route::post('/task/image', 'TaskController@uploadTaskImage');
     Route::delete('/task/image/{taskImage}', 'TaskController@deleteImage');
     Route::get('/getAllTaskIdsForJob/{jobId}', 'TaskController@getAllTaskIdsForJob');
@@ -70,6 +70,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/getImagesNotAssociatedToATask/{jobId}', 'TaskImagesController@getImagesNotAssociatedToATask');
     Route::post('/associateImagesToTasks', 'TaskImagesController@associateImagesToTasks');
     Route::get('/jobImages/{id}', 'JobController@jobImages');
+    Route::post('/task/updateMessage', 'TaskController@updateMessage');
 
     Route::post('user/profileImage', 'UserController@uploadProfileImage');
 
@@ -96,7 +97,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('job/cancel', 'JobController@cancelJobBid');
     Route::get('/getContractor/{id}', 'ContractorController@getContractor');
     Route::get('/getCustomer/{id}', 'CustomerController@getCustomer');
-    Route::post('/bid/task/', 'TaskController@updateBidContractorJobTask');
+    Route::post('/bid/task', 'TaskController@updateBidContractorJobTask');
     Route::post('/bidTask', 'TaskController@updateBidContractorJobTask');
     Route::post('/task/finished', 'TaskController@taskHasBeenFinished');
     Route::post('/task/finished/sub', 'TaskController@taskFinishedBySubContractor');
