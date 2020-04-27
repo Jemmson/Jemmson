@@ -1,8 +1,10 @@
 <template>
     <!-- /all bids shown in a list as a customer should see it -->
+
     <div class="container-fluid" :class="getTopMargin()">
 
         <div v-if="bidsContractorSectionPicked" ref="jobs">
+            <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Jobs Page</h2>
             <search-bar>
                 <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
             </search-bar>

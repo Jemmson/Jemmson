@@ -1408,6 +1408,10 @@ class TaskController extends Controller
                     $job->save();
                 }
             }
+            if($request->updateBasePrice){
+                $task->proposed_cust_price = $request->taskPrice;
+                $task->save();
+            }
         } else {
             $task = new Task();
             $task->createTask($request);

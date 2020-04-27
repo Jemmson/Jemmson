@@ -192,13 +192,20 @@
                         :class="{'has-error': form.errors.has('terms')}"
                         label="I Accept The Terms Of Service *"
                 ></v-switch>
-                <a href="/terms" target="_blank">Terms</a>
+                <v-btn
+                        id="terms"
+                        ref="terms"
+                        label="Terms"
+                        @click="$router.push('/terms')"
+                        color="blue"
+                        text="">Terms</v-btn>
                 <span class="help-block" v-show="form.errors.has('terms')">{{ form.errors.get('terms') }}</span>
 
                 <v-card-actions>
                     <v-btn
                             class="w-full"
                             color="primary"
+                            text
                             type="submit"
                             name="submit"
                             @click.prevent="submitFurtherInfo()"

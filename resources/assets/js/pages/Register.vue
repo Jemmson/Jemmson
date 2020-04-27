@@ -193,7 +193,13 @@
                                 v-model="registerForm.terms"
                                 label="I Accept The Terms Of Service *"
                         ></v-switch>
-                        <a href="/terms" target="_blank">Terms</a>
+                        <v-btn
+                                id="terms"
+                                ref="terms"
+                                label="Terms"
+                                @click="goToTerms()"
+                                color="blue"
+                                text="">Terms</v-btn>
                         <span class="help-block"
                               v-show="registerForm.errors.terms">You Must Accept The Terms Of Service</span>
 
@@ -620,6 +626,10 @@
             document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
         },
         methods: {
+
+            goToTerms(){
+              this.$router.push('/terms')
+            },
 
             addLicenses(licenses) {
                 this.registerForm.licenses = []

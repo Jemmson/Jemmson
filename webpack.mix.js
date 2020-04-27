@@ -64,8 +64,8 @@ mix.extend('vuetify', new class {
 //     .copy('node_modules/sweetalert/dist/sweetalert.css', 'public/css/sweetalert.css')
 
 mix.less('resources/assets/less/app.less', 'public/css')
-    // .js('resources/assets/js/app.js', 'public/js')
-    .js('resources/assets/js/app.js', 'public/js').version().browserSync()
+    .js('resources/assets/js/app.js', 'public/js')
+    .version()
     .copy('node_modules/sweetalert2/dist/sweetalert2.min.js', 'public/js/sweetalert.min.js')
     .webpackConfig({
         resolve: {

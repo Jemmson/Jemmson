@@ -125,6 +125,7 @@ function goingToANonAuthorizedPage(path) {
     path === '/howto' ||
     path === '/documentation' ||
     path === '/pricing' ||
+    path === '/terms' ||
     path === '/benefits' ||
     path === '/register' ||
     path === '/registerQuickBooks'

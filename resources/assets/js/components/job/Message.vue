@@ -11,6 +11,7 @@
         <v-btn
                 class="primary mt-1rem"
                 @click="updateMessage()"
+                text
                 :disabled="!shouldSendMessage"
                 :loading="messageIsBeingSent"
         >

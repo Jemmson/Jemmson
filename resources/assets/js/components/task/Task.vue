@@ -20,7 +20,7 @@
                     >
                         {{ jobName(bidTask) }}
                     </v-card-title>
-                    <v-card-subtitle> {{ getLatestStatus() }}</v-card-subtitle>
+                    <v-card-subtitle class="capitalize"> {{ getLatestStatus() }}</v-card-subtitle>
                 </div>
                 <div class="flex flex-end" style="margin-right: 1rem;">
                     <stripe-verification-required
@@ -263,6 +263,7 @@
                                     :disabled="!stripeVerified"
                                     class="w-full mt-1rem"
                                     color="primary"
+                                    text
                                     v-if="showFinishedBtn(bidTask)"
                                     @click="finished(bidTask)"
                                     :loading="disabled.finished">

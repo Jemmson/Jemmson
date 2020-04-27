@@ -6,6 +6,7 @@
             <v-btn
                     class="w-full"
                     color="primary"
+                    text
                     @click.prevent="goBack()">
                 Back
             </v-btn>
@@ -38,6 +39,7 @@
                     <div class="flex w-full btn-spacing">
                         <v-btn
                                 class="w-40"
+                                text
                                 color="red"
                                 @click="showDeleteTaskModal(jTask, index)">
                             DELETE
@@ -46,6 +48,7 @@
                         <v-spacer></v-spacer>
                         <v-btn
                                 class="w-40"
+                                text
                                 color="primary"
                                 @click="goToJobTask(index)">SELECT</v-btn>
                     </div>

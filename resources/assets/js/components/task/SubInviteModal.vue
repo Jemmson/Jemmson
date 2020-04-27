@@ -56,7 +56,6 @@
                             :rules="phoneRules()"
                             :counter="14"
                             label="Mobile Phone Number *"
-                            @change="validateMobileNumber($event)"
                             :error="phoneError()"
                             :error-messages="phoneErrorMessages()"
                             :loading="loading"
@@ -144,6 +143,13 @@
                     this.autoComplete()
                 }
             },
+
+            phone(val){
+                if (val.length === 14) {
+                    this.validateMobileNumber(val)
+                }
+            },
+
             selected(val) {
                 if (val && val !== null) {
                     const filteredComboResult = this.getComboResult(val)
@@ -391,6 +397,11 @@
 
         },
         computed: {
+
+            phone() {
+                return this.initiateBidForSubForm.phone
+            },
+
             taskForSubInvite() {
                 // debugger;
                 if (this.jobTask) {

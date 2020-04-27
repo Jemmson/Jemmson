@@ -1,5 +1,8 @@
 <template>
     <v-container>
+
+        <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Home Page</h2>
+
         <section>
 
 

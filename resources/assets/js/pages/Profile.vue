@@ -36,12 +36,14 @@
                         <v-icon
                                 class="mr-1rem"
                                 color="primary"
+                                text
                                 ref="rotateBtn"
                                 @click="rotateImage()"
                         >mdi-axis-x-rotate-clockwise
                         </v-icon>
                         <v-btn
                                 v-if="imageHasBeenRotated()"
+                                text
                                 :loading="loadingSaveBtn"
                                 @click="saveNewUrl()"
                         >Save
@@ -161,6 +163,9 @@
                         >
                         </v-text-field>
 
+                        <h5 class="green--text tet-center"
+                            v-show="success"
+                        >Successfully Updated</h5>
 
                         <v-card-actions>
                             <v-btn
@@ -168,6 +173,7 @@
                                     color="primary"
                                     name="submit"
                                     id="submit"
+                                    text
                                     dusk="submitBid"
                                     @click.prevent="update()"
                                     :loading="loadingSettings"
@@ -207,12 +213,13 @@
          */
         data() {
             return {
+                success: false,
                 loadingSaveBtn: false,
                 currentPhoto: null,
                 degree: 0,
                 show: {
                     photo: false,
-                    contactInformation: false,
+                    contactInformation: true,
                 },
                 photoUrl: null,
                 valid: false,
@@ -260,11 +267,20 @@
             this.form.fname = this.user.first_name;
             this.form.lname = this.user.last_name;
             this.form.phone = this.user.phone;
-            this.form.addressline1 = this.user.contractor.location.address_line_1;
-            this.form.addressline2 = this.user.contractor.location.address_line_2;
-            this.form.city = this.user.contractor.location.city;
-            this.form.state = this.user.contractor.location.state;
-            this.form.zip = this.user.contractor.location.zip;
+            
+            if (this.user.customer) {
+                this.form.addressline1 = this.user.customer.location.address_line_1;
+                this.form.addressline2 = this.user.customer.location.address_line_2;
+                this.form.city = this.user.customer.location.city;
+                this.form.state = this.user.customer.location.state;
+                this.form.zip = this.user.customer.location.zip;
+            } else {
+                this.form.addressline1 = this.user.contractor.location.address_line_1;
+                this.form.addressline2 = this.user.contractor.location.address_line_2;
+                this.form.city = this.user.contractor.location.city;
+                this.form.state = this.user.contractor.location.state;
+                this.form.zip = this.user.contractor.location.zip;
+            }
 
             this.photoUrl = this.user.photo_url
 
@@ -332,6 +348,7 @@
                 ).then(function (response) {
                     this.photoUrl = response.data;
                     this.loadingPhoto = false;
+                    Bus.$emit('updateUser');
                 }.bind(this)).catch(function (e) {
                     console.log('e', e.message)
                     this.loadingPhoto = false;
@@ -411,10 +428,12 @@
              * Update the user's contact information.
              */
             update() {
+                this.success = false;
                 this.loadingSettings = true;
                 Spark.put('/settings/contact', this.form)
                     .then(() => {
                         Bus.$emit('updateUser');
+                        this.success = true;
                         this.loadingSettings = false;
                     });
             }

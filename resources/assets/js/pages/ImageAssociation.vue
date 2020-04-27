@@ -22,6 +22,7 @@
                         :disabled="!imagesHaveBeenAssociated()"
                         label="Submit"
                         color="primary"
+                        text
                         @click="submitImageTasks()"
                 >Submit
                 </v-btn>

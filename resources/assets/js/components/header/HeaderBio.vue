@@ -17,7 +17,7 @@
 
         <v-btn
                 icon
-                @click="logout()"
+                @click="openDialog()"
         >
             <v-icon>mdi-login</v-icon>
         </v-btn>
@@ -29,61 +29,64 @@
             <v-icon>mdi-settings</v-icon>
         </v-btn>
 
+        <v-dialog
+                v-model="logoutDialog"
+                width="500"
+        >
+            <v-card>
+                <v-card-title class="uppercase">Do you wish to logout?</v-card-title>
+                <v-card-actions>
+                    <v-btn
+                            id="cancel"
+                            ref="cancel"
+                            @click="cancelDialog()"
+                            color="red"
+                            text="">CANCEL
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            id="logout"
+                            ref="logout"
+                            @click="logout()"
+                            color="primary"
+                            text="">LOGOUT
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+
+        </v-dialog>
+
     </v-app-bar>
-
-
-<!--    <div class="container-fluid mb-1rem">-->
-<!--        <div class="row bg-light home-row">-->
-<!--            &lt;!&ndash;            <div class="col-12 pt-3" style="height: 40px;">&ndash;&gt;-->
-<!--            &lt;!&ndash;                <i class="fas fa-search text-white float-left sm-icon"></i>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <i class="far fa-bell text-white float-right sm-icon"></i>&ndash;&gt;-->
-<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--            <div class="col-12" ref="biographical_information">-->
-<!--                &lt;!&ndash;                <img class="profile-pic float-left ml-2"&ndash;&gt;-->
-<!--                &lt;!&ndash;                     src="https://www.skylightsearch.co.uk/wp-content/uploads/2017/01/Hadie-profile-pic-circle-1.png"&ndash;&gt;-->
-<!--                &lt;!&ndash;                     alt="profile pic">&ndash;&gt;-->
-<!--                <div class="profile-details">-->
-<!--                    <h4 class="text-center mt-half-rem" ref="name">{{ name }}</h4>-->
-
-<!--                    <div>-->
-
-<!--                    </div>-->
-
-
-<!--                    <nav class="flex justify-content-around header-border">-->
-<!--                        <section class="" @click="settings()">-->
-<!--&lt;!&ndash;                            <img class="float-left img" src="/img/edit.svg" alt="">&ndash;&gt;-->
-<!--                            <label>Edit Profile</label>-->
-<!--                        </section>-->
-<!--                        <section class="" @click="logout()">-->
-<!--&lt;!&ndash;                            <img id="logout" class="float-left img" src="/img/Logout.svg" alt="">&ndash;&gt;-->
-<!--                            <label for="logout">Log Out</label>-->
-<!--                        </section>-->
-
-<!--                    </nav>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 </template>
 
 <script>
 
-  export default {
-    name: 'HeaderBio',
-    props: {
-      name: String
-    },
-    methods:{
-      logout(){
-        window.location.href = '/logout';
-      },
-      settings(){
-        // window.location.href = '/settings';
-          this.$router.push('/settings')
-      }
+    export default {
+        name: 'HeaderBio',
+        props: {
+            name: String
+        },
+        data() {
+            return {
+                logoutDialog: false
+            }
+        },
+        methods: {
+            logout() {
+                window.location.href = '/logout';
+            },
+            openDialog() {
+                this.logoutDialog = true
+            },
+            cancelDialog() {
+                this.logoutDialog = false
+            },
+            settings() {
+                // window.location.href = '/settings';
+                this.$router.push('/settings')
+            }
+        }
     }
-  }
 </script>
 
 <style scoped>
@@ -100,8 +103,8 @@
         display: flex;
     }
 
-    .justify-content-around{
-        justify-content:space-around!important
+    .justify-content-around {
+        justify-content: space-around !important
     }
 
     /*.flex-1{-webkit-box-flex:1;-ms-flex:1;flex:1}*/
@@ -120,7 +123,7 @@
 
     .header-row {
         margin-top: .65rem;
-        width:100%;
+        width: 100%;
     }
 
     .img {

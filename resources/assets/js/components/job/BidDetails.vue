@@ -32,8 +32,9 @@
                     <v-icon
                             ref="jobTaskNavButton"
                             class="nav-btn-position"
+                            :class="!isCustomer && jobTasksNotifications() ? 'red--text' : null"
                             @click="showSection('jobTask')">mdi-briefcase<span
-                                v-if="getJobTasksLength() > 0">
+                            v-if="getJobTasksLength() > 0">
                                     ({{ getJobTasksLength() }})
                             </span>
                     </v-icon>
@@ -61,6 +62,7 @@
                             ref="job-add-task"
                             v-if="canAddATask() && !isCustomer"
                             class="nav-btn-position"
+                            :class="jobTasksNotifications() ? 'red--text' : null"
                             name="addTaskToBid"
                             id="addTaskToBid"
                             @click="$router.push('/job/add/task')"
@@ -116,14 +118,14 @@
                             <td>Contractor Name:</td>
                             <td class="lookLikeALink">{{ getCompanyName() }}</td>
                         </tr>
-                        <tr v-if="!bidHasBeenSubmitted">
-                            <td>Start Date:</td>
-                            <td>Bid Not Complete</td>
-                        </tr>
-                        <tr v-if="bidHasBeenSubmitted">
-                            <td>Start Date:</td>
-                            <td>{{ agreedStartDate }}</td>
-                        </tr>
+<!--                        <tr v-if="!bidHasBeenSubmitted">-->
+<!--                            <td>Start Date:</td>-->
+<!--                            <td>Bid Not Complete</td>-->
+<!--                        </tr>-->
+<!--                        <tr v-if="bidHasBeenSubmitted">-->
+<!--                            <td>Start Date:</td>-->
+<!--                            <td>{{ agreedStartDate }}</td>-->
+<!--                        </tr>-->
                         <tr v-if="!bidHasBeenSubmitted">
                             <td>Total Bid Price:</td>
                             <td>Bid Not Complete</td>
@@ -174,10 +176,10 @@
                             <td>Customer Name:</td>
                             <td class="lookLikeALink">{{ customerName }}</td>
                         </tr>
-                        <tr>
-                            <td>Start Date:</td>
-                            <td>{{ agreedStartDate }}</td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td>Start Date:</td>-->
+<!--                            <td>{{ agreedStartDate }}</td>-->
+<!--                        </tr>-->
                         <tr>
                             <td>Total Bid Price:</td>
                             <td>
@@ -294,7 +296,7 @@
                                     </div>
                                     <div class="flex space-evenly">
                                         <v-btn
-                                                @click="approveSubsWork(item)"
+                                                @click="approveSubsTask(item)"
                                                 class="btn-size btn-weight"
                                                 :class="i % 2 === 0 ? 'primary--text': 'white--text'"
                                                 text
@@ -362,6 +364,7 @@
                                         id="viewTasks"
                                         class="w-40"
                                         color="primary"
+                                        text
                                         @click.prevent="viewTasks()"
                                 >
                                     View Tasks
@@ -520,6 +523,7 @@
                         <v-btn
                                 v-if="isCustomer"
                                 class="mt-1rem"
+                                text
                                 color="primary"
                                 ref="update_customer_notes_button"
                                 @click="updateGeneralContractorNotes"
@@ -585,10 +589,42 @@
         >
         </stripe>
 
-        <deny-task-modal v-if="!isCustomer"
-                         :job-task="currentJobTask"
-                         :id="currentJobTaskId">
-        </deny-task-modal>
+
+        <v-dialog
+            v-model="denyDialog"
+            width="500"
+        >
+
+            <v-card>
+                <v-card-title class="error--text" v-show="denyForm.error">{{ denyForm.error }}</v-card-title>
+                <v-card-title class="justify-content-between"><div>Deny Sub's Finished Task</div><div>{{ currentJobTask.task === undefined ? '' : currentJobTask.task.name.toUpperCase() }}</div></v-card-title>
+                <v-card-text>
+                    <v-textarea
+                            outlined
+                            v-model="denyForm.message"
+                            :auto-grow="true"
+                            :clearable="true"
+                    ></v-textarea>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn class="w-full"
+                           color="primary"
+                           text
+                           @click.prevent="denyTask"
+                           :loading="disabled.deny"
+                           ref="denyTaskBtn">
+                        Deny Approval
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+
+        </v-dialog>
+
+
+<!--        <deny-task-modal v-if="!isCustomer"-->
+<!--                         :job-task="currentJobTask"-->
+<!--                         :id="currentJobTaskId">-->
+<!--        </deny-task-modal>-->
 
     </v-container>
 </template>
@@ -650,6 +686,17 @@
         },
         data() {
             return {
+                disabled: {
+                    deny: false,
+                    user_id: null,
+                    job_task_id: null
+                },
+                denyForm: {
+                    job_task_id: 0,
+                    message: '',
+                    error: ''
+                },
+                denyDialog: false,
                 show: {
                     jobStepper: false,
                     details: true,
@@ -840,6 +887,61 @@
         },
         methods: {
 
+            getJobTaskId(){
+                if (this.jobTask) {
+                    return this.jobTask.id
+                }
+            },
+
+            async denyTask() {
+                if (this.denyForm.message !== '') {
+                    try {
+                        await axios.post('/task/deny', {
+                            job_task_id: this.currentJobTaskId,
+                            user_id: Spark.state.user.id,
+                            message: this.denyForm.message
+                        })
+                        User.emitChange('bidUpdated')
+                        Vue.toasted.success('Task Denied & Notification Sent')
+                        this.denyDialog = false;
+                        this.denyForm.error = '';
+                    } catch (error) {
+                        error = error.response.data
+                        Vue.toasted.error(error.message)
+                        this.denyForm.error = error.message;
+                        this.denyDialog = false;
+                    }
+                } else {
+                    this.denyForm.error = 'The Message Cannot Be Blank'
+                }
+            },
+
+            jobTasksNotifications() {
+
+                if (this.atleastOneJobTaskExists()) {
+                    return this.subHasInitiatedABid()
+                } else {
+                    return true
+                }
+
+            },
+
+            atleastOneJobTaskExists() {
+                if (this.bid && this.bid.job_tasks) {
+                    return this.bid.job_tasks.length > 0;
+                }
+            },
+
+            subHasInitiatedABid() {
+                if (this.bid && this.bid.job_tasks) {
+                    for (let i = 0; i < this.bid.job_tasks.length; i++) {
+                        if (this.bid.job_tasks[i].sub_statuses.length > 0) {
+                            return this.getLatestSubStatus(this.bid.job_tasks[i]) === 'initiated';
+                        }
+                    }
+                }
+            },
+
             getNumberOfImages() {
                 if (this.getJob() && this.bid.images) {
                     return this.bid.images.length
@@ -901,7 +1003,10 @@
             openDenyTaskForm(item) {
                 this.currentJobTask = item;
                 this.currentJobTaskId = item.id;
-                $('#deny-task-modal_' + item.id).modal('show')
+
+                this.denyDialog = true;
+
+                // $('#deny-task-modal_' + item.id).modal('show')
             },
 
             subHasNotFinishedTask(item) {
@@ -1037,9 +1142,18 @@
                 }
             },
 
-            approveSubsWork(jobTask) {
-                GeneralContractor.approveSubsTask(jobTask)
+            async approveSubsTask(jobTask) {
+                try {
+                    await axios.post('task/approve', {
+                        id: jobTask.id
+                    });
+                    Vue.toasted.success('Task Has Been Approved and Customer Has Been Notified')
+                    Bus.$emit('bidUpdated');
+                } catch (error) {
+                    console.log('error');
+                }
             },
+
 
             jobIsNotFinishedAndNotApproved(item) {
                 if (item) {
@@ -1069,6 +1183,7 @@
                 const latestStatus = this.getLatestJobTaskStatus(task)
                 return latestStatus !== 'general finished work'
                     && latestStatus !== 'sub finished work'
+                    && latestStatus !== 'approved subs work'
                     && latestStatus !== 'paid'
             },
 

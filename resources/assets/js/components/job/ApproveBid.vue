@@ -68,6 +68,7 @@
                         v-if="bidHasNotChanged()"
                         class="w-full mb-half-rem"
                         color="primary"
+                        text
                         @click.prevent="openModal('approveBid')"
                         :loading="disabled.approve"
                         ref="approve">
@@ -76,6 +77,7 @@
 
                 <v-btn
                         v-else
+                        text
                         class="w-full mb-half-rem"
                         color="primary"
                         :disabled="true"
@@ -88,6 +90,7 @@
                 <v-btn
                         class="w-40"
                         color="red"
+                        text
                         @click.prevent="openModal('cancelBid')"
                         :loading="disabled.cancelBid"
                         ref="cancel">
@@ -96,6 +99,7 @@
                 <v-spacer></v-spacer>
                 <v-btn
                         class="w-40"
+                        text
                         color="warning"
                         @click.prevent="openDeclineForm" ref="decline">
                     Change Bid
@@ -118,6 +122,7 @@
                     <v-btn
                             class="w-40"
                             color="primary"
+                            text
                             @click.prevent="declineBid" :loading="disabled.declineBid"
                             ref="declineBid">
                         Change Bid

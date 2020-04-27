@@ -43,6 +43,16 @@ class InitiateBidController extends Controller
             'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
         ]);
 
+
+        if (!$this->jobNameMustBeUniqueForContractor($request->jobName)) {
+            return response()->json(
+                [
+                    'message' => 'A Job With this job name already exists. Job Names must be unique',
+                    'errors' => ['job_creation_failed' => 'A Job With this job name already exists. Job Names must be unique']
+                ], 422);
+        }
+
+
         // validate that the contractor can even create a new job
         $contractor = Auth::user()->contractor()->first();
         if (!$contractor->canCreateNewJob()) {
@@ -127,6 +137,13 @@ class InitiateBidController extends Controller
         return "Bid was created";
 
     }
+
+
+    private function jobNameMustBeUniqueForContractor($jobName)
+    {
+        return is_null(Job::where('job_name', '=', $jobName)->get()->first());
+    }
+
 
     private function updatePaymentType($contractor, $requestPaymentType)
     {

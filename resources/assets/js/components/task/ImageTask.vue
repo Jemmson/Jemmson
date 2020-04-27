@@ -43,6 +43,7 @@
                 <v-btn
                         :disabled="!task"
                         color="primary"
+                        text
                         @click="clearAll()"
                 >
                     Clear All

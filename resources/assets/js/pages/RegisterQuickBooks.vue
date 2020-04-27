@@ -119,6 +119,7 @@
                     <v-btn
                             class="w-40"
                             color="primary"
+                            text
                             ref="edit_btn"
                             @click="sections.editGeneralInfo = true">Edit
                     </v-btn>
@@ -129,12 +130,14 @@
                             class="w-40"
                             color="primary"
                             id="cancel_btn"
+                            text
                             ref="cancel_btn"
                             @click="cancel()">Cancel
                     </v-btn>
                     <v-btn
                             class="w-40"
                             color="primary"
+                            text
                             ref="reset_btn"
                             @click="reset()">Reset
                     </v-btn>

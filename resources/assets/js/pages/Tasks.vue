@@ -1,10 +1,14 @@
 <template>
     <div class="main flex flex-col justify-between mt-1">
+
+        <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Sub Jobs Page</h2>
+
         <div>
             <v-btn
                     @click="connectWithStripe($route.path)"
                     class="w-full mt-6"
                     color="aliceblue"
+                    text
                     elevation="2"
                     single-line
                     sticky

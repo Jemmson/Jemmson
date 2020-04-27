@@ -52,7 +52,7 @@ class TaskFinished extends Notification implements ShouldQueue
             $generalStatus = 'general_finished_work';
             $subStatus = '';
         } else {
-            $custom = "Please review the finished task.";
+            $custom = "Please review the finished task. ";
             $generalStatus = 'sub_finished_work';
             $subStatus = 'finished_job';
         }
@@ -83,14 +83,14 @@ class TaskFinished extends Notification implements ShouldQueue
     {
         if ($this->customer) {
             $custom = "Please approve the task ";
-            $generalStatus = 'general_finished_work';
+            $generalStatus = 'general_finished_work ';
             $subStatus = '';
         } else {
             $custom = "Please review the finished task. ";
-            $generalStatus = 'sub_finished_work';
-            $subStatus = 'finished_job';
+            $generalStatus = 'sub_finished_work ';
+            $subStatus = 'finished_job ';
         }
-        $text = "The task: " . $this->task->name . " has been finished."
+        $text = "The task: " . $this->task->name . " has been finished. "
             . $custom
             . ' View Task '
             . url('/login/mix/' .

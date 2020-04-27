@@ -38,6 +38,7 @@
         <v-btn
                 v-if="needsPayment"
                 :loading="submitted"
+                text
                 color="primary"
                 @click="submit()">
             Pay
@@ -45,6 +46,7 @@
         <v-btn
                 v-if="!needsPayment"
                 :disabled="true"
+                text
                 color="primary">
             Pay
         </v-btn>

@@ -34,6 +34,7 @@ import HowTo from './pages/HowTo'
 import RegisterQuickBooks from './pages/RegisterQuickBooks'
 import Register from './pages/Register'
 import UserAuthorizationPage from './pages/UserAuthorizationPage'
+import Terms from "./pages/Terms";
 // import BidTask from './components/job/BidTask';
 
 
@@ -45,6 +46,10 @@ const routes = [
     // name: 'jobs',
     // component: () =>
     //   import(/* webpackChunkName: "about" */ "./pages/Jobs")
+  },
+  {
+    path: '/terms',
+    component: Terms
   },
   {
     path: '/bids/subs',

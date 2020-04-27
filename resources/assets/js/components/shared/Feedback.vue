@@ -4,6 +4,7 @@
                 fab
                 class="elevation-10"
                 color="primary"
+                text
                 id="feedback"
                 style="position:fixed; bottom: 11px; right: 11px; margin-bottom: 4rem"
                 @click="dialog = true"
@@ -41,6 +42,7 @@
                                             v-if="isContractor()"
                                             class="ma-2 white--text"
                                             color="primary"
+                                            text
                                             to="/initiate-bid"
                                             id="addbtn"
                                     >
@@ -58,6 +60,7 @@
                                             dark v-on="on"
                                             v-if="isContractor() && activeJobsExist()"
                                             color="primary"
+                                            text
                                             class="ma-2 white--text"
                                             @click="showJobs()"
                                     >
@@ -74,6 +77,7 @@
                                     <v-btn
                                             dark v-on="on"
                                             color="primary"
+                                            text
                                             class="ma-2 white--text"
                                             @click="showFeedback()"
                                     >
@@ -130,6 +134,7 @@
                         ></v-textarea>
                         <v-btn
                                 @click="submit"
+                                text
                                 color="primary"
                         >
                             Submit

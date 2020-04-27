@@ -3,7 +3,7 @@
 
 <!--        <pre>{{ user }}</pre>-->
 
-        <div class="h1 text-center">Settings</div>
+        <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Settings</h2>
         <v-card>
             <v-card-actions
                     class="flex flex-col"
@@ -20,6 +20,7 @@
                     >mdi-onepassword
                     </v-icon>
                     <v-icon
+                            v-if="isContractor()"
                             class="nav-btn-position"
                             @click="showSection('subscription')"
                     >mdi-youtube-subscription
@@ -50,6 +51,7 @@
         </section>
 
         <section
+                v-if="isContractor()"
                 v-show="show.subscription"
         >
             <subscription></subscription>
@@ -83,7 +85,7 @@
         data() {
             return {
                 show: {
-                    profile: false,
+                    profile: true,
                     changePassword: false,
                     manageCreditCard: false,
                     subscription: false,
@@ -91,7 +93,13 @@
                 user: this.$attrs.user
             }
         },
+        computed: {
+
+        },
         methods: {
+            isContractor(){
+                return Spark.state.user.usertype === 'contractor'
+            },
             showSection(section) {
                 this.hideAllSections();
                 if (section === 'profile') {

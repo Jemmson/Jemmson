@@ -22,6 +22,11 @@ export default {
     },
 
     currencyMask(price) {
+
+      if (typeof price === 'number') {
+        price = price.toString()
+      }
+
       if (price.length < 6) {
         return '$ .##'
       } else if (price.length === 6) {

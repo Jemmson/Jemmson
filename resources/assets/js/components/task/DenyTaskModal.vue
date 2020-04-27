@@ -29,6 +29,7 @@
                     <div class="form-group">
                         <v-btn class="w-full"
                                color="primary"
+                               text
                                @click.prevent="denyTask"
                                :loading="disabled.deny"
                                ref="denyTaskBtn">

@@ -1,6 +1,8 @@
 <template>
     <v-container>
 
+        <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Job Task Page</h2>
+
         <div class="col-12">
             <v-btn
                     class="w-full primary mb-1rem"
@@ -139,6 +141,12 @@
 
                 <v-card-text v-if="isContractor">
 
+                    <v-card-title
+                            class="error--text"
+                            style="font-size: 12pt;"
+                            v-if="cust_final_price < sub_final_price"
+                    >* The Bid You Accepted Is Higher Than Your Bid Price
+                    </v-card-title>
 
                     <v-list dense>
                         <v-list-item>
@@ -345,7 +353,15 @@
                     :id="jobTask ? 'task-subs-' + jobTask.id : 0"
                     v-if="isGeneral() && jobHasSubs()"
             >
-                <v-card-title>Bids</v-card-title>
+                <div class="flex justify-content-between">
+                    <v-card-title>Bids</v-card-title>
+                    <v-card-title
+                            class="error--text"
+                            style="font-size: 12pt;"
+                            v-if="atleastOneSubHasAHigherBidPrice(jobTask.bid_contractor_job_tasks)"
+                    >* Subs Bid Is Higher Than Your Bid Price
+                    </v-card-title>
+                </div>
                 <v-card-text>
                     <div class="flex justify-content-around">
                         <strong class="uppercase">Sub</strong>
@@ -358,12 +374,22 @@
                          v-for="bid in jobTask.bid_contractor_job_tasks"
                          :key="jobTask ? bid.id : 0">
 
-                        <div class="flex-1 lookLikeALink"
-                             @click="viewContractorInfo(bid.contractor_id)">{{
+                        <v-btn
+                                color="primary"
+                                text
+                                @click="viewContractorInfo(bid.contractor_id)">{{
                             getCompanyName(bid) }}
-                        </div>
-                        <div :class="subPriceHigherThanBidPrice(bid) ? 'bid-price-error flex-1': 'flex-1'"
-                        >$ {{ getBidPrice(bid) }}
+                        </v-btn>
+                        <div>
+                            <div v-if="subPriceHigherThanBidPrice(bid)"
+                                 class="error--text flex-1"
+                            >$ {{ getBidPrice(bid) }} *
+                            </div>
+                            <div
+                                    v-else
+                                    class="flex-1"
+                            >$ {{ getBidPrice(bid) }}
+                            </div>
                         </div>
                         <div>
                             <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
@@ -373,7 +399,7 @@
                                     v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
                                                                     && checkIfBidHasBeenSent(bid)"
                                     @click="acceptSubBidForTask(bid, jobTask)"
-                                    class="primary w-1/2"
+                                    color="primary"
                                     text
                                     :loading="disabled.accept"
                             >
@@ -739,6 +765,17 @@
             }
         },
         methods: {
+
+            atleastOneSubHasAHigherBidPrice(bids) {
+                if (bids) {
+                    for (let i = 0; i < bids.length; i++) {
+                        if (this.subPriceHigherThanBidPrice(bids[i])) {
+                            return true
+                        }
+                    }
+                    return false
+                }
+            },
 
             validateGeneralPriceIsHigherThanSubsPrice() {
 

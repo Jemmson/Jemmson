@@ -15,12 +15,14 @@
                     <v-btn
                             @click="showTheJobTaskDetails('show')"
                             class="uppercase w-40"
+                            text
                             color="show"
                             v-show="!showDetails">show
                     </v-btn>
                     <v-btn
                             @click="showTheJobTaskDetails('hide')"
                             class="uppercase w-40"
+                            text
                             color="show"
                             v-show="showDetails">hide
                     </v-btn>
@@ -72,6 +74,7 @@
                 <v-btn v-if="isContractor()"
                        class="w-40"
                        color="primary"
+                       text
                        v-show="
                             jobTask.status === 'bid_task.reopened' ||
                             bid.status === 'bid.initiated' ||
@@ -106,6 +109,7 @@
                         <span class="label mb-2">Change Task Location</span>
                         <v-btn class="w-40"
                                color="primary"
+                               text
                                @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
                         </v-btn>
@@ -119,6 +123,7 @@
                         <v-btn
                                 class="w-40"
                                 color="primary"
+                                text
                                 @click="openUpdateTaskLocation(jobTask.id)">
                             <i class="fas fa-edit"></i>
                         </v-btn>
@@ -190,6 +195,7 @@
                                         @click="acceptSubBidForTask(bid, jobTask)"
                                         class="w-40"
                                         color="primary"
+                                        text
                                         :loading="disabled.accept">
                                     Accept
                                 </v-btn>
@@ -210,6 +216,7 @@
                 <v-btn
                         class="w-40"
                         color="primary"
+                        text
                         v-if="showDenyBtn(jobTask)" @click="openDenyTaskForm(jobTask.id)">
                     Deny
                 </v-btn>
@@ -217,6 +224,7 @@
                 <v-btn
                         class="w-40"
                         color="red"
+                        text
                         v-if="showDeleteBtn(jobTask)" @click="deleteTask(jobTask)"
                         :loading="disabled.deleteTask">
                     Delete
@@ -226,6 +234,7 @@
                     <v-btn
                             class="w-40"
                             color="primary"
+                            text
                             @click.prevent="openSubInvite(jobTask.id)"
                             v-if="isGeneral() && showSendSubInvite && !checkIfAnyBidHasBeenAccepted(jobTask)">
                         Add A Sub
@@ -236,6 +245,7 @@
                     <v-btn
                             class="w-40"
                             color="primary"
+                            text
                             v-if="showFinishedBtn(jobTask)" @click="finishedTask(jobTask)"
                             :loading="disabled.finished">
                         Click Me When Job Is Finished
@@ -244,6 +254,7 @@
                     <v-btn
                             class="w-40"
                             color="primary"
+                            text
                             v-if="showApproveBtn(jobTask)"
                             @click="approveTaskHasBeenFinished(jobTask)"
                             :loading="disabled.approve">

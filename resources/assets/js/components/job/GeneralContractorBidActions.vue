@@ -11,12 +11,14 @@
                     v-if="jobHasNotBeenSubmittedOrAChangeIsRequested()"
                     ref="submitBid"
                     color="green"
+                    text
                     class="btn btn-normal-green btn-lg w-full"
                     @click="submitBid()"
                     :disabled="disabled.submitBid || disableButton"
                     :loading="disabled.submitBid"
             >
-                Submit Bid
+                <div v-if="bidHasBeenSentBefore()">Resubmit Bid</div>
+                <div v-else>Submit Bid</div>
             </v-btn>
             <div v-else-if="jobIsApproved()">
                 <span class="capitalize w-break"
@@ -134,6 +136,16 @@
             bidHasBeenSent() {
                 if (this.bid && this.bid.status) {
                     return this.bid.status === 'bid.sent'
+                }
+            },
+            bidHasBeenSentBefore() {
+                if (this.bid) {
+                    for (let i = 0; i < this.bid.job_statuses.length; i++) {
+                        if (this.bid.job_statuses[i].status === 'sent') {
+                            return true
+                        }
+                    }
+                    return false
                 }
             },
             // shouldBeSignedUpForStripe() {

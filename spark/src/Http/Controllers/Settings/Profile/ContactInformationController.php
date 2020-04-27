@@ -39,9 +39,8 @@ class ContactInformationController extends Controller
             $location = Auth::user()->customer()->first()->location()->first();
         }
 
-//        dd($location);
-        $location->address_line_1 = $request->address_line_1;
-        $location->address_line_2 = $request->address_line_2;
+        $location->address_line_1 = $request->addressline1;
+        $location->address_line_2 = $request->addressline2;
         $location->city = $request->city;
         $location->state = $request->state;
         $location->zip = $request->zip;

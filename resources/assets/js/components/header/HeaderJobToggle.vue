@@ -18,10 +18,37 @@
 
             <v-btn
                     icon
-                    @click="logout()"
+                    @click="openDialog()"
             >
                 <v-icon>mdi-login</v-icon>
             </v-btn>
+
+            <v-dialog
+                    v-model="logoutDialog"
+                    width="500"
+            >
+                <v-card>
+                    <v-card-title class="uppercase">Do you wish to logout?</v-card-title>
+                    <v-card-actions>
+                        <v-btn
+                                id="cancel"
+                                ref="cancel"
+                                @click="cancelDialog()"
+                                color="red"
+                                text="">CANCEL
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                id="logout"
+                                ref="logout"
+                                @click="logout()"
+                                color="primary"
+                                text="">LOGOUT
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+
+            </v-dialog>
 
             <v-btn
                     @click="settings()"
@@ -72,6 +99,11 @@
         props: {
             name: String
         },
+        data() {
+            return {
+                logoutDialog: false
+            }
+        },
         computed: {
             ...mapState({
                 bidsContractorSectionPicked: state => state.bidsContractorSectionPicked,
@@ -81,6 +113,12 @@
             ...mapMutations([
                 'toggleBidsContractor'
             ]),
+            openDialog() {
+                this.logoutDialog = true
+            },
+            cancelDialog() {
+                this.logoutDialog = false
+            },
             logout(){
                 window.location.href = '/logout';
             },

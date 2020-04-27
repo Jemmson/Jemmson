@@ -24,16 +24,22 @@
                         :value="selected">
                 </v-combobox>
 
-                <v-text-field
-                        v-model="addNewTaskForm.taskPrice"
-                        label="Task Price"
-                        :rules="[
-                            taskPriceIsNotEmptyRule()
-                       ]"
-                        id="custTaskPrice"
-                        v-mask="getCurrencyMask()"
-                        name="taskPrice"
-                        ref="task_price"></v-text-field>
+                <div class="flex justify-content-between">
+                    <v-text-field
+                            type="text"
+                            v-model="addNewTaskForm.taskPrice"
+                            class="input-margins"
+                            id="custTaskPrice"
+                            label="Input Bid Price Here"
+                            @change="formatInput($event)"
+                    ></v-text-field>
+
+                    <v-switch
+                            style="margin-left: 5rem"
+                            v-model="addNewTaskForm.updateBasePrice"
+                            label="Update Base Price"
+                    ></v-switch>
+                </div>
 
                 <v-text-field
                         v-model="addNewTaskForm.qty"
@@ -127,6 +133,7 @@
         },
         data() {
             return {
+                formattedPrice: '',
                 addingTheTask: false,
                 overlay: false,
                 addTask: false,
@@ -164,10 +171,11 @@
                     subTaskPrice: 0,
                     taskExists: '',
                     taskId: 0,  // if -1 then the task did not come from the drop down
-                    taskPrice: 0.00,
+                    taskPrice: '$ 0.00',
                     taskName: '',
                     trackQtyOnHand: true,
                     type: 'Inventory',
+                    updateBasePrice: false,
                     updateTask: false,
                     useStripe: false
                 }),
@@ -203,9 +211,8 @@
                 },
                 dropDownSelectedNameIsDifferent: false,
                 taskResultsChange: false,
-
                 taskResults: [],
-
+                taskPriceAssigned: false,
                 valueChanged: false,
                 dropdownSelected: false,
                 nameExistsInDB: false,
@@ -250,15 +257,29 @@
             }
         },
         methods: {
-
-            getCurrencyMask() {
-                // return '######'
-                if(this.taskPriceIsNotEmpty()){
-                    return this.currencyMask(this.addNewTaskForm.taskPrice);
-                } else {
-                    return '$ .##';
+            formatInput(input) {
+                if (typeof input === 'string') {
+                    const numLength = input.length
+                    let pricef = ''
+                    if (numLength < 3) {
+                        pricef = '.' + input
+                        this.formattedBidPrice = pricef
+                    } else if (numLength > 2) {
+                        let price = ''
+                        for (let i = 0; i < numLength - 2; i++) {
+                            price = price + input[i]
+                        }
+                        pricef = price + '.' + input[numLength - 2] + input[numLength - 1]
+                        this.formattedBidPrice = pricef
+                    }
+                    return pricef
+                } else if (typeof input === 'number') {
+                    let bidPrice = input / 100
+                    this.formattedBidPrice = bidPrice
+                    return bidPrice
                 }
             },
+
 
             setFormData(result) {
                 this.addNewTaskForm.taskName = result.name
@@ -520,9 +541,9 @@
                     if (response.data.length > 0) {
                         // let filteredResults = this.filterResultsSoOnlyTasksNotCurrentlyInJobAreInDropdown(response.data)
                         this.comboResults = this.transformDataForComboBox(response.data);
-                        this.currentTasks = response.data
-                        this.taskResults = response.data
-                        this.showTaskResults = true
+                        this.currentTasks = response.data;
+                        this.taskResults = response.data;
+                        this.showTaskResults = true;
                     } else {
                         // if there are no results returned then the task results array should be empty and
                         // the name does not exist in the database
@@ -568,11 +589,12 @@
 
                     // Task Price
                     if (result.proposed_cust_price === null) {
-                        this.addNewTaskForm.taskPrice = 0
+                        this.addNewTaskForm.taskPrice = "$ 0.00"
                         this.result.standardCustomerTaskPrice = 0
                     } else {
-                        this.addNewTaskForm.taskPrice = result.proposed_cust_price
+                        this.addNewTaskForm.taskPrice = "$ " + result.proposed_cust_price
                         this.result.standardCustomerTaskPrice = result.proposed_cust_price
+                        this.taskPriceAssigned = true
                     }
 
                     this.addNewTaskForm.qty = 1
@@ -751,7 +773,7 @@
                 return (this.selected !== null && this.selected.length > 0) || (this.selected && this.selected.text && this.selected.text.length > 0);
             },
             taskPriceIsNotEmpty() {
-                return this.addNewTaskForm.taskPrice.length > 0
+                return this.addNewTaskForm.taskPrice.toString().length > 0
             },
             quantityIsGreaterThanZeroRule() {
                 return this.quantityIsGreaterThanZero() || 'Quantity Must Be Greater Than Zero'

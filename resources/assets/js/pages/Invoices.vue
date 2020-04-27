@@ -2,6 +2,8 @@
 
     <div class="container-fluid">
 
+        <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Invoices Page</h2>
+
         <v-card>
             <v-card-title>
                 Receipts

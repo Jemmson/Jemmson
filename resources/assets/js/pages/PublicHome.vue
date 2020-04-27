@@ -23,6 +23,7 @@
         >
             <v-btn
                     color="white"
+                    text
                     class="formatting"
                     @click="openMenu()"
             >Sub A Job And Get Paid

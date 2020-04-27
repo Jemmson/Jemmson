@@ -7,6 +7,7 @@
             <v-card-actions>
                 <v-btn
                         color="primary"
+                        text
                         @click.prevent="goBack()">
                     Back
                 </v-btn>
@@ -32,6 +33,7 @@
                 <v-btn
                         v-if="userCreatedImage(image.user_id)"
                         class="w-full"
+                        text
                         color="red"
                         :id="'image-' + image.id"
                         @click="deleteImage(image.id, index)">

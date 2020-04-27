@@ -65,6 +65,7 @@
                                 color="primary"
                                 name="submit"
                                 id="submit"
+                                text
                                 dusk="submitBid"
                                 @click.prevent="submit()"
                                 :loading="loading"
