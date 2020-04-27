@@ -6,7 +6,7 @@
                 <v-col>
                     <h1>Customer Information</h1>
                     <v-card>
-                        <v-card-title>
+                        <v-card-title class="w-break">
                             {{ customer.user ? customer.user.name : '' }}
                         </v-card-title>
                         <v-img

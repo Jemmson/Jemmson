@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-card>
-            <v-card-title>Manage Subscription</v-card-title>
+            <v-card-title class="w-break">Manage Subscription</v-card-title>
             <v-card-actions
                     class="flex"
             >
@@ -23,7 +23,7 @@
 
         <v-card v-show="show.cardProcessingErrors" class="mt-1rem">
             <v-card-title
-                    class="error--text">Errors
+                    class="w-break error--text">Errors
             </v-card-title>
             <v-card-text class="error--text">{{ cardProcessingErrorMessage }}</v-card-text>
         </v-card>
@@ -36,7 +36,7 @@
         </v-card>
 
         <v-card v-show="show.creditCardDialog" class="mt-1rem">
-            <v-card-title>
+            <v-card-title class="w-break">
                 Add A Payment Method
             </v-card-title>
             <v-card-text>
@@ -59,6 +59,7 @@
                            color="primary"
                            :loading="submitted"
                            class="mt-4 v-btn"
+                           text
                            :data-secret="paymentIntent.clientSecret">
                         Update Payment Method
                     </v-btn>
@@ -66,6 +67,7 @@
                     <v-btn
                             @click="cancelAddingPaymentMethod()"
                             color="error"
+                            text
                             class="mt-4 v-btn"
                     >
                         Cancel
@@ -87,7 +89,7 @@
                     :disabled="disablePlans"
             >
                 <div class="flex justify-content-between">
-                    <v-card-title>
+                    <v-card-title class="w-break">
                         Monthly Plan
                     </v-card-title>
                     <div
@@ -112,7 +114,7 @@
                     :disabled="disablePlans"
             >
                 <div class="flex justify-content-between">
-                    <v-card-title>
+                    <v-card-title class="w-break">
                         Yearly Plan
                     </v-card-title>
                     <div
@@ -136,10 +138,10 @@
 
         <v-dialog
                 v-model="show.confirmCancelationModal"
-                width="440"
+                width="500"
         >
             <v-card>
-                <v-card-title>Do You wish To Really Cancel?</v-card-title>
+                <v-card-title class="w-break uppercase">Do You wish To Really Cancel?</v-card-title>
                 <v-card-actions>
                     <v-btn
                             text
@@ -147,6 +149,7 @@
                             @click="closeCancelation()"
                     >Cancel
                     </v-btn>
+                    <v-spacer></v-spacer>
                     <v-btn
                             :loading="loadingCancelButton"
                             text

@@ -4,7 +4,7 @@
 
         <v-container>
             <v-card>
-                <v-card-title>Who Are You?</v-card-title>
+                <v-card-title class="w-break">Who Are You?</v-card-title>
                 <v-card-actions>
                     <v-btn
                             class="w-1/2"

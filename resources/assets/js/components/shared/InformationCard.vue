@@ -1,7 +1,7 @@
 <template>
 
     <div>
-        <v-card-title>{{ title }}</v-card-title>
+        <v-card-title class="w-break">{{ title }}</v-card-title>
         <v-card-text>
             <div v-for="(section, index) in sections" :key="index">
                 <h4>{{ section.title }}</h4>

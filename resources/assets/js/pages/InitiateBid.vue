@@ -3,7 +3,7 @@
         <v-card>
 
             <div class="flex justify-content-between">
-                <v-card-title>
+                <v-card-title class="w-break">
                     <img :src="'/img/jobs.svg'" alt="" srcset="" class="pr-1 float-left">
                     <div class="ml-2">Create A Job</div>
                 </v-card-title>

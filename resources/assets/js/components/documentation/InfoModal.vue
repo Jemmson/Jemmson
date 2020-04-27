@@ -8,7 +8,7 @@
 
         <v-card>
             <v-card-title
-                    class="headline primary lighten-2"
+                    class="w-break headline primary lighten-2"
                     primary-title
             >
                 <div v-if="jobType == 'cash'">Cash Job Application Fee - $ 2.80</div>

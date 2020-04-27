@@ -38,7 +38,7 @@
         >
 
             <v-card>
-                <v-card-title>Add A License</v-card-title>
+                <v-card-title class="w-break">Add A License</v-card-title>
 
                 <v-card-text>
                     <v-autocomplete

@@ -5,7 +5,7 @@
                 <v-col>
                     <h1>Contractor Information</h1>
                     <v-card>
-                        <v-card-title>
+                        <v-card-title class="w-break">
                             {{ contractor && contractor.user ? contractor.user.contractor.company_name : '' }}
                         </v-card-title>
                         <v-img

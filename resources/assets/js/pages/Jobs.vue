@@ -26,7 +26,7 @@
                 <v-icon
                         color="primary"
                         @click="showModal('jobs', getJobStatus(bid))"
-                        class="mt-3 pr-3 w-95 justify-content-end">mdi-information
+                        class="w-break mt-3 pr-3 w-95 justify-content-end">mdi-information
                 </v-icon>
                 <v-card-title class="uppercase pb-0"
                               style="margin-top: -1.5rem"

@@ -14,7 +14,7 @@
         >
 
             <v-card>
-                <v-card-title>Verification Details</v-card-title>
+                <v-card-title class="w-break">Verification Details</v-card-title>
                 <v-card-text>
                     <div class="flex flex-col">
                         <div class="flex justify-content-between mt-25rem mb-25rem">

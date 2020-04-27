@@ -4,7 +4,7 @@
             v-if="showDashboardLoginBtn"
             @click="login"
             :loading="busy">
-        <v-card-title>Login to Stripe Dashboard</v-card-title>
+        <v-card-title class="w-break">Login to Stripe Dashboard</v-card-title>
         <v-card-actions>
             <img
                     style="height:5rem"

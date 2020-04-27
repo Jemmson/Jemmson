@@ -3,7 +3,7 @@
     <div class="container" id="top" v-if="isContractor()">
         <v-card>
 
-            <v-card-title>Add New Task</v-card-title>
+            <v-card-title class="w-break">Add New Task</v-card-title>
             <v-card-subtitle>This adds a new task to the job so you can sub out a portion of the job.</v-card-subtitle>
 
             <v-card-title ref="errorMessage"

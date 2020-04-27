@@ -24,7 +24,7 @@
             <v-card-title
                     v-if="jobTask.task !== undefined"
                     for="task-name"
-                    class="self-center mt-2">{{ jobTask.task.name }}
+                    class="w-break self-center mt-2">{{ jobTask.task.name }}
             </v-card-title>
 
             <v-img

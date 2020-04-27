@@ -162,7 +162,7 @@
             >
 
                 <v-card>
-                    <v-card-title>
+                    <v-card-title class="w-break">
                         Request Change For <span class="capitalize">{{ this.changeTask.taskName }}</span>
                     </v-card-title>
 

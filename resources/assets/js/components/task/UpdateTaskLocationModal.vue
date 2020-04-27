@@ -6,7 +6,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <v-card>
-                        <v-card-title>Update Task Location</v-card-title>
+                        <v-card-title class="w-break">Update Task Location</v-card-title>
                         <v-card-text>
                             <input type="hidden" name="street_number" id="street_number">
                             <v-text-field

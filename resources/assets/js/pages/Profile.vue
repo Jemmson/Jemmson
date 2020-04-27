@@ -7,7 +7,7 @@
             >
                 <v-spacer></v-spacer>
                 <v-icon
-                            class="nav-btn-position"
+                            class="w-break nav-btn-position"
                             ref="showPhotoSection"
                             @click="showSection('photo')"
                     >mdi-image-edit
@@ -28,7 +28,7 @@
         >
             <v-card>
                 <div class="flex justify-content-between">
-                    <v-card-title>Change Current Photo</v-card-title>
+                    <v-card-title class="w-break">Change Current Photo</v-card-title>
                     <div
                             v-if="checkForPhoto()"
                             class="m-1rem"
@@ -85,7 +85,7 @@
                 v-if="show.contactInformation"
         >
             <v-card>
-                <v-card-title
+                <v-card-title class="w-break"
                 >Contact Information
                 </v-card-title>
                 <v-form v-model="valid">

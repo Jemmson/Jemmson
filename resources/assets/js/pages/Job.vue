@@ -15,7 +15,7 @@
         </v-card>
 
         <v-card>
-            <v-card-title class="flex justify-content-around">{{ bid.job_name }}
+            <v-card-title class="w-break flex justify-content-around">{{ bid.job_name }}
                 <div>
                     <v-icon
                             v-if="bid.payment_type === 'cash'"

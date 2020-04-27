@@ -48,7 +48,7 @@
                 <v-card
                         class="card-margin"
                 >
-                    <v-card-title class="title text-center">Monthly Plan</v-card-title>
+                    <v-card-title class="w-break title text-center">Monthly Plan</v-card-title>
                     <v-card-text>
                         <div class="title text-center">Unlimited Jobs</div>
                         <div class="title text-center">50$ / Month</div>
@@ -61,7 +61,7 @@
                 <v-card
                         class="card-margin"
                 >
-                    <v-card-title class="title text-center">Yearly Plan</v-card-title>
+                    <v-card-title class="w-break itle text-center">Yearly Plan</v-card-title>
                     <v-card-text>
                         <div class="title text-center">Unlimited Jobs</div>
                         <div class="title text-center">550$ / Year</div>

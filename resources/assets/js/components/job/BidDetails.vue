@@ -6,7 +6,7 @@
         >
             <h1 class="card-title mt-4">Job Change Message</h1>
             <card>
-                <v-card-title
+                <v-card-title class="w-break"
                         style="background-color: lightcoral"
                 >
                     {{ bid.declined_message }}
@@ -212,13 +212,13 @@
                                 :class="i % 2 === 0 ? 'b-brown': 'b-blue'"
                         >
                             <v-card-title
-                                    class="uppercase mb-0 pb-0"
+                                    class="w-break uppercase mb-0 pb-0"
                                     style="font-size: 12pt"
                             >{{ jobTaskObject(item).Name }}
                                 <v-spacer></v-spacer>
                                 <div></div>
                                 <v-card-subtitle
-                                        class="uppercase"
+                                        class="w-break uppercase"
                                         style="font-size: 10pt"
                                 >{{ jobTaskObject(item).Status }}
                                 </v-card-subtitle>
@@ -235,7 +235,7 @@
                                 >{{ notificationMessage(item) }}
                                 </v-btn>
                             </v-card-title>
-                            <v-card-title v-if="hasTaskMessages(item)">
+                            <v-card-title class="w-break" v-if="hasTaskMessages(item)">
                                 <ul>
                                     <li v-for="(message, index) in item.task_messages" :key="index">
                                         {{ message.message }}
@@ -418,7 +418,7 @@
             <div v-else>
 
                 <v-card class="mb-1rem">
-                    <v-card-title>There are no current tasks</v-card-title>
+                    <v-card-title class="w-break">There are no current tasks</v-card-title>
                     <v-card-actions>
                         <v-btn
                                 ref="job-add-task"
@@ -493,7 +493,7 @@
             </div>
             <div v-else>
                 <v-card>
-                    <v-card-title>Customer Has Not Set The Job Location Yet</v-card-title>
+                    <v-card-title class="w-break">Customer Has Not Set The Job Location Yet</v-card-title>
                 </v-card>
             </div>
         </section>
@@ -502,7 +502,7 @@
                  v-show="show.notes"
         >
             <card>
-                <v-card-title v-if="isCustomer" class="card-title mt-4">Special Notes For The Job</v-card-title>
+                <v-card-title v-if="isCustomer" class="w-break card-title mt-4">Special Notes For The Job</v-card-title>
                 <v-card-title v-else class="card-title mt-4">Special Notes From Customer</v-card-title>
                 <main class="row">
                     <section class="col-12">
@@ -596,8 +596,8 @@
         >
 
             <v-card>
-                <v-card-title class="error--text" v-show="denyForm.error">{{ denyForm.error }}</v-card-title>
-                <v-card-title class="justify-content-between"><div>Deny Sub's Finished Task</div><div>{{ currentJobTask.task === undefined ? '' : currentJobTask.task.name.toUpperCase() }}</div></v-card-title>
+                <v-card-title class="w-break error--text" v-show="denyForm.error">{{ denyForm.error }}</v-card-title>
+                <v-card-title class="w-break justify-content-between"><div>Deny Sub's Finished Task</div><div>{{ currentJobTask.task === undefined ? '' : currentJobTask.task.name.toUpperCase() }}</div></v-card-title>
                 <v-card-text>
                     <v-textarea
                             outlined

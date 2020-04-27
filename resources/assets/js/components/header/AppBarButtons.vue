@@ -43,7 +43,7 @@
                     width="500"
             >
                 <v-card>
-                    <v-card-title class="uppercase">Do you wish to logout?</v-card-title>
+                    <v-card-title class="w-break uppercase">Do you wish to logout?</v-card-title>
                     <v-card-actions>
                         <v-btn
                                 id="cancel"

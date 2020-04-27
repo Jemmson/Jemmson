@@ -9,7 +9,7 @@
     >
         <v-card >
 
-            <button type="button" class="close mr-3 pt-2" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="w-break close mr-3 pt-2" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
 

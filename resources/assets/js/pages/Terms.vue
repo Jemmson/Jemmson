@@ -10,7 +10,7 @@
                     Back
                 </v-btn>
             </v-card-actions>
-            <v-card-title>Terms Of Service</v-card-title>
+            <v-card-title class="w-break">Terms Of Service</v-card-title>
             <v-card-text>
                 
                 <p>Last updated: April 21, 2018</p>
@@ -23,14 +23,14 @@
                 <p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you do not have permission to access the Service.</p>
 
 
-                <v-card-title>Communications</v-card-title>
+                <v-card-title class="w-break">Communications</v-card-title>
 
                 <p>By creating an Account on our service, you agree to subscribe to newsletters, marketing or promotional materials and other information we may send. However, you may opt out of receiving any, or all, of these communications from us by following the unsubscribe link or instructions provided in any email we send.</p>
 
 
 
 
-                <v-card-title>Subscriptions</v-card-title>
+                <v-card-title class="w-break">Subscriptions</v-card-title>
 
                 <p>Some parts of the Service are billed on a subscription basis ("Subscription(s)"). You will be billed in advance on a recurring and periodic basis ("Billing Cycle"). Billing cycles are set on a monthly basis.</p>
 
@@ -41,7 +41,7 @@
                 <p>Should automatic billing fail to occur for any reason, Jemmson, Inc. will issue an electronic invoice indicating that you must proceed manually, within a certain deadline date, with the full payment corresponding to the billing period as indicated on the invoice.</p>
 
 
-                <v-card-title>Free Trial</v-card-title>
+                <v-card-title class="w-break">Free Trial</v-card-title>
 
                 <p>Jemmson, Inc. may, at its sole discretion, offer a Subscription with a free trial for a limited period of time ("Free Trial").</p>
 
@@ -177,7 +177,8 @@
     }
 
     v-card-title{
-        color: black
+        color: black;
+        word-break: break-word;
     }
 
     p{

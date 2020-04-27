@@ -15,7 +15,7 @@
             <div class="flex justify-content-between">
                 <div>
                     <v-card-title
-                            class="uppercase"
+                            class="w-break uppercase"
                             v-if="showBid(bidTask)"
                     >
                         {{ jobName(bidTask) }}
@@ -112,7 +112,7 @@
                     <v-card
                             :disabled="needsStripeForCreditCardPayments() && isCreditCardJob()"
                     >
-                        <v-card-title>Task Details</v-card-title>
+                        <v-card-title class="w-break">Task Details</v-card-title>
                         <v-card-text>
                             <v-row
                                     class="justify-content-around mt-1rem"

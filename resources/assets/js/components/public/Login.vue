@@ -1,7 +1,7 @@
 <template>
     <v-card width="100%"
     >
-        <v-card-title class="pb-0 flex flex-col">
+        <v-card-title class="w-break pb-0 flex flex-col">
             <template
                     style="font-size: 1.5rem;"
             >Login Or

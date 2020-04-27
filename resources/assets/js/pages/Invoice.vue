@@ -6,7 +6,7 @@
         <v-card
 
         >
-            <v-card-title>{{ invoice ? invoice.job.job_name : '' }}</v-card-title>
+            <v-card-title class="w-break">{{ invoice ? invoice.job.job_name : '' }}</v-card-title>
 
             <v-card-text>
 

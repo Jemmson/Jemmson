@@ -16,7 +16,7 @@
         </div>
 
         <v-card class="margins">
-            <v-card-title>Associate Images</v-card-title>
+            <v-card-title class="w-break">Associate Images</v-card-title>
             <v-card-actions>
                 <v-btn
                         :disabled="!imagesHaveBeenAssociated()"
