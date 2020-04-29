@@ -1239,8 +1239,13 @@
 
 
             canAddATask() {
-                if (this.bid) {
-                    return this.bid.status !== 'job.approved' && this.bid.status !== 'bid.sent'
+                if (this.bid && this.bid.job_statuses) {
+                    const latestJobStatus = this.bid.job_statuses[this.bid.job_statuses.length - 1].status;
+                    return latestJobStatus !== 'approved'
+                        && latestJobStatus !== 'canceled_by_customer'
+                        && latestJobStatus !== 'canceled_by_general'
+                        && latestJobStatus !== 'declines_finished_task'
+                        && latestJobStatus !== 'paid';
                 }
             },
 

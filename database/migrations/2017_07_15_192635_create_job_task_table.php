@@ -26,6 +26,7 @@ class CreateJobTaskTable extends Migration
             $table->bigInteger('cust_final_price')->unsigned()->nullable();
             $table->text('customer_message')->nullable();
             $table->text('declined_message')->nullable();
+            $table->text('details')->nullable();
             $table->integer('job_id')->unsigned();
             $table->integer('location_id')->unsigned()->nullable();
             $table->string('paid_with_cash_message')->nullable();

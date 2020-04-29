@@ -100,7 +100,7 @@
                         :disabled="addingTheTask"
                         ref="add_task"
                         :loading="addingTheTask"
-                >Add Task
+                >Submit
                 </v-btn>
             </v-card-actions>
         </v-card>
