@@ -174,6 +174,69 @@ describe('Register', function() {
 
   })
 
+  test('expect that zip should have the right format', async () => {
+    wrapper = shallowMount(Register, {
+      vuetify,
+      localVue,
+      store,
+      directives: {
+        mask() {
+        }
+      }
+    })
 
+    wrapper.setData({
+      registerForm: {
+        zip: '12342-'
+      }
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.formatZip()).toBe('12342')
+
+    wrapper.setData({
+      registerForm: {
+        zip: '12342'
+      }
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.formatZip()).toBe('12342')
+
+    wrapper.setData({
+      registerForm: {
+        zip: '12342-1234'
+      }
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.formatZip()).toBe('12342-1234')
+  })
+
+  test('that zip must have atleast 5 characters', async () => {
+    wrapper = shallowMount(Register, {
+      vuetify,
+      localVue,
+      store,
+      directives: {
+        mask() {
+        }
+      }
+    })
+
+    wrapper.setData({
+      registerForm: {
+        zip: '12342'
+      }
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.zipMustHaveAtleast5characters()).toBe(true)
+
+    wrapper.setData({
+      registerForm: {
+        zip: '1234'
+      }
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.zipMustHaveAtleast5characters()).toBe('Zip Code Must Be At Least 5 Characters')
+
+  })
 
 })

@@ -11,11 +11,11 @@
                         class="flex"
                 >
                     <div class="flex justify-content-around w-full">
-                        <v-icon
-                                class="nav-btn-position"
-                                @click="showSection('details')"
-                        >mdi-details
-                        </v-icon>
+<!--                        <v-icon-->
+<!--                                class="nav-btn-position"-->
+<!--                                @click="showSection('details')"-->
+<!--                        >mdi-details-->
+<!--                        </v-icon>-->
                         <!--                        <v-icon-->
                         <!--                                class="nav-btn-position"-->
                         <!--                                @click="showSection('subs')"-->
@@ -32,11 +32,11 @@
                         <!--                                @click="showSection('customers')"-->
                         <!--                        >mdi-google-maps-->
                         <!--                        </v-icon>-->
-                        <v-icon
-                                class="nav-btn-position"
-                                @click="showSection('invoices')"
-                        >mdi-message
-                        </v-icon>
+<!--                        <v-icon-->
+<!--                                class="nav-btn-position"-->
+<!--                                @click="showSection('invoices')"-->
+<!--                        >mdi-message-->
+<!--                        </v-icon>-->
 
                         <img
                                 ref="subsNavButton"
@@ -102,7 +102,7 @@
                             </v-list-item-content>
                         </v-list-item>
                     </v-list>
-                    <v-card-subtitle>Licenses:</v-card-subtitle>
+                    <v-card-subtitle v-if="isContractor()">Licenses:</v-card-subtitle>
                     <v-list dense>
                         <template v-for="license in getLicenses()">
                             <v-list-item>
@@ -135,7 +135,7 @@
                 </v-card-actions>
             </v-card>
 
-            <v-card class="mt-1rem">
+            <v-card class="mt-1rem" v-if="isContractor()">
                 <v-card-title>Jobs</v-card-title>
                 <v-card-text>
                     <v-card-subtitle>As A General Contractor</v-card-subtitle>
@@ -191,36 +191,56 @@
 
             getAddressLine1(){
                 if (this.haveSparkStateLoaded()) {
-                    return Spark.state.user.contractor.location.address_line_1
+                    if (this.isContractor()) {
+                        return Spark.state.user.contractor.location.address_line_1
+                    } else {
+                        return Spark.state.user.customer.location.address_line_1
+                    }
                 }
             },
 
             getAddressLine2(){
                 if (this.haveSparkStateLoaded()) {
-                    return Spark.state.user.contractor.location.address_line_2
+                    if (this.isContractor()) {
+                        return Spark.state.user.contractor.location.address_line_2
+                    } else {
+                        return Spark.state.user.customer.location.address_line_2
+                    }
                 }
             },
 
             getCity(){
                 if (this.haveSparkStateLoaded()) {
-                    return Spark.state.user.contractor.location.city
+                    if (this.isContractor()) {
+                        return Spark.state.user.contractor.location.city
+                    } else {
+                        return Spark.state.user.customer.location.city
+                    }
                 }
             },
 
             getState(){
                 if (this.haveSparkStateLoaded()) {
-                    return Spark.state.user.contractor.location.state
+                    if (this.isContractor()) {
+                        return Spark.state.user.contractor.location.state
+                    } else {
+                        return Spark.state.user.customer.location.state
+                    }
                 }
             },
 
             getZip(){
                 if (this.haveSparkStateLoaded()) {
-                    return Spark.state.user.contractor.location.zip
+                    if (this.isContractor()) {
+                        return Spark.state.user.contractor.location.zip
+                    } else {
+                        return Spark.state.user.customer.location.zip
+                    }
                 }
             },
 
             getLicenses(){
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && this.isContractor()) {
                     return Spark.state.user.contractor.licenses
                 }
             },
@@ -246,7 +266,8 @@
             },
             getVerification() {
                 if (
-                    Spark.state.user.contractor
+                    this.isContractor()
+                    && Spark.state.user.contractor
                     && Spark.state.user.contractor.stripe_express
                 ) {
                     return Spark.state.user.contractor.stripe_express.stripe_account_verification
@@ -263,7 +284,8 @@
             },
             requiresVerification() {
                 if (
-                    Spark.state
+                    this.isContractor()
+                    && Spark.state
                     && Spark.state.user
                     && Spark.state.user.contractor
                     && Spark.state.user.contractor.stripe_express
@@ -284,7 +306,9 @@
                 }
             },
             isContractor() {
-                return true
+                if (this.haveSparkStateLoaded()) {
+                    return Spark.state.user.usertype === 'contractor'
+                }
             },
             showSection(section) {
                 this.hideAllSections();

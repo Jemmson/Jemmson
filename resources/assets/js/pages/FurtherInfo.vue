@@ -5,14 +5,14 @@
             <v-card-title v-if="isContractor">Register Your Company</v-card-title>
             <v-card-title v-if="!isContractor">Additional Information</v-card-title>
             <v-card-subtitle>Additional information needed</v-card-subtitle>
-            
+
             <v-card-text>
                 <v-text-field
-                    id="email"
-                    ref="email"
-                    v-model="form.email"
-                    :class="{'has-error': form.errors.has('email')}"
-                    label="Update Login Email: *"
+                        id="email"
+                        ref="email"
+                        v-model="form.email"
+                        :class="{'has-error': form.errors.has('email')}"
+                        label="Update Login Email: *"
                 >
                 </v-text-field>
                 <span
@@ -58,7 +58,7 @@
                 <span v-if="isContractor" ref="emailError" class="help-block" v-show="form.errors.has('company_name')">
                   {{ form.errors.get('company_name') }}
                 </span>
-                
+
                 <v-text-field
                         id="phone_number"
                         ref="phone_number"
@@ -77,7 +77,7 @@
                     {{ form.errors.get('phone_number') }}
                 </span>
                 <div v-if="checkThatNumberIsMobile()"
-                style="color: green">{{ this.getMobileValidResponse[1] }}
+                     style="color: green">{{ this.getMobileValidResponse[1] }}
                 </div>
                 <div v-if="checkLandLineNumber()" style="color: red">
                     {{ this.getMobileValidResponse[1] }}
@@ -119,7 +119,8 @@
                         label="City *"
                 >
                 </v-text-field>
-                <span ref="cityError" class="help-block" v-show="form.errors.has('city')">{{ form.errors.get('city') }}</span>
+                <span ref="cityError" class="help-block"
+                      v-show="form.errors.has('city')">{{ form.errors.get('city') }}</span>
 
                 <v-text-field
                         id="locality"
@@ -133,11 +134,16 @@
                 <v-text-field
                         id="postal_code"
                         :class="{'has-error': form.errors.has('zip')}"
+                        :rules="[
+                            this.zipMustHaveAtleast5characters()
+                        ]"
                         v-model="form.zip"
+                        v-mask="'#####-####'"
                         label="Zip Code *"
                 >
                 </v-text-field>
-                <span ref="zipError" class="help-block" v-show="form.errors.has('zip')">{{ form.errors.get('zip') }}</span>
+                <span ref="zipError" class="help-block"
+                      v-show="form.errors.has('zip')">{{ form.errors.get('zip') }}</span>
 
                 <v-textarea
                         v-if="!isContractor"
@@ -153,7 +159,7 @@
                             @add="addLicenses($event)"
                     >
                     </add-license-box>
-                    
+
                 </div>
 
 
@@ -183,8 +189,6 @@
                 <span class="help-block" v-show="form.errors.has('password_confirmation')">{{ form.errors.get('password_confirmation') }}</span>
 
 
-
-
                 <hr style="margin-top: 3rem">
 
                 <v-switch
@@ -198,7 +202,8 @@
                         label="Terms"
                         @click="$router.push('/terms')"
                         color="blue"
-                        text="">Terms</v-btn>
+                        text="">Terms
+                </v-btn>
                 <span class="help-block" v-show="form.errors.has('terms')">{{ form.errors.get('terms') }}</span>
 
                 <v-card-actions>
@@ -215,10 +220,10 @@
                         Register
                     </v-btn>
                 </v-card-actions>
-                
+
 
             </v-card-text>
-            
+
         </v-card>
     </v-container>
 
@@ -363,6 +368,10 @@
                 'checkMobileNumber',
             ]),
 
+            zipMustHaveAtleast5characters() {
+                return this.form.zip.length > 4 || 'Zip Code Must Be At Least 5 Characters'
+            },
+
             terms() {
                 if (this.form.terms) {
                     this.form.terms = null
@@ -402,7 +411,27 @@
                     return false
                 }
                 this.form.email = this.form.email.trim()
+                this.form.zip = this.formatZip()
                 this.getFurtherInfo()
+            },
+
+            formatZip() {
+
+                let zip = this.form.zip.split('-')
+                
+                if (zip.length === 1) {
+                    return this.form.zip
+                }
+
+                if (zip.length === 2) {
+
+                    if (zip[zip.length - 1] === '') {
+                        return zip[0]
+                    } else {
+                        return this.form.zip
+                    }
+                }
+
             },
 
             async getFurtherInfo() {
@@ -425,6 +454,7 @@
             initAutocomplete() {
                 User.initAutocomplete('route')
             },
+
             /**
              * Update the user's profile photo.
              */

@@ -158,6 +158,10 @@
 
                         <v-text-field
                                 id="postal_code"
+                                v-mask="'#####-####'"
+                                :rules="[
+                                    this.zipMustHaveAtleast5characters()
+                                ]"
                                 v-model="registerForm.zip"
                                 label="Zip Code *"
                         >
@@ -199,7 +203,8 @@
                                 label="Terms"
                                 @click="goToTerms()"
                                 color="blue"
-                                text="">Terms</v-btn>
+                                text="">Terms
+                        </v-btn>
                         <span class="help-block"
                               v-show="registerForm.errors.terms">You Must Accept The Terms Of Service</span>
 
@@ -627,8 +632,31 @@
         },
         methods: {
 
-            goToTerms(){
-              this.$router.push('/terms')
+            zipMustHaveAtleast5characters() {
+                return this.registerForm.zip.length > 4 || 'Zip Code Must Be At Least 5 Characters'
+            },
+
+            formatZip() {
+
+                let zip = this.registerForm.zip.split('-')
+
+                if (zip.length === 1) {
+                    return this.registerForm.zip
+                }
+
+                if (zip.length === 2) {
+
+                    if (zip[zip.length - 1] === '') {
+                        return zip[0]
+                    } else {
+                        return this.registerForm.zip
+                    }
+                }
+
+            },
+
+            goToTerms() {
+                this.$router.push('/terms')
             },
 
             addLicenses(licenses) {
@@ -705,6 +733,8 @@
             },
 
             async register() {
+
+                this.registerForm.zip = this.formatZip();
 
                 if (!this.registerForm.terms) {
                     this.registerForm.errors.terms = true
