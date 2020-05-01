@@ -68,6 +68,7 @@
                     <div class="flex justify-content-between">
                         <div>Job Task Name:</div>
                         <div
+                                class="capitalize"
                                 id="taskName"
                         >{{ jobTask ? jobTask.task.name : ''}}
                         </div>
@@ -204,7 +205,9 @@
                             </v-list-item-content>
                         </v-list-item>
 
-                        <v-list-item style="height: 1rem">
+                        <v-list-item
+                                v-if="isContractor()"
+                                style="height: 1rem">
                             <v-list-item-content>Unit Price:</v-list-item-content>
                             <v-list-item-content class="align-end">
                                 <v-text-field
