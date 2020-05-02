@@ -82,7 +82,7 @@ class TaskFinished extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         if ($this->customer) {
-            $custom = "Please approve the task ";
+            $custom = "Please approve the task. ";
             $generalStatus = 'general_finished_work ';
             $subStatus = '';
         } else {
@@ -92,7 +92,7 @@ class TaskFinished extends Notification implements ShouldQueue
         }
         $text = "The task: " . $this->task->name . " has been finished. "
             . $custom
-            . ' View Task '
+            . "' View Task '\n"
             . url('/login/mix/' .
                 $this->task->jobTask()->first()->job_id . '/' .
                 $this->user->generateToken(

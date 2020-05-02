@@ -6,7 +6,9 @@
         <section>
 
 
-            <v-card>
+            <v-card
+                    ref="contractorNavigationBar"
+                    v-if="isContractor()">
                 <v-card-actions
                         class="flex"
                 >
@@ -41,7 +43,7 @@
                         <img
                                 ref="subsNavButton"
                                 class="nav-btn-position"
-                                v-show="isContractor()"
+                                v-if="hasStripe()"
                                 @click="showSection('stripe')"
                                 style="height:1.6rem"
                                 src="/img/Stripe logo - slate.svg" alt=""
@@ -59,7 +61,7 @@
 
         </section>
 
-        <section v-show="show.stripe">
+        <section v-if="show.stripe && hasStripe()">
 
             <stripe-verification-required
                     v-if="requiresVerification()"
@@ -77,7 +79,7 @@
 
         <section v-show="show.details">
             <v-card>
-                <v-card-title>Welcome {{ spark.state && spark.state.user ? spark.state.user.name : ' To Jemmson' }}</v-card-title>
+                <v-card-title>Welcome {{ getUserName() }}</v-card-title>
                 <v-img :src="getPhoto()" aspect-ratio="1.7" alt="">
                 </v-img>
                 <v-card-text>
@@ -187,6 +189,18 @@
               if (this.haveSparkStateLoaded()) {
                   return Spark.state.user.photo_url
               }
+            },
+
+            hasStripe(){
+                if (this.haveSparkStateLoaded()) {
+                    return Spark.state.user.customer_stripe_id !== null
+                }
+            },
+
+            getUserName() {
+                if (this.haveSparkStateLoaded()) {
+                    return Spark.state.user.name
+                }
             },
 
             getAddressLine1(){

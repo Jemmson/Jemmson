@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <div v-if="isCustomer" class="text-right">
+            <div v-if="isCustomer && !allTasksArePaidFor()" ref="showPaymentButton" class="text-right">
                 <v-btn
                         v-if="cashJobOrNotSetupWithStripe()"
                         class="w-full"
@@ -336,6 +336,25 @@
             },
         },
         methods: {
+
+            allTasksArePaidFor(){
+                // return true
+                const tasks = this.getAllPayableTasks(this.jobTasks)
+
+                if (tasks !== undefined) {
+
+                    let paid = 0;
+
+                    for (let i = 0; i < tasks.length; i++) {
+                        if (this.getLatestStatus(tasks[i].job_task_status) === 'paid') {
+                            paid = paid + 1;
+                        }
+                    }
+
+                    return paid === tasks.length
+                }
+
+            },
 
             requestChange() {
                 this.changeTask.disabled = true;

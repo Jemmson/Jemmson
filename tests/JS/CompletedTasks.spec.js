@@ -765,6 +765,205 @@ describe('CompletedTasks', () => {
 
     })
 
+    test('that if all tasks are paid for then pay with credit card and pay with cash buttons are not visible', async () => {
+        wrapper = shallowMount(CompletedTasks, {
+            localVue,
+            vuetify,
+            store,
+            stubs: {
+                Stripe: true
+            },
+            mocks: {
+                methods: {
+                    addJobTaskToExcludedList: jest.fn()
+                }
+            },
+            computed: {
+                jobTasks() {
+                    return this.bid.job_tasks
+                }
+            },
+            propsData: {
+                bid: {
+                    "contractor": {
+                        "id": 1,
+                        "contractor": {
+                            "stripe_id": "acct_1CENK6Bp6bf1LkLw"
+                        }
+                    },
+                    job_tasks: [
+                        {
+                            "id": 1,
+                            "job_task_status": [
+                                {
+                                    "job_task_id": 4,
+                                    "status": "paid"
+                                }
+                            ],
+                            cust_final_price: 50
+                        },
+                        {
+                            "id": 2,
+                            "job_task_status": [
+                                {
+                                    "job_task_id": 5,
+                                    "status": "paid",
+                                }
+                            ],
+                            cust_final_price: 50
+                        }
+                    ]
+                }
+            }
+        });
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.allTasksArePaidFor()).toBe(true)
+        expect(wrapper.find({ref: 'showPaymentButton'}).exists()).toBe(false)
+
+        wrapper.setProps({
+            bid: {
+                "contractor": {
+                    "id": 1,
+                    "contractor": {
+                        "stripe_id": "acct_1CENK6Bp6bf1LkLw"
+                    }
+                },
+                job_tasks: [
+                    {
+                        "id": 1,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 4,
+                                "status": "paid"
+                            }
+                        ],
+                        cust_final_price: 50
+                    },
+                    {
+                        "id": 2,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 5,
+                                "status": "general_finished_work",
+                            }
+                        ],
+                        cust_final_price: 50
+                    },
+                    {
+                        "id": 3,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 5,
+                                "status": "approved_subs_work",
+                            }
+                        ],
+                        cust_final_price: 50
+                    }
+                ]
+            }
+        })
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.allTasksArePaidFor()).toBe(false)
+        expect(wrapper.find({ref: 'showPaymentButton'}).exists()).toBe(true)
+
+        wrapper.setProps({
+            bid: {
+                "contractor": {
+                    "id": 1,
+                    "contractor": {
+                        "stripe_id": "acct_1CENK6Bp6bf1LkLw"
+                    }
+                },
+                job_tasks: [
+                    {
+                        "id": 1,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 4,
+                                "status": "paid"
+                            }
+                        ],
+                        cust_final_price: 50
+                    },
+                    {
+                        "id": 2,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 5,
+                                "status": "general_finished_work",
+                            }
+                        ],
+                        cust_final_price: 50
+                    },
+                    {
+                        "id": 3,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 5,
+                                "status": "approved_subs_work",
+                            }
+                        ],
+                        cust_final_price: 50
+                    }
+                ]
+            }
+        })
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.allTasksArePaidFor()).toBe(false)
+        expect(wrapper.find({ref: 'showPaymentButton'}).exists()).toBe(true)
+
+        wrapper.setProps({
+            bid: {
+                "contractor": {
+                    "id": 1,
+                    "contractor": {
+                        "stripe_id": "acct_1CENK6Bp6bf1LkLw"
+                    }
+                },
+                job_tasks: [
+                    {
+                        "id": 1,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 4,
+                                "status": "general_finished_work"
+                            }
+                        ],
+                        cust_final_price: 50
+                    },
+                    {
+                        "id": 2,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 5,
+                                "status": "general_finished_work",
+                            }
+                        ],
+                        cust_final_price: 50
+                    },
+                    {
+                        "id": 3,
+                        "job_task_status": [
+                            {
+                                "job_task_id": 5,
+                                "status": "approved_subs_work",
+                            }
+                        ],
+                        cust_final_price: 50
+                    }
+                ]
+            }
+        })
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.allTasksArePaidFor()).toBe(false)
+        expect(wrapper.find({ref: 'showPaymentButton'}).exists()).toBe(true)
+
+    })
+
     test.skip('that when one of the two tasks is excluded then the total for the customer only show the total for the nonexcluded tasks', () => {
 
         //TODO: DONT KNOW WHY document.getElementById('exclude-' + jobTask.id).checked
