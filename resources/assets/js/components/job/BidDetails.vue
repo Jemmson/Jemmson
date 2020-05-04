@@ -540,7 +540,7 @@
         <section class="mt-4"
                  v-if="(isCustomer && needsApproval()) || !isCustomer"
         >
-            <card class="mb-4">
+            <card class="mb-4" v-if="getJobTasksLength() > 0">
                 <v-card-title>Actions</v-card-title>
                 <!-- /customer approve bid form -->
                 <approve-bid

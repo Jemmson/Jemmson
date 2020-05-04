@@ -41,6 +41,13 @@
                                 ref="jobNotSubmittedMessage"
                                 class="text-center uppercase w-break">Please wait until your contractor submits bid</h5>
                     </div>
+                    <div v-else-if="jobTasksExist()"
+                         style="padding-bottom: .1rem"
+                    >
+                        <h5
+                                class="text-center uppercase w-break">This Job Has No Tasks.
+                            Please Contact The Contractor to add a task and resubmit the bid</h5>
+                    </div>
                     <div v-else>
                         <v-sheet class="capitalize"
                                  ref="jobStatus"
@@ -179,6 +186,12 @@
             },
         },
         methods: {
+
+            jobTasksExist(){
+              if (this.bid && this.bid.job_tasks) {
+                  return this.bid.job_tasks.length === 0
+              }
+            },
 
             userIsACustomerAndJobHasNotBeenSent(bid) {
                 return this.isCustomer
