@@ -13,11 +13,11 @@
                         class="flex"
                 >
                     <div class="flex justify-content-around w-full">
-<!--                        <v-icon-->
-<!--                                class="nav-btn-position"-->
-<!--                                @click="showSection('details')"-->
-<!--                        >mdi-details-->
-<!--                        </v-icon>-->
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('details')"
+                        >mdi-details
+                        </v-icon>
                         <!--                        <v-icon-->
                         <!--                                class="nav-btn-position"-->
                         <!--                                @click="showSection('subs')"-->
@@ -34,11 +34,11 @@
                         <!--                                @click="showSection('customers')"-->
                         <!--                        >mdi-google-maps-->
                         <!--                        </v-icon>-->
-<!--                        <v-icon-->
-<!--                                class="nav-btn-position"-->
-<!--                                @click="showSection('invoices')"-->
-<!--                        >mdi-message-->
-<!--                        </v-icon>-->
+                        <!--                        <v-icon-->
+                        <!--                                class="nav-btn-position"-->
+                        <!--                                @click="showSection('invoices')"-->
+                        <!--                        >mdi-message-->
+                        <!--                        </v-icon>-->
 
                         <img
                                 ref="subsNavButton"
@@ -77,7 +77,7 @@
             </stripe-express-dashboard>
         </section>
 
-        <section v-show="show.details">
+        <section v-if="show.details">
             <v-card>
                 <v-card-title>Welcome {{ getUserName() }}</v-card-title>
                 <v-img :src="getPhoto()" aspect-ratio="1.7" alt="">
@@ -185,13 +185,13 @@
             }
         },
         methods: {
-            getPhoto(){
-              if (this.haveSparkStateLoaded()) {
-                  return Spark.state.user.photo_url
-              }
+            getPhoto() {
+                if (this.haveSparkStateLoaded()) {
+                    return Spark.state.user.photo_url
+                }
             },
 
-            hasStripe(){
+            hasStripe() {
                 if (this.haveSparkStateLoaded()) {
                     return Spark.state.user.customer_stripe_id !== null
                 }
@@ -203,7 +203,7 @@
                 }
             },
 
-            getAddressLine1(){
+            getAddressLine1() {
                 if (this.haveSparkStateLoaded()) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.address_line_1
@@ -213,7 +213,7 @@
                 }
             },
 
-            getAddressLine2(){
+            getAddressLine2() {
                 if (this.haveSparkStateLoaded()) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.address_line_2
@@ -223,7 +223,7 @@
                 }
             },
 
-            getCity(){
+            getCity() {
                 if (this.haveSparkStateLoaded()) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.city
@@ -233,7 +233,7 @@
                 }
             },
 
-            getState(){
+            getState() {
                 if (this.haveSparkStateLoaded()) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.state
@@ -243,7 +243,7 @@
                 }
             },
 
-            getZip(){
+            getZip() {
                 if (this.haveSparkStateLoaded()) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.zip
@@ -253,17 +253,17 @@
                 }
             },
 
-            getLicenses(){
+            getLicenses() {
                 if (this.haveSparkStateLoaded() && this.isContractor()) {
                     return Spark.state.user.contractor.licenses
                 }
             },
 
 
-            haveSparkStateLoaded(){
+            haveSparkStateLoaded() {
                 return Spark
-                && Spark.state
-                && Spark.state.user
+                    && Spark.state
+                    && Spark.state.user
             },
             generalTotalJobNumber() {
                 return this.generalJobs.length

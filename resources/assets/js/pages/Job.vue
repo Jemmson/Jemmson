@@ -3,7 +3,7 @@
 
     <div class="container">
 
-        <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Job Details Page</h2>
+        <h2 class="text-center uppercase black--text" style="margin-bottom: 3rem;">Job Details Page</h2>
 
         <div v-show="false">{{ getJobStatusValue() }}</div>
 
