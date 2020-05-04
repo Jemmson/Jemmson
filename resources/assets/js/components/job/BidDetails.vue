@@ -1239,6 +1239,11 @@
 
 
             canAddATask() {
+
+                if (this.getJobTasksLength === 0) {
+                    return true
+                }
+
                 if (this.bid && this.bid.job_statuses) {
                     const latestJobStatus = this.bid.job_statuses[this.bid.job_statuses.length - 1].status;
                     return latestJobStatus !== 'approved'
