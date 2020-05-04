@@ -569,8 +569,16 @@ class TaskController extends Controller
     public function destroy(Request $request)
     {
         // remove the task from the job
-        $job = Job::find($request->jobId);
         $jobTask = JobTask::find($request->jobTaskId);
+
+        $job = null;
+
+        if (\is_null($request->jobId)) {
+            $job = Job::find($jobTask->job_id);
+        } else {
+            $job = Job::find($request->jobId);
+        }
+
 
         try {
             $jobTask->delete();

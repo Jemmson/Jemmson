@@ -186,25 +186,25 @@
         },
         methods: {
             getPhoto() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     return Spark.state.user.photo_url
                 }
             },
 
             hasStripe() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     return Spark.state.user.customer_stripe_id !== null
                 }
             },
 
             getUserName() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     return Spark.state.user.name
                 }
             },
 
             getAddressLine1() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.address_line_1
                     } else {
@@ -214,7 +214,7 @@
             },
 
             getAddressLine2() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.address_line_2
                     } else {
@@ -224,7 +224,7 @@
             },
 
             getCity() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.city
                     } else {
@@ -234,7 +234,7 @@
             },
 
             getState() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.state
                     } else {
@@ -244,7 +244,7 @@
             },
 
             getZip() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     if (this.isContractor()) {
                         return Spark.state.user.contractor.location.zip
                     } else {
@@ -254,7 +254,7 @@
             },
 
             getLicenses() {
-                if (this.haveSparkStateLoaded() && this.isContractor()) {
+                if (this.haveSparkStateLoaded() && this.isContractor() && Spark.state.user !== null) {
                     return Spark.state.user.contractor.licenses
                 }
             },
@@ -263,7 +263,6 @@
             haveSparkStateLoaded() {
                 return Spark
                     && Spark.state
-                    && Spark.state.user
             },
             generalTotalJobNumber() {
                 return this.generalJobs.length
@@ -292,7 +291,7 @@
                 if (data.error) {
                     console.log('error', data)
                 } else {
-                    console.log('error', data)
+                    console.log('data', data)
                     this.generalJobs = data
                 }
             },
@@ -320,7 +319,7 @@
                 }
             },
             isContractor() {
-                if (this.haveSparkStateLoaded()) {
+                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     return Spark.state.user.usertype === 'contractor'
                 }
             },
