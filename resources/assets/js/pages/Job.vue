@@ -41,7 +41,7 @@
                                 ref="jobNotSubmittedMessage"
                                 class="text-center uppercase w-break">Please wait until your contractor submits bid</h5>
                     </div>
-                    <div v-else-if="jobTasksExist()"
+                    <div v-else-if="jobTasksExist() && isCustomer"
                          style="padding-bottom: .1rem"
                     >
                         <h5
