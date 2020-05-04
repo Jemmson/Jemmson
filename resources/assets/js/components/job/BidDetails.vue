@@ -1240,7 +1240,7 @@
 
             canAddATask() {
 
-                if (this.getJobTasksLength === 0) {
+                if (this.bid && this.bid.job_tasks && this.bid.job_tasks.length === 0) {
                     return true
                 }
 
