@@ -261,8 +261,14 @@
 
 
             haveSparkStateLoaded() {
-                return Spark
-                    && Spark.state
+
+                if (Spark
+                    && Spark.state && Spark.state.user !== null) {
+                    this.$router.push('/bids')
+                }
+
+                return Spark && Spark.state
+
             },
             generalTotalJobNumber() {
                 return this.generalJobs.length
