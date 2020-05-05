@@ -263,7 +263,7 @@
             haveSparkStateLoaded() {
 
                 if (Spark
-                    && Spark.state && Spark.state.user !== null) {
+                    && Spark.state && Spark.state.user === null) {
                     this.$router.push('/bids')
                 }
 
