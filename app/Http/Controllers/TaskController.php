@@ -1394,7 +1394,11 @@ class TaskController extends Controller
 
         Task::validate_new_task_input($request);
 
-        $task = Task::find($request->taskId);
+        $task = Task::where('name', '=', $request->taskName)
+            ->where('contractor_id', '=', Auth::user()->getAuthIdentifier())
+            ->get()->first();
+
+//        $task = Task::find($request->taskId);
         $job = Job::find($request->jobId);
         $customer = User::find($request->customer_id);
 

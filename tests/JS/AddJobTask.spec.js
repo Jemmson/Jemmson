@@ -116,5 +116,52 @@ describe('AddJobTask', () => {
         expect(wrapper.find({ref: 'errorMessage'}).text()).toBe('Errors exist on page. Please review')
 
     })
+    
+    test('should only see update job task if a drop down was selected', async () => {
+        let wrapper = shallowMount(AddJobTask, {
+            vuetify,
+            localVue,
+            directives: {
+                mask() {
+                }
+            },
+            mocks: {
+                $router: {
+                    push: jest.fn()
+                }
+            },
+            methods: {
+                addNewTaskToBid: jest.fn()
+            }
+        });
+
+        wrapper.setData({
+            search: 'task 1',
+            selected: {
+                text: 'task 1'
+            }
+        });
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'updateBasePrice'}).exists()).toBe(true);
+
+        wrapper.setData({
+            selected: null
+        });
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'updateBasePrice'}).exists()).toBe(false);
+
+        wrapper.setData({
+            search: 'task 123',
+            selected: {
+                text: 'task 1'
+            }
+        });
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'updateBasePrice'}).exists()).toBe(false);
+        
+    })
 
 })

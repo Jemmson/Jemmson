@@ -35,7 +35,9 @@
                     ></v-text-field>
 
                     <v-switch
+                            v-if="dropDownTaskWasSelected()"
                             style="margin-left: 5rem"
+                            ref="updateBasePrice"
                             v-model="addNewTaskForm.updateBasePrice"
                             label="Update Base Price"
                     ></v-switch>
@@ -257,6 +259,11 @@
             }
         },
         methods: {
+            dropDownTaskWasSelected() {
+                return this.selected !== null
+                    && this.search === this.selected.text
+            },
+
             formatInput(input) {
                 if (typeof input === 'string') {
                     const numLength = input.length
