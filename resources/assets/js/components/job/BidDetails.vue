@@ -59,10 +59,10 @@
                     >({{ getNumberOfImages() }})</span>
                     </v-icon>
                     <v-icon
-                            ref="job-add-task"
+                            ref="job-add-task-icon"
                             v-if="canAddATask() && !isCustomer"
-                            class="nav-btn-position"
-                            :class="jobTasksNotifications() ? 'red--text' : null"
+                        class="nav-btn-position"
+                            :class="canAddATask() && !isCustomer ? 'red--text' : null"
                             name="addTaskToBid"
                             id="addTaskToBid"
                             @click="$router.push('/job/add/task')"
@@ -919,7 +919,7 @@
             jobTasksNotifications() {
 
                 if (this.atleastOneJobTaskExists()) {
-                    return this.subHasInitiatedABid()
+                    return false
                 } else {
                     return true
                 }
