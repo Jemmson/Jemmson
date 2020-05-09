@@ -15,7 +15,7 @@ class StripeExpress extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'customer_stripe_id', 'stripe_user_id');
     }
 
     public function stripeEvent()
