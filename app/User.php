@@ -189,8 +189,6 @@ class User extends SparkUser
     )
     {
 
-//        dd('hello');
-
         $sub = self::getContractorByPhone($phone, $id);
 
         if (\is_null($sub)) {

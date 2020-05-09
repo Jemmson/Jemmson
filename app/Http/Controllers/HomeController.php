@@ -66,7 +66,7 @@ class HomeController extends Controller
         $this->validate(
             $request,
             [
-                'email' => 'required|email',
+                'email' => 'required|email|unique:users,email',
                 'first_name' => 'required|string',
                 'last_name' => 'required|string',
                 'phone_number' => 'required|min:10|max:14',
