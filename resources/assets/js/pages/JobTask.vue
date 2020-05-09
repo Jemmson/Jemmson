@@ -163,7 +163,9 @@
                             </v-list-item-content>
                         </v-list-item>
 
-                        <v-list-item>
+                        <v-list-item
+                            v-if="isContractor()"
+                        >
                             <v-list-item-content>Total Sub Price:</v-list-item-content>
                             <v-list-item-content class="align-end">
                                 <div class="flex">

@@ -154,7 +154,7 @@ class TaskController extends Controller
                     $bcjtask->jobTask()->get()->first()->jobTaskStatuses()->get();
 
                 $bcjtask['job_task']['job']['sub_status'] =
-                    $bcjtask->jobTask()->get()->first()->subStatuses()->orderBy('updated_at', 'desc')->get()->where('user_id', '=', Auth::user()->getAuthIdentifier());
+                    $bcjtask->jobTask()->get()->first()->subStatuses()->orderBy('updated_at', 'asc')->where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
 
                 $bcjtask['job_task']['task'] = $bcjtask->jobTask()->get()->first()->task()->select([
                     'id',
