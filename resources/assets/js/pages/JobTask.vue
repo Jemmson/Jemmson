@@ -5,7 +5,7 @@
 
         <div class="col-12">
             <v-btn
-                    class="w-full primary mb-1rem"
+                    class="w-full mb-1rem"
                     text
                     @click.prevent="goBack()"
             >
@@ -140,7 +140,7 @@
                     </v-icon>
                 </div>
 
-                <v-card-text v-if="isContractor">
+                <v-card-text v-if="isContractor()">
 
                     <v-card-title
                             class="error--text"
@@ -230,7 +230,7 @@
                 </v-card-text>
 
 
-                <v-card-text v-if="!isContractor">
+                <v-card-text v-if="!isContractor()">
 
                     <v-text-field
                             id="totalTaskPrice"

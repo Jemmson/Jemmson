@@ -112,6 +112,16 @@ class User extends SparkUser
         return $this->hasMany(Feedback::class);
     }
 
+    public function stripeInvoices()
+    {
+        return $this->hasMany(StripeInvoice::class, 'customer_id', 'stripe_id');
+    }
+
+    public function stripeBillingInvoices()
+    {
+        return $this->hasMany(StripeBillingInvoice::class, 'customer_id', 'customer_stripe_id');
+    }
+
     public function elements()
     {
         return $this->belongsTo(Element::class);
