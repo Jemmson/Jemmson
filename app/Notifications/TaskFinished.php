@@ -48,7 +48,7 @@ class TaskFinished extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         if ($this->customer) {
-            $custom = "Please approve the task \n";
+            $custom = "Please approve the task. \n";
             $generalStatus = 'general_finished_work';
             $subStatus = '';
         } else {
@@ -58,8 +58,8 @@ class TaskFinished extends Notification implements ShouldQueue
         }
         return (new MailMessage)
                     ->line("The task: " . $this->task->name . " has been finished. ")
-                    ->line($custom)
-                    ->action(' View Task ', url('/login/mix/' .
+                    ->line($custom . " ")
+                    ->action(' View Task ' . ": ", url('/login/mix/' .
                         $this->task->jobTask()->first()->job_id . '/' .
                         $this->user->generateToken(
                             $this->user->id,
@@ -93,6 +93,7 @@ class TaskFinished extends Notification implements ShouldQueue
         $text = "The task: " . $this->task->name . " has been finished. "
             . $custom
             . "' View Task '\n"
+            . ": "
             . url('/login/mix/' .
                 $this->task->jobTask()->first()->job_id . '/' .
                 $this->user->generateToken(
