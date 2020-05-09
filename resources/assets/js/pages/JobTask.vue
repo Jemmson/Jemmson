@@ -140,12 +140,12 @@
                     </v-icon>
                 </div>
 
-                <v-card-text v-if="isContractor()">
+                <v-card-text>
 
                     <v-card-title
                             class="error--text"
                             style="font-size: 12pt;"
-                            v-if="cust_final_price < sub_final_price"
+                            v-if="isContractor() && cust_final_price < sub_final_price"
                     >* The Bid You Accepted Is Higher Than Your Bid Price
                     </v-card-title>
 
@@ -230,7 +230,7 @@
                 </v-card-text>
 
 
-                <v-card-text v-if="!isContractor()">
+                <v-card-text v-if="isContractor()">
 
                     <v-text-field
                             id="totalTaskPrice"
