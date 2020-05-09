@@ -428,6 +428,9 @@
         <section>
             <v-card>
                 <v-card-title>Actions</v-card-title>
+                <v-card-subtitle
+                        v-if="subHasNotFinishedTask(jobTask)"
+                >Waiting For Sub</v-card-subtitle>
                 <v-card-actions v-if="isGeneral()">
                     <v-btn
                             v-if="jobIsNotComplete()"
@@ -466,10 +469,6 @@
                     >
                         Change Task
                     </v-btn>
-                    <h5
-                            v-if="subHasNotFinishedTask(jobTask)"
-                            class="text-center"
-                    >Waiting For Sub</h5>
                     <v-btn
                             v-if="contractorWantsToDeleteTheTask(jobTask)"
                             class="w-full mb-half-rem"

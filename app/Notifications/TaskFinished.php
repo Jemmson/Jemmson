@@ -48,7 +48,7 @@ class TaskFinished extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         if ($this->customer) {
-            $custom = "Please approve the task ";
+            $custom = "Please approve the task \n";
             $generalStatus = 'general_finished_work';
             $subStatus = '';
         } else {
@@ -82,7 +82,7 @@ class TaskFinished extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         if ($this->customer) {
-            $custom = "Please approve the task. ";
+            $custom = "Please approve the task. \n";
             $generalStatus = 'general_finished_work ';
             $subStatus = '';
         } else {
