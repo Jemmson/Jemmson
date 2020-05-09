@@ -164,7 +164,7 @@
                         </v-list-item>
 
                         <v-list-item
-                            v-if="isContractor()"
+                                v-if="isContractor()"
                         >
                             <v-list-item-content>Total Sub Price:</v-list-item-content>
                             <v-list-item-content class="align-end">
@@ -358,15 +358,13 @@
                     :id="jobTask ? 'task-subs-' + jobTask.id : 0"
                     v-if="isGeneral() && jobHasSubs()"
             >
-                <div class="flex justify-content-between">
-                    <v-card-title>Bids</v-card-title>
-                    <v-card-title
-                            class="error--text"
-                            style="font-size: 12pt;"
-                            v-if="atleastOneSubHasAHigherBidPrice(jobTask.bid_contractor_job_tasks)"
-                    >* Subs Bid Is Higher Than Your Bid Price
-                    </v-card-title>
-                </div>
+                <v-card-title>Bids</v-card-title>
+                <v-card-subtitle
+                        class="error--text"
+                        style="font-size: 12pt;"
+                        v-if="atleastOneSubHasAHigherBidPrice(jobTask.bid_contractor_job_tasks)"
+                >* Subs Bid Is Higher Than Your Bid Price
+                </v-card-subtitle>
                 <v-card-text>
                     <div class="flex justify-content-around">
                         <strong class="uppercase">Sub</strong>
@@ -430,7 +428,8 @@
                 <v-card-title>Actions</v-card-title>
                 <v-card-subtitle
                         v-if="subHasNotFinishedTask(jobTask)"
-                >Waiting For Sub</v-card-subtitle>
+                >Waiting For Sub
+                </v-card-subtitle>
                 <v-card-actions v-if="isGeneral()">
                     <v-btn
                             v-if="jobIsNotComplete()"

@@ -13,7 +13,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
 
-            <v-card-title class="flex flex-column pt-6"
+            <v-card-title class="flex flex-column pt-6 w-break"
                           v-if="initiateBidForSubForm.counter <= 0">Invite A Subcontractor - {{
                 taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase() }}
             </v-card-title>
