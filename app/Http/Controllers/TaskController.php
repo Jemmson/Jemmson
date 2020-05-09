@@ -150,7 +150,8 @@ class TaskController extends Controller
                     'status'
                 ])->get()->first();
 
-                $bcjtask['job_task']['job']['job_task_status'] = $bcjtask->jobTask()->get()->first()->jobTaskStatuses()->get();
+                $bcjtask['job_task']['job']['job_task_status'] =
+                    $bcjtask->jobTask()->get()->first()->jobTaskStatuses()->where('user_id', '=', Auth::user()->getAuthIdentifier())->get();
 
                 $bcjtask['job_task']['job']['sub_status'] = $bcjtask->jobTask()->get()->first()->subStatuses()->get();
 
@@ -1420,7 +1421,7 @@ class TaskController extends Controller
                     $job->save();
                 }
             }
-            if($request->updateBasePrice){
+            if ($request->updateBasePrice) {
                 $task->proposed_cust_price = $request->taskPrice;
                 $task->save();
             }
