@@ -35,6 +35,8 @@ import RegisterQuickBooks from './pages/RegisterQuickBooks'
 import Register from './pages/Register'
 import UserAuthorizationPage from './pages/UserAuthorizationPage'
 import Terms from "./pages/Terms";
+import PasswordReset from "./pages/PasswordReset";
+import PasswordEmailVerification from "./pages/PasswordEmailVerification";
 // import BidTask from './components/job/BidTask';
 
 
@@ -54,6 +56,14 @@ const routes = [
   {
     path: '/bids/subs',
     component: Jobs
+  },
+  {
+    path: '/passwordEmailVerification',
+    component: PasswordEmailVerification
+  },
+  {
+    path: '/passwordReset',
+    component: PasswordReset
   },
   {
     path: '/job/tasks',

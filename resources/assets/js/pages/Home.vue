@@ -267,6 +267,11 @@
                     this.$router.push('/bids')
                 }
 
+                if (Spark
+                    && Spark.state && Spark.state.user && Spark.state.user.password_updated === 0) {
+                    this.$router.push('/furtherInfo')
+                }
+
                 return Spark && Spark.state
 
             },

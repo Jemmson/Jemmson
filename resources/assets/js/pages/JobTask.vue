@@ -358,10 +358,10 @@
                     :id="jobTask ? 'task-subs-' + jobTask.id : 0"
                     v-if="isGeneral() && jobHasSubs()"
             >
+
                 <v-card-title>Bids</v-card-title>
                 <v-card-subtitle
                         class="error--text"
-                        style="font-size: 12pt;"
                         v-if="atleastOneSubHasAHigherBidPrice(jobTask.bid_contractor_job_tasks)"
                 >* Subs Bid Is Higher Than Your Bid Price
                 </v-card-subtitle>

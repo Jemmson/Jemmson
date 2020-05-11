@@ -62,7 +62,11 @@
 
         </section>
 
-        <section v-else-if="(onInitiateBidPage() || onImageAssociationPage()) && !isCustomer()">
+        <section v-else-if="(
+            onInitiateBidPage()
+            || onImageAssociationPage())
+            && !isCustomer()"
+        >
             <header-bio
                     ref="homePage"
                     :name="user.first_name + ' ' + user.last_name"

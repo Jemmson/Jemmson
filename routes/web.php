@@ -35,6 +35,11 @@ Route::get('/quickbooks/getCachedCompanyInfo', 'QuickbooksController@getCachedCo
 Route::post('/register/contractor', 'RegisterController@registerContractor');
 Route::post('/task/addTask', 'TaskController@addTask');
 
+Route::get('/pwr', function () {
+    return view('reset')
+        ->with(['token' => 1234, 'email' => 'sdf@asdsa.com']);
+});
+
 // login routes
 Route::get('login', 'Auth\LoginController@show');
 Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);

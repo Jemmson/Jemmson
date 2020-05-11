@@ -60,7 +60,7 @@
                     text
                     color="primary"
                     link
-                    href="/password/reset"
+                    @click="$router.push('/passwordEmailVerification')"
             >Forgot Your Password?
             </v-btn>
         </v-col>

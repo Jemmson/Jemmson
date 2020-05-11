@@ -26,8 +26,6 @@
                     <v-card class="mt-4">
                         <v-card-title>Address</v-card-title>
                         <v-card-text>
-
-
                             <a
                                     v-if="getAddress() !== 'Address Not Available'"
                                     target="_blank"
