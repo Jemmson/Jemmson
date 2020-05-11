@@ -12,6 +12,17 @@
                     style="color: black"
             >You will need to set up a credit card to bid on this job
             </v-card-title>
+            <div class="flex justify-content-between w-full">
+                <v-card-title style="font-size: 1rem">General Contractor:
+                    <v-btn
+                            color="primary"
+                            text
+                            @click="viewContractorInfoForSubs()"
+                    >
+                        {{ getCompanyName() }}
+                    </v-btn>
+                </v-card-title>
+            </div>
             <div class="flex justify-content-between">
                 <div>
                     <v-card-title
@@ -364,6 +375,30 @@
             user: Object
         },
         methods: {
+
+            getCompanyName(){
+                if (
+                    this.bidTask
+                    && this.bidTask.job_task
+                    && this.bidTask.job_task.task
+                    && this.bidTask.job_task.task.contractor
+                ) {
+                    return this.bidTask.job_task.task.contractor.company_name;
+                }
+            },
+
+            viewContractorInfoForSubs() {
+
+                if (
+                    this.bidTask
+                    && this.bidTask.job_task
+                    && this.bidTask.job_task.job
+                ) {
+                    this.$store.commit('setCurrentPage', '/contractor-info');
+                    this.$router.push({name: 'contractor-info', params: {contractorId: this.bidTask.job_task.job.contractor_id}})
+                }
+
+            },
 
             getVerification() {
                 if (
