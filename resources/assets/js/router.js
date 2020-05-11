@@ -54,6 +54,10 @@ const routes = [
     component: Terms
   },
   {
+    path: '/termsAuth',
+    component: Terms
+  },
+  {
     path: '/bids/subs',
     component: Jobs
   },

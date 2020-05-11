@@ -367,13 +367,12 @@
                 </v-card-subtitle>
                 <v-card-text>
                     <div class="flex justify-content-around">
-                        <strong class="uppercase">Sub</strong>
                         <strong class="uppercase">Bid Price</strong>
                         <strong class="uppercase">Action</strong>
                     </div>
                     <v-divider></v-divider>
 
-                    <div class="flex mb-2 justify-content-between"
+                    <div class="mb-2 flex flex-col"
                          v-for="bid in jobTask.bid_contractor_job_tasks"
                          :key="jobTask ? bid.id : 0">
 
@@ -383,40 +382,42 @@
                                 @click="viewContractorInfo(bid.contractor_id)">{{
                             getCompanyName(bid) }}
                         </v-btn>
-                        <div>
-                            <div v-if="subPriceHigherThanBidPrice(bid)"
-                                 class="error--text flex-1"
-                            >$ {{ getBidPrice(bid) }} *
+                        <div class="flex justify-content-between">
+                            <div>
+                                <div v-if="subPriceHigherThanBidPrice(bid)"
+                                     class="error--text flex-1"
+                                >$ {{ getBidPrice(bid) }} *
+                                </div>
+                                <div
+                                        v-else
+                                        class="flex-1"
+                                >$ {{ getBidPrice(bid) }}
+                                </div>
                             </div>
-                            <div
-                                    v-else
-                                    class="flex-1"
-                            >$ {{ getBidPrice(bid) }}
-                            </div>
-                        </div>
-                        <div>
-                            <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
+                            <div>
+                                <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
 
 
-                            <v-btn
-                                    v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
+                                <v-btn
+                                        v-if="!checkIfBidHasBeenAccepted(jobTask, bid)
                                                                     && checkIfBidHasBeenSent(bid)"
-                                    @click="acceptSubBidForTask(bid, jobTask)"
-                                    color="primary"
-                                    text
-                                    :loading="disabled.accept"
-                            >
-                                Accept
-                            </v-btn>
+                                        @click="acceptSubBidForTask(bid, jobTask)"
+                                        color="primary"
+                                        text
+                                        :loading="disabled.accept"
+                                >
+                                    Accept
+                                </v-btn>
 
 
-                            <div
-                                    v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
-                                <strong>Accepted</strong>
+                                <div
+                                        v-else-if="checkIfBidHasBeenAccepted(jobTask, bid)">
+                                    <strong>Accepted</strong>
+                                </div>
+                                <div
+                                        v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
+                                    <strong>Pending</strong></div>
                             </div>
-                            <div
-                                    v-else-if="!checkIfAnyBidHasBeenAccepted(jobTask) && !checkIfBidHasBeenSent(bid)">
-                                <strong>Pending</strong></div>
                         </div>
                     </div>
                 </v-card-text>

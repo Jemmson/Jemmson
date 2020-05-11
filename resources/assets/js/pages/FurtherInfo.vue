@@ -200,7 +200,7 @@
                         id="terms"
                         ref="terms"
                         label="Terms"
-                        @click="$router.push('/terms')"
+                        @click="goToTerms()"
                         color="blue"
                         text="">Terms
                 </v-btn>
@@ -367,6 +367,10 @@
             ...mapActions([
                 'checkMobileNumber',
             ]),
+
+            goToTerms() {
+                this.$router.push('/termsAuth')
+            },
 
             zipMustHaveAtleast5characters() {
                 return this.form.zip.length > 4 || 'Zip Code Must Be At Least 5 Characters'
