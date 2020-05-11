@@ -366,7 +366,7 @@
                 >* Subs Bid Is Higher Than Your Bid Price
                 </v-card-subtitle>
                 <v-card-text>
-                    <div class="flex justify-content-around">
+                    <div class="flex justify-content-between">
                         <strong class="uppercase">Bid Price</strong>
                         <strong class="uppercase">Action</strong>
                     </div>
@@ -419,6 +419,7 @@
                                     <strong>Pending</strong></div>
                             </div>
                         </div>
+                        <hr>
                     </div>
                 </v-card-text>
             </v-card>
