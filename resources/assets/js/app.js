@@ -188,6 +188,8 @@ router.beforeEach((to, from, next) => {
                             if (store.state.user.user.password_updated === 0) {
                                 if (to.fullPath === '/furtherInfo') {
                                     next()
+                                } else if (to.fullPath === '/termsAuth') {
+                                    next()
                                 } else {
                                     next('/furtherInfo')
                                 }
@@ -285,39 +287,39 @@ var app = new Vue({
     },
     methods: {
         async passwordReset() {
-          if (this.passwordsMatch()) {
-              this.loading = true;
-              const {data} = await axios.post('/password/reset', {
-                  email: this.form.email,
-                  password: this.form.password,
-                  password_confirmation: this.form.password_confirmation,
-                  token: this.form.token
-              });
+            if (this.passwordsMatch()) {
+                this.loading = true;
+                const {data} = await axios.post('/password/reset', {
+                    email: this.form.email,
+                    password: this.form.password,
+                    password_confirmation: this.form.password_confirmation,
+                    token: this.form.token
+                });
 
-              if (data.error) {
-                  console.log('failure', data)
-              } else {
-                  Bus.$emit('updateUser');
-                  this.$router.push('/home');
-                  this.showHome = true;
-                  // console.log('success', data)
-              }
-              this.loading = false;
-          }
+                if (data.error) {
+                    console.log('failure', data)
+                } else {
+                    Bus.$emit('updateUser');
+                    this.$router.push('/home');
+                    this.showHome = true;
+                    // console.log('success', data)
+                }
+                this.loading = false;
+            }
         },
-        setToken (token) {
+        setToken(token) {
             this.form.token = token;
         },
-        setEmail (email) {
+        setEmail(email) {
             this.form.email = email;
         },
         passwordsMatch() {
             return this.form.password_confirmation === this.form.password
         },
-        passwordsMatchRule(){
+        passwordsMatchRule() {
             return this.passwordsMatch() || 'Passwords Must Match'
         },
-        goHome(){
+        goHome() {
             // this.$router.push('/home')
             window.location = '/#/home'
         }

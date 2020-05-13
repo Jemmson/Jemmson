@@ -3,6 +3,11 @@
 namespace Tests\Feature;
 
 use App\Location;
+use Tests\Feature\Traits\JobTaskTrait;
+use Tests\Feature\Traits\JobTrait;
+use Tests\Feature\Traits\TaskTrait;
+use Tests\Feature\Traits\UserTrait;
+use Tests\Feature\Traits\UtilitiesTrait;
 use Tests\TestCase;
 use App\User;
 use App\Customer;
@@ -19,13 +24,18 @@ use Illuminate\Notifications\AnonymousNotifiable;
 class InitiateBidTest extends TestCase
 {
 
-    use RefreshDatabase;
     use WithFaker;
+    use UtilitiesTrait;
     use Setup;
+    use UserTrait;
+    use JobTaskTrait;
+    use TaskTrait;
+    use JobTrait;
+    use RefreshDatabase;
 
     protected function initiateBid($general, $params)
     {
-        return  $this->actingAs($general)->json('POST', '/initiate-bid', $params);
+        return $this->actingAs($general)->json('POST', '/initiate-bid', $params);
     }
 
     public function test_That_The_Right_Response_Is_Returned_And_DB_Is_Populated_Appropriately()
@@ -33,23 +43,67 @@ class InitiateBidTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $general = $this->createAUser('contractor', 1, 1, [], [
+        $general = $this->createUser('contractor', 1, 1, [], [
             'company_name' => 'Albertsons',
             'free_jobs' => 5
         ]);
 
+        $lastName = $this->faker->lastName;
+        $firstName = $this->faker->firstName;
+        $jobName = "2020-" . rand(100, 999) . "-$lastName-$firstName";
+
         $response = $this->initiateBid($general, [
-            'customerName' => 'karen willis',
-            'email' => $this->faker->email,
-            'firstName' => 'karen',
-            'lastName' => 'willis',
-            'jobName' => 'pool work',
-            'phone' => '4807034902',
-            'quickbooks_id' => '',
+            "busy" => false,
+            "customerName" => "$firstName $lastName",
+            "email" => "",
+            "errors" => ["errors" => []],
+            "firstName" => "$firstName",
+            "id" => "",
+            "jobName" => $jobName,
+            "lastName" => $this->faker->lastName,
+            "paymentType" => "cash",
+            "paymentTypeDefault" => null,
+            "phone" => "(480)-703-4902",
+            "quickbooks_id" => "",
+            "successful" => false,
+            "taxRate" => 0
         ]);
 
-
-        $response->assertSeeText('Bid was created');
+        $response->assertJsonStructure(
+            [
+                "job" => [
+                    "contractor_id",
+                    "customer_id",
+                    "job_name",
+                    "payment_type",
+                    "status",
+                    "location_id",
+                    "updated_at",
+                    "created_at",
+                    "id"
+                ],
+                "customer" => [
+                    "name",
+                    "phone",
+                    "first_name",
+                    "last_name",
+                    "usertype",
+                    "password_updated",
+                    "updated_at",
+                    "created_at",
+                    "id",
+                    "tax_rate"
+                ],
+                "jobStatuses" => [
+                    "job_id",
+                    "status_number",
+                    "status",
+                    "updated_at",
+                    "created_at",
+                    "id"
+                ]
+            ]
+        );
 
 //        Contractor can create new a new job
         $this->assertDatabaseHas('contractors', [
@@ -59,7 +113,7 @@ class InitiateBidTest extends TestCase
         $this->assertGreaterThan(0, $general->contractor()->get()->first()->free_jobs);
 
 //        Check a customer has been added to the database
-        $newCustomer = User::where('name', '=', 'karen willis')->get()->first();
+        $newCustomer = User::where('name', '=', "$firstName $lastName")->get()->first();
 
         $this->assertDatabaseHas('users', [
             "id" => $newCustomer->id,
@@ -82,16 +136,35 @@ class InitiateBidTest extends TestCase
 
 //      Check that a job has been created
         $this->assertDatabaseHas('jobs', [
-                'contractor_id' => $general->id,
-                'customer_id' => $newCustomer->id,
-                'job_name' => "pool work",
-                'status' => "bid.initiated",
-                'location_id' => null
+            'contractor_id' => $general->id,
+            'customer_id' => $newCustomer->id,
+            'job_name' => $jobName,
+            'status' => "bid.initiated",
+            'location_id' => null
         ]);
+
+
+        $res = json_decode($response->getContent());
+
+//        dd($res->job->id);
 
 //      Check the customer has been notified
         $this->assertDatabaseHas('user_tokens', [
-            "user_id" => $newCustomer->id
+            "job_id" => $res->job->id,
+            "user_id" => $res->customer->id,
+            "job_task_id" => null,
+            "job_step" => $res->jobStatuses->status,
+            "job_task_step" => null,
+            "type" => 'email',
+        ]);
+
+        $this->assertDatabaseHas('user_tokens', [
+            "job_id" => $res->job->id,
+            "user_id" => $res->customer->id,
+            "job_task_id" => null,
+            "job_step" => $res->jobStatuses->status,
+            "job_task_step" => null,
+            "type" => 'text',
         ]);
 
         $this->assertDatabaseHas('customers', [
@@ -103,21 +176,21 @@ class InitiateBidTest extends TestCase
             "notes" => null
         ]);
 
-        Notification::fake();
-
-        // Assert that no notifications were sent...
-        Notification::assertNothingSent();
-
-        $job = Job::where('job_name', '=', 'pool work')->get()->first();
-
-        Notification::assertSentTo(
-            $newCustomer,
-            $job,
-            BidInitiated::class,
-            function ($notification, $channels) use ($job, $newCustomer) {
-                return $notification->job[0]->id === $job->id;
-            }
-        );
+//        Notification::fake();
+//
+//        // Assert that no notifications were sent...
+//        Notification::assertNothingSent();
+//
+//        $job = Job::where('job_name', '=', $jobName)->get()->first();
+//
+//        Notification::assertSentTo(
+//            $newCustomer,
+//            $job,
+//            BidInitiated::class,
+//            function ($notification, $channels) use ($job, $newCustomer) {
+//                return $notification->job[0]->id === $job->id;
+//            }
+//        );
 
         // Assert a notification was sent to the given users...
 //        Notification::assertSentTo(

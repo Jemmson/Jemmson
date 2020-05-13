@@ -228,7 +228,7 @@ class User extends SparkUser
             ], 200);
         }
 
-        self::notifySubAboutNewBid($sub, $jobTask->task_id);
+        self::notifySubAboutNewBid($sub, $jobTaskId, $jobTask->job_id);
         self::setSubStatusToInitiated($sub, $jobTaskId);
 
         return $sub;
@@ -451,9 +451,9 @@ class User extends SparkUser
         $this->setSubStatus($sub->id, $jobTaskId, 'initiated');
     }
 
-    protected function notifySubAboutNewBid($sub, $taskId)
+    protected function notifySubAboutNewBid($sub, $jobTaskId, $jobId)
     {
-        $sub->notify(new NotifySubOfTaskToBid($taskId, $sub));
+        $sub->notify(new NotifySubOfTaskToBid($jobTaskId, $sub, $jobId));
     }
 
     protected function addPreferredPaymentTypeForGeneralForSub(

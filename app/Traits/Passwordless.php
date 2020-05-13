@@ -45,12 +45,16 @@ trait Passwordless
     /**
      * Generate a token for the current user.
      *
+     * @param $user_id
      * @param bool $save Generate token and save it.
      * @param integer $job_id Id of the job so that a token is only tied to that job not some other contractors job.
-     * @param string $step Current Workflow Step.
+     * @param string $job_step
+     * @param string $job_task_step
+     * @param string $sub_step
      * @param string $type what the token was created for, email, text, etc.
      *
-     * @return PasswordlessToken
+     * @param null $taskId
+     * @return UserToken|null
      */
 //    public function generateToken($save = false)
     public function generateToken(
@@ -60,7 +64,8 @@ trait Passwordless
         $job_step = 'not set',
         $job_task_step = 'not set',
         $sub_step = 'not set',
-        $type = 'not set'
+        $type = 'not set',
+        $jobTaskId = null
     )
     {
         $now = Carbon::now();
@@ -74,7 +79,8 @@ trait Passwordless
             'token' => str_random(16),
             'type' => $type,
             'created_at' => time(),
-            'expires_at' => $now->addHour()
+            'expires_at' => $now->addHour(),
+            'job_task_id' => $jobTaskId,
         ];
 //        $token = App::make(PasswordlessToken::class);
         $token->fill($attributes);

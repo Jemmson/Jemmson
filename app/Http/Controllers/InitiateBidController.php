@@ -134,7 +134,11 @@ class InitiateBidController extends Controller
 
         // notify the user
         $request->session()->flash('status', 'Your bid was created');
-        return "Bid was created";
+        return response()->json([
+            "job" => $job,
+            "customer" => $customer,
+            "jobStatuses" => $js
+        ]);
 
     }
 

@@ -585,7 +585,7 @@ class TaskController extends Controller
         try {
             $jobTask->delete();
         } catch (\Excpetion $e) {
-            Log::error('Deleteing JobTask: ' . $e->getMessage());
+            Log::error('Deleting JobTask: ' . $e->getMessage());
             return response()->json(["errors" => ['error' => $e->getMessage()]], 422);
         }
 

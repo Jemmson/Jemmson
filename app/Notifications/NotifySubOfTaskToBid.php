@@ -11,11 +11,12 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Laravel\Spark\Notifications\SparkChannel;
 use Laravel\Spark\Notifications\SparkNotification;
+use App\JobTask;
 
 class NotifySubOfTaskToBid extends Notification implements ShouldQueue
 {
 
-    protected $taskId;
+    protected $jobTaskId;
     protected $user;
     protected $emailToken;
     protected $nexmoToken;
@@ -27,38 +28,40 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($taskId, $user)
+    public function __construct($jobTaskId, $user, $jobId)
     {
-        $this->taskId = $taskId;
+        $this->jobTaskId = $jobTaskId;
         $this->user = $user;
-        $this->createEmailToken($taskId, $user);
-        $this->createNexmoToken($taskId, $user);
+        $this->createEmailToken($jobId, $jobTaskId, $user);
+        $this->createNexmoToken($jobId, $jobTaskId, $user);
 
     }
 
-    private function createEmailToken($taskId, $user)
+    private function createEmailToken($jobId, $jobTaskId, $user)
     {
         $this->emailToken = $user->generateToken(
             $this->user->id,
             true,
-            $taskId,
+            $jobId,
             'in_progress',
             'initiated',
             'initiated',
-            'email'
+            'email',
+            $jobTaskId
         )->token;
     }
 
-    private function createNexmoToken($taskId, $user)
+    private function createNexmoToken($jobId, $jobTaskId, $user)
     {
         $this->nexmoToken = $this->user->generateToken(
             $user->id,
             true,
-            $taskId,
+            $jobId,
             'in_progress',
             'initiated',
             'initiated',
-            'text'
+            'text',
+            $jobTaskId
         )->token;
     }
 
@@ -81,7 +84,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $task = Task::find($this->taskId);
+        $task = Task::find($this->jobTaskId);
         if (true) {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' back to Jemmson.')
@@ -111,20 +114,21 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
         return (new NexmoMessage)
                     ->content('You have a potential job! Please sign in to see it. ' .
                         url('/login/sub/task/'.
-                            $this->taskId . '/' . $this->nexmoToken, [], true) . ' ');
+                            $this->jobTaskId . '/' . $this->nexmoToken, [], true) . ' ');
     }
 
     public function toSpark($notifiable)
     {
         return (new SparkNotification)
-                      ->action('View Task', '/bid/tasks?taskId=' . $this->taskId)
+                      ->action('View Task', '/bid/tasks?taskId=' . $this->jobTaskId)
                       ->icon('fa-users')
                       ->body('A contractor sent you a task!');
     }
 
     public function toBroadcast($notifiable)
     {
-        $task = Task::find($this->taskId);
+        $jt = JobTask::find($this->jobTaskId);
+        $task = Task::find($jt->task_id);
         return new BroadcastMessage([
             'task' => $task,
         ]);
