@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
+use Illuminate\Support\Facades\Log;
 use Laravel\Spark\Notifications\SparkChannel;
 use Laravel\Spark\Notifications\SparkNotification;
 use App\JobTask;
@@ -84,21 +85,21 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $task = Task::find($this->jobTaskId);
+        $jobTask = JobTask::find($this->jobTaskId);
         if (true) {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' back to Jemmson.')
                 ->line('You have a potential job! Please sign in to see it. ')
-                ->action('Login ', url('/login/sub/task/'. $task->id . '/' . $this->emailToken, [], true))
-                ->line('Thank you for using our application!');
+                ->action('Login ', url('/login/sub/task/'. $jobTask->id . '/' . $this->emailToken, [], true))
+                ->line('Thank you for using our application!');;
         } else {
             return (new MailMessage)
                 ->line('Welcome ' . $this->user->name . ' to Jemmson.')
                 ->line('Please follow these steps to sign up for the site. and review your task.')
                 ->action('Login ', url('/login/sub/task/'.
-                    $task->id . '/' .
+                    $jobTask->id . '/' .
                     $this->emailToken, [], true))
-                ->line('Thank you for using our application!');
+                ->line('Thank you for using our application!');;
         }
 
     }
@@ -112,9 +113,9 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         return (new NexmoMessage)
-                    ->content('You have a potential job! Please sign in to see it. ' .
-                        url('/login/sub/task/'.
-                            $this->jobTaskId . '/' . $this->nexmoToken, [], true) . ' ');
+            ->content('You have a potential job! Please sign in to see it. ' .
+                url('/login/sub/task/'.
+                    $this->jobTaskId . '/' . $this->nexmoToken, [], true) . ' ');;
     }
 
     public function toSpark($notifiable)
