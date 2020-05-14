@@ -12,6 +12,7 @@ import Jobs from './pages/Jobs'
 import JobTasks from './pages/JobTasks'
 import AddJobTask from './pages/AddJobTask'
 import JobTask from './pages/JobTask'
+import AssociatedContractors from './pages/AssociatedContractors'
 
 import ContractorInfo from './pages/ContractorInfo'
 import CustomerInfo from './pages/CustomerInfo'
@@ -56,6 +57,10 @@ const routes = [
   {
     path: '/termsAuth',
     component: Terms
+  },
+  {
+    path: '/associatedContractors',
+    component: AssociatedContractors
   },
   {
     path: '/bids/subs',

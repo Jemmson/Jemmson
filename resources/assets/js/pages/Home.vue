@@ -18,28 +18,6 @@
                                 @click="showSection('details')"
                         >mdi-details
                         </v-icon>
-                        <!--                        <v-icon-->
-                        <!--                                class="nav-btn-position"-->
-                        <!--                                @click="showSection('subs')"-->
-                        <!--                        >mdi-currency-usd-->
-                        <!--                        </v-icon>-->
-                        <!--                        <v-icon-->
-                        <!--                                ref="jobTaskNavImage"-->
-                        <!--                                class="nav-btn-position"-->
-                        <!--                                @click="showSection('contractors')"-->
-                        <!--                        >mdi-image-edit</v-icon>-->
-                        <!--                        <v-icon-->
-                        <!--                                v-show="isContractor()"-->
-                        <!--                                class="nav-btn-position"-->
-                        <!--                                @click="showSection('customers')"-->
-                        <!--                        >mdi-google-maps-->
-                        <!--                        </v-icon>-->
-                        <!--                        <v-icon-->
-                        <!--                                class="nav-btn-position"-->
-                        <!--                                @click="showSection('invoices')"-->
-                        <!--                        >mdi-message-->
-                        <!--                        </v-icon>-->
-
                         <img
                                 ref="subsNavButton"
                                 class="nav-btn-position"
@@ -48,16 +26,16 @@
                                 style="height:1.6rem"
                                 src="/img/Stripe logo - slate.svg" alt=""
                         >
-
-                        <!--                        <v-icon-->
-                        <!--                                ref="subsNavButton"-->
-                        <!--                                class="nav-btn-position"-->
-                        <!--                                v-show="isContractor()"-->
-                        <!--                                @click="showSection('stripe')"-->
-                        <!--                        ></v-icon>-->
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="goToContractorsPage()"
+                        >mdi-face
+                        </v-icon>
                     </div>
                 </v-card-actions>
             </v-card>
+
+
 
         </section>
 
@@ -189,6 +167,10 @@
                 if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
                     return Spark.state.user.photo_url
                 }
+            },
+
+            goToContractorsPage(){
+              this.$router.push('/associatedContractors')
             },
 
             hasStripe() {

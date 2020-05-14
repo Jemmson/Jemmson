@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class ContractorContractor extends Model
 {
@@ -33,4 +34,28 @@ class ContractorContractor extends Model
             ->whereIn('task_id', $jobTask_taskids)
             ->get();
     }
+
+    public static function getSubsNameAndId($authUser)
+    {
+        $associatedSubs = ContractorContractor::select(['subcontractor_id'])
+            ->where('contractor_id', '=', $authUser)
+            ->get();
+
+        $ids = [];
+
+        foreach ($associatedSubs as $associatedSub) {
+            array_push($ids, $associatedSub->subcontractor_id);
+        }
+
+        $subs = User::select(['id', 'name'])->whereIn('id', $ids)->get();
+
+        foreach ($subs as $sub) {
+            $sub['contractor'] = Contractor::select(['company_name'])->where('user_id', '=', $sub->id)->get()->first();
+        }
+
+
+        return $subs;
+
+    }
+
 }

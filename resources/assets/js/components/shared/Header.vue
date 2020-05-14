@@ -5,6 +5,7 @@
 
         <section v-if="onHomePage()
                 || onCustomerInfo ()
+                || onAssociatedContractorsPage ()
                 || onContractorInfo ()
                 || onSettingsPage ()
         ">
@@ -124,6 +125,9 @@
             },
             onCustomerInfo() {
                 return this.page === '/customer-info' || this.page === '/customer-info/'
+            },
+            onAssociatedContractorsPage() {
+                return this.page === '/associatedContractors'
             },
             onContractorInfo() {
                 return this.page === '/contractor-info' || this.page === '/contractor-info/'

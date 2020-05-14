@@ -137,6 +137,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/paidWithCashMessage', 'JobController@paidWithCashMessage');
     Route::get('/email/duplicate/{email}', 'ContractorController@checkDuplicateEmail');
     Route::post('/jobTask/message', 'TaskController@setChangeMessage');
+    Route::get('/contractors/getSubs', 'ContractorContractorController@getSubs');
 
 }
 );
