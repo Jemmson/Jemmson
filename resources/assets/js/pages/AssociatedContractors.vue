@@ -2,17 +2,23 @@
     <v-card
         :loading="loading"
         >
-        <v-card-title>Associated Contractors</v-card-title>
-        <v-card-text>
-            <v-list-item
-                    selectable
+
+        <v-card-title>My Subs</v-card-title>
+        <v-data-table
+                :headers="headers"
+                :items="subs"
+                class="elevation-1"
+        >
+            <template v-slot:item.id="{ item }">
+                <v-btn
+                    text
+                    color="primary"
                     @click="viewContractorInfo(item.id)"
-                    v-for="item in associated" :key="item.id">
-                <v-list-item-content>Name</v-list-item-content>
-                <v-list-item-content v-if="item.contractor.company_name">{{ item.contractor.company_name }}</v-list-item-content>
-                <v-list-item-content v-else>{{ item.name }}</v-list-item-content>
-            </v-list-item>
-        </v-card-text>
+                >
+                    Select
+                </v-btn>
+            </template>
+        </v-data-table>
     </v-card>
 
 </template>
@@ -22,10 +28,25 @@
         name: "AssociatedContractors",
         data() {
             return {
+                selected: [],
                 error: {
                     exists: false,
                     message: null
                 },
+                headers: [
+                    {
+                        text: 'Company Name',
+                        align: 'start',
+                        sortable: false,
+                        value: 'company_name',
+                    },
+                    { text: 'Name', value: 'name' },
+                    { text: '', value: 'id' },
+                ],
+                item: {
+                    id: null
+                },
+                subs: [],
                 associated: null,
                 loading: false
             }
@@ -39,12 +60,24 @@
                     this.error.exists = true;
                     this.error.message = data.error.message;
                 } else {
-                    this.associated = data
+                    this.subs = this.dataTransformed(data);
                 }
                 this.loading = false;
             },
-            viewContractorInfo(contractorId) {
-                this.$router.push({name: 'contractor-info', params: {contractorId: contractorId}})
+            dataTransformed(subs){
+                let transformed = [];
+                for (let i = 0; i < subs.length; i++) {
+                    let company = {};
+                    company.id = subs[i].id;
+                    company.name = subs[i].name;
+                    company.company_name = subs[i].contractor.company_name;
+                    transformed.push(company)
+                }
+                return transformed;
+            },
+            viewContractorInfo(event) {
+                // console.log('contractorId', event)
+                this.$router.push({name: 'contractor-info', params: {contractorId: event}})
             },
         },
         mounted() {

@@ -50,7 +50,9 @@ class ContractorContractor extends Model
         $subs = User::select(['id', 'name'])->whereIn('id', $ids)->get();
 
         foreach ($subs as $sub) {
-            $sub['contractor'] = Contractor::select(['company_name'])->where('user_id', '=', $sub->id)->get()->first();
+            $sub['contractor'] = Contractor::select(['company_name'])
+                ->where('user_id', '=', $sub->id)
+                ->get()->first();
         }
 
 
