@@ -8,12 +8,13 @@
                 <v-spacer></v-spacer>
                 <div class="flex flex-col">
                     <v-icon
+                            :color="show.photo ? 'success': ''"
                             class="w-break nav-btn-position"
                             ref="showPhotoSection"
                             @click="showSection('photo')"
                     >mdi-image-edit
                     </v-icon>
-                    <div class="nav-icon-label">
+                    <div class="nav-icon-label" :class="show.photo ? 'nav-icon-label-selected': ''">
                         Change Photo
                     </div>
                 </div>
@@ -21,10 +22,11 @@
                 <div class="flex flex-col">
                     <v-icon
                             class="nav-btn-position"
+                            :color="show.contactInformation ? 'success': ''"
                             @click="showSection('contactInformation')"
                     >mdi-contacts
                     </v-icon>
-                    <div class="nav-icon-label">
+                    <div class="nav-icon-label" :class="show.contactInformation ? 'nav-icon-label-selected': ''">
                         Contact Information
                     </div>
                 </div>

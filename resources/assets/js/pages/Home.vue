@@ -16,11 +16,12 @@
 
                         <div class="flex flex-col">
                             <v-icon
+                                    :color="show.details ? 'success': ''"
                                     class="nav-btn-position"
                                     @click="showSection('details')"
                             >mdi-details
                             </v-icon>
-                            <div class="nav-icon-label">
+                            <div class="nav-icon-label" :class="show.details ? 'nav-icon-label-selected': ''">
                                 Details
                             </div>
                         </div>
@@ -36,11 +37,12 @@
 
                         <div class="flex flex-col">
                             <v-icon
+                                    :color="show.subs ? 'success': ''"
                                     class="nav-btn-position"
                                     @click="goToContractorsPage()"
                             >mdi-face
                             </v-icon>
-                            <div class="nav-icon-label">
+                            <div class="nav-icon-label" :class="show.subs ? 'nav-icon-label-selected': ''">
                                 Subs
                             </div>
                         </div>

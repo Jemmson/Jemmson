@@ -91,21 +91,23 @@
                     <div class="flex justify-content-around w-full">
                         <div class="flex flex-col">
                             <v-icon
+                                    :color="show.details ? 'success': ''"
                                     class="nav-btn-position"
                                     @click="showSection('details')"
                             >mdi-details
                             </v-icon>
-                            <div class="nav-icon-label">
+                            <div class="nav-icon-label" :class="show.details ? 'nav-icon-label-selected': ''">
                                 Details
                             </div>
                         </div>
                         <div class="flex flex-col">
                             <v-icon
+                                    :color="show.location ? 'success': ''"
                                     class="nav-btn-position"
                                     @click="showSection('location')"
                             >mdi-google-maps
                             </v-icon>
-                            <div class="nav-icon-label">
+                            <div class="nav-icon-label" :class="show.location ? 'nav-icon-label-selected': ''">
                                 Location
                             </div>
                         </div>
@@ -114,23 +116,25 @@
                              v-if="showDeclinedMsg(bidTask) && subHasMessage(bidTask)"
                         >
                             <v-icon
+                                    :color="show.messages ? 'success': ''"
                                     class="nav-btn-position"
                                     color="error"
                                     @click="showSection('messages')"
                             >mdi-message
                             </v-icon>
-                            <div class="nav-icon-label">
+                            <div class="nav-icon-label" :class="show.messages ? 'nav-icon-label-selected': ''">
                                 Messages
                             </div>
                         </div>
 
                         <div class="flex flex-col">
                             <v-icon
+                                    :color="show.images ? 'success': ''"
                                     class="nav-btn-position"
                                     @click="showSection('images')"
                             >mdi-image
                             </v-icon>
-                            <div class="nav-icon-label">
+                            <div class="nav-icon-label" :class="show.images ? 'nav-icon-label-selected': ''">
                                 Photos
                             </div>
                         </div>

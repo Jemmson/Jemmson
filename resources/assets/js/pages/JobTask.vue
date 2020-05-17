@@ -20,27 +20,30 @@
                 <div class="flex justify-content-around w-full">
                     <div class="flex flex-col">
                         <v-icon
+                                :color="show.details ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('details')"
                         >mdi-details
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.details ? 'nav-icon-label-selected': ''">
                             Details
                         </div>
                     </div>
                     <div class="flex flex-col">
                         <v-icon
+                                :color="show.prices ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('prices')"
                         >mdi-currency-usd
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.prices ? 'nav-icon-label-selected': ''">
                             Prices
                         </div>
                     </div>
 
                     <div class="flex flex-col">
                         <v-icon
+                                :color="show.images ? 'success': ''"
                                 ref="jobTaskNavImage"
                                 class="nav-btn-position"
                                 @click="showSection('images')"
@@ -49,29 +52,31 @@
                         > ({{ getImagesLength() }})</span>
 
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.images ? 'nav-icon-label-selected': ''">
                             Photos
                         </div>
                     </div>
 
                     <div class="flex flex-col">
                         <v-icon
+                                :color="show.location ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('location')"
                         >mdi-google-maps
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.location ? 'nav-icon-label-selected': ''">
                             Location
                         </div>
                     </div>
 
                     <div class="flex flex-col">
                         <v-icon
+                                :color="show.messages ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('specialInstructions')"
                         >mdi-message
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.messages ? 'nav-icon-label-selected': ''">
                             Messages
                         </div>
                     </div>
@@ -80,12 +85,13 @@
                          v-if="showSubsPanel()"
                     >
                         <v-icon
+                                :color="show.subs ? 'success': ''"
                                 ref="subsNavButton"
                                 class="nav-btn-position"
                                 @click="showSection('subPanel')"
                         >mdi-face<span> ({{ getSubsLength() }})</span>
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.subs ? 'nav-icon-label-selected': ''">
                             Subs
                         </div>
                     </div>
