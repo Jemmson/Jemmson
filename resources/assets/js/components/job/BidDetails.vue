@@ -55,9 +55,8 @@
                             Tasks
                         </div>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col" v-if="!isCustomer">
                         <v-icon
-                                v-if="!isCustomer"
                                 class="nav-btn-position"
                                 @click="showSection('location')"
                         >mdi-google-maps

@@ -76,10 +76,11 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col">
+                    <div class="flex flex-col"
+                         v-if="showSubsPanel()"
+                    >
                         <v-icon
                                 ref="subsNavButton"
-                                v-if="showSubsPanel()"
                                 class="nav-btn-position"
                                 @click="showSection('subPanel')"
                         >mdi-face<span> ({{ getSubsLength() }})</span>
