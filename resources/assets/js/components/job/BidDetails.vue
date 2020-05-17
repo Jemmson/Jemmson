@@ -24,30 +24,30 @@
                     <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 class="nav-btn-position"
-                                :color="show.jobStepper ? '#001eff': ''"
+                                :color="show.jobStepper ? 'success': ''"
                                 @click="showSection('jobStepper')"
                         >mdi-page-next
                         </v-icon>
-                        <div class="nav-icon-label" :color="show.jobStepper ? '#001eff': ''">
+                        <div class="nav-icon-label" :class="show.jobStepper ? 'nav-icon-label-selected': ''">
                             Step
                         </div>
                     </div>
                     <div class="flex flex-col nav-icon-spacing">
                         <v-icon
-                                :color="show.details ? '#001eff': ''"
+                                :color="show.details ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('details')"
 
                         >mdi-details
                         </v-icon>
-                        <div class="nav-icon-label" :color="show.details ? '#001eff': ''">
+                        <div class="nav-icon-label" :class="show.details ? 'nav-icon-label-selected': ''">
                             Details
                         </div>
                     </div>
                     <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 ref="jobTaskNavButton"
-                                :color="show.jobTask ? '#001eff': ''"
+                                :color="show.jobTask ? 'success': ''"
                                 class="nav-btn-position"
                                 :class="!isCustomer && jobTasksNotifications() ? 'red--text' : null"
                                 @click="showSection('jobTask')">mdi-briefcase<span
@@ -55,43 +55,43 @@
                                     ({{ getJobTasksLength() }})
                             </span>
                         </v-icon>
-                        <div class="nav-icon-label" :color="show.jobTask ? '#001eff': ''">
+                        <div class="nav-icon-label" :class="show.jobTask ? 'nav-icon-label-selected': ''">
                             Tasks
                         </div>
                     </div>
                     <div class="flex flex-col nav-icon-spacing" v-if="!isCustomer">
                         <v-icon
-                                :color="show.location ? '#001eff': ''"
+                                :color="show.location ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('location')"
                         >mdi-google-maps
                         </v-icon>
-                        <div class="nav-icon-label" :color="show.location ? '#001eff': ''">
+                        <div class="nav-icon-label" :class="show.location ? 'nav-icon-label-selected': ''">
                             Location
                         </div>
                     </div>
                     <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 class="nav-btn-position"
-                                :color="show.notes ? '#001eff': ''"
+                                :color="show.notes ? 'success': ''"
                                 @click="showSection('notes')"
                         >mdi-note-text-outline
                         </v-icon>
-                        <div class="nav-icon-label" :color="show.notes ? '#001eff': ''">
+                        <div class="nav-icon-label" :class="show.notes ? 'nav-icon-label-selected': ''">
                             Notes
                         </div>
                     </div>
                     <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 ref="imagesNavButton"
-                                :color="show.images ? '#001eff': ''"
+                                :color="show.images ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('images')"
                         >mdi-image<span
                                 v-if="getNumberOfImages() > 0"
                         >({{ getNumberOfImages() }})</span>
                         </v-icon>
-                        <div class="nav-icon-label" :color="show.images ? '#001eff': ''">
+                        <div class="nav-icon-label" :class="show.images ? 'nav-icon-label-selected': ''">
                             Photos
                         </div>
                     </div>
