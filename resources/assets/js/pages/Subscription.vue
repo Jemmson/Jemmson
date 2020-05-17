@@ -7,16 +7,24 @@
             >
                 <v-spacer></v-spacer>
                 <v-icon
-                        class="nav-btn-position subscription-btn-width"
+                        class="nav-btn-position"
+                        color="success"
                         @click="showSubscription()"
                 >mdi-floor-plan
                 </v-icon>
+                <div class="nav-icon-label nav-icon-label-selected">
+                    Subscription
+                </div>
                 <v-spacer></v-spacer>
                 <v-icon
-                        class="nav-btn-position subscription-btn-width"
+                        class="nav-btn-position"
+                        color="red"
                         @click="openCancelConfirmationDialog()"
                 >mdi-cancel
                 </v-icon>
+                <div class="nav-icon-label" style="color: red">
+                    Cancel Subscription
+                </div>
                 <v-spacer></v-spacer>
             </v-card-actions>
         </v-card>
