@@ -38,4 +38,10 @@ trait JobTaskTrait
         $jobTask->makePayment();
     }
 
+    public function addSubToJobTask($jobTask, $subId)
+    {
+        $jobTask->contractor_id = $subId;
+        $jobTask->save();
+    }
+
 }

@@ -21,7 +21,7 @@
             <section>
                 <paginate ref="paginator"
                           :list="sTasks"
-                          :per="8"
+                          :per="5"
                           name="sTasks"
                           v-show="sTasks.length > 0"
                 >
@@ -34,6 +34,7 @@
                                 :bidTask="bidTask"
                                 :user="current_user"
                         ></task>
+                        <hr>
                     </div>
                 </paginate>
                 <div class="card card-body justify-center">
@@ -140,7 +141,7 @@
                     if (this.searchTerm == '' || this.searchTerm.length <= 1) {
                         return true
                     }
-                    return this.task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
+                    return task.job_task.task.name.toLowerCase().search(this.searchTerm.toLowerCase()) > -1
                 })
                 if (this.$refs.paginator && this.$refs.paginator.lastPage >= 1) {
                     this.$refs.paginator.goToPage(1)

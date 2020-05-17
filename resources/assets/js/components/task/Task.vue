@@ -89,28 +89,51 @@
                         class="flex"
                 >
                     <div class="flex justify-content-around w-full">
-                        <v-icon
-                                class="nav-btn-position"
-                                @click="showSection('details')"
-                        >mdi-details
-                        </v-icon>
-                        <v-icon
-                                class="nav-btn-position"
-                                @click="showSection('location')"
-                        >mdi-google-maps
-                        </v-icon>
-                        <v-icon
-                                v-if="showDeclinedMsg(bidTask) && subHasMessage(bidTask)"
-                                class="nav-btn-position"
-                                color="error"
-                                @click="showSection('messages')"
-                        >mdi-message
-                        </v-icon>
-                        <v-icon
-                                class="nav-btn-position"
-                                @click="showSection('images')"
-                        >mdi-image
-                        </v-icon>
+                        <div class="flex flex-col">
+                            <v-icon
+                                    class="nav-btn-position"
+                                    @click="showSection('details')"
+                            >mdi-details
+                            </v-icon>
+                            <div class="nav-icon-label">
+                                Details
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <v-icon
+                                    class="nav-btn-position"
+                                    @click="showSection('location')"
+                            >mdi-google-maps
+                            </v-icon>
+                            <div class="nav-icon-label">
+                                Location
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col"
+                             v-if="showDeclinedMsg(bidTask) && subHasMessage(bidTask)"
+                        >
+                            <v-icon
+                                    class="nav-btn-position"
+                                    color="error"
+                                    @click="showSection('messages')"
+                            >mdi-message
+                            </v-icon>
+                            <div class="nav-icon-label">
+                                Messages
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <v-icon
+                                    class="nav-btn-position"
+                                    @click="showSection('images')"
+                            >mdi-image
+                            </v-icon>
+                            <div class="nav-icon-label">
+                                Photos
+                            </div>
+                        </div>
                     </div>
                 </v-card-actions>
             </v-card>

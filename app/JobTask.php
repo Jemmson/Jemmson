@@ -2,12 +2,15 @@
 
 namespace App;
 
+use App\Job;
 use App\Notifications\TaskFinished;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\JobTaskStatus;
 use Illuminate\Support\Facades\Log;
+use App\User;
+use App\Task;
 
 use \App\Traits\ConvertPrices;
 
@@ -261,12 +264,18 @@ class JobTask extends Model
     public function subFinishesJobTask()
     {
         $task = $this->getTheTaskFromTheJobTask($this);
+        $sub = $this->getTheSubFromTheJobTask($this);
+        $job = $this->getTheJobFromTheJobTask($this);
         $status = __("bid_task.finished_by_sub");
         if (!$this->updateStatus($status)) {
             return response()->json(["message" => "Couldn't update job task.", "errors" => ["error" => ['']]], 422);
         }
         $this->setSubsFinishedStatus($this);
-        $this->notifyTheGeneralContractor($task->contractor_id, $task);
+        $this->notifyTheGeneralContractor(
+            $task,
+            $sub,
+            $job
+        );
         $this->resetDeclinedMessage();
     }
 
@@ -278,6 +287,16 @@ class JobTask extends Model
     public function getTheTaskFromTheJobTask($jobTask)
     {
         return $jobTask->task()->first();
+    }
+
+    public function getTheSubFromTheJobTask($jobTask)
+    {
+        return User::find($jobTask->contractor_id);
+    }
+
+    public function getTheJobFromTheJobTask($jobTask)
+    {
+        return Job::find($jobTask->job_id);
     }
 
     public function setsGeneralsFinishedStatus($jobTask)
@@ -302,10 +321,21 @@ class JobTask extends Model
         $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job');
     }
 
-    public function notifyTheGeneralContractor($contractor_id, $task)
+    public function notifyTheGeneralContractor(
+        $task,
+        $sub,
+        $job
+    )
     {
-        $generalContractor = $this->getTheGeneralContractor($contractor_id);
-        $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
+        $generalContractor = $this->getTheGeneralContractor($job->contractor_id);
+        $generalContractor->notify(new TaskFinished(
+            $task,
+            null,
+            $sub,
+            $generalContractor,
+            $this,
+            $job
+        ));
     }
 
     public function setJobTaskStatus($job_task_id, $status)
@@ -324,17 +354,6 @@ class JobTask extends Model
     {
         return User::find($contractor_id);
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function updateLocation($request)

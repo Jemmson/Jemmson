@@ -72,4 +72,35 @@ class UserTest extends TestCase
         $this->assertEquals(true, empty(User::checkIfUserExistsByPhoneNumber($phone)));
 
     }
+
+    /**  @test */
+    function that_if_subs_bid_has_been_accepted_and_the_job_has_been_approved_then_another_sub_has_been_accepted_then_the_first_sub_is_denied_and_the_newly_accepted_sub_finishes_with_status_of_job_has_been_approved_by_customer() {
+
+        // GIVEN
+
+//        need a general contractor
+//        need a customer
+//        need two subs
+//        need a job
+//        need one task for that job
+//        need sub status for sub A to be accepted
+//        need sub status for sub B to be denied
+//        need job status to be approved
+//        need job task status to be approved
+
+        // ACTION
+
+//        need the general to accept a bid for sub B
+
+
+        // ASSERTION
+
+//        need sub B status to be accepted
+//        need sub B status to be approved_by_customer
+//        need jobtask contractor to be sub B's user ID
+//        need sub B to be notified that the bid was accepted
+
+    }
+
+
 }

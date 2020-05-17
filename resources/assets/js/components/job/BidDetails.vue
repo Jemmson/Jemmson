@@ -7,7 +7,7 @@
             <h1 class="card-title mt-4">Job Change Message</h1>
             <card>
                 <v-card-title class="w-break"
-                        style="background-color: lightcoral"
+                              style="background-color: lightcoral"
                 >
                     {{ bid.declined_message }}
                 </v-card-title>
@@ -19,56 +19,95 @@
                     class="flex flex-col"
             >
                 <div class="flex justify-content-around w-full">
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('jobStepper')"
-                    >mdi-page-next
-                    </v-icon>
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('details')"
-                    >mdi-details
-                    </v-icon>
-                    <v-icon
-                            ref="jobTaskNavButton"
-                            class="nav-btn-position"
-                            :class="!isCustomer && jobTasksNotifications() ? 'red--text' : null"
-                            @click="showSection('jobTask')">mdi-briefcase<span
-                            v-if="getJobTasksLength() > 0">
+
+
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('jobStepper')"
+                        >mdi-page-next
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Step
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('details')"
+                        >mdi-details
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Details
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                ref="jobTaskNavButton"
+                                class="nav-btn-position"
+                                :class="!isCustomer && jobTasksNotifications() ? 'red--text' : null"
+                                @click="showSection('jobTask')">mdi-briefcase<span
+                                v-if="getJobTasksLength() > 0">
                                     ({{ getJobTasksLength() }})
                             </span>
-                    </v-icon>
-
-                    <v-icon
-                            v-if="!isCustomer"
-                            class="nav-btn-position"
-                            @click="showSection('location')"
-                    >mdi-google-maps
-                    </v-icon>
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('notes')"
-                    >mdi-note-text-outline
-                    </v-icon>
-                    <v-icon
-                            ref="imagesNavButton"
-                            class="nav-btn-position"
-                            @click="showSection('images')"
-                    >mdi-image<span
-                            v-if="getNumberOfImages() > 0"
-                    >({{ getNumberOfImages() }})</span>
-                    </v-icon>
-                    <v-icon
-                            ref="job-add-task-icon"
-                            v-if="canAddATask() && !isCustomer"
-                        class="nav-btn-position"
-                            :class="canAddATask() && !isCustomer ? 'red--text' : null"
-                            name="addTaskToBid"
-                            id="addTaskToBid"
-                            @click="$router.push('/job/add/task')"
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Tasks
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                v-if="!isCustomer"
+                                class="nav-btn-position"
+                                @click="showSection('location')"
+                        >mdi-google-maps
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Location
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('notes')"
+                        >mdi-note-text-outline
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Notes
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                ref="imagesNavButton"
+                                class="nav-btn-position"
+                                @click="showSection('images')"
+                        >mdi-image<span
+                                v-if="getNumberOfImages() > 0"
+                        >({{ getNumberOfImages() }})</span>
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Photos
+                        </div>
+                    </div>
+                    <div class="flex flex-col"
+                         v-if="canAddATask() && !isCustomer"
                     >
-                        mdi-plus-thick
-                    </v-icon>
+                        <v-icon
+                                ref="job-add-task-icon"
+                                class="nav-btn-position"
+                                :class="canAddATask() && !isCustomer ? 'red--text' : null"
+                                name="addTaskToBid"
+                                id="addTaskToBid"
+                                @click="$router.push('/job/add/task')"
+                        >
+                            mdi-plus-thick
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Add Task
+                        </div>
+                    </div>
+
+
                 </div>
             </v-card-actions>
         </v-card>
@@ -118,14 +157,14 @@
                             <td>Contractor Name:</td>
                             <td class="lookLikeALink">{{ getCompanyName() }}</td>
                         </tr>
-<!--                        <tr v-if="!bidHasBeenSubmitted">-->
-<!--                            <td>Start Date:</td>-->
-<!--                            <td>Bid Not Complete</td>-->
-<!--                        </tr>-->
-<!--                        <tr v-if="bidHasBeenSubmitted">-->
-<!--                            <td>Start Date:</td>-->
-<!--                            <td>{{ agreedStartDate }}</td>-->
-<!--                        </tr>-->
+                        <!--                        <tr v-if="!bidHasBeenSubmitted">-->
+                        <!--                            <td>Start Date:</td>-->
+                        <!--                            <td>Bid Not Complete</td>-->
+                        <!--                        </tr>-->
+                        <!--                        <tr v-if="bidHasBeenSubmitted">-->
+                        <!--                            <td>Start Date:</td>-->
+                        <!--                            <td>{{ agreedStartDate }}</td>-->
+                        <!--                        </tr>-->
                         <tr v-if="!bidHasBeenSubmitted">
                             <td>Total Bid Price:</td>
                             <td>Bid Not Complete</td>
@@ -176,10 +215,10 @@
                             <td>Customer Name:</td>
                             <td class="lookLikeALink">{{ customerName }}</td>
                         </tr>
-<!--                        <tr>-->
-<!--                            <td>Start Date:</td>-->
-<!--                            <td>{{ agreedStartDate }}</td>-->
-<!--                        </tr>-->
+                        <!--                        <tr>-->
+                        <!--                            <td>Start Date:</td>-->
+                        <!--                            <td>{{ agreedStartDate }}</td>-->
+                        <!--                        </tr>-->
                         <tr>
                             <td>Total Bid Price:</td>
                             <td>
@@ -203,74 +242,105 @@
             <div v-if="getJobTasksLength() > 0">
                 <div v-if="!isCustomer && bid && getJobTasksLength() > 0">
 
+
+
                     <v-card>
                         <v-card-title>Job Tasks</v-card-title>
-
-                        <v-card v-for="(item, i) in getJobTasks()"
+                        <v-card
+                                v-for="(item, i) in getJobTasks()"
                                 :key="i"
                                 class="card-positioning"
                                 :class="i % 2 === 0 ? 'b-brown': 'b-blue'"
                         >
-                            <v-card-title
-                                    class="w-break uppercase mb-0 pb-0"
-                                    style="font-size: 12pt"
-                            >{{ jobTaskObject(item).Name }}
-                                <v-spacer></v-spacer>
-                                <div></div>
-                                <v-card-subtitle
-                                        class="w-break uppercase"
-                                        style="font-size: 10pt"
-                                >{{ jobTaskObject(item).Status }}
-                                </v-card-subtitle>
-                            </v-card-title>
-                            <v-card-title
-                                    v-if="notificationMessage(item)"
-                            >
-                                <v-btn
-                                        v-if="item.sub_statuses.length > 0"
-                                        text
-                                        class="btn-size btn-weight"
-                                        :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                                        :to="'/job/task/' + i"
-                                >{{ notificationMessage(item) }}
-                                </v-btn>
-                            </v-card-title>
-                            <v-card-title class="w-break" v-if="hasTaskMessages(item)">
-                                <ul>
-                                    <li v-for="(message, index) in item.task_messages" :key="index">
-                                        {{ message.message }}
-                                    </li>
-                                </ul>
-                            </v-card-title>
-                            <v-divider></v-divider>
-                            <v-row
-                                    class="justify-content-around"
-                            >
+                            <v-card-text>
 
-                                <strong class="uppercase"
-                                        style="font-size: 10pt"
-                                >Subs</strong>
-                                <strong class="uppercase"
-                                        style="font-size: 10pt"
-                                >Quantity</strong>
-                                <strong class="uppercase"
-                                        style="font-size: 10pt"
-                                >Price</strong>
-                            </v-row>
-                            <v-row
-                                    class="justify-content-around mb-15"
-                            >
-                                <div>{{ jobTaskObject(item).Subs }}</div>
-                                <div>{{ jobTaskObject(item).Qty }}</div>
-                                <div
-                                        v-if="jobTaskObject(item).Price"
-                                        v-text="'$ ' + jobTaskObject(item).Price"
-                                ></div>
-                                <div v-else>Price Not Set</div>
-                            </v-row>
-                            <v-divider></v-divider>
+                                <v-list-item-group
+                                >
+                                    <v-list-item-content>
+                                        <v-list-item-title style="
+                                                            font-size: 1.25rem;
+                                                            font-weight: bolder;
+                                                            margin-left: 1rem;"
+                                                           class="uppercase"
+                                        >
+                                            {{ jobTaskObject(item).Name }}
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                    <hr>
+                                    <v-list-item-content
+                                            style="margin-left: 1rem; margin-right: 1rem; margin-top: -1rem"
+                                    >
+                                        <v-list-item-title class="uppercase flex justify-content-between">
+                                            <div style="font-size: .875rem;">Task Status:</div>
+                                            <div style="font-size: .875rem;">{{ jobTaskObject(item).Status }}</div>
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                    <v-list-item-content
+                                            v-if="notificationMessage(item)"
+                                            style="margin-top: -1rem"
+                                            :class="!hasTaskMessages(item) ? 'mb-1rem-negative' : ''"
+                                    >
+                                        <v-list-item-title class="uppercase flex justify-content-between align-center">
+                                            <div
+                                                    style="font-size: .875rem; margin-left: 1rem;"
+                                            >Sub Status:</div>
+                                            <div>
+                                                <v-btn
+                                                        style="font-size: .875rem;"
+                                                        v-if="item.sub_statuses.length > 0"
+                                                        text
+                                                        :class="i % 2 === 0 ? 'primary--text': 'white--text'"
+                                                        :to="'/job/task/' + i"
+                                                >{{ notificationMessage(item) }}
+                                                </v-btn>
+                                            </div>
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+
+                                    <v-list-item-content
+                                            class="w-break" v-if="hasTaskMessages(item)"
+                                            style="margin-top: -1rem"
+                                    >
+                                        <v-list-item-title class="uppercase flex justify-content-between align-center"
+                                                           v-for="(message, index) in item.task_messages" :key="index"
+                                        >
+                                            <div
+                                                    style="font-size: .875rem; margin-left: 1rem;"
+                                            >{{ message.message }}</div>
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                    <hr>
+
+                                    <v-list-item-content
+                                            style="margin-left: 1rem; margin-right: 1rem; margin-top: -1rem;"
+                                            class="mb-1rem-negative"
+                                    >
+                                        <v-list-item-title class="uppercase flex justify-content-between">
+                                            <div class="flex">
+                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">Subs:</div>
+                                                <div style="font-size: .875rem;">{{ jobTaskObject(item).Subs }}</div>
+                                            </div>
+                                            <div class="flex">
+                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">Quantity:</div>
+                                                <div style="font-size: .875rem;">{{ jobTaskObject(item).Qty }}</div>
+                                            </div>
+                                            <div class="flex">
+                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">Price:</div>
+                                                <div style="font-size: .875rem;"
+                                                     v-if="jobTaskObject(item).Price"
+                                                     v-text="'$ ' + jobTaskObject(item).Price"
+                                                ></div>
+                                                <div v-else>Price Not Set</div>
+                                            </div>
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+
+                                    <hr>
+                                </v-list-item-group>
+                            </v-card-text>
                             <v-card-actions
                                     class="space-evenly"
+                                    style="margin-top: -2rem"
                             >
                                 <v-btn
                                         class="btn-size btn-weight"
@@ -336,8 +406,8 @@
                                               :bid-payment-type="bid ? bid.payment_type : null"
                                               :id="item ? item.id : null">
                             </sub-invite-modal>
+                            <hr>
                         </v-card>
-
 
                     </v-card>
 
@@ -591,13 +661,16 @@
 
 
         <v-dialog
-            v-model="denyDialog"
-            width="500"
+                v-model="denyDialog"
+                width="500"
         >
 
             <v-card>
                 <v-card-title class="w-break error--text" v-show="denyForm.error">{{ denyForm.error }}</v-card-title>
-                <v-card-title class="w-break justify-content-between"><div>Deny Sub's Finished Task</div><div>{{ currentJobTask.task === undefined ? '' : currentJobTask.task.name.toUpperCase() }}</div></v-card-title>
+                <v-card-title class="w-break justify-content-between">
+                    <div>Deny Sub's Finished Task</div>
+                    <div>{{ currentJobTask.task === undefined ? '' : currentJobTask.task.name.toUpperCase() }}</div>
+                </v-card-title>
                 <v-card-text>
                     <v-textarea
                             outlined
@@ -621,10 +694,10 @@
         </v-dialog>
 
 
-<!--        <deny-task-modal v-if="!isCustomer"-->
-<!--                         :job-task="currentJobTask"-->
-<!--                         :id="currentJobTaskId">-->
-<!--        </deny-task-modal>-->
+        <!--        <deny-task-modal v-if="!isCustomer"-->
+        <!--                         :job-task="currentJobTask"-->
+        <!--                         :id="currentJobTaskId">-->
+        <!--        </deny-task-modal>-->
 
     </v-container>
 </template>
@@ -887,7 +960,7 @@
         },
         methods: {
 
-            getJobTaskId(){
+            getJobTaskId() {
                 if (this.jobTask) {
                     return this.jobTask.id
                 }

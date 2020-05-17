@@ -18,42 +18,79 @@
                     class="flex"
             >
                 <div class="flex justify-content-around w-full">
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('details')"
-                    >mdi-details
-                    </v-icon>
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('prices')"
-                    >mdi-currency-usd
-                    </v-icon>
-                    <v-icon
-                            ref="jobTaskNavImage"
-                            class="nav-btn-position"
-                            @click="showSection('images')"
-                    >mdi-image-edit<span
-                            v-if="getImagesLength() > 0"
-                    > ({{ getImagesLength() }})</span>
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('details')"
+                        >mdi-details
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Details
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('prices')"
+                        >mdi-currency-usd
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Prices
+                        </div>
+                    </div>
 
-                    </v-icon>
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('location')"
-                    >mdi-google-maps
-                    </v-icon>
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('specialInstructions')"
-                    >mdi-message
-                    </v-icon>
-                    <v-icon
-                            ref="subsNavButton"
-                            v-if="showSubsPanel()"
-                            class="nav-btn-position"
-                            @click="showSection('subPanel')"
-                    >mdi-face<span> ({{ getSubsLength() }})</span>
-                    </v-icon>
+                    <div class="flex flex-col">
+                        <v-icon
+                                ref="jobTaskNavImage"
+                                class="nav-btn-position"
+                                @click="showSection('images')"
+                        >mdi-image-edit<span
+                                v-if="getImagesLength() > 0"
+                        > ({{ getImagesLength() }})</span>
+
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Photos
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('location')"
+                        >mdi-google-maps
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Location
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('specialInstructions')"
+                        >mdi-message
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Messages
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <v-icon
+                                ref="subsNavButton"
+                                v-if="showSubsPanel()"
+                                class="nav-btn-position"
+                                @click="showSection('subPanel')"
+                        >mdi-face<span> ({{ getSubsLength() }})</span>
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Subs
+                        </div>
+                    </div>
+
+
+
                 </div>
             </v-card-actions>
         </v-card>

@@ -9,22 +9,37 @@
                     class="flex flex-col"
             >
                 <div class="flex justify-content-around w-full">
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('profile')"
-                    >mdi-face-profile
-                    </v-icon>
-                    <v-icon
-                            class="nav-btn-position"
-                            @click="showSection('changePassword')"
-                    >mdi-onepassword
-                    </v-icon>
-                    <v-icon
-                            v-if="isContractor()"
-                            class="nav-btn-position"
-                            @click="showSection('subscription')"
-                    >mdi-youtube-subscription
-                    </v-icon>
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('profile')"
+                        >mdi-face-profile
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Profile
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                class="nav-btn-position"
+                                @click="showSection('changePassword')"
+                        >mdi-onepassword
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Password
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <v-icon
+                                v-if="isContractor()"
+                                class="nav-btn-position"
+                                @click="showSection('subscription')"
+                        >mdi-youtube-subscription
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Subscription
+                        </div>
+                    </div>
 <!--                    <v-btn-->
 <!--                            class="nav-btn-position"-->
 <!--                            @click="showSection('manageCreditCard')"-->

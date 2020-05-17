@@ -897,6 +897,8 @@ class TaskController extends Controller
 
         $customer = User::find(Job::find($jobTask->job_id)->customer_id);
         $subContractor = User::find($jobTask->contractor_id);
+        $job = Job::find($jobTask->job_id);
+        $general = User::find($job->contractor_id);
 
         try {
             $jobTask->save();
@@ -905,7 +907,14 @@ class TaskController extends Controller
             return response()->json(["message" => "Couldn't update status task.", "errors" => ["error" => [$e->getMessage()]]], 404);
         }
 
-        $customer->notify(new TaskFinished($task, true, $customer));
+        $customer->notify(new TaskFinished(
+            $task,
+            $customer,
+            $subContractor,
+            $general,
+            $jobTask,
+            $job
+        ));
         $subContractor->notify(new TaskApproved($task, $subContractor));
 
         $this->setJobTaskStatus($jobTask->id, 'approved_subs_work');
@@ -932,18 +941,28 @@ class TaskController extends Controller
     public function taskFinishedBGeneralContractor(Request $request)
     {
 
-        $taskId = $this->getJobTaskIdFromRequest($request->job_task_id, $request->id);
-        $jobTask = $this->getTheJobTask($taskId);
-        $task = $this->getTheTaskFromTheJobTask($jobTask);
+
+        $jobTask = JobTask::find($request->job_task_id);
+        $task = $jobTask->task()->first();
+        $subContractor = User::find($jobTask->contractor_id);
+        $job = Job::find($jobTask->job_id);
+        $general = User::find($job->contractor_id);
 
         $status = __("bid_task.finished_by_general");
+
         if (!$jobTask->updateStatus($status)) {
             return response()->json(["message" => "Couldn't update job task.", "errors" => ["error" => ['']]], 422);
         }
 
         $this->setsGeneralsFinishedStatus($jobTask);
 
-        $this->notifyTheCustomer($jobTask, $task);
+        $this->notifyTheCustomer(
+            $task,
+            $subContractor,
+            $general,
+            $jobTask,
+            $job
+        );
         $jobTask->resetDeclinedMessage();
 
         return response()->json(["message" => "Success"], 200);
@@ -986,16 +1005,23 @@ class TaskController extends Controller
         return User::find(Job::find($jobTask->job_id)->customer_id);
     }
 
-    public function notifyTheGeneralContractor($contractor_id, $task)
-    {
-        $generalContractor = $this->getTheGeneralContractor($contractor_id);
-        $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
-    }
-
-    public function notifyTheCustomer($jobTask, $task)
+    public function notifyTheCustomer(
+        $task,
+        $subContractor,
+        $general,
+        $jobTask,
+        $job
+    )
     {
         $customer = $this->getTheCustomerFromTheJobTask($jobTask);
-        $customer->notify(new TaskFinished($task, true, $customer));
+        $customer->notify(new TaskFinished(
+            $task,
+            $customer,
+            $subContractor,
+            $general,
+            $jobTask,
+            $job
+        ));
     }
 
     public function setSubsFinishedStatus($jobTask)
@@ -1032,6 +1058,9 @@ class TaskController extends Controller
         $jobTask = JobTask::find($id);
         $task = $jobTask->task()->first();
 
+        $subContractor = User::find($jobTask->contractor_id);
+        $job = Job::find($jobTask->job_id);
+
         if ($request->current_user_id === $jobTask->contractor_id && $request->current_user_id === $task->contractor_id) {
             $finishedByGeneral = true;
             $status = __("bid_task.finished_by_general");
@@ -1048,9 +1077,23 @@ class TaskController extends Controller
 
         if ($finishedByGeneral) {
             // is general contractor
-            $customer->notify(new TaskFinished($task, true, $customer));
+            $customer->notify(new TaskFinished(
+                $task,
+                null,
+                $subContractor,
+                $generalContractor,
+                $this,
+                $job
+            ));
         } else {
-            $generalContractor->notify(new TaskFinished($task, false, $generalContractor));
+            $generalContractor->notify(new TaskFinished(
+                $task,
+                $customer,
+                $subContractor,
+                $generalContractor,
+                $jobTask,
+                $job
+            ));
         }
 
         if ($jobTask->contractor_id == $generalContractor->id) {

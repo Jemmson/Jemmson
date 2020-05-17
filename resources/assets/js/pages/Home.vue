@@ -13,11 +13,18 @@
                         class="flex"
                 >
                     <div class="flex justify-content-around w-full">
-                        <v-icon
-                                class="nav-btn-position"
-                                @click="showSection('details')"
-                        >mdi-details
-                        </v-icon>
+
+                        <div class="flex flex-col">
+                            <v-icon
+                                    class="nav-btn-position"
+                                    @click="showSection('details')"
+                            >mdi-details
+                            </v-icon>
+                            <div class="nav-icon-label">
+                                Details
+                            </div>
+                        </div>
+
                         <img
                                 ref="subsNavButton"
                                 class="nav-btn-position"
@@ -26,11 +33,20 @@
                                 style="height:1.6rem"
                                 src="/img/Stripe logo - slate.svg" alt=""
                         >
-                        <v-icon
-                                class="nav-btn-position"
-                                @click="goToContractorsPage()"
-                        >mdi-face
-                        </v-icon>
+
+                        <div class="flex flex-col">
+                            <v-icon
+                                    class="nav-btn-position"
+                                    @click="goToContractorsPage()"
+                            >mdi-face
+                            </v-icon>
+                            <div class="nav-icon-label">
+                                Subs
+                            </div>
+                        </div>
+
+
+
                     </div>
                 </v-card-actions>
             </v-card>

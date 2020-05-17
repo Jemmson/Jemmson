@@ -6,18 +6,28 @@
                     class="flex"
             >
                 <v-spacer></v-spacer>
-                <v-icon
+                <div class="flex flex-col">
+                    <v-icon
                             class="w-break nav-btn-position"
                             ref="showPhotoSection"
                             @click="showSection('photo')"
                     >mdi-image-edit
                     </v-icon>
+                    <div class="nav-icon-label">
+                        Change Photo
+                    </div>
+                </div>
                 <v-spacer></v-spacer>
+                <div class="flex flex-col">
                     <v-icon
                             class="nav-btn-position"
                             @click="showSection('contactInformation')"
                     >mdi-contacts
                     </v-icon>
+                    <div class="nav-icon-label">
+                        Contact Information
+                    </div>
+                </div>
                 <v-spacer></v-spacer>
             </v-card-actions>
         </v-card>

@@ -309,10 +309,16 @@ class User extends SparkUser
         $allContractorsForJobTask = BidContractorJobTask::select()->where("job_task_id", "=", $jobTaskId)->get();
 
         foreach ($allContractorsForJobTask as $jt) {
-            if ($jt->contractor_id == $subId) {
+            if ($this->subHasBeenAccepted($jt->contractor_id, $subId)) {
                 $jt->accepted = true;
                 $jt->status = 'bid_task.accepted';
                 $this->setSubStatus($jt->contractor_id, $jobTaskId, 'accepted');
+
+                $jobId = $this->getJobIdFromTaskId($jobTaskId);
+                $latestJobStatus = $this->getLatestJobStatusFromJobId($jobId);
+                if ($latestJobStatus === 'approved') {
+                    $this->setSubStatus($jt->contractor_id, $jobTaskId, 'approved_by_customer');
+                }
             } else {
                 $jt->accepted = false;
                 if ($jt->status == 'bid_task.accepted') {
@@ -331,6 +337,25 @@ class User extends SparkUser
             }
         }
     }
+
+    public function getJobIdFromTaskId($jobTaskId)
+    {
+        $jobTask = JobTask::find($jobTaskId);
+        return $jobTask->job_id;
+    }
+
+    public function getLatestJobStatusFromJobId($jobId)
+    {
+        $jobStatus = JobStatus::where('job_id', '=', $jobId)->get();
+        return $jobStatus[count($jobStatus) - 1]->status;
+    }
+
+    private function subHasBeenAccepted($tasksCurrentlyAssignedContractor, $subId)
+    {
+        return $tasksCurrentlyAssignedContractor === $subId;
+    }
+
+
 
     public function updateJobTaskWithAcceptedBid(
         $jobTask,

@@ -59,11 +59,15 @@
 
         </v-app-bar>
 
-        <v-tabs class="justify-content-between" style="margin-top: 3.5rem;">
-            <v-tab class="w-full"
+        <v-tabs class="justify-center" style="margin-top: 3.5rem;">
+            <v-tab
+                    style="margin-left: auto; margin-right: auto;"
+                    class="w-full"
                    @click.prevent="toggleBidsContractor(true)"
             >General Jobs</v-tab>
-            <v-tab class="w-full"
+            <v-tab
+                    style="margin-left: auto; margin-right: auto;"
+                    class="w-full"
                    @click.prevent="toggleBidsContractor(false)"
             >Sub Jobs</v-tab>
         </v-tabs>

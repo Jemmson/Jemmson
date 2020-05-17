@@ -4,30 +4,49 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Feature\Traits\JobTaskTrait;
+use Tests\Feature\Traits\JobTrait;
+use Tests\Feature\Traits\TaskTrait;
+use Tests\Feature\Traits\UserTrait;
+use Tests\Feature\Traits\UtilitiesTrait;
 use Tests\TestCase;
 
 class JobTask extends TestCase
 {
+
+    use WithFaker;
+    use UtilitiesTrait;
+    use Setup;
+    use UserTrait;
+    use JobTaskTrait;
+    use TaskTrait;
+    use JobTrait;
+    use RefreshDatabase;
+
     /**  @test */
-    function shouldBeAbleToAddATask() {
+    function shouldBeAbleToAddATask()
+    {
         //
         $this->withoutExceptionHandling();
 
-        $general = $this->createAUser('contractor', 1, 1, [], [
+        $general = $this->createUser('contractor', 1, 1, [], [
             'company_name' => 'Albertsons',
             'free_jobs' => 5
         ]);
     }
 
     /**  @test */
-    function subs_bid_has_been_accepted_but_sub_wants_delete_the_task_and_not_do_the_job_so_tak_should_be_remove_from_bid_contractor_job_table_and_subs_should_show_as_pending_or_accept_bid_on_job_table() {
-        //
+    function that_when_the_sub_finishes_the_task_that_the_general_is_notifed()
+    {
 
-    }
+        // GIVEN
 
-    /**  @test */
-    function should_() {
-        //
+
+        // ACTION
+
+
+        // ASSERTION
+
 
     }
 
