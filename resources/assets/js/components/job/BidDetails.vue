@@ -21,9 +21,10 @@
                 <div class="flex justify-content-around w-full">
 
 
-                    <div class="flex flex-col">
+                    <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 class="nav-btn-position"
+                                :color="show.jobStepper ? 'primary': ''"
                                 @click="showSection('jobStepper')"
                         >mdi-page-next
                         </v-icon>
@@ -31,19 +32,22 @@
                             Step
                         </div>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col nav-icon-spacing">
                         <v-icon
+                                :color="show.details ? 'primary': ''"
                                 class="nav-btn-position"
                                 @click="showSection('details')"
+
                         >mdi-details
                         </v-icon>
                         <div class="nav-icon-label">
                             Details
                         </div>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 ref="jobTaskNavButton"
+                                :color="show.jobTask ? 'primary': ''"
                                 class="nav-btn-position"
                                 :class="!isCustomer && jobTasksNotifications() ? 'red--text' : null"
                                 @click="showSection('jobTask')">mdi-briefcase<span
@@ -55,8 +59,9 @@
                             Tasks
                         </div>
                     </div>
-                    <div class="flex flex-col" v-if="!isCustomer">
+                    <div class="flex flex-col nav-icon-spacing" v-if="!isCustomer">
                         <v-icon
+                                :color="show.location ? 'primary': ''"
                                 class="nav-btn-position"
                                 @click="showSection('location')"
                         >mdi-google-maps
@@ -65,9 +70,10 @@
                             Location
                         </div>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 class="nav-btn-position"
+                                :color="show.notes ? 'primary': ''"
                                 @click="showSection('notes')"
                         >mdi-note-text-outline
                         </v-icon>
@@ -75,9 +81,10 @@
                             Notes
                         </div>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 ref="imagesNavButton"
+                                :color="show.images ? 'primary': ''"
                                 class="nav-btn-position"
                                 @click="showSection('images')"
                         >mdi-image<span
@@ -88,7 +95,7 @@
                             Photos
                         </div>
                     </div>
-                    <div class="flex flex-col"
+                    <div class="flex flex-col nav-icon-spacing"
                          v-if="canAddATask() && !isCustomer"
                     >
                         <v-icon
@@ -774,6 +781,7 @@
                     details: true,
                     jobTask: false,
                     location: false,
+                    notes: false,
                     images: false
                 },
                 isPaid: false,
