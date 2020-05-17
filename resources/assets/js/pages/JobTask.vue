@@ -71,12 +71,12 @@
 
                     <div class="flex flex-col">
                         <v-icon
-                                :color="show.messages ? 'success': ''"
+                                :color="show.specialInstructions ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('specialInstructions')"
                         >mdi-message
                         </v-icon>
-                        <div class="nav-icon-label" :class="show.messages ? 'nav-icon-label-selected': ''">
+                        <div class="nav-icon-label" :class="show.specialInstructions ? 'nav-icon-label-selected': ''">
                             Messages
                         </div>
                     </div>

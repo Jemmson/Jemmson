@@ -12,31 +12,34 @@
                     <div class="flex flex-col">
                         <v-icon
                                 class="nav-btn-position"
+                                :color="show.profile ? 'success': ''"
                                 @click="showSection('profile')"
                         >mdi-face-profile
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.profile ? 'nav-icon-label-selected': ''">
                             Profile
                         </div>
                     </div>
                     <div class="flex flex-col">
                         <v-icon
+                                :color="show.changePassword ? 'success': ''"
                                 class="nav-btn-position"
                                 @click="showSection('changePassword')"
                         >mdi-onepassword
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.changePassword ? 'nav-icon-label-selected': ''">
                             Password
                         </div>
                     </div>
                     <div class="flex flex-col">
                         <v-icon
+                                :color="show.subscription ? 'success': ''"
                                 v-if="isContractor()"
                                 class="nav-btn-position"
                                 @click="showSection('subscription')"
                         >mdi-youtube-subscription
                         </v-icon>
-                        <div class="nav-icon-label">
+                        <div class="nav-icon-label" :class="show.subscription ? 'nav-icon-label-selected': ''">
                             Subscription
                         </div>
                     </div>
