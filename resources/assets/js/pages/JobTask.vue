@@ -124,6 +124,12 @@
                             {{ getLatestJobStatus(jobTask) }}
                         </div>
                     </div>
+                    <div class="flex justify-content-between">
+                        <div>Start Date</div>
+                        <div class="float-right font-weight-bold capitalize">
+                            {{ getStartDate(jobTask.start_date) }}
+                        </div>
+                    </div>
                     <div v-show="jobTask ? jobTask.declined_message !== '' : false">
                         <hr>
                         <div class="row">
@@ -412,6 +418,7 @@
                 <v-card-text>
                     <div class="flex justify-content-between">
                         <strong class="uppercase">Bid Price</strong>
+                        <strong class="uppercase">Start Date</strong>
                         <strong class="uppercase">Action</strong>
                     </div>
                     <v-divider></v-divider>
@@ -437,6 +444,9 @@
                                         class="flex-1"
                                 >$ {{ getBidPrice(bid) }}
                                 </div>
+                            </div>
+                            <div>
+                                {{ bid.proposed_start_date }}
                             </div>
                             <div>
                                 <!-- <button v-if="showAcceptBtn(jobTask.status)" -->
@@ -681,9 +691,9 @@
                     prices: false
                 },
                 show: {
-                    details: false,
+                    details: true,
                     taskStatus: false,
-                    prices: true,
+                    prices: false,
                     images: false,
                     location: false,
                     specialInstructions: false,
@@ -814,6 +824,11 @@
             }
         },
         methods: {
+
+            // getStartDate(startDate){
+            //     let date = startDate.split(' ')
+            //     return date[0]
+            // },
 
             atleastOneSubHasAHigherBidPrice(bids) {
                 if (bids) {

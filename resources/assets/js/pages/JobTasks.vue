@@ -50,7 +50,8 @@
                                 class="w-40"
                                 text
                                 color="primary"
-                                @click="goToJobTask(index)">SELECT</v-btn>
+                                @click="goToJobTask(index)">SELECT
+                        </v-btn>
                     </div>
                 </div>
             </card>
@@ -71,197 +72,199 @@
 </template>
 
 <script>
-  import BidTask from '../components/job/BidTask'
-  import DeleteTaskModal from '../components/job/DeleteTaskModal'
-  import HorizontalTable from '../components/shared/HorizontalTable'
-  import SearchBar from '../components/shared/SearchBar'
-  import JobTaskBidModal from '../components/task/JobTaskBidModal'
-  import Card from '../components/shared/Card'
-  import Feedback from '../components/shared/Feedback'
-  import Status from '../components/mixins/Status'
+    import BidTask from '../components/job/BidTask'
+    import DeleteTaskModal from '../components/job/DeleteTaskModal'
+    import HorizontalTable from '../components/shared/HorizontalTable'
+    import SearchBar from '../components/shared/SearchBar'
+    import JobTaskBidModal from '../components/task/JobTaskBidModal'
+    import Card from '../components/shared/Card'
+    import Feedback from '../components/shared/Feedback'
+    import Status from '../components/mixins/Status'
+    import Utilities from '../components/mixins/Utilities'
 
-  import { mapState } from 'vuex'
-  import Utilities from '../components/mixins/Utilities'
+    import {mapState} from 'vuex'
 
-  export default {
-    components: {
-      BidTask,
-      HorizontalTable,
-      SearchBar,
-      Feedback,
-      JobTaskBidModal,
-      Card,
-      DeleteTaskModal
-    },
-    data() {
-      return {
-        globalUser: User,
-        paginate: ['jobTasks'],
-        jobTask: null,
-        message: '',
-        sendSubMessage: true,
-        sendCustomerMessage: true,
-        customerMessage: '',
-        searchTerm: '',
-        disabled: {
-          spinner: [],
-          showDenyForm: false,
-          pay: false,
-          finished: false,
-          approve: false,
-          reopen: false,
-          deny: false,
-          deleteTask: false,
-          payCash: false,
-          accept: false,
+    export default {
+        components: {
+            BidTask,
+            HorizontalTable,
+            SearchBar,
+            Feedback,
+            JobTaskBidModal,
+            Card,
+            DeleteTaskModal
         },
-        deleteTask: {
-          id: ''
-        }
-      }
-    },
-    mixins: [
-      Status
-    ],
-    created() {
-      document.body.scrollTop = 0 // For Safari
-      document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
-    },
-    computed: {
-      show() {
-        return this.jobTasks.length > 0
-      },
-      isContractor() {
-        return Spark.state.user.usertype === 'contractor'
-      },
-      jobTasks() {
-        if (this.job[0] && this.job[0].job_tasks) {
-          return this.job[0].job_tasks
-        } else if (this.job && this.job.job_tasks) {
-          return this.job.job_tasks
-        } else {
-          return []
-        }
-      },
-      ...mapState({
-        job: state => state.job.model
-      })
-    },
-    methods: {
-      jobTaskObject(jt) {
+        data() {
+            return {
+                globalUser: User,
+                paginate: ['jobTasks'],
+                jobTask: null,
+                message: '',
+                sendSubMessage: true,
+                sendCustomerMessage: true,
+                customerMessage: '',
+                searchTerm: '',
+                disabled: {
+                    spinner: [],
+                    showDenyForm: false,
+                    pay: false,
+                    finished: false,
+                    approve: false,
+                    reopen: false,
+                    deny: false,
+                    deleteTask: false,
+                    payCash: false,
+                    accept: false,
+                },
+                deleteTask: {
+                    id: ''
+                }
+            }
+        },
+        mixins: [
+            Status, Utilities
+        ],
+        created() {
+            document.body.scrollTop = 0 // For Safari
+            document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
+        },
+        computed: {
+            show() {
+                return this.jobTasks.length > 0
+            },
+            isContractor() {
+                return Spark.state.user.usertype === 'contractor'
+            },
+            jobTasks() {
+                if (this.job[0] && this.job[0].job_tasks) {
+                    return this.job[0].job_tasks
+                } else if (this.job && this.job.job_tasks) {
+                    return this.job.job_tasks
+                } else {
+                    return []
+                }
+            },
+            ...mapState({
+                job: state => state.job.model
+            })
+        },
+        methods: {
+            jobTaskObject(jt) {
 
 
-        const latestStatus = this.formatStatus(this.getJobTaskStatusCustomer_latest(jt));
+                const latestStatus = this.formatStatus(this.getJobTaskStatusCustomer_latest(jt));
 
-        if (jt && !this.isContractor) {
-          return {
-            Task: jt.task ? jt.task.name : '',
-            Status: latestStatus,
-            Contractor: jt.contractor ? jt.contractor.company_name : 'none',
-            Phone: jt.contractor ? jt.contractor.phone : 'none'
-          }
-        } else {
-          return {
-            Task: jt.task ? jt.task.name : '',
-            Status: latestStatus,
-            Sub: jt.contractor ? jt.contractor.company_name : 'none',
-            Phone: jt.contractor ? jt.contractor.phone : 'none'
-          }
-        }
-      },
-      checkSpinner(index) {
-        if (this.disabled.spinner[index]) {
-          return this.disabled.spinner[index].disabled
-        }
-      },
-      showDeleteTaskModal(job_task, index) {
-        this.disabled.spinner[index].disabled = true
-        this.deleteTask.id = job_task.id
-        this.jobTask = job_task
-        $('#delete-task-modal').modal('show')
-      },
-      deleteTheTask(action) {
-        if (action === 'delete') {
-          this.deleteTheActualTask(this.deleteTask.id)
-        }
-        $('#delete-task-modal').modal('hide')
-      },
-      async deleteTheActualTask(id) {
-        try {
-          const data = await axios.post('/jobTask/delete', {
-            id: id
-          })
-          this.getBid(this.jobTask.job.id)
-        } catch (error) {
-          console.log(error)
-        }
-      },
-      async getBid(id) {
-        try {
-          const {
-            data
-          } = await axios.get('/job/' + id)
-          if (data[0]) {
-            this.bid = data[0]
-            this.$store.commit('setJob', data[0])
-          } else {
-            this.bid = data
-            this.$store.commit('setJob', data)
-          }
-          this.$store.commit('setJob', data)
-          this.setSpinnerIndexes()
-        } catch (error) {
-          console.log(error)
-          if (
-            error.message === 'Not Authorized to access this resource/api' ||
-            error.response !== undefined && error.response.status === 403
-          ) {
-            this.$router.push('/bids')
-          }
-          Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
-        }
-      },
-      goBack() {
-        this.$router.go(-1)
-      },
-      getTotalSubsForTasks(JTask) {
-        let length = 0
-        for (let i = 0; i < this.jobTasks.length; i++) {
-          length = length + this.jobTasks[i].bid_contractor_job_tasks.length
-        }
-        return length
-      },
-      setCurrentJobTaskToBidOn(jobTask) {
-        this.jobTask = jobTask
-        $('#job-task-bid-modal').modal()
-      },
-      search() {
+                if (jt && !this.isContractor) {
+                    return {
+                        Task: jt.task ? jt.task.name : '',
+                        Status: latestStatus,
+                        Contractor: jt.contractor ? jt.contractor.company_name : 'none',
+                        Phone: jt.contractor ? jt.contractor.phone : 'none',
+                        Start: this.dateOnly(jt.start_date)
+                    }
+                } else {
+                    return {
+                        Task: jt.task ? jt.task.name : '',
+                        Status: latestStatus,
+                        Sub: jt.contractor ? jt.contractor.company_name : 'none',
+                        Start: this.dateOnly(jt.start_date)
+                    }
+                }
+            },
 
-      },
-      goToJobTask(index) {
-        console.log(index)
-        this.$router.push('/job/task/' + index)
-      },
-      getLabelClass(bid) {
-        return Format.statusLabel(bid.status, User.isCustomer, User.isGeneral(bid, User.id))
-      },
-      status(bid) {
-        return User.status(bid.status, bid)
-      },
-      setSpinnerIndexes() {
-        let spinner = []
-        for (let i = 0; i < this.jobTasks.length; i++) {
-          spinner.push({disabled: false})
+            checkSpinner(index) {
+                if (this.disabled.spinner[index]) {
+                    return this.disabled.spinner[index].disabled
+                }
+            },
+            showDeleteTaskModal(job_task, index) {
+                this.disabled.spinner[index].disabled = true
+                this.deleteTask.id = job_task.id
+                this.jobTask = job_task
+                $('#delete-task-modal').modal('show')
+            },
+            deleteTheTask(action) {
+                if (action === 'delete') {
+                    this.deleteTheActualTask(this.deleteTask.id)
+                }
+                $('#delete-task-modal').modal('hide')
+            },
+            async deleteTheActualTask(id) {
+                try {
+                    const data = await axios.post('/jobTask/delete', {
+                        id: id
+                    })
+                    this.getBid(this.jobTask.job.id)
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async getBid(id) {
+                try {
+                    const {
+                        data
+                    } = await axios.get('/job/' + id)
+                    if (data[0]) {
+                        this.bid = data[0]
+                        this.$store.commit('setJob', data[0])
+                    } else {
+                        this.bid = data
+                        this.$store.commit('setJob', data)
+                    }
+                    this.$store.commit('setJob', data)
+                    this.setSpinnerIndexes()
+                } catch (error) {
+                    console.log(error)
+                    if (
+                        error.message === 'Not Authorized to access this resource/api' ||
+                        error.response !== undefined && error.response.status === 403
+                    ) {
+                        this.$router.push('/bids')
+                    }
+                    Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
+                }
+            },
+            goBack() {
+                this.$router.go(-1)
+            },
+            getTotalSubsForTasks(JTask) {
+                let length = 0
+                for (let i = 0; i < this.jobTasks.length; i++) {
+                    length = length + this.jobTasks[i].bid_contractor_job_tasks.length
+                }
+                return length
+            },
+            setCurrentJobTaskToBidOn(jobTask) {
+                this.jobTask = jobTask
+                $('#job-task-bid-modal').modal()
+            },
+            search() {
+
+            },
+            goToJobTask(index) {
+                console.log(index)
+                this.$router.push('/job/task/' + index)
+            },
+            getLabelClass(bid) {
+                return Format.statusLabel(bid.status, User.isCustomer, User.isGeneral(bid, User.id))
+            },
+            status(bid) {
+                return User.status(bid.status, bid)
+            },
+            setSpinnerIndexes() {
+                let spinner = []
+                for (let i = 0; i < this.jobTasks.length; i++) {
+                    spinner.push({disabled: false})
+                }
+                this.disabled.spinner = spinner
+                // Vue.set(this.disabled.spinner, spinner, false)
+                // Vue.set(this.disabled, 'disable_' + i, false)
+            }
+        },
+        mounted: function () {
+            this.setSpinnerIndexes()
         }
-        this.disabled.spinner = spinner
-        // Vue.set(this.disabled.spinner, spinner, false)
-        // Vue.set(this.disabled, 'disable_' + i, false)
-      }
-    },
-    mounted: function() {
-      this.setSpinnerIndexes()
     }
-  }
 </script>
 
 <style lang="less" scoped>

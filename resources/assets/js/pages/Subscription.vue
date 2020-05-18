@@ -136,7 +136,7 @@
                 </div>
                 <v-card-text>
                     <div>540$ per year + $1 per job</div>
-                    <div><small>Same as -> 45$ per month + $1 per job</small></div>
+                    <div><small>Same as 45$ per month + $1 per job</small></div>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
@@ -187,9 +187,9 @@
         data() {
             return {
                 show: {
-                    subscriptions: false,
+                    subscriptions: true,
                     confirmCancelationModal: false,
-                    createCreditCard: true,
+                    createCreditCard: false,
                     creditCardDialog: false,
                     cardProcessingErrors: false,
                     cardProcessingSuccess: false,

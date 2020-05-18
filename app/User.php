@@ -368,6 +368,7 @@ class User extends SparkUser
         $jobTask->sub_final_price = $price * 100;
         $jobTask->contractor_id = $subId;
         $jobTask->bid_id = $bidContractorJobTask->id; // accepted bid
+        $jobTask->start_date = $bidContractorJobTask->proposed_start_date; // accepted bid
         $jobTask->stripe = false;
         $jobTask->status = __('bid_task.accepted');
 
@@ -393,18 +394,18 @@ class User extends SparkUser
     }
 
     public function subSendsBidToGeneral(
-        $bidPrice, $paymentType, $generalId, $jobTask, $subId, $job
+        $bidPrice, $paymentType, $generalId, $jobTask, $subId, $job, $startDate
     )
     {
         $bidContractorJobTask = BidContractorJobTask::where('job_task_id', '=', $jobTask->id)
             ->where('contractor_id', '=', $subId)
             ->get()->first();
-        self::updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType);
+        self::updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType, $startDate);
         self::updateJobTaskStatuses($jobTask, $subId);
         self::notifyGeneralOfSubmittedBid($job, $bidContractorJobTask, $generalId);
     }
 
-    public function updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType)
+    public function updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType, $startDate)
     {
 
         if ($bidContractorJobTask == null) {
@@ -416,6 +417,7 @@ class User extends SparkUser
         $bidContractorJobTask->bid_price = $this->convertToCents($bidPrice);
         $bidContractorJobTask->status = 'bid_task.bid_sent';
         $bidContractorJobTask->payment_type = $paymentType;
+        $bidContractorJobTask->proposed_start_date = $startDate;
 
         try {
             $bidContractorJobTask->save();

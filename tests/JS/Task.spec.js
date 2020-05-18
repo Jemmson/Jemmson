@@ -171,6 +171,52 @@ describe('Task', () => {
 
     })
 
+    test('test that if the date is not included on submit then an error will be thrown', async () => {
+
+        let wrapper = shallowMount(Task, {
+            localVue,
+            directives: {
+                mask() {
+                }
+            },
+            methods: {
+
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        })
+
+        wrapper.setData({
+            startDate: '',
+            startDateError: false,
+            bidPrice: ''
+        })
+
+        const submit = wrapper.find({ref: 'submit'});
+
+        submit.trigger('click');
+
+        await wrapper.vm.$nextTick()
+        
+        expect(wrapper.find({ref: 'startDateError'}).exists()).toBe(true);
+
+    })
+
     test.skip('that if the stripe account is disabled then there will a message saying ' +
         'that the sub will not be able to mark the bid as finished ' +
         'and that he will be unable to paid for the job ' +

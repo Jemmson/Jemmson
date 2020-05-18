@@ -175,32 +175,41 @@
                                     v-if="isBidOpen(bidTask)"
                                     style="align-items:baseline"
                             >
-                                <!--
-                                                       v-if="bidTask.job_task.sub_sets_own_price_for_job === 1 && "-->
-                                <v-spacer></v-spacer>
                                 <v-text-field
                                         type="text"
                                         v-mask="getCurrencyMask()"
                                         v-model="bidPrice"
-                                        class="input-margins"
+                                        :rules="[
+                                            bidPriceIsRequired()
+                                        ]"
+                                        class="ml-1rem"
                                         :id="bidTask ? 'price-' + bidTask.id : ''"
-                                        label="Input Bid Price Here"
+                                        label="Bid Price *"
                                         @change="formatInput($event)"
                                 ></v-text-field>
-                                <!--                                @change="bidPrice('price-' + bidTask.id)"-->
                                 <v-spacer></v-spacer>
-                                <v-btn
-                                        class=""
-                                        color="primary"
-                                        text
-                                        bottom
-                                        outlined
-                                        @click.prevent="update(bidTask)"
-                                        v-bind:id="bidTask ? bidTask.id: null" :loading="disabled.submit">
-                                    Submit
-                                </v-btn>
-                                <v-spacer></v-spacer>
+                                <v-text-field
+                                        type="date"
+                                        :rules="[
+                                            startDateIsRequired()
+                                        ]"
+                                        v-model="startDate"
+                                        class="mr-1rem"
+                                        label="Start Date *"
+                                ></v-text-field>
                             </v-row>
+                            <v-btn
+                                    ref="submit"
+                                    class=""
+                                    color="primary"
+                                    :disabled="canSubmit()"
+                                    text
+                                    bottom
+                                    outlined
+                                    @click.prevent="update(bidTask)"
+                                    v-bind:id="bidTask ? bidTask.id: null" :loading="disabled.submit">
+                                Submit
+                            </v-btn>
                         </v-card-text>
                     </v-card>
                 </section>
@@ -394,7 +403,9 @@
                 },
                 jobTask: {},
                 formattedBidPrice: '',
-                bidPrice: ''
+                bidPrice: '',
+                startDate: '',
+                startDateError: false
             }
         },
         props: {
@@ -403,7 +414,35 @@
         },
         methods: {
 
-            getCompanyName(){
+            bidPriceIsRequired() {
+                if (this.bidPrice.length > 3) {
+                    return true;
+                } else {
+                    return 'A Bid Is Required'
+                }
+            },
+
+            startDateIsRequired() {
+                if (this.startDate.length === 10) {
+                    return true;
+                } else {
+                    return 'A Start Date Is Required';
+                }
+            },
+
+            bidPriceIsRequiredCheck() {
+                return this.bidPrice.length > 3;
+            },
+
+            startDateIsRequiredCheck() {
+                return this.startDate.length === 10;
+            },
+
+            canSubmit() {
+                return !this.startDateIsRequiredCheck() || !this.bidPriceIsRequiredCheck()
+            },
+
+            getCompanyName() {
                 if (
                     this.bidTask
                     && this.bidTask.job_task
@@ -422,7 +461,10 @@
                     && this.bidTask.job_task.job
                 ) {
                     this.$store.commit('setCurrentPage', '/contractor-info');
-                    this.$router.push({name: 'contractor-info', params: {contractorId: this.bidTask.job_task.job.contractor_id}})
+                    this.$router.push({
+                        name: 'contractor-info',
+                        params: {contractorId: this.bidTask.job_task.job.contractor_id}
+                    })
                 }
 
             },
@@ -574,12 +616,16 @@
             },
 
             zero() {
-                let zero = 0
-                return zero.toString()
+                let zero = 0;
+                return zero.toString();
+            },
+
+            startDateAndPriceExist() {
+                return this.startDate.length === 10 && this.bidPrice.length > 3;
             },
 
             update(bidTask) {
-                if (bidTask && bidTask.job_task) {
+                if (this.startDateAndPriceExist() && bidTask && bidTask.job_task) {
                     let id = bidTask.id
                     // debugger;
                     let bid_price = $('#price-' + id).val()
@@ -589,6 +635,7 @@
                     axios.post('/bidTask', {
                         id: id,
                         bid_price: bid_price,
+                        start_date: this.startDate,
                         paymentType: po,
                         job_task_id: bidTask.job_task.id,
                         subId: bidTask.contractor_id,
@@ -602,6 +649,8 @@
                         Vue.toasted.error(error.response.data.message)
                         this.disabled.submit = false
                     })
+                } else {
+                    this.startDateError = true
                 }
             },
             setPaymentType(value) {
@@ -724,13 +773,13 @@
             },
 
             prettyDate(bidTask) {
-                if (bidTask && bidTask.job_task) {
-                    let date = bidTask.job_task.start_date
+                if (bidTask && bidTask.proposed_start_date) {
+                    let date = bidTask.proposed_start_date;
                     if (date == null)
-                        return ''
+                        return '';
                     // return the date and ignore the time
-                    date = date.split(' ')
-                    return date[0]
+                    date = date.split(' ');
+                    return date[0];
                 }
             },
 
