@@ -132,8 +132,8 @@ class TaskFinished extends Notification implements ShouldQueue
                     'text'
                 )->token, [], true);
 
-        Log::debug((new NexmoMessage)
-            ->content($text));
+//        Log::debug((new NexmoMessage)
+//            ->content($text));
 
         return (new NexmoMessage)
             ->content($text);

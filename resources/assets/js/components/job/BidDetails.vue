@@ -1139,15 +1139,15 @@
                 }
 
                 if (accepted) {
-                    return "You Have Accepted A Bid"
+                    return "Accepted A Bid"
                 }
 
                 if (sent_a_bid) {
-                    return "A Sub Has Sent A Bid"
+                    return "Received A Bid"
                 }
 
                 if (initiated) {
-                    return "No Currently Submitted Bids"
+                    return "Waiting For Bids"
                 }
             },
 

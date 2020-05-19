@@ -146,7 +146,7 @@ export default class GeneralContractor {
         if (id === bid.contractor_id && id === contractor_id)
             general = true;
 
-        axios.post('task/finished/general', bid)
+        axios.post('/task/finished/general', bid)
             .then((response) => {
                 console.log(response)
                 // show a toast notification

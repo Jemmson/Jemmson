@@ -943,7 +943,7 @@ class TaskController extends Controller
     {
 
 
-        $jobTask = JobTask::find($request->job_task_id);
+        $jobTask = JobTask::find($request->id);
         $task = $jobTask->task()->first();
         $subContractor = User::find($jobTask->contractor_id);
         $job = Job::find($jobTask->job_id);

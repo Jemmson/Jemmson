@@ -280,17 +280,17 @@
                 </v-card-text>
 
 
-                <v-card-text v-if="isContractor()">
+<!--                <v-card-text v-if="isContractor()">-->
 
-                    <v-text-field
-                            id="totalTaskPrice"
-                            label="Total Task Price:"
-                            v-model="cust_final_price"
-                            prepend-icon="mdi-currency-usd"
-                    >
-                    </v-text-field>
+<!--                    <v-text-field-->
+<!--                            id="totalTaskPrice"-->
+<!--                            label="Total Task Price:"-->
+<!--                            v-model="cust_final_price"-->
+<!--                            prepend-icon="mdi-currency-usd"-->
+<!--                    >-->
+<!--                    </v-text-field>-->
 
-                </v-card-text>
+<!--                </v-card-text>-->
 
             </v-card>
         </section>
