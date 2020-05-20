@@ -183,7 +183,7 @@ class JobController extends Controller
             ->select([
                 'id',
                 'qty',
-                'cust_final_price',
+                'sub_final_price',
                 'job_id'
             ])->get();
 
@@ -197,6 +197,7 @@ class JobController extends Controller
 
             $jobTask['general'] = $general;
             $jobTask['job_name'] = $job->job_name;
+            $jobTask['job_id'] = $job->id;
 
             $customer = User::where('id', '=', $job->customer_id)->select([
                 'name'
@@ -264,6 +265,7 @@ class JobController extends Controller
                 $subJobs
             ], 200);
         }
+
     }
 
     public function getInvoice(Job $job)

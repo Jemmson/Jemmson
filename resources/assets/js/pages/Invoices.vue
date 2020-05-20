@@ -260,12 +260,12 @@
                         status = job.statuses[job.statuses.length - 1]
                         if (status.status === 'paid') {
                             this.subReceipts.push({
-                                id: job.id,
+                                id: job.job_id,
                                 qty: job.qty,
                                 job_name: job.job_name,
                                 general: job.general.company_name,
                                 customer: job.customer.name,
-                                price: job.cust_final_price / 100,
+                                price: job.sub_final_price / 100,
                                 finished: this.dateOnly(status.updated_at)
                             })
                         }
