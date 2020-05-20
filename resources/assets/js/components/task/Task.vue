@@ -162,7 +162,8 @@
                             <v-row
                                     class="justify-content-around mb-15"
                             >
-                                <div>{{ prettyDate(bidTask) }}</div>
+                                <div v-if="bidTask.proposed_start_date">{{ prettyDate(bidTask) }}</div>
+                                <div v-else>Not Set</div>
                                 <div>{{ getTaskQuantity(bidTask) }}</div>
                                 <div
                                         v-if="subHasEnteredAPrice(bidTask)"

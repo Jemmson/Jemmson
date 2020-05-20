@@ -143,15 +143,8 @@ class JobController extends Controller
             ->get();
     }
 
-    /**
-     * Invoices
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getInvoices()
+    public function getGeneralJobs()
     {
-
-
         $invoices = [];
 
         $invoices['jobs'] = Auth::user()->jobs()->select([
@@ -159,7 +152,8 @@ class JobController extends Controller
             'job_name',
             'completed_bid_date',
             'contractor_id',
-            'customer_id'
+            'customer_id',
+            'bid_price'
         ])->get();
 
         foreach ($invoices['jobs'] as $job) {
@@ -177,33 +171,99 @@ class JobController extends Controller
             $job['statuses'] = $jobStatuses;
         }
 
-        return response()->json($invoices, 200);
+        return $invoices;
+    }
 
+    public function getSubJobs()
+    {
+        $invoices = [];
 
-//        if ($this->isCustomer()) {
-//            $invoices = Auth::user()->jobs()
-//                ->where(function ($query) {
-//                    $query->where('status', __('job.completed'));
-//                })
-//                ->with(
-//                    [
-//                        'jobTasks' => function ($query) {
-//                            $query->with(
-//                                [
-//                                    'task' => function ($q) {
-//                                        $q->select('tasks.id', 'tasks.name', 'tasks.contractor_id');
-//                                    }
-//                                ]);
-//                        }
-//                    ])->get();
-//
-//        } else {
-//            $invoices = Auth::user()->jobs()->where('status', __('job.completed'))->with('jobTasks.task', 'jobTasks.bidContractorJobTasks.contractor')->get();
-//            $subInvoices = Auth::user()->contractor()->first()->jobTasks()->where('bid_id', '!=', null)->where('status', 'bid_task.customer_sent_payment')->with('task')->get();
-//            $invoices = $invoices->merge($subInvoices);
-//        }
-//
-//        return response()->json($invoices, 200);
+        $invoices['jobTasks'] = JobTask::where('contractor_id', '=', Auth::user()
+            ->getAuthIdentifier())
+            ->select([
+                'id',
+                'qty',
+                'cust_final_price',
+                'job_id'
+            ])->get();
+
+        foreach ($invoices['jobTasks'] as $jobTask) {
+
+            $job = Job::find($jobTask->job_id);
+
+            $general = Contractor::where('user_id', '=', $job->contractor_id)->select([
+                'company_name'
+            ])->get()->first();
+
+            $jobTask['general'] = $general;
+            $jobTask['job_name'] = $job->job_name;
+
+            $customer = User::where('id', '=', $job->customer_id)->select([
+                'name'
+            ])->get()->first();
+            $jobTask['customer'] = $customer;
+
+            $jobTaskStatuses = $jobTask->jobTaskStatuses()->get();
+            $jobTask['statuses'] = $jobTaskStatuses;
+        }
+
+        return $invoices;
+    }
+
+    public function getCustomerJobs()
+    {
+        $invoices = [];
+
+        $invoices['customerJobs'] = Auth::user()->jobs()->select([
+            'id',
+            'job_name',
+            'contractor_id',
+            'customer_id',
+            'bid_price'
+        ])->get();
+
+        foreach ($invoices['customerJobs'] as $job) {
+            $contractor = Contractor::where('user_id', '=', $job->contractor_id)->select([
+                'company_name'
+            ])->get()->first();
+            $job['contractor'] = $contractor;
+
+            $customer = User::where('id', '=', $job->customer_id)->select([
+                'name'
+            ])->get()->first();
+            $job['customer'] = $customer;
+
+            $jobStatuses = $job->jobStatuses()->get();
+            $job['statuses'] = $jobStatuses;
+        }
+
+        return $invoices;
+    }
+
+    /**
+     * Invoices
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getInvoices()
+    {
+
+        if (Auth::user()->usertype === 'customer') {
+            //        As A Customer
+            $customerJobs = $this->getCustomerJobs();
+            return response()->json([
+                $customerJobs
+            ], 200);
+        } else {
+            //        As A General
+            $generalJobs = $this->getGeneralJobs();
+            //        As A Sub
+            $subJobs = $this->getSubJobs();
+            return response()->json([
+                $generalJobs,
+                $subJobs
+            ], 200);
+        }
     }
 
     public function getInvoice(Job $job)
@@ -923,11 +983,11 @@ class JobController extends Controller
         }
 
         $address = [
-          "addressLine1" => $request->address_line_1,
-          "addressLine2" => $request->address_line_2,
-          "city" => $request->city,
-          "state" => $request->state,
-          "zip" => $request->zip
+            "addressLine1" => $request->address_line_1,
+            "addressLine2" => $request->address_line_2,
+            "city" => $request->city,
+            "state" => $request->state,
+            "zip" => $request->zip
         ];
 
         $job->approveJob(
@@ -935,7 +995,7 @@ class JobController extends Controller
             $request->agreed_start_date,
             Auth::user()->customer()->first()->location_id,
             $request->job_location_same_as_home
-    );
+        );
 
 //        // TODO: what date needs to be updated here?
 //        $job->agreed_start_date = $request->agreed_start_date;

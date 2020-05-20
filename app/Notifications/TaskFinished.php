@@ -103,16 +103,16 @@ class TaskFinished extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
         if ($this->customer) {
-            $custom = "General: $this->general->name \n
-        Job: $this->job->name\n
-        Task: $this->task->name\n";
+            $custom = "General: " . $this->general->name . "\n
+        Job: " . $this->job->name . "\n
+        Task: " . $this->task->name . "\n";
             $generalStatus = 'general_finished_work ';
             $subStatus = '';
             $user = $this->customer;
         } else {
-            $custom = "Sub: $this->sub->name\n
-        Job: $this->job->name\n
-        Task: $this->task->name\n";
+            $custom = "Sub: " . $this->sub->name . "\n
+        Job: " . $this->job->name . "\n
+        Task: " . $this->task->name . "\n";
             $generalStatus = "sub_finished_work ";
             $subStatus = "finished_job ";
             $user = $this->customer;

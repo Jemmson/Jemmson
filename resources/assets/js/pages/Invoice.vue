@@ -27,7 +27,7 @@
                                 <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
                                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                                 <td>{{ item.qty }}</td>
-                                <td>{{ item.unit_price }}</td>
+                                <td>{{ item.unit_price/100 }}</td>
                             </tr>
                             </tbody>
                         </template>
@@ -36,7 +36,7 @@
                     <v-row align="center">
                         <v-card-subtitle>Total</v-card-subtitle>
                         <v-spacer></v-spacer>
-                        <span class="mr-1rem">{{ invoice.job.bid_price }}</span>
+                        <span class="mr-1rem">{{ invoice.job.bid_price/100 }}</span>
                     </v-row>
                 </div>
 
@@ -155,6 +155,7 @@
     // },
     // methods: {},
     mounted: function() {
+        this.$store.commit('setCurrentPage', '/invoice');
       const id = this.$route.params.id
       axios.get('/invoice/' + id).then((data) => {
         this.invoice = data.data

@@ -25,6 +25,7 @@
         </section>
 
         <section v-else-if="onInvoicesPage() ||
+                            onInvoicePage() ||
                         onParticularInvoicePage() ||
                         onImagesPage()">
 
@@ -146,6 +147,9 @@
             },
             onInvoicesPage() {
                 return this.page === '/invoices' || this.page === '/invoices/'
+            },
+            onInvoicePage() {
+                return this.page === '/invoice' || this.page === '/invoice/'
             },
             onParticularInvoicePage() {
                 return this.page.split('/')[1] === 'invoice' ||

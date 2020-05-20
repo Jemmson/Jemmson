@@ -632,6 +632,10 @@
                 :id="jobTask ? jobTask.id : null">
         </update-task-location-modal>
 
+        <feedback
+                page="jobTask"
+        ></feedback>
+
     </v-container>
 </template>
 
@@ -1054,7 +1058,7 @@
 
             getLatestJobStatus(jobTask) {
                 if (jobTask && jobTask.job && jobTask.job.job_statuses) {
-                    return jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status
+                    return this.formatStatus(jobTask.job.job_statuses[jobTask.job.job_statuses.length - 1].status);
                 }
             },
 
