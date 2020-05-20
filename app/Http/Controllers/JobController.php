@@ -285,10 +285,10 @@ class JobController extends Controller
     public function customerInvoice($job)
     {
         $invoice = [];
-        $invoice['job'] = $job->select([
-            'bid_price',
-            'job_name'
-        ])->get()->first();
+        $invoice['job'] = [
+            'bid_price' => $job->bid_price,
+            'job_name' => $job->job_name
+        ];
         $invoice['contractor'] = $job->contractor()->select([
             'name'
         ])->get()->first();
@@ -336,10 +336,10 @@ class JobController extends Controller
     public function generalInvoice($job)
     {
         $invoice = [];
-        $invoice['job'] = $job->select([
-            'bid_price',
-            'job_name'
-        ])->get()->first();
+        $invoice['job'] = [
+            'bid_price' => $job->bid_price,
+            'job_name' => $job->job_name
+        ];
         $invoice['contractor'] = $job->contractor()->select([
             'name'
         ])->get()->first();
@@ -386,11 +386,14 @@ class JobController extends Controller
 
     public function subInvoice($job)
     {
+
         $invoice = [];
-        $invoice['job'] = $job->select([
-            'bid_price',
-            'job_name'
-        ])->get()->first();
+        
+        $invoice['job'] = [
+            'bid_price' => $job->bid_price,
+            'job_name' => $job->job_name
+        ];
+
         $invoice['contractor'] = $job->contractor()->select([
             'name'
         ])->get()->first();
