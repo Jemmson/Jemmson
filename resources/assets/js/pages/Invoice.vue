@@ -87,7 +87,7 @@
                                 <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
                                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                                 <td>{{ item.qty }}</td>
-                                <td>{{ totalSubPrice() }}</td>
+                                <td>{{ item.sub_final_price }}</td>
                             </tr>
                             </tbody>
                         </template>
@@ -96,7 +96,7 @@
                     <v-row align="center">
                         <v-card-subtitle>Total</v-card-subtitle>
                         <v-spacer></v-spacer>
-                        <span class="mr-1rem">{{ getBidPrice(invoice) }}</span>
+                        <span class="mr-1rem">{{ totalSubPrice() }}</span>
                     </v-row>
                 </div>
 
@@ -151,8 +151,8 @@
             totalSubPrice() {
                 let total = 0
                 if (this.invoice !== null) {
-                    for (const task of this.invoice.job_tasks) {
-                        total += task.sub_final_price
+                    for (const task of this.invoice.job.job_tasks) {
+                        total += parseFloat(task.sub_final_price)
                     }
                 }
                 return total
