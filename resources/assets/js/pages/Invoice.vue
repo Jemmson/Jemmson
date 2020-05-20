@@ -27,7 +27,7 @@
                                 <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
                                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                                 <td>{{ item.qty }}</td>
-                                <td>{{ item.unit_price/100 }}</td>
+                                <td>{{ getUnitPrice(item) }}</td>
                             </tr>
                             </tbody>
                         </template>
@@ -36,7 +36,7 @@
                     <v-row align="center">
                         <v-card-subtitle>Total</v-card-subtitle>
                         <v-spacer></v-spacer>
-                        <span class="mr-1rem">{{ invoice.job.bid_price/100 }}</span>
+                        <span class="mr-1rem">{{ getBidPrice(invoice) }}</span>
                     </v-row>
                 </div>
 
@@ -57,7 +57,7 @@
                                 <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
                                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                                 <td>{{ item.qty }}</td>
-                                <td>{{ item.unit_price }}</td>
+                                <td>{{ getUnitPrice(item)}}</td>
                             </tr>
                             </tbody>
                         </template>
@@ -66,7 +66,7 @@
                     <v-row align="center">
                         <v-card-subtitle>Total</v-card-subtitle>
                         <v-spacer></v-spacer>
-                        <span class="mr-1rem">{{ invoice.job.bid_price }}</span>
+                        <span class="mr-1rem">{{ getBidPrice(invoice) }}</span>
                     </v-row>
                 </div>
 
@@ -87,7 +87,7 @@
                                 <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
                                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                                 <td>{{ item.qty }}</td>
-                                <td>{{ item.unit_price }}</td>
+                                <td>{{ getUnitPrice(item) }}</td>
                             </tr>
                             </tbody>
                         </template>
@@ -96,7 +96,7 @@
                     <v-row align="center">
                         <v-card-subtitle>Total</v-card-subtitle>
                         <v-spacer></v-spacer>
-                        <span class="mr-1rem">{{ invoice.job.bid_price }}</span>
+                        <span class="mr-1rem">{{ getBidPrice(invoice) }}</span>
                     </v-row>
                 </div>
 
@@ -130,30 +130,37 @@
             document.body.scrollTop = 0 // For Safari
             document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
         },
-        // computed: {
-        isContractor() {
-            return User.isContractor()
+        computed: {
+            isContractor() {
+                return User.isContractor()
+            },
+            //   totalCustomerPrice() {
+            //     let total = 0
+            //     if (this.invoice !== null) {
+            //       for (const task of this.invoice.job_tasks) {
+            //         total += (task.cust_final_price - task.sub_final_price)
+            //       }
+            //     }
+            //     return total
+            //   },
+            //   totalSubPrice() {
+            //     let total = 0
+            //     if (this.invoice !== null) {
+            //       for (const task of this.invoice.job_tasks) {
+            //         total += task.sub_final_price
+            //       }
+            //     }
+            //     return total
+            //   }
         },
-        //   totalCustomerPrice() {
-        //     let total = 0
-        //     if (this.invoice !== null) {
-        //       for (const task of this.invoice.job_tasks) {
-        //         total += (task.cust_final_price - task.sub_final_price)
-        //       }
-        //     }
-        //     return total
-        //   },
-        //   totalSubPrice() {
-        //     let total = 0
-        //     if (this.invoice !== null) {
-        //       for (const task of this.invoice.job_tasks) {
-        //         total += task.sub_final_price
-        //       }
-        //     }
-        //     return total
-        //   }
-        // },
-        // methods: {},
+        methods: {
+            getBidPrice(invoice) {
+                return parseFloat(invoice.job.bid_price) / 100
+            },
+            getUnitPrice(item){
+                return parseFloat(item.unit_price) / 100
+            }
+        },
         mounted: function () {
             this.$store.commit('setCurrentPage', '/invoice');
             const id = this.$route.params.id

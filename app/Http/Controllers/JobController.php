@@ -388,7 +388,7 @@ class JobController extends Controller
     {
 
         $invoice = [];
-        
+
         $invoice['job'] = [
             'bid_price' => $job->bid_price,
             'job_name' => $job->job_name
