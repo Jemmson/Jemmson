@@ -351,6 +351,7 @@ class JobController extends Controller
 
         $jobTasks = $job->jobTasks()->select([
             'qty',
+            'sub_final_price',
             'cust_final_price',
             'task_id',
             'contractor_id',
@@ -390,7 +391,6 @@ class JobController extends Controller
         $invoice = [];
 
         $invoice['job'] = [
-            'bid_price' => $job->bid_price,
             'job_name' => $job->job_name
         ];
 
@@ -405,7 +405,7 @@ class JobController extends Controller
 
         $jobTasks = $job->jobTasks()->select([
             'qty',
-            'cust_final_price',
+            'sub_final_price',
             'task_id',
             'contractor_id',
             'unit_price'

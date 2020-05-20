@@ -87,7 +87,7 @@
                                 <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
                                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                                 <td>{{ item.qty }}</td>
-                                <td>{{ getUnitPrice(item) }}</td>
+                                <td>{{ totalSubPrice() }}</td>
                             </tr>
                             </tbody>
                         </template>
@@ -143,21 +143,21 @@
             //     }
             //     return total
             //   },
-            //   totalSubPrice() {
-            //     let total = 0
-            //     if (this.invoice !== null) {
-            //       for (const task of this.invoice.job_tasks) {
-            //         total += task.sub_final_price
-            //       }
-            //     }
-            //     return total
-            //   }
         },
         methods: {
             getBidPrice(invoice) {
                 return parseFloat(invoice.job.bid_price) / 100
             },
-            getUnitPrice(item){
+            totalSubPrice() {
+                let total = 0
+                if (this.invoice !== null) {
+                    for (const task of this.invoice.job_tasks) {
+                        total += task.sub_final_price
+                    }
+                }
+                return total
+            },
+            getUnitPrice(item) {
                 return parseFloat(item.unit_price) / 100
             }
         },
