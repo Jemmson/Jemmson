@@ -96,9 +96,9 @@
                             class="mx-auto title font-weight-light mb-8"
                             max-width="720"
                     >
-                        <p style="color:black">As a contractor, you know how important it is to find people to help finish the job right.  Who you choose trust with your projects can make or break your professional reputation. On the other hand, during busy times if you try to do the all the work yourself, turnover time slows, stress rises, efficiency lags and customers are unhappy.</p>
+                        <p style="color:black">As a contractor, you know how important it is to find people to help finish the job right.  Who you choose to trust with your projects can make or break your professional reputation. On the other hand, during busy times if you try to do the all the work yourself, turnover time slows, stress rises, efficiency lags and customers are unhappy.</p>
 
-                        <p style="color:black">What if there was a way for you to do what you do best and sub the rest? And what if you could create a passive income at the same time? JEMMSON makes that happen. Communicate with subcontractors and customers, view finished jobs, create instant invoices, and get paid all with a few taps on your smart phone, computer screen or other mobile devise. Our site is simple, fast, and secure. Get some peace of mind.  Do what you do best… and sub the rest with JEMMSON!</p>
+                        <p style="color:black">What if there was a way for you to do what you do best and sub the rest? And what if you could create a passive income at the same time? JEMMSON makes that happen. Communicate with subcontractors and customers, view finished jobs, create instant invoices, and get paid all with a few taps on your smart phone, computer screen or other mobile device. Our site is simple, fast, and secure. Get some peace of mind.  Do what you do best… and sub the rest with JEMMSON!</p>
 
                     </v-responsive>
 
