@@ -113,7 +113,7 @@
                         </div>
 
                         <div class="flex flex-col"
-                             v-if="showDeclinedMsg(bidTask) && subHasMessage(bidTask)"
+                             v-if="showDeclinedMsg(bidTask) || subHasMessage(bidTask)"
                         >
                             <v-icon
                                     :color="show.messages ? 'success': ''"
@@ -267,17 +267,21 @@
                         <v-card-title>Messages</v-card-title>
 
                         <v-card-text>
-                            <content-section
-                                    v-if="showDeclinedMsg(bidTask)"
-                                    label="Declined Reason:"
-                                    style="background-color: lightcoral"
-                                    :content="getDeclinedMessage(bidTask)"
-                                    type="declinedReason"></content-section>
-                            <content-section
-                                    v-if="subHasMessage(bidTask)"
-                                    label="Sub Instructions:"
-                                    :content="getSubMessage(bidTask)"
-                                    type="subInstructions"></content-section>
+
+                            <div v-if="subHasMessage(bidTask)" class="flex flex-col"
+                                style="font-weight: bold;"
+                            >
+                                <div>Sub Instructions:</div>
+                                <div>{{ getSubMessage(bidTask) }}</div>
+                            </div>
+
+                            <div v-if="showDeclinedMsg(bidTask)" class="flex flex-col"
+                                style="font-weight: bold;"
+                            >
+                                <div>Declined Reason:</div>
+                                <div>{{ getDeclinedMessage(bidTask) }}</div>
+                            </div>
+
                         </v-card-text>
 
                     </v-card>

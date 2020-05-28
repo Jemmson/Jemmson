@@ -14,6 +14,13 @@
         </div>
 
         <v-card>
+            <v-card-subtitle>Task Name:</v-card-subtitle>
+            <v-card-title class="uppercase"
+                style="margin-top: -2rem;
+                        margin-bottom: -1.5rem;
+                        margin-left: 10px;"
+            >{{ jobTask.task.name }}</v-card-title>
+            <hr>
             <v-card-actions
                     class="flex"
             >

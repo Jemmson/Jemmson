@@ -19,8 +19,6 @@
                     class="flex flex-col"
             >
                 <div class="flex justify-content-around w-full">
-
-
                     <div class="flex flex-col nav-icon-spacing">
                         <v-icon
                                 class="nav-btn-position"
@@ -249,7 +247,6 @@
                 <div v-if="!isCustomer && bid && getJobTasksLength() > 0">
 
 
-
                     <v-card>
                         <v-card-title>Job Tasks</v-card-title>
                         <v-card
@@ -289,7 +286,8 @@
                                         <v-list-item-title class="uppercase flex justify-content-between align-center">
                                             <div
                                                     style="font-size: .875rem; margin-left: 1rem;"
-                                            >Sub Status:</div>
+                                            >Sub Status:
+                                            </div>
                                             <div>
                                                 <v-btn
                                                         style="font-size: .875rem;"
@@ -312,7 +310,8 @@
                                         >
                                             <div
                                                     style="font-size: .875rem; margin-left: 1rem;"
-                                            >{{ message.message }}</div>
+                                            >{{ message.message }}
+                                            </div>
                                         </v-list-item-title>
                                     </v-list-item-content>
                                     <hr>
@@ -323,15 +322,21 @@
                                     >
                                         <v-list-item-title class="uppercase flex justify-content-between">
                                             <div class="flex">
-                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">Subs:</div>
+                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">
+                                                    Subs:
+                                                </div>
                                                 <div style="font-size: .875rem;">{{ jobTaskObject(item).Subs }}</div>
                                             </div>
                                             <div class="flex">
-                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">Quantity:</div>
+                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">
+                                                    Quantity:
+                                                </div>
                                                 <div style="font-size: .875rem;">{{ jobTaskObject(item).Qty }}</div>
                                             </div>
                                             <div class="flex">
-                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">Price:</div>
+                                                <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">
+                                                    Price:
+                                                </div>
                                                 <div style="font-size: .875rem;"
                                                      v-if="jobTaskObject(item).Price"
                                                      v-text="'$ ' + jobTaskObject(item).Price"
@@ -577,38 +582,39 @@
         <section class="mt-1rem"
                  v-show="show.notes"
         >
-            <card>
-                <v-card-title v-if="isCustomer" class="w-break card-title mt-4">Special Notes For The Job</v-card-title>
-                <v-card-title v-else class="card-title mt-4">Special Notes From Customer</v-card-title>
-                <main class="row">
-                    <section class="col-12">
+            <v-card v-if="isCustomer">
+                <v-card-title class="card-title mt-4">Notes</v-card-title>
+                <v-card-text>
+                    <div style="display: none;">{{ messageFromCustomer }}</div>
+                    <div style="display: none;">{{ getPaidWithCashMessage }}</div>
+                    <v-textarea v-model="customerNotesMessage"
+                                label="Your Notes For Your Contractor"
+                                outlined
+                                id="message">
+                    </v-textarea>
+                </v-card-text>
 
-                        <div style="display: none;">{{ messageFromCustomer }}</div>
-                        <div style="display: none;">{{ getPaidWithCashMessage }}</div>
+                <v-btn
+                        :loading="submittedMessage"
+                        v-if="isCustomer"
+                        class="mt-1rem"
+                        text
+                        color="primary"
+                        ref="update_customer_notes_button"
+                        @click="updateGeneralContractorNotes"
+                >Submit
+                </v-btn>
 
-
-                        <textarea ref="message_text_area"
-                                  v-model="customerNotesMessage"
-                                  name="notes" id="notes" cols="30" rows="10"
-                                  class="form-control"
-                                  :disabled="!isCustomer"
-                        >
-
-                            </textarea>
-
-                        <v-btn
-                                v-if="isCustomer"
-                                class="mt-1rem"
-                                text
-                                color="primary"
-                                ref="update_customer_notes_button"
-                                @click="updateGeneralContractorNotes"
-                        >Submit
-                        </v-btn>
-
-                    </section>
-                </main>
-            </card>
+            </v-card>
+<!--            <card>-->
+<!--                <v-card-title v-else class="card-title mt-4">Contractor Notes For You</v-card-title>-->
+<!--                <v-card-text>-->
+<!--                    <v-textarea cols="0" rows="0" class="form-control"-->
+<!--                                v-model="customerNotesMessage"-->
+<!--                                id="message">-->
+<!--                    </v-textarea>-->
+<!--                </v-card-text>-->
+<!--            </card>-->
         </section>
 
         <!-- / tasks -->
@@ -1540,12 +1546,26 @@
             },
             ...mapMutations(['setCustomerName']),
             ...mapActions(['actCustomerName']),
-            updateGeneralContractorNotes() {
-                Customer.updateNotesForJob(
-                    this.customerNotesMessage,
-                    this.bid.customer.id
-                )
+
+            async updateGeneralContractorNotes() {
+                try {
+                    this.submittedMessage = true
+                    await axios.post('/customer/updateCustomerNotes',
+                        {
+                            customerNotesMessage: this.customerNotesMessage,
+                            customer_id: this.bid.customer.id
+                        }
+                    )
+                    User.emitChange('bidUpdated')
+                    Vue.toasted.success('Customer Note Has Been Updated')
+                    this.submittedMessage = false
+                } catch (error) {
+                    // error = error.response.data
+                    this.submittedMessage = false
+                    Vue.toasted.error(error)
+                }
             },
+
             updateArea() {
                 // Customer.updateArea (this.area.area, this.bid.id);
             },

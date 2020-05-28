@@ -15,19 +15,31 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn
-                icon
-                @click="openDialog()"
-        >
-            <v-icon>mdi-login</v-icon>
-        </v-btn>
+        <div class="flex flex-col nav-icon-spacing">
+            <v-btn
+                    icon
+                    @click="openDialog()"
+            >
+                <v-icon>mdi-login</v-icon>
+            </v-btn>
+            <div class="nav-icon-label" style="margin-top: -.5rem; margin-bottom: .5rem">
+                Logout
+            </div>
+        </div>
 
-        <v-btn
-                @click="settings()"
-                icon
-        >
-            <v-icon>mdi-settings</v-icon>
-        </v-btn>
+        <div class="flex flex-col nav-icon-spacing">
+            <v-btn
+                    @click="settings()"
+                    icon
+            >
+                <v-icon>mdi-settings</v-icon>
+            </v-btn>
+            <div class="nav-icon-label" style="margin-top: -.5rem; margin-bottom: .5rem">
+                Settings
+            </div>
+        </div>
+
+
 
         <v-dialog
                 v-model="logoutDialog"

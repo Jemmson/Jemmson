@@ -31,12 +31,17 @@
                 <v-icon>mdi-file-document</v-icon>
             </v-btn>
 
-            <v-btn
-                    icon
-                    @click="openDialog()"
-            >
-                <v-icon>mdi-login</v-icon>
-            </v-btn>
+            <div class="flex flex-col nav-icon-spacing">
+                <v-btn
+                        icon
+                        @click="openDialog()"
+                >
+                    <v-icon>mdi-login</v-icon>
+                </v-btn>
+                <div class="nav-icon-label" style="margin-top: -.5rem; margin-bottom: .5rem">
+                    Logout
+                </div>
+            </div>
 
             <v-dialog
                     v-model="logoutDialog"
@@ -64,6 +69,20 @@
                 </v-card>
 
             </v-dialog>
+
+            <div class="flex flex-col nav-icon-spacing">
+                <v-btn
+                        @click="gotoSettings()"
+                        icon
+                >
+                    <v-icon>mdi-settings</v-icon>
+                </v-btn>
+                <div class="nav-icon-label" style="margin-top: -.5rem; margin-bottom: .5rem">
+                    Settings
+                </div>
+            </div>
+
+
         </div>
         <div
                 v-if="auth"
@@ -73,13 +92,6 @@
                     icon
             >
                 <v-icon>mdi-home-outline</v-icon>
-            </v-btn>
-
-            <v-btn
-                    @click="gotoSettings()"
-                    icon
-            >
-                <v-icon>mdi-settings</v-icon>
             </v-btn>
         </div>
     </div>
