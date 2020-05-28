@@ -30,7 +30,7 @@
                 <v-row no-gutters>
                     <v-img
                             :min-height="'calc(100vh - ' + $vuetify.application.top + 'px)'"
-                            src="img/IMG_0054.jpeg"
+                            src="https://res.cloudinary.com/jemmson-inc/image/upload/a_90/v1588213756/oUG0dypr9n3mJJ5AysO69ZvUg3WQujZgU3mkXIEz_ajhvan.jpg"
                     >
                         <v-theme-provider dark>
                             <v-container fill-height>
@@ -96,11 +96,10 @@
                             class="mx-auto title font-weight-light mb-8"
                             max-width="720"
                     >
-                        JEMMSON aims provide the contractor with the ability to subcontract jobs that would be easier
-                        to make a quick profit or you just dont have the time to complete. We are focused on single
-                        operator contractors who desire to make their life easier. We use industry leading Stripe for
-                        card card processing which enables easy payment across customers, general contractors and
-                        subcontractors
+                        <p style="color:black">As a contractor, you know how important it is to find people to help finish the job right.  Who you choose trust with your projects can make or break your professional reputation. On the other hand, during busy times if you try to do the all the work yourself, turnover time slows, stress rises, efficiency lags and customers are unhappy.</p>
+
+                        <p style="color:black">What if there was a way for you to do what you do best and sub the rest? And what if you could create a passive income at the same time? JEMMSON makes that happen. Communicate with subcontractors and customers, view finished jobs, create instant invoices, and get paid all with a few taps on your smart phone, computer screen or other mobile devise. Our site is simple, fast, and secure. Get some peace of mind.  Do what you do best… and sub the rest with JEMMSON!</p>
+
                     </v-responsive>
 
 <!--                    <v-avatar-->
