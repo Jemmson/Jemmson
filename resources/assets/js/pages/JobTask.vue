@@ -19,7 +19,7 @@
                 style="margin-top: -2rem;
                         margin-bottom: -1.5rem;
                         margin-left: 10px;"
-            >{{ jobTask.task.name }}</v-card-title>
+            >{{ getTaskName() }}</v-card-title>
             <hr>
             <v-card-actions
                     class="flex"
@@ -121,7 +121,7 @@
                         <div
                                 class="capitalize"
                                 id="taskName"
-                        >{{ jobTask ? jobTask.task.name : ''}}
+                        >{{ getTaskName() }}
                         </div>
                     </div>
                     <div class="flex justify-content-between">
@@ -134,7 +134,7 @@
                     <div class="flex justify-content-between">
                         <div>Start Date</div>
                         <div class="float-right font-weight-bold capitalize">
-                            {{ getStartDate(jobTask.start_date) }}
+                            {{ getStartDate(jobTask) }}
                         </div>
                     </div>
                     <div v-show="jobTask ? jobTask.declined_message !== '' : false">
@@ -396,10 +396,12 @@
                 </v-card-text>
                 <v-card-text v-if="!isContractor()">
                     <v-textarea
+                            style="color: black !important"
+                            outlined
                             auto-grow
                             label="Notes From Contractor"
-                            :value="getContractorNotesForCustomer"
-                            :disabled="true"
+                            v-model="getContractorNotesForCustomer"
+                            readonly
                     ></v-textarea>
                 </v-card-text>
             </v-card>
@@ -437,7 +439,7 @@
                         <v-btn
                                 color="primary"
                                 text
-                                @click="viewContractorInfo(bid.contractor_id)">{{
+                                @click="viewContractorInfo(bid)">{{
                             getCompanyName(bid) }}
                         </v-btn>
                         <div class="flex justify-content-between">
@@ -841,6 +843,12 @@
             //     return date[0]
             // },
 
+            getTaskName(){
+              if (this.jobTask) {
+                  return this.jobTask.task.name
+              }
+            },
+
             atleastOneSubHasAHigherBidPrice(bids) {
                 if (bids) {
                     for (let i = 0; i < bids.length; i++) {
@@ -931,7 +939,7 @@
             },
 
             subHasNotFinishedTask(item) {
-                if (this.isASub(item.contractor_id, item.job.contractor_id)) {
+                if (item && this.isASub(item.contractor_id, item.job.contractor_id)) {
                     return this.getLatestJobTaskStatus1(item) === 'approved by customer'
                         || this.getLatestJobTaskStatus1(item) === 'declined subs work'
                 }
@@ -954,8 +962,11 @@
                 return status
             },
 
-            getStartDate(date) {
-                return this.dateOnly(date)
+            getStartDate(jt) {
+                if (jt) {
+                    let date = jt.start_date
+                    return this.dateOnly(date)
+                }
             },
 
             subPriceHigherThanBidPrice(bid) {
@@ -1116,8 +1127,11 @@
                     return this.formatStatus(this.getJobTaskStatus_latest(this.jobTask))
                 }
             },
-            viewContractorInfo(id) {
-                this.$router.push({name: 'contractor-info', params: {contractorId: id}})
+            viewContractorInfo(bid) {
+                if (bid) {
+                    let id = bid.contractor_id
+                    this.$router.push({name: 'contractor-info', params: {contractorId: id}})
+                }
             },
             getBidPrice(bid) {
                 if (bid) {
