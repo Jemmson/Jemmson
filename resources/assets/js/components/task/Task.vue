@@ -289,14 +289,16 @@
                                 style="font-weight: bold;"
                             >
                                 <div>Sub Instructions:</div>
-                                <div>{{ getSubMessage(bidTask) }}</div>
+                                <p style="margin-left: 10px">{{ getSubMessage(bidTask) }}</p>
                             </div>
+
+                            <hr>
 
                             <div v-if="showDeclinedMsg(bidTask)" class="flex flex-col"
                                 style="font-weight: bold;"
                             >
                                 <div>Declined Reason:</div>
-                                <div>{{ getDeclinedMessage(bidTask) }}</div>
+                                <p style="margin-left: 10px">{{ getDeclinedMessage(bidTask) }}</p>
                             </div>
 
                         </v-card-text>
