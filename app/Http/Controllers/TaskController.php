@@ -99,6 +99,7 @@ class TaskController extends Controller
             ])->get()->first();
             $bcjtask['job'] = $bcjtask->jobTask()->get()->first()->task()->select([
                 'id',
+                'job_name',
                 'sub_status',
                 'status',
                 'contractor_id'
@@ -146,6 +147,7 @@ class TaskController extends Controller
                 $bcjtask['job_task']['job'] = $bcjtask->jobTask()->get()->first()->job()->select([
                     'id',
                     'contractor_id',
+                    'job_name',
                     'payment_type',
                     'status'
                 ])->get()->first();

@@ -15,13 +15,6 @@
             <div
                     class="flex flex-column gray-background"
             >
-                <!--                <div-->
-                <!--                        style="background-color: green"-->
-                <!--                        class="banner"-->
-                <!--                        v-if="paymentSucceeded"-->
-                <!--                >-->
-                <!--                    <h3 class="text-center">Payment Succeeded!</h3>-->
-                <!--                </div>-->
                 <div
                         class="error banner"
                         v-if="errors"
@@ -62,18 +55,6 @@
                 >
 
                 </credit-card>
-                <!--            <div class="textfield-spacing">-->
-                <!--                <v-text-field-->
-                <!--                        v-model="statementDescriptor"-->
-                <!--                        label="Payment Description"-->
-                <!--                        counter-->
-                <!--                        :counter="22"-->
-                <!--                        :rules="rules"-->
-                <!--                ></v-text-field>-->
-                <!--            </div>-->
-
-                <!--            v-model="selected[i.id]"-->
-
 
                 <div class="flex flex-col">
                     <v-btn

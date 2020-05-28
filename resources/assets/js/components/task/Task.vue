@@ -40,17 +40,6 @@
                 </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
             <div class="flex justify-content-between">
                 <div>
                     <v-card-title
