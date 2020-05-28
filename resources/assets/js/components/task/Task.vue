@@ -20,17 +20,17 @@
                      style="margin-top: .5rem;
                             margin-left: 10px;"
                 >
-                    <div style="font-weight: bold; font-size: 12px; margin-right: 6px;">Job Name:</div>
-                    <div style="font-size: 12px; margin-right: 6px;">{{ bidTask.job_task.job.job_name }}</div>
+                    <div style="font-weight: bold; font-size: 15px; margin-right: 6px;">Job Name:</div>
+                    <div style="font-size: 15px; margin-right: 6px;">{{ bidTask.job_task.job.job_name }}</div>
                 </div>
 
                 <div class="flex align-center justify-content-between"
                      style="margin-top: .5rem;
                             margin-left: 10px;"
                 >
-                    <div style="font-weight: bold; font-size: 12px; margin-right: 6px;">General Contractor:</div>
+                    <div style="font-weight: bold; font-size: 15px; margin-right: 6px;">General Contractor:</div>
                     <v-btn
-                            style="font-size: 12px"
+                            style="font-size: 15px"
                             color="primary"
                             text
                             @click="viewContractorInfoForSubs()"
