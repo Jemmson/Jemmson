@@ -12,17 +12,45 @@
                     style="color: black"
             >You will need to set up a credit card to bid on this job
             </v-card-title>
-            <div class="flex justify-content-between w-full">
-                <v-card-title style="font-size: 1rem">General Contractor:
+
+
+
+            <div class="flex flex-col">
+                <div class="flex justify-content-between"
+                     style="margin-top: .5rem;
+                            margin-left: 10px;"
+                >
+                    <div style="font-weight: bold; font-size: 12px; margin-right: 6px;">Job Name:</div>
+                    <div style="font-size: 12px; margin-right: 6px;">{{ bidTask.job_task.job.job_name }}</div>
+                </div>
+
+                <div class="flex align-center justify-content-between"
+                     style="margin-top: .5rem;
+                            margin-left: 10px;"
+                >
+                    <div style="font-weight: bold; font-size: 12px; margin-right: 6px;">General Contractor:</div>
                     <v-btn
+                            style="font-size: 12px"
                             color="primary"
                             text
                             @click="viewContractorInfoForSubs()"
                     >
                         {{ getCompanyName() }}
                     </v-btn>
-                </v-card-title>
+                </div>
             </div>
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="flex justify-content-between">
                 <div>
                     <v-card-title
