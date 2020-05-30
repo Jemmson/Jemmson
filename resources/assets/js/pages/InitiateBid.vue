@@ -27,26 +27,26 @@
                     >
                     </v-combobox>
 
-<!--                    <v-text-field-->
-<!--                            id="firstName"-->
-<!--                            v-model="form.firstName"-->
-<!--                            required-->
-<!--                            :rules="nameRules()"-->
-<!--                            :counter="20"-->
-<!--                            label="First Name *"-->
-<!--                    >-->
-<!--                    </v-text-field>-->
+                    <!--                    <v-text-field-->
+                    <!--                            id="firstName"-->
+                    <!--                            v-model="form.firstName"-->
+                    <!--                            required-->
+                    <!--                            :rules="nameRules()"-->
+                    <!--                            :counter="20"-->
+                    <!--                            label="First Name *"-->
+                    <!--                    >-->
+                    <!--                    </v-text-field>-->
 
-<!--                    <v-text-field-->
-<!--                            id="lastName"-->
-<!--                            v-model="form.lastName"-->
-<!--                            @change="lastName()"-->
-<!--                            required-->
-<!--                            :rules="nameRules()"-->
-<!--                            :counter="20"-->
-<!--                            label="Last Name *"-->
-<!--                    >-->
-<!--                    </v-text-field>-->
+                    <!--                    <v-text-field-->
+                    <!--                            id="lastName"-->
+                    <!--                            v-model="form.lastName"-->
+                    <!--                            @change="lastName()"-->
+                    <!--                            required-->
+                    <!--                            :rules="nameRules()"-->
+                    <!--                            :counter="20"-->
+                    <!--                            label="Last Name *"-->
+                    <!--                    >-->
+                    <!--                    </v-text-field>-->
 
                     <v-text-field
                             id="phone"
@@ -118,6 +118,7 @@
 
                     <v-card-actions>
                         <v-btn
+                                ref="submit"
                                 class="w-full"
                                 color="primary"
                                 name="submit" id="submit" dusk="submitBid"
@@ -314,9 +315,7 @@
             },
 
             allRequiredFieldsHaveAValue() {
-                return this.form.firstName !== ''
-                    && this.form.lastName !== ''
-                    && this.form.phone !== ''
+                return this.form.customerName !== '' && this.form.phone !== '';
             },
 
             phoneNumberMustBeMobile() {
@@ -353,8 +352,6 @@
 
             setFormData(result) {
                 if (result) {
-                    this.form.firstName = result.first_name
-                    this.form.lastName = result.last_name
                     this.form.phone = result.phone
                     this.form.email = result.email
                     this.form.taxRate = result.tax_rate
@@ -378,15 +375,26 @@
             },
 
             submit() {
-                console.log('submit')
-                this.setCustomerName()
-                GeneralContractor.initiateBid(this.form, this.disabled)
+                if (this.setCustomerName()) {
+                    console.log('submit')
+                    GeneralContractor.initiateBid(this.form, this.disabled)
+                }
             },
 
             setCustomerName() {
-                if (this.form.customerName === '') {
-                    this.form.customerName = this.form.firstName + ' ' + this.form.lastName
+                if (this.form.customerName !== '') {
+                    let nameArray = this.form.customerName.split(' ');
+                    this.form.firstName = nameArray[0];
+                    if (nameArray.length > 1) {
+                        let lname = '';
+                        for (let i = 1; i < nameArray.length; i++) {
+                            lname = lname + ' ' + nameArray[i];
+                        }
+                        this.form.lastName = lname;
+                    }
+                    return true;
                 }
+                return false;
             },
 
             imclicked() {

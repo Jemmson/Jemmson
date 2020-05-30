@@ -28,7 +28,8 @@
     "test_file_watch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js",
     "test:integration": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js && ",
     "testst": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js — timeout 10000 --require tests/JS/setup.js",
-    "jswatch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js tests/JS/**/*.spec.js"
+    "jswatch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/JS/setup.js tests/JS/**/*.spec.js",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@babel/core": "^7.7.5",

@@ -10,12 +10,14 @@
                             class="w-1/2"
                             color="primary"
                             text
+                            id="customerButton"
                             ref="customerButton"
                             :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
                             v-on:click="userSelected('customer')">Customer
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
+                            id="contractorButton"
                             class="w-1/2"
                             color="primary"
                             text
