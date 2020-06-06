@@ -20,6 +20,7 @@
             <v-spacer></v-spacer>
             <v-app-bar-nav-icon
                     id="loginModalButton"
+                    data-cy="loginModalButton"
                     @click="openMenu()"
             ></v-app-bar-nav-icon>
 

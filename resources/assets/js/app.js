@@ -245,6 +245,8 @@ router.beforeEach((to, from, next) => {
                         if (goingToANonAuthorizedPage(to.path)) {
                             next()
                             store.state.auth = false
+                        } else {
+                            next('/')
                         }
                     }
                 }

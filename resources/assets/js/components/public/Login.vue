@@ -20,12 +20,14 @@
             <v-form>
                 <v-text-field
                         id="username"
+                        data-cy="username"
                         label="Email"
                         v-model="form.username"
                         prepend-icon="mdi-account-circle"
                 />
                 <v-text-field
                         id="password"
+                        data-cy="password"
                         :type="showPassword ? 'text' : 'password'"
                         v-model="form.password"
                         label="Password"
@@ -40,6 +42,7 @@
             <v-spacer></v-spacer>
             <v-btn
                     id="submit"
+                    data-cy="submit"
                     color="info"
                     :loading="form.busy"
                     width="40%"

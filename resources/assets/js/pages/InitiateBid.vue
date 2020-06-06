@@ -19,6 +19,7 @@
 
                     <v-combobox
                             id="customerName"
+                            data-cy="customerName"
                             v-model="selected"
                             label="Customer Name"
                             :search-input.sync="search"
@@ -50,6 +51,7 @@
 
                     <v-text-field
                             id="phone"
+                            data-cy="phone"
                             v-model="form.phone"
                             required
                             v-mask="phoneMask"
@@ -67,6 +69,7 @@
 
                     <v-text-field
                             id="jobName"
+                            data-cy="jobName"
                             v-model="form.jobName"
                             label="Job Name"
                     >
@@ -74,7 +77,7 @@
 
                     <v-row class="flex-col payment-section">
                         <div class="align-baseline flex justify-center">
-                            <h5 class="text-center">Select Payment Type For Job</h5>
+                            <h5 data-cy="paymentTypeLabel" class="text-center">Select Payment Type For Job</h5>
                         </div>
                         <v-radio-group
                                 v-model="form.paymentType"
@@ -239,6 +242,8 @@
                         this.splitName(val);
                         this.setJobName()
                     }
+                } else {
+                    this.form.customerName = this.selected;
                 }
             }
         },
@@ -268,13 +273,29 @@
 
             setJobName() {
                 let n = moment();
-                this.form.jobName = n.year() + '-' + 100 + '-' + this.getLastNameForJobName().trimLeft() + '-' + this.form.firstName
+
+                if (this.customerNameLength() > 1) {
+                    this.form.jobName = n.year() + '-' + 100 + '-' + this.getLastNameForJobName().trimLeft() + '-' + this.form.firstName
+                } else {
+                    this.form.jobName = n.year() + '-' + 100 + '-' + this.form.customerName;
+                }
+
+            },
+
+            customerNameLength() {
+                const nameArray = this.form.customerName.split(' ');
+                return nameArray.length;
             },
 
             setJobNameFromResult(result) {
                 let n = moment();
                 let jobNumber = 100 + result.jobNumber;
-                this.form.jobName = n.year() + '-' + jobNumber + '-' + this.getLastNameForJobName().trimLeft() + '-' + this.form.firstName
+                
+                if (this.customerNameLength() > 1) {
+                    this.form.jobName = n.year() + '-' + jobNumber + '-' + this.getLastNameForJobName().trimLeft() + '-' + this.form.firstName
+                } else {
+                    this.form.jobName = n.year() + '-' + 100 + '-' + this.form.customerName;
+                }
             },
 
             splitName(val) {
@@ -284,6 +305,7 @@
                     let lastName = this.getLastName(nameArray);
                     this.form.lastName = lastName.trimLeft();
                 }
+                this.form.customerName = val;
             },
 
             getLastName(nameArray) {
