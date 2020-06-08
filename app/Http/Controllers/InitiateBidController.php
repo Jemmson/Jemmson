@@ -145,7 +145,7 @@ class InitiateBidController extends Controller
 
     private function jobNameMustBeUniqueForContractor($jobName)
     {
-        return is_null(Job::where('job_name', '=', $jobName)->get()->first());
+        return is_null(Job::where('job_name', '=', $jobName)->where('contractor_id', '=', Auth::user()->getAuthIdentifier())->get()->first());
     }
 
 

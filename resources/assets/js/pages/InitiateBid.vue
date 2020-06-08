@@ -237,6 +237,7 @@
                     const filteredComboResult = this.getComboResult(val)
                     if (filteredComboResult) {
                         this.setFormData(filteredComboResult)
+                        this.splitName(val.text);
                         this.setJobNameFromResult(filteredComboResult)
                     } else {
                         this.splitName(val);
@@ -275,7 +276,7 @@
                 let n = moment();
 
                 if (this.customerNameLength() > 1) {
-                    this.form.jobName = n.year() + '-' + 100 + '-' + this.getLastNameForJobName().trimLeft() + '-' + this.form.firstName
+                    this.form.jobName = n.year() + '-' + 100 + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
                 } else {
                     this.form.jobName = n.year() + '-' + 100 + '-' + this.form.customerName;
                 }
@@ -290,9 +291,9 @@
             setJobNameFromResult(result) {
                 let n = moment();
                 let jobNumber = 100 + result.jobNumber;
-                
+
                 if (this.customerNameLength() > 1) {
-                    this.form.jobName = n.year() + '-' + jobNumber + '-' + this.getLastNameForJobName().trimLeft() + '-' + this.form.firstName
+                    this.form.jobName = n.year() + '-' + jobNumber + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
                 } else {
                     this.form.jobName = n.year() + '-' + 100 + '-' + this.form.customerName;
                 }
@@ -301,9 +302,10 @@
             splitName(val) {
                 let nameArray = val.split(' ')
                 if (nameArray.length > 1) {
+                    this.form.lastName = nameArray[nameArray.length - 1]
                     this.form.firstName = nameArray[0];
-                    let lastName = this.getLastName(nameArray);
-                    this.form.lastName = lastName.trimLeft();
+                    let firstName = this.getFirstName(nameArray);
+                    this.form.lastName = firstName.trimLeft();
                 }
                 this.form.customerName = val;
             },
@@ -314,6 +316,14 @@
                     lastName = lastName + ' ' + nameArray[i]
                 }
                 return lastName
+            },
+
+            getFirstName(nameArray) {
+                let firstName = ''
+                for (let i = 0; i < nameArray.length - 1; i++) {
+                    firstName = firstName + ' ' + nameArray[i]
+                }
+                return firstName
             },
 
             getLastNameForJobName() {
@@ -330,6 +340,22 @@
 
                 }
                 return lastName.trimLeft()
+            },
+            
+            getFirstNameForJobName() {
+
+                let firstName = ''
+                let firstNameArray = this.form.firstName.split(' ')
+                for (let i = 0; i < firstNameArray.length; i++) {
+
+                    if (i === 0) {
+                        firstName = firstName + firstNameArray[i]
+                    } else {
+                        firstName = firstName + '-' + firstNameArray[i]
+                    }
+
+                }
+                return firstName.trimLeft()
             },
 
             dataMustBeValid() {

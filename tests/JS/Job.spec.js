@@ -1,4 +1,4 @@
-import {createLocalVue, shallowMount, mount, config} from '@vue/test-utils'
+AAZimport {createLocalVue, shallowMount, mount, config} from '@vue/test-utils'
 import Job from '../../resources/assets/js/pages/Job'
 import Status from '../../resources/assets/js/components/mixins/Status'
 import Utilities from '../../resources/assets/js/components/mixins/Utilities'
