@@ -15,7 +15,6 @@ export default class User {
     if (error) {
       Vue.toasted.error(error.message)
     } else {
-      console.log(charge)
       Vue.toasted.success('Payment Sent!')
     }
   }
@@ -219,7 +218,6 @@ export default class User {
    */
   needsStripe() {
     if (!this.stripeExpressConnected()) {
-      console.log('No Stripe Express')
       Bus.$emit('needsStripe')
       return true
     }
@@ -256,7 +254,6 @@ export default class User {
       })
       Vue.toasted.success('info updated')
       // debugger;
-      console.log(JSON.stringify(data.data))
       router.push(data.data)
       Bus.$emit('updateUser')
       // location.href = data
@@ -363,7 +360,6 @@ export default class User {
       disabled.submit = false
       $('#feedback-modal').modal('hide')
     } catch (error) {
-      console.log(error)
       Vue.toasted.error(error.message)
       disabled.submit = false
     }
@@ -382,7 +378,6 @@ export default class User {
       disabled.submit = false
       location.href = data
     } catch (error) {
-      console.log(error)
       form.errors.errors = error.errors
       Vue.toasted.error(error.message)
       disabled.submit = false
@@ -408,7 +403,6 @@ export default class User {
       disabled.update = false
       $('#update-task-location-modal').modal('hide')
     } catch (error) {
-      console.log(error)
       disabled.update = false
       Vue.toasted.error(error.message)
     }
@@ -418,7 +412,6 @@ export default class User {
     disabled.uploadTaskImageBtn = true
     try {
       const {data} = await axios.post('/task/image', form)
-      console.log(data)
       Bus.$emit('bidUpdated')
       disabled.uploadTaskImageBtn = false
       return false;

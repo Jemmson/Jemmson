@@ -196,7 +196,6 @@
                     })
                     this.getBid(this.jobTask.job.id)
                 } catch (error) {
-                    console.log(error)
                 }
             },
             async getBid(id) {
@@ -214,7 +213,6 @@
                     this.$store.commit('setJob', data)
                     this.setSpinnerIndexes()
                 } catch (error) {
-                    console.log(error)
                     if (
                         error.message === 'Not Authorized to access this resource/api' ||
                         error.response !== undefined && error.response.status === 403
@@ -242,7 +240,6 @@
 
             },
             goToJobTask(index) {
-                console.log(index)
                 this.$router.push('/job/task/' + index)
             },
             getLabelClass(bid) {

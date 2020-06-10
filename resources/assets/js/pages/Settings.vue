@@ -39,7 +39,7 @@
                                 @click="showSection('subscription')"
                         >mdi-youtube-subscription
                         </v-icon>
-                        <div class="nav-icon-label" :class="show.subscription ? 'nav-icon-label-selected': ''">
+                        <div v-if="isContractor()" class="nav-icon-label" :class="show.subscription ? 'nav-icon-label-selected': ''">
                             Subscription
                         </div>
                     </div>

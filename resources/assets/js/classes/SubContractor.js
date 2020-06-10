@@ -24,17 +24,14 @@ export default class SubContractor {
      * @param {Object} jobTask 
      */
     reopenTask(jobTask, disabled) {
-        console.log('reopenTask', jobTask);
         disabled.reopen = true;
         axios.post('/bid/tasks/reopen', jobTask)
             .then((response) => {
-                console.log(response)
                 // show a toast notification
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('Reopened Task');
                 disabled.reopen = false;
             }).catch((error) => {
-                console.error(error);
                 // show a toast notification
                 Vue.toasted.error('Error: ' + error.message);
                 disabled.reopen = false;
@@ -43,15 +40,11 @@ export default class SubContractor {
 
     finishedTask(bid, disabled) {
 
-        console.log('finishedTask', bid);
         let id = this.user.id;
         bid.current_user_id = id;
 
         let general = false;
         disabled.finished = true;
-
-
-        console.log(bid.payment_type)
 
         if (bid.payment_type === 'stripe' &&
             User.needsStripe()) {
@@ -71,7 +64,6 @@ export default class SubContractor {
 
         axios.post('task/finished/sub', bid)
             .then((response) => {
-                console.log(response)
                 // show a toast notification
                 User.emitChange('bidUpdated');
                 Vue.toasted.success(general ?
@@ -79,7 +71,6 @@ export default class SubContractor {
                   Language.lang().submit.job_finished.success.sub);
                 disabled.finished = false;
             }).catch((error) => {
-                console.error(error);
                 // show a toast notification
                 Vue.toasted.error('Error: ' + error.message);
                 disabled.finished = false;

@@ -15,6 +15,17 @@ use App\Feature;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/refreshDatabase', function () {
+
+    if (env('APP_ENV') == 'testing') {
+        Artisan::call('migrate:fresh');
+    }
+
+});
+
+
 
 Route::get('/', 'WebController@index');
 Route::get('/home', 'WebController@index');

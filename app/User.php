@@ -97,6 +97,12 @@ class User extends SparkUser
         return $this->hasOne(Customer::class);
     }
 
+//    public function subscription()
+//    {
+//        return $this->hasOne(Subscription::class);
+//    }
+
+
     public function stripeExpress()
     {
         return $this->hasOne(StripeExpress::class);

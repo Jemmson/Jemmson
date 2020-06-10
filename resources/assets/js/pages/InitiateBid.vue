@@ -303,9 +303,8 @@
                 let nameArray = val.split(' ')
                 if (nameArray.length > 1) {
                     this.form.lastName = nameArray[nameArray.length - 1]
-                    this.form.firstName = nameArray[0];
                     let firstName = this.getFirstName(nameArray);
-                    this.form.lastName = firstName.trimLeft();
+                    this.form.firstName = firstName.trimLeft();
                 }
                 this.form.customerName = val;
             },

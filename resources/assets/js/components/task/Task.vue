@@ -361,6 +361,7 @@
         >
         </show-task-modal>
 
+        <hr>
 
     </v-container>
 

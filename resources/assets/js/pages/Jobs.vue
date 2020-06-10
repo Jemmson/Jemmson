@@ -217,7 +217,6 @@
                     })
                     this.getBids()
                 } catch (error) {
-                    console.log(error)
                 }
             },
             isContractor() {
@@ -287,7 +286,7 @@
                 })
             },
             previewSubForTask(bidId, jobTaskId, subBidId) {
-                console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
+                // console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
             }
         },
         mounted() {

@@ -4,7 +4,6 @@ import {router} from '../router.js'
 export default class GeneralContractor {
 
     acceptSubBidForTask(jobTask, bid, disabled, generalId) {
-        console.log('acceptSubBidForTask', jobTask)
         disabled.accept = true
         axios.post('/task/accept', {
             jobId: jobTask.job_id,
@@ -14,19 +13,16 @@ export default class GeneralContractor {
             bidId: bid.id,
             price: bid.bid_price
         }).then((response) => {
-            console.log(response.data)
             User.emitChange('bidUpdated')
             Vue.toasted.success('Accepted Bid!')
             disabled.accept = false
         }).catch((error) => {
-            console.error(error)
             Vue.toasted.error('Error Trying to Accept Bid!')
             disabled.accept = false
         })
     }
 
     addNewTaskToBid(bid, form) {
-        console.log('sendSubInviteToBidOnTask', bid, form)
         // I want the status to go from initiated to in progress when the first new task is added
         // I want each task to be added to the the tasks table
         // I want the task to associated to a job, customer, and contractor
@@ -40,7 +36,6 @@ export default class GeneralContractor {
 
         Spark.post('task/addTask', form)
             .then((response) => {
-                console.log(response)
                 // NOTICE: using Spark.post returns the exact data so response.data doesn't have anything its already data
                 // show a toast notification
                 form.taskName = ''
@@ -77,7 +72,6 @@ export default class GeneralContractor {
             Vue.toasted.success('Task Has Been Approved and Customer Has Been Notified')
             Bus.$on('bidUpdated');
         } catch (error) {
-            console.log('error');
         }
     }
 
@@ -101,17 +95,14 @@ export default class GeneralContractor {
     }
 
     approveTaskHasBeenFinished(jobTask, disabled) {
-        console.log('approveTaskHasBeenFinished', jobTask)
         disabled.approve = true
         axios.post('task/approve', jobTask)
             .then((response) => {
-                console.log(response)
                 // show a toast notification
                 User.emitChange('bidUpdated')
                 Vue.toasted.success(Language.lang().submit.approve_task.success)
                 disabled.approve = false
             }).catch(error => {
-            console.error(error)
             // show a toast notification
             Vue.toasted.error('Error: ' + error.message)
             disabled.approve = false
@@ -120,15 +111,11 @@ export default class GeneralContractor {
 
     finishedTask(bid, disabled) {
 
-        console.log('finishedTask', bid);
         let id = this.user.id;
         bid.current_user_id = id;
 
         let general = false;
         disabled.finished = true;
-
-
-        console.log(bid.payment_type)
 
         if (bid.payment_type === 'stripe' &&
             User.needsStripe()) {
@@ -148,7 +135,6 @@ export default class GeneralContractor {
 
         axios.post('/task/finished/general', bid)
             .then((response) => {
-                console.log(response)
                 // show a toast notification
                 User.emitChange('bidUpdated');
                 Vue.toasted.success(general ?
@@ -156,7 +142,6 @@ export default class GeneralContractor {
                     Language.lang().submit.job_finished.success.sub);
                 disabled.finished = false;
             }).catch((error) => {
-            console.error(error);
             // show a toast notification
             Vue.toasted.error('Error: ' + error.message);
             disabled.finished = false;
@@ -204,19 +189,14 @@ export default class GeneralContractor {
 
     getBid(id) {
         axios.get('/job/' + id).then((data) => {
-            console.log(JSON.stringify(data.data))
             return data.data
         }).catch(() => {
-            console.log(error)
-            // debugger;
             if (
                 error.message === 'Not Authorized to access this resource/api' ||
                 error.response.status === 403
             ) {
                 this.$router.push('/bids')
             }
-            // error = error.response.data;
-            // Vue.toasted.error(error.message);
             Vue.toasted.error('You are unable to view this bid. Please pick the bid you wish to see.')
         })
     }
@@ -227,7 +207,6 @@ export default class GeneralContractor {
 
     async initiateBid(form, disabled) {
         disabled.submit = true
-        console.log(form)
         try {
             const data = await axios.post('/initiate-bid', form)
             if (data.data.tokenState !== undefined) {
@@ -235,19 +214,13 @@ export default class GeneralContractor {
                     this.goToUserAuthorizationPage()
                 }
             }
-            console.log(data)
-            console.log(JSON.stringify(data))
             Vue.toasted.success('Bid Initiated')
             disabled.submit = false
             window.location = '/#/bids'
         } catch (error) {
-            console.log(error)
             error = error.response.data
             form.errors.errors = error.errors
             Vue.toasted.error(error.message)
-            console.log('Initiate bid errors')
-            console.log(error)
-            console.log(error.message)
             disabled.submit = false
             if (error.errors['no_free_jobs'] !== undefined) {
                 router.push('/settings')
@@ -279,17 +252,14 @@ export default class GeneralContractor {
         //     disabled.submitBid = false
         //     return false
         // }
-        console.log('notifyCustomerOfFinishedBid', bid);
         axios.post('/api/task/finishedBidNotification', {
             jobId: bid.id,
             customerId: bid.customer_id
         }).then((response) => {
-            console.log(response);
             disabled.submitBid = false;
             User.emitChange('bidUpdated');
             Vue.toasted.success('Bid has been submitted and notification sent!');
         }).catch((error) => {
-            console.error(error);
             disabled.submitBid = false;
             Vue.toasted.error('Whoops! Something went wrong! Please try again.');
         })
@@ -302,7 +272,6 @@ export default class GeneralContractor {
         form.phone = form.phone.replace(/[^0-9]/g, '');
         Spark.post('/task/notify', form)
             .then((response) => {
-                console.log(response)
                 User.emitChange('bidUpdated');
                 Vue.toasted.success('Invite Sent!');
                 disabled.invite = false;
@@ -312,7 +281,6 @@ export default class GeneralContractor {
                 form.phone = '';
                 Bus.$emit('clearAndCloseForm')
             }).catch((error) => {
-            console.error(error);
             form.errors.errors = error.errors;
             Vue.toasted.error('Error: ' + error.message);
             disabled.invite = false
@@ -320,11 +288,9 @@ export default class GeneralContractor {
     }
 
     updateCustomerPrice(price, jobTaskId, jobId) {
-        console.log(price)
         if (price === '') {
             price = 0
         }
-        console.log(price)
         axios.post('/api/task/updateCustomerPrice', {
             jobId: jobId,
             jobTaskId: jobTaskId,
@@ -333,10 +299,7 @@ export default class GeneralContractor {
             User.emitChange('bidUpdated')
             Vue.toasted.success(Language.lang().bid_task.price_updated.general)
             return true;
-            // console.log(response.data)
-            // this.updateAllTasksDataWithCustomerPrice(response.data.price, response.data.taskId)
         }).catch(error => {
-            console.error(error)
             // show a toast notification
             Vue.toasted.error('Error: ' + error.message)
             return false

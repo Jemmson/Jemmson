@@ -121,8 +121,6 @@
             },
             submit() {
                 this.submitted = true;
-                console.log('excludedTaskIds', this.excludedTaskIds)
-
                 if (this.canPay()) {
                     this.errors = false;
                     stripe.confirmCardPayment(this.clientSecret, {
@@ -149,7 +147,6 @@
                         this.submitted = false;
                         if (result.error) {
                             // Show error to your customer (e.g., insufficient funds)
-                            console.log(result.error.message);
                             this.errorMessage = result.error.message;
                             this.errors = true;
                         } else {

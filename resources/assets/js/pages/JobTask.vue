@@ -1093,7 +1093,6 @@
                         Bus.$emit('bidUpdated')
                         this.dialog = false
                     } catch (error) {
-                        console.log(error)
                     }
                 } else if (Spark.state.user.usertype === 'contractor') {
                     try {

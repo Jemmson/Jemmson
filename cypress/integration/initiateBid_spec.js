@@ -2,6 +2,13 @@ describe('Initiate Bid Test', function () {
 
     beforeEach(() => {
 
+        // cy.exec('php artisan migrate:refresh --force;')
+
+        // && composer dump-autoload && php artisan db:seed --class=UserTableSeeder
+        // cy.request('/refreshDatabase')
+
+        cy.viewport('macbook-15')
+
         cy.request('/#/')
             .its('body')
             .then((body) => {
@@ -22,6 +29,34 @@ describe('Initiate Bid Test', function () {
         cy.visit('/#/initiate-bid')
 
     })
+
+    it('should open up to the initiate bid page', function () {
+
+        // disabled button should be disabled upon load with empty fields
+        cy.get("#submit").then(($myElement) => {
+            // $myElement.should('have.attr', 'disabled')
+            console.log('myelment', $myElement)
+        })
+
+
+        // typing a name should give me responses back
+        cy.route({
+            method: 'GET',
+            url: '/customer/search?query=',
+            response: 'fixture:searchShawn.json'
+        });
+
+        cy.get('#customerName').then(($dropdown) => {
+            // return $dropdown;
+        }).type('Shawn Pike')
+
+        cy.contains('span', 'Shawn Pike').click()
+
+        cy.get('#jobName').should('contain.text', '2020-105-Shawn-Pike')
+
+    });
+
+    // Support Methods
 
     function beforeVisit() {
         cy.server()
@@ -56,30 +91,6 @@ describe('Initiate Bid Test', function () {
             response: 'fixture:getJobs/getJobs.json'
         })
     }
-
-    it('should open up to the initiate bid page', function () {
-
-        // disabled button should be disabled upon load with empty fields
-        cy.get("#submit").then(($myElement) => {
-            // $myElement.should('have.attr', 'disabled')
-            console.log('myelment', $myElement)
-        })
-
-
-        // typing a name should give me responses back
-        cy.route({
-            method: 'GET',
-            url: '/customer/search?query=',
-            response: 'fixture:searchShawn.json'
-        });
-
-        cy.get('#customerName').then(($dropdown) => {
-            // return $dropdown;
-        }).type('Shawn Pike')
-
-
-
-    });
 
 
 });

@@ -103,7 +103,6 @@
         }
       },
       getAddressLine1() {
-        console.log('customer', this.customer)
         if (this.customer && this.customer.user && this.customer.user.location) {
           return this.customer.user.location.address_line_1
         }
@@ -141,7 +140,6 @@
       },
       getAddress() {
         if (this.customer.user && this.customer.user.location) {
-          console.log(JSON.stringify(this.customer.user.location))
           if (this.customer.user.location !== null) {
             return this.customer.user.location.address_line_1 + ' ' +
               this.customer.user.location.address_line_2 + ' ' +
@@ -168,7 +166,6 @@
           const data = await axios.get('/getCustomer/' + customerId);
           this.customer = data.data;
         } catch (error) {
-          console.log(error);
         }
       }
     }

@@ -3,13 +3,8 @@
  */
 
 export const getInitialDate = ({commit, getters, rootState}, column) => {
-  console.log(column)
   if (column === 'agreed_start_date') {
-    console.log(getters.getAgreedStartDate)
     let date = getters.getAgreedStartDate
-    console.log(typeof date)
-    console.log(date)
-    // debugger
     return date
   } else if (column === 'agreed_end_date') {
     return getters.getAgreedEndDate

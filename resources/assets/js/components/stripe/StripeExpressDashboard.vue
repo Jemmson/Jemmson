@@ -35,7 +35,6 @@
             login() {
                 this.busy = true;
                 axios.post('/stripe/express/dashboard').then((response) => {
-                    console.log(response.data);
                     this.busy = false;
                     window.location = response.data.url;
                 });

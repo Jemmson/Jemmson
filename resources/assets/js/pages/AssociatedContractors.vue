@@ -76,7 +76,6 @@
                 return transformed;
             },
             viewContractorInfo(event) {
-                // console.log('contractorId', event)
                 this.$router.push({name: 'contractor-info', params: {contractorId: event}})
             },
         },

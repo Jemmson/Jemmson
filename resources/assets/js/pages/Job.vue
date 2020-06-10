@@ -222,7 +222,6 @@
                 Customer.approveBid(this.bidForm, this.disabled)
             },
             openTaskPanel(index) {
-                console.log(index)
 
                 if (this.jobTaskIndex === index && this.showTaskPanel) {
                     this.showTaskPanel = false
@@ -239,18 +238,15 @@
                 $('#add-task-modal').modal()
             },
             closeBid: function () {
-                console.log('closeBid')
                 this.$emit('closeBid')
             },
             async getBid(id) {
                 try {
                     const {data} = await axios.get('/job/' + id)
                     if (data[0]) {
-                        console.log('data', data[0])
                         this.bid = data[0]
                         this.$store.commit('setJob', data[0])
                     } else {
-                        console.log('data', data)
                         this.bid = data
                         this.$store.commit('setJob', data)
                     }

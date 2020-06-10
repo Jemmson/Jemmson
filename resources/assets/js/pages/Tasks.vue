@@ -34,7 +34,6 @@
                                 :bidTask="bidTask"
                                 :user="current_user"
                         ></task>
-                        <hr>
                     </div>
                 </paginate>
                 <div class="card card-body justify-center">
@@ -155,14 +154,7 @@
                 return (bid.id === bid.job_task.bid_id && (bid.job_task.job.status === 'job.approved' || bid.job_task.job.status === 'job.completed' || bid.job_task.status === 'bid_task.accepted')) || (bid.job_task.status ===
                     'bid_task.bid_sent' || bid.job_task.status === 'bid_task.initiated')
             },
-            getArea(bidTask) {
-                // console.log(bidTask)
-                // debugger
-                // Customer.getArea(bidTask.job_id, this.area)
-                // this.localArea = this.area
-
-                // return this.localArea.area
-            },
+            getArea(bidTask) {},
 
             hasStripe() {
                 return this.bid.contractor.stripe_id === null
@@ -180,7 +172,6 @@
             },
             getTasks() {
                 if (Spark.state.user.usertype === 'contractor') {
-                    console.log('getTasks');
                     axios.post('/bid/tasks').then((response) => {
                         if (response.data) {
                             this.tasks = response.data;

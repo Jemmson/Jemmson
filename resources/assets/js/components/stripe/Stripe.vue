@@ -117,7 +117,6 @@
                     const data = await axios.get('/stripe/hideModal')
                     this.exit()
                 } catch (error) {
-                    console.log(error)
                 }
             }
         },

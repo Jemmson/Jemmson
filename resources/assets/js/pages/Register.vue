@@ -196,6 +196,7 @@
                         <hr style="margin-top: 3rem">
 
                         <v-switch
+                                id="term_switch"
                                 v-model="registerForm.terms"
                                 label="I Accept The Terms Of Service *"
                         ></v-switch>

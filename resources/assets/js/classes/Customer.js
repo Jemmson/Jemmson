@@ -10,16 +10,13 @@ export default class Customer {
    * @param {Object} bidForm
    */
   approveBid(bidForm, disabled) {
-    console.log('approve')
     disabled.approve = true
     Spark.post('/job/approve/' + bidForm.id, bidForm)
       .then((response) => {
-        console.log(response)
         User.emitChange('bidUpdated')
         Vue.toasted.success('Job Approved')
         disabled.approve = false
       }).catch((error) => {
-      console.log(error)
       bidForm.errors.errors = bidForm.errors.errors.errors
       Vue.toasted.error('Whoops! Something went wrong! Please try again.')
       disabled.approve = false
@@ -42,7 +39,6 @@ export default class Customer {
    * @param {Object} disabled
    */
   async cancelBid(bid, disabled) {
-    console.log(bid)
     disabled.cancelBid = true
     try {
       await axios.post('/job/cancel', bid)
@@ -109,32 +105,21 @@ export default class Customer {
   }
 
   getAddress(locationId, ajax_response) {
-    console.log('locationId: ' + locationId)
-    console.log('ajax_response: ' + ajax_response)
-    // debugger
     axios.post('/api/customer/getAddress', {
       locationId: locationId
     }).then((response) => {
-      console.log(response)
-      console.log(response.data)
       ajax_response.location = response.data
     }).catch((error) => {
-      console.log(error)
     })
   }
 
   getArea(jobId, ajax_response) {
-    console.log('jobId: ' + jobId)
-    console.log('ajax_response: ' + ajax_response)
     // debugger
     axios.post('/api/job/getArea', {
       job_id: jobId
     }).then((response) => {
-      console.log(response)
-      console.log(response.data)
       ajax_response.area = response.data
     }).catch((error) => {
-      console.log(error)
     })
   }
 
@@ -152,7 +137,6 @@ export default class Customer {
    * @param {Object} jobTask
    */
   async paidWithCashTask(jobTask, disabled) {
-    console.log('paidWithCashTask', jobTask)
     disabled.payCash = true
 
     try {
@@ -175,11 +159,8 @@ export default class Customer {
    * @param {obj} disabled
    */
   async payAllPayableTasks(id, excluded, disabled) {
-    console.log('payAllPayableTasks', id)
     disabled.payAll = true
-
     if (!User.isSignedUpWithStripe()) {
-      console.log('No Stripe Account')
       Bus.$emit('needsStripe')
       disabled.payAll = false
       return false
@@ -204,7 +185,6 @@ export default class Customer {
    * @param {obj} disabled
    */
   async payAllPayableTasksWithCash(id, excluded, disabled, cashMessage) {
-    console.log('payAllPayableTasksWithCash', id)
     disabled.payCash = true
     try {
       await axios.post('/stripe/customer/pay/tasks/cash', {
@@ -228,7 +208,6 @@ export default class Customer {
    * @param {Object} task
    */
   async payForTask(jobTask, disabled) {
-    console.log('payForTask', jobTask)
     disabled.pay = true
     try {
       await axios.post('/stripe/express/task/payment', jobTask)
@@ -251,7 +230,6 @@ export default class Customer {
     }).then((response) => {
       Vue.toasted.success('Area Updated')
     }).catch((error) => {
-      console.log(error)
       Vue.toasted.error('Area was not able to be updated')
     })
   }

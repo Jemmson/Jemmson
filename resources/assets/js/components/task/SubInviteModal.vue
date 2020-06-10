@@ -215,7 +215,6 @@
                             this.duplicateError = true
                         }
                     } catch (error) {
-                        console.log(error)
                     }
                 }
             },
@@ -335,11 +334,9 @@
                 this.results = []
                 try {
                     const data = await axios.get('/search/' + this.search)
-                    console.log('data', JSON.stringify(data.data))
                     this.results = this.returnContractorsNotAlreadyAssignedToTask(data.data)
                     this.comboResults = this.transformDataForComboBox(this.results)
                 } catch (error) {
-                    console.log(error)
                 }
             },
 
@@ -355,18 +352,6 @@
                 }
                 return customers
             },
-
-            // autoComplete() {
-            //   this.results = []
-            //   let query = this.initiateBidForSubForm.companyName
-            //   console.log('checking for names')
-            //   if (query.length > 2) {
-            //     axios.get('/search/' + query).then(function(response) {
-            //       console.log('autocomplete', response.data)
-            //       this.results = this.returnContractorsNotAlreadyAssignedToTask(response.data)
-            //     }.bind(this))
-            //   }
-            // },
 
             enableSubmit() {
 

@@ -1,0 +1,14 @@
+{
+  "firstName": "General",
+  "lastName": "Contractor",
+  "email": "jemmsoninc@gmail.com",
+  "companyName": "Jemmson Inc.",
+  "phoneNumber": "4806226441",
+  "route": "1234 Example St",
+  "addressLine2": "apt 123",
+  "administrative_area_level_1": "Boise",
+  "locality": "AZ",
+  "postal_code": "85283",
+  "password": "asdasd",
+  "password_confirmation": "asdasd"
+}

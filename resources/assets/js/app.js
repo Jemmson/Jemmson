@@ -177,7 +177,6 @@ router.beforeEach((to, from, next) => {
                         // this.$store.commit('setAuth', true);
 
                         store.state.auth = true
-                        console.log('auth', store.state.auth)
 
                         checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
 
@@ -220,7 +219,6 @@ router.beforeEach((to, from, next) => {
                                 axios.get('/user/current')
                                     .then(response => {
                                         this.user = response.data
-                                        console.log(JSON.stringify(this.user))
                                         Spark.state.user = this.user
                                         this.$store.commit('setUser', this.user)
                                         window.User.user = this.user
@@ -252,7 +250,6 @@ router.beforeEach((to, from, next) => {
                 }
             )
             .catch(error => {
-                console.log(JSON.stringify(error))
                 store.state.auth = false
             })
     } else {
@@ -299,12 +296,10 @@ var app = new Vue({
                 });
 
                 if (data.error) {
-                    console.log('failure', data)
                 } else {
                     Bus.$emit('updateUser');
                     this.$router.push('/home');
                     this.showHome = true;
-                    // console.log('success', data)
                 }
                 this.loading = false;
             }
@@ -330,9 +325,6 @@ var app = new Vue({
     router,
     vuetify: new Vuetify(vuetifyOptions),
     mounted() {
-
-        console.log('I am calling the mounted object in the main vue app mounted function')
-
         let location = {
             hash: window.location.hash,
             host: window.location.host,
@@ -349,7 +341,6 @@ var app = new Vue({
 require('./bootstrap')
 
 function checkThatCurrentJobExistsForRoutesThatNeedIt(route) {
-    console.log('checking that job exists in store', route)
     if (route == '/job/tasks' ||
         route == '/job/add/task' ||
         route == '/job/task/' + route.split('/')[3]) {

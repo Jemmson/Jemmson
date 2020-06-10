@@ -133,7 +133,7 @@ class SparkServiceProvider extends ServiceProvider
         Spark::swap('UserRepository@current',
             function () {
                 // Return the current user...
-                if (Auth::user() != null) 
+                if (Auth::user() != null)
                     return Auth::user()->load('subscriptions',
                         'contractor.stripeExpress', 'customer',
                         'contractor.location',
