@@ -136,6 +136,7 @@
                 this.logoutDialog = false
             },
             logout(){
+                localStorage.setItem('auth', false);
                 window.location.href = '/logout';
             },
             settings(){

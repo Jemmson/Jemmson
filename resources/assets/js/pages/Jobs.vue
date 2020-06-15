@@ -31,14 +31,29 @@
                 <v-card-title class="uppercase pb-0"
                               style="margin-top: -1.5rem"
                 >
-                    <v-icon
-                            v-if="bid.payment_type === 'cash'"
-                    >mdi-cash
-                    </v-icon>
-                    <v-icon
-                            v-else-if="bid.payment_type === 'creditCard'"
-                    >mdi-credit-card
-                    </v-icon>
+
+                    <div class="flex flex-col nav-icon-spacing"
+                         v-if="bid.payment_type === 'cash'"
+                    >
+                        <v-icon
+                        >mdi-cash
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Cash Job
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col nav-icon-spacing"
+                         v-else-if="bid.payment_type === 'creditCard'"
+                    >
+                        <v-icon
+                        >mdi-credit-card
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Credit Card Job
+                        </div>
+                    </div>
+
                     <div class="mr-1rem ml-half-rem">{{ jobName(bid.job_name) }}</div>
                     <v-spacer></v-spacer>
                     <v-card-subtitle class="uppercase w-break">{{ getJobStatus(bid) }}</v-card-subtitle>

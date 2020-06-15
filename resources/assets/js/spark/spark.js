@@ -130,7 +130,6 @@ module.exports = {
       axios.get('/user/current')
         .then(response => {
           this.user = response.data
-          console.log(JSON.stringify(this.user))
           Spark.state.user = this.user
 
           // Vue.$store.state.user.user

@@ -13,16 +13,16 @@
  |
  */
 
-import Echo from 'laravel-echo'
-
-window.Pusher = require('pusher-js')
-
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: '07c3b89aa6d0a0206b23',
-    cluster: 'mt1',
-    encrypted: true
-})
+// import Echo from 'laravel-echo'
+//
+// window.Pusher = require('pusher-js')
+//
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: '07c3b89aa6d0a0206b23',
+//     cluster: 'mt1',
+//     encrypted: true
+// })
 
 require('spark-bootstrap')
 
@@ -163,95 +163,130 @@ function doAuthRouting(to, from, next) {
     }
 }
 
+function isAuthorized() {
+
+    return localStorage.getItem('auth') === 'true'
+}
+
+function timeHasNotExpired() {
+    const now = moment()
+    const expiredTime = parseInt(localStorage.getItem('authTime'));
+
+    return expiredTime > now.valueOf()
+}
+
+function getAuth() {
+    return isAuthorized() && timeHasNotExpired()
+}
+
+function setAuthorizedInLocalStorage() {
+    localStorage.setItem('auth', true)
+}
+
+function setTwoHourExpirationTimeInLocalStorage() {
+    let now = moment.now()
+    let expireTime = now + 7200000;
+    localStorage.setItem('authTime', expireTime.toString())
+}
+
+function setAuth() {
+    setAuthorizedInLocalStorage()
+    setTwoHourExpirationTimeInLocalStorage()
+    store.state.auth = true
+}
+
+function handleSuccessfulAuth(to, from, next) {
+
+    checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
+
+    if (isUserInVuexStore()) {
+
+        // doAuthRouting(to, from, next)
+
+        if (store.state.user.user.password_updated === 0) {
+            if (to.fullPath === '/furtherInfo') {
+                next()
+            } else if (to.fullPath === '/termsAuth') {
+                next()
+            } else {
+                next('/furtherInfo')
+            }
+        } else {
+            next()
+        }
+
+    } else {
+
+        if (isUserInSparkState()) {
+
+            updateStoreWithSparkState()
+
+            if (store.state.user.user.password_updated === 0) {
+                if (to.fullPath === '/furtherInfo') {
+                    next()
+                } else {
+                    next('/furtherInfo')
+                }
+            } else {
+                next()
+            }
+
+        } else {
+
+            axios.get('/user/current')
+                .then(response => {
+                    this.user = response.data
+                    Spark.state.user = this.user
+                    this.$store.commit('setUser', this.user)
+                    window.User.user = this.user
+                    window.GeneralContractor.user = this.user
+                    window.SubContractor.user = this.user
+                    window.Customer.user = this.user
+
+                    if (store.state.user.user.password_updated === 0) {
+                        if (to.fullPath === '/furtherInfo') {
+                            next()
+                        } else {
+                            next('/furtherInfo')
+                        }
+                    } else {
+                        next()
+                    }
+
+                })
+        }
+    }
+}
+
 import MainHeader from './components/shared/Header'
 import MainFooter from './components/shared/Footer'
 
 router.beforeEach((to, from, next) => {
 
     if (to.fullPath !== '/' && to.fullPath !== '/register') {
-        axios.get('/checkAuth')
-            .then(response => {
-                    if (response.data.auth) {
 
-                        // setAuth(this,true)
-                        // this.$store.commit('setAuth', true);
-
-                        store.state.auth = true
-
-                        checkThatCurrentJobExistsForRoutesThatNeedIt(to.path)
-
-                        if (isUserInVuexStore()) {
-
-                            // doAuthRouting(to, from, next)
-
-                            if (store.state.user.user.password_updated === 0) {
-                                if (to.fullPath === '/furtherInfo') {
-                                    next()
-                                } else if (to.fullPath === '/termsAuth') {
-                                    next()
-                                } else {
-                                    next('/furtherInfo')
-                                }
-                            } else {
+        if (getAuth()) {
+            handleSuccessfulAuth(to, from, next)
+        } else {
+            axios.get('/checkAuth')
+                .then(response => {
+                        if (response.data.auth) {
+                            setAuth()
+                            handleSuccessfulAuth(to, from, next)
+                        } else {
+                            if (goingToANonAuthorizedPage(to.path)) {
                                 next()
-                            }
-
-                        } else {
-
-                            if (isUserInSparkState()) {
-
-                                updateStoreWithSparkState()
-
-                                // doAuthRouting(to, from, next)
-
-                                if (store.state.user.user.password_updated === 0) {
-                                    if (to.fullPath === '/furtherInfo') {
-                                        next()
-                                    } else {
-                                        next('/furtherInfo')
-                                    }
-                                } else {
-                                    next()
-                                }
-
+                                store.state.auth = false
                             } else {
-
-                                axios.get('/user/current')
-                                    .then(response => {
-                                        this.user = response.data
-                                        Spark.state.user = this.user
-                                        this.$store.commit('setUser', this.user)
-                                        window.User.user = this.user
-                                        window.GeneralContractor.user = this.user
-                                        window.SubContractor.user = this.user
-                                        window.Customer.user = this.user
-
-                                        if (store.state.user.user.password_updated === 0) {
-                                            if (to.fullPath === '/furtherInfo') {
-                                                next()
-                                            } else {
-                                                next('/furtherInfo')
-                                            }
-                                        } else {
-                                            next()
-                                        }
-
-                                    })
+                                next('/')
                             }
-                        }
-                    } else {
-                        if (goingToANonAuthorizedPage(to.path)) {
-                            next()
-                            store.state.auth = false
-                        } else {
-                            next('/')
                         }
                     }
-                }
-            )
-            .catch(error => {
-                store.state.auth = false
-            })
+                )
+                .catch(error => {
+                    store.state.auth = false
+                })
+        }
     } else {
         next()
     }

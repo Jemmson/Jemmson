@@ -15,16 +15,27 @@
         </v-card>
 
         <v-card>
+
             <v-card-title class="w-break flex justify-content-around">{{ bid.job_name }}
-                <div>
+                <div class="flex flex-col nav-icon-spacing"
+                     v-if="bid.payment_type === 'cash'"
+                >
                     <v-icon
-                            v-if="bid.payment_type === 'cash'"
                     >mdi-cash
                     </v-icon>
+                    <div class="nav-icon-label">
+                        Cash Job
+                    </div>
+                </div>
+                <div class="flex flex-col nav-icon-spacing"
+                     v-else-if="bid.payment_type === 'creditCard'"
+                >
                     <v-icon
-                            v-else-if="bid.payment_type === 'creditCard'"
                     >mdi-credit-card
                     </v-icon>
+                    <div class="nav-icon-label">
+                        Credit Card Job
+                    </div>
                 </div>
             </v-card-title>
             <hr class="mb-0 mt-0">

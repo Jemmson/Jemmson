@@ -62,14 +62,28 @@
                             :verification="getVerification()"
                             @verified="accountVerified($event)"
                     ></stripe-verification-required>
-                    <v-icon
-                            v-if="getPaymentType('cash')"
-                    >mdi-cash
-                    </v-icon>
-                    <v-icon
-                            v-else-if="getPaymentType('creditCard')"
-                    >mdi-credit-card
-                    </v-icon>
+
+                    <div class="flex flex-col nav-icon-spacing"
+                         v-if="getPaymentType('cash')"
+                    >
+                        <v-icon
+                        >mdi-cash
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Cash Job
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col nav-icon-spacing"
+                         v-else-if="getPaymentType('creditCard')"
+                    >
+                        <v-icon
+                        >mdi-credit-card
+                        </v-icon>
+                        <div class="nav-icon-label">
+                            Credit Card Job
+                        </div>
+                    </div>
                 </div>
             </div>
             <v-card-actions>

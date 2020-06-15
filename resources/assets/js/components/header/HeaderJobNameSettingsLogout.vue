@@ -24,21 +24,22 @@
 
 <script>
 
-  export default {
-    name: 'HeaderJobNameSettingsLogout',
-    props: {
-      jobName: String
-    },
-    methods:{
-      logout(){
-        window.location.href = '/logout';
-      },
-      settings(){
-        // window.location.href = '/settings';
-          this.$router.push('/settings')
-      }
+    export default {
+        name: 'HeaderJobNameSettingsLogout',
+        props: {
+            jobName: String
+        },
+        methods: {
+            logout() {
+                localStorage.setItem('auth', false);
+                window.location.href = '/logout';
+            },
+            settings() {
+                // window.location.href = '/settings';
+                this.$router.push('/settings')
+            }
+        }
     }
-  }
 </script>
 
 <style scoped>
