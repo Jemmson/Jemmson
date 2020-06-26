@@ -1,3 +1,6 @@
+import Echo from "laravel-echo";
+import Stripe from 'stripe'
+
 describe('Initiate Bid Test', function () {
 
     beforeEach(() => {
@@ -8,6 +11,8 @@ describe('Initiate Bid Test', function () {
         // cy.request('/refreshDatabase')
 
         cy.viewport('macbook-15')
+
+        // cy.stub(window.Echo, 'private').callsFake(() => 'foo');
 
         cy.request('/#/')
             .its('body')
@@ -32,6 +37,18 @@ describe('Initiate Bid Test', function () {
 
     it('should open up to the initiate bid page', function () {
 
+
+        // window.Echo = new Echo({
+        //     broadcaster: '',
+        //     key: '',
+        //     cluster: '',
+        //     encrypted: true
+        // })
+
+        // cy.stub(window.Echo)
+        cy.stub(Stripe)
+
+
         // disabled button should be disabled upon load with empty fields
         cy.get("#submit").then(($myElement) => {
             // $myElement.should('have.attr', 'disabled')
@@ -52,7 +69,7 @@ describe('Initiate Bid Test', function () {
 
         cy.contains('span', 'Shawn Pike').click()
 
-        cy.get('#jobName').should('contain.text', '2020-105-Shawn-Pike')
+        cy.get('[data-cy=jobName]').should('contain.text', '2020-105-Pike-Shawn')
 
     });
 
@@ -60,36 +77,11 @@ describe('Initiate Bid Test', function () {
 
     function beforeVisit() {
         cy.server()
-        cy.route({
-            method: 'GET',
-            url: '/checkAuth',
-            response: 'fixture:checkAuth.json'
-        }).as('checkAuth')
+        cy.checkAuth();
+        cy.recents();
+        cy.broadAuth();
+        cy.getJobs();
 
-        // cy.wait('@checkAuth').then((xhr) => {
-        //     assert.isNotNull(xhr.response.body.auth, 'true')
-        // })
-
-        cy.route({
-            method: 'GET',
-            url: '/notifications/recent',
-            response: 'fixture:recentNotifications.json'
-        })
-        cy.route({
-            method: 'POST',
-            url: '/broadcasting/auth',
-            response: 'fixture:broadcastingAuth.json'
-        })
-        cy.route({
-            method: 'GET',
-            url: '/getJobs',
-            response: 'fixture:getJobs/getJobs.json'
-        })
-        cy.route({
-            method: 'GET',
-            url: '/getJobs',
-            response: 'fixture:getJobs/getJobs.json'
-        })
     }
 
 

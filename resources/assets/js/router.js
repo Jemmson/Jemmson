@@ -14,6 +14,7 @@ import AddJobTask from './pages/AddJobTask'
 import JobTask from './pages/JobTask'
 import AssociatedContractors from './pages/AssociatedContractors'
 
+import Assessor from './pages/Assessor'
 import ContractorInfo from './pages/ContractorInfo'
 import CustomerInfo from './pages/CustomerInfo'
 import Documentation from './pages/Documentation'
@@ -43,6 +44,13 @@ import PasswordEmailVerification from "./pages/PasswordEmailVerification";
 
 // vue routes
 const routes = [
+  {
+    path: '/assessor/:location',
+    component: Assessor
+    // name: 'jobs',
+    // component: () =>
+    //   import(/* webpackChunkName: "about" */ "./pages/Jobs")
+  },
   {
     path: '/bids',
     component: Jobs

@@ -70,8 +70,8 @@
                     <v-text-field
                             id="jobName"
                             data-cy="jobName"
-                            v-model="form.jobName"
                             label="Job Name"
+                            v-model="form.jobName"
                     >
                     </v-text-field>
 
@@ -301,12 +301,25 @@
 
             splitName(val) {
                 let nameArray = val.split(' ')
+
+                nameArray = this.removeEmptiesInArray(nameArray);
+
                 if (nameArray.length > 1) {
                     this.form.lastName = nameArray[nameArray.length - 1]
                     let firstName = this.getFirstName(nameArray);
                     this.form.firstName = firstName.trimLeft();
                 }
                 this.form.customerName = val;
+            },
+
+            removeEmptiesInArray(array) {
+                let subArray = [];
+                for (let i = 0; i < array.length; i++) {
+                    if (array[i] !== '') {
+                        subArray.push(array[i]);
+                    }
+                }
+                return subArray;
             },
 
             getLastName(nameArray) {

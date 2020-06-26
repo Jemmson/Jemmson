@@ -13,6 +13,7 @@
 // Cypress.Commands.add("login", (email, password) => { ... })
 
 Cypress.Commands.add('loginByCSRF', (csrfToken, username, password) => {
+    // debugger
     cy.request({
         method: 'POST',
         url: '/login',
@@ -27,6 +28,48 @@ Cypress.Commands.add('loginByCSRF', (csrfToken, username, password) => {
         }
     })
 })
+
+Cypress.Commands.add('checkAuth', () => {
+    cy.route({
+        method: 'GET',
+        url: '/checkAuth',
+        response: 'fixture:checkAuth.json'
+    }).as('checkAuth')
+})
+
+Cypress.Commands.add('recents', () => {
+    cy.route({
+        method: 'GET',
+        url: '/notifications/recent',
+        response: 'fixture:recentNotifications.json'
+    })
+})
+
+Cypress.Commands.add('broadAuth', () => {
+    cy.route({
+        method: 'POST',
+        url: '/broadcasting/auth',
+        response: 'fixture:broadcastingAuth.json'
+    })
+})
+
+Cypress.Commands.add('getJobs', () => {
+    cy.route({
+        method: 'GET',
+        url: '/getJobs',
+        response: 'fixture:getJobs/getJobs.json'
+    })
+})
+
+// Cypress.Commands.add('validatePhoneNumber', () => {
+//     cy.route({
+//         method: 'GET',
+//         url: '/getJobs',
+//         response: 'fixture:getJobs/getJobs.json'
+//     })
+// })
+
+
 
 
 //

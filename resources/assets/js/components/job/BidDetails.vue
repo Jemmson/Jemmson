@@ -544,7 +544,17 @@
             <div v-if="showAddress">
                 <card>
 
-                    <v-card-title>Job Location</v-card-title>
+                    <div class="flex justify-content-between align-baseline">
+                        <v-card-title>Job Location</v-card-title>
+                        <v-btn
+                                class="mr-1rem"
+                                text
+                                color="primary"
+                                @click="routeToAssessorPage(bid)"
+                        >
+                            Assessor
+                        </v-btn>
+                    </div>
 
                     <div class="flex flex-col">
                         <div>
@@ -606,15 +616,15 @@
                 </v-btn>
 
             </v-card>
-<!--            <card>-->
-<!--                <v-card-title v-else class="card-title mt-4">Contractor Notes For You</v-card-title>-->
-<!--                <v-card-text>-->
-<!--                    <v-textarea cols="0" rows="0" class="form-control"-->
-<!--                                v-model="customerNotesMessage"-->
-<!--                                id="message">-->
-<!--                    </v-textarea>-->
-<!--                </v-card-text>-->
-<!--            </card>-->
+            <!--            <card>-->
+            <!--                <v-card-title v-else class="card-title mt-4">Contractor Notes For You</v-card-title>-->
+            <!--                <v-card-text>-->
+            <!--                    <v-textarea cols="0" rows="0" class="form-control"-->
+            <!--                                v-model="customerNotesMessage"-->
+            <!--                                id="message">-->
+            <!--                    </v-textarea>-->
+            <!--                </v-card-text>-->
+            <!--            </card>-->
         </section>
 
         <!-- / tasks -->
@@ -771,11 +781,6 @@
         },
         data() {
             return {
-                disabled: {
-                    deny: false,
-                    user_id: null,
-                    job_task_id: null
-                },
                 denyForm: {
                     job_task_id: 0,
                     message: '',
@@ -852,6 +857,9 @@
                 submissionCard: false,
                 cancelBidCard: false,
                 disabled: {
+                    deny: false,
+                    user_id: null,
+                    job_task_id: null,
                     cancelBid: false,
                     jobCompleted: false,
                     submitBid: false,
@@ -973,10 +981,47 @@
         },
         methods: {
 
+            routeToAssessorPage(bid) {
+
+                let location = '';
+
+                if (bid.location.address_line_2) {
+                    location = bid.location.address_line_1
+                        + ' ' + bid.location.address_line_2
+                        + ' ' + bid.location.city
+                        + ' ' + bid.location.state
+                        + ' ' + bid.location.zip
+                } else {
+                    location = bid.location.address_line_1
+                        + ' ' + bid.location.city
+                        + ' ' + bid.location.state
+                        + ' ' + bid.location.zip
+                }
+
+                location = this.urlEncodeLocation(location);
+
+                this.$router.push({
+                    path: '/assessor/' + location
+                });
+            },
+
             getJobTaskId() {
                 if (this.jobTask) {
                     return this.jobTask.id
                 }
+            },
+
+            urlEncodeLocation(location){
+                var locationArray = location.split(' ')
+                let result = '';
+                for (let i = 0; i < locationArray.length; i++) {
+                    if(i !== locationArray.length - 1){
+                        result = result + locationArray[i] + '+';
+                    } else {
+                        result = result + locationArray[i];
+                    }
+                }
+                return result;
             },
 
             async denyTask() {

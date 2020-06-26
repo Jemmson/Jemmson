@@ -8,22 +8,22 @@ describe('Logging In - CSRF Tokens', function () {
     const username = 'jemmsoninc@gmail.com'
     const password = 'asdasd'
 
-    Cypress.Commands.add('loginByCSRF', (csrfToken) => {
-        cy.request({
-            method: 'POST',
-            url: '/login',
-            failOnStatusCode: false, // dont fail so we can make assertions
-            form: true, // we are submitting a regular form body
-            body: {
-                username,
-                password
-            },
-            headers: {
-                'x-csrf-token': csrfToken
-
-            }
-        })
-    })
+    // Cypress.Commands.add('loginByCSRF', (csrfToken) => {
+    //     cy.request({
+    //         method: 'POST',
+    //         url: '/login',
+    //         failOnStatusCode: false, // dont fail so we can make assertions
+    //         form: true, // we are submitting a regular form body
+    //         body: {
+    //             username,
+    //             password
+    //         },
+    //         headers: {
+    //             'x-csrf-token': csrfToken
+    //
+    //         }
+    //     })
+    // })
 
     /**
      * A utility function to check that we are seeing the dashboard page
@@ -42,7 +42,7 @@ describe('Logging In - CSRF Tokens', function () {
     }
 
     beforeEach(function () {
-        cy.viewport(414, 736)
+        cy.viewport('macbook-15')
     })
 
     // it('redirects to /#/', () => {
@@ -78,11 +78,12 @@ describe('Logging In - CSRF Tokens', function () {
                     .then((resp) => {
                         console.log('resp', resp)
                         expect(resp.status).to.eq(200)
-                        expect(resp.body.name).to.include('General Contractor')
+                        // expect(resp.body.name).to.include('General Contractor')
                     })
-
             })
-        visitInitiateBid()
+
+        cy.visit('/#/bid/1')
+        // visitInitiateBid()
     })
 
             // it('strategy #2: parse token from response headers', function () {

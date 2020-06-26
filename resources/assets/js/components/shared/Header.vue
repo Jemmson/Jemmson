@@ -8,6 +8,7 @@
                 || onAssociatedContractorsPage ()
                 || onContractorInfo ()
                 || onSettingsPage ()
+                || onAssessorPage ()
         ">
             <header-bio
                     ref="homePage"
@@ -157,6 +158,9 @@
             },
             onSettingsPage() {
                 return this.page === '/settings' || this.page === '/settings/'
+            },
+            onAssessorPage() {
+                return this.page === '/assessor' || this.page === '/assessor/'
             },
             onAddTaskPage() {
                 return this.page === '/job/add/task' || this.page === '/job/add/task/'
