@@ -18,46 +18,35 @@
             >
             </info-modal-generic>
 
+            <v-icon
+                    color="primary"
+                    @click="showHelp()"
+                    class="w-break mt-3 pr-3 w-95 justify-content-end">mdi-information
+            </v-icon>
+
             <v-card
                     v-for="bid in sBids" v-bind:key="bid.id"
                     class="margins-quarter-rem"
                     v-if="getJobStatus(bid) !== 'paid'"
             >
-                <v-icon
-                        color="primary"
-                        @click="showModal('jobs', getJobStatus(bid))"
-                        class="w-break mt-3 pr-3 w-95 justify-content-end">mdi-information
-                </v-icon>
-                <v-card-title class="uppercase pb-0"
-                              style="margin-top: -1.5rem"
+                <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
+                <v-card-subtitle>{{ getJobStatus(bid) }}</v-card-subtitle>
+                <v-card-subtitle
+                        v-if="bid.payment_type === 'cash'"
                 >
-
-                    <div class="flex flex-col nav-icon-spacing"
-                         v-if="bid.payment_type === 'cash'"
-                    >
-                        <v-icon
-                        >mdi-cash
-                        </v-icon>
-                        <div class="nav-icon-label">
-                            Cash Job
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col nav-icon-spacing"
-                         v-else-if="bid.payment_type === 'creditCard'"
-                    >
-                        <v-icon
-                        >mdi-credit-card
-                        </v-icon>
-                        <div class="nav-icon-label">
-                            Credit Card Job
-                        </div>
-                    </div>
-
-                    <div class="mr-1rem ml-half-rem">{{ jobName(bid.job_name) }}</div>
-                    <v-spacer></v-spacer>
-                    <v-card-subtitle class="uppercase w-break">{{ getJobStatus(bid) }}</v-card-subtitle>
-                </v-card-title>
+                    <v-icon
+                    >mdi-cash
+                    </v-icon>
+                    Cash Job
+                </v-card-subtitle>
+                <v-card-subtitle
+                        v-else-if="bid.payment_type === 'creditCard'"
+                >
+                    <v-icon
+                    >mdi-credit-card
+                    </v-icon>
+                    Credit Card Job
+                </v-card-subtitle>
 
                 <v-card-text>
                     <v-card-subtitle v-if="isContractor()"
@@ -178,15 +167,21 @@
         },
         methods: {
 
-            getTopMargin(){
-              return this.isCustomer() ? 'customer-top-margin' : 'contractor-top-margin'
+            getTopMargin() {
+                return this.isCustomer() ? 'customer-top-margin' : 'contractor-top-margin'
             },
 
             ...mapMutations([
                 'toggleBidsContractor'
             ]),
 
-            setModalText(status){
+            showHelp() {
+                this.$router.push({
+                    path: '/help/jobs'
+                });
+            },
+
+            setModalText(status) {
                 if (status === 'changed') {
                     this.modalText.jobs = `Job Has Changed`
                 }

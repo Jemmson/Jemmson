@@ -39,6 +39,8 @@ import UserAuthorizationPage from './pages/UserAuthorizationPage'
 import Terms from "./pages/Terms";
 import PasswordReset from "./pages/PasswordReset";
 import PasswordEmailVerification from "./pages/PasswordEmailVerification";
+
+import Help from "./pages/Help"
 // import BidTask from './components/job/BidTask';
 
 
@@ -47,9 +49,10 @@ const routes = [
   {
     path: '/assessor/:location',
     component: Assessor
-    // name: 'jobs',
-    // component: () =>
-    //   import(/* webpackChunkName: "about" */ "./pages/Jobs")
+  },
+  {
+    path: '/help/:page',
+    component: Help
   },
   {
     path: '/bids',

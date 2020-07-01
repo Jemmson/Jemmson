@@ -9,6 +9,7 @@
                 || onContractorInfo ()
                 || onSettingsPage ()
                 || onAssessorPage ()
+                || onHelpPage ()
         ">
             <header-bio
                     ref="homePage"
@@ -161,6 +162,9 @@
             },
             onAssessorPage() {
                 return this.page === '/assessor' || this.page === '/assessor/'
+            },
+            onHelpPage() {
+                return this.page === '/help' || this.page === '/help/'
             },
             onAddTaskPage() {
                 return this.page === '/job/add/task' || this.page === '/job/add/task/'
