@@ -547,6 +547,8 @@
                     <div class="flex justify-content-between align-baseline">
                         <v-card-title>Job Location</v-card-title>
                         <v-btn
+                                v-if="bid.location.state === 'AZ'"
+                                ref="assessor"
                                 class="mr-1rem"
                                 text
                                 color="primary"

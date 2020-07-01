@@ -20,15 +20,19 @@ class AssessorController extends Controller
 
         $response = $this->getAssessorData($location);
 
-        dd($response);
+        $result = json_decode($response);
 
-//        $phpArray = json_decode($response);
-//
-//        if (count($phpArray['Results']) > 1) {
-//            return response()->json([
-//                'results' => count($phpArray['Results'])
-//            ], 200);
-//        }
+        $totalFound = (int)$result->TotalFound;
+
+        if ($totalFound === 0) {
+            return response()->json([
+                'error' => 'There was no assessor information available'
+            ]);
+        } else if ($totalFound === 1) {
+            return $this->getAssessorData($result->Results[0]->APN->link);
+        } else {
+            return $result->Results;
+        }
 
     }
 

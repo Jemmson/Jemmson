@@ -653,6 +653,11 @@ describe('BidDetails', function () {
                             ]
                         }
                     ],
+                    job_statuses: [
+                        {
+                            status: 'sdasads'
+                        }
+                    ]
                 },
                 isCustomer: false
             }
@@ -671,8 +676,57 @@ describe('BidDetails', function () {
         await wrapper.vm.$nextTick()
         expect(wrapper
             .find({ref: 'job-add-task-icon'})
-            .attributes().class).toBe('nav-btn-position red--text')
+            .attributes().class).toBe('v-icon notranslate nav-btn-position v-icon--link mdi mdi-plus-thick theme--light red--text')
 
+    })
+    
+    test('that assessor button appears for the address if the address is from AZ', async () => {
+
+        const wrapper = mount(BidDetails, {
+            localVue,
+            vuetify,
+            store,
+            router,
+            stubs: [
+                'approve-bid',
+                'sub-invite-modal'
+            ],
+            propsData: {
+                bid: {
+                    location_id: '1',
+                    location: {
+                        state: 'AZ'
+                    }
+                },
+                isCustomer: false
+            }
+        });
+
+        wrapper.setData({
+            show: {
+                jobStepper: false,
+                details: false,
+                jobTask: false,
+                location: true,
+                images: false
+            },
+        });
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'assessor'}).exists()).toBe(true)
+
+        wrapper.setProps({
+            bid: {
+                location_id: '1',
+                location: {
+                    state: 'CA'
+                }
+            },
+        })
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'assessor'}).exists()).toBe(false)
+        
     })
 
 })
