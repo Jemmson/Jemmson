@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
@@ -106,8 +107,8 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
         Please use the following link. '
             . $url;
 
-        Log::info('NotifyContractorOfSubBid Notification Message: ' . $text);
-        Log::info('NotifyContractorOfSubBid Notification Link: ' . $url);
+        NotificationLog::info('NotifyContractorOfSubBid Notification Message: ' . $text);
+        NotificationLog::info('NotifyContractorOfSubBid Notification Link: ' . $url);
 
 
         return (new NexmoMessage)

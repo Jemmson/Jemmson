@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -102,8 +103,8 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
         $text = $this->general->name . " has approved your bid " .
             $url;
 
-        Log::info('NotifySubOfAcceptedBid Notification Message: ' . $text);
-        Log::info('NotifySubOfAcceptedBid Notification Link: ' . $url);
+        NotificationLog::info('NotifySubOfAcceptedBid Notification Message: ' . $text);
+        NotificationLog::info('NotifySubOfAcceptedBid Notification Link: ' . $url);
 
 
         return (new NexmoMessage)

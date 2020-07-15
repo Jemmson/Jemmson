@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -87,8 +88,8 @@ class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
             ' View Job: ' .
             $url;
 
-        Log::info('NotifyContractorOfAcceptedBid Notification Message: ' . $text);
-        Log::info('NotifyContractorOfAcceptedBid Notification Link: ' . $url);
+        NotificationLog::info('NotifyContractorOfAcceptedBid Notification Message: ' . $text);
+        NotificationLog::info('NotifyContractorOfAcceptedBid Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -90,8 +91,8 @@ class TaskApproved extends Notification implements ShouldQueue
             . ' View Task '
             . $url;
 
-        Log::info('TaskApproved Notification Message: ' . $text);
-        Log::info('TaskApproved Notification Link: ' . $url);
+        NotificationLog::info('TaskApproved Notification Message: ' . $text);
+        NotificationLog::info('TaskApproved Notification Link: ' . $url);
 
 
         return (new NexmoMessage)

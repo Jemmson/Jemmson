@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -100,8 +101,8 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
 
         $text = $this->company_name . " has finished your bid. Please go to the link below to take action on the job " . $url;
 
-        Log::info('NotifyCustomerThatBidIsFinished Notification Message: ' . $text);
-        Log::info('NotifyCustomerThatBidIsFinished Notification Link: ' . $url);
+        NotificationLog::info('NotifyCustomerThatBidIsFinished Notification Message: ' . $text);
+        NotificationLog::info('NotifyCustomerThatBidIsFinished Notification Link: ' . $url);
 
 
         return (new NexmoMessage)

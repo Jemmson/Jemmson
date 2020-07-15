@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -144,8 +145,8 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
                 . $url;
         }
 
-        Log::info('NotifyThatJobHasBeenApproved Notification Message: ' . $text);
-        Log::info('NotifyThatJobHasBeenApproved Notification Link: ' . $url);
+        NotificationLog::info('NotifyThatJobHasBeenApproved Notification Message: ' . $text);
+        NotificationLog::info('NotifyThatJobHasBeenApproved Notification Link: ' . $url);
 
 
         return (new NexmoMessage)

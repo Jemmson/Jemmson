@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -109,8 +110,8 @@ class JobBidDeclined extends Notification implements ShouldQueue
             . $this->bid->declined_message . ".  Please go to the link below to view the job. "
             . $url;
 
-        Log::info('JobBidDeclined Notification Message: ' . $text);
-        Log::info('JobBidDeclined Notification Link: ' . $url);
+        NotificationLog::info('JobBidDeclined Notification Message: ' . $text);
+        NotificationLog::info('JobBidDeclined Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

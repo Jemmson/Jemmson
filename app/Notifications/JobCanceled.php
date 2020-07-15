@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -85,8 +86,8 @@ class JobCanceled extends Notification
 
         $text = $this->jobName . " has been canceled. Please login to see your bids. " . $url;
 
-        Log::info('JobCanceled Notification Message: ' . $text);
-        Log::info('JobCanceled Notification Link: ' . $url);
+        NotificationLog::info('JobCanceled Notification Message: ' . $text);
+        NotificationLog::info('JobCanceled Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Task;
 use App\TaskMessage;
 use App\JobTask;
+use App\Traits\NotificationLog;
 use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -74,7 +75,7 @@ class NotifyContractorThatCustomerChangesBid extends Notification
     {
         $text = $this->customer->name . ' is requesting a change to your bid.';
 
-        Log::info('NotifyContractorThatCustomerChangesBid Notification Message: ' . $text);
+        NotificationLog::info('NotifyContractorThatCustomerChangesBid Notification Message: ' . $text);
 //        Log::info('NotifyContractorThatCustomerChangesBid Notification Link: ' . $url);
 
 

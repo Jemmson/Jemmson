@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -60,7 +61,7 @@ class NotifySubOfUpdatedMessage extends Notification
     {
         $text = 'Your Contractor Has Sent an Updated Message';
 
-        Log::info('NotifySubOfUpdatedMessage Notification Message: ' . $text);
+        NotificationLog::info('NotifySubOfUpdatedMessage Notification Message: ' . $text);
 //        Log::info('NotifySubOfUpdatedMessage Notification Link: ' . $url);
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -131,8 +132,8 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
             . ' Thank you for using our application!';
         }
 
-        Log::info('CustomerPaidForTask Notification Message: ' . $text);
-        Log::info('CustomerPaidForTask Notification Link: ' . $url);
+        NotificationLog::info('CustomerPaidForTask Notification Message: ' . $text);
+        NotificationLog::info('CustomerPaidForTask Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -81,7 +82,7 @@ class NotifySubOfBidNotAcceptedBid extends Notification implements ShouldQueue
             . $this->bid->name
             . ' was not accepted. Thank you for using our application';
 
-        Log::info('NotifySubOfBidNotAcceptedBid Notification Message: ' . $text);
+        NotificationLog::info('NotifySubOfBidNotAcceptedBid Notification Message: ' . $text);
 //        Log::info('NotifySubOfBidNotAcceptedBid Notification Link: ' . $url);
 
         return (new NexmoMessage)

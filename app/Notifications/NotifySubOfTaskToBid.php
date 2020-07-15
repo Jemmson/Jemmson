@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Task;
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -119,8 +120,8 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
         $text = 'You have a potential job! Please sign in to see it. ' .
             $url . ' ';
 
-        Log::info('NotifySubOfTaskToBid Notification Message: ' . $text);
-        Log::info('NotifySubOfTaskToBid Notification Link: ' . $url);
+        NotificationLog::info('NotifySubOfTaskToBid Notification Message: ' . $text);
+        NotificationLog::info('NotifySubOfTaskToBid Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);;

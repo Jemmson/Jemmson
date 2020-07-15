@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Traits\NotificationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Notification;
@@ -141,8 +142,8 @@ class TaskFinished extends Notification implements ShouldQueue
 //        Log::debug((new NexmoMessage)
 //            ->content($text));
 
-        Log::info('TaskFinished Notification Message: ' . $text);
-        Log::info('TaskFinished Notification Link: ' . $url);
+        NotificationLog::info('TaskFinished Notification Message: ' . $text);
+        NotificationLog::info('TaskFinished Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);
