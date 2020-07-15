@@ -13,7 +13,7 @@ use Auth;
 
 use App\User;
 use App\Job;
-use Illuminate\Support\Facades\Log;
+
 
 class NotifyContractorOfSubBid extends Notification implements ShouldQueue
 {

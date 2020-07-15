@@ -12,7 +12,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Job;
 use App\User;
-use Illuminate\Support\Facades\Log;
+
 
 class JobBidDeclined extends Notification implements ShouldQueue
 {

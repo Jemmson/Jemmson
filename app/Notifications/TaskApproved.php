@@ -12,7 +12,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
-use Illuminate\Support\Facades\Log;
+
 
 class TaskApproved extends Notification implements ShouldQueue
 {

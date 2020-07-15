@@ -11,7 +11,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use App\Job;
 use App\User;
-use Illuminate\Support\Facades\Log;
+
 
 class JobCanceled extends Notification
 {
