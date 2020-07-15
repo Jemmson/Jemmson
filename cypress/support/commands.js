@@ -61,6 +61,38 @@ Cypress.Commands.add('getJobs', () => {
     })
 })
 
+Cypress.Commands.add('images', () => {
+    cy.route({
+        method: 'GET',
+        url: '/getImagesNotAssociatedToATask/1',
+        response: '[]'
+    })
+})
+
+Cypress.Commands.add('stripe', () => {
+    cy.route({
+        method: 'GET',
+        url: 'https://m.stripe/4',
+        response: 'c8a2ab9b-785a-4fa9-a3d4-3d1cc10c0c84'
+    })
+})
+
+Cypress.Commands.add('job1', () => {
+    cy.route({
+        method: 'GET',
+        url: '/job/1',
+        response: 'fixture:getJobs/job1.json'
+    })
+})
+
+Cypress.Commands.add('current', () => {
+    cy.route({
+        method: 'GET',
+        url: '/user/current',
+        response: 'fixture:users/current.json'
+    })
+})
+
 // Cypress.Commands.add('validatePhoneNumber', () => {
 //     cy.route({
 //         method: 'GET',

@@ -9,11 +9,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 
 class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueue
 {
     use Queueable;
+
     protected $bid, $user, $company_name;
 
     /**
@@ -24,7 +26,7 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
      * @param String $companyName
      *
      */
-    public function __construct($bid, $user, String $companyName)
+    public function __construct($bid, $user, string $companyName)
     {
         $this->bid = $bid;
         $this->user = $user;
@@ -52,8 +54,16 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
     {
         return (new MailMessage)
             ->line('The introduction to the notification.')
-            ->action('Notification Action ', url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token, [], true))
-            ->line('Thank you for using our application!');
+            ->action('Notification Action ', url('/login/customer/' . $this->bid->id . '/' .
+                $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->bid->id,
+                    'sent',
+                    'waiting_for_customer_approval',
+                    'not set',
+                    'mail')->token, [], true))
+                ->line('Thank you for using our application!');
     }
 
     /**
@@ -78,7 +88,21 @@ class NotifyCustomerThatBidIsFinished extends Notification implements ShouldQueu
     public function toNexmo($notifiable)
     {
 
-        $text = $this->company_name . " has finished your bid. Please go to the link below to take action on the job " . url('/login/customer/' . $this->bid->id . '/' . $this->user->generateToken(true)->token, [], true);
+        $url = url('/login/customer/' . $this->bid->id . '/' .
+            $this->user->generateToken(
+                $this->user->id,
+                true,
+                $this->bid->id,
+                'sent',
+                'waiting_for_customer_approval',
+                'not set',
+                'text')->token, [], true);
+
+        $text = $this->company_name . " has finished your bid. Please go to the link below to take action on the job " . $url;
+
+        Log::info('NotifyCustomerThatBidIsFinished Notification Message: ' . $text);
+        Log::info('NotifyCustomerThatBidIsFinished Notification Link: ' . $url);
+
 
         return (new NexmoMessage)
             ->content($text);

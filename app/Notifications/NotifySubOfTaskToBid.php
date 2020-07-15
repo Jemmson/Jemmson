@@ -112,10 +112,18 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
+
+        $url = url('/login/sub/task/'.
+            $this->jobTaskId . '/' . $this->nexmoToken, [], true);
+
+        $text = 'You have a potential job! Please sign in to see it. ' .
+            $url . ' ';
+
+        Log::info('NotifySubOfTaskToBid Notification Message: ' . $text);
+        Log::info('NotifySubOfTaskToBid Notification Link: ' . $url);
+
         return (new NexmoMessage)
-            ->content('You have a potential job! Please sign in to see it. ' .
-                url('/login/sub/task/'.
-                    $this->jobTaskId . '/' . $this->nexmoToken, [], true) . ' ');;
+            ->content($text);;
     }
 
     public function toSpark($notifiable)

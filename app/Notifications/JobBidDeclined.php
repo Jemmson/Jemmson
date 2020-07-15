@@ -11,6 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Job;
 use App\User;
+use Illuminate\Support\Facades\Log;
 
 class JobBidDeclined extends Notification implements ShouldQueue
 {
@@ -93,18 +94,23 @@ class JobBidDeclined extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
+        $url = url('/login/contractor/' . $this->bid->id . '/'
+            . $this->user->generateToken(
+                $this->user->id,
+                true,
+                $this->bid->id,
+                'changed',
+                'waiting_for_customer_approval',
+                'waiting_for_customer_approval',
+                'text'
+            )->token, [], true);
+
         $text = $this->customer->name . " requests a change to your bid. The customer's message is: "
             . $this->bid->declined_message . ".  Please go to the link below to view the job. "
-            . url('/login/contractor/' . $this->bid->id . '/'
-                . $this->user->generateToken(
-                    $this->user->id,
-                    true,
-                    $this->bid->id,
-                    'changed',
-                    'waiting_for_customer_approval',
-                    'waiting_for_customer_approval',
-                    'text'
-                )->token, [], true);
+            . $url;
+
+        Log::info('JobBidDeclined Notification Message: ' . $text);
+        Log::info('JobBidDeclined Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

@@ -11,6 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
+use Illuminate\Support\Facades\Log;
 
 class CustomerPaidForTask extends Notification implements ShouldQueue
 {
@@ -96,32 +97,42 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
         $isGeneral = $this->task->contractor_id === $this->user->id;
 
         if ($isGeneral) {
+
+            $url = url('/login/general/' . $this->task->id . '/'
+                . $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->task->id,
+                    'paid',
+                    'paid',
+                    'paid',
+                    'text'
+                )->token, [], true);
+
+
             $text = 'Customer has sent you a payment for : '. $this->task->name . '. '
-                . url('/login/general/' . $this->task->id . '/'
-                            . $this->user->generateToken(
-                                $this->user->id,
-                                true,
-                                $this->task->id,
-                                'paid',
-                                'paid',
-                                'paid',
-                                'text'
-                            )->token, [], true)
-            . 'Thank you for using our application!';
+                . $url
+            . ' Thank you for using our application!';
         } else {
+
+            $url = url('/login/sub/task/' . $this->task->id . '/'
+                . $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->task->id,
+                    'paid',
+                    'paid',
+                    'paid',
+                    'text'
+                )->token, [], true);
+
             $text = 'Customer has sent you a payment for : '. $this->task->name . '. '
-                . url('/login/sub/task/' . $this->task->id . '/'
-                    . $this->user->generateToken(
-                        $this->user->id,
-                        true,
-                        $this->task->id,
-                        'paid',
-                        'paid',
-                        'paid',
-                        'text'
-                    )->token, [], true)
-            . 'Thank you for using our application!';
+                . $url
+            . ' Thank you for using our application!';
         }
+
+        Log::info('CustomerPaidForTask Notification Message: ' . $text);
+        Log::info('CustomerPaidForTask Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

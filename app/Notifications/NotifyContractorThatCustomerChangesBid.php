@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
+use Illuminate\Support\Facades\Log;
 
 
 class NotifyContractorThatCustomerChangesBid extends Notification
@@ -72,6 +73,11 @@ class NotifyContractorThatCustomerChangesBid extends Notification
     public function toNexmo($notifiable)
     {
         $text = $this->customer->name . ' is requesting a change to your bid.';
+
+        Log::info('NotifyContractorThatCustomerChangesBid Notification Message: ' . $text);
+//        Log::info('NotifyContractorThatCustomerChangesBid Notification Link: ' . $url);
+
+
         return (new NexmoMessage)
             ->content($text);
     }

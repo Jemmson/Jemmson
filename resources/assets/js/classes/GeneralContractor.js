@@ -216,7 +216,7 @@ export default class GeneralContractor {
             }
             Vue.toasted.success('Bid Initiated')
             disabled.submit = false
-            window.location = '/#/bids'
+            window.location = '/#/bid/' + data.data.job.id
         } catch (error) {
             error = error.response.data
             form.errors.errors = error.errors

@@ -26,6 +26,7 @@
 
                 <div class="flex justify-content-between">
                     <v-text-field
+                            @focus="clearTaskPrice()"
                             type="text"
                             v-model="addNewTaskForm.taskPrice"
                             class="input-margins"
@@ -259,6 +260,13 @@
             }
         },
         methods: {
+
+            clearTaskPrice(){
+              if (this.addNewTaskForm.taskPrice === '$ 0.00') {
+                  this.addNewTaskForm.taskPrice = '';
+              }
+            },
+
             dropDownTaskWasSelected() {
                 return this.selected !== null
                     && this.search === this.selected.text

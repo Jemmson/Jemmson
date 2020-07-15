@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Notifications\BidInitiated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Tests\Feature\Traits\UtilitiesTrait;
 use Tests\Feature\Traits\UserTrait;
@@ -23,122 +26,184 @@ class NotificationTest extends TestCase
     use Setup;
     use RefreshDatabase;
 
-    /**  @test */
-    function test_that_a_Notification_is_sent_to_a_new_customer()
+    public function testBidInitiated()
     {
-        //
+        $this->withExceptionHandling();
 
-        $admin = $this->createAdmin_Contractor();
+        $general = $this->createContractor();
+        $customer = $this->createCustomer();
 
-        $this->initiateABid($admin, 'Joe', 'Smith');
+//        dd(json_encode($customer->customer()->get()->first()->location_id));
 
-        $user = $this->getNewlyCreatedUser('Joe Smith');
-
-        $this->assertDatabaseHas('user_tokens', [
-            "user_id" => $user->id
-        ]);
-
-        $this->assertDatabaseHas('jobs', [
-            "status" => "bid.initiated"
-        ]);
-    }
-
-    /**  @test */
-    function test_that_notification_is_sent_to_a_sub_when_the_sub_is_invited() {
-        //
-        $admin = $this->createAdmin_Contractor();
-        $customer = $this->create_a_customer();
-        $location_id = $customer->customer()->get()->first()->location()->get()->first()->id;
-        $job = $this->create_a_job(
+        $location_id = $customer->customer()->get()->first()->location_id;
+        $job = $this->createJob(
             $customer->id,
-            $admin->id,
+            $general->id,
             $location_id,
             'bid.in_progress'
         );
-        $task = $this->create_a_task($admin->id);
 
-        $job_task = $this->create_a_job_task(
-            $job->id,
-            $task->id,
-            $location_id,
-            $admin->id,
-            'bid_task.initiated'
-            );
+        Notification::fake();
 
-        $this->assertDatabaseHas('jobs', [
-            "status" => "bid.in_progress"
-        ]);
+        // Assert that no notifications were sent...
+        Notification::assertNothingSent();
 
-        $this->assertDatabaseHas('job_task', [
-            "id" => $job_task->id,
-            "status" => "bid_task.initiated"
-        ]);
+        // Perform initiating a bid...
+        $customer->notify(new BidInitiated($job, $customer));
 
-        $firstName = 'Kristen';
-        $lastName = 'Battafarano';
-        $name = $firstName . ' ' . $lastName;
-        $response = $this->invite_a_sub($admin, $task->id, $job_task->id, $firstName, $lastName);
 
-        $response->assertJson([
-            "message" => 'success'
-        ]);
+        // Assert a specific type of notification was sent meeting the given truth test...
+        Notification::assertSentTo(
+            $customer,
+            'hello',
+            function (BidInitiated $notification, $channels) use ($job) {
+                echo $notification->job->id;
+                return $notification->job->id === $job->id;
+            }
+        );
 
-        $sub = $this->getNewlyCreatedUser($name);
+//        // Assert a notification was sent to the given users...
+//        Notification::assertSentTo(
+//            [$customer], BidInitiated::class
+//        );
 
-        $this->assertDatabaseHas('user_tokens', [
-            "user_id" => $sub->id
-        ]);
+//        // Assert a notification was not sent...
+//        Notification::assertNotSentTo(
+//            [$user], AnotherNotification::class
+//        );
 
-        $this->assertDatabaseHas('jobs', [
-            "status" => "bid.in_progress"
-        ]);
+//        // Assert a notification was sent via Notification::route() method...
+//        Notification::assertSentTo(
+//            new AnonymousNotifiable, OrderShipped::class
+//        );
 
-        $this->assertDatabaseHas('job_task', [
-            "status" => "bid.initiated"
-        ]);
-
-        $this->assertDatabaseHas('bid_contractor_job_task', [
-            "status" => "sub.initiated"
-        ]);
-
+//        // Assert Notification::route() method sent notification to the correct user...
+//        Notification::assertSentTo(
+//            new AnonymousNotifiable,
+//            BidInitiated::class,
+//            function ($notification, $channels, $notifiable) use ($customer) {
+//                return $notifiable->routes['nexmo'] === $customer->phone;
+//            }
+//        );
     }
 
-
-    #########################
-    ## Routes
-    #########################
-
-    protected function initiateABid(
-        $admin,
-        $firstName = "Shawn",
-        $lastName = "Pike",
-        $jobName = "pool job",
-        $phone = "(480) 703-4902"
-    )
-    {
-        $params = [
-            "busy" => false,
-            "customerName" => $firstName . " " . $lastName,
-            "email" => "",
-            "errors" => [
-                "errors" => []
-            ],
-            "firstName" => $firstName,
-            "jobName" => $jobName,
-            "lastName" => $lastName,
-            "phone" => $phone,
-            "quickbooks_id" => "",
-            "successful" => false
-        ];
-
-        $response = '';
-
-        try {
-            $response = $this->actingAs($admin)->json('POST', '/initiate-bid', $params);
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-
-        return $response;
-    }
+//    /**  @test */
+//    function test_that_a_Notification_is_sent_to_a_new_customer()
+//    {
+//        //
+//
+//        $admin = $this->createAdmin_Contractor();
+//
+//        $this->initiateABid($admin, 'Joe', 'Smith');
+//
+//        $user = $this->getNewlyCreatedUser('Joe Smith');
+//
+//        $this->assertDatabaseHas('user_tokens', [
+//            "user_id" => $user->id
+//        ]);
+//
+//        $this->assertDatabaseHas('jobs', [
+//            "status" => "bid.initiated"
+//        ]);
+//    }
+//
+//    /**  @test */
+//    function test_that_notification_is_sent_to_a_sub_when_the_sub_is_invited()
+//    {
+//        //
+//        $admin = $this->createAdmin_Contractor();
+//        $customer = $this->create_a_customer();
+//        $location_id = $customer->customer()->get()->first()->location()->get()->first()->id;
+//        $job = $this->create_a_job(
+//            $customer->id,
+//            $admin->id,
+//            $location_id,
+//            'bid.in_progress'
+//        );
+//        $task = $this->create_a_task($admin->id);
+//
+//        $job_task = $this->create_a_job_task(
+//            $job->id,
+//            $task->id,
+//            $location_id,
+//            $admin->id,
+//            'bid_task.initiated'
+//        );
+//
+//        $this->assertDatabaseHas('jobs', [
+//            "status" => "bid.in_progress"
+//        ]);
+//
+//        $this->assertDatabaseHas('job_task', [
+//            "id" => $job_task->id,
+//            "status" => "bid_task.initiated"
+//        ]);
+//
+//        $firstName = 'Kristen';
+//        $lastName = 'Battafarano';
+//        $name = $firstName . ' ' . $lastName;
+//        $response = $this->invite_a_sub($admin, $task->id, $job_task->id, $firstName, $lastName);
+//
+//        $response->assertJson([
+//            "message" => 'success'
+//        ]);
+//
+//        $sub = $this->getNewlyCreatedUser($name);
+//
+//        $this->assertDatabaseHas('user_tokens', [
+//            "user_id" => $sub->id
+//        ]);
+//
+//        $this->assertDatabaseHas('jobs', [
+//            "status" => "bid.in_progress"
+//        ]);
+//
+//        $this->assertDatabaseHas('job_task', [
+//            "status" => "bid.initiated"
+//        ]);
+//
+//        $this->assertDatabaseHas('bid_contractor_job_task', [
+//            "status" => "sub.initiated"
+//        ]);
+//
+//    }
+//
+//
+//    #########################
+//    ## Routes
+//    #########################
+//
+//    protected function initiateABid(
+//        $admin,
+//        $firstName = "Shawn",
+//        $lastName = "Pike",
+//        $jobName = "pool job",
+//        $phone = "(480) 703-4902"
+//    )
+//    {
+//        $params = [
+//            "busy" => false,
+//            "customerName" => $firstName . " " . $lastName,
+//            "email" => "",
+//            "errors" => [
+//                "errors" => []
+//            ],
+//            "firstName" => $firstName,
+//            "jobName" => $jobName,
+//            "lastName" => $lastName,
+//            "phone" => $phone,
+//            "quickbooks_id" => "",
+//            "successful" => false
+//        ];
+//
+//        $response = '';
+//
+//        try {
+//            $response = $this->actingAs($admin)->json('POST', '/initiate-bid', $params);
+//        } catch (\Exception $e) {
+//            return $e->getMessage();
+//        }
+//
+//        return $response;
+//    }
 }

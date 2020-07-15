@@ -120,23 +120,29 @@ class TaskFinished extends Notification implements ShouldQueue
             $subStatus = "finished_job ";
             $user = $this->general;
         }
+
+        $url = url('/login/mix/' .
+            $this->job->id . '/' .
+            $user->generateToken(
+                $user->id,
+                true,
+                $this->jobTask->name,
+                'approved',
+                $generalStatus,
+                $subStatus,
+                'text'
+            )->token, [], true);
+
         $text = "The task: " . $this->task->name . " has been finished. "
             . $custom
             . " View Task: \n"
-            . url('/login/mix/' .
-                $this->job->id . '/' .
-                $user->generateToken(
-                    $user->id,
-                    true,
-                    $this->jobTask->name,
-                    'approved',
-                    $generalStatus,
-                    $subStatus,
-                    'text'
-                )->token, [], true);
+            . $url;
 
 //        Log::debug((new NexmoMessage)
 //            ->content($text));
+
+        Log::info('TaskFinished Notification Message: ' . $text);
+        Log::info('TaskFinished Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

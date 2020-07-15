@@ -92,6 +92,9 @@ trait Passwordless
                 return null;
             }
         }
+
+        Log::info($token);
+
         return $token;
     }
 

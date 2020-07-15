@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Facades\Log;
 
 
 class NotifySubOfBidNotAcceptedBid extends Notification implements ShouldQueue
@@ -75,10 +76,16 @@ class NotifySubOfBidNotAcceptedBid extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
+
+        $text = 'Your bid for '
+            . $this->bid->name
+            . ' was not accepted. Thank you for using our application';
+
+        Log::info('NotifySubOfBidNotAcceptedBid Notification Message: ' . $text);
+//        Log::info('NotifySubOfBidNotAcceptedBid Notification Link: ' . $url);
+
         return (new NexmoMessage)
-            ->content('Your bid for '
-                . $this->bid->name
-                . ' was not accepted. Thank you for using our application');
+            ->content($text);
     }
 
     public function toBroadcast($notifiable)

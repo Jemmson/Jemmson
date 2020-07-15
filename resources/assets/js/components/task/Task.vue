@@ -297,9 +297,9 @@
                     <v-card>
                         <v-card-title>Messages</v-card-title>
 
-                        <v-card-text>
+                        <v-card-text v-if="subHasMessage(bidTask)">
 
-                            <div v-if="subHasMessage(bidTask)" class="flex flex-col"
+                            <div class="flex flex-col"
                                 style="font-weight: bold;"
                             >
                                 <div>Sub Instructions:</div>

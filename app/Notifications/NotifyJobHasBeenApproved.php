@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Facades\Log;
 
 
 class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
@@ -110,31 +111,42 @@ class NotifyJobHasBeenApproved extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
+        $url = '';
+
         if ($this->sub) {
+
+            $url = url('/login/sub/task/' . $this->job->id . '/' . $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->job->id,
+                    'approved',
+                    'approved_by_customer',
+                    'approved_by_customer',
+                    'text'
+                )->token, [], true);
+
             $text = "The customer has approved of the job. Please go to the link below view job and begin work. "
-                . url('/login/sub/task/' . $this->job->id . '/'
-                    . $this->user->generateToken(
-                        $this->user->id,
-                        true,
-                        $this->job->id,
-                        'approved',
-                        'approved_by_customer',
-                        'approved_by_customer',
-                        'text'
-                    )->token, [], true);
+                . $url;
         } else {
+
+            $url = url('/login/contractor/' . $this->job->id . '/'
+                . $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->job->id,
+                    'approved',
+                    'approved_by_customer',
+                    'approved_by_customer',
+                    'text'
+                )->token, [], true);
+
             $text = "The customer has approved of the job. Please go to the link below view job and begin work. "
-                . url('/login/contractor/' . $this->job->id . '/'
-                    . $this->user->generateToken(
-                        $this->user->id,
-                        true,
-                        $this->job->id,
-                        'approved',
-                        'approved_by_customer',
-                        'approved_by_customer',
-                        'text'
-                    )->token, [], true);
+                . $url;
         }
+
+        Log::info('NotifyThatJobHasBeenApproved Notification Message: ' . $text);
+        Log::info('NotifyThatJobHasBeenApproved Notification Link: ' . $url);
+
 
         return (new NexmoMessage)
             ->content($text);

@@ -961,6 +961,11 @@ class JobController extends Controller
 
         $job->delete();
 
+        $user = Auth::user();
+
+        $user->notify(new CustomerUnableToSendPaymentWithStripe());
+
+
         return response()->json(null, 204);
     }
 
@@ -1253,8 +1258,7 @@ class JobController extends Controller
      * @param Request $request
      * @return Response
      */
-    public
-    function declineJobBid(Request $request)
+    public function declineJobBid(Request $request)
     {
         $this->validate($request, [
             'id' => 'required',
@@ -1274,7 +1278,6 @@ class JobController extends Controller
         if ($job->updateStatus(__('bid.declined'))) {
             $contractor->notify(new JobBidDeclined($job, $contractor, $message, $customer));
             $job->setJobDeclinedMessage($message);
-
             $this->setJobStatus($job->id, 'changed');
 
             return response()->json(['message' => 'Success'], 200);

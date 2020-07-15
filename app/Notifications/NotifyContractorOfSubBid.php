@@ -12,6 +12,7 @@ use Auth;
 
 use App\User;
 use App\Job;
+use Illuminate\Support\Facades\Log;
 
 class NotifyContractorOfSubBid extends Notification implements ShouldQueue
 {
@@ -89,20 +90,25 @@ class NotifyContractorOfSubBid extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
+        $url = url('/login/contractor/' . $this->bid->id . '/' .
+            $this->user->generateToken(
+                $this->user->id,
+                true,
+                $this->bid->id,
+                'in_progress',
+                'initiated',
+                'sent_a_bid',
+                'text'
+            )->token, [], true);
 
         $text = 'Hello ' . $this->user->name . ' Contractor ' . $this->subName
             . ' has just submitted a bid for the task you sent. 
         Please use the following link. '
-            . url('/login/contractor/' . $this->bid->id . '/' .
-                $this->user->generateToken(
-                    $this->user->id,
-                    true,
-                    $this->bid->id,
-                    'in_progress',
-                    'initiated',
-                    'sent_a_bid',
-                    'text'
-                )->token, [], true);
+            . $url;
+
+        Log::info('NotifyContractorOfSubBid Notification Message: ' . $text);
+        Log::info('NotifyContractorOfSubBid Notification Link: ' . $url);
+
 
         return (new NexmoMessage)
             ->content($text);

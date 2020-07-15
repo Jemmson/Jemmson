@@ -69,7 +69,9 @@ describe('Initiate Bid Test', function () {
 
         cy.contains('span', 'Shawn Pike').click()
 
-        cy.get('[data-cy=jobName]').should('contain.text', '2020-105-Pike-Shawn')
+        // cy.get('[data-cy=jobName]').should('contain.text', '2020-105-Pike-Shawn')
+
+        cy.get('#submit').click();
 
     });
 

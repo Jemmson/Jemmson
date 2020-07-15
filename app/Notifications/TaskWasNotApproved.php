@@ -11,6 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\JobTask;
 use App\User;
+use Illuminate\Support\Facades\Log;
 
 class TaskWasNotApproved extends Notification implements ShouldQueue
 {
@@ -105,30 +106,39 @@ class TaskWasNotApproved extends Notification implements ShouldQueue
     {
 
         if ($this->task->contractor_id !== $this->user->id) {
+
+            $url = url('/login/sub/task/'. $this->task->id . '/' .
+                $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->task->id,
+                    'approved',
+                    'approved_by_customer',
+                    'finished_job_denied_by_contractor',
+                    'text'
+                )->token, [], true);
+
             $text = 'Your finished task was not approved. '. $this->message . ' ' .
-                url('/login/sub/task/'. $this->task->id . '/' .
-                    $this->user->generateToken(
-                        $this->user->id,
-                        true,
-                        $this->task->id,
-                        'approved',
-                        'approved_by_customer',
-                        'finished_job_denied_by_contractor',
-                        'text'
-                    )->token, [], true);
+                $url;
         } else {
+
+            $url = url('/login/contractor/' . $this->task->id . '/' .
+                $this->user->generateToken(
+                    $this->user->id,
+                    true,
+                    $this->task->id,
+                    'approved',
+                    'customer_changes_finished_task',
+                    'customer_changes_finished_task',
+                    'text'
+                )->token, [], true);
+
             $text = 'Your finished task was not approved. '. $this->message . ' '.
-                url('/login/contractor/' . $this->task->id . '/' .
-                    $this->user->generateToken(
-                        $this->user->id,
-                        true,
-                        $this->task->id,
-                        'approved',
-                        'customer_changes_finished_task',
-                        'customer_changes_finished_task',
-                        'text'
-                    )->token, [], true);
+                $url;
         }
+
+        Log::info('TaskWasNotApproved Notification Message: ' . $text);
+        Log::info('TaskWasNotApproved Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

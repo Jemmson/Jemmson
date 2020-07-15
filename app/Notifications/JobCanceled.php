@@ -10,6 +10,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use App\Job;
 use App\User;
+use Illuminate\Support\Facades\Log;
 
 class JobCanceled extends Notification
 {
@@ -80,7 +81,12 @@ class JobCanceled extends Notification
     public function toNexmo($notifiable)
     {
 
-        $text = $this->jobName . " has been canceled. Please login to see your bids. " . url('/#/bids', [], true);
+        $url = url('/#/bids', [], true);
+
+        $text = $this->jobName . " has been canceled. Please login to see your bids. " . $url;
+
+        Log::info('JobCanceled Notification Message: ' . $text);
+        Log::info('JobCanceled Notification Link: ' . $url);
 
         return (new NexmoMessage)
             ->content($text);

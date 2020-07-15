@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Facades\Log;
 
 
 class NotifySubOfUpdatedMessage extends Notification
@@ -58,6 +59,11 @@ class NotifySubOfUpdatedMessage extends Notification
     public function toNexmo($notifiable)
     {
         $text = 'Your Contractor Has Sent an Updated Message';
+
+        Log::info('NotifySubOfUpdatedMessage Notification Message: ' . $text);
+//        Log::info('NotifySubOfUpdatedMessage Notification Link: ' . $url);
+
+
         return (new NexmoMessage)
             ->content($text);
     }

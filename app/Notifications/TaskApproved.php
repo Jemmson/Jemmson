@@ -11,6 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
+use Illuminate\Support\Facades\Log;
 
 class TaskApproved extends Notification implements ShouldQueue
 {
@@ -72,20 +73,26 @@ class TaskApproved extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
+        $url = url('/login/sub/task/' .
+            $this->task->id . '/' .
+            $this->user->generateToken(
+                $this->user->id,
+                true,
+                $this->task->id,
+                'approved',
+                'approved_by_customer',
+                'finished_job_approved_by_contractor',
+                'text'
+            )->token, [], true);
+
         $text = "The task: " . $this->task->name . " has been Approved."
-            . 'Now waiting on customer to approve the task & send payment.'
+            . ' Now waiting on customer to approve the task & send payment.'
             . ' View Task '
-            . url('/login/sub/task/' .
-                $this->task->id . '/' .
-                $this->user->generateToken(
-                    $this->user->id,
-                    true,
-                    $this->task->id,
-                    'approved',
-                    'approved_by_customer',
-                    'finished_job_approved_by_contractor',
-                    'text'
-                )->token, [], true);
+            . $url;
+
+        Log::info('TaskApproved Notification Message: ' . $text);
+        Log::info('TaskApproved Notification Link: ' . $url);
+
 
         return (new NexmoMessage)
             ->content($text);

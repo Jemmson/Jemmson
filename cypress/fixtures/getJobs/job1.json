@@ -1,0 +1,85 @@
+[
+  {
+    "id": 1,
+    "location_id": 2,
+    "job_name": "2020-100-Pike-Shawn",
+    "status": "bid.in_progress",
+    "bid_price": 123,
+    "completed_bid_date": null,
+    "agreed_start_date": "2020-06-30 13:17:10",
+    "agreed_end_date": null,
+    "actual_end_date": null,
+    "deleted_at": null,
+    "created_at": "2020-06-15T13:27:47.000000Z",
+    "updated_at": "2020-06-30T13:17:10.000000Z",
+    "declined_message": null,
+    "paid_with_cash_message": null,
+    "payment_type": "cash",
+    "location": {
+      "user_id": 2,
+      "default": 1,
+      "address_line_1": "705 E Oxford Dr",
+      "address_line_2": "",
+      "city": "Tempe",
+      "state": "AZ",
+      "zip": "85283",
+      "area": "Mesa",
+      "country": "US",
+      "created_at": "2020-06-16T13:25:07.000000Z",
+      "updated_at": "2020-06-16T13:25:07.000000Z",
+      "lat": null,
+      "long": null
+    },
+    "images": [],
+    "contractor": {
+      "id": 1,
+      "name": "General Contractor",
+      "stripe_id": true,
+      "email": "jemmsoninc@gmail.com",
+      "photo_url": "https:\/\/www.gravatar.com\/avatar\/b79a143c3fc9e45c8f1344369273cb0c.jpg?s=200&d=mm",
+      "logo_url": null,
+      "phone": "4806226441",
+      "first_name": "General",
+      "last_name": "Contractor",
+      "contractor": {
+        "company_name": "Jemmson Inc."
+      }
+    },
+    "customer": {
+      "id": 2,
+      "name": "Shawn Pike",
+      "email": "pike.shawn@gmail.com",
+      "photo_url": "https:\/\/www.gravatar.com\/avatar\/0549048b71b1b03e427fe4b3194a1702.jpg?s=200&d=mm",
+      "logo_url": null,
+      "phone": "4807034902",
+      "first_name": "Shawn",
+      "last_name": "Pike",
+      "customer": {
+        "notes": ""
+      }
+    },
+    "job_tasks": [],
+    "job_status": [
+      {
+        "id": 1,
+        "job_id": 1,
+        "status": "initiated",
+        "status_number": 1,
+        "sent_on": null,
+        "deleted_at": null,
+        "created_at": "2020-06-15T13:27:47.000000Z",
+        "updated_at": "2020-06-15T13:27:47.000000Z"
+      },
+      {
+        "id": 3,
+        "job_id": 1,
+        "status": "in_progress",
+        "status_number": 2,
+        "sent_on": null,
+        "deleted_at": null,
+        "created_at": "2020-06-30T13:17:10.000000Z",
+        "updated_at": "2020-06-30T13:17:10.000000Z"
+      }
+    ]
+  }
+]

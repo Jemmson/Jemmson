@@ -3,6 +3,8 @@
 
     <div class="container-fluid" :class="getTopMargin()">
 
+        <pre>bidsContractorSectionPicked: {{ bidsContractorSectionPicked }}</pre>
+
         <div v-if="bidsContractorSectionPicked" ref="jobs">
             <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Jobs Page</h2>
             <search-bar>
@@ -30,7 +32,7 @@
                     v-if="getJobStatus(bid) !== 'paid'"
             >
                 <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
-                <v-card-subtitle>{{ getJobStatus(bid) }}</v-card-subtitle>
+                <v-card-subtitle class="uppercase">{{ getJobStatus(bid) }}</v-card-subtitle>
                 <v-card-subtitle
                         v-if="bid.payment_type === 'cash'"
                 >
@@ -167,6 +169,25 @@
         },
         methods: {
 
+            async getUser() {
+                const {data} = await axios.get('user/current')
+                if (data.error) {
+                    console.log('getting user error', data)
+                } else {
+                    this.user = data;
+                    this.mountPage();
+                }
+            },
+
+            mountPage(){
+                this.getBids()
+                if (this.$route.path === '/bids/subs') {
+                    this.toggleBidsContractor(false)
+                }
+
+                this.$store.commit('setCurrentPage', this.$router.history.current.path)
+            },
+
             getTopMargin() {
                 return this.isCustomer() ? 'customer-top-margin' : 'contractor-top-margin'
             },
@@ -299,13 +320,13 @@
                 // console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
             }
         },
+
         mounted() {
-
-            if (this.$route.path === '/bids/subs') {
-                this.toggleBidsContractor(false)
+            if (this.user.user === null) {
+                this.getUser()
+            } else {
+                this.mountPage()
             }
-
-            this.$store.commit('setCurrentPage', this.$router.history.current.path)
         },
         created() {
             document.body.scrollTop = 0 // For Safari

@@ -177,7 +177,8 @@
                     customers: false,
                     invoices: false,
                     stripe: false,
-                }
+                },
+                user: {}
             }
         },
         methods: {
@@ -198,7 +199,8 @@
             },
 
             getUserName() {
-                if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
+                // if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
+                if (Spark.state.user !== null) {
                     return Spark.state.user.name
                 }
             },
@@ -259,12 +261,24 @@
                 }
             },
 
+            // async getUser() {
+            //
+            //     if (Spark && Spark.state && Spark.state.user === null) {
+            //         const {data} = await axios.get('user/current')
+            //         if (data.error) {
+            //             console.log('getting user error', data)
+            //         } else {
+            //             Spark.state.user = data;
+            //         }
+            //     }
+            // },
 
             haveSparkStateLoaded() {
 
                 if (Spark
                     && Spark.state && Spark.state.user === null) {
-                    this.$router.push('/bids')
+                    // this.getUser();
+                    // this.$router.push('/bids')
                 }
 
                 if (Spark
@@ -365,6 +379,9 @@
         mounted() {
             this.$store.commit('setCurrentPage', this.$router.history.current.path);
             this.getJobs();
+            // this.getUser();
+            // this.nextTick(() => {
+            // });
         }
     }
 </script>

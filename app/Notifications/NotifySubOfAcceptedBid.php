@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Facades\Log;
 
 
 class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
@@ -55,6 +56,7 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
                     ->action('View Job ',
                         url('/login/sub/task/'. $this->bid->id . '/'
                             . $this->user->generateToken(
+                                $this->user->id,
                                 true,
                                 $this->bid->id,
                                 'in_progress',
@@ -87,15 +89,22 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
+        $url = url('/login/sub/task/'. $this->bid->id . '/' .
+            $this->user->generateToken(
+                $this->user->id,
+                true,
+                $this->bid->id,
+                'in_progress',
+                'initiated',
+                'accepted',
+                'text')->token, [], true);
+
         $text = $this->general->name . " has approved your bid " .
-            url('/login/sub/task/'. $this->bid->id . '/' .
-                $this->user->generateToken($this->user->id,
-                    true,
-                    $this->bid->id,
-                    'in_progress',
-                    'initiated',
-                    'accepted',
-                    'text')->token, [], true);
+            $url;
+
+        Log::info('NotifySubOfAcceptedBid Notification Message: ' . $text);
+        Log::info('NotifySubOfAcceptedBid Notification Link: ' . $url);
+
 
         return (new NexmoMessage)
             ->content($text);

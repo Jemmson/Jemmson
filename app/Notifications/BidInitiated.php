@@ -8,10 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-
+use Illuminate\Support\Facades\Log;
 
 use App\User;
-use Log;
 
 class BidInitiated extends Notification implements ShouldQueue
 {
@@ -97,20 +96,20 @@ class BidInitiated extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
+        $url = url('/login/customer/' . $this->job->id . '/' . $this->textToken, [], true);
+
         $text = 'Welcome to Jemmson ' .
             $this->contractor .
             ' has initated a bid ' .
             '- Job Name: ' .
             $this->job->job_name .
             ' The link below will expire in one week.' .
-            ' Login Link: ' .
-            url('/login/' .
-                'customer/' .
-                $this->job->id .
-                '/' .
-               $this->textToken, [], true);
-        return (new NexmoMessage)
-            ->content($text);
+            ' Login Link: ' . $url;
+
+        Log::info('BidInitiated Notification Message: ' . $text);
+        Log::info('BidInitiated Notification Link: ' . $url);
+
+        return (new NexmoMessage)->content($text);
     }
 
     public function toBroadcast($notifiable)

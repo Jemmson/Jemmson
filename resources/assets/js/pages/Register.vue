@@ -162,7 +162,7 @@
                                 id="postal_code"
                                 v-mask="'#####-####'"
                                 :rules="[
-                                    this.zipMustHaveAtleast5characters()
+                                    zipMustHaveAtleast5characters()
                                 ]"
                                 v-model="registerForm.zip"
                                 label="Zip Code *"

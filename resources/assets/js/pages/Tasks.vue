@@ -27,9 +27,12 @@
                 >
                     <div v-for="bidTask in paginated('sTasks')"
                          v-bind:key="bidTask.id"
-                         :id="'task_' + bidTask.task_id"
+                         :id="'task_' + bidTask.job_task_id"
                          style="z-index:2;"
                     >
+
+<!--                        <pre>{{ bidTask }}</pre>-->
+
                         <task
                                 :bidTask="bidTask"
                                 :user="current_user"

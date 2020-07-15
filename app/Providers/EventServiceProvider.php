@@ -22,6 +22,10 @@ class EventServiceProvider extends ServiceProvider
             'Laravel\Spark\Listeners\Subscription\UpdateTrialEndingDate',
         ],
 
+        'Illuminate\Notifications\Events\NotificationSent' => [
+            'App\Listeners\LogNotification',
+        ],
+
         'Laravel\Spark\Events\Profile\ContactInformationUpdated' => [
             'Laravel\Spark\Listeners\Profile\UpdateContactInformationOnStripe',
         ],

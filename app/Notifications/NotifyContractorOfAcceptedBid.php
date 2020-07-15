@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-
+use Illuminate\Support\Facades\Log;
 
 
 class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
@@ -71,19 +71,25 @@ class NotifyContractorOfAcceptedBid extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
+        $url = url('/login/contractor/' . $this->bid->id . '/'
+            . $this->user->generateToken(
+                $this->user->id,
+                true,
+                $this->bid->id,
+                'approved',
+                'approved_by_customer',
+                'approved_by_customer',
+                'text'
+            )->token, [], true);
+
         $text = 'Your bid for job: ' . $this->bid->name .
             'has been accepted' .
             ' View Job: ' .
-            url('/login/contractor/' . $this->bid->id . '/'
-                . $this->user->generateToken(
-                    $this->user->id,
-                    true,
-                    $this->bid->id,
-                    'approved',
-                    'approved_by_customer',
-                    'approved_by_customer',
-                    'text'
-                )->token, [], true);
+            $url;
+
+        Log::info('NotifyContractorOfAcceptedBid Notification Message: ' . $text);
+        Log::info('NotifyContractorOfAcceptedBid Notification Link: ' . $url);
+
         return (new NexmoMessage)
             ->content($text);
     }

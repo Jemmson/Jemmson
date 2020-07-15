@@ -123,6 +123,7 @@
                         <v-btn
                                 ref="submit"
                                 class="w-full"
+                                :class="dataMustBeValid ? 'border-color' : ''"
                                 color="primary"
                                 name="submit" id="submit" dusk="submitBid"
                                 @click.prevent="submit"
@@ -555,6 +556,12 @@
 </script>
 
 <style lang="less" scoped>
+
+    .border-color{
+        border-color: #0d47a1;
+        border: solid;
+    }
+
     .formatError {
         border-color: red;
         background-color: yellow;
