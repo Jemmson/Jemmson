@@ -6,6 +6,7 @@ Vue.use(VueRouter)
 //Route Components
 import CheckAccountingApp from './pages/CheckAccountingApp'
 import Home from './pages/Home'
+import SplashScreen from './pages/SplashScreen'
 import Feedback from './pages/Feedback'
 import PublicHome from './pages/PublicHome'
 import Jobs from './pages/Jobs'
@@ -138,6 +139,10 @@ const routes = [
     component: Home
   },
   {
+    path: '/splashScreen',
+    component: SplashScreen
+  },
+  {
     path: '/',
     component: PublicHome
   },
@@ -212,8 +217,8 @@ const routes = [
   {
     path: '/#*'
   }
-
 ]
+
 
 // mode: 'history',
 

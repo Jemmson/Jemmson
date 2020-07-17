@@ -277,8 +277,7 @@
 
                 if (Spark
                     && Spark.state && Spark.state.user === null) {
-                    // this.getUser();
-                    // this.$router.push('/bids')
+                    this.$router.push('/splashScreen')
                 }
 
                 if (Spark
@@ -379,6 +378,7 @@
         mounted() {
             this.$store.commit('setCurrentPage', this.$router.history.current.path);
             this.getJobs();
+            this.haveSparkStateLoaded();
             // this.getUser();
             // this.nextTick(() => {
             // });

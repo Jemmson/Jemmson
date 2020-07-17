@@ -9,6 +9,7 @@
                 || onContractorInfo ()
                 || onSettingsPage ()
                 || onAssessorPage ()
+                || onSplashScreen ()
                 || onHelpPage ()
         ">
             <header-bio
@@ -162,6 +163,9 @@
             },
             onAssessorPage() {
                 return this.page === '/assessor' || this.page === '/assessor/'
+            },
+            onSplashScreen() {
+                return this.page === '/splash-screen' || this.page === '/splash-screen/'
             },
             onHelpPage() {
                 return this.page === '/help' || this.page === '/help/'

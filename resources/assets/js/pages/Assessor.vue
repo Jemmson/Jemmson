@@ -1,6 +1,10 @@
 <template>
     <div>
 
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+
         <v-container>
 
             <h1 class="text-center">Assessor Information</h1>
@@ -199,188 +203,188 @@
                 <v-card-text>
                     <div>
 
-                            <v-divider></v-divider>
+                        <v-divider></v-divider>
 
-                            <v-list dense>
+                        <v-list dense>
 
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Area Neighboorhood:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.AreaNeighboorhood }}
-                                    </v-list-item-content>
-                                </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Area Neighboorhood:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.AreaNeighboorhood }}
+                                </v-list-item-content>
+                            </v-list-item>
 
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Assessor Market:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.AssessorMarket }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Detached Living Area:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.DetachedLivingArea }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Main Living Area:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.MainLivingArea }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Number Of Carports:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.NumberOfCarports }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Full Cash Value:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.FullCashValue }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Number Of Covered Patios:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.NumberOfCoveredPatios }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Number Of Garages:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.NumberOfGarages }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Number Of Patios:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.NumberofPatios }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Number Of Uncovered Patios:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.NumberOfUncoveredPatios }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Construction Year:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.ConstructionYear }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Improvement Quality Grade:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.ImprovementQualityGrade }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>PE Improvement Quality Grade:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.PEImprovementQualityGrade }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Bath Fixtures:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.BathFixtures }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Covered Parking:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.CoveredParking }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Parking Type:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.ParkingType.ParkingDetail.ParkingType }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Parking Count:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.ParkingType.ParkingDetail.ParkingCount }}
-                                    </v-list-item-content>
-                                </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Assessor Market:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.AssessorMarket }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Detached Living Area:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.DetachedLivingArea }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Main Living Area:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.MainLivingArea }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Number Of Carports:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.NumberOfCarports }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Full Cash Value:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.FullCashValue }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Number Of Covered Patios:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.NumberOfCoveredPatios }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Number Of Garages:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.NumberOfGarages }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Number Of Patios:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.NumberofPatios }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Number Of Uncovered Patios:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.NumberOfUncoveredPatios }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Construction Year:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.ConstructionYear }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Improvement Quality Grade:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.ImprovementQualityGrade }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>PE Improvement Quality Grade:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.PEImprovementQualityGrade }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Bath Fixtures:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.BathFixtures }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Covered Parking:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.CoveredParking }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Parking Type:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.ParkingType.ParkingDetail.ParkingType }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Parking Count:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.ParkingType.ParkingDetail.ParkingCount }}
+                                </v-list-item-content>
+                            </v-list-item>
 
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Pool:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.Pool }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Cooling:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.Cooling }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Heating:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.Heating }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Exterior Walls:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.ExteriorWalls }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Number Of Patios:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.NumberOfPatios }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Patio Type:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.PatioType }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Physical Condition:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.PhysicalCondition }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Roof Type:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.RoofType }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Other Structures:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.OtherStructures }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Locational Characteristics:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.LocationalCharacteristics }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Original Construction Year:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.OriginalConstructionYear }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item class="flex justify-content-between">
-                                    <v-list-item-content>Locational Factors:</v-list-item-content>
-                                    <v-list-item-content class="align-end">{{
-                                        locationData.ResidentialPropertyData.LocationalFactors }}
-                                    </v-list-item-content>
-                                </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Pool:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.Pool }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Cooling:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.Cooling }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Heating:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.Heating }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Exterior Walls:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.ExteriorWalls }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Number Of Patios:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.NumberOfPatios }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Patio Type:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.PatioType }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Physical Condition:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.PhysicalCondition }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Roof Type:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.RoofType }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Other Structures:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.OtherStructures }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Locational Characteristics:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.LocationalCharacteristics }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Original Construction Year:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.OriginalConstructionYear }}
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item class="flex justify-content-between">
+                                <v-list-item-content>Locational Factors:</v-list-item-content>
+                                <v-list-item-content class="align-end">{{
+                                    locationData.ResidentialPropertyData.LocationalFactors }}
+                                </v-list-item-content>
+                            </v-list-item>
 
-                            </v-list>
+                        </v-list>
                     </div>
 
                 </v-card-text>
@@ -409,7 +413,8 @@
                                 >
                                     <v-card>
                                         <v-card-title class="subheading font-weight-bold">
-                                            <a :href="'https://mcassessor.maricopa.gov/mcs.php?q=' + item.Parcel">{{ item.Parcel }}</a>
+                                            <a :href="'https://mcassessor.maricopa.gov/mcs.php?q=' + item.Parcel">{{
+                                                item.Parcel }}</a>
                                         </v-card-title>
 
                                         <v-divider></v-divider>
@@ -483,7 +488,7 @@
                 </v-card-actions>
             </v-card>
 
-            <v-card v-if="show.owner">
+            <v-card v-if="show.owner && dataReturned">
                 <v-card-title>Owner Information</v-card-title>
                 <v-card-text>
                     <div>
@@ -659,15 +664,17 @@
 
         </v-container>
 
-<!--        <h1>Assessor</h1>-->
+        <!--        <h1>Assessor</h1>-->
 
-<!--        {{ $route.params.location }}-->
+        <!--        {{ $route.params.location }}-->
 
-<!--        <pre>{{ locationData }}</pre>-->
+        <!--        <pre>{{ locationData }}</pre>-->
     </div>
 </template>
 
 <script>
+    import {mapState} from "vuex";
+
     export default {
         name: 'Assessor',
         data() {
@@ -681,6 +688,8 @@
                     residentialPropertyData: false,
                     owner: true
                 },
+                overlay: true,
+                dataReturned: false
             }
         },
         methods: {
@@ -700,7 +709,6 @@
                     this.show.owner = true;
                 }
             },
-
             hideAllSections() {
                 this.show.details = false;
                 this.show.valuations = false;
@@ -709,7 +717,7 @@
                 this.show.residentialPropertyData = false;
                 this.show.owner = false;
             },
-            parcel(parcel){
+            parcel(parcel) {
                 let parcelArray = parcel.split('-');
                 return parcelArray[0] + parcelArray[1] + parcelArray[2];
             },
@@ -718,18 +726,16 @@
             },
             async getAssessorData() {
                 const {data} = await axios.get('/assessor/' + this.$route.params.location);
-
-                console.log('data', data)
-
-                if (data.error) {
-
-                } else {
+                if (data.error) {} else {
                     this.locationData = data;
+                    this.dataReturned = true;
                 }
+                this.overlay = false;
             }
         },
-        created() {
+        mounted() {
             this.setPage();
+            this.overlay = true;
             this.getAssessorData();
         }
     }

@@ -1,5 +1,10 @@
 <template>
     <div>
+
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+
         <v-btn
                 fab
                 class="elevation-10"
@@ -23,7 +28,8 @@
                             size="x-large"
                             color="red"
                             @click="dialog=false"
-                    >mdi-location-exit</v-icon>
+                    >mdi-location-exit
+                    </v-icon>
                 </div>
 
                 <v-card-actions
@@ -147,75 +153,79 @@
 </template>
 
 <script>
-  export default {
-    data: function() {
-      return {
-        dialog: false,
-        disabled: {
-          submit: false,
+    export default {
+        data: function () {
+            return {
+                dialog: false,
+                disabled: {
+                    submit: false,
+                },
+                tasks: false,
+                subs: false,
+                item: '',
+                jobs: [],
+                subTasks: [],
+                feedback: false,
+                label: 'App Feedback',
+                overlay: false,
+                comment: '',
+                placeholder: 'Please tell us what you think about the site. What can be improved, something missing or whatever works well.',
+                rows: 5
+            }
         },
-        tasks: false,
-        subs: false,
-        item: '',
-        jobs: [],
-        subTasks: [],
-        feedback: false,
-        label: 'App Feedback',
-        comment: '',
-        placeholder: 'Please tell us what you think about the site. What can be improved, something missing or whatever works well.',
-        rows: 5
-      }
-    },
-    props: {
-      page: String
-    },
-    mounted() {
-      this.getJobs()
-    },
-    methods: {
-      printHello() {
-        return 'Hello'
-      },
-      showJobs() {
-        this.tasks = true
-        this.feedback = false
-      },
-      activeJobsExist() {
-        if (this.jobs) {
-          return this.jobs.length > 0
-        }
-      },
-      open() {
-        $('#feedback-modal').modal()
-      },
-      async getJobs() {
-        let data = await axios.get('/getJobs')
-        this.jobs = data.data
-      },
-      async getTasks() {
-        let data = await axios.get('/getTasks')
-        this.subTasks = data.data
-        this.subs = true
-      },
-      showFeedback() {
-        this.tasks = false
-        this.feedback = true
-      },
+        props: {
+            page: String
+        },
+        mounted() {
+            this.overlay = true;
+            this.getJobs()
+        },
+        methods: {
+            printHello() {
+                return 'Hello'
+            },
+            showJobs() {
+                this.tasks = true
+                this.feedback = false
+            },
+            activeJobsExist() {
+                if (this.jobs) {
+                    return this.jobs.length > 0
+                }
+            },
+            open() {
+                $('#feedback-modal').modal()
+            },
+            async getJobs() {
+                let data = await axios.get('/getJobs')
+                this.jobs = data.data
+                this.overlay = false;
+            },
+            async getTasks() {
+                let data = await axios.get('/getTasks')
+                this.subTasks = data.data
+                this.subs = true
+                this.overlay = false;
+            },
+            showFeedback() {
+                this.tasks = false
+                this.feedback = true
+            },
 
-      isContractor() {
-        if (Spark.state.user) {
-          return Spark.state.user.usertype === 'contractor'
+            isContractor() {
+                if (Spark.state.user) {
+                    return Spark.state.user.usertype === 'contractor'
+                }
+            },
+            submit() {
+                let theComment = this.comment
+                this.comment = ''
+                User.submitFeedback(theComment, this.disabled)
+                this.feedback = false
+                this.dialog = false
+            }
         }
-      },
-      submit() {
-        let theComment = this.comment
-        this.comment = ''
-        User.submitFeedback(theComment, this.disabled)
-        this.feedback = false
-        this.dialog = false
-      }
     }
-  }
 </script>
 
 <style>

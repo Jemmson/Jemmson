@@ -2,8 +2,9 @@
     <!-- /all bids shown in a list as a customer should see it -->
 
     <div class="container-fluid" :class="getTopMargin()">
-
-        <pre>bidsContractorSectionPicked: {{ bidsContractorSectionPicked }}</pre>
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
 
         <div v-if="bidsContractorSectionPicked" ref="jobs">
             <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Jobs Page</h2>
@@ -141,6 +142,7 @@
                     jobs: ''
                 },
                 bids: [],
+                overlay: false,
                 sBids: [],
                 showBid: false,
                 bidIndex: 0,
@@ -177,6 +179,7 @@
                     this.user = data;
                     this.mountPage();
                 }
+                this.overlay = false;
             },
 
             mountPage(){
@@ -184,7 +187,6 @@
                 if (this.$route.path === '/bids/subs') {
                     this.toggleBidsContractor(false)
                 }
-
                 this.$store.commit('setCurrentPage', this.$router.history.current.path)
             },
 
@@ -314,6 +316,7 @@
                         this.bids = response.data
                         this.sBids = this.bids
                     }
+                    this.overlay = false;
                 })
             },
             previewSubForTask(bidId, jobTaskId, subBidId) {
@@ -322,6 +325,7 @@
         },
 
         mounted() {
+            this.overlay = true;
             if (this.user.user === null) {
                 this.getUser()
             } else {

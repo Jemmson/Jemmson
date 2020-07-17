@@ -682,8 +682,6 @@
                 @paid="paidFromSignUp()"
         >
         </stripe>
-
-
         <v-dialog
                 v-model="denyDialog"
                 width="500"
@@ -716,7 +714,6 @@
             </v-card>
 
         </v-dialog>
-
 
         <!--        <deny-task-modal v-if="!isCustomer"-->
         <!--                         :job-task="currentJobTask"-->
@@ -772,11 +769,6 @@
                 this.clientSecret = clientSecret
                 $('#stripe-modal').modal('show')
             })
-
-            // if (!this.bid) {
-            //     this.bid = localStorage.getItem('getCurrentBid');
-            // }
-
             this.getUser()
             document.body.scrollTop = 0 // For Safari
             document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
@@ -1612,12 +1604,7 @@
                     Vue.toasted.error(error)
                 }
             },
-
-            updateArea() {
-                // Customer.updateArea (this.area.area, this.bid.id);
-            },
             showArea() {
-                // console.log('user type: ' + User.isContractor())
                 return this.area.area !== '' && !this.isCustomer
             },
             initializePayWithCashMessageValue() {
@@ -1635,10 +1622,6 @@
         },
         mounted() {
             this.initializePayWithCashMessageValue()
-
-            // if (this.bid) {
-            //     this.bid = localStorage.setItem('getCurrentBid', this.bid);
-            // }
         }
     }
 </script>

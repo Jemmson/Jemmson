@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
+    <link href="https://unpkg.com/nprogress@0.2.0/nprogress.css" rel="stylesheet" />
 
 
     <!-- Scripts -->
@@ -82,6 +83,7 @@
 
   gtag('config', 'UA-117973760-1');
 </script>
+<script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
 <footer class="footer-spacing"></footer>
 </body>
 </html>
