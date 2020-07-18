@@ -12,8 +12,6 @@ use Illuminate\Foundation\Auth\RedirectsUsers;
 use Laravel\Spark\Contracts\Interactions\Auth\Register;
 use Laravel\Spark\Contracts\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Log;
-use App\Quickbook;
-use App\Http\Controllers\QuickBooksController;
 use Laravel\Spark\User;
 use App\Traits\Utilities;
 use Illuminate\Support\Facades\Validator;

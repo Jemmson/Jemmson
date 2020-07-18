@@ -11,6 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\NexmoMessage;
 
+use Illuminate\Support\Facades\Log;
 use Laravel\Spark\Notifications\SparkChannel;
 use Laravel\Spark\Notifications\SparkNotification;
 use App\JobTask;
@@ -86,6 +87,7 @@ class NotifySubOfTaskToBid extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        Log::debug($this->jobTaskId);
         $jobTask = JobTask::find($this->jobTaskId);
         if (true) {
             return (new MailMessage)
