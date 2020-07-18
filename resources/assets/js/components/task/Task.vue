@@ -832,6 +832,7 @@
                 const status = this.getLatestStatus();
                 if (
                     status !== 'approved by customer'
+                    && status !== 'accepted'
                     && status !== 'finished job'
                     && status !== 'finished job denied by contractor'
                     && status !== 'customer changes finished task'
