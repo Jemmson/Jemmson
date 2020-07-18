@@ -1166,34 +1166,42 @@
             },
 
             notificationMessage(item) {
-                let initiated = false;
-                let accepted = false;
-                let sent_a_bid = false;
-                if (item.sub_statuses) {
-                    for (let i = 0; i < item.sub_statuses.length; i++) {
-                        if (item.sub_statuses[i].status == 'initiated') {
-                            initiated = true;
-                        }
-                        if (item.sub_statuses[i].status == 'accepted') {
-                            accepted = true;
-                        }
-                        if (item.sub_statuses[i].status == 'sent_a_bid') {
-                            sent_a_bid = true;
-                        }
+                // let initiated = false;
+                // let accepted = false;
+                // let sent_a_bid = false;
+
+
+
+
+                if (item.sub_statuses.length > 0) {
+
+                    let latestStatus = item.sub_statuses[item.sub_statuses.length - 1].status;
+
+                    if (latestStatus === 'initiated') {
+                        return "Waiting For Bids"
                     }
+
+                    if (latestStatus === 'sent_a_bid') {
+                        return "Received A Bid"
+                    }
+
+                    if (latestStatus === 'accepted') {
+                        return "Accepted A Bid"
+                    }
+
+                    // for (let i = 0; i < item.sub_statuses.length; i++) {
+                    //     if (item.sub_statuses[i].status == 'initiated') {
+                    //         initiated = true;
+                    //     }
+                    //     if (item.sub_statuses[i].status == 'accepted') {
+                    //         accepted = true;
+                    //     }
+                    //     if (item.sub_statuses[i].status == 'sent_a_bid') {
+                    //         sent_a_bid = true;
+                    //     }
+                    // }
                 }
 
-                if (accepted) {
-                    return "Accepted A Bid"
-                }
-
-                if (sent_a_bid) {
-                    return "Received A Bid"
-                }
-
-                if (initiated) {
-                    return "Waiting For Bids"
-                }
             },
 
             getCurrentUser() {
