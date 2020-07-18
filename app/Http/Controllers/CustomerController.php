@@ -203,7 +203,7 @@ class CustomerController extends Controller
             return QuickbooksCustomer::getAssociatedCustomers($query, Auth::user()->getAuthIdentifier());
         } else {
             $associatedUsers = ContractorCustomer::getAssociatedCustomers($users, Auth::user()->getAuthIdentifier());
-            $jobNumber = count(Auth::user()->jobs()->get());
+            $jobNumber = self::getLatestJobNumber();
             $users = [];
             foreach ($associatedUsers as $user) {
                 $u = User::select(['id', 'name', 'first_name', 'last_name', 'phone', 'email'])
@@ -216,6 +216,32 @@ class CustomerController extends Controller
             }
 
             return $users;
+        }
+
+    }
+
+    public function getLatestJobNumber()
+    {
+        $jobs = Auth::user()->jobs()->get();
+
+        $jobNames = [];
+        foreach ($jobs as $job) {
+            array_push($jobNames, $job->job_name);
+        }
+
+        $jobNumbers = [];
+        foreach ($jobNames as $jobName) {
+            $jobNumberArray = explode('-', $jobName);
+            if (count($jobNumberArray) > 1 && is_numeric($jobNumberArray[1])) {
+                array_push($jobNumbers, (int) $jobNumberArray[1]);
+            }
+        }
+
+        if (count($jobNumbers) > 0) {
+            sort($jobNumbers);
+            return $jobNumbers[count($jobNumbers) - 1];
+        } else {
+            return 99;
         }
 
     }

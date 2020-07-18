@@ -291,10 +291,8 @@
 
             setJobNameFromResult(result) {
                 let n = moment();
-                let jobNumber = 100 + result.jobNumber;
-
                 if (this.customerNameLength() > 1) {
-                    this.form.jobName = n.year() + '-' + jobNumber + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
+                    this.form.jobName = n.year() + '-' + result.jobNumber + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
                 } else {
                     this.form.jobName = n.year() + '-' + 100 + '-' + this.form.customerName;
                 }
