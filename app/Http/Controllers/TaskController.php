@@ -519,7 +519,6 @@ class TaskController extends Controller
     {
 
         $sub = User::find($request->subId);
-
         $jobTask = JobTask::find($request->job_task_id);
         $job = Job::find($jobTask->job_id);
 

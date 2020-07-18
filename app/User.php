@@ -407,7 +407,7 @@ class User extends SparkUser
             ->where('contractor_id', '=', $subId)
             ->get()->first();
         self::updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType, $startDate);
-        self::updateJobTaskStatuses($jobTask, $subId);
+        self::updateJobTaskStatuses($jobTask, $subId, $generalId);
         self::notifyGeneralOfSubmittedBid($job, $bidContractorJobTask, $generalId);
     }
 
@@ -433,10 +433,31 @@ class User extends SparkUser
         }
     }
 
-    public function updateJobTaskStatuses($jobTask, $subId)
+    public function updateJobTaskStatuses($jobTask, $subId, $generalId)
     {
         self::updateBidStatusToSent($jobTask);
+        self::changeBidToNotAcceptedIfNeedBe($jobTask, $subId, $generalId);
         $this->setSubStatus($subId, $jobTask->id, 'sent_a_bid');
+    }
+
+    public function changeBidToNotAcceptedIfNeedBe($jobTask, $subId, $generalId)
+    {
+        $bcjt = BidContractorJobTask::where('job_task_id', '=', $jobTask->id)->where('contractor_id', '=', $subId)->get()->first();
+
+        if ($bcjt->accepted === 1) {
+            $bcjt->accepted = 0;
+            $bcjt->save();
+
+            self::removeAcceptedFromJobTask($jobTask, $generalId);
+        }
+    }
+
+    public function removeAcceptedFromJobTask($jobTask, $generalId)
+    {
+        $jobTask->contractor_id = $generalId;
+        $jobTask->sub_final_price = 0;
+        $jobTask->bid_id = null;
+        $jobTask->save();
     }
 
     public function updateBidStatusToSent($jobTask, $status = 'bid_task.bid_sent')

@@ -832,7 +832,6 @@
                 const status = this.getLatestStatus();
                 if (
                     status !== 'approved by customer'
-                    && status !== 'accepted'
                     && status !== 'finished job'
                     && status !== 'finished job denied by contractor'
                     && status !== 'customer changes finished task'
@@ -884,7 +883,7 @@
                 return ''
             },
 
-            getAddress(bidTask) {
+            getAddressOld(bidTask) {
 
                 if (bidTask && bidTask.job_task) {
                     if (bidTask.job_task.location !== null) {
