@@ -133,11 +133,11 @@ class JobTask extends Model
 
     }
 
-    public function addJobTask($request)
+    public function addJobTask($request, $taskId)
     {
-        self::createJobTask(
+        return self::createJobTask(
             $request->jobId,
-            $request->taskId,
+            $taskId,
             $request->contractorId,
             $request->qty,
             $request->taskPrice,

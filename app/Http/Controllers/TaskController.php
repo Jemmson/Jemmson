@@ -1353,7 +1353,8 @@ class TaskController extends Controller
 
         if (!empty($task)) {
             $jobTask = new JobTask();
-            $jobTask->addJobTask($request);
+            $jobTask->addJobTask($request, $task->id);
+
             if ($task->isTaskAQBLineItem($request->item_id)) {
                 if ($job->hasAQuickbookEstimateBeenCreated()) {
                     $job->updateQuickBooksEstimate($task, $job, $jobTask);
