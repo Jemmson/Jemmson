@@ -217,6 +217,9 @@ export default class GeneralContractor {
             Vue.toasted.success('Bid Initiated')
             disabled.submit = false
             window.location = '/#/bid/' + data.data.job.id
+            localStorage.setItem('customerName', '');
+            localStorage.setItem('mobile', '');
+            localStorage.setItem('jobName', '');
         } catch (error) {
             error = error.response.data
             form.errors.errors = error.errors

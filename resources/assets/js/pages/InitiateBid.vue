@@ -19,6 +19,7 @@
 
                     <v-combobox
                             id="customerName"
+                            ref="customerName"
                             data-cy="customerName"
                             v-model="selected"
                             label="Customer Name"
@@ -49,23 +50,44 @@
                     <!--                    >-->
                     <!--                    </v-text-field>-->
 
-                    <v-text-field
-                            id="phone"
-                            data-cy="phone"
-                            v-model="form.phone"
-                            required
-                            v-mask="phoneMask"
-                            :rules="phoneRules()"
-                            :counter="14"
-                            label="Mobile Phone Number *"
-                            @change="validateMobileNumber($event)"
-                            :error="phoneError()"
-                            :error-messages="phoneErrorMessages()"
-                            :loading="loading"
-                            :disabled="loading"
-                            :messages="phoneMessages()"
-                    >
-                    </v-text-field>
+                    <div class="flex align-center">
+                        <v-text-field
+                                class="1rem"
+                                style="margin-right: 1rem;"
+                                id="phone"
+                                ref="phone"
+                                data-cy="phone"
+                                v-model="form.phone"
+                                required
+                                v-mask="phoneMask"
+                                :rules="phoneRules()"
+                                @change="validateMobileNumber($event)"
+                                :counter="14"
+                                label="Mobile Phone Number *"
+                                :error="phoneError()"
+                                :error-messages="phoneErrorMessages()"
+                                :loading="loading"
+                                :disabled="loading"
+                                :messages="phoneMessages()"
+                        >
+                        </v-text-field>
+
+                        <!--                        <input ref="isMobile"-->
+                        <!--                               v-model="form.isMobile"-->
+                        <!--                               aria-checked="false"-->
+                        <!--                               id="isMobile"-->
+                        <!--                               role="checkbox"-->
+                        <!--                               type="checkbox"-->
+                        <!--                               value="">-->
+
+                        <v-checkbox
+                                id="isMobile"
+                                ref="isMobile"
+                                v-model="form.isMobile"
+                                label="Is Mobile *"
+                        ></v-checkbox>
+
+                    </div>
 
                     <v-text-field
                             id="jobName"
@@ -123,13 +145,13 @@
                         <v-btn
                                 ref="submit"
                                 class="w-full"
-                                :class="dataMustBeValid ? 'border-color' : ''"
                                 color="primary"
                                 name="submit" id="submit" dusk="submitBid"
                                 @click.prevent="submit"
-                                :disabled="dataMustBeValid()"
                                 text
                                 :loading="disabled.submit"
+                                :class="dataMustBeValid() ? '': 'border-color'"
+                                :disabled="dataMustBeValid()"
                         >
                             Submit
                         </v-btn>
@@ -206,6 +228,7 @@
                     jobName: '',
                     phone: '',
                     quickbooks_id: '',
+                    isMobile: false,
                     id: '',
                     taxRate: 0,
                     paymentType: 'cash',
@@ -233,12 +256,17 @@
                     this.autoComplete()
                 }
             },
+            enteredPhoneNumber(val) {
+                if (val && val.length === 14) {
+                    this.validateMobileNumber(val);
+                }
+            },
             selected(val) {
                 if (val && val !== null) {
                     const filteredComboResult = this.getComboResult(val)
                     if (filteredComboResult) {
                         this.setFormData(filteredComboResult)
-                        this.splitName(val.text);
+                        this.splitName(val);
                         this.setJobNameFromResult(filteredComboResult)
                     } else {
                         this.splitName(val);
@@ -247,12 +275,35 @@
                 } else {
                     this.form.customerName = this.selected;
                 }
+                this.storeInfoInLocalStorage();
             }
         },
 
-        computed: {},
+        computed: {
+            enteredPhoneNumber: {
+                get: function () {
+                    return this.form.phone
+                },
+                set: function (newValue) {
+                    this.form.phone = newValue
+                }
+            }
+        },
 
         methods: {
+
+            storeInfoInLocalStorage() {
+                localStorage.setItem('customerName', this.form.customerName)
+                localStorage.setItem('mobile', this.form.phone)
+                localStorage.setItem('jobName', this.form.jobName)
+            },
+
+            retrieveCustomerInfoFromLocalStorage() {
+                this.selected = localStorage.getItem('customerName');
+                this.form.customerName = localStorage.getItem('customerName');
+                this.form.phone = localStorage.getItem('mobile');
+                this.form.jobName = localStorage.getItem('jobName');
+            },
 
             showModal(modal) {
                 if (modal === 'paymentType') {
@@ -352,7 +403,7 @@
                 }
                 return lastName.trimLeft()
             },
-            
+
             getFirstNameForJobName() {
 
                 let firstName = ''
@@ -370,23 +421,43 @@
             },
 
             dataMustBeValid() {
-                return !(this.allRequiredFieldsHaveAValue() && this.phoneNumberMustBeMobile())
+                return !(this.allRequiredFieldsHaveAValue() && this.phoneNumberIsMobile() && this.form.isMobile)
             },
 
             allRequiredFieldsHaveAValue() {
                 return this.form.customerName !== '' && this.form.phone !== '';
             },
 
-            phoneNumberMustBeMobile() {
-                return !this.phoneError()
+            phoneNumberIsMobile() {
+                return this.phoneNumberIsValid() && this.isMobile()
             },
 
             phoneError() {
-
-                if (this.form.phone.length > 13) {
+                if (this.form && this.form.phone && this.form.phone.length > 13) {
                     return !(this.getMobileValidResponse[1] === 'mobile'
                         || this.getMobileValidResponse[1] === 'virtual')
                 }
+            },
+
+            isMobile() {
+                if (this.phoneNumberIsValid()) {
+                    return this.getMobileValidResponse[1] === 'mobile'
+                        || this.getMobileValidResponse[1] === 'virtual'
+                }
+                return false
+            },
+
+            phoneNumberIsValid() {
+                return this.phoneDataVariableExists()
+                    && this.phoneNumberHasProperLength()
+            },
+
+            phoneDataVariableExists() {
+                return this.form.phone
+            },
+
+            phoneNumberHasProperLength() {
+                return this.phoneDataVariableExists() && this.form.phone.length > 13
             },
 
             phoneErrorMessages() {
@@ -418,6 +489,7 @@
                     this.form.customerName = result.name
                     this.form.id = result.id
                     this.validateMobileNumber(result.phone)
+                    this.storeInfoInLocalStorage();
                 }
             },
 
@@ -430,7 +502,7 @@
             },
 
             phoneRules() {
-                return []
+
             },
 
             submit() {
@@ -489,6 +561,8 @@
                     })
                     this.results = data.data
                     this.comboResults = this.transformDataForComboBox(data.data)
+                    console.log(' this.comboResults ', this.comboResults);
+                    console.log(' this.comboResults ', JSON.stringify(this.comboResults));
                 } catch (error) {
                     console.log(error)
                 }
@@ -549,15 +623,15 @@
         mounted() {
             this.$store.commit('setCurrentPage', this.$router.history.current.path)
             this.form.paymentType = Spark.state.user.contractor.payment_type;
+            this.retrieveCustomerInfoFromLocalStorage();
         },
     }
 </script>
 
 <style lang="less" scoped>
 
-    .border-color{
-        border-color: #0d47a1;
-        border: solid;
+    .border-color {
+        border: #0d47a1 solid thin;
     }
 
     .formatError {
