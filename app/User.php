@@ -147,7 +147,7 @@ class User extends SparkUser
 
     public static function checkIfUserExistsByPhoneNumber($phone)
     {
-        return User::select()->where('phone', '=', $phone)->get()->first();
+        return User::select()->where('phone', '=', $phone)->where('usertype', '=', 'customer')->get()->first();
     }
 
     public function getTheSubsBid($subcontractorId, $jobTaskId)
