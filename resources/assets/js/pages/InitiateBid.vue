@@ -305,6 +305,33 @@ export default {
       this.form.jobName = localStorage.getItem('jobName');
     },
 
+    formatPhone(phone) {
+      let totalDigits = 0;
+      let totalDigitString = '(';
+      console.log('phone length', phone.length)
+      for (let i = 0; i < phone.length; i++) {
+        console.log('phone digit', phone[i])
+        console.log('integer', Number.isInteger(phone[i]))
+        if (!isNaN(phone[i])) {
+          totalDigits++;
+          if (
+              i < 3
+              || (i > 3 && i < 6)
+              || i > 6
+          ) {
+            totalDigitString = totalDigitString + phone[i]
+          } else if (3 === i) {
+            totalDigitString = totalDigitString + ")-" + phone[i]
+          } else if (i === 6) {
+            totalDigitString = totalDigitString + "-" + phone[i]
+          }
+        }
+
+      }
+
+      return totalDigitString
+    },
+
     showModal(modal) {
       if (modal === 'paymentType') {
         this.modal.paymentTypeInfoDialog = true;
