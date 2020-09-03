@@ -350,7 +350,13 @@
             },
 
             splitName(val) {
-                let nameArray = val.split(' ')
+
+                let nameArray = null;
+                if (typeof val === 'object' && typeof val !== null) {
+                  nameArray =  val.text.split(' ');
+                } else {
+                  nameArray =  val.split(' ');
+                }
 
                 nameArray = this.removeEmptiesInArray(nameArray);
 
