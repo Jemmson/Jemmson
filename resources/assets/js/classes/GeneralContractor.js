@@ -221,6 +221,9 @@ export default class GeneralContractor {
             localStorage.setItem('mobile', '');
             localStorage.setItem('jobName', '');
         } catch (error) {
+            localStorage.setItem('customerName', '');
+            localStorage.setItem('mobile', '');
+            localStorage.setItem('jobName', '');
             error = error.response.data
             form.errors.errors = error.errors
             Vue.toasted.error(error.message)
