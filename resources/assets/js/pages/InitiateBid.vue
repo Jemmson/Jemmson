@@ -301,7 +301,7 @@ export default {
     retrieveCustomerInfoFromLocalStorage() {
       this.selected = localStorage.getItem('customerName');
       this.form.customerName = localStorage.getItem('customerName');
-      this.form.phone = localStorage.getItem('mobile');
+      this.form.phone = this.formatPhone(localStorage.getItem('mobile'));
       this.form.jobName = localStorage.getItem('jobName');
     },
 
@@ -432,6 +432,18 @@ export default {
     },
 
     dataMustBeValid() {
+
+      // return (
+      //         this.form.customerName !== ''
+      //     || this.form.customerName.text !== ''
+      //     )
+      // && this.form.phone !== ''
+      // && this.form.phone !== null
+      // && this.form.phone.length > 13
+      // && (this.getMobileValidResponse[1] === 'mobile'
+      //     || this.getMobileValidResponse[1] === 'virtual')
+      // && this.form.isMobile
+
       return !(this.allRequiredFieldsHaveAValue() && this.phoneNumberIsMobile() && this.form.isMobile)
     },
 
