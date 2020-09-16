@@ -1567,7 +1567,7 @@
                         return '$0.00'
                     }
 
-                    const minimumPrice = price * .029 + .30 + 2.5;
+                    // const minimumPrice = price * .029 + .30 + 2.5;
 
                     if (this.jobTask) {
 

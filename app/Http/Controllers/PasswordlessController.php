@@ -86,7 +86,8 @@ class PasswordlessController {
 
     private function jobTaskIsAssociatedToSub($user, $jobTaskId)
     {
-        return !\is_null(BidContractorJobTask::where('job_task_id', '=', $jobTaskId)->where('contractor_id', '=', $user->id)->get()->first());
+        return !\is_null(BidContractorJobTask::where('job_task_id', '=', $jobTaskId)
+            ->where('contractor_id', '=', $user->id)->get()->first());
     }
 
 }

@@ -37,6 +37,7 @@ class StripeExpress extends Model
 
             $job = Job::find($jobId);
             $generalId = $job->contractor_id;
+            // TODO: should somehow record the actual amount that stripe charged me to see if it is the same as I calculate on my end
             $stripeFee = (int)round($totalAmount * .029 + 30);
             $jemmsonFee = $this->getJemmsonFee($jobId);
             $customerId = $job->customer_id;
@@ -138,14 +139,13 @@ class StripeExpress extends Model
 
             if ($this->isASub($generalId, $subId)) {
                 $stripeExpressId = $this->getStripeExpressId($subId);
-                $amount = $jobTask->sub_final_price;
                 $subAmount = $jobTask->sub_final_price;
 
                 if (!$this->hasTransferCapability($stripeExpressId)) {
                     $this->updateTransferCapability($stripeExpressId);
                 }
 
-                $this->transfer($amount, $stripeExpressId, $chargeId);
+                $this->transfer($subAmount, $stripeExpressId, $chargeId);
 
             }
 
@@ -169,6 +169,18 @@ class StripeExpress extends Model
 
     public function transferAmountToGeneral($amount, $generalId, $chargeId)
     {
+
+//        {
+//            "error": {
+//                "code": "resource_missing",
+//                "doc_url": "https://stripe.com/docs/error-codes/resource-missing",
+//                "message": "No such charge: 'ch_1HRo6mGEo9SvCpxUIukRe0aS'",
+//                "param": "source_transaction",
+//                "type": "invalid_request_error"
+//            }
+//        }
+
+
         $general = $this->getGeneral($generalId);
         if ($this->hasTransferCapability($general->customer_stripe_id)) {
             $stripeId = $this->getStripeExpressId($generalId);
@@ -183,6 +195,18 @@ class StripeExpress extends Model
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
+
+    //      {
+//          "error": {
+    //            "code": "parameter_invalid_integer",
+            //    "doc_url": "https://stripe.com/docs/error-codes/parameter-invalid-integer",
+            //    "message": "This value must be greater than or equal to 1.",
+            //    "param": "amount",
+            //    "type": "invalid_request_error"
+            //  }
+         //}
+
+
 
         return \Stripe\Transfer::create([
             'amount' => $amount,
@@ -222,13 +246,15 @@ class StripeExpress extends Model
 
     public function getJemmsonFee($jobId)
     {
-        if (JobTask::atLeastOnTaskIsPaid($jobId)) {
-            return 0;
-        } else {
-            return env('JEMMSON_FLAT_RATE');
-        }
+//        if (JobTask::atLeastOneTaskIsPaid($jobId)) {
+//            return 0;
+//        } else {
+//            return env('JEMMSON_FLAT_RATE');
+//        }
+        return env('JEMMSON_FLAT_RATE');
     }
 
+//    used to calculate the general contractors profit
     public function getTotalSubAmount($jobTasks, $generalId)
     {
         $amount = 0;

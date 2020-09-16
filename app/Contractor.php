@@ -446,11 +446,13 @@ class Contractor extends Model
 
             $c = $this->getUserInfoAssociatedToTheSub($sub);
 
-            $qbc = $this->getAllSubContractorsInQBThatAreAssociatedToTheGeneralContractor($c);
+//            $qbc = $this->getAllSubContractorsInQBThatAreAssociatedToTheGeneralContractor($c);
+//
+//            if (empty($qbc)) {
+//                $qbc = $this->getAllSubsRegardlessOfGeneralContractorAssociation($c);
+//            }
 
-            if (empty($qbc)) {
-                $qbc = $this->getAllSubsRegardlessOfGeneralContractorAssociation($c);
-            }
+            $qbc = [];
 
             $state = $this->getSubContractorState($sub);
 
@@ -689,13 +691,15 @@ class Contractor extends Model
 //                of the contractor in the QB_contractor table
 
         $subs = $this->getAllContractorsExceptTheGeneralContractor($company_name, $generalContractorsCompanyName);
-        $formattedSubs = $this->subsWithPhoneNumberAndEmail($subs);
-
-        $qb = new Quickbook();
-        if ($qb->isContractorThatUsesQuickbooks()) {
-            return $this->getAllQuickbookCompaniesAndFormattedSubs($company_name, $formattedSubs, Auth::user()->getAuthIdentifier());
+        if (count($subs) > 0) {
+            $formattedSubs = $this->subsWithPhoneNumberAndEmail($subs);
+            $qb = new Quickbook();
+            if ($qb->isContractorThatUsesQuickbooks()) {
+                return $this->getAllQuickbookCompaniesAndFormattedSubs($company_name, $formattedSubs, Auth::user()->getAuthIdentifier());
+            }
+            return $formattedSubs;
+        } else {
+            return response()->json([]);
         }
-
-        return $formattedSubs;
     }
 }

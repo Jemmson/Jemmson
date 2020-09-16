@@ -11,6 +11,7 @@
                 || onAssessorPage ()
                 || onSplashScreen ()
                 || onHelpPage ()
+                || onFurtherInfoPage ()
         ">
             <header-bio
                     ref="homePage"

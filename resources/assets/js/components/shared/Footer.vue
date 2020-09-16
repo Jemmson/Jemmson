@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <div>
         <div class="container-fluid border-top" v-if="page !== '/' || user.usertype !== undefined">
             <div v-if="isLoggedIn" class="row mt-2 align-items-center justify-content-center">
                 <div class="col d-flex align-items-center">
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-    </v-app>
+    </div>
 </template>
 
 <script>

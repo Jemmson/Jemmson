@@ -223,7 +223,7 @@
                     case 'approveBid':
                         this.updateModal(
                             'Confirm Approval',
-                            'You are about to approve this bid. Click approve bid to approve or back to cancel this action.',
+                            'The bid price does not include the application fee of $2.50 for all credit card jobs.',
                             'approveBid',
                             'Approve Bid',
                             'Back'

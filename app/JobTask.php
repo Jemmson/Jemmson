@@ -535,7 +535,7 @@ class JobTask extends Model
         return $totalTasks == $paidTasks;
     }
 
-    public static function atLeastOnTaskIsPaid($jobId)
+    public static function atLeastOneTaskIsPaid($jobId)
     {
         $allJobTasks = JobTask::select('id')->where('job_id', '=', $jobId)->get();
 

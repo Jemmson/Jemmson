@@ -661,18 +661,24 @@
             </card>
         </section>
 
-        <section class="mt-4" v-if="customerHasCompletedTasks()">
-            <h1 class="card-title mt-4">Completed Tasks</h1>
-            <card>
-                <main class="row w-full ml-0">
-                    <completed-tasks
-                            class="w-full"
-                            :bid="bid"
-                            :paid="checkIfPaid()"
-                    >
-                    </completed-tasks>
-                </main>
-            </card>
+        <section class="mt-4" style="margin-left: -18px; margin-right: -18px;" v-if="customerHasCompletedTasks()">
+
+          <v-card>
+            <v-card-title>
+<!--            <v-card-title class="v-card__title">-->
+              Completed Tasks</v-card-title>
+            <v-card-text style="padding-left: 0px; padding-right: 0px;">
+<!--            <v-card-text class="v-card__title">-->
+              <main class="row w-full ml-0">
+                <completed-tasks
+                    class="w-full"
+                    :bid="bid"
+                    :paid="checkIfPaid()"
+                >
+                </completed-tasks>
+              </main>
+            </v-card-text>
+          </v-card>
         </section>
 
         <stripe
@@ -1225,6 +1231,7 @@
                 return bp[1]
             },
 
+          // TODO: I dont not understand this method. dont know how this would even work?!!!
             getStripeFlatRateCharges() {
                 return this.getNumberOfJobTasks() * .30
             },
@@ -1635,6 +1642,14 @@
 </script>
 
 <style lang="less" scoped>
+
+    //.v-card__title {
+    //  padding: 0;
+    //}
+
+    //.card__title {
+    //  padding: 0;
+    //}
 
     .b-brown {
         background-color: beige;

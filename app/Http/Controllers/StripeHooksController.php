@@ -17,7 +17,8 @@ class StripeHooksController extends Controller
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $endpoint_secret = 'whsec_VcVERIuVrQanB1BDYICGTdQMNkl4bKss';
+        $endpoint_secret = 'whsec_VC7dUEsDza75wRt4KtH2VL11Dbt47xz5';
+//        $endpoint_secret = 'whsec_VcVERIuVrQanB1BDYICGTdQMNkl4bKss';
 
         $sig_header = $request->headers->get('stripe-signature');
 
