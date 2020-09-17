@@ -15,10 +15,12 @@ class StripeHooksController extends Controller
 {
     public function hooks(Request $request)
     {
+//        Log::debug('sk_test_519YZpRIX4qnobbHhhbsdPCMtc4OhFEVP6cCshbIlTSuwYnRBbpf2a230zaqkCuKbkKZYUL7zIoyHVI3wCf7B3p2y00GdnzPrEV');
+//        Log::debug(dd(env('STRIPE_SECRET')));
+
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $endpoint_secret = 'whsec_VC7dUEsDza75wRt4KtH2VL11Dbt47xz5';
-//        $endpoint_secret = 'whsec_VcVERIuVrQanB1BDYICGTdQMNkl4bKss';
+        $endpoint_secret = 'whsec_VcVERIuVrQanB1BDYICGTdQMNkl4bKss';
 
         $sig_header = $request->headers->get('stripe-signature');
 
