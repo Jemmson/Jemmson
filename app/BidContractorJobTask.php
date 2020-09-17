@@ -53,7 +53,7 @@ class BidContractorJobTask extends Model
                 $subTasks = self::getSubTasks($jobTask->id);
                 if (!\is_null($subTasks)) {
                     foreach ($subTasks as $subTask) {
-                        $subTask->destroy();
+                        $subTask->delete();
                     }
                 }
             }
