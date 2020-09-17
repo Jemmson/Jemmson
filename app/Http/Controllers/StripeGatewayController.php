@@ -137,7 +137,7 @@ class StripeGatewayController extends Controller
         $jobTasks = $this->jobTasksExist($request->excluded, $request->jobId);
 
         if ($jobTasks["exists"]) {
-            $totalAmount = JobTask::totalAmountForAllPayableTasks($jobTasks["jobTasks"]);
+            $totalAmount = JobTask::totalAmountForAllPayableTasks($jobTasks["jobTasks"]) + env('JEMMSON_FLAT_RATE');
             $generalId = Job::where('id', '=', $request->jobId)->get()->first()->contractor_id;
             $general = User::find($generalId);
 

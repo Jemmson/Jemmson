@@ -3,8 +3,8 @@
     <div ref="subTaskWarning"
          class="text-white bg-red rounded p-3 mt-2 mb-2 text-center w-break"
          style="font-weight: 700"
-         v-if="subTaskWarning">
-      Unable to submit this bid. There is a task where the sub price is higher than your price.
+         v-if="subTaskWarning && creditCardJob()">
+      Unable to submit this bid. There is a task where the sub price is higher than your price + the credit card fee.
     </div>
     <div ref="disableButton"
          class="capitalize text-white bg-red rounded p-3 mt-2 mb-2 text-center w-break"
@@ -75,6 +75,18 @@
             <td><strong>${{ tasksTotal.sub.toFixed(2) }}</strong></td>
             <td><strong>${{ tasksTotal.profit.toFixed(2) }}</strong></td>
           </tr>
+          <tr v-if="creditCardJob()">
+            <td></td>
+            <td></td>
+            <td><strong>Stripe Fee</strong></td>
+            <td><strong>-${{ tasksTotal.stripeFee.toFixed(2) }}</strong></td>
+          </tr>
+          <tr v-if="creditCardJob()">
+            <td></td>
+            <td></td>
+            <td><strong>Net Total:</strong></td>
+            <td><strong>${{ tasksTotal.netTotal.toFixed(2) }}</strong></td>
+          </tr>
           </tbody>
         </template>
       </v-simple-table>
@@ -83,8 +95,9 @@
         <v-card-text>
           <strong>NOTE:</strong><br>
           <strong>Credit Card Job:</strong><br>
-          You will be responsible for the credit card fees for the job so you should make sure that each task covers
-          those fees. CC fees are .30 per transaction and 2.9% per transaction total. The customer will cover
+          You will be responsible for the credit card fees for the job. This means your profit between a general and a sub
+          should be enough to cover the fee. You will be unable to submit a bid until all tasks cover the fee.
+          CC fees are .30 per transaction and 2.9% per transaction total. The customer will cover
           the application fee of $2.50 per job.
           <br>
           <strong>Cash Job:</strong><br>
@@ -169,6 +182,7 @@ export default {
       let sub = 0;
       let profit = 0;
       let ccFee = 0;
+      let stripeFee = 0;
       let minimumPrice = 0;
       let ccFeeCovered = false;
       for (let i = 0; i < this.bid.job_tasks.length; i++) {
@@ -179,6 +193,7 @@ export default {
         minimumPrice = 0;
         ccFeeCovered = false;
         ccFee = (this.bid.job_tasks[i].cust_final_price *.029) + .30;
+        stripeFee = stripeFee + ccFee;
         minimumPrice = this.bid.job_tasks[i].sub_final_price + ccFee;
         ccFeeCovered = (this.bid.job_tasks[i].cust_final_price - this.bid.job_tasks[i].sub_final_price) > ccFee;
         this.tasks.push(
@@ -198,6 +213,8 @@ export default {
       this.tasksTotal.general = general;
       this.tasksTotal.sub = sub;
       this.tasksTotal.profit = profit;
+      this.tasksTotal.stripeFee = stripeFee;
+      this.tasksTotal.netTotal = profit - stripeFee;
       this.subsPriceIsHigherThanTheGeneralsPrice();
     },
 
