@@ -1230,11 +1230,9 @@ class TaskController extends Controller
         $jobTask = JobTask::find($taskId);
         $job = Job::find($jobTask->job_id);
 
-        $unit_price = $this->convertToCents($request->unit_price);
-
         try {
             $jobTask->qty = $quantity;
-            $jobTask->cust_final_price = $quantity * $unit_price;
+            $jobTask->cust_final_price = $quantity * $jobTask->unit_price;
             $jobTask->save();
         } catch (\Excpetion $e) {
             Log::error('Updating JobTask: ' . $e->getMessage);
