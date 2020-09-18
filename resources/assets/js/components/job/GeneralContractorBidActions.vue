@@ -78,14 +78,14 @@
           <tr v-if="creditCardJob()">
             <td></td>
             <td></td>
-            <td><strong>Stripe Fee</strong></td>
-            <td><strong>-${{ tasksTotal.stripeFee.toFixed(2) }}</strong></td>
+            <td><strong>Total Stripe Fee:</strong></td>
+            <td><strong>-${{ tasksTotal.stripeFee }}</strong></td>
           </tr>
           <tr v-if="creditCardJob()">
             <td></td>
             <td></td>
-            <td><strong>Net Total:</strong></td>
-            <td><strong>${{ tasksTotal.netTotal.toFixed(2) }}</strong></td>
+            <td><strong>Net Profit:</strong></td>
+            <td><strong>${{ tasksTotal.netTotal }}</strong></td>
           </tr>
           </tbody>
         </template>
@@ -210,11 +210,12 @@ export default {
             }
         )
       }
+      let netTotal = profit - stripeFee;
       this.tasksTotal.general = general;
       this.tasksTotal.sub = sub;
       this.tasksTotal.profit = profit;
-      this.tasksTotal.stripeFee = stripeFee;
-      this.tasksTotal.netTotal = profit - stripeFee;
+      this.tasksTotal.stripeFee = stripeFee.toFixed(2);
+      this.tasksTotal.netTotal = netTotal.toFixed(2);
       this.subsPriceIsHigherThanTheGeneralsPrice();
     },
 
