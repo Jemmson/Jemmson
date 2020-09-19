@@ -1241,6 +1241,20 @@ class TaskController extends Controller
 
         $job->jobTotal();
 
+//        TODO: need to add functionality that if the job has an accepted sub and the general changes the
+//        TODO: quantity for the job then the whole resubmission process is done again in a slightly different way
+//        check if there are subs that have been accepted for this particular task
+//        if yes
+//        - unaccept the sub
+//        - send a notification to sub that the bid quantity has changed
+//        - Task UI Changes
+//            - sub has a button to deny the change
+//            - sub accepts the bid and resubmits the amount
+//        - sub denies the change
+//            - all other subs get notifications that the job task has reopened
+//        -
+
+
     }
 
     public function updateCustomerPrice(Request $request)
@@ -1269,6 +1283,7 @@ class TaskController extends Controller
 
         $data = ["price" => $price, "taskId" => $taskId];
         return json_encode($data);
+
 
     }
 

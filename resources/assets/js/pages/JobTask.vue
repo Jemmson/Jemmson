@@ -707,6 +707,11 @@ export default {
               description: `The total task price is the final price for the task. This price will be the price that you
                 charge as a General Contractor or it is the price of the accepted price of the sub. You should
                 charge more than the price of the sub and an error will be thrown if it is not.`
+            },
+            {
+              title: 'Quantity',
+              description: `Quantity is only editable if the job has not been approved by the customer and the job
+              has no accepted subs.`
             }
           ]
         }
@@ -1523,8 +1528,19 @@ export default {
       //     this.jobStatus === 'bid.declined')
     },
     showTaskQuantityInput() {
-      return this.isGeneral() && this.jobHasNotBeenApproved();
+      return this.isGeneral() && this.jobHasNotBeenApproved() && this.subHasNotBeenAccepted();
     },
+
+    subHasNotBeenAccepted() {
+
+      if (this.jobTask.sub_statuses.length > 0) {
+        let currentSubStatus = this.jobTask.sub_statuses[this.jobTask.sub_statuses - 1];
+        return currentSubStatus === 'initiated'
+        || currentSubStatus === 'sent_a_bid'
+      }
+      return false;
+    },
+
     updateCustomerTaskQuantity(jobTask, newQuantity) {
 
       newQuantity = Number(newQuantity)
