@@ -618,6 +618,14 @@
                 </v-btn>
 
             </v-card>
+
+          <v-card v-if="!isCustomer">
+            <v-card-title class="card-title mt-4">Notes</v-card-title>
+            <v-card-text>
+              <div class="capitalize" style="color: black;">{{ messageFromCustomer }}</div>
+              <div style="display: none; color: black;">{{ getPaidWithCashMessage }}</div>
+            </v-card-text>
+          </v-card>
             <!--            <card>-->
             <!--                <v-card-title v-else class="card-title mt-4">Contractor Notes For You</v-card-title>-->
             <!--                <v-card-text>-->
