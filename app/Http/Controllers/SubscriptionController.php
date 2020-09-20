@@ -37,6 +37,33 @@ class SubscriptionController extends Controller
 
     }
 
+    public function getInvoices()
+    {
+        $invoices = Auth::user()->invoices();
+
+        $allInvoices = [];
+
+
+        foreach ($invoices as $invoice) {
+
+            $item = [
+                'id' => $invoice->asStripeInvoice()->id,
+                'stripeInvoicePdf' => $invoice->asStripeInvoice()->hosted_invoice_url,
+                'stripeInvoiceUrl' => $invoice->asStripeInvoice()->invoice_pdf,
+                'date' => $invoice->date()->toFormattedDateString(),
+                'total' => $invoice->total(),
+            ];
+
+            array_push($allInvoices, $item);
+        }
+
+//        return $total;
+//        return ;
+        return response()->json([
+            'invoices' => $allInvoices
+        ]);
+    }
+
     public function changePlan(Request $request)
     {
         $plans = $this->plans();

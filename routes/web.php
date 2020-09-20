@@ -99,6 +99,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('subscription/getPaymentMethods', 'SubscriptionController@getPaymentMethods');
     Route::post('subscriptions/setPaymentMethod', 'SubscriptionController@setPaymentMethod');
     Route::get('subscription/getPaymentIntent', 'SubscriptionController@getPaymentIntent');
+    Route::get('subscription/getInvoices', 'SubscriptionController@getInvoices');
 
     // JobController
     Route::resource('/job', 'JobController');

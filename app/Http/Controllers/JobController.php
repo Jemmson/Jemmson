@@ -1018,7 +1018,7 @@ class JobController extends Controller
 
         if ($contractor->free_jobs === 0 && !\is_null($contractorUser->stripe_id)) {
             if ($job->payment_type == 'cash') {
-                $contractorUser->invoiceFor('Stickers', 500);
+                $contractorUser->invoiceFor($job->job_name, 100);
             }
         }
 
