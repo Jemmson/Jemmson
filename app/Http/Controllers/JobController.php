@@ -1007,6 +1007,22 @@ class JobController extends Controller
             $request->job_location_same_as_home
         );
 
+        //TODO: need to charge the general 1 dollar for the job if the job is a cash job
+        // will use cashier for this
+        // will need to be a stripe customer to charge for a cash job
+        // will need to have been signed up for the site
+        // if using free jobs then the dollar will not apply
+
+        $contractor = Contractor::find($job->contractor_id)->first();
+        $contractorUser = User::find($job->contractor_id)->first();
+
+        if ($contractor->free_jobs === 0 && !\is_null($contractorUser->stripe_id)) {
+            if ($job->payment_type == 'cash') {
+                $contractorUser->invoiceFor('Stickers', 500);
+            }
+        }
+
+
 //        // TODO: what date needs to be updated here?
 //        $job->agreed_start_date = $request->agreed_start_date;
 //        $job->status = __('job.approved');

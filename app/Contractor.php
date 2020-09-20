@@ -76,7 +76,7 @@ class Contractor extends Model
     public function isSubscribed()
     {
 
-        return $this->user->current_billing_plan !== null; // means the contractor has subscribed
+        return $this->user->plan !== null; // means the contractor has subscribed
 
     }
 

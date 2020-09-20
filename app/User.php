@@ -12,6 +12,7 @@ use App\Services\SanatizeService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Cashier\Billable;
 use Laravel\Spark\User as SparkUser;
 use Illuminate\Notifications\Notifiable;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -36,6 +37,7 @@ class User extends SparkUser
     use Utilities;
     use SoftDeletes;
     use Status;
+    use Billable;
 
     /**
      * The attributes that are mass assignable.

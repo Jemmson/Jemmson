@@ -110,7 +110,8 @@
                     </div>
                 </div>
                 <v-card-text>
-                    50$ per month + $1 per job
+                    50$ per month + $1 per cash job
+                    <div><small>First 5 Jobs Are Free</small></div>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
@@ -135,8 +136,9 @@
                     </div>
                 </div>
                 <v-card-text>
-                    <div>540$ per year + $1 per job</div>
-                    <div><small>Same as 45$ per month + $1 per job</small></div>
+                    <div>540$ per year + $1 per cash job</div>
+                    <div><small>Same as 45$ per month + $1 per cash job</small></div>
+                  <div><small>First 5 Jobs Are Free</small></div>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
