@@ -451,7 +451,7 @@ export default {
       if (data.error) {
 
       } else {
-        console.log('data', data)
+        // console.log('data', data)
         this.invoices = data.invoices;
         // console.log('data', JSON.stringify(data))
         this.hideAllSections();

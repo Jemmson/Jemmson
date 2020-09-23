@@ -118,16 +118,7 @@
                 ],
                 customerReceipts: [],
                 jobHeaders: [
-                    {
-                        text: 'ID',
-                        align: 'left',
-                        sortable: false,
-                        value: 'id',
-                    },
                     {text: 'Job Name', value: 'job_name'},
-                    {text: 'General', value: 'general'},
-                    {text: 'Customer', value: 'customer'},
-                    {text: 'Price', value: 'price'},
                     {text: 'Finished', value: 'finished'},
                 ],
                 jobReceipts: [],
