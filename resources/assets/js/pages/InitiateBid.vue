@@ -259,6 +259,8 @@ export default {
     enteredPhoneNumber(val) {
       if (val && val.length === 14) {
         this.validateMobileNumber(val);
+      } else if (val && val.length === 10 && this.allNumbers(val)) {
+        this.formatPhone(val);
       }
     },
     selected(val) {
@@ -292,38 +294,90 @@ export default {
 
   methods: {
 
+    allNumbers(val) {
+      if (typeof val !== 'string') {
+        val = val + ''
+      }
+      return this.countNumbers(val);
+    },
+
+    countNumbers(val) {
+      let onlyNumbers = true
+      for (let i = 0; i < val.length; i++) {
+        if (isNaN(val[i])) {
+          onlyNumbers = false
+        }
+      }
+      return onlyNumbers
+    },
+
     storeInfoInLocalStorage() {
+      this.form.customerName = this.removeExtraSpaces(this.form.customerName)
       localStorage.setItem('customerName', this.form.customerName)
+      localStorage.setItem('isMobile', this.form.isMobile)
       localStorage.setItem('mobile', this.form.phone)
       localStorage.setItem('jobName', this.form.jobName)
+    },
+
+    removeExtraSpaces(value) {
+      if (typeof value === 'string') {
+        let valArray = value.split(' ');
+        let noSpaceArray = []
+        for (let i = 0; i < valArray.length; i++) {
+          if (valArray[i] !== "") {
+            noSpaceArray.push(valArray[i])
+          }
+        }
+
+        let newString = '';
+        for (let i = 0; i < noSpaceArray.length; i++) {
+          if (i === noSpaceArray.length - 1) {
+            newString = newString + noSpaceArray[i];
+          } else {
+            newString = newString + noSpaceArray[i] + ' ';
+          }
+        }
+
+        return newString;
+      } else {
+        return ''
+      }
+
     },
 
     retrieveCustomerInfoFromLocalStorage() {
       this.selected = localStorage.getItem('customerName');
       this.form.customerName = localStorage.getItem('customerName');
+      if (localStorage.getItem('isMobile') === 'false') {
+        this.form.isMobile = false;
+      } else {
+        this.form.isMobile = true;
+      }
       this.form.phone = this.formatPhone(localStorage.getItem('mobile'));
       this.form.jobName = localStorage.getItem('jobName');
     },
 
     formatPhone(phone) {
+
+      if (typeof phone !== 'string') {
+        phone = phone + ''
+      }
+
       if (phone) {
         let totalDigits = 0;
         let totalDigitString = '(';
-        console.log('phone length', phone.length)
         for (let i = 0; i < phone.length; i++) {
-          console.log('phone digit', phone[i])
-          console.log('integer', Number.isInteger(phone[i]))
           if (!isNaN(phone[i])) {
             totalDigits++;
             if (
-                i < 3
-                || (i > 3 && i < 6)
-                || i > 6
+                totalDigits < 4
+                || (totalDigits > 4 && totalDigits < 7)
+                || totalDigits > 7
             ) {
               totalDigitString = totalDigitString + phone[i]
-            } else if (3 === i) {
+            } else if (4 === totalDigits) {
               totalDigitString = totalDigitString + ")-" + phone[i]
-            } else if (i === 6) {
+            } else if (totalDigits === 7) {
               totalDigitString = totalDigitString + "-" + phone[i]
             }
           }
@@ -536,6 +590,7 @@ export default {
       if (result) {
         this.form.phone = result.phone
         this.form.email = result.email
+        this.form.isMobile = true
         this.form.taxRate = result.tax_rate
         this.form.quickbooks_id = result.quickbooks_id
         this.form.customerName = result.name

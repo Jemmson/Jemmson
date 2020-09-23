@@ -124,6 +124,65 @@ describe('InitiateBid', () => {
         expect(wrapper.isVueInstance()).toBeTruthy()
     })
 
+    test('test that there is no extra spaces in the name', async () => {
+        wrapper.setData({
+            form: {
+                customerName: 'Shawn  Pike'
+            }
+        });
+        wrapper.vm.form.customerName = wrapper.vm.removeExtraSpaces(wrapper.vm.form.customerName)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.form.customerName).toBe('Shawn Pike');
+
+        wrapper.vm.form.customerName = ' Shawn   Pike  '
+        wrapper.vm.form.customerName = wrapper.vm.removeExtraSpaces(wrapper.vm.form.customerName)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.form.customerName).toBe('Shawn Pike');
+
+        wrapper.vm.form.customerName = 'Shawn Pike'
+        wrapper.vm.form.customerName = wrapper.vm.removeExtraSpaces(wrapper.vm.form.customerName)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.form.customerName).toBe('Shawn Pike');
+
+    })
+
+    test('test that I am checking for all numbers in a value', async () => {
+        let num = '1231231234'
+        let allNumbers = wrapper.vm.allNumbers(num);
+        await wrapper.vm.$nextTick()
+        expect(allNumbers).toBe(true)
+
+        num = 1231231234
+        allNumbers = wrapper.vm.allNumbers(num);
+        await wrapper.vm.$nextTick()
+        expect(allNumbers).toBe(true)
+
+    })
+
+    test('test formatting the phone number correctly', async () => {
+
+        let num = '1231231234'
+        let formattedPhoneNumber = wrapper.vm.formatPhone(num);
+        await wrapper.vm.$nextTick()
+        expect(formattedPhoneNumber).toBe('(123)-123-1234');
+
+        num = '(12))--312--wiuwqe31234));;;'
+        formattedPhoneNumber = wrapper.vm.formatPhone(num);
+        await wrapper.vm.$nextTick()
+        expect(formattedPhoneNumber).toBe('(123)-123-1234');
+
+        num = '(((12))--312--wiuwqe31234));;;'
+        formattedPhoneNumber = wrapper.vm.formatPhone(num);
+        await wrapper.vm.$nextTick()
+        expect(formattedPhoneNumber).toBe('(123)-123-1234');
+
+        num = 1231231234
+        formattedPhoneNumber = wrapper.vm.formatPhone(num);
+        await wrapper.vm.$nextTick()
+        expect(formattedPhoneNumber).toBe('(123)-123-1234');
+
+    })
+
     test.skip('must have a title saying "Add New Job"', () => {
         wrapper = mount(InitiateBid, {
             localVue,
@@ -308,7 +367,7 @@ describe('InitiateBid', () => {
         expect(wrapper.find({ref: 'submit'}).attributes().disabled).toBe('disabled')
     })
 
-    test('that when the radio button is selected that the isMobile value is true', async () => {
+    test.skip('that when the radio button is selected that the isMobile value is true', async () => {
         wrapper.setData({
             form: {
                 isMobile: false

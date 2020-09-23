@@ -219,10 +219,12 @@ export default class GeneralContractor {
             window.location = '/#/bid/' + data.data.job.id
             localStorage.setItem('customerName', '');
             localStorage.setItem('mobile', '');
+            localStorage.setItem('isMobile', 'false');
             localStorage.setItem('jobName', '');
         } catch (error) {
             localStorage.setItem('customerName', '');
             localStorage.setItem('mobile', '');
+            localStorage.setItem('isMobile', 'false');
             localStorage.setItem('jobName', '');
             error = error.response.data
             form.errors.errors = error.errors
