@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::get('/getImagesNotAssociatedToATask/{jobId}', 'TaskImagesController@getImagesNotAssociatedToATask');
     Route::post('/associateImagesToTasks', 'TaskImagesController@associateImagesToTasks');
     Route::get('/jobImages/{id}', 'JobController@jobImages');
+    Route::get('/job/getLatestJobNumber', 'JobController@getLatestJobNumber');
     Route::post('/task/updateMessage', 'TaskController@updateMessage');
 
     Route::post('user/profileImage', 'UserController@uploadProfileImage');

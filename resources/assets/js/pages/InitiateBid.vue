@@ -1,7 +1,6 @@
 <template>
   <div class="container" v-if="isContractor()">
     <v-card>
-
       <div class="flex justify-content-between">
         <v-card-title class="w-break">
           <img :src="'/img/jobs.svg'" alt="" srcset="" class="pr-1 float-left">
@@ -201,6 +200,7 @@ export default {
   },
   data() {
     return {
+      latestJobNumber: null,
       modal: {
         paymentTypeInfoDialog: false,
         createJobDialog: false,
@@ -436,9 +436,9 @@ export default {
     setJobNameFromResult(result) {
       let n = moment();
       if (this.customerNameLength() > 1) {
-        this.form.jobName = n.year() + '-' + result.jobNumber + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
+        this.form.jobName = n.year() + '-' + this.latestJobNumber + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
       } else {
-        this.form.jobName = n.year() + '-' + 100 + '-' + this.form.customerName;
+        this.form.jobName = n.year() + '-' + this.latestJobNumber + '-' + this.form.customerName;
       }
     },
 
@@ -730,12 +730,24 @@ export default {
         }
       }
       // this.results = []
+    },
+
+    async getLatestJobNumber() {
+      const {data} = await axios.get('/job/getLatestJobNumber')
+
+      if (data.error) {
+
+      } else {
+        this.latestJobNumber = data.latest + 101;
+      }
     }
+
   },
   mounted() {
     this.$store.commit('setCurrentPage', this.$router.history.current.path)
     this.form.paymentType = Spark.state.user.contractor.payment_type;
     this.retrieveCustomerInfoFromLocalStorage();
+    this.getLatestJobNumber();
   },
 }
 </script>

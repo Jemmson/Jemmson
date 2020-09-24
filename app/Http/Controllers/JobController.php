@@ -1055,6 +1055,25 @@ class JobController extends Controller
         return response()->json($job, 200);
     }
 
+    public function getLatestJobNumber()
+    {
+        $year = $this->getYear();
+
+        $latest = Job::where('contractor_id', '=', Auth::user()->getAuthIdentifier())
+            ->where('created_at', 'LIKE', "$year%")->select('id')
+            ->get()->count();
+
+        return response()->json([
+            'latest' => $latest
+        ]);
+    }
+
+    public function getYear()
+    {
+        $c = Carbon::now();
+        return $c->year;
+    }
+
     /**
      * Notify all contractors and sub connected to the job
      * that have approved bids
