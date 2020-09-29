@@ -40,12 +40,11 @@
                             style="margin-left: auto; margin-right: auto;"
                             class="flex space-evenly"
                     >
-                        <v-tooltip bottom>
+                        <v-tooltip bottom v-if="isContractor()">
                             <template v-slot:activator="{ on }">
                                 <div class="flex flex-col">
                                     <v-btn
                                             dark v-on="on"
-                                            v-if="isContractor()"
                                             class="ma-2 white--text"
                                             color="primary"
                                             text
@@ -59,12 +58,11 @@
                             </template>
                             <span>Add A Job</span>
                         </v-tooltip>
-                        <v-tooltip bottom>
+                        <v-tooltip bottom v-if="isContractor() && activeJobsExist()">
                             <template v-slot:activator="{ on }">
                                 <div class="flex flex-col">
                                     <v-btn
                                             dark v-on="on"
-                                            v-if="isContractor() && activeJobsExist()"
                                             color="primary"
                                             text
                                             class="ma-2 white--text"
@@ -125,7 +123,7 @@
                         <v-subheader>There Are No Active Jobs</v-subheader>
                     </div>
                 </div>
-                <div v-show="feedback">
+                <div v-show="feedback || !isContractor()">
                     <v-sheet
                             elevation="2"
                             class="pa-12"

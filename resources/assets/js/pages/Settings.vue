@@ -31,10 +31,9 @@
                             Password
                         </div>
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col" v-if="isContractor()">
                         <v-icon
                                 :color="show.subscription ? 'success': ''"
-                                v-if="isContractor()"
                                 class="nav-btn-position"
                                 @click="showSection('subscription')"
                         >mdi-youtube-subscription
