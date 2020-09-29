@@ -243,6 +243,54 @@ class User extends SparkUser
 
     }
 
+    public function inviteExistingSub(
+        $subId,
+        $jobTaskId,
+        $paymentType,
+        $generalId,
+        $task_id,
+        $job_id
+    )
+    {
+
+        $sub = User::find($subId);
+
+        try {
+            $bid = self::addBidEntryForTheSubContractor(
+                $sub,
+                $jobTaskId,
+                $task_id,
+                $paymentType
+            );
+        } catch (SubHasAlreadyBeenInvitedForThisTaskException $e) {
+            return response()->json([
+                "message" => "This Sub Has Already Been Invited For This Task",
+                "errors" => ["error" => "This Sub Has Already Been Invited For This Task"]
+            ], 422);
+        }
+
+        try {
+            self::addPreferredPaymentTypeForGeneralForSub(
+                $bid->id,
+                $jobTaskId,
+                $sub->id,
+                $paymentType,
+                $generalId
+            );
+        } catch (UnableToAddPreferredPaymentException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], 200);
+        }
+
+        self::notifySubAboutNewBid($sub, $jobTaskId, $job_id);
+        self::setSubStatusToInitiated($sub, $jobTaskId);
+
+        return $sub;
+
+    }
+
     public function getAssociatedSubsForTask(
         $generalId, $taskId, $withTask = false, $limit = 5, $favorites = false
     )

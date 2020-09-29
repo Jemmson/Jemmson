@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractorContractor;
 use App\ContractorSubcontractorPreferredPayment;
 use App\JobStatus;
 use App\Notifications\NotifyContractorThatCustomerChangesBid;
@@ -768,6 +769,89 @@ class TaskController extends Controller
             $jobTask
         );
 
+    }
+
+    public function inviteSubs(Request $request)
+    {
+        foreach ($request->subs as $sub) {
+            Auth::user()->inviteExistingSub(
+                $sub['id'],
+                $sub['jobTaskId'],
+                $sub['paymentType'],
+                Auth::user()->getAuthIdentifier(),
+                $request->task_id,
+                $request->job_id
+            );
+        }
+
+        return response()->json();
+    }
+
+    public function getAssociatedSubs($jobTaskId)
+    {
+
+        $subIds = ContractorContractor::select('subcontractor_id')->where('contractor_id', '=', Auth::user()->getAuthIdentifier())->get();
+
+        $invitedSubs = BidContractorJobTask::select('contractor_id')->where('job_task_id', '=', $jobTaskId)->get();
+
+        $associatedSubs = [];
+
+        foreach ($subIds as $subId) {
+
+            $subUser = User::select(['first_name', 'last_name'])
+                ->where('id', '=', $subId->subcontractor_id)->first();
+            $subContractor = Contractor::select(['payment_type', 'company_name'])
+                ->where('user_id', '=', $subId->subcontractor_id)->first();
+
+            $alreadyInvited = false;
+            foreach ($invitedSubs as $invitedSub){
+                if ($invitedSub->contractor_id === $subId->subcontractor_id) {
+                    $alreadyInvited = true;
+                }
+            }
+
+            if (!$alreadyInvited) {
+                array_push($associatedSubs, [
+                    'id' => $subId->subcontractor_id,
+                    'jobTaskId' => $jobTaskId,
+                    'quickbooksId' => null,
+                    'firstName' => $subUser->first_name,
+                    'lastName' => $subUser->last_name,
+                    'companyName' => $subContractor->company_name,
+                    'paymentType' => $subContractor->payment_type,
+                    'selected' => false
+                ]);
+            }
+
+        }
+
+      // TODO: should sort it by companyName
+//        self::sortByKey($associatedSubs, 'companyName');
+
+        return response()->json([
+            $associatedSubs
+        ]);
+    }
+
+    public function sortByKey($array, $key)
+    {
+        $associatedSubs_sorted = [];
+        $numberOfSubs = count($array);
+        $min_index = 0;
+
+        for($i = 0; $i < $numberOfSubs; $i++){
+            if ($i < $numberOfSubs - 1) {
+                $min_index = $i;
+                $j = $i + 1;
+                while ($j < $numberOfSubs) {
+                    if ($array[$j][$key] < $array[$min_index][$key]) {
+                        $min_index = $j;
+                    }
+                    $j++;
+                }
+                $associatedSubs[$min_index] = $array[$i];
+            }
+        }
     }
 
     public function notifyAcceptedBid(Request $request)
