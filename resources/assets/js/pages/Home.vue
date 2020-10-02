@@ -141,11 +141,11 @@
               <v-list-item-content>Number of Jobs:</v-list-item-content>
               <v-list-item-content class="align-end">{{ generalTotalJobNumber() }}</v-list-item-content>
             </v-list-item>
-            <v-list-item>
-              <v-list-item-content>Number of Subs:</v-list-item-content>
-              <v-list-item-content class="align-end">{{ generalTotalNumberOfSubs() }}
-              </v-list-item-content>
-            </v-list-item>
+<!--            <v-list-item>-->
+<!--              <v-list-item-content>Number of Subs:</v-list-item-content>-->
+<!--              <v-list-item-content class="align-end">{{ generalTotalNumberOfSubs() }}-->
+<!--              </v-list-item-content>-->
+<!--            </v-list-item>-->
           </v-list>
         </v-card-text>
       </v-card>
