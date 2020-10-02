@@ -193,17 +193,16 @@
                                 Submit
                             </v-btn>
                         </v-card-actions>
-
-                        <br>
-                        <feedback
-                                page="initiateBid"
-                        ></feedback>
                     </v-container>
                 </v-form>
 
             </v-card>
 
         </section>
+
+      <feedback
+          page="initiateBid"
+      ></feedback>
 
     </v-container>
 </template>
