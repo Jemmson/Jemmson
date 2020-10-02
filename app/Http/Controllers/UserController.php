@@ -95,11 +95,22 @@ class UserController extends Controller
 
         $photo = $request->files->get('profilePhoto');
 
-        $fileName = $photo->getFilename();
+        if ($photo->getFilename() !== '') {
+            $fileName = $photo->getFilename();
+        } else if ($photo->getClientOriginalName() !== '') {
+            $fileName = $photo->getClientOriginalName();
+        }
 
-        $image = Cloudinary\Uploader::upload($photo, [
-            "public_id" => $fileName
-        ]);
+        try {
+            $image = Cloudinary\Uploader::upload($photo, [
+                "public_id" => $fileName
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+               'error' => true,
+               'message' => $exception->getMessage()
+            ], 500);
+        }
 
         if (empty($image)) {
             return response()->json(['message' => 'Error Uploading Image. Please Try Again'], 400);
