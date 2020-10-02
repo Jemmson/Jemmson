@@ -409,13 +409,6 @@ export default {
 
     },
 
-    addCorrectFileType(imageName) {
-      let photoArray = imageName.split('.');
-      if (photoArray[0] !== 'jpeg') {
-        return photoArray[0] + '.jpeg';
-      }
-    },
-
     checkForPhoto() {
       return this.user && this.user.photo_url
     },
@@ -435,10 +428,10 @@ export default {
 
           if (urlsplit.length === 8) {
             hash = urlsplit[6];
-            imageName = this.addCorrectFileType(urlsplit[7]);
+            imageName = urlsplit[7];
           } else {
             hash = urlsplit[7];
-            imageName = this.addCorrectFileType(urlsplit[8]);
+            imageName = urlsplit[8];
           }
 
 

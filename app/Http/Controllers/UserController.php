@@ -42,7 +42,7 @@ class UserController extends Controller
     public function changePassword(Request $request)
     {
 
-         $same = Hash::check($request->currentPassword, Auth::user()->password);
+        $same = Hash::check($request->currentPassword, Auth::user()->password);
 
         if (!$same) {
             return response()->json([
@@ -90,6 +90,14 @@ class UserController extends Controller
         return $users;
     }
 
+    public function addCorrectFileType($fileName)
+    {
+        $photoArray = explode('.', $fileName);
+        if ($photoArray[0] !== 'jpeg') {
+            return $photoArray[0] . '.jpeg';
+        }
+    }
+
     public function uploadProfileImage(Request $request)
     {
 
@@ -101,14 +109,16 @@ class UserController extends Controller
             $fileName = $photo->getClientOriginalName();
         }
 
+        $fileName = $this->addCorrectFileType($fileName);
+
         try {
             $image = Cloudinary\Uploader::upload($photo, [
                 "public_id" => $fileName
             ]);
         } catch (\Exception $exception) {
             return response()->json([
-               'error' => true,
-               'message' => $exception->getMessage()
+                'error' => true,
+                'message' => $exception->getMessage()
             ], 500);
         }
 
