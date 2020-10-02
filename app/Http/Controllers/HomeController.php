@@ -138,7 +138,7 @@ class HomeController extends Controller
                 ]);
             }
 
-            \App\License::addLicenses($request->licenses, $contractor);
+            \App\License::addLicenses($request->licenses, Auth::user()->getAuthIdentifier());
 
         } else if (Auth::user()->usertype == 'customer') {
 
