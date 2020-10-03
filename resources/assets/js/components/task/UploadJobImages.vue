@@ -2,6 +2,9 @@
     <div class="row"
          style="margin-top: -1.25rem"
     >
+      <v-card-subtitle
+          class="error--text"
+      ><span style="color:black">note:</span> All images must be less than 1 megabyte</v-card-subtitle>
 
         <div
             v-if="unassociatedImagesExist"
