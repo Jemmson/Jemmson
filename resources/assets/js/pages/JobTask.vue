@@ -286,7 +286,7 @@
           </v-list>
         </v-card-text>
 
-        <v-card-actions>
+        <v-card-actions v-if="isContractor()">
           <v-btn
               text
               color="primary"
