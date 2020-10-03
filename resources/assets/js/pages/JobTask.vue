@@ -1534,7 +1534,7 @@ export default {
     subHasNotBeenAccepted() {
 
       if (this.jobTask.sub_statuses.length > 0) {
-        let currentSubStatus = this.jobTask.sub_statuses[this.jobTask.sub_statuses - 1];
+        let currentSubStatus = this.jobTask.sub_statuses[this.jobTask.sub_statuses.length - 1].status;
         return currentSubStatus === 'initiated'
         || currentSubStatus === 'sent_a_bid'
       }
