@@ -416,7 +416,11 @@ export default class User {
       disabled.uploadTaskImageBtn = false
       return false;
     } catch (error) {
-      Vue.toasted.error(error.message)
+      if (error.response.status === 413) {
+        Vue.toasted.error('Your image must less than 1 megabyte.')
+      } else {
+        Vue.toasted.error(error.message)
+      }
       disabled.uploadTaskImageBtn = false
       return false;
     }
