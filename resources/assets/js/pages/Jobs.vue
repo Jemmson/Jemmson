@@ -21,11 +21,11 @@
             >
             </info-modal-generic>
 
-            <v-icon
-                    color="primary"
-                    @click="showHelp()"
-                    class="w-break mt-3 pr-3 w-95 justify-content-end">mdi-information
-            </v-icon>
+<!--            <v-icon-->
+<!--                    color="primary"-->
+<!--                    @click="showHelp()"-->
+<!--                    class="w-break mt-3 pr-3 w-95 justify-content-end">mdi-information-->
+<!--            </v-icon>-->
 
             <v-card
                     v-for="bid in sBids" v-bind:key="bid.id"
