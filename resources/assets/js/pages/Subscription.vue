@@ -128,7 +128,7 @@
         <v-card-actions>
           <v-btn
               :loading="loadingPlan"
-              @click="selectPlan('Monthly-Plan')"
+              @click="selectPlan('Monthly Plan')"
               color="primary"
           >Select
           </v-btn>
