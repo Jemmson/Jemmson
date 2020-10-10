@@ -437,7 +437,8 @@
             }
         },
         mounted() {
-            this.stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`);
+            this.stripe = Stripe(Spark.stripeKey);
+            // this.stripe = Stripe(`pk_test_iAX3DPtpLj5RiG3FCexe1r0Z`);
         }
     }
 </script>
