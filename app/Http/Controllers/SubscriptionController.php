@@ -70,18 +70,17 @@ class SubscriptionController extends Controller
 
         try {
             if (
-                Auth::user()->subscription('default')->onGracePeriod()
-                && Auth::user()->subscription('default')->stripe_plan === $plans[$request->selectedPlan]
+                self::hasGracePeriod()
+                && self::alreadyHasTheCurrentPlan($plans[$request->selectedPlan])
             ) {
-                Auth::user()->subscription('default')->resume();
+                self::resumeCurrentPlan();
                 return response()->json([
                     'success' => 'Your Plan Has Been Successfully Resumed',
                     'currentPlan' => $request->selectedPlan
                 ], 200);
             } else {
-                Auth::user()->subscription('default')->swap($plans[$request->selectedPlan]);
-                Auth::user()->plan = $request->selectedPlan;
-                Auth::user()->save();
+                self::switchToNewPlan($plans[$request->selectedPlan]);
+                self::updateUserPlan($request->selectedPlan);
                 return response()->json([
                     'success' => 'Your Plan Has Been Successfully Changed',
                     'currentPlan' => $request->selectedPlan
@@ -94,6 +93,32 @@ class SubscriptionController extends Controller
                 "error" => [$e->getMessage()]], 200);
         }
 
+    }
+
+    private function updateUserPlan($newPlan)
+    {
+        Auth::user()->plan = $newPlan;
+        Auth::user()->save();
+    }
+
+    private function switchToNewPlan($newPlan)
+    {
+        Auth::user()->subscription('default')->swap($newPlan);
+    }
+
+    private function resumeCurrentPlan()
+    {
+        return Auth::user()->subscription('default')->resume();
+    }
+
+    private function alreadyHasTheCurrentPlan($givenPlan)
+    {
+        return Auth::user()->subscription('default')->stripe_plan === $givenPlan;
+    }
+
+    private function hasGracePeriod()
+    {
+        return Auth::user()->subscription('default')->onGracePeriod();
     }
 
     public function cancelPlan()
