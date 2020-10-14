@@ -212,11 +212,14 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
+    <feedback
+        page="invoices"
+    ></feedback>
   </v-container>
 </template>
 
 <script>
+import Feedback from '../components/shared/Feedback'
 
 let stripe = Stripe(Spark.stripeKey);
 let elements = stripe.elements();
@@ -224,12 +227,15 @@ let card = undefined;
 
 export default {
   name: "Subscription",
+  components: {
+    Feedback
+  },
   data() {
     return {
       overlay: false,
       invoices: [],
       show: {
-        invoices: true,
+        invoices: false,
         subscriptions: true,
         confirmCancelationModal: false,
         createCreditCard: false,
