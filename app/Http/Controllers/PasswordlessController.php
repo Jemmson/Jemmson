@@ -79,6 +79,32 @@ class PasswordlessController {
         }
     }
 
+    public function receipt($type, $job_id, $token)
+    {
+        // find token in the db
+        $token = PasswordlessToken::where('token', $token)->first();
+        // invalid token
+        if (!$token) {
+            Log::warning('invalid token');
+            return redirect('/#/')->withErrors(__('passwordless.invalid_token'));
+        }
+        // find user connected to token
+        $user = User::find($token->user_id);
+        // user not found or login user if they where found
+        if (!$user) {
+            Log::warning('user not found with given token');
+            return redirect('/#/')->withErrors(__('passwordless.no_user'));
+        } else {
+            if ($user->isValidToken($token->token)) {
+                Auth::login($user);
+                session(['job_id' => $job_id, 'prevDestination' => '/#/bids/']);
+                return redirect('/#/invoice/' . $job_id);
+            } else {
+                return redirect('/#/')->withErrors(__('passwordless.invalid'));
+            }
+        }
+    }
+
     private function tokenIsValid($user, $token)
     {
         return $user->isValidToken($token->token);
