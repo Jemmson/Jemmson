@@ -20,9 +20,10 @@
           text
           class="btn btn-normal-green btn-lg w-full"
           @click="submitBid()"
-          :disabled="subTaskWarning"
+          :disabled="!subTaskWarning || !disableButton"
           :loading="disabled.submitBid"
       >
+
         <div v-if="bidHasBeenSentBefore()">Resubmit Bid</div>
         <div v-else>Submit Bid</div>
       </v-btn>
@@ -95,7 +96,8 @@
         <v-card-text>
           <strong>NOTE:</strong><br>
           <strong>Credit Card Job:</strong><br>
-          You will be responsible for the credit card fees for the job. This means your profit between a general and a sub
+          You will be responsible for the credit card fees for the job. This means your profit between a general and a
+          sub
           should be enough to cover the fee. You will be unable to submit a bid until all tasks cover the fee.
           CC fees are .30 per transaction and 2.9% per transaction total. The customer will cover
           the application fee of $2.50 per job.
@@ -159,7 +161,9 @@ export default {
       tasksTotal: {
         general: 0,
         sub: 0,
-        profit: 0
+        profit: 0,
+        stripeFee: 0,
+        netTotal: 0
       },
       subTaskWarning: false,
       disabled: {
@@ -192,13 +196,12 @@ export default {
         ccFee = 0;
         minimumPrice = 0;
         ccFeeCovered = false;
-        ccFee = (this.bid.job_tasks[i].cust_final_price *.029) + .30;
         stripeFee = stripeFee + ccFee;
         minimumPrice = this.bid.job_tasks[i].sub_final_price + ccFee;
         ccFeeCovered = (this.bid.job_tasks[i].cust_final_price - this.bid.job_tasks[i].sub_final_price) > ccFee;
         this.tasks.push(
             {
-              id: i+1,
+              id: i + 1,
               name: this.bid.job_tasks[i].task.name,
               general: this.bid.job_tasks[i].cust_final_price,
               sub: this.bid.job_tasks[i].sub_final_price,
@@ -210,11 +213,17 @@ export default {
             }
         )
       }
-      let netTotal = profit - stripeFee;
+      const totalCustomerCost = general + 2.5;
+      stripeFee = (totalCustomerCost * .029) + .30;
+      let jemmsonFinalAmount = totalCustomerCost - stripeFee;
+      let netTotal = jemmsonFinalAmount - 2.50 - sub;
+
+      // let netTotal = profit - stripeFee;
       this.tasksTotal.general = general;
       this.tasksTotal.sub = sub;
       this.tasksTotal.profit = profit;
       this.tasksTotal.stripeFee = stripeFee.toFixed(2);
+      // this.tasksTotal.stripeFee = stripeFee.toFixed(2);
       this.tasksTotal.netTotal = netTotal.toFixed(2);
       this.subsPriceIsHigherThanTheGeneralsPrice();
     },
@@ -346,16 +355,16 @@ export default {
       }
       return false
     },
-    acceptedSubPriceTooHigh (task) {
+    acceptedSubPriceTooHigh(task) {
       return this.subPrice(task) > (this.generalPrice(task) - this.stripeFee(this.generalPrice(task)) - .01);
     },
-    stripeFee(price){
+    stripeFee(price) {
       return price * .029 + .30;
     },
-    subPrice(task){
+    subPrice(task) {
       return task.sub_final_price
     },
-    generalPrice(task){
+    generalPrice(task) {
       return task.cust_final_price
     },
     sendBid() {
