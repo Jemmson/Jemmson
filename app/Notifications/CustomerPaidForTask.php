@@ -12,23 +12,26 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Task;
 use App\User;
+use App\Job;
 
 
 class CustomerPaidForTask extends Notification implements ShouldQueue
 {
     use Queueable;
-    protected $task, $user;
+    protected $task, $user, $job;
 
     /**
      * Create a new notification instance.
      *
      * @param Task $task
      * @param User $user
+     * @param Job $job
      */
-    public function __construct(Task $task, User $user)
+    public function __construct(Task $task, User $user, Job $job)
     {
         $this->task = $task;
         $this->user = $user;
+        $this->job = $job;
     }
 
     /**
@@ -55,25 +58,9 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
         if ($isGeneral) {
             return (new MailMessage)
                     ->line('Customer has sent you a payment for : '. $this->task->name . '.')
-                    ->action('View Task ',
-                        url('/login/general/' . $this->task->jobTask()->first()->job_id . '/'
+                    ->action('View Job Receipt ',
+                        url('/login/general/receipt/' . $this->job->id . '/'
                             .  $this->user->generateToken(
-                                $this->user->id,
-                                true,
-                                $this->task->id,
-                                'paid',
-                                'paid',
-                                'paid',
-                                'email'
-                            )->token
-                            , [], true))
-                    ->line('Thank you for using our application!');
-        } else {
-            return (new MailMessage)
-                    ->line('Customer has sent you a payment for : ' .$this->task->name . '.')
-                    ->action('View Task ',
-                        url('/login/sub/task/' . $this->task->id . '/'
-                            . $this->user->generateToken(
                                 $this->user->id,
                                 true,
                                 $this->task->id,
@@ -83,6 +70,21 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                                 'email'
                             )->token, [], true))
                     ->line('Thank you for using our application!');
+        } else {
+            return (new MailMessage)
+                    ->line('Customer has sent you a payment for : ' .$this->task->name . '.')
+                    ->action('View Task ',
+                        url('/login/sub/receipt/' . $this->job->id . '/'
+                            .  $this->user->generateToken(
+                                $this->user->id,
+                                true,
+                                $this->task->id,
+                                'paid',
+                                'paid',
+                                'paid',
+                                'email'
+                            )->token, [], true))
+                ->line('Thank you for using our application!');
         }
 
     }
@@ -95,19 +97,20 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
+
         $isGeneral = $this->task->contractor_id === $this->user->id;
 
         if ($isGeneral) {
 
-            $url = url('/login/general/' . $this->task->id . '/'
-                . $this->user->generateToken(
+            $url = url('/login/general/receipt/' . $this->job->id . '/'
+                .  $this->user->generateToken(
                     $this->user->id,
                     true,
                     $this->task->id,
                     'paid',
                     'paid',
                     'paid',
-                    'text'
+                    'email'
                 )->token, [], true);
 
 
@@ -116,15 +119,15 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
             . ' Thank you for using our application!';
         } else {
 
-            $url = url('/login/sub/task/' . $this->task->id . '/'
-                . $this->user->generateToken(
+            $url = url('/login/sub/receipt/' . $this->job->id . '/'
+                .  $this->user->generateToken(
                     $this->user->id,
                     true,
                     $this->task->id,
                     'paid',
                     'paid',
                     'paid',
-                    'text'
+                    'email'
                 )->token, [], true);
 
             $text = 'Customer has sent you a payment for : '. $this->task->name . '. '

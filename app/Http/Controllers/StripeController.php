@@ -324,13 +324,13 @@ class StripeController extends Controller
             $general_contractor_id = $task->contractor_id;
 
             $general_contractor = $this->getGeneral($general_contractor_id);
-
+            $job = Job::find($jobTask->job_id);
             if ($this->isSub($sub_contractor_id, $general_contractor_id)) {
                 $sub_contractor = $this->getSub($sub_contractor_id);
-                $this->notifySub($sub_contractor, $task);
+                $this->notifySub($sub_contractor, $task, $job);
                 $this->setSubStatus($sub_contractor_id, $jobTask->id, 'paid');
             }
-            $this->notifyGeneral($general_contractor, $task);
+            $this->notifyGeneral($general_contractor, $task, $job);
             $this->setJobTaskStatus($jobTask->id, 'paid');
         }
 
@@ -415,9 +415,9 @@ class StripeController extends Controller
         return $jobTask->task()->first();
     }
 
-    public function notifyGeneral($general_contractor, $task)
+    public function notifyGeneral($general_contractor, $task, $job)
     {
-        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
+        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor, $job));
     }
 
     public function isSub($sub_contractor_id, $general_contractor_id)
@@ -435,9 +435,9 @@ class StripeController extends Controller
         return User::find($general_contractor_id);
     }
 
-    public function notifySub($sub_contractor, $task)
+    public function notifySub($sub_contractor, $task, $job)
     {
-        $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+        $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job));
     }
 
     /**
@@ -597,6 +597,7 @@ class StripeController extends Controller
             $task = $jobTask->task()->first();
             $sub_contractor_id = $jobTask->contractor_id;
             $general_contractor_id = $task->contractor_id;
+            $job = Job::find($jobTask->job_id);
 
             // amounts
 
@@ -624,7 +625,7 @@ class StripeController extends Controller
                         "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
-                    $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+                    $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job));
                 } catch (\Exception $e) {
                     Log::emergency('Transfering Payments Sub: ' . $e->getMessage());
                     $this->reverseTransfers($transfers);
@@ -642,7 +643,7 @@ class StripeController extends Controller
                         "source_transaction" => $chargeId,
                     ));
                     $transfers[$jobTask->id] = $transfer->id;
-                    $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
+                    $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor, $job));
                 } catch (\Exception $e) {
                     Log::emergency('Transfering Payments General: ' . $e->getMessage());
                     $this->reverseTransfers($transfers);
@@ -823,6 +824,7 @@ class StripeController extends Controller
 
         // get modals and relevant variables 
         $jobTask = JobTask::find($request->id);
+        $job = Job::find($jobTask->job_id);
         $task = $jobTask->task()->first();
         $jobTask = $task->jobTask()->first();
         $sub_contractor_id = $jobTask->contractor_id;
@@ -837,7 +839,8 @@ class StripeController extends Controller
         $sub_contractor = User::find($sub_contractor_id);
         $general_contractor = User::find($general_contractor_id);
 
-        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
+
+        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor, $job));
 
         // update task status
         $jobTask->updateStatus(__('bid_task.customer_sent_payment'));

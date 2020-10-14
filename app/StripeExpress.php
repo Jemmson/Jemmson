@@ -73,11 +73,12 @@ class StripeExpress extends Model
         $general = User::find($generalId);
         foreach ($jobTasks as $jobTask) {
             $task = $jobTask->task()->get()->first();
+            $job = Job::find($jobTask->job_id);
             if ($this->isASub($general->id, $jobTask->contractor_id)) {
                 $sub_contractor = User::find($jobTask->contractor_id);
-                $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+                $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job));
             }
-            $general->notify(new CustomerPaidForTask($task, $general));
+            $general->notify(new CustomerPaidForTask($task, $general, $job));
         }
     }
 
@@ -276,6 +277,7 @@ class StripeExpress extends Model
         $task = $jobTask->task()->first();
         $sub_contractor_id = $jobTask->contractor_id;
         $general_contractor_id = $task->contractor_id;
+        $job = Job::find($jobTask->job_id);
 
         // if not payable how'd you get here?
         if (!$jobTask->updatable(__('bid_task.customer_sent_payment'))) {
@@ -324,7 +326,7 @@ class StripeExpress extends Model
                 ),
             ));
             //notify
-            $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor));
+            $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job));
         }
 
         // pay the general the customer price - sub price
@@ -338,7 +340,7 @@ class StripeExpress extends Model
                 ),
             ));
             // notify
-            $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor));
+            $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor, $job));
         }
 
         // update task status
