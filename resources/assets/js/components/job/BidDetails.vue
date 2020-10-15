@@ -538,6 +538,92 @@
       </v-card>
     </section>
 
+    <v-card v-show="changeLocation" class="mt-2">
+      <v-btn
+          text
+          color="red"
+          @click="changeLocation = false">Cancel
+      </v-btn>
+      <v-card-title>Enter New Job Location</v-card-title>
+      <v-card-title class="error--text" v-if="locationError">{{ locationErrorMessage }}</v-card-title>
+      <v-card-text>
+
+        <v-text-field
+            id="route"
+            :class="{'has-error': form.errors.has('address_line_1')}"
+            v-model="form.address_line_1"
+            label=""
+            required
+            :rules="[addressLine1CantBeBlank()]"
+        >
+        </v-text-field>
+        <span ref="addressLine1Error" class="help-block"
+              v-show="form.errors.has('address_line_1')">{{ form.errors.get('address_line_1') }}</span>
+
+        <v-text-field
+            id="addressLine2"
+            v-model="form.address_line_2"
+            label="Address Line 2"
+        >
+        </v-text-field>
+
+        <v-text-field
+            id="administrative_area_level_1"
+            :class="{'has-error': form.errors.has('city')}"
+            v-model="form.city"
+            required
+            :rules="[cityCantBeBlank()]"
+            label="City *"
+        >
+        </v-text-field>
+        <span ref="cityError" class="help-block"
+              v-show="form.errors.has('city')">{{ form.errors.get('city') }}</span>
+
+        <v-text-field
+            id="locality"
+            :class="{'has-error': form.errors.has('state')}"
+            v-model="form.state"
+            :rules="[stateCantBeBlank()]"
+            required
+            label="State *"
+        >
+        </v-text-field>
+        <span ref="stateError" class="help-block" v-show="form.errors.has('state')">{{
+            form.errors.get('state')
+          }}</span>
+
+        <v-text-field
+            id="postal_code"
+            :class="{'has-error': form.errors.has('zip')}"
+            :rules="[this.zipMustHaveAtleast5characters(), zipCantBeBlank()]"
+            v-model="form.zip"
+            required
+            v-mask="'#####-####'"
+            label="Zip Code *"
+        >
+        </v-text-field>
+        <span ref="zipError" class="help-block"
+              v-show="form.errors.has('zip')">{{ form.errors.get('zip') }}</span>
+
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+            text
+            :loading="updateLocationLoading"
+            color="primary"
+            @click="updateLocation()"
+        >Update
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+            text
+            color="red"
+            @click="changeLocation = false"
+        >Cancel
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+
     <section ref="job_address" class="mt-1rem"
              v-show="show.location"
     >
@@ -557,6 +643,15 @@
               Assessor
             </v-btn>
           </div>
+
+          <v-card-actions>
+            <v-btn
+                color="primary"
+                text
+                @click="openLocationDialog()"
+            >Change Job Location
+            </v-btn>
+          </v-card-actions>
 
           <div class="flex flex-col">
             <div>
@@ -582,6 +677,7 @@
                             " allowfullscreen>
             </iframe>
           </main>
+
         </card>
       </div>
       <div v-else>
@@ -790,11 +886,21 @@ export default {
   },
   data() {
     return {
+      updateLocationLoading: false,
+      locationError: false,
+      locationErrorMessage: null,
       denyForm: {
         job_task_id: 0,
         message: '',
         error: ''
       },
+      form: new SparkForm({
+        address_line_1: '',
+        address_line_2: '',
+        city: '',
+        state: '',
+        zip: ''
+      }),
       denyDialog: false,
       show: {
         jobStepper: false,
@@ -856,6 +962,7 @@ export default {
       customerNotes: false,
       customerNotes_contractor: false,
       areaError: '',
+      changeLocation: false,
       payWithCashMessage: '',
       successfulUpdate: '',
       locationExists: false,
@@ -989,6 +1096,68 @@ export default {
     }
   },
   methods: {
+
+    addressLine1CantBeBlank() {
+      return !!this.form.address_line_1 || 'Address line 1 is required'
+    },
+
+    cityCantBeBlank() {
+      return !!this.form.address_line_1 || 'City is required'
+    },
+
+    stateCantBeBlank() {
+      return !!this.form.state || 'State is required'
+    },
+
+    zipCantBeBlank() {
+      return !!this.form.zip || 'Zip is required'
+    },
+
+
+    async updateLocation() {
+
+      this.updateLocationLoading = true;
+
+      const {data} = await axios.post('/location/update', {
+        'jobId': this.bid.id,
+        'userId': this.bid.customer.id,
+        'address_line_1': this.form.address_line_1,
+        'address_line_2': this.form.address_line_2,
+        'city': this.form.city,
+        'state': this.form.state,
+        'zip': this.form.zip
+      })
+
+      if (data.error) {
+        this.locationError = true
+        this.locationErrorMessage = data.error
+      } else {
+        this.locationError = false
+        Bus.$emit('bidUpdated');
+        this.changeLocation = false;
+      }
+
+      this.updateLocationLoading = false;
+    },
+
+    zipMustHaveAtleast5characters() {
+      return this.form.zip.length > 4 || 'Zip Code Must Be At Least 5 Characters'
+    },
+
+    initAutocomplete() {
+      User.initAutocomplete('route')
+    },
+
+    updateFormLocation(location) {
+      this.form.address_line_1 = location.route
+      this.form.city = location.locality
+      this.form.state = location.administrative_area_level_1
+      this.form.zip = location.postal_code
+    },
+
+    openLocationDialog() {
+      this.changeLocation = !this.changeLocation
+    },
 
     routeToAssessorPage(bid) {
 
@@ -1679,7 +1848,13 @@ export default {
     }
   },
   mounted() {
+
+    Bus.$on('updateFormLocation', (payload) => {
+      this.updateFormLocation(payload)
+    })
+
     this.initializePayWithCashMessageValue()
+    this.initAutocomplete()
   }
 }
 </script>

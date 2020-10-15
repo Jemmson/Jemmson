@@ -61,6 +61,7 @@ Route::post('login', ['as' => 'login', 'uses' => 'Auth\LoginController@login']);
 Route::group(['middleware' => ['auth', 'further.info']], function () {
 
     Route::get('/assessor/{location}', 'AssessorController@getLocation');
+    Route::post('/location/update', 'JobController@updateLocation');
 
     Route::get('/feedback', 'FeedbackController@show');
 

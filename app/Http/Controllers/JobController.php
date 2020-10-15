@@ -30,6 +30,7 @@ use App\Traits\ConvertPrices;
 use App\Traits\Status;
 use App\Location;
 use App\JobStatus;
+use Illuminate\Validation\ValidationException;
 
 
 class JobController extends Controller
@@ -109,6 +110,110 @@ class JobController extends Controller
         }
 
         return response()->json($jobs, 200);
+    }
+
+    public function updateLocation(Request $request)
+    {
+//        validate that all required fields exist
+        try {
+            $this->validate($request, [
+                'address_line_1' => 'required',
+                'city' => 'required',
+                'state' => 'required',
+                'zip' => 'required'
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'error' => $exception->getMessage()
+            ]);
+        }
+
+//        does the location exist
+        $locationExists = self::locationExists($request);
+        $job = Job::find($request->jobId);
+        $jobId = $request->jobId;
+        if ($locationExists) {
+            if (!self::jobAlreadyAssociatedToLocation($job->location_id, $locationExists->id)) {
+//           if so then update the id of the job to the id of the existing location
+                self::updateJobLocation($jobId, $locationExists->id);
+                self::updateAllJobTasksLocation($jobId, $locationExists->id);
+            }
+        } else {
+//        if not then create a new location and then update the job with the id of the new location
+            $locationId = self::addNewLocation($request);
+            self::updateJobLocation($jobId, $locationId);
+            self::updateAllJobTasksLocation($jobId, $locationId);
+        }
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function updateAllJobTasksLocation($jobId, $locationId)
+    {
+        $jobTasks = self::getAllJobTasksAssociatedToTheJob($jobId);
+        foreach ($jobTasks as $jobTask) {
+            $jobTask->location_id = $locationId;
+            try {
+                $jobTask->save();
+            } catch (\Exception $e) {
+                Log::error('unable to save loaction Id to job task' . $e->getMessage());
+            }
+        }
+    }
+
+    public function getAllJobTasksAssociatedToTheJob($jobId)
+    {
+        return JobTask::where('job_id', '=', $jobId)->get();
+    }
+
+    public function jobAlreadyAssociatedToLocation($currentJobLocationId, $existingLocationId)
+    {
+        return $currentJobLocationId == $existingLocationId;
+    }
+
+    public function updateJobLocation($jobId, $locationId)
+    {
+        $job = Job::find($jobId);
+        $job->location_id = $locationId;
+
+        try {
+            $job->save();
+        } catch (\Exception $e) {
+            Log::error('jobLocationError ' . $e->getMessage());
+        }
+    }
+
+    public function addNewLocation($request)
+    {
+        $address = strtolower($request->address_line_1);
+        $address2 = empty($request->address_line_2) ? null : strtolower($request->address_line_2);
+        $city = strtolower($request->city);
+        $state = strtolower($request->state);
+        $zip = self::formatZip(strtolower($request->zip));
+        $userId = strtolower($request->userId);
+        $newLocation = new Location();
+        $addedLocation = $newLocation->addNewLocation($address, $address2, $city, $state, $zip, $userId);
+        return $addedLocation->id;
+    }
+
+    public function locationExists($request)
+    {
+        $address = strtolower($request->address_line_1);
+        $city = strtolower($request->city);
+        $state = strtolower($request->state);
+        $zip = self::formatZip(strtolower($request->zip));
+        return Location::where('address_line_1', '=', $address)
+            ->where('city', '=', $city)
+            ->where('state', '=', $state)
+            ->where('zip', '=', $zip)
+            ->get()->first();
+    }
+
+    public function formatZip($zip)
+    {
+        return rtrim($zip, '-');
     }
 
     public function getJobs()
