@@ -408,6 +408,20 @@ export default class User {
     }
   }
 
+  async updateJobTaskLocation(form, disabled) {
+    disabled.update = true
+    const {data} = await axios.post('/location', form)
+    if (data.error) {
+      disabled.update = false
+      Vue.toasted.error(error.message)
+    } else {
+      Bus.$emit('bidUpdated')
+      Vue.toasted.success('Location Updated')
+      disabled.update = false
+      $('#update-task-location-modal').modal('hide')
+    }
+  }
+
   async uploadTaskImage(form, disabled) {
     disabled.uploadTaskImageBtn = true
     try {

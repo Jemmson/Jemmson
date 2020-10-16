@@ -20,7 +20,7 @@
           text
           class="btn btn-normal-green btn-lg w-full"
           @click="submitBid()"
-          :disabled="!subTaskWarning || !disableButton"
+          :disabled="subTaskWarning || disableButton"
           :loading="disabled.submitBid"
       >
 

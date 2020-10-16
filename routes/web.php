@@ -184,3 +184,4 @@ Route::get('/login/{type}/receipt/{job_id}/{token}', 'PasswordlessController@rec
 
 Route::post('/bid/customer/getName', 'CustomerController@getName');
 Route::post('/customer/updateCustomerNotes', 'CustomerController@updateCustomerNotes');
+Route::post('/location', 'JobTaskController@updateJTLocation');

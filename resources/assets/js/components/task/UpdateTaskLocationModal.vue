@@ -58,7 +58,7 @@
                                     class="w-full"
                                     text
                                     color="primary"
-                                    @click="update" type="submit" :loading="disabled.update">
+                                    @click="update()" type="submit" :loading="disabled.update">
                                 Submit
                             </v-btn>
                         </v-card-actions>
@@ -106,7 +106,7 @@
                 if (this.jobTask) {
                     this.form.id = this.jobTask.id
                     this.form.location_id = this.jobTask.location_id
-                    this.authUser.updateTaskLocation(this.form, this.disabled)
+                    this.authUser.updateJobTaskLocation(this.form, this.disabled)
                     $('#update-task-location-modal_' + this.id).modal('hide')
                 }
             },
