@@ -738,6 +738,8 @@ export default {
   ],
   data() {
     return {
+      job: null,
+      jobStatus: null,
       detailsLoading: false,
       editDetails: false,
       deleteTheTask: false,
@@ -820,10 +822,11 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      job: state => state.job.model,
-      jobStatus: state => state.job.model.status
-    }),
+    // ...mapState({
+    //   job: state => state.job.model,
+    //   jobStatus: state => state.job.model.status
+    // }),
+
     jobLocationHasBeenSet() {
       if (this.jobTask && this.jobTask.location) {
         return true
@@ -924,6 +927,8 @@ export default {
       } else {
         // console.log('success', data[0]);
         this.jobTask = data[0];
+        this.job = this.jobTask.job;
+        this.jobStatus = this.jobTask.job.status;
       }
       this.detailsLoading = false;
       this.editDetails = false;
@@ -1587,7 +1592,7 @@ export default {
 
     },
     isContractor() {
-      return this.user.usertype === 'contractor'
+      return this.authUser.usertype === 'contractor'
     },
     showTheJobTaskDetails(value) {
       if (value === 'show') {
@@ -1699,6 +1704,8 @@ export default {
         // update the prices
         this.cust_final_price = this.jobTask.cust_final_price
         this.unit_price = this.jobTask.unit_price
+        this.job = this.jobTask.job;
+        this.jobStatus = this.jobTask.job.status;
 
         // update the qty
         if (

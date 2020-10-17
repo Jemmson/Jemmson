@@ -11,7 +11,7 @@
                     </button>
                     <h4
                             class="modal-title">
-                        Deny Approval - {{ jobTask.task === undefined ? '' : jobTask.task.name.toUpperCase() }}
+                        Deny Approval - {{ getTaskName() }}
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -61,6 +61,16 @@
             }
         },
         methods: {
+
+          getTaskName(){
+            if (this.jobTask && this.jobTask.task) {
+              return this.jobTask.task.name.toUpperCase();
+            } else
+            {
+              return '';
+            }
+          },
+
             getJobTaskId(){
               if (this.jobTask) {
                   return this.jobTask.id
