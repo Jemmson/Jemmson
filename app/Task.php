@@ -67,7 +67,8 @@ class Task extends Model
 //        $now = Carbon::now();
 
         $request->validate([
-            'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
+            'taskName' => 'required',
+//            'taskName' => 'required|regex:/^[a-zA-Z0-9 .\-#,]+$/i',
             'taskPrice' => 'required|numeric',
             'subTaskPrice' => 'required|numeric',
             'start_when_accepted' => 'required',
