@@ -235,6 +235,7 @@
         <div class="flex justify-content-between">
           <v-card-title>Prices</v-card-title>
           <v-icon
+              v-if="isContractor()"
               ref="priceInfo"
               color="primary"
               @click="infoDialog.prices = true"
