@@ -177,11 +177,11 @@
               <td>Total Bid Price:</td>
               <td>
                 {{ bidPrice }}
-                <v-icon
-                    color="primary"
-                    @click="showFeeDialog()"
-                    class="ml-1rem">mdi-information
-                </v-icon>
+<!--                <v-icon-->
+<!--                    color="primary"-->
+<!--                    @click="showFeeDialog()"-->
+<!--                    class="ml-1rem">mdi-information-->
+<!--                </v-icon>-->
               </td>
             </tr>
             </tbody>
@@ -189,13 +189,13 @@
         </v-simple-table>
 
 
-        <info-modal
-            :open-dialog="feeDialog"
-            :is-customer="isCustomer"
-            :estimated-fee="totalEstimatedFee()"
-            :job-type="bid ? bid.payment_type : null"
-            @closeFeeDialog="feeDialog = false"
-        ></info-modal>
+<!--        <info-modal-->
+<!--            :open-dialog="feeDialog"-->
+<!--            :is-customer="isCustomer"-->
+<!--            :estimated-fee="totalEstimatedFee()"-->
+<!--            :job-type="bid ? bid.payment_type : null"-->
+<!--            @closeFeeDialog="feeDialog = false"-->
+<!--        ></info-modal>-->
 
 
         <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less
@@ -227,11 +227,11 @@
               <td>Total Bid Price:</td>
               <td>
                 {{ bidPrice }}
-                <v-icon
-                    color="primary"
-                    @click="showFeeDialog()"
-                    class="ml-1rem">mdi-information
-                </v-icon>
+<!--                <v-icon-->
+<!--                    color="primary"-->
+<!--                    @click="showFeeDialog()"-->
+<!--                    class="ml-1rem">mdi-information-->
+<!--                </v-icon>-->
               </td>
             </tr>
             </tbody>
