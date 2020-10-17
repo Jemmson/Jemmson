@@ -332,7 +332,7 @@
           </v-list>
         </v-card-text>
 
-        <v-card-actions v-if="isContractor()">
+        <v-card-actions v-if="isContractor() && showTaskQuantityInput() && !jobIsApproved()">
           <v-btn
               text
               color="primary"
