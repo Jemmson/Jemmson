@@ -391,8 +391,7 @@ require('./bootstrap')
 
 function checkThatCurrentJobExistsForRoutesThatNeedIt(route) {
     if (route == '/job/tasks' ||
-        route == '/job/add/task' ||
-        route == '/job/task/' + route.split('/')[3]) {
+        route == '/job/add/task') {
         if (store.state.job.model === null) {
             router.push('/bids')
         }

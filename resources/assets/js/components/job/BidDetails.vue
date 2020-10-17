@@ -356,7 +356,7 @@
                 <v-btn
                     class="btn-size btn-weight"
                     :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                    :to="'/job/task/' + i"
+                    :to="'/job/task/' + item.id"
                     text
                 >Edit
                 </v-btn>

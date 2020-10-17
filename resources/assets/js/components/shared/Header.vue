@@ -9,6 +9,7 @@
                 || onContractorInfo ()
                 || onSettingsPage ()
                 || onAssessorPage ()
+                || onJobTaskPage ()
                 || onSplashScreen ()
                 || onHelpPage ()
                 || onFurtherInfoPage ()
@@ -144,7 +145,7 @@
                 return this.page.split('/')[1] === 'bid'
             },
             onJobTaskPage() {
-                return this.page === '/job/tasks' || this.page === '/job/tasks/'
+                return this.page === '/job/task' || this.page === '/job/tasks/'
             },
             onTasksPage() {
                 return this.page === '/tasks' || this.page === '/tasks/'

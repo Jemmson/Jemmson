@@ -3,15 +3,96 @@
 namespace App\Http\Controllers;
 
 use App\JobTask;
+use App\Task;
 use App\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\ConvertPrices;
 
 class JobTaskController extends Controller
 {
     //
+
+    use ConvertPrices;
+
+    public function updateDetails(Request $request)
+    {
+        //        validate that all required fields exist
+        try {
+            $this->validate($request, [
+                'taskName' => 'required',
+                'startDate' => 'required',
+                'jobTaskId' => 'required'
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'error' => $exception->getMessage()
+            ]);
+        }
+
+        $jobTask = JobTask::find($request->jobTaskId);
+        $task = Task::find($jobTask->task_id);
+
+        self::updateStartDate($jobTask, $request->startDate);
+        self::updateTaskName($task, $request->taskName);
+
+        return self::getJobTaskForGeneral($jobTask->id, null);
+
+    }
+
+    public function updateTaskName($task, $taskName)
+    {
+        $task->name = $taskName;
+
+        try {
+            $task->save();
+        } catch (\Exception $e) {
+            Log::error(': ' . $e->getMessage());
+        }
+    }
+
+    public function updateStartDate($jobTask, $startDate)
+    {
+        $jobTask->start_date = $startDate;
+
+        try {
+            $jobTask->save();
+        } catch (\Exception $e) {
+            Log::error(': ' . $e->getMessage());
+        }
+    }
+
+    public function getJobTaskForGeneral($jobTaskId, $userId)
+    {
+
+        $jobTasks = JobTask::with(
+            [
+                'task',
+                'images',
+                'location',
+                'subStatuses',
+                'job',
+                'job.jobStatuses',
+                'taskMessages',
+                'job.customer',
+                'jobTaskStatuses',
+                'bidContractorJobTasks',
+                'bidContractorJobTasks.contractor',
+                'bidContractorJobTasks.contractor.contractor'
+            ])->where('id', '=', $jobTaskId)->get();
+        foreach ($jobTasks as $jt) {
+            $jt->cust_final_price = $this->convertToDollars($jt->cust_final_price);
+            $jt->sub_final_price = $this->convertToDollars($jt->sub_final_price);
+            $jt->unit_price = $this->convertToDollars($jt->unit_price);
+            foreach ($jt->bidContractorJobTasks as $bidContractorJobTask) {
+                $bidContractorJobTask->bid_price = $this->convertToDollars($bidContractorJobTask->bid_price);
+            }
+        }
+        return $jobTasks;
+    }
+
 
     public function updateJTLocation(Request $request)
     {

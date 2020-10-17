@@ -114,8 +114,53 @@
         class="col-12"
     >
       <v-card>
-        <v-card-title>Details</v-card-title>
-        <v-card-text>
+        <div class="flex justify-content-between align-items-center">
+          <v-card-title>Details</v-card-title>
+          <v-btn
+              v-if="!isCustomer"
+              class="mx-2"
+              small
+              color="primary"
+              @click="editDetailInformation()"
+          >
+            <v-icon>mdi-circle-edit-outline</v-icon>
+          </v-btn>
+        </div>
+
+        <v-card-text v-if="editDetails && !isCustomer">
+          <v-form>
+            <v-text-field label="Task Name" type="text" v-model="details.taskName"></v-text-field>
+            <v-text-field label="Start Date" v-model="details.startDate"></v-text-field>
+            <v-date-picker v-model="details.startDate"></v-date-picker>
+            <v-textarea
+                class="mt-3"
+                filled
+                name="message"
+                readonly
+                outlined
+                label="Messages"
+                :value="getMessage(jobTask)"
+            ></v-textarea>
+            <div class="flex justify-content-between">
+              <v-btn text
+                     :loading="detailsLoading"
+                     color="primary"
+                     @click="submitEditDetails()"
+              >
+                Submit
+              </v-btn>
+
+              <v-btn text
+                     class="error--text"
+                     @click="editDetails = false"
+              >
+                Cancel
+              </v-btn>
+            </div>
+          </v-form>
+        </v-card-text>
+
+        <v-card-text v-if="!editDetails">
           <div class="flex justify-content-between">
             <div>Job Task Name:</div>
             <div
@@ -134,7 +179,7 @@
           <div class="flex justify-content-between">
             <div>Start Date</div>
             <div class="float-right font-weight-bold capitalize">
-              {{ getStartDate(jobTask) }}
+              {{ getStartDateHyphen(jobTask) }}
             </div>
           </div>
           <div v-show="jobTask ? jobTask.declined_message !== '' : false">
@@ -693,8 +738,14 @@ export default {
   ],
   data() {
     return {
+      detailsLoading: false,
+      editDetails: false,
       deleteTheTask: false,
       validate: false,
+      details: {
+        taskName: null,
+        startDate: null
+      },
       unitPriceRules: {
         mustBeANumber: value => !!value && !isNaN(value) || 'The Unit Price Must Be A Number'
       },
@@ -821,7 +872,7 @@ export default {
       return this.jobTask.status === 'bid_task.approved_by_customer'
     },
     isCustomer() {
-      return this.authUser.isCustomer
+      return this.authUser.usertype === 'customer'
     },
     // isContractor() {
     //   return this.user.isContractor()
@@ -859,6 +910,30 @@ export default {
     //     let date = startDate.split(' ')
     //     return date[0]
     // },
+
+    async submitEditDetails() {
+      this.detailsLoading = true;
+      const {data} = await axios.post('/jobTask/updateDetails', {
+        taskName: this.details.taskName,
+        startDate: this.details.startDate,
+        jobTaskId: this.jobTask.id
+      })
+
+      if (data.error) {
+        console.log('data.error', data.error);
+      } else {
+        // console.log('success', data[0]);
+        this.jobTask = data[0];
+      }
+      this.detailsLoading = false;
+      this.editDetails = false;
+    },
+
+    editDetailInformation() {
+      this.details.taskName = this.getTaskName()
+      this.details.startDate = this.getStartDateHyphen(this.jobTask)
+      this.editDetails = true;
+    },
 
     getTaskName() {
       if (this.jobTask) {
@@ -983,6 +1058,13 @@ export default {
       if (jt) {
         let date = jt.start_date
         return this.dateOnly(date)
+      }
+    },
+
+    getStartDateHyphen(jt) {
+      if (jt) {
+        let date = jt.start_date
+        return this.dateOnlyHyphen(date)
       }
     },
 
@@ -1491,17 +1573,17 @@ export default {
 
     updateCustomerTaskPrice(price, jobTaskId, bidId) {
 
-        if (parseFloat(price) !== this.unit_price) {
-          if (this.sub_final_price > price) {
-            this.errors.unit_price = true
-          } else if (this.sub_final_price < price) {
-            price = parseFloat(price);
-            let custFinalPrice = price * this.jobTask.qty;
-            this.unit_price = price.toFixed(2)
-            this.cust_final_price = custFinalPrice.toFixed(2)
-            GeneralContractor.updateCustomerPrice(price.toFixed(2), jobTaskId, bidId)
-          }
+      if (parseFloat(price) !== this.unit_price) {
+        if (this.sub_final_price > price) {
+          this.errors.unit_price = true
+        } else if (this.sub_final_price < price) {
+          price = parseFloat(price);
+          let custFinalPrice = price * this.jobTask.qty;
+          this.unit_price = price.toFixed(2)
+          this.cust_final_price = custFinalPrice.toFixed(2)
+          GeneralContractor.updateCustomerPrice(price.toFixed(2), jobTaskId, bidId)
         }
+      }
 
     },
     isContractor() {
@@ -1536,7 +1618,7 @@ export default {
       if (this.jobTask.sub_statuses.length > 0) {
         let currentSubStatus = this.jobTask.sub_statuses[this.jobTask.sub_statuses.length - 1].status;
         return currentSubStatus === 'initiated'
-        || currentSubStatus === 'sent_a_bid'
+            || currentSubStatus === 'sent_a_bid'
       }
       return false;
     },
@@ -1609,12 +1691,29 @@ export default {
     },
     async getTask() {
       try {
-        const data = await axios.get('/getJobTaskForGeneral/' + this.jobTask.id + '/' + this.user.id)
+        const data = await axios.get('/getJobTaskForGeneral/' + this.$route.params.index + '/' + Spark.state.user.id)
+
+        // assign the job task
         this.jobTask = data.data[0]
+
+        // update the prices
+        this.cust_final_price = this.jobTask.cust_final_price
+        this.unit_price = this.jobTask.unit_price
+
+        // update the qty
+        if (
+            parseInt(this.cust_final_price) <= 0 &&
+            this.jobTask.qty > 0 &&
+            this.unit_price > 0
+        ) {
+          // update the customer task price
+          this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.job)
+        }
 
         if (this.isContractor()) {
           this.sub_final_price = this.jobTask.sub_final_price
         }
+
 
       } catch (error) {
         console.log(error.message)
@@ -1642,49 +1741,56 @@ export default {
   },
   mounted() {
 
-    Bus.$on('bidUpdated', () => {
-      this.getTask()
-    })
+    // Bus.$on('bidUpdated', () => {
+    //   this.getTask()
+    // })
 
-    if (!this.$store.state.job.model) {
-      this.$router.push('/bids');
-    } else {
-      if (this.$store.state.job.model.job_tasks) {
-        this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
-      } else if (this.$store.state.job.model[0].job_tasks) {
-        this.jobTask = this.$store.state.job.model[0].job_tasks[this.$route.params.index]
-      }
+    this.$store.commit('setCurrentPage', '/job/task');
 
-      if (this.jobTask) {
-        this.cust_final_price = this.jobTask.cust_final_price
-        this.sub_final_price = this.jobTask.sub_final_price
-        this.unit_price = this.jobTask.unit_price
+    this.getTask()
 
-        if (
-            parseInt(this.cust_final_price) <= 0 &&
-            this.jobTask.qty > 0 &&
-            this.unit_price > 0
-        ) {
-
-          if (this.jobStateIsAnArray()) {
-            if (this.$store.state.job.model[0].id > 0) {
-              this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
-            } else if (this.$store.state.job.id !== '') {
-              this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
-            }
-          } else if (this.jobStateIsAnObject) {
-            if (this.$store.state.job.model.id > 0) {
-              this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model.id)
-            } else if (this.$store.state.job.id !== '') {
-              this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
-            }
-          }
+    this.authUser = Spark.state.user
 
 
-        }
-      }
-      this.user = Spark.state.user
-    }
+    // if (!this.$store.state.job.model) {
+    //   this.$router.push('/bids');
+    // } else {
+    //   if (this.$store.state.job.model.job_tasks) {
+    //     this.jobTask = this.$store.state.job.model.job_tasks[this.$route.params.index]
+    //   } else if (this.$store.state.job.model[0].job_tasks) {
+    //     this.jobTask = this.$store.state.job.model[0].job_tasks[this.$route.params.index]
+    //   }
+    //
+    //   if (this.jobTask) {
+    //     this.cust_final_price = this.jobTask.cust_final_price
+    //     this.sub_final_price = this.jobTask.sub_final_price
+    //     this.unit_price = this.jobTask.unit_price
+    //
+    //     if (
+    //         parseInt(this.cust_final_price) <= 0 &&
+    //         this.jobTask.qty > 0 &&
+    //         this.unit_price > 0
+    //     ) {
+    //
+    //       if (this.jobStateIsAnArray()) {
+    //         if (this.$store.state.job.model[0].id > 0) {
+    //           this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model[0].id)
+    //         } else if (this.$store.state.job.id !== '') {
+    //           this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
+    //         }
+    //       } else if (this.jobStateIsAnObject) {
+    //         if (this.$store.state.job.model.id > 0) {
+    //           this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.model.id)
+    //         } else if (this.$store.state.job.id !== '') {
+    //           this.updateCustomerTaskPrice(this.unit_price, this.jobTask.id, this.$store.state.job.id)
+    //         }
+    //       }
+    //
+    //
+    //     }
+    //   }
+    //   this.user = Spark.state.user
+    // }
 
   },
   created() {

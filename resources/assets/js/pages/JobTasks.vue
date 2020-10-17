@@ -50,7 +50,7 @@
                                 class="w-40"
                                 text
                                 color="primary"
-                                @click="goToJobTask(index)">SELECT
+                                @click="goToJobTask(jTask.id)">SELECT
                         </v-btn>
                     </div>
                 </div>

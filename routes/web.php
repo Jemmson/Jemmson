@@ -85,7 +85,7 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/task/image', 'TaskController@uploadTaskImage');
     Route::delete('/task/image/{taskImage}', 'TaskController@deleteImage');
     Route::get('/getAllTaskIdsForJob/{jobId}', 'TaskController@getAllTaskIdsForJob');
-    Route::get('/getJobTaskForGeneral/{task}/{userId}', 'TaskController@getJobTaskForGeneral');
+    Route::get('/getJobTaskForGeneral/{task}/{userId}', 'JobTaskController@getJobTaskForGeneral');
     Route::get('/getImagesNotAssociatedToATask/{jobId}', 'TaskImagesController@getImagesNotAssociatedToATask');
     Route::post('/associateImagesToTasks', 'TaskImagesController@associateImagesToTasks');
     Route::get('/jobImages/{id}', 'JobController@jobImages');
@@ -185,3 +185,4 @@ Route::get('/login/{type}/receipt/{job_id}/{token}', 'PasswordlessController@rec
 Route::post('/bid/customer/getName', 'CustomerController@getName');
 Route::post('/customer/updateCustomerNotes', 'CustomerController@updateCustomerNotes');
 Route::post('/location', 'JobTaskController@updateJTLocation');
+Route::post('/jobTask/updateDetails', 'JobTaskController@updateDetails');
