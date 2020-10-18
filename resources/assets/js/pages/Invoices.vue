@@ -33,16 +33,27 @@
                     v-model="search"
                     append-icon="mdi-table-search"
                     label="Search"
-                    single-line
                     hide-details
             ></v-text-field>
             </v-card-title>
+
             <v-data-table
                     :headers="jobHeaders"
                     :items="jobReceipts"
                     :search="search"
+                    disable-sort
                     @click:row="goToInvoice('/invoice/'+ $event.id)"
-            ></v-data-table>
+            >
+              <hr>
+              <template v-slot:item="{ item }">
+                <div class="flex justify-content-around align-center border-bottom select-item"  @click="goToInvoice('/invoice/'+ item.id)">
+                  <div>{{ item.job_name }}</div>
+                  <div>{{ item.customer }}</div>
+                  <div>{{ item.finished }}</div>
+                  <hr>
+                </div>
+              </template>
+            </v-data-table>
         </v-card>
 
         <v-card v-if="show.subs">
@@ -319,6 +330,31 @@
 </script>
 
 <style scoped>
+
+    .select-item:hover {
+      background: #e5e5e5;
+      outline: none;
+      -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+      -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+      box-shadow: inset 0px 0px 5px #c1c1c1;
+    }
+
+    .select-item:active {
+      background: #e5e5e5;
+      outline: none;
+      -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+      -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+      box-shadow: inset 0px 0px 5px #c1c1c1;
+    }
+
+    .hoverOver:hover{
+      background: red;
+    }
+
+    .hoverOver:active{
+      background: green;
+    }
+
     .full-height {
         height: 125vh;
     }
