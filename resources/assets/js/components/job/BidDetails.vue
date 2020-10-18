@@ -177,11 +177,11 @@
               <td>Total Bid Price:</td>
               <td>
                 {{ bidPrice }}
-<!--                <v-icon-->
-<!--                    color="primary"-->
-<!--                    @click="showFeeDialog()"-->
-<!--                    class="ml-1rem">mdi-information-->
-<!--                </v-icon>-->
+                <!--                <v-icon-->
+                <!--                    color="primary"-->
+                <!--                    @click="showFeeDialog()"-->
+                <!--                    class="ml-1rem">mdi-information-->
+                <!--                </v-icon>-->
               </td>
             </tr>
             </tbody>
@@ -189,13 +189,13 @@
         </v-simple-table>
 
 
-<!--        <info-modal-->
-<!--            :open-dialog="feeDialog"-->
-<!--            :is-customer="isCustomer"-->
-<!--            :estimated-fee="totalEstimatedFee()"-->
-<!--            :job-type="bid ? bid.payment_type : null"-->
-<!--            @closeFeeDialog="feeDialog = false"-->
-<!--        ></info-modal>-->
+        <!--        <info-modal-->
+        <!--            :open-dialog="feeDialog"-->
+        <!--            :is-customer="isCustomer"-->
+        <!--            :estimated-fee="totalEstimatedFee()"-->
+        <!--            :job-type="bid ? bid.payment_type : null"-->
+        <!--            @closeFeeDialog="feeDialog = false"-->
+        <!--        ></info-modal>-->
 
 
         <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less
@@ -227,11 +227,11 @@
               <td>Total Bid Price:</td>
               <td>
                 {{ bidPrice }}
-<!--                <v-icon-->
-<!--                    color="primary"-->
-<!--                    @click="showFeeDialog()"-->
-<!--                    class="ml-1rem">mdi-information-->
-<!--                </v-icon>-->
+                <!--                <v-icon-->
+                <!--                    color="primary"-->
+                <!--                    @click="showFeeDialog()"-->
+                <!--                    class="ml-1rem">mdi-information-->
+                <!--                </v-icon>-->
               </td>
             </tr>
             </tbody>
@@ -633,7 +633,7 @@
           <div class="flex justify-content-between align-baseline">
             <v-card-title>Job Location</v-card-title>
             <v-btn
-                v-if="bid.location.state === 'AZ'"
+                v-if="stateIsAz()"
                 ref="assessor"
                 class="mr-1rem"
                 text
@@ -1096,6 +1096,12 @@ export default {
     }
   },
   methods: {
+
+    stateIsAz() {
+      let state = 'AZ';
+      let addressState = this.bid.location.state;
+      return addressState.toLowerCase() === state.toLowerCase();
+    },
 
     addressLine1CantBeBlank() {
       return !!this.form.address_line_1 || 'Address line 1 is required'

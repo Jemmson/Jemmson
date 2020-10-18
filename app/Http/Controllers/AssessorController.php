@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
+use oasis\names\specification\ubl\schema\xsd\CommonBasicComponents_2\BalanceBroughtForwardIndicator;
 
 class AssessorController extends Controller
 {
@@ -31,9 +32,59 @@ class AssessorController extends Controller
         } else if ($totalFound === 1) {
             return $this->getAssessorData($result->Results[0]->APN->link);
         } else {
-            return $result->Results;
+            $bestGuess = self::bestGuessOption($result->Results, $location);
+            return $this->getAssessorData($bestGuess->APN->link);
+
         }
 
+    }
+
+    public function bestGuessOption($results, $location)
+    {
+        try {
+            $situsAddress = [];
+            $locationArray = explode('+', $location);
+            $houseNumberArray = explode('/', $locationArray[0]);
+            $houseNumber = $houseNumberArray[count($houseNumberArray) - 1];
+            $locationArray[0] = $houseNumber;
+            for ($i = 0; $i < count($results); $i++){
+                $addressArray = explode(' ', $results[$i]->SitusAddress);
+                if ($results[$i]->SitusAddress === '2345 S ALMA SCHOOL RD MESA, AZ 85210') {
+                    $found = true;
+                }
+                $matchedAddress = [];
+                foreach ($addressArray as $address) {
+                    if (strlen($address) > 0) {
+                        foreach ($locationArray as $item) {
+                            if (strtolower($item) === strtolower($address)) {
+                                array_push($matchedAddress, $item);
+                                break;
+                            } else if (
+                                $item[0] &&
+                                strtolower($item[0]) === strtolower($address[0])
+                            ) {
+                                array_push($matchedAddress, $item);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (count($matchedAddress) === count($locationArray)) {
+                    array_push($situsAddress, $results[$i]);
+                }
+            }
+        } catch (\Exception $e) {
+            Log::debug($e->getMessage());
+        }
+
+
+
+        if (count($situsAddress) === 1) {
+            return $situsAddress[0];
+        } else {
+            return $situsAddress[0];
+        }
     }
 
     private function getAssessorData($location)
