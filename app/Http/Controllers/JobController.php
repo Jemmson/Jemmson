@@ -501,7 +501,16 @@ class JobController extends Controller
             'job_name' => $job->job_name
         ];
 
+        $invoice['job']['location'] = Location::find($job->location_id);
+        $invoice['job']['status'] = JobStatus::where('job_id', '=', $job->id)->get();
+        $customer = User::find($job->customer_id);
+        $invoice['job']['customer'] = [
+            "id" => $customer->id,
+            "first_name" => $customer->first_name,
+            "last_name" => $customer->last_name
+        ];
         $invoice['contractor'] = $job->contractor()->select([
+            'id',
             'name'
         ])->get()->first();
         $invoice['contractor']['company'] =
@@ -514,8 +523,7 @@ class JobController extends Controller
             'qty',
             'sub_final_price',
             'task_id',
-            'contractor_id',
-            'unit_price'
+            'contractor_id'
         ])->get();
 
         $invoice['job']['job_tasks'] = $jobTasks;
