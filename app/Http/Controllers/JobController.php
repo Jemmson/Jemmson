@@ -447,7 +447,19 @@ class JobController extends Controller
             'bid_price' => $job->bid_price,
             'job_name' => $job->job_name
         ];
+
+
+        $invoice['job']['location'] = Location::find($job->location_id);
+        $invoice['job']['status'] = JobStatus::where('job_id', '=', $job->id)->get();
+        $customer = User::find($job->customer_id);
+        $invoice['job']['customer'] = [
+            "id" => $customer->id,
+            "first_name" => $customer->first_name,
+            "last_name" => $customer->last_name
+        ];
+
         $invoice['contractor'] = $job->contractor()->select([
+            'id',
             'name'
         ])->get()->first();
         $invoice['contractor']['company'] =
@@ -535,7 +547,8 @@ class JobController extends Controller
 
             if ($jt->contractor_id != $job->contractor_id) {
                 $jt['sub'] = User::where('id', '=', $jt->contractor_id)->select([
-                    'name'
+                    'name',
+                    'id'
                 ])->get()->first();
                 $jt['sub']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
                     ->select(['company_name'])->get()->first();

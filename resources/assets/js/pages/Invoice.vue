@@ -47,6 +47,31 @@
         </div>
 
         <div v-if="invoice && invoice.user === 'general'">
+
+          <div class="flex justify-content-around align-center">
+            <v-card-title>{{ user.contractor.company_name }}</v-card-title>
+          </div>
+          <v-card-text>
+            <div class="capitalize" style="font-weight: bold">Job Address:</div>
+            <div>
+              <v-btn
+                  color="primary"
+                  style="margin-left: -1rem"
+                  text
+                  @click="viewCustomerInfoForSubs()"
+              >
+                {{ invoice.job.customer.first_name }} {{ invoice.job.customer.last_name }}
+              </v-btn>
+              <div class="capitalize">{{ invoice.job.location.address_line_1 }}</div>
+              <div class="capitalize">{{ invoice.job.location.address_line_2 }}</div>
+              <div class="capitalize">{{ invoice.job.location.city }}, {{ invoice.job.location.state }},
+                {{ invoice.job.location.zip }}
+              </div>
+            </div>
+          </v-card-text>
+
+
+
           <v-simple-table>
             <template v-slot:default>
               <thead>
@@ -60,10 +85,13 @@
               <tbody>
               <tr v-for="item in invoice.job.job_tasks" :key="item.task_id">
                 <td>{{ item.task.name }}</td>
-                <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
+                <td v-if="item.sub"
+                    style="color: #1976d2"
+                    @click="viewContractorInfoForSubsWithId( item.sub.id )"
+                >{{ item.sub.company.company_name }}</td>
                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                 <td>{{ item.qty }}</td>
-                <td>$ {{ getUnitPrice(item) }}</td>
+                <td>${{ getUnitPrice(item) }}</td>
               </tr>
               </tbody>
             </template>
@@ -72,7 +100,7 @@
           <v-row align="center">
             <v-card-subtitle>Total</v-card-subtitle>
             <v-spacer></v-spacer>
-            <span class="mr-1rem">$ {{ getBidPrice(invoice) }}</span>
+            <span class="mr-1rem">${{ getBidPrice(invoice) }}</span>
           </v-row>
         </div>
 
@@ -87,26 +115,23 @@
               {{ invoice.contractor.company.company_name }}
             </v-btn>
           </div>
-          <v-card-text class="flex justify-content-between">
-            <div>
+          <v-card-text>
               <div class="capitalize" style="font-weight: bold">Job Address:</div>
               <div>
+                <v-btn
+                    color="primary"
+                    style="margin-left: -1rem"
+                    text
+                    @click="viewCustomerInfoForSubs()"
+                >
+                  {{ invoice.job.customer.first_name }} {{ invoice.job.customer.last_name }}
+                </v-btn>
                 <div class="capitalize">{{ invoice.job.location.address_line_1 }}</div>
                 <div class="capitalize">{{ invoice.job.location.address_line_2 }}</div>
                 <div class="capitalize">{{ invoice.job.location.city }}, {{ invoice.job.location.state }},
                   {{ invoice.job.location.zip }}
                 </div>
               </div>
-            </div>
-            <div>
-              <v-btn
-                  color="primary"
-                  text
-                  @click="viewCustomerInfoForSubs()"
-              >
-                {{ invoice.job.customer.first_name }} {{ invoice.job.customer.last_name }}
-              </v-btn>
-            </div>
           </v-card-text>
           <v-simple-table>
             <template v-slot:default>
@@ -211,6 +236,19 @@ export default {
         this.$router.push({
           name: 'customer-info',
           params: {customerId: this.invoice.job.customer.id}
+        })
+      }
+    },
+
+    viewContractorInfoForSubsWithId(id) {
+      if (
+          this.invoice
+          && this.invoice.contractor
+      ) {
+        this.$store.commit('setCurrentPage', '/contractor-info');
+        this.$router.push({
+          name: 'contractor-info',
+          params: {contractorId: id}
         })
       }
     },
