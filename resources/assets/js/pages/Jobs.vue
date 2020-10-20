@@ -32,17 +32,23 @@
           class="flex justify-content-center"
       >
         <v-tab
-          @click="inProgress = true"
-        >In Progress</v-tab>
+            @click="selectTab('inProgress')"
+        >In Progress
+        </v-tab>
         <v-tab
-          @click="inProgress = false"
-        >Paid</v-tab>
+            @click="selectTab('approved')"
+        >Approved
+        </v-tab>
+        <v-tab
+            @click="selectTab('paid')"
+        >Paid
+        </v-tab>
       </v-tabs>
 
       <v-card
           v-for="bid in sBids" v-bind:key="bid.id"
           class="margins-quarter-rem"
-          v-if="getJobStatus(bid) !== 'paid' && inProgress"
+          v-if="getJobStatus(bid) !== 'paid' && getJobStatus(bid) !== 'approved' && inProgress"
       >
         <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
         <v-card-subtitle class="uppercase">{{ getJobStatus(bid) }}</v-card-subtitle>
@@ -105,10 +111,39 @@
 
       </v-card>
 
-
+      <v-simple-table
+          v-if="approved"
+      >
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th class="text-left">Job Name</th>
+            <th class="text-left">Date Paid</th>
+            <th class="text-left"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+              v-if="getJobStatus(item) === 'approved'"
+              v-for="item in sBids" :key="item.id">
+            <td>{{ jobName(item.job_name) }}</td>
+            <td>{{ dateOnlyHyphenDBTimestampFromLatestStatus(item.job_statuses) }}</td>
+            <td>
+              <v-btn
+                  @click="goToJob(item.id)"
+                  text
+                  color="primary"
+                  class="w-40"
+              >VIEW
+              </v-btn>
+            </td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
 
       <v-simple-table
-          v-if="!inProgress"
+          v-if="paid"
       >
         <template v-slot:default>
           <thead>
@@ -124,13 +159,15 @@
               v-for="item in sBids" :key="item.id">
             <td>{{ jobName(item.job_name) }}</td>
             <td>{{ dateOnlyHyphenDBTimestampFromLatestStatus(item.job_statuses) }}</td>
-            <td><v-btn
-                @click="goToJob(item.id)"
-                text
-                color="primary"
-                class="w-40"
-            >VIEW
-            </v-btn></td>
+            <td>
+              <v-btn
+                  @click="goToJob(item.id)"
+                  text
+                  color="primary"
+                  class="w-40"
+              >VIEW
+              </v-btn>
+            </td>
           </tr>
           </tbody>
         </template>
@@ -181,6 +218,8 @@ export default {
   data() {
     return {
       inProgress: true,
+      approved: false,
+      paid: false,
       modal: {
         jobs: false
       },
@@ -216,6 +255,22 @@ export default {
     })
   },
   methods: {
+
+    selectTab(status) {
+      if (status === 'inProgress') {
+        this.approved = false;
+        this.paid = false;
+        this.inProgress = true;
+      } else if (status === 'approved') {
+        this.paid = false;
+        this.inProgress = false;
+        this.approved = true;
+      } else {
+        this.inProgress = false;
+        this.approved = false;
+        this.paid = true;
+      }
+    },
 
     async getUser() {
       const {data} = await axios.get('user/current')
