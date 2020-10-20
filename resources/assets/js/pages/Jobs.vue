@@ -105,71 +105,36 @@
 
       </v-card>
 
-      <v-card
-          v-for="bid in sBids" v-bind:key="bid.id"
-          class="margins-quarter-rem"
-          v-if="getJobStatus(bid) === 'paid' && !inProgress"
+
+
+      <v-simple-table
+          v-if="!inProgress"
       >
-        <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
-        <v-card-subtitle class="uppercase">{{ getJobStatus(bid) }}</v-card-subtitle>
-        <v-card-subtitle
-            v-if="bid.payment_type === 'cash'"
-        >
-          <v-icon
-          >mdi-cash
-          </v-icon>
-          Cash Job
-        </v-card-subtitle>
-        <v-card-subtitle
-            v-else-if="bid.payment_type === 'creditCard'"
-        >
-          <v-icon
-          >mdi-credit-card
-          </v-icon>
-          Credit Card Job
-        </v-card-subtitle>
-
-        <v-card-text>
-          <v-card-subtitle v-if="isContractor()"
-                           class="p-0"
-          >
-                                     <span ref="total_number_of_subs"
-                                           class="float-right list-card-info">
-                                            {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
-                                        <i class="fas fa-users"></i>
-                                     </span>
-
-            <span class="float-right mr-2 list-card-info"
-                  ref="show_number_of_job_tasks">
-                                            {{ bid.job_tasks_length }} Tasks
-                                        <i class="far fa-check-square"></i>
-                                    </span>
-          </v-card-subtitle>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn
-              class="w-40"
-              text
-              color="red"
-              @click="showDeleteJobModal(bid)"
-          >
-            DELETE JOB
-          </v-btn>
-
-          <v-spacer></v-spacer>
-
-          <v-btn
-              @click="goToJob(bid.id)"
-              text
-              color="primary"
-              class="w-40"
-          >VIEW JOB
-          </v-btn>
-
-        </v-card-actions>
-
-      </v-card>
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th class="text-left">Job Name</th>
+            <th class="text-left">Date Paid</th>
+            <th class="text-left"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+              v-if="getJobStatus(item) === 'paid'"
+              v-for="item in sBids" :key="item.id">
+            <td>{{ jobName(item.job_name) }}</td>
+            <td>{{ dateOnlyHyphenDBTimestampFromLatestStatus(item.job_statuses) }}</td>
+            <td><v-btn
+                @click="goToJob(item.id)"
+                text
+                color="primary"
+                class="w-40"
+            >VIEW
+            </v-btn></td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
 
     </div>
     <tasks v-else>
@@ -195,6 +160,7 @@ import DeleteTaskModal from '../components/job/DeleteTaskModal'
 import Feedback from '../components/shared/Feedback'
 import Status from '../components/mixins/Status'
 import InfoModalGeneric from '../components/documentation/InfoModalGeneric'
+import Utilities from "../components/mixins/Utilities";
 
 export default {
   name: 'Jobs',
@@ -207,7 +173,7 @@ export default {
     DeleteTaskModal
   },
   mixins: [
-    Status
+    Status, Utilities
   ],
   props: {
     user: Object

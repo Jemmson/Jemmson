@@ -41,6 +41,16 @@ export default {
             }
         },
 
+        dateOnlyHyphenDBTimestampFromLatestStatus(status) {
+            let latestStatus = status[status.length - 1]
+            let datetime = latestStatus.updated_at
+            if (datetime) {
+                let d = datetime.split('T');
+                let time = moment(d[0]);
+                return time.local().format('YYYY-MM-DD');
+            }
+        },
+
         localTime(time) {
             return moment(time)
                 .local()
