@@ -17,6 +17,22 @@
       <v-card-text>
 
         <div v-if="invoice && invoice.user === 'customer'">
+
+          <div class="flex justify-content-around align-center">
+            <v-card-title>{{ user.first_name }} {{ user.last_name }}</v-card-title>
+          </div>
+          <v-card-text>
+            <div class="capitalize" style="font-weight: bold">Job Address:</div>
+            <div>
+              <div class="capitalize">{{ invoice.job.location.address_line_1 }}</div>
+              <div class="capitalize">{{ invoice.job.location.address_line_2 }}</div>
+              <div class="capitalize">{{ invoice.job.location.city }}, {{ invoice.job.location.state }},
+                {{ invoice.job.location.zip }}
+              </div>
+            </div>
+          </v-card-text>
+
+
           <v-simple-table>
             <template v-slot:default>
               <thead>
@@ -30,10 +46,18 @@
               <tbody>
               <tr v-for="item in invoice.job.job_tasks" :key="item.task_id">
                 <td>{{ item.task.name }}</td>
-                <td v-if="item.sub">{{ item.sub.company.company_name }}</td>
-                <td v-if="item.general">{{ item.general.company.company_name }}</td>
+                <td v-if="item.sub"
+                    style="color: #1976d2"
+                    @click="viewContractorInfoForSubsWithId( item.sub.id )"
+                >{{ item.sub.company.company_name }}
+                </td>
+                <td v-if="item.general"
+                    style="color: #1976d2"
+                    @click="viewContractorInfoForSubsWithId( item.general.id )"
+                >{{ item.general.company.company_name }}
+                </td>
                 <td>{{ item.qty }}</td>
-                <td>{{ getUnitPrice(item) }}</td>
+                <td>${{ getUnitPrice(item) }}</td>
               </tr>
               </tbody>
             </template>
@@ -42,7 +66,7 @@
           <v-row align="center">
             <v-card-subtitle>Total</v-card-subtitle>
             <v-spacer></v-spacer>
-            <span class="mr-1rem">{{ getBidPrice(invoice) }}</span>
+            <span class="mr-1rem">${{ getBidPrice(invoice) }}</span>
           </v-row>
         </div>
 
@@ -71,7 +95,6 @@
           </v-card-text>
 
 
-
           <v-simple-table>
             <template v-slot:default>
               <thead>
@@ -88,7 +111,8 @@
                 <td v-if="item.sub"
                     style="color: #1976d2"
                     @click="viewContractorInfoForSubsWithId( item.sub.id )"
-                >{{ item.sub.company.company_name }}</td>
+                >{{ item.sub.company.company_name }}
+                </td>
                 <td v-if="item.general">{{ item.general.company.company_name }}</td>
                 <td>{{ item.qty }}</td>
                 <td>${{ getUnitPrice(item) }}</td>
@@ -116,22 +140,22 @@
             </v-btn>
           </div>
           <v-card-text>
-              <div class="capitalize" style="font-weight: bold">Job Address:</div>
-              <div>
-                <v-btn
-                    color="primary"
-                    style="margin-left: -1rem"
-                    text
-                    @click="viewCustomerInfoForSubs()"
-                >
-                  {{ invoice.job.customer.first_name }} {{ invoice.job.customer.last_name }}
-                </v-btn>
-                <div class="capitalize">{{ invoice.job.location.address_line_1 }}</div>
-                <div class="capitalize">{{ invoice.job.location.address_line_2 }}</div>
-                <div class="capitalize">{{ invoice.job.location.city }}, {{ invoice.job.location.state }},
-                  {{ invoice.job.location.zip }}
-                </div>
+            <div class="capitalize" style="font-weight: bold">Job Address:</div>
+            <div>
+              <v-btn
+                  color="primary"
+                  style="margin-left: -1rem"
+                  text
+                  @click="viewCustomerInfoForSubs()"
+              >
+                {{ invoice.job.customer.first_name }} {{ invoice.job.customer.last_name }}
+              </v-btn>
+              <div class="capitalize">{{ invoice.job.location.address_line_1 }}</div>
+              <div class="capitalize">{{ invoice.job.location.address_line_2 }}</div>
+              <div class="capitalize">{{ invoice.job.location.city }}, {{ invoice.job.location.state }},
+                {{ invoice.job.location.zip }}
               </div>
+            </div>
           </v-card-text>
           <v-simple-table>
             <template v-slot:default>

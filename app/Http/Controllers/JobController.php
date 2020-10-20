@@ -396,9 +396,21 @@ class JobController extends Controller
             'bid_price' => $job->bid_price,
             'job_name' => $job->job_name
         ];
+
+        $invoice['job']['location'] = Location::find($job->location_id);
+        $invoice['job']['status'] = JobStatus::where('job_id', '=', $job->id)->get();
+        $user = Auth::user();
+        $invoice['job']['customer'] = [
+            "id" => $user->id,
+            "first_name" => $user->first_name,
+            "last_name" => $user->last_name
+        ];
+
         $invoice['contractor'] = $job->contractor()->select([
+            'id',
             'name'
         ])->get()->first();
+
         $invoice['contractor']['company'] =
             $job->contractor()->get()->first()
                 ->contractor()->select([
