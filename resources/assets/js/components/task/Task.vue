@@ -36,6 +36,17 @@
           </div>
         </div>
       </div>
+      <v-card-subtitle
+          style="padding: 0;"
+      >
+        <v-btn
+            color="primary"
+            text
+            @click="viewContractorInfoForSubs()"
+        >
+          {{ getCompanyName() }}
+        </v-btn>
+      </v-card-subtitle>
       <div class="flex justify-between" style="align-items: center;">
         <v-card-subtitle
             style="padding-top: 0; padding-bottom: 0;"
@@ -45,17 +56,6 @@
           {{ jobName(bidTask) }}
         </v-card-subtitle>
         <v-card-subtitle class="capitalize w-full"> {{ getLatestStatus() }}</v-card-subtitle>
-        <v-card-subtitle
-            style="padding: 0;"
-        >
-          <v-btn
-              color="primary"
-              text
-              @click="viewContractorInfoForSubs()"
-          >
-            {{ getCompanyName() }}
-          </v-btn>
-        </v-card-subtitle>
       </div>
 
       <v-card-text v-show="showTheTask">
