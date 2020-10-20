@@ -498,6 +498,7 @@ class JobController extends Controller
 
             if ($jt->contractor_id != $job->contractor_id) {
                 $jt['sub'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'id',
                     'name'
                 ])->get()->first();
                 $jt['sub']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
