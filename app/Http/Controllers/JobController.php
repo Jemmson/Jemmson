@@ -1100,9 +1100,9 @@ class JobController extends Controller
 
         $job->delete();
 
-        $user = Auth::user();
+//        $user = Auth::user();
 
-        $user->notify(new CustomerUnableToSendPaymentWithStripe());
+//        $user->notify(new CustomerUnableToSendPaymentWithStripe());
 
 
         return response()->json(null, 204);

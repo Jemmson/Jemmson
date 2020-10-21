@@ -349,6 +349,7 @@ export default {
         const data = await axios.post('/job/delete', {
           id: id
         })
+        // await this.getBids()
         this.getBids()
       } catch (error) {
       }
@@ -405,12 +406,32 @@ export default {
     goToJob(id) {
       this.$router.push('/bid/' + id)
     },
-    getBids() {
+
+    // async getBids() {
+    //   let url = ''
+    //   if (User.isCustomer()) {
+    //     url = '/getJobsForCustomer'
+    //   } else {
+    //     url = '/jobs'
+    //   }
+    //   const {data} = await axios.get(url)
+    //   if (data.error) {
+    //
+    //   } else {
+    //     if (Array.isArray(response.data)) {
+    //       this.bids = response.data
+    //       this.sBids = this.bids
+    //     }
+    //     this.overlay = false;
+    //   }
+    // },
+
+     getBids() {
       let url = ''
       if (User.isCustomer()) {
-        url = 'getJobsForCustomer'
+        url = '/getJobsForCustomer'
       } else {
-        url = 'jobs'
+        url = '/jobs'
       }
       axios.get(url).then((response) => {
         if (Array.isArray(response.data)) {
@@ -420,6 +441,7 @@ export default {
         this.overlay = false;
       })
     },
+
     previewSubForTask(bidId, jobTaskId, subBidId) {
       // console.log(TaskUtil.previewSubForTask(this.bids, bidId, jobTaskId, subBidId))
     }
