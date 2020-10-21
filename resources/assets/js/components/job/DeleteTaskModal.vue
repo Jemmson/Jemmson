@@ -1,22 +1,16 @@
 <template>
+
     <div class="modal h-100 modal-background-gray" id="delete-task-modal" tabindex="-1" role="dialog"
          aria-labelledby="deny-task-modal"
          aria-hidden="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content styled">
-                <div class="modal-header">
-                    <div class="title w-full text-center">{{ title }}</div>
-                </div>
-                <div class="modal-body">
-                    <div class="flex space-between">
-                        <v-btn class="w-40" text color="red" @click="confirm()">Delete</v-btn>
-                        <v-btn class="w-40" text color="green" @click="cancel()">Keep</v-btn>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div>
-        </div>
+      <v-card style="margin-top: 4rem" class="mr-1rem ml-1rem">
+        <v-card-title>{{ title }}</v-card-title>
+        <v-card-title style="color: red">This can not be undone</v-card-title>
+        <v-card-actions>
+          <v-btn class="w-40" text color="red" @click="confirm()">Delete</v-btn>
+          <v-btn class="w-40" text color="green" @click="cancel()">Keep</v-btn>
+        </v-card-actions>
+      </v-card>
     </div>
 </template>
 
