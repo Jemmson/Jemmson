@@ -345,6 +345,7 @@ export default {
       $('#delete-task-modal').modal('hide')
     },
     async deleteTheActualJob(id) {
+      this.overlay = true;
       try {
         const data = await axios.post('/job/delete', {
           id: id
@@ -353,6 +354,7 @@ export default {
         this.getBids()
       } catch (error) {
       }
+
     },
     isContractor() {
       if (this.user) {
