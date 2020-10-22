@@ -94,6 +94,11 @@
             color="deep-purple accent-4"
         ></v-progress-linear>
 
+        <hr>
+        <v-card-subtitle
+            style="font-weight: bolder;"
+        >Billing Address:
+        </v-card-subtitle>
 
         <input type="hidden" name="street_number" id="street_number">
         <v-text-field
@@ -137,9 +142,7 @@
         <v-text-field
             id="postal_code"
             :class="{'has-error': form.errors.has('zip')}"
-            :rules="[
-                            this.zipMustHaveAtleast5characters()
-                        ]"
+            :rules="[ this.zipMustHaveAtleast5characters() ]"
             v-model="form.zip"
             v-mask="'#####-####'"
             label="Zip Code *"
@@ -147,6 +150,63 @@
         </v-text-field>
         <span ref="zipError" class="help-block"
               v-show="form.errors.has('zip')">{{ form.errors.get('zip') }}</span>
+
+
+        <div v-if="!isContractor">
+          <v-checkbox
+              class="mt-4"
+              v-model="form.jobAddressIsDifferent"
+              label="Job Address Is Different?"
+          ></v-checkbox>
+
+          <div v-if="form.jobAddressIsDifferent">
+            <hr>
+            <v-card-subtitle
+                style="font-weight: bolder;"
+            >Job Address:
+            </v-card-subtitle>
+
+            <input type="hidden" name="street_number" id="job_street_number">
+            <v-text-field
+                id="route"
+                :class="{'has-error': form.errors.has('address_line_1')}"
+                v-model="form.job.address_line_1"
+                label="Address Line 1 *"
+            >
+            </v-text-field>
+
+            <v-text-field
+                id="job_addressLine2"
+                v-model="form.job.address_line_2"
+                label="Address Line 2 *"
+            >
+            </v-text-field>
+
+            <v-text-field
+                id="job_administrative_area_level_1"
+                v-model="form.job.city"
+                label="City *"
+            >
+            </v-text-field>
+
+            <v-text-field
+                id="job_locality"
+                v-model="form.job.state"
+                label="State *"
+            >
+            </v-text-field>
+
+            <v-text-field
+                id="job_postal_code"
+                :class="{'has-error': form.errors.has('zip')}"
+                :rules="[ this.jobZipMustHaveAtleast5characters() ]"
+                v-model="form.job.zip"
+                v-mask="'#####-####'"
+                label="Zip Code *"
+            >
+            </v-text-field>
+          </div>
+        </div>
 
         <v-textarea
             v-if="!isContractor"
@@ -233,17 +293,18 @@
       <v-card-title>Info Is Updated</v-card-title>
       <v-card-actions>
         <v-btn
-          color="primary"
-          @click="goHome()"
-        >Home</v-btn>
-<!--        <v-btn-->
-<!--            color="primary"-->
-<!--            @click="goToBids()"-->
-<!--        >Bids</v-btn>-->
-<!--        <v-btn-->
-<!--            color="primary"-->
-<!--            @click="createJob()"-->
-<!--        >New Job</v-btn>-->
+            color="primary"
+            @click="goHome()"
+        >Home
+        </v-btn>
+        <!--        <v-btn-->
+        <!--            color="primary"-->
+        <!--            @click="goToBids()"-->
+        <!--        >Bids</v-btn>-->
+        <!--        <v-btn-->
+        <!--            color="primary"-->
+        <!--            @click="createJob()"-->
+        <!--        >New Job</v-btn>-->
       </v-card-actions>
     </v-card>
   </v-container>
@@ -283,10 +344,18 @@ export default {
         validData: true
       },
       form: new SparkForm({
+        jobAddressIsDifferent: false,
         email: '',
         name: '',
         company_name: '',
         phone_number: '',
+        job: {
+          address_line_1: '',
+          address_line_2: '',
+          city: '',
+          state: '',
+          zip: '',
+        },
         address_line_1: '',
         address_line_2: '',
         first_name: '',
@@ -408,6 +477,10 @@ export default {
     },
 
     zipMustHaveAtleast5characters() {
+      return this.form.zip.length > 4 || 'Zip Code Must Be At Least 5 Characters'
+    },
+
+    jobZipMustHaveAtleast5characters() {
       return this.form.zip.length > 4 || 'Zip Code Must Be At Least 5 Characters'
     },
 
@@ -538,6 +611,8 @@ export default {
     Bus.$on('updateFormLocation', (payload) => {
       this.updateFormLocation(payload)
     })
+
+    this.$store.commit('setCurrentPage', '/furtherInfo');
 
     this.initAutocomplete()
     this.form.phone_number = this.user.phone != null ? this.user.phone : ''

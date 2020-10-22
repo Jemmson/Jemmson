@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use mysql_xdevapi\Exception;
 use App\Services\RandomPasswordService;
+use Illuminate\Support\Facades\Log;
 
 class Customer extends Model
 {
     //
     use SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'notes',
@@ -30,7 +32,7 @@ class Customer extends Model
     {
         return $this->hasMany(Job::class, 'customer_id', 'user_id');
     }
-    
+
     public function contractors()
     {
         return $this->belongsToMany(
@@ -40,15 +42,15 @@ class Customer extends Model
             'customer_user_id'
         );
     }
-    
+
     public function location()
     {
         return $this->hasOne(Location::class, 'id', 'location_id');
     }
 
-    private function updateJoblocations()
+    private function updateJoblocations($locationId)
     {
-        Job::where('customer_id', $this->user()->first()->id)->update(['location_id' => $this->location_id]);
+        Job::where('customer_id', $this->user()->first()->id)->update(['location_id' => $locationId]);
     }
 
     public function updateTaskLocations()
@@ -56,7 +58,7 @@ class Customer extends Model
         $jobs = Job::where('customer_id', $this->user()->first()->id)->get();
         foreach ($jobs as $job) {
             $jobTasks = $job->jobTasks()->get();
-            foreach($jobTasks as $jobTask) {
+            foreach ($jobTasks as $jobTask) {
                 $jobTask->location_id = $job->location_id;
 
                 try {
@@ -74,7 +76,6 @@ class Customer extends Model
 
     public function updateLocation($request)
     {
-        $newLocation = false;
         if ($this->location_id === null) {
             $location = new Location();
             $location->user_id = $this->user()->first()->id;
@@ -85,7 +86,6 @@ class Customer extends Model
             $location->area = $request->city;
             $location->state = $request->state;
             $location->zip = $request->zip;
-            $newLocation = true;
         } else {
             $location = $this->location()->first();
             $location->address_line_1 = $request->address_line_1;
@@ -101,11 +101,38 @@ class Customer extends Model
             $location->save();
             $this->location_id = $location->id;
             $this->save();
-            if ($newLocation) {
-                $this->updateJobLocations();
+
+            if ($request->jobAddressIsDifferent) {
+                self::updateJobLocation($request);
+            } else {
+                $this->updateJobLocations($this->location_id);
                 $this->updateTaskLocations();
             }
-        } catch(\Exception $e) {
+
+
+        } catch (\Exception $e) {
+            Log::error('Saving Location: ' . $e->getMessage());
+        }
+
+    }
+
+    public function updateJobLocation($request)
+    {
+        $location = new Location();
+        $location->user_id = $this->user()->first()->id;
+        $location->default = true;
+        $location->address_line_1 = $request->job['address_line_1'];
+        $location->address_line_2 = $request->job['address_line_2'];
+        $location->city = $request->job['city'];
+        $location->area = $request->job['city'];
+        $location->state = $request->job['state'];
+        $location->zip = $request->job['zip'];
+
+        try {
+            $location->save();
+            $this->updateJobLocations($location->id);
+            $this->updateTaskLocations();
+        } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
         }
 
@@ -168,7 +195,6 @@ class Customer extends Model
     // TODO: understand where an intermidate table relates to two other tables
     // TODO: define relationship where table references itself
     // TODO: I need to be able to have a contractor reference many contractors
-
 
 
 }
