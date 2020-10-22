@@ -1198,7 +1198,7 @@ class JobController extends Controller
     {
         $year = $this->getYear();
 
-        $latest = Job::where('contractor_id', '=', Auth::user()->getAuthIdentifier())
+        $latest = Job::withTrashed()->where('contractor_id', '=', Auth::user()->getAuthIdentifier())
             ->where('created_at', 'LIKE', "$year%")->select('id')
             ->get()->count();
 

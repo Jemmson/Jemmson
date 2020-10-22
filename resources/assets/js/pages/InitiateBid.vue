@@ -348,17 +348,22 @@ export default {
     retrieveCustomerInfoFromLocalStorage() {
       this.selected = localStorage.getItem('customerName');
       this.form.customerName = localStorage.getItem('customerName');
-      if (localStorage.getItem('isMobile') && localStorage.getItem('isMobile') === 'false') {
+
+
+      if (localStorage.getItem('isMobile') === null) {
         this.form.isMobile = false;
-      } else {
+      } else if (localStorage.getItem('isMobile') === 'false') {
+        this.form.isMobile = false;
+      } else if (localStorage.getItem('isMobile') === 'true') {
         this.form.isMobile = true;
+        if (localStorage.getItem('mobile').length < 10) {
+          this.form.phone = ''
+          localStorage.setItem('mobile', '');
+        } else {
+          this.form.phone = this.formatPhone(localStorage.getItem('mobile'));
+        }
       }
-      if (localStorage.getItem('mobile') && localStorage.getItem('mobile').length < 10) {
-        this.form.phone = ''
-        localStorage.setItem('mobile', '');
-      } else {
-        this.form.phone = this.formatPhone(localStorage.getItem('mobile'));
-      }
+
       this.form.jobName = localStorage.getItem('jobName');
     },
 
@@ -370,7 +375,7 @@ export default {
 
       if (phone) {
         let totalDigits = 0;
-        let totalDigitString = '(';
+        let totalDigitString = '';
         for (let i = 0; i < phone.length; i++) {
           if (!isNaN(phone[i])) {
             totalDigits++;
@@ -386,7 +391,10 @@ export default {
               totalDigitString = totalDigitString + "-" + phone[i]
             }
           }
+        }
 
+        if (totalDigitString.length > 0) {
+          totalDigitString = '(' + totalDigitString
         }
 
         return totalDigitString
@@ -413,12 +421,14 @@ export default {
     },
 
     setJobName() {
-      let n = moment();
 
-      if (this.customerNameLength() > 1) {
-        this.form.jobName = n.year() + '-' + 100 + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
-      } else {
-        this.form.jobName = n.year() + '-' + 100 + '-' + this.form.customerName;
+      if (this.latestJobNumber) {
+        let n = moment();
+        if (this.customerNameLength() > 1) {
+          this.form.jobName = n.year() + '-' + this.latestJobNumber + '-' + this.form.lastName + '-' + this.getFirstNameForJobName().trimLeft()
+        } else {
+          this.form.jobName = n.year() + '-' + this.latestJobNumber + '-' + this.form.customerName;
+        }
       }
 
     },
@@ -458,7 +468,13 @@ export default {
         let firstName = this.getFirstName(nameArray);
         this.form.firstName = firstName.trimLeft();
       }
-      this.form.customerName = val;
+
+      if (typeof val === 'object') {
+        this.form.customerName = val.text;
+      } else if (typeof val === 'string') {
+        this.form.customerName = val;
+      }
+
     },
 
     removeEmptiesInArray(array) {
@@ -668,7 +684,7 @@ export default {
       try {
         const data = await axios.get('/customer/search', {
           params: {
-            query: this.form.firstName
+            query: this.search
           }
         })
         this.results = data.data
@@ -734,7 +750,6 @@ export default {
 
     async getLatestJobNumber() {
       const {data} = await axios.get('/job/getLatestJobNumber')
-
       if (data.error) {
 
       } else {
