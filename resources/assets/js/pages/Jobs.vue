@@ -118,7 +118,7 @@
           <thead>
           <tr>
             <th class="text-left">Job Name</th>
-            <th class="text-left">Date Paid</th>
+            <th class="text-left">Date Approved</th>
             <th class="text-left"></th>
           </tr>
           </thead>
