@@ -544,7 +544,7 @@
     </section>
 
     <section>
-      <v-card v-if="false">
+      <v-card v-if="true">
         <v-card-title>Actions</v-card-title>
         <v-card-subtitle
             v-if="subHasNotFinishedTask(jobTask)"
