@@ -47,6 +47,17 @@
               </div>
             </div>
 
+            <div class="flex flex-col">
+              <v-icon
+                  color="primary"
+                  class="nav-btn-position"
+                  @click="viewHelp()"
+              >mdi-help-circle
+              </v-icon>
+              <div class="nav-icon-label" :class="show.subs ? 'nav-icon-label-selected': ''">
+                Help
+              </div>
+            </div>
 
           </div>
         </v-card-actions>
@@ -141,16 +152,23 @@
               <v-list-item-content>Number of Jobs:</v-list-item-content>
               <v-list-item-content class="align-end">{{ generalTotalJobNumber() }}</v-list-item-content>
             </v-list-item>
-<!--            <v-list-item>-->
-<!--              <v-list-item-content>Number of Subs:</v-list-item-content>-->
-<!--              <v-list-item-content class="align-end">{{ generalTotalNumberOfSubs() }}-->
-<!--              </v-list-item-content>-->
-<!--            </v-list-item>-->
+            <!--            <v-list-item>-->
+            <!--              <v-list-item-content>Number of Subs:</v-list-item-content>-->
+            <!--              <v-list-item-content class="align-end">{{ generalTotalNumberOfSubs() }}-->
+            <!--              </v-list-item-content>-->
+            <!--            </v-list-item>-->
           </v-list>
         </v-card-text>
       </v-card>
     </section>
     <br>
+
+    <v-dialog
+        v-model="openHelp"
+    >
+      <home-page-documentation></home-page-documentation>
+    </v-dialog>
+
     <feedback
         page="home"
     ></feedback>
@@ -161,16 +179,19 @@
 import StripeExpressDashboard from '../components/stripe/StripeExpressDashboard';
 import StripeVerificationRequired from "../components/stripe/StripeVerificationRequired";
 import Feedback from '../components/shared/Feedback'
+import HomePageDocumentation from "../components/documentation/pages/HomePageDocumentation";
 
 export default {
   name: 'home',
   components: {
     Feedback,
     StripeExpressDashboard,
+    HomePageDocumentation,
     StripeVerificationRequired
   },
   data() {
     return {
+      openHelp: false,
       stripeVerified: true,
       generalJobs: [],
       show: {
@@ -186,6 +207,11 @@ export default {
     }
   },
   methods: {
+
+    viewHelp() {
+      this.openHelp = !this.openHelp;
+    },
+
     getPhoto() {
       if (this.haveSparkStateLoaded() && Spark.state.user !== null) {
         return Spark.state.user.photo_url

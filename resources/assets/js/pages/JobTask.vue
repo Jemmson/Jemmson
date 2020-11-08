@@ -544,11 +544,9 @@
     </section>
 
     <section>
-      <v-card v-if="true">
+      <v-card>
         <v-card-title>Actions</v-card-title>
-        <v-card-subtitle
-            v-if="subHasNotFinishedTask(jobTask)"
-        >Waiting For Sub
+        <v-card-subtitle v-if="subHasNotFinishedTask(jobTask)">Waiting For Sub
         </v-card-subtitle>
         <v-card-actions v-if="isGeneral()">
           <v-btn
@@ -1135,7 +1133,7 @@ export default {
 
     jobTaskIsFinished(jobTask) {
       const status = this.getLatestJobTaskStatus(jobTask)
-      return status === 'general finished work' || status === 'sub finished work'
+      return status === 'general_finished_work' || status === 'sub_finished_work'
     },
 
     subHasFinishedWork(jobTask) {
@@ -1223,6 +1221,7 @@ export default {
     jobIsNotComplete() {
       const latestStatus = this.getTheLatestJobTaskStatus()
       return latestStatus !== 'general finished work'
+          && latestStatus !== 'approved subs work'
           && latestStatus !== 'sub finished work'
           && latestStatus !== 'paid'
     },
@@ -1394,6 +1393,16 @@ export default {
       }
     },
     showFinishedBtn(jobTask) {
+
+      // let status = this.getLatestJobTaskStatus1(jobTask);
+      // return this.isGeneral() &&
+      //     this.isAssignedToMe(jobTask, Spark.state.user.id) &&
+      //     (
+      //         status === 'approved by customer'
+      //         || status === 'customer changes finished task'
+      //     )
+
+
       if (this.isContractor() &&
           this.authUser.isAssignedToMe(jobTask, this.user.id) &&
           (jobTask.status === 'bid_task.approved_by_customer'
@@ -1494,7 +1503,7 @@ export default {
     },
     isGeneral() {
       if (this.jobTask && this.jobTask.task) {
-        return this.jobTask.task.contractor_id === this.user.id
+        return this.jobTask.task.contractor_id === Spark.state.user.id
       }
     },
     prettyDate(date) {

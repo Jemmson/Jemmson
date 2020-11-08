@@ -249,6 +249,37 @@
 
           <v-card>
             <v-card-title>Job Tasks</v-card-title>
+
+            <v-simple-table>
+              <template>
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>View</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item, i) in getJobTasks()" :key="i">
+                  <td>{{ jobTaskObject(item).Name }}</td>
+                  <td
+                      v-if="jobTaskObject(item).Price"
+                      v-text="'$ ' + jobTaskObject(item).Price"
+                  ></td>
+                  <td>                <v-btn
+                      class="btn-size btn-weight"
+                      :class="i % 2 === 0 ? 'primary--text': 'white--text'"
+                      :to="'/job/task/' + item.id"
+                      text
+                  >Edit
+                  </v-btn></td>
+                </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+
+
+
             <v-card
                 v-for="(item, i) in getJobTasks()"
                 :key="i"

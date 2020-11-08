@@ -1,12 +1,16 @@
 <template>
-  <v-card-texttext>
-    <v-card-subtitle></v-card-subtitle>
-  </v-card-texttext>
+  <v-card-text>
+    <v-card-subtitle>{{ title }}</v-card-subtitle>
+    <slot style="color: black"></slot>
+  </v-card-text>
 </template>
 
 <script>
 export default {
-
+  props: {
+    title: String,
+    text: String,
+  }
 }
 </script>
 
