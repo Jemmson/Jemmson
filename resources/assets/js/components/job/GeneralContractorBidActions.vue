@@ -56,25 +56,25 @@
           <tbody>
           <tr v-for="item in tasks" :key="item.id">
             <td>{{ item.name }}</td>
-            <td>${{ item.general.toFixed(2) }}
+            <td>${{ item.ccFee ? item.general.toFixed(2) : '' }}
               <v-tooltip v-if="!item.ccFeeCovered && creditCardJob()" v-model="item.show" top>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" v-on="on">
                     <v-icon color="warning">mdi-alert-rhombus</v-icon>
                   </v-btn>
                 </template>
-                <span>Profit Does Not Cover Estimated Credit Card Fee of {{ item.ccFee.toFixed(2) }}.
-                  Minimum price should be at least {{ item.minimumPrice.toFixed(2) }}</span>
+                <span>Profit Does Not Cover Estimated Credit Card Fee of {{ item.ccFee ? item.ccFee.toFixed(2) : '' }}.
+                  Minimum price should be at least {{ item.minimumPrice ?  item.minimumPrice.toFixed(2) : '' }}</span>
               </v-tooltip>
             </td>
-            <td>${{ item.sub.toFixed(2) }}</td>
-            <td>${{ item.profit.toFixed(2) }}</td>
+            <td>${{ item.sub ?  item.sub.toFixed(2) : '' }}</td>
+            <td>${{ item.profit ?  item.profit.toFixed(2) : '' }}</td>
           </tr>
           <tr>
             <td><strong>Totals:</strong></td>
-            <td><strong>${{ tasksTotal.general.toFixed(2) }}</strong></td>
-            <td><strong>${{ tasksTotal.sub.toFixed(2) }}</strong></td>
-            <td><strong>${{ tasksTotal.profit.toFixed(2) }}</strong></td>
+            <td><strong>${{ tasksTotal.general ?  tasksTotal.general.toFixed(2) : '' }}</strong></td>
+            <td><strong>${{ tasksTotal.sub ?  tasksTotal.sub.toFixed(2) : '' }}</strong></td>
+            <td><strong>${{ tasksTotal.profit ?  tasksTotal.profit.toFixed(2) : '' }}</strong></td>
           </tr>
           <tr v-if="creditCardJob()">
             <td></td>

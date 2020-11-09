@@ -148,7 +148,7 @@ export default class User {
         elem[i].style.zIndex = '10000000000'
       }
     }, 400)
-  }
+  };
 
   // is the task assigned to the currently logged in user
   isAssignedToMe(jobTask, userId) {

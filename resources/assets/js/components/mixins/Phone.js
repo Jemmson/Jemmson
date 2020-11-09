@@ -31,7 +31,6 @@ export default {
     ...mapMutations(['setMobileResponse']),
     ...mapActions(['checkMobileNumber']),
     validateMobileNumber(phone) {
-      console.log('phone', phone)
       if (this.initiateBidForSubForm) {
         if (this.unformatNumber(this.initiateBidForSubForm.phone) === 10) {
           this.checkMobileNumber(phone)

@@ -249,7 +249,6 @@
             selected(val) {
                 if (val) {
                     const result = this.getComboResult(val)
-                    console.log('result', result)
                     this.fillTaskValues(result)
                 }
             }
@@ -544,7 +543,6 @@
             getExistingTask(message) {
                 this.taskResults = []
                 // this.submitted = false
-                console.log('getExistingTask is called',)
 
                 // debugger;
                 axios.post('/search/task', {
@@ -552,7 +550,6 @@
                     jobId: this.bid.id
                 }).then(response => {
                     // debugger;
-                    console.log(response.data)
                     if (response.data.length > 0) {
                         // let filteredResults = this.filterResultsSoOnlyTasksNotCurrentlyInJobAreInDropdown(response.data)
                         this.comboResults = this.transformDataForComboBox(response.data);
@@ -589,8 +586,6 @@
             },
             fillTaskValues(result) {  // this method fills values of the form when a drop down item is selected  x
                 if (result) {
-                    console.log(result)
-
                     // since the user selected a drop down option then the name automatically exists in the database
                     this.nameExistsInDB = true
                     this.dropdownSelected = true

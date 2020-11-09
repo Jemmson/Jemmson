@@ -216,8 +216,6 @@ describe('Job', () => {
         })
 
         await wrapper.vm.$nextTick()
-        
-        console.log('message', wrapper.find({ref: 'jobNotSubmittedMessage'}).html())
 
         expect(wrapper.find({ref: 'jobNotSubmittedMessage'}).exists()).toBe(true)
 

@@ -40,6 +40,23 @@ describe('Task', () => {
             directives: {
                 mask() {
                 }
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         })
 
@@ -52,6 +69,23 @@ describe('Task', () => {
             localVue,
             directives: {
                 mask() {
+                }
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         })
@@ -71,6 +105,23 @@ describe('Task', () => {
             localVue,
             directives: {
                 mask() {
+                }
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         })
@@ -97,6 +148,23 @@ describe('Task', () => {
             directives: {
                 mask() {
                 }
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         })
 
@@ -120,6 +188,23 @@ describe('Task', () => {
             localVue,
             directives: {
                 mask() {
+                }
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         })
@@ -207,13 +292,7 @@ describe('Task', () => {
             bidPrice: ''
         })
 
-        const submit = wrapper.find({ref: 'submit'});
-
-        submit.trigger('click');
-
-        await wrapper.vm.$nextTick()
-        
-        expect(wrapper.find({ref: 'startDateError'}).exists()).toBe(true);
+        expect(wrapper.vm.startDateIsRequired()).toBe('A Start Date Is Required')
 
     })
 

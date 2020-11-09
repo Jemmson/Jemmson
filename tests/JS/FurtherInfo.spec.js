@@ -37,7 +37,8 @@ describe('FurtherInfo', () => {
                 // checkMobileNumber: jest.fn(() => Promise.resolve())
             },
             mutations: {
-                setPhoneLoadingValue: jest.fn()
+                setPhoneLoadingValue: jest.fn(),
+                setCurrentPage: jest.fn()
             },
             getters: {
                 getMobileValidResponse: () => {

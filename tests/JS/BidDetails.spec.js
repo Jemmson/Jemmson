@@ -3,7 +3,7 @@ import BidDetails from '../../resources/assets/js/components/job/BidDetails'
 import Vuetify from "vuetify"
 import Vuex from "vuex";
 import VueRouter from 'vue-router'
-
+import User from '../../resources/assets/js/classes/User'
 
 import Vue from 'vue'
 
@@ -72,6 +72,15 @@ describe('BidDetails', function () {
             vuetify,
             localVue,
             store,
+            methods: {
+                initAutocomplete() {
+                    return true;
+                }
+            },
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 isCustomer: true,
                 bid: {
@@ -83,7 +92,8 @@ describe('BidDetails', function () {
                                 name: 'Task 1',
                                 qty: 1,
                                 unit_price: 1,
-                                cust_final_price: 123
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -102,7 +112,8 @@ describe('BidDetails', function () {
                                 name: 'Task 2',
                                 qty: 1,
                                 unit_price: 234,
-                                cust_final_price: 234
+                                cust_final_price: 234,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -119,7 +130,8 @@ describe('BidDetails', function () {
                                 name: 'Task 3',
                                 qty: 1,
                                 unit_price: 345,
-                                cust_final_price: 345
+                                cust_final_price: 345,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -168,8 +180,16 @@ describe('BidDetails', function () {
 
         const wrapper = shallowMount(BidDetails, {
             localVue,
+            methods: {
+                initAutocomplete() {
+                    return true;
+                }
+            },
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
-
                 bid: {
                     job_status: [{
                         status_number: 1,
@@ -183,7 +203,8 @@ describe('BidDetails', function () {
                                 name: 'Task 1',
                                 qty: 1,
                                 unit_price: 1,
-                                cust_final_price: 123
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -226,6 +247,15 @@ describe('BidDetails', function () {
             stubs: [
                 'approve-bid'
             ],
+            directives: {
+                mask() {
+                }
+            },
+            methods: {
+                initAutocomplete() {
+                    return true;
+                }
+            },
             propsData: {
                 bid: {
                     status: 'bid.sent',
@@ -239,7 +269,8 @@ describe('BidDetails', function () {
                                 name: 'Task 1',
                                 qty: 1,
                                 unit_price: 1,
-                                cust_final_price: 123
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -289,6 +320,15 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
+            methods: {
+                initAutocomplete() {
+                    return true;
+                }
+            },
             propsData: {
                 bid: {
                     job_status: [{
@@ -315,6 +355,10 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     job_status: [{
@@ -352,6 +396,10 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     job_status: [{
@@ -364,7 +412,8 @@ describe('BidDetails', function () {
                             name: 'Task 1',
                             qty: 1,
                             unit_price: 1,
-                            cust_final_price: 123
+                            cust_final_price: 123,
+                            sub_final_price: 0
                         },
                         job_task_status: [
                             {
@@ -396,6 +445,10 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     job_status: [{
@@ -422,6 +475,10 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     job_tasks: [{
@@ -431,7 +488,8 @@ describe('BidDetails', function () {
                             name: 'Task 1',
                             qty: 1,
                             unit_price: 1,
-                            cust_final_price: 123
+                            cust_final_price: 123,
+                            sub_final_price: 0
                         },
                         job_task_status: [
                             {
@@ -463,6 +521,10 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     job_tasks: [
@@ -473,7 +535,8 @@ describe('BidDetails', function () {
                                 name: 'Task 1',
                                 qty: 1,
                                 unit_price: 1,
-                                cust_final_price: 123
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -492,7 +555,8 @@ describe('BidDetails', function () {
                                 name: 'Task 1',
                                 qty: 1,
                                 unit_price: 1,
-                                cust_final_price: 123
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -511,7 +575,8 @@ describe('BidDetails', function () {
                                 name: 'Task 1',
                                 qty: 1,
                                 unit_price: 1,
-                                cust_final_price: 123
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -544,6 +609,10 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     images: [
@@ -584,6 +653,10 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     images: []
@@ -607,12 +680,25 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            methods: {
+                initAutocomplete() {
+                    return true;
+                }
+            },
+            directives: {
+                mask() {
+                }
+            },
             propsData: {
                 bid: {
                     job_tasks: [
                         {
                             task: {
                                 name: 'Task 1',
+                                qty: 1,
+                                unit_price: 1,
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -622,11 +708,16 @@ describe('BidDetails', function () {
                                 }, {
                                     status: "changed"
                                 },
-                            ]
+                            ],
+                            sub_statuses: []
                         },
                         {
                             task: {
                                 name: 'Task 2',
+                                qty: 1,
+                                unit_price: 1,
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -636,11 +727,16 @@ describe('BidDetails', function () {
                                 }, {
                                     status: "changed"
                                 },
-                            ]
+                            ],
+                            sub_statuses: []
                         },
                         {
                             task: {
                                 name: 'Task 3',
+                                qty: 1,
+                                unit_price: 1,
+                                cust_final_price: 123,
+                                sub_final_price: 0
                             },
                             job_task_status: [
                                 {
@@ -650,7 +746,8 @@ describe('BidDetails', function () {
                                 }, {
                                     status: "changed"
                                 },
-                            ]
+                            ],
+                            sub_statuses: []
                         }
                     ],
                     job_statuses: [
@@ -682,7 +779,7 @@ describe('BidDetails', function () {
     
     test('that assessor button appears for the address if the address is from AZ', async () => {
 
-        const wrapper = mount(BidDetails, {
+        const wrapper = shallowMount(BidDetails, {
             localVue,
             vuetify,
             store,
@@ -691,6 +788,15 @@ describe('BidDetails', function () {
                 'approve-bid',
                 'sub-invite-modal'
             ],
+            directives: {
+                mask() {
+                }
+            },
+            methods: {
+                initAutocomplete() {
+                    return true;
+                }
+            },
             propsData: {
                 bid: {
                     location_id: '1',

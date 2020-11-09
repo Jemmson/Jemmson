@@ -883,6 +883,7 @@ import TaskImages from '../../components/task/UploadJobImages'
 import Utilities from '../mixins/Utilities'
 import Stripe from '../stripe/Stripe'
 import DenyTaskModal from '../../components/task/DenyTaskModal'
+// import User from '../../classes/User'
 
 export default {
   components: {

@@ -973,7 +973,6 @@ export default {
           status = this.formatStatus(this.getTheLatestJobTaskStatus(task.job.job_task_status))
         }
       }
-
       return status
     },
 

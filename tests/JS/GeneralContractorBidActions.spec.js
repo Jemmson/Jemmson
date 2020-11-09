@@ -60,7 +60,7 @@ describe('GeneralContractorBidActions', function () {
 
     test('submit button is disabled if the disableButton prop is true', async () => {
         wrapper.setProps({
-            disableButton: false
+            disableButton: true
         })
         wrapper.setData({
             subTaskWarning: false
@@ -71,13 +71,12 @@ describe('GeneralContractorBidActions', function () {
 
     test('submit button is not disabled if the disableButton prop is false', async () => {
         wrapper.setProps({
-            disableButton: true
+            disableButton: false
         })
         wrapper.setData({
-            subTaskWarning: true
+            subTaskWarning: false
         });
         await wrapper.vm.$nextTick()
-        console.log('sub', wrapper.find({ref: 'submitBid'}).html())
         expect(wrapper.find({ref: 'submitBid'}).attributes().disabled).toBe(undefined)
     })
 

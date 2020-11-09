@@ -6,6 +6,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import Feedback from "../../resources/assets/js/components/shared/Feedback";
 import AddJobTask from "../../resources/assets/js/pages/AddJobTask";
+import GeneralContractor from "../../resources/assets/js/classes/GeneralContractor";
 
 global.Spark = {
     state: {
@@ -18,6 +19,9 @@ global.Spark = {
         }
     }
 }
+
+window.GeneralContractor = GeneralContractor
+GeneralContractor.updateCustomerPrice = jest.fn()
 
 require('./setup')
 require('./stripeSetup')
@@ -185,6 +189,37 @@ describe('JobTask', () => {
                     contractor_id: 1
                 },
                 contractor_id: 1
+            },
+            job: {
+                job_statuses: [
+                    {
+                        id: 1,
+                        job_id: 1,
+                        status: 'initiated',
+                        status_number: 1,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:15:18',
+                        updated_at: '2019-12-05 22:15:18'
+                    },
+                    {
+                        id: 2,
+                        job_id: 1,
+                        status: 'in_progress',
+                        status_number: 2,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:17:17',
+                        updated_at: '2019-12-05 22:17:17'
+                    },
+                    {
+                        id: 3,
+                        job_id: 1,
+                        status: 'sent',
+                        status_number: 3,
+                        deleted_at: null,
+                        created_at: '2019-12-06 21:52:13',
+                        updated_at: '2019-12-06 21:52:13'
+                    }
+                ]
             }
         });
 
@@ -212,6 +247,37 @@ describe('JobTask', () => {
                     contractor_id: 1
                 },
                 contractor_id: 1
+            },
+            job: {
+                job_statuses: [
+                    {
+                        id: 1,
+                        job_id: 1,
+                        status: 'initiated',
+                        status_number: 1,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:15:18',
+                        updated_at: '2019-12-05 22:15:18'
+                    },
+                    {
+                        id: 2,
+                        job_id: 1,
+                        status: 'in_progress',
+                        status_number: 2,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:17:17',
+                        updated_at: '2019-12-05 22:17:17'
+                    },
+                    {
+                        id: 3,
+                        job_id: 1,
+                        status: 'sent',
+                        status_number: 3,
+                        deleted_at: null,
+                        created_at: '2019-12-06 21:52:13',
+                        updated_at: '2019-12-06 21:52:13'
+                    }
+                ]
             }
         });
 
@@ -242,6 +308,37 @@ describe('JobTask', () => {
                     status: "initiated"
                 }]
 
+            },
+            job: {
+                job_statuses: [
+                    {
+                        id: 1,
+                        job_id: 1,
+                        status: 'initiated',
+                        status_number: 1,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:15:18',
+                        updated_at: '2019-12-05 22:15:18'
+                    },
+                    {
+                        id: 2,
+                        job_id: 1,
+                        status: 'in_progress',
+                        status_number: 2,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:17:17',
+                        updated_at: '2019-12-05 22:17:17'
+                    },
+                    {
+                        id: 3,
+                        job_id: 1,
+                        status: 'sent',
+                        status_number: 3,
+                        deleted_at: null,
+                        created_at: '2019-12-06 21:52:13',
+                        updated_at: '2019-12-06 21:52:13'
+                    }
+                ]
             }
         });
 
@@ -306,6 +403,37 @@ describe('JobTask', () => {
                 },
                 contractor_id: 1,
                 start_date: '2020-03-05 01:05:02'
+            },
+            job: {
+                job_statuses: [
+                    {
+                        id: 1,
+                        job_id: 1,
+                        status: 'initiated',
+                        status_number: 1,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:15:18',
+                        updated_at: '2019-12-05 22:15:18'
+                    },
+                    {
+                        id: 2,
+                        job_id: 1,
+                        status: 'in_progress',
+                        status_number: 2,
+                        deleted_at: null,
+                        created_at: '2019-12-05 22:17:17',
+                        updated_at: '2019-12-05 22:17:17'
+                    },
+                    {
+                        id: 3,
+                        job_id: 1,
+                        status: 'sent',
+                        status_number: 3,
+                        deleted_at: null,
+                        created_at: '2019-12-06 21:52:13',
+                        updated_at: '2019-12-06 21:52:13'
+                    }
+                ]
             }
         });
 
@@ -432,6 +560,9 @@ describe('JobTask', () => {
                 id: 1,
                 usertype: 'contractor'
             },
+            authUser: {
+                usertype: 'contractor'
+            },
             contractor_id: 1,
             job: {
                 contractor_id: 1,
@@ -468,9 +599,7 @@ describe('JobTask', () => {
         })
 
         wrapper.vm.$store.state.job.model.status = 'job.initiated'
-
         await wrapper.vm.$nextTick()
-
         expect(wrapper.find({ref: 'subPanelSection'}).exists()).toBe(true)
 
     })
@@ -637,6 +766,10 @@ describe('JobTask', () => {
             show: {
                 subPanel: true,
             },
+            authUser: {
+                usertype: 'contractor'
+            },
+            jobStatus: 'job.initiated',
             jobTask: {
                 images: [{}, {}],
                 contractor_id: 1,
@@ -777,13 +910,16 @@ describe('JobTask', () => {
         wrapper.setData({
             infoDialog: {
                 prices: false
+            },
+            authUser: {
+                usertype: 'contractor'
             }
         });
 
+        await wrapper.vm.$nextTick();
+
         const pbtn = wrapper.find({ref: 'priceInfo'});
         pbtn.trigger('click');
-
-        await wrapper.vm.$nextTick();
 
         const btn = wrapper.find({ref: 'cancel'});
         btn.trigger('click');
@@ -802,7 +938,9 @@ describe('JobTask', () => {
         let storeOptions
 
         actions = {}
-        mutations = {}
+        mutations = {
+            setCurrentPage: jest.fn()
+        }
         getters = {}
         state = {
             job: {
