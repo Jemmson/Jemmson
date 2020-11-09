@@ -56,7 +56,7 @@
           <tbody>
           <tr v-for="item in tasks" :key="item.id">
             <td>{{ item.name }}</td>
-            <td>${{ item.ccFee ? item.general.toFixed(2) : '' }}
+            <td>${{ item.general ? item.general.toFixed(2) : '' }}
               <v-tooltip v-if="!item.ccFeeCovered && creditCardJob()" v-model="item.show" top>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn icon v-bind="attrs" v-on="on">

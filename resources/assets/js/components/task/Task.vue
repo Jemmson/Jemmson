@@ -669,12 +669,18 @@ export default {
       return this.startDate.length === 10 && this.bidPrice.length > 3;
     },
 
+    calculateBidPrice(id){
+      let bid_price = $('#price-' + id).val()
+      console.log('bidprice', bid_price)
+      console.log('bid_price', this.bidPrice)
+      let price = this.convertPriceToIntegers(bid_price)
+      return price * this.bidTask.job_task.qty
+    },
+
     update(bidTask) {
       if (this.startDateAndPriceExist() && bidTask && bidTask.job_task) {
         let id = bidTask.id
-        // debugger;
-        let bid_price = $('#price-' + id).val()
-        bid_price = this.convertPriceToIntegers(bid_price)
+        let bid_price = this.calculateBidPrice(id)
         let po = this.paymentType
         this.disabled.submit = true
         axios.post('/bidTask', {
