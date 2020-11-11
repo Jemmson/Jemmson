@@ -75,15 +75,7 @@
 //
 //     test('that the component is set up correctly', async () => {
 //
-//         await wrapper.vm.$nextTick()
 //         expect(true).toBe(true)
-//
-//     })
-//
-//     test('test that the select buttons will trigger ', async () => {
-//
-//         await wrapper.vm.$nextTick()
-//         expect()
 //
 //     })
 //
