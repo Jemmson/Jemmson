@@ -1,8 +1,6 @@
 <template>
 
-  <v-container
-      v-if="showBid(bidTask)"
-  >
+  <v-container>
 
     <v-card
         class="mb-1rem"
@@ -14,7 +12,7 @@
       >You will need to set up a credit card to bid on this job
       </v-card-title>
       <div class="flex justify-between" style="align-items: center;">
-        <v-card-title>{{ bidTask.job_task.job.job_name }}</v-card-title>
+        <v-card-title v-if="bidTask && bidTask.job_task">{{ bidTask.job_task.job.job_name }}</v-card-title>
         <div class="flex flex-col nav-icon-spacing"
              v-if="getPaymentType('cash')"
         >
@@ -139,12 +137,16 @@
                 >
                   <div v-if="bidTask.proposed_start_date">{{ prettyDate(bidTask) }}</div>
                   <div v-else>Not Set</div>
+
                   <div>{{ getTaskQuantity(bidTask) }}</div>
+
                   <div
                       v-if="subHasEnteredAPrice(bidTask)"
                       v-text="'$ ' + getBidPrice(bidTask)"
                   ></div>
+
                   <div v-else>Price Not Set</div>
+
                 </v-row>
                 <v-divider></v-divider>
                 <div
@@ -437,7 +439,7 @@ export default {
         location: false
       },
       paymentType: 'cash',
-      showTheTask: false,
+      showTheTask: true,
       disabled: {
         submit: false,
         finished: false,

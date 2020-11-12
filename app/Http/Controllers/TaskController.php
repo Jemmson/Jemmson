@@ -140,8 +140,7 @@ class TaskController extends Controller
                     'status',
                     'start_date',
                     'sub_final_price',
-                    'sub_message',
-                    'unit_price'
+                    'sub_message'
                 ])->get()->first();
 
 
@@ -161,8 +160,6 @@ class TaskController extends Controller
 
                 $bcjtask['job_task']['task'] = $bcjtask->jobTask()->get()->first()->task()->select([
                     'id',
-                    'proposed_cust_price',
-                    'proposed_sub_price',
                     'name'
                 ])->get()->first();
 
@@ -211,14 +208,6 @@ class TaskController extends Controller
             foreach ($bidTasks[0] as $bt) {
                 if (!empty($bt->job_task)) {
                     $bt->job_task->sub_final_price = $this->convertToDollars($bt->job_task->sub_final_price);
-                    $bt->job_task->unit_price = $this->convertToDollars($bt->job_task->unit_price);
-                }
-                if (!empty($bt->job)) {
-                    $bt->job->unit_price = $this->convertToDollars($bt->job->unit_price);
-                }
-                if (!empty($bt->task)) {
-                    $bt->task->proposed_cust_price = $this->convertToDollars($bt->task->proposed_cust_price);
-                    $bt->task->proposed_sub_price = $this->convertToDollars($bt->task->proposed_sub_price);
                 }
             }
             return response()->json($bidTasks, 200);
@@ -804,7 +793,7 @@ class TaskController extends Controller
                 ->where('user_id', '=', $subId->subcontractor_id)->first();
 
             $alreadyInvited = false;
-            foreach ($invitedSubs as $invitedSub){
+            foreach ($invitedSubs as $invitedSub) {
                 if ($invitedSub->contractor_id === $subId->subcontractor_id) {
                     $alreadyInvited = true;
                 }
@@ -825,7 +814,7 @@ class TaskController extends Controller
 
         }
 
-      // TODO: should sort it by companyName
+        // TODO: should sort it by companyName
 //        self::sortByKey($associatedSubs, 'companyName');
 
         return response()->json([
@@ -839,7 +828,7 @@ class TaskController extends Controller
         $numberOfSubs = count($array);
         $min_index = 0;
 
-        for($i = 0; $i < $numberOfSubs; $i++){
+        for ($i = 0; $i < $numberOfSubs; $i++) {
             if ($i < $numberOfSubs - 1) {
                 $min_index = $i;
                 $j = $i + 1;

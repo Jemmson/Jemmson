@@ -28,6 +28,24 @@ const localVue = createLocalVue()
 localVue.use(Vuetify, {})
 
 describe('Task', () => {
+    let wrap
+
+    beforeEach(() => {
+        wrap = shallowMount(Task, {
+            localVue,
+            mocks: {
+                $router: {
+                    push: jest.fn()
+                }
+            },
+            directives: {
+                mask() {
+                }
+            },
+            propsData: {}
+        })
+
+    })
 
     test('is a Vue instance', () => {
 
@@ -218,6 +236,29 @@ describe('Task', () => {
 
         val = wrapper.vm.convertPriceToIntegers('')
         expect(val).toBe(null)
+
+    })
+
+    test('if the bid is not sent then the price should not be shown', async () => {
+        wrap.setProps({
+            bidTask: {
+                job_task: {
+                    unit_price: 100,
+                    task: {
+                        name: ''
+                    },
+                    job: {
+                        job_task_status: [
+                            {
+                                status: ''
+                            }
+                        ]
+                    }
+                }
+            }
+        })
+        await wrapper.vm.$nextTick()
+        expect()
 
     })
 
