@@ -450,18 +450,22 @@ class User extends SparkUser
     }
 
     public function subSendsBidToGeneral(
-        $bidPrice, $paymentType, $generalId, $jobTask, $subId, $job, $startDate
+        $bidPrice, $paymentType, $generalId, $jobTask, $subId, $job, $startDate, $unitPrice
     )
     {
         $bidContractorJobTask = BidContractorJobTask::where('job_task_id', '=', $jobTask->id)
             ->where('contractor_id', '=', $subId)
             ->get()->first();
-        self::updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType, $startDate);
+        self::updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType, $startDate, $unitPrice);
         self::updateJobTaskStatuses($jobTask, $subId, $generalId);
         self::notifyGeneralOfSubmittedBid($job, $bidContractorJobTask, $generalId);
     }
 
-    public function updateBidContractorJobTaskTable($bidContractorJobTask, $bidPrice, $paymentType, $startDate)
+    public function updateBidContractorJobTaskTable($bidContractorJobTask,
+                                                    $bidPrice,
+                                                    $paymentType,
+                                                    $startDate,
+                                                    $unitPrice)
     {
 
         if ($bidContractorJobTask == null) {
@@ -473,6 +477,7 @@ class User extends SparkUser
         $bidContractorJobTask->bid_price = $this->convertToCents($bidPrice);
         $bidContractorJobTask->status = 'bid_task.bid_sent';
         $bidContractorJobTask->payment_type = $paymentType;
+        $bidContractorJobTask->unit_price = $this->convertToCents($unitPrice);
         $bidContractorJobTask->proposed_start_date = $startDate;
 
         try {

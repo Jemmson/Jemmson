@@ -519,7 +519,8 @@ class TaskController extends Controller
             $jobTask,
             $request->subId,
             $job,
-            $request->start_date
+            $request->start_date,
+            $request->unitPrice,
         );
 
 //        $bidContractorJobTask = BidContractorJobTask::find($request->id);

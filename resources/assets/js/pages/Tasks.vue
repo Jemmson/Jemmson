@@ -30,10 +30,21 @@
                   class="nav-btn-position"
                   :color="initiated ? 'success': ''"
                   @click="selectTab('initiated')"
-              >mdi-page-next
+              >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="initiated ? 'nav-icon-label-selected': ''">
                 Initiated
+              </div>
+            </div>
+            <div class="flex flex-col nav-icon-spacing">
+              <v-icon
+                  :color="sent ? 'success': ''"
+                  class="nav-btn-position"
+                  @click="selectTab('sent')"
+              >mdi-details
+              </v-icon>
+              <div class="nav-icon-label" :class="sent ? 'nav-icon-label-selected': ''">
+                Sent
               </div>
             </div>
             <div class="flex flex-col nav-icon-spacing">
@@ -166,6 +177,36 @@
         </v-card-text>
       </v-card>
 
+      <v-card v-if="sent">
+        <v-card-title>Sent</v-card-title>
+        <v-card-text>
+          <v-simple-table>
+            <template>
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Select</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="getLatestStatus(bid) === 'sent a bid'">
+                <td>{{ bid.job_task.task.name }}</td>
+                <td>{{ bid.payment_type }}</td>
+                <td>
+                  <v-btn
+                      color="primary"
+                      @click="showSelectedBid(bid)"
+                  >View
+                  </v-btn>
+                </td>
+              </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-card-text>
+      </v-card>
+
       <v-card v-if="approved">
         <v-card-title>Approved</v-card-title>
         <v-card-text>
@@ -268,6 +309,7 @@
         <task
             :bidTask="bid"
             :user="current_user"
+            @close="showSelected=false"
         ></task>
       </v-dialog>
 
@@ -343,6 +385,7 @@ export default {
         job: {}
       },
       initiated: true,
+      sent: false,
       accepted: false,
       approved: false,
       paid: false,
@@ -371,30 +414,42 @@ export default {
     selectTab(status) {
       if (status === 'initiated') {
         this.accepted = false;
+        this.sent = false;
         this.approved = false;
         this.paid = false;
         this.denied = false;
         this.initiated = true;
+      } else if (status === 'sent') {
+        this.initiated = false;
+        this.sent = true;
+        this.approved = false;
+        this.paid = false;
+        this.denied = false;
+        this.accepted = false;
       } else if (status === 'accepted') {
         this.initiated = false;
+        this.sent = false;
         this.approved = false;
         this.paid = false;
         this.denied = false;
         this.accepted = true;
       } else if (status === 'approved') {
         this.initiated = false;
+        this.sent = false;
         this.accepted = false;
         this.paid = false;
         this.denied = false;
         this.approved = true;
       } else if (status === 'paid') {
         this.initiated = false;
+        this.sent = false;
         this.accepted = false;
         this.denied = false;
         this.approved = false;
         this.paid = true;
       } else {
         this.initiated = false;
+        this.sent = false;
         this.accepted = false;
         this.approved = false;
         this.paid = false;
@@ -495,6 +550,7 @@ export default {
 
         } else {
           if (data) {
+            console.log('tasks', data)
             this.tasks = data;
             this.sTasks = this.tasks;
             this.bid = data[0]

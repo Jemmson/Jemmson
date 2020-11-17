@@ -152,15 +152,25 @@
                 <div
                     v-if="isBidOpen(bidTask)"
                 >
-                  <v-text-field
-                      type="text"
-                      v-mask="getCurrencyMask()"
-                      v-model="bidPrice"
-                      :rules="[bidPriceIsRequired()]"
-                      :id="bidTask ? 'price-' + bidTask.id : ''"
-                      label="Bid Price *"
-                      @change="formatInput($event)"
-                  ></v-text-field>
+                  <div style="display:none">{{ prePopulate() }}</div>
+                  <div class="flex justify-between">
+                    <v-text-field
+                        ref="unitPrice"
+                        type="text"
+                        v-mask="getCurrencyMask()"
+                        v-model="unitPrice"
+                        :rules="[unitPriceIsRequired()]"
+                        :id="bidTask ? 'price-' + bidTask.id : ''"
+                        label="Unit Price *"
+                        @change="formatInput($event)"
+                    ></v-text-field>
+                    <div class="flex flex-column align-center">
+                      <v-card-subtitle
+                          id="calculatedPrice"
+                      >{{ getPrice() !== NaN ? getPrice() : '0' }}</v-card-subtitle>
+                      <div>Proposed Price</div>
+                    </div>
+                  </div>
                   <v-text-field
                       type="date"
                       :rules="[startDateIsRequired()]"
@@ -170,6 +180,7 @@
                 </div>
                 <v-btn
                     ref="submit"
+                    id="submit"
                     class=""
                     color="primary"
                     :disabled="canSubmit()"
@@ -451,6 +462,7 @@ export default {
       jobTask: {},
       formattedBidPrice: '',
       bidPrice: '',
+      unitPrice: '',
       startDate: '',
       startDateError: false
     }
@@ -461,8 +473,35 @@ export default {
   },
   methods: {
 
-    bidPriceIsRequired() {
-      if (this.bidPrice.length > 3) {
+    prePopulate() {
+      if (this.bidTask && this.unitPrice === '') {
+        this.unitPrice = this.bidTask.unit_price
+      }
+      if (this.bidTask && this.startDate === '') {
+        this.startDate = this.bidTask.proposed_start_date
+      }
+    },
+
+    getPrice(){
+      this.bidPrice = this.getTaskQuantityInteger(this.bidTask) * this.rawPrice(this.unitPrice)
+      if (this.bidPrice > 0) {return this.bidPrice}
+      return 'Not Set'
+    },
+
+    rawPrice(price) {
+      if (price) {
+        let digits = ''
+        for (let i = 0; i < price.length; i++) {
+          if (!isNaN(price[i]) || price[i] === '.'){
+            digits = digits + price[i]
+          }
+        }
+        return parseFloat(digits)
+      }
+    },
+
+    unitPriceIsRequired() {
+      if (this.unitPrice && this.unitPrice.length > 3) {
         return true;
       } else {
         return 'A Bid Is Required'
@@ -470,7 +509,7 @@ export default {
     },
 
     startDateIsRequired() {
-      if (this.startDate.length === 10) {
+      if (this.startDate && this.startDate.length === 10) {
         return true;
       } else {
         return 'A Start Date Is Required';
@@ -478,11 +517,12 @@ export default {
     },
 
     bidPriceIsRequiredCheck() {
-      return this.bidPrice.length > 3;
+      const bidPrice = this.bidPrice + ''
+      return bidPrice.length > 2;
     },
 
     startDateIsRequiredCheck() {
-      return this.startDate.length === 10;
+      return this.startDate && this.startDate.length === 10;
     },
 
     canSubmit() {
@@ -584,7 +624,7 @@ export default {
     },
 
     getCurrencyMask() {
-      return this.currencyMask(this.bidPrice)
+      return this.currencyMask(this.unitPrice)
     },
 
     subHasEnteredAPrice(bidTask) {
@@ -605,14 +645,26 @@ export default {
         const numLength = input.length
         let pricef = ''
         if (numLength < 3) {
-          pricef = '.' + input
+
+          if (input.includes('.')) {
+            pricef = input
+          } else {
+            pricef = '.' + input
+          }
+
           this.formattedBidPrice = pricef
         } else if (numLength > 2) {
           let price = ''
           for (let i = 0; i < numLength - 2; i++) {
             price = price + input[i]
           }
-          pricef = price + '.' + input[numLength - 2] + input[numLength - 1]
+
+          if (input.includes('.')) {
+            pricef = price + input[numLength - 2] + input[numLength - 1]
+          } else {
+            pricef = price + '.' + input[numLength - 2] + input[numLength - 1]
+          }
+
           this.formattedBidPrice = pricef
         }
         return pricef
@@ -668,7 +720,13 @@ export default {
     },
 
     startDateAndPriceExist() {
-      return this.startDate.length === 10 && this.bidPrice.length > 3;
+      let bidPrice
+      if (typeof this.bidPrice === 'string') {
+        bidPrice = this.bidPrice
+      } else {
+        bidPrice = String(this.bidPrice)
+      }
+      return this.startDate.length === 10 && bidPrice.length > 2;
     },
 
     calculateBidPrice(id){
@@ -683,10 +741,12 @@ export default {
       if (this.startDateAndPriceExist() && bidTask && bidTask.job_task) {
         let id = bidTask.id
         let bid_price = this.calculateBidPrice(id)
+        let unit_price = this.rawPrice(this.unitPrice)
         let po = this.paymentType
         this.disabled.submit = true
         axios.post('/bidTask', {
           id: id,
+          unitPrice: unit_price,
           bid_price: bid_price,
           start_date: this.startDate,
           paymentType: po,
@@ -697,6 +757,7 @@ export default {
           // TODO: security review
           Vue.toasted.success('Bid Sent.')
           User.emitChange('bidUpdated')
+          this.$emit('close')
           this.disabled.submit = false
         }).catch((error) => {
           Vue.toasted.error(error.response.data.message)
@@ -839,6 +900,12 @@ export default {
     getTaskQuantity(bidTask) {
       if (bidTask && bidTask.job_task) {
         return bidTask.job_task.qty.toString()
+      }
+    },
+
+    getTaskQuantityInteger(bidTask) {
+      if (bidTask && bidTask.job_task) {
+        return bidTask.job_task.qty
       }
     },
 

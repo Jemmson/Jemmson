@@ -28,24 +28,24 @@ const localVue = createLocalVue()
 localVue.use(Vuetify, {})
 
 describe('Task', () => {
-    let wrap
-
-    beforeEach(() => {
-        wrap = shallowMount(Task, {
-            localVue,
-            mocks: {
-                $router: {
-                    push: jest.fn()
-                }
-            },
-            directives: {
-                mask() {
-                }
-            },
-            propsData: {}
-        })
-
-    })
+    // let wrap
+    //
+    // beforeEach(() => {
+    //     wrap = shallowMount(Task, {
+    //         localVue,
+    //         mocks: {
+    //             $router: {
+    //                 push: jest.fn()
+    //             }
+    //         },
+    //         directives: {
+    //             mask() {
+    //             }
+    //         },
+    //         propsData: {}
+    //     })
+    //
+    // })
 
     test('is a Vue instance', () => {
 
@@ -117,9 +117,9 @@ describe('Task', () => {
         bidPrice.setValue(10)
         await wrapper.vm.$nextTick()
         expect(wrapper.vm.calculateBidPrice(wrapper.vm.bidTask.id)).toBe(100)
-        
+
     })
-    
+
     test('test that I can pull back cents if there are only 2 digits', () => {
 
         let wrapper = shallowMount(Task, {
@@ -239,8 +239,8 @@ describe('Task', () => {
 
     })
 
-    test('if the bid is not sent then the price should not be shown', async () => {
-        wrap.setProps({
+    test.skip('if the bid is not sent then the price should not be shown', async () => {
+        wrapper.setProps({
             bidTask: {
                 job_task: {
                     unit_price: 100,
@@ -344,8 +344,98 @@ describe('Task', () => {
                 mask() {
                 }
             },
-            methods: {
+            methods: {},
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    },
+                    proposed_start_date: ''
+                }
+            }
+        })
 
+        wrapper.setData({
+            startDate: '',
+            startDateError: false,
+            bidPrice: ''
+        })
+
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.startDateIsRequired()).toBe('A Start Date Is Required')
+
+    })
+
+    test('test that I can convert a string of numbers to the raw values', async () => {
+
+        let wrapper = shallowMount(Task, {
+            localVue,
+            directives: {
+                mask() {
+                }
+            },
+            methods: {},
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    },
+                    proposed_start_date: ''
+                }
+            }
+        })
+
+        wrapper.setData({
+            startDate: '',
+            startDateError: false,
+            bidPrice: ''
+        })
+
+        let price = '$ .2'
+        let rawPrice = wrapper.vm.rawPrice(price)
+        await wrapper.vm.$nextTick()
+        expect(rawPrice).toBe(.2)
+
+        price = '$ .21'
+        rawPrice = wrapper.vm.rawPrice(price)
+        await wrapper.vm.$nextTick()
+        expect(rawPrice).toBe(.21)
+
+        price = '$ 123.21'
+        rawPrice = wrapper.vm.rawPrice(price)
+        await wrapper.vm.$nextTick()
+        expect(rawPrice).toBe(123.21)
+
+    })
+
+    test('test that if a unit price is given then the calculated price is correct', async () => {
+
+        let wrapper = shallowMount(Task, {
+            localVue,
+            directives: {
+                mask() {
+                }
             },
             propsData: {
                 bidTask: {
@@ -364,15 +454,127 @@ describe('Task', () => {
                     }
                 }
             }
-        })
+        });
 
         wrapper.setData({
-            startDate: '',
+            unitPrice: '$ .23',
             startDateError: false,
             bidPrice: ''
         })
 
-        expect(wrapper.vm.startDateIsRequired()).toBe('A Start Date Is Required')
+        const calculatedPrice = wrapper.find('#calculatedPrice')
+        await wrapper.vm.$nextTick()
+        expect(calculatedPrice.text()).toBe("0.23")
+        expect(wrapper.vm.bidPrice).toBe(.23)
+
+    })
+
+    test('that I can submit the if there is a start date and the bid Price is calculated', async () => {
+        let wrapper = shallowMount(Task, {
+            localVue,
+            directives: {
+                mask() {
+                }
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        });
+
+        wrapper.setData({
+            unitPrice: '$ .23',
+            startDateError: false,
+            bidPrice: .23,
+            startDate: '2020-11-16'
+        })
+
+        const submit = wrapper.find('#submit')
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'submit'}).attributes().disabled).toBe(undefined)
+
+        wrapper.setData({
+            unitPrice: '$ .23',
+            startDateError: false,
+            bidPrice: .23,
+            startDate: '2020-11-1'
+        })
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'submit'}).attributes().disabled).toBe("true")
+
+        wrapper.setData({
+            unitPrice: '$ .3',
+            startDateError: false,
+            bidPrice: 0.3,
+            startDate: '2020-11-16'
+        })
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find({ref: 'submit'}).attributes().disabled).toBe(undefined)
+    })
+
+    test('test that the formatted bid price has the correct format', async () => {
+
+        let wrapper = shallowMount(Task, {
+            localVue,
+            directives: {
+                mask() {
+                }
+            },
+            propsData: {
+                bidTask: {
+                    job_task: {
+                        qty: '1',
+                        task: {
+                            name: 'Task 1'
+                        },
+                        job: {
+                            job_task_status: [
+                                {
+                                    status: 'approved_by_customer'
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        });
+
+        wrapper.setData({
+            unitPrice: '$ 1.23',
+            startDateError: false,
+            bidPrice: 1.23,
+            startDate: '2020-11-16',
+            formattedBidPrice: ''
+        })
+
+        wrapper.vm.formatInput(wrapper.vm.unitPrice)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.formattedBidPrice).toBe("$ 1.23")
+
+        wrapper.setData({
+            unitPrice: '$ 1,231.23',
+            startDateError: false,
+            bidPrice: 1231.23,
+            startDate: '2020-11-16',
+            formattedBidPrice: ''
+        })
+
+        wrapper.vm.formatInput(wrapper.vm.unitPrice)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.vm.formattedBidPrice).toBe("$ 1,231.23")
 
     })
 
@@ -464,7 +666,7 @@ describe('Task', () => {
                         accounting_software: ''
                     },
                     usertype: 'customer',
-                    stripe_account_verification : {
+                    stripe_account_verification: {
                         account_id: "acct_1GRmKtJl3a26Gg1U",
                         created_at: "2020-03-28 21:40:11",
                         current_deadline: null,
