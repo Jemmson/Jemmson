@@ -712,9 +712,11 @@ export default {
         const data = await axios.post('/jobTask/delete', {
           id: id
         })
-        this.getBid(this.job_task.job.id)
+        this.$emit('getTasks')
+        this.$emit('close')
+        // this.getBid(this.bidTask.job_task.job.id)
       } catch (error) {
-        console.log(error)
+        console.log('error', error)
       }
     },
 

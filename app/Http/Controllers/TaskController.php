@@ -48,6 +48,7 @@ use App\Traits\ConvertPrices;
 use App\Traits\Status;
 use Cloudinary;
 use Cloudinary\Api;
+use phpDocumentor\Reflection\Types\Null_;
 
 class TaskController extends Controller
 {
@@ -263,13 +264,16 @@ class TaskController extends Controller
     {
         $subTask = BidContractorJobTask::where('job_task_id', '=', $jobTaskId)->
         where('contractor_id', '=', $contractorId)->get()->first();
+        $subTask->status = 'bid_task.deleted';
+        try {
+            $subTask->save();
+        } catch (\Exception $e) {
+            Log::error(': ' . $e->getMessage());
+        }
         try {
             $subTask->delete();
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'code' => $e->getCode()
-            ], 200);
+            Log::error(': ' . $e->getMessage());
         }
     }
 
@@ -288,8 +292,6 @@ class TaskController extends Controller
         $customer_id = $jobTask->job()->get()->first()->customer_id;
         $job_id = $jobTask->job()->get()->first()->id;
 
-        $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'canceled_bid_task');
-
         if ($this->userIsAContractor($contractor_id) || $this->userIsACustomer($customer_id)) {
             $this->deleteSubContractorTasks($jobTask->id);
             try {
@@ -303,6 +305,10 @@ class TaskController extends Controller
         } else if ($this->userIsASubContractor($contractor_id)) {
             $sub_contractor_id = Auth::user()->getAuthIdentifier();
             $this->deleteSubsBid($sub_contractor_id, $request->id);
+            if ($this->getLatestSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id) == 'accepted') {
+                $this->removeSubFinalPriceFromJobTask($jobTask->id);
+            }
+            $this->setSubStatus(Auth::user()->getAuthIdentifier(), $jobTask->id, 'canceled_bid_task');
         }
 
         $this->updateJobPrice($job_id);
@@ -321,6 +327,95 @@ class TaskController extends Controller
 //        3. update job totals
 
 
+    }
+
+    public function getLatestSubStatus($userId, $jobTaskId)
+    {
+        $statuses = SubStatus::where('user_id', '=', $userId)
+            ->where('job_task_id', '=', $jobTaskId)
+            ->orderBy('id', 'ASC')->get();
+        return $statuses[count($statuses) - 1]->status;
+    }
+
+    public function removeSubFinalPriceFromJobTask($jobTaskId)
+    {
+        $jobTask = JobTask::find($jobTaskId);
+        $jobTask->sub_final_price = 0;
+        $jobTask->status = $this->setPriorJobTaskState($jobTask->id);
+        try {
+            $jobTask->save();
+            return response()->json([
+                'success' => ''
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error(': ' . $e->getMessage());
+        }
+    }
+
+    public function setPriorJobTaskState($jobTaskId)
+    {
+        return $this->latestSubState($jobTaskId);
+    }
+
+    public function latestSubState($jobTaskId)
+    {
+        $subStatuses = SubStatus::where('job_task_id', '=', $jobTaskId)->get();
+        $latest = $subStatuses[0]->status_number;
+        foreach ($subStatuses as $subStatus) {
+            if ($subStatus->status_number > $latest) {
+                $latest = $subStatus->status_number;
+            }
+        }
+
+        $ss = $this->subStatuses();
+        $ssStatus = $ss[$latest . ''];
+        $st = $this->subStatusTranslation();
+        return $st[$ssStatus];
+
+    }
+
+    public function subStatuses()
+    {
+        return [
+            "1" => "initiated",
+            "2" => "sent_a_bid",
+            "3" => "accepted",
+            "4" => "denied",
+            "5" => "waiting_for_customer_approval",
+            "6" => "customer_changes_bid",
+            "7" => "canceled_by_customer",
+            "8" => "canceled_by_general",
+            "9" => "canceled_bid_task",
+            "10" => "approved_by_customer",
+            "11" => "finished_job",
+            "12" => "finished_job_denied_by_contractor",
+            "13" => "customer_changes_finished_task",
+            "14" => "finished_job_approved_by_contractor",
+            "15" => "waiting_for_customer_payment",
+            "16" => "paid"
+        ];
+    }
+
+    public function subStatusTranslation()
+    {
+        return [
+            "initiated" => "bid_task.initiated",
+            "sent_a_bid" => "bid_task.bid_sent",
+            "accepted" => "bid_task.accepted",
+            "denied" => "bid_task.denied",
+            "waiting_for_customer_approval" => "bid_task.waiting_for_customer_approval",
+            "customer_changes_bid" => "bid_task.customer_changes_bid",
+            "canceled_by_customer" => "bid_task.canceled_by_customer",
+            "canceled_by_general" => "bid_task.canceled_by_general",
+            "canceled_bid_task" => "bid_task.canceled_bid_task",
+            "approved_by_customer" => "bid_task.approved_by_customer",
+            "finished_job" => "bid_task.finished_job",
+            "finished_job_denied_by_contractor" => "bid_task.finished_job_denied_by_contractor",
+            "customer_changes_finished_task" => "bid_task.customer_changes_finished_task",
+            "finished_job_approved_by_contractor" => "bid_task.finished_job_approved_by_contractor",
+            "waiting_for_customer_payment" => "bid_task.waiting_for_customer_payment",
+            "paid" => "bid_task.customer_sent_payment"
+        ];
     }
 
     public function updateJobPrice($job_id)

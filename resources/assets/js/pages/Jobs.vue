@@ -177,11 +177,11 @@
     <tasks v-else>
     </tasks>
 
-    <delete-task-modal
+    <delete-job-modal
         @action="deleteTheJob($event)"
         title="Do You Wish To Delete This Job?"
     >
-    </delete-task-modal>
+    </delete-job-modal>
     <feedback
         page="jobs"
     ></feedback>
@@ -193,7 +193,7 @@ import {mapState, mapMutations} from 'vuex'
 import Tasks from './Tasks'
 import SearchBar from '../components/shared/SearchBar'
 import Card from '../components/shared/Card'
-import DeleteTaskModal from '../components/job/DeleteTaskModal'
+import DeleteJobModal from '../components/job/DeleteJobModal'
 import Feedback from '../components/shared/Feedback'
 import Status from '../components/mixins/Status'
 import InfoModalGeneric from '../components/documentation/InfoModalGeneric'
@@ -207,7 +207,7 @@ export default {
     SearchBar,
     Feedback,
     InfoModalGeneric,
-    DeleteTaskModal
+    DeleteJobModal
   },
   mixins: [
     Status, Utilities
@@ -336,13 +336,13 @@ export default {
     showDeleteJobModal(job) {
       this.deleteJob.id = job.id
       this.job = job
-      $('#delete-task-modal').modal('show')
+      $('#delete-job-modal').modal('show')
     },
     deleteTheJob(action) {
       if (action === 'delete') {
         this.deleteTheActualJob(this.deleteJob.id)
       }
-      $('#delete-task-modal').modal('hide')
+      $('#delete-job-modal').modal('hide')
     },
     async deleteTheActualJob(id) {
       this.overlay = true;

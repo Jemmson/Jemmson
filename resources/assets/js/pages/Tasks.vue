@@ -310,6 +310,7 @@
             :bidTask="bid"
             :user="current_user"
             @close="showSelected=false"
+            @getTasks="getTasks()"
         ></task>
       </v-dialog>
 
