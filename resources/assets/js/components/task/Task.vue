@@ -624,7 +624,11 @@ export default {
     },
 
     getCurrencyMask() {
-      return this.currencyMask(this.unitPrice)
+      if (this.unitPrice === null) {
+        return this.currencyMask(this.bidPrice)
+      } else {
+        return this.currencyMask(this.unitPrice)
+      }
     },
 
     subHasEnteredAPrice(bidTask) {
