@@ -325,7 +325,7 @@
                             v-if="item.sub_statuses.length > 0"
                             text
                             :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                            :to="'/job/task/' + i"
+                            :to="'/job/task/' + item.id"
                         >{{ notificationMessage(item) }}
                         </v-btn>
                       </div>
