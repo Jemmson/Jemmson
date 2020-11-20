@@ -373,6 +373,7 @@
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn
+            v-if="jobHasNotBeenPaid()"
             text
             color="red"
             width="40%"
@@ -472,6 +473,16 @@ export default {
     user: Object
   },
   methods: {
+
+    jobHasNotBeenPaid(){
+      if (
+          this.bidTask
+          && this.bidTask.job_task
+          && this.bidTask.job_task.job
+      ) {
+        return this.bidTask.job_task.job.sub_status[this.bidTask.job_task.job.sub_status.length - 1].status !== 'paid'
+      }
+    },
 
     prePopulate() {
       if (this.bidTask && this.unitPrice === '') {
