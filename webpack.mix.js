@@ -1,5 +1,6 @@
 let mix = require('laravel-mix')
 var path = require('path')
+require('laravel-mix-tailwind');
 
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
@@ -67,6 +68,7 @@ mix.less('resources/assets/less/app.less', 'public/css')
     .js('resources/assets/js/app.js', 'public/js')
     .copy('node_modules/sweetalert2/dist/sweetalert2.min.js', 'public/js/sweetalert.min.js')
     .browserSync()
+    .tailwind()
     .webpackConfig({
         resolve: {
             modules: [

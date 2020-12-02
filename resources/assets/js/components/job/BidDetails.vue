@@ -14,242 +14,217 @@
       </card>
     </div>
 
-    <v-card>
-      <v-card-actions
-          class="flex flex-col"
-      >
-        <div class="flex justify-content-around w-full">
-          <div class="flex flex-col nav-icon-spacing">
-            <v-icon
-                class="nav-btn-position"
-                :color="show.jobStepper ? 'success': ''"
-                @click="showSection('jobStepper')"
-            >mdi-page-next
-            </v-icon>
-            <div class="nav-icon-label" :class="show.jobStepper ? 'nav-icon-label-selected': ''">
-              Step
-            </div>
-          </div>
-          <div class="flex flex-col nav-icon-spacing">
-            <v-icon
-                :color="show.details ? 'success': ''"
-                class="nav-btn-position"
-                @click="showSection('details')"
+    <div class="flex flex-wrap justify-content-around">
+      <bid-details-option
+          id="stepTile"
+          :height="height" :width="width" title="Step" icon="mdi-page-next" @openDialog="openDialog('step')">
+      </bid-details-option>
+      <v-spacer></v-spacer>
+      <bid-details-option
+          :height="height" :width="width" title="Details" icon="mdi-details" @openDialog="openDialog('details')">
+      </bid-details-option>
+      <v-spacer></v-spacer>
+      <bid-details-option
+          :height="height" :width="width" title="Tasks" icon="mdi-briefcase" @openDialog="openDialog('tasks')">
+      </bid-details-option>
+    </div>
+    <div class="flex flex-wrap justify-content-around">
+      <bid-details-option
+          :height="height" :width="width" title="Location" icon="mdi-google-maps"
+          @openDialog="openDialog('location')">
+      </bid-details-option>
+      <v-spacer></v-spacer>
+      <bid-details-option
+          :height="height" :width="width" title="Notes" icon="mdi-note-text-outline"
+          @openDialog="openDialog('notes')">
+      </bid-details-option>
+      <v-spacer></v-spacer>
+      <bid-details-option
+          :height="height" :width="width" title="Photos" icon="mdi-image" @openDialog="openDialog('photos')">
+      </bid-details-option>
+    </div>
 
-            >mdi-details
-            </v-icon>
-            <div class="nav-icon-label" :class="show.details ? 'nav-icon-label-selected': ''">
-              Details
-            </div>
-          </div>
-          <div class="flex flex-col nav-icon-spacing">
-            <v-icon
-                ref="jobTaskNavButton"
-                :color="show.jobTask ? 'success': ''"
-                class="nav-btn-position"
-                :class="!isCustomer && jobTasksNotifications() ? 'red--text' : null"
-                @click="showSection('jobTask')">mdi-briefcase<span
-                v-if="getJobTasksLength() > 0">
-                                    ({{ getJobTasksLength() }})
-                            </span>
-            </v-icon>
-            <div class="nav-icon-label" :class="show.jobTask ? 'nav-icon-label-selected': ''">
-              Tasks
-            </div>
-          </div>
-          <div class="flex flex-col nav-icon-spacing" v-if="!isCustomer">
-            <v-icon
-                :color="show.location ? 'success': ''"
-                class="nav-btn-position"
-                @click="showSection('location')"
-            >mdi-google-maps
-            </v-icon>
-            <div class="nav-icon-label" :class="show.location ? 'nav-icon-label-selected': ''">
-              Location
-            </div>
-          </div>
-          <div class="flex flex-col nav-icon-spacing">
-            <v-icon
-                class="nav-btn-position"
-                :color="show.notes ? 'success': ''"
-                @click="showSection('notes')"
-            >mdi-note-text-outline
-            </v-icon>
-            <div class="nav-icon-label" :class="show.notes ? 'nav-icon-label-selected': ''">
-              Notes
-            </div>
-          </div>
-          <div class="flex flex-col nav-icon-spacing">
-            <v-icon
-                ref="imagesNavButton"
-                :color="show.images ? 'success': ''"
-                class="nav-btn-position"
-                @click="showSection('images')"
-            >mdi-image<span
-                v-if="getNumberOfImages() > 0"
-            >({{ getNumberOfImages() }})</span>
-            </v-icon>
-            <div class="nav-icon-label" :class="show.images ? 'nav-icon-label-selected': ''">
-              Photos
-            </div>
-          </div>
-          <div class="flex flex-col nav-icon-spacing"
-               v-if="canAddATask() && !isCustomer"
-          >
-            <v-icon
-                ref="job-add-task-icon"
-                class="nav-btn-position"
-                :class="canAddATask() && !isCustomer ? 'red--text' : null"
-                name="addTaskToBid"
-                id="addTaskToBid"
-                @click="$router.push('/job/add/task')"
-            >
-              mdi-plus-thick
-            </v-icon>
-            <div class="nav-icon-label">
-              Add Task
-            </div>
-          </div>
-
-
-        </div>
-      </v-card-actions>
-    </v-card>
-
-    <section class="mt-1rem"
-             v-show="show.jobStepper"
-    >
-      <job-stepper
-          :status="getSelectedJob()"
-          :user="getUser()"
-          style="padding: 0;"
-      ></job-stepper>
-    </section>
-
-    <section class="mt-1rem"
-             v-show="show.details"
+    <v-dialog
+        v-if="step"
+        v-model="step"
+        fullscreen
+        id="stepDialog"
     >
       <v-card>
-        <v-card-title>Details</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              @click="closeAllDialogs()"
+          >Close
+          </v-btn>
+        </v-card-actions>
+        <job-stepper
+            :status="getSelectedJob()"
+            :user="getUser()"
+            style="padding: 0;"
+        ></job-stepper>
+      </v-card>
+    </v-dialog>
 
-        <v-card-subtitle
-            v-if="
+    <v-dialog
+        v-if="details"
+        v-model="details"
+        fullscreen
+        id="detailsDialog"
+    >
+      <v-card>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              @click="closeAllDialogs()"
+          >Close
+          </v-btn>
+        </v-card-actions>
+        <v-card>
+          <v-card-title>Details</v-card-title>
+
+          <v-card-subtitle
+              v-if="
                         isCustomer
                         && (
                             getJobStatus_latest(bid) === 'initiated'
                             || getJobStatus_latest(bid) === 'in_progress'
                         )"
-            ref="details-subtitle"
-            class="w-break"
-        >PLEASE WAIT UNTIL YOUR CONTRACTOR SUBMITS BID
-        </v-card-subtitle>
+              ref="details-subtitle"
+              class="w-break"
+          >PLEASE WAIT UNTIL YOUR CONTRACTOR SUBMITS BID
+          </v-card-subtitle>
 
-        <v-simple-table v-if="isCustomer">
-          <template v-slot:default>
-            <thead>
-            <tr>
-              <th class="text-left"></th>
-              <th class="text-left"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>Job Name:</td>
-              <td class="capitalize">{{ bid ? bid.job_name : '' }}</td>
-            </tr>
-            <tr @click="viewContractorInfo()">
-              <td>Contractor Name:</td>
-              <td class="lookLikeALink">{{ getCompanyName() }}</td>
-            </tr>
-            <!--                        <tr v-if="!bidHasBeenSubmitted">-->
-            <!--                            <td>Start Date:</td>-->
-            <!--                            <td>Bid Not Complete</td>-->
-            <!--                        </tr>-->
-            <!--                        <tr v-if="bidHasBeenSubmitted">-->
-            <!--                            <td>Start Date:</td>-->
-            <!--                            <td>{{ agreedStartDate }}</td>-->
-            <!--                        </tr>-->
-            <tr v-if="!bidHasBeenSubmitted">
-              <td>Total Bid Price:</td>
-              <td>Bid Not Complete</td>
-            </tr>
-            <tr v-if="bidHasBeenSubmitted">
-              <td>Total Bid Price:</td>
-              <td>
-                {{ bidPrice }}
-                <!--                <v-icon-->
-                <!--                    color="primary"-->
-                <!--                    @click="showFeeDialog()"-->
-                <!--                    class="ml-1rem">mdi-information-->
-                <!--                </v-icon>-->
-              </td>
-            </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-
-
-        <!--        <info-modal-->
-        <!--            :open-dialog="feeDialog"-->
-        <!--            :is-customer="isCustomer"-->
-        <!--            :estimated-fee="totalEstimatedFee()"-->
-        <!--            :job-type="bid ? bid.payment_type : null"-->
-        <!--            @closeFeeDialog="feeDialog = false"-->
-        <!--        ></info-modal>-->
+          <v-simple-table v-if="isCustomer">
+            <template v-slot:default>
+              <thead>
+              <tr>
+                <th class="text-left"></th>
+                <th class="text-left"></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>Job Name:</td>
+                <td class="capitalize">{{ bid ? bid.job_name : '' }}</td>
+              </tr>
+              <tr @click="viewContractorInfo()">
+                <td>Contractor Name:</td>
+                <td class="lookLikeALink">{{ getCompanyName() }}</td>
+              </tr>
+              <!--                        <tr v-if="!bidHasBeenSubmitted">-->
+              <!--                            <td>Start Date:</td>-->
+              <!--                            <td>Bid Not Complete</td>-->
+              <!--                        </tr>-->
+              <!--                        <tr v-if="bidHasBeenSubmitted">-->
+              <!--                            <td>Start Date:</td>-->
+              <!--                            <td>{{ agreedStartDate }}</td>-->
+              <!--                        </tr>-->
+              <tr v-if="!bidHasBeenSubmitted">
+                <td>Total Bid Price:</td>
+                <td>Bid Not Complete</td>
+              </tr>
+              <tr v-if="bidHasBeenSubmitted">
+                <td>Total Bid Price:</td>
+                <td>
+                  {{ bidPrice }}
+                  <!--                <v-icon-->
+                  <!--                    color="primary"-->
+                  <!--                    @click="showFeeDialog()"-->
+                  <!--                    class="ml-1rem">mdi-information-->
+                  <!--                </v-icon>-->
+                </td>
+              </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
 
 
-        <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less
-          than the sum of
-          your subs bids
-        </v-card-text>
-        <v-simple-table v-if="!isCustomer">
-          <template v-slot:default>
-            <thead>
-            <tr>
-              <th class="text-left"></th>
-              <th class="text-left"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>Job Name:</td>
-              <td class="capitalize">{{ bid ? bid.job_name : '' }}</td>
-            </tr>
-            <tr @click="viewCustomerInfo()">
-              <td>Customer Name:</td>
-              <td class="lookLikeALink">{{ customerName }}</td>
-            </tr>
-            <!--                        <tr>-->
-            <!--                            <td>Start Date:</td>-->
-            <!--                            <td>{{ agreedStartDate }}</td>-->
-            <!--                        </tr>-->
-            <tr>
-              <td>Total Bid Price:</td>
-              <td>
-                {{ bidPrice }}
-                <!--                <v-icon-->
-                <!--                    color="primary"-->
-                <!--                    @click="showFeeDialog()"-->
-                <!--                    class="ml-1rem">mdi-information-->
-                <!--                </v-icon>-->
-              </td>
-            </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
+          <!--        <info-modal-->
+          <!--            :open-dialog="feeDialog"-->
+          <!--            :is-customer="isCustomer"-->
+          <!--            :estimated-fee="totalEstimatedFee()"-->
+          <!--            :job-type="bid ? bid.payment_type : null"-->
+          <!--            @closeFeeDialog="feeDialog = false"-->
+          <!--        ></info-modal>-->
+
+
+          <v-card-text v-if="subTaskWarning && !isCustomer" class="uppercase red ml-1rem mr-1rem">bid price less
+            than the sum of
+            your subs bids
+          </v-card-text>
+          <v-simple-table v-if="!isCustomer">
+            <template v-slot:default>
+              <thead>
+              <tr>
+                <th class="text-left"></th>
+                <th class="text-left"></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>Job Name:</td>
+                <td class="capitalize">{{ bid ? bid.job_name : '' }}</td>
+              </tr>
+              <tr @click="viewCustomerInfo()">
+                <td>Customer Name:</td>
+                <td class="lookLikeALink">{{ customerName }}</td>
+              </tr>
+              <!--                        <tr>-->
+              <!--                            <td>Start Date:</td>-->
+              <!--                            <td>{{ agreedStartDate }}</td>-->
+              <!--                        </tr>-->
+              <tr>
+                <td>Total Bid Price:</td>
+                <td>
+                  {{ bidPrice }}
+                  <!--                <v-icon-->
+                  <!--                    color="primary"-->
+                  <!--                    @click="showFeeDialog()"-->
+                  <!--                    class="ml-1rem">mdi-information-->
+                  <!--                </v-icon>-->
+                </td>
+              </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-card>
       </v-card>
-    </section>
+    </v-dialog>
 
-    <section ref="job_tasks" class="mt-1rem"
-             v-show="show.jobTask"
+    <v-dialog
+        v-if="tasks"
+        v-model="tasks"
+        fullscreen
+        id="tasksDialog"
+        scrollable
+        hide-overlay
+        overlay-opacity="1"
+
     >
-      <div v-if="getJobTasksLength() > 0">
-        <div v-if="!isCustomer && bid && getJobTasksLength() > 0">
 
 
-          <v-card>
-            <v-card-title>Job Tasks</v-card-title>
-
+      <div v-if="!isCustomer">
+        <v-card height="100vh">
+          <v-card-actions>
+            <v-btn
+                v-if="bidHasNotBeenApproved(bid)"
+                color="primary"
+                @click="$router.push('/job/add/task')"
+            >Add Task
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="primary"
+                @click="closeAllDialogs()"
+            >Close
+            </v-btn>
+          </v-card-actions>
+          <v-card-title>Job Tasks</v-card-title>
+          <v-card-subtitle class="uppercase">{{ getJobStatus_latest(bid) }}</v-card-subtitle>
+          <v-card-text>
             <v-simple-table>
               <template>
                 <thead>
@@ -266,297 +241,106 @@
                       v-if="jobTaskObject(item).Price"
                       v-text="'$ ' + jobTaskObject(item).Price"
                   ></td>
-                  <td>                <v-btn
-                      class="btn-size btn-weight"
-                      :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                      :to="'/job/task/' + item.id"
-                      text
-                  >Edit
-                  </v-btn></td>
+                  <td>
+                    <v-btn
+                        class="btn-size btn-weight primary--text"
+                        :to="'/job/task/' + item.id"
+                        text
+                    >Edit
+                    </v-btn>
+                  </td>
                 </tr>
                 </tbody>
               </template>
             </v-simple-table>
-
-
-
-            <v-card
-                v-for="(item, i) in getJobTasks()"
-                :key="i"
-                class="card-positioning"
-                :class="i % 2 === 0 ? 'b-brown': 'b-blue'"
-            >
-              <v-card-text>
-
-                <v-list-item-group
-                >
-                  <v-list-item-content>
-                    <v-list-item-title style="
-                                                            font-size: 1.25rem;
-                                                            font-weight: bolder;
-                                                            margin-left: 1rem;"
-                                       class="uppercase"
-                    >
-                      {{ jobTaskObject(item).Name }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                  <hr>
-                  <v-list-item-content
-                      style="margin-left: 1rem; margin-right: 1rem; margin-top: -1rem"
-                  >
-                    <v-list-item-title class="uppercase flex justify-content-between">
-                      <div style="font-size: .875rem;">Task Status:</div>
-                      <div style="font-size: .875rem;">{{ jobTaskObject(item).Status }}</div>
-                    </v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-content
-                      v-if="notificationMessage(item)"
-                      style="margin-top: -1rem"
-                      :class="!hasTaskMessages(item) ? 'mb-1rem-negative' : ''"
-                  >
-                    <v-list-item-title class="uppercase flex justify-content-between align-center">
-                      <div
-                          style="font-size: .875rem; margin-left: 1rem;"
-                      >Sub Status:
-                      </div>
-                      <div>
-                        <v-btn
-                            style="font-size: .875rem;"
-                            v-if="item.sub_statuses.length > 0"
-                            text
-                            :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                            :to="'/job/task/' + item.id"
-                        >{{ notificationMessage(item) }}
-                        </v-btn>
-                      </div>
-                    </v-list-item-title>
-                  </v-list-item-content>
-
-                  <v-list-item-content
-                      class="w-break" v-if="hasTaskMessages(item)"
-                      style="margin-top: -1rem"
-                  >
-                    <v-list-item-title class="uppercase flex justify-content-between align-center"
-                                       v-for="(message, index) in item.task_messages" :key="index"
-                    >
-                      <div
-                          style="font-size: .875rem; margin-left: 1rem;"
-                      >{{ message.message }}
-                      </div>
-                    </v-list-item-title>
-                  </v-list-item-content>
-                  <hr>
-
-                  <v-list-item-content
-                      style="margin-left: 1rem; margin-right: 1rem; margin-top: -1rem;"
-                      class="mb-1rem-negative"
-                  >
-                    <v-list-item-title class="uppercase flex justify-content-between">
-                      <div class="flex">
-                        <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">
-                          Subs:
-                        </div>
-                        <div style="font-size: .875rem;">{{ jobTaskObject(item).Subs }}</div>
-                      </div>
-                      <div class="flex">
-                        <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">
-                          Quantity:
-                        </div>
-                        <div style="font-size: .875rem;">{{ jobTaskObject(item).Qty }}</div>
-                      </div>
-                      <div class="flex">
-                        <div style="font-size: .875rem; margin-right: 6px; font-weight: bold;">
-                          Price:
-                        </div>
-                        <div style="font-size: .875rem;"
-                             v-if="jobTaskObject(item).Price"
-                             v-text="'$ ' + jobTaskObject(item).Price"
-                        ></div>
-                        <div v-else>Price Not Set</div>
-                      </div>
-                    </v-list-item-title>
-                  </v-list-item-content>
-
-                  <hr>
-                </v-list-item-group>
-              </v-card-text>
-              <v-card-actions
-                  class="space-evenly"
-                  style="margin-top: -2rem"
-              >
-                <v-btn
-                    class="btn-size btn-weight"
-                    :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                    :to="'/job/task/' + item.id"
-                    text
-                >Edit
-                </v-btn>
-                <v-btn
-                    v-if="isGeneral() && approvedByCustomer(item)"
-                    @click="openSubInvite(item.id)"
-                    class="btn-size btn-weight"
-                    :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                    text
-                >Add Sub
-                </v-btn>
-                <div class="flex flex-col"
-                     v-if="isGeneral() && subFinishedTask(item)"
-                >
-                  <div class="text-center"
-                       :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                  >Sub Has Finished
-                  </div>
-                  <div class="flex space-evenly">
-                    <v-btn
-                        @click="approveSubsTask(item)"
-                        class="btn-size btn-weight"
-                        :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                        text
-                    >
-                      Approve
-                    </v-btn>
-                    <v-btn
-                        class="btn-size btn-weight"
-                        :class="i % 2 === 0 ? 'error--text': 'error--text'"
-                        text
-                        @click="openDenyTaskForm(item)"
-                    >
-                      Change Task
-                    </v-btn>
-                  </div>
-                </div>
-                <v-btn
-                    :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                    v-if="isGeneral() && showFinishedBtn(item)"
-                    @click="finishedTask(item)"
-                    class="btn-size btn-weight"
-                    :loading="disabled.finished"
-                    text
-                >Mark Finished
-                </v-btn>
-                <div
-                    :class="i % 2 === 0 ? 'primary--text': 'white--text'"
-                    v-if="isGeneral() && subHasNotFinishedTask(item)"
-                ><span
-                    style="color: black"
-                >Waiting For Sub</span>
-                </div>
-              </v-card-actions>
-              <sub-invite-modal v-if="isGeneral()" :job-task="item"
-                                :job-task-task="item ? item.task : null"
-                                :job-task-name="item ? item.task.name : null"
-                                :bid-payment-type="bid ? bid.payment_type : null"
-                                :id="item ? item.id : null">
-              </sub-invite-modal>
-              <hr>
-            </v-card>
-
-          </v-card>
-
-
-        </div>
-        <div v-else-if="generalHasSentABid(bid)">
-
-          <v-card>
-            <v-card-title>Job Tasks</v-card-title>
-            <card>
-
-              <v-row>
-                <div>
-                                <span class="">
-                                    (<b ref="job_task_length_customer">{{ getJobTasksLength() }}</b>)
-                                </span> Total
-                </div>
-
-                <v-spacer></v-spacer>
-
-                <pre v-show="false">{{ atleastOnetaskHasChanged() }}</pre>
-
-                <v-btn
-                    id="viewTasks"
-                    class="w-40"
-                    color="primary"
-                    text
-                    @click.prevent="viewTasks()"
-                >
-                  View Tasks
-                </v-btn>
-              </v-row>
-
-              <table class="table mt-2rem">
-                <thead>
-                <tr>
-                  <td>Name</td>
-                  <td>Qty</td>
-                  <td>Unit Price</td>
-                  <td>Price</td>
-                </tr>
-                </thead>
-                <tbody>
-                <template v-for="(jt, index) in getJobTasks()">
-                  <tr
-                      :class="paid(jt) ? 'paid' : ''">
-                    <td colspan="4"
-                        :ref="'jobTaskStatus-' + index"
-                        class="uppercase text-center"
-                    >
-                      {{ getLatestJobTaskStatus(jt) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="uppercase">
-                      {{ jt.task.name }}
-                    </td>
-                    <td>
-                      {{ jt.qty }}
-                    </td>
-                    <td>
-                      {{ formatPrice(jt.unit_price) }}
-                    </td>
-                    <td>
-                      {{ formatPrice(jt.cust_final_price) }}
-                    </td>
-                  </tr>
-                </template>
-                </tbody>
-              </table>
-
-            </card>
-          </v-card>
-
-        </div>
-      </div>
-
-      <div v-else>
-
-        <v-card class="mb-1rem">
-          <v-card-title class="w-break">There are no current tasks</v-card-title>
-          <v-card-actions>
-            <v-btn
-                ref="job-add-task"
-                color="primary"
-                v-if="canAddATask() && !isCustomer"
-                class="nav-btn-position"
-                name="addTaskToBid"
-                text
-                @click="$router.push('/job/add/task')"
-            >
-              Add A Job Task
-            </v-btn>
-          </v-card-actions>
+          </v-card-text>
         </v-card>
+      </div>
+      <div v-else>
+        <div v-if="generalHasSentABid(bid)">
+          <!--          current status -->
+          <!--          view tasks -->
+          <v-card height="100vh">
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="primary"
+                  @click="closeAllDialogs()"
+              >Close
+              </v-btn>
+            </v-card-actions>
+            <v-card-title>Job Tasks</v-card-title>
+            <v-card-subtitle>{{ getJobStatus_latest(bid) }}</v-card-subtitle>
+            <v-card-text>
+              <v-simple-table>
+                <template>
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>View</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="(item, i) in getJobTasks()" :key="i">
+                    <td>{{ jobTaskObject(item).Name }}</td>
+                    <td
+                        v-if="jobTaskObject(item).Price"
+                        v-text="'$ ' + jobTaskObject(item).Price"
+                    ></td>
+                    <td>
+                      <v-btn
+                          class="btn-size btn-weight primary--text"
+                          :to="'/job/task/' + item.id"
+                          text
+                      >View
+                      </v-btn>
+                    </td>
+                  </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-card-text>
+          </v-card>
+        </div>
+        <div v-else>
+          <!-- no current tasks -->
+          <v-card height="100vh">
+            <v-card-actions>
+              <v-btn
+                  color="primary"
+                  @click="closeAllDialogs()"
+              >Close
+              </v-btn>
+            </v-card-actions>
+            <v-card-title>Job Tasks</v-card-title>
+            <v-card-subtitle>Bid Has Not Been Submitted</v-card-subtitle>
+            <v-card-text>
+              Please wait until your contractor submits bid
+            </v-card-text>
+          </v-card>
 
+        </div>
       </div>
 
-    </section>
 
-    <!-- images -->
-    <section class="mt-1rem"
-             v-show="show.images"
+    </v-dialog>
+
+    <v-dialog
+        v-if="photos"
+        v-model="photos"
+        fullscreen
+        id="photosDialog"
     >
-      <!--            <p>Only allowable file types are JPG, PNG, GIF or WebP files</p>-->
       <v-card>
-
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              @click="closeAllDialogs()"
+          >Close
+          </v-btn>
+        </v-card-actions>
         <v-card-title>Images</v-card-title>
 
         <v-card-text>
@@ -567,169 +351,201 @@
         </v-card-text>
 
       </v-card>
-    </section>
+    </v-dialog>
 
-    <v-card v-show="changeLocation" class="mt-2">
-      <v-btn
-          text
-          color="red"
-          @click="changeLocation = false">Cancel
-      </v-btn>
-      <v-card-title>Enter New Job Location</v-card-title>
-      <v-card-title class="error--text" v-if="locationError">{{ locationErrorMessage }}</v-card-title>
-      <v-card-text>
-
-        <v-text-field
-            id="route"
-            :class="{'has-error': form.errors.has('address_line_1')}"
-            v-model="form.address_line_1"
-            label=""
-            required
-            :rules="[addressLine1CantBeBlank()]"
-        >
-        </v-text-field>
-        <span ref="addressLine1Error" class="help-block"
-              v-show="form.errors.has('address_line_1')">{{ form.errors.get('address_line_1') }}</span>
-
-        <v-text-field
-            id="addressLine2"
-            v-model="form.address_line_2"
-            label="Address Line 2"
-        >
-        </v-text-field>
-
-        <v-text-field
-            id="administrative_area_level_1"
-            :class="{'has-error': form.errors.has('city')}"
-            v-model="form.city"
-            required
-            :rules="[cityCantBeBlank()]"
-            label="City *"
-        >
-        </v-text-field>
-        <span ref="cityError" class="help-block"
-              v-show="form.errors.has('city')">{{ form.errors.get('city') }}</span>
-
-        <v-text-field
-            id="locality"
-            :class="{'has-error': form.errors.has('state')}"
-            v-model="form.state"
-            :rules="[stateCantBeBlank()]"
-            required
-            label="State *"
-        >
-        </v-text-field>
-        <span ref="stateError" class="help-block" v-show="form.errors.has('state')">{{
-            form.errors.get('state')
-          }}</span>
-
-        <v-text-field
-            id="postal_code"
-            :class="{'has-error': form.errors.has('zip')}"
-            :rules="[this.zipMustHaveAtleast5characters(), zipCantBeBlank()]"
-            v-model="form.zip"
-            required
-            v-mask="'#####-####'"
-            label="Zip Code *"
-        >
-        </v-text-field>
-        <span ref="zipError" class="help-block"
-              v-show="form.errors.has('zip')">{{ form.errors.get('zip') }}</span>
-
-      </v-card-text>
-      <v-card-actions>
-        <v-btn
-            text
-            :loading="updateLocationLoading"
-            color="primary"
-            @click="updateLocation()"
-        >Update
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn
-            text
-            color="red"
-            @click="changeLocation = false"
-        >Cancel
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-
-    <section ref="job_address" class="mt-1rem"
-             v-show="show.location"
+    <v-dialog
+        v-if="location"
+        v-model="location"
+        fullscreen
+        id="locationDialog"
     >
-      <div v-if="showAddress">
-        <card>
+      <v-card>
+        <v-card v-show="changeLocation" class="mt-2">
+          <v-btn
+              text
+              color="red"
+              @click="changeLocation = false">Cancel
+          </v-btn>
+          <v-card-title>Enter New Job Location</v-card-title>
+          <v-card-title class="error--text" v-if="locationError">{{ locationErrorMessage }}</v-card-title>
+          <v-card-text>
 
-          <div class="flex justify-content-between align-baseline">
-            <v-card-title>Job Location</v-card-title>
-            <v-btn
-                v-if="stateIsAz()"
-                ref="assessor"
-                class="mr-1rem"
-                text
-                color="primary"
-                @click="routeToAssessorPage(bid)"
+            <v-text-field
+                id="route"
+                :class="{'has-error': form.errors.has('address_line_1')}"
+                v-model="form.address_line_1"
+                label=""
+                required
+                :rules="[addressLine1CantBeBlank()]"
             >
-              Assessor
-            </v-btn>
-          </div>
+            </v-text-field>
+            <span ref="addressLine1Error" class="help-block"
+                  v-show="form.errors.has('address_line_1')">{{ form.errors.get('address_line_1') }}</span>
 
+            <v-text-field
+                id="addressLine2"
+                v-model="form.address_line_2"
+                label="Address Line 2"
+            >
+            </v-text-field>
+
+            <v-text-field
+                id="administrative_area_level_1"
+                :class="{'has-error': form.errors.has('city')}"
+                v-model="form.city"
+                required
+                :rules="[cityCantBeBlank()]"
+                label="City *"
+            >
+            </v-text-field>
+            <span ref="cityError" class="help-block"
+                  v-show="form.errors.has('city')">{{ form.errors.get('city') }}</span>
+
+            <v-text-field
+                id="locality"
+                :class="{'has-error': form.errors.has('state')}"
+                v-model="form.state"
+                :rules="[stateCantBeBlank()]"
+                required
+                label="State *"
+            >
+            </v-text-field>
+            <span ref="stateError" class="help-block" v-show="form.errors.has('state')">{{
+                form.errors.get('state')
+              }}</span>
+
+            <v-text-field
+                id="postal_code"
+                :class="{'has-error': form.errors.has('zip')}"
+                :rules="[this.zipMustHaveAtleast5characters(), zipCantBeBlank()]"
+                v-model="form.zip"
+                required
+                v-mask="'#####-####'"
+                label="Zip Code *"
+            >
+            </v-text-field>
+            <span ref="zipError" class="help-block"
+                  v-show="form.errors.has('zip')">{{ form.errors.get('zip') }}</span>
+
+          </v-card-text>
           <v-card-actions>
             <v-btn
-                color="primary"
                 text
-                @click="openLocationDialog()"
-            >Change Job Location
+                :loading="updateLocationLoading"
+                color="primary"
+                @click="updateLocation()"
+            >Update
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+                text
+                color="red"
+                @click="changeLocation = false"
+            >Cancel
             </v-btn>
           </v-card-actions>
-
-          <div class="flex flex-col">
-            <div>
-              {{ bid.location.address_line_1 }}
+        </v-card>
+        <div v-if="showAddress">
+          <card>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="primary"
+                  @click="closeAllDialogs()"
+              >Close
+              </v-btn>
+            </v-card-actions>
+            <div class="flex justify-content-between align-baseline">
+              <v-card-title>Job Location</v-card-title>
+              <v-btn
+                  v-if="stateIsAz()"
+                  ref="assessor"
+                  class="mr-1rem"
+                  text
+                  color="primary"
+                  @click="routeToAssessorPage(bid)"
+              >
+                Assessor
+              </v-btn>
             </div>
-            <div>
-              {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+
+            <v-card-actions>
+              <v-btn
+                  color="primary"
+                  text
+                  @click="openLocationDialog()"
+              >Change Job Location
+              </v-btn>
+            </v-card-actions>
+
+            <div class="flex flex-col">
+              <div>
+                {{ bid.location.address_line_1 }}
+              </div>
+              <div>
+                {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
+              </div>
             </div>
-          </div>
 
-          <hr>
+            <hr>
 
-          <main class="map-responsive">
-            <iframe
-                width="450"
-                height="250"
-                frameborder="0" style="border:0"
-                :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
+            <main class="map-responsive">
+              <iframe
+                  width="450"
+                  height="250"
+                  frameborder="0" style="border:0"
+                  :src="'https://www.google.com/maps/embed/v1/search?key=AIzaSyBAQZB-zS1HVbyNe2JEk1IgNVl0Pm2xsno&q=' +
                             bid.location.address_line_1 + ' ' +
                             bid.location.city + ' ' +
                             bid.location.state + ' ' +
                             bid.location.zip
                             " allowfullscreen>
-            </iframe>
-          </main>
+              </iframe>
+            </main>
 
-        </card>
-      </div>
-      <div v-else>
-        <v-card>
-          <v-card-title class="w-break">Customer Has Not Set The Job Location Yet</v-card-title>
-        </v-card>
-      </div>
-    </section>
+          </card>
+        </div>
+        <div v-else>
+          <v-card>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="primary"
+                  @click="closeAllDialogs()"
+              >Close
+              </v-btn>
+            </v-card-actions>
+            <v-card-title class="w-break">Customer Has Not Set The Job Location Yet</v-card-title>
+          </v-card>
+        </div>
+      </v-card>
+    </v-dialog>
 
-    <section class="mt-1rem"
-             v-show="show.notes"
+    <v-dialog
+        v-if="notes"
+        v-model="notes"
+        fullscreen
+        id="notesDialog"
     >
       <v-card v-if="isCustomer">
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              @click="closeAllDialogs()"
+          >Close
+          </v-btn>
+        </v-card-actions>
         <v-card-title class="card-title mt-4">Notes</v-card-title>
         <v-card-text>
           <div style="display: none;">{{ messageFromCustomer }}</div>
           <div style="display: none;">{{ getPaidWithCashMessage }}</div>
-          <v-textarea v-model="customerNotesMessage"
-                      label="Your Notes For Your Contractor"
-                      outlined
-                      id="message">
+          <v-textarea
+              style="color:black;"
+              v-model="customerNotesMessage"
+              label="Your Notes For Your Contractor"
+              outlined
+              id="message">
           </v-textarea>
         </v-card-text>
 
@@ -747,75 +563,107 @@
       </v-card>
 
       <v-card v-if="!isCustomer">
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="primary"
+              @click="closeAllDialogs()"
+          >Close
+          </v-btn>
+        </v-card-actions>
         <v-card-title class="card-title mt-4">Notes</v-card-title>
         <v-card-text>
           <div class="capitalize" style="color: black;">{{ messageFromCustomer }}</div>
           <div style="display: none; color: black;">{{ getPaidWithCashMessage }}</div>
         </v-card-text>
       </v-card>
-      <!--            <card>-->
-      <!--                <v-card-title v-else class="card-title mt-4">Contractor Notes For You</v-card-title>-->
-      <!--                <v-card-text>-->
-      <!--                    <v-textarea cols="0" rows="0" class="form-control"-->
-      <!--                                v-model="customerNotesMessage"-->
-      <!--                                id="message">-->
-      <!--                    </v-textarea>-->
-      <!--                </v-card-text>-->
-      <!--            </card>-->
-    </section>
 
-    <!-- / tasks -->
 
-    <section class="mt-4"
-             v-if="(isCustomer && needsApproval()) || !isCustomer"
+    </v-dialog>
+
+    <v-dialog
+        v-if="submit"
+        v-model="submit"
+        fullscreen
+        id="submitDialog"
     >
-      <card class="mb-4" v-if="getJobTasksLength() > 0">
-        <v-card-title>Actions</v-card-title>
-        <!-- /customer approve bid form -->
+      <div v-if="!isCustomer">
+        <card class="mb-4" v-if="getJobTasksLength() > 0">
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="primary"
+                @click="closeAllDialogs()"
+            >Close
+            </v-btn>
+          </v-card-actions>
+          <v-card-text class="mb-40">
+            <v-sheet
+                class="text-center uppercase successful-submit"
+                v-if="submittedMessage"
+            >
+              You have successfully submitted a bid
+            </v-sheet>
+
+            <general-contractor-bid-actions
+                ref="generalBidContractorActions"
+                :disable-button="noJobTasks()"
+                @bid-submitted="bidSubmitted()"
+                @remove-notification="removeSubmittedNotification()"
+                :bid="bid">
+            </general-contractor-bid-actions>
+          </v-card-text>
+        </card>
+      </div>
+    </v-dialog>
+
+    <v-card v-if="!isCustomer">
+      <v-card-actions>
+        <v-btn
+            color="primary"
+            @click="openDialog('submit')"
+        >Submit
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+            color="primary"
+            @click="$router.push('/job/add/task')"
+        >Add Task
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+
+    <div v-if="isCustomer">
+      <div v-if="generalHasSentABid(bid)">
         <approve-bid
-            v-if="isCustomer && needsApproval()"
+            v-if="needsApproval()"
             :bid="bid"
         >
         </approve-bid>
+        <div v-if="customerHasCompletedTasks()">
+          <v-card>
+            <v-card-title>Completed Tasks</v-card-title>
+            <v-card-text style="padding-left: 0px; padding-right: 0px;">
+              <main class="row w-full ml-0">
+                <completed-tasks
+                    class="w-full"
+                    :bid="bid"
+                    :paid="checkIfPaid()"
+                >
+                </completed-tasks>
+              </main>
+            </v-card-text>
+          </v-card>
 
-        <v-sheet
-            class="text-center uppercase successful-submit"
-            v-if="submittedMessage"
-        >
-          You have successfully submitted a bid
-        </v-sheet>
+        </div>
+      </div>
+      <div v-else>
+        waiting on work to be finished
+      </div>
+    </div>
 
-        <general-contractor-bid-actions
-            ref="generalBidContractorActions"
-            :disable-button="noJobTasks()"
-            @bid-submitted="bidSubmitted()"
-            @remove-notification="removeSubmittedNotification()"
-            :bid="bid"
-            v-if="!isCustomer">
-        </general-contractor-bid-actions>
-      </card>
-    </section>
 
-    <section class="mt-4" style="margin-left: -18px; margin-right: -18px;" v-if="customerHasCompletedTasks()">
-
-      <v-card>
-        <v-card-title>
-          <!--            <v-card-title class="v-card__title">-->
-          Completed Tasks
-        </v-card-title>
-        <v-card-text style="padding-left: 0px; padding-right: 0px;">
-          <!--            <v-card-text class="v-card__title">-->
-          <main class="row w-full ml-0">
-            <completed-tasks
-                class="w-full"
-                :bid="bid"
-                :paid="checkIfPaid()"
-            >
-            </completed-tasks>
-          </main>
-        </v-card-text>
-      </v-card>
-    </section>
+    <!-- / tasks -->
 
     <stripe
         :bid="bid"
@@ -883,11 +731,13 @@ import TaskImages from '../../components/task/UploadJobImages'
 import Utilities from '../mixins/Utilities'
 import Stripe from '../stripe/Stripe'
 import DenyTaskModal from '../../components/task/DenyTaskModal'
+import BidDetailsOption from "./BidDetailsOption";
 // import User from '../../classes/User'
 
 export default {
   components: {
     ApproveBid,
+    BidDetailsOption,
     Card,
     ContentSection,
     CompletedTasks,
@@ -918,6 +768,13 @@ export default {
   },
   data() {
     return {
+      step: false,
+      details: false,
+      tasks: false,
+      location: false,
+      photos: false,
+      notes: false,
+      submit: false,
       updateLocationLoading: false,
       locationError: false,
       locationErrorMessage: null,
@@ -1023,6 +880,55 @@ export default {
     }),
     ...mapGetters(['getCustomerName']),
 
+    height() {
+      if (this.$vuetify.breakpoint) {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs':
+            return 50
+          case 'sm':
+            return 100
+          case 'md':
+            return 150
+          case 'lg':
+            return 225
+          case 'xl':
+            return 275
+        }
+      }
+    },
+
+    width() {
+      if (this.$vuetify.breakpoint) {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs':
+            return 50
+          case 'sm':
+            return 100
+          case 'md':
+            return 150
+          case 'lg':
+            return 225
+          case 'xl':
+            return 275
+        }
+      }
+    },
+
+    iconSize() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return 'small'
+        case 'sm':
+          return 'default'
+        case 'md':
+          return 'medium'
+        case 'lg':
+          return 'large'
+        case 'xl':
+          return 'xlarge'
+      }
+    },
+
     agreedStartDate() {
       if (this.getJob() && this.bid.agreed_start_date !== undefined && this.bid.agreed_start_date !== null) {
         return this.dateOnly(this.bid.agreed_start_date)
@@ -1116,8 +1022,7 @@ export default {
         return (
             this.bid.location_id !== undefined &&
             this.bid.location_id !== null &&
-            this.bid.location !== null &&
-            !this.isCustomer
+            this.bid.location !== null
         )
       }
     }
@@ -1128,6 +1033,43 @@ export default {
     }
   },
   methods: {
+
+    bidHasNotBeenApproved() {
+      const latestJobStatus = this.getJobStatus_latest(this.bid)
+      return latestJobStatus === 'initiated'
+          || latestJobStatus === 'in_progress'
+          || latestJobStatus === 'sent'
+          || latestJobStatus === 'changed'
+    },
+
+    openDialog(dialog) {
+      this.closeAllDialogs();
+      if (dialog === 'step') {
+        this.step = true;
+      } else if (dialog === 'details') {
+        this.details = true;
+      } else if (dialog === 'tasks') {
+        this.tasks = true;
+      } else if (dialog === 'location') {
+        this.location = true;
+      } else if (dialog === 'photos') {
+        this.photos = true;
+      } else if (dialog === 'notes') {
+        this.notes = true;
+      } else if (dialog === 'submit') {
+        this.submit = true;
+      }
+    },
+
+    closeAllDialogs() {
+      this.step = false;
+      this.details = false;
+      this.tasks = false;
+      this.location = false;
+      this.photos = false;
+      this.notes = false;
+      this.submit = false;
+    },
 
     stateIsAz() {
       let state = 'AZ';
@@ -1663,7 +1605,7 @@ export default {
           Status: this.formatStatus(this.getJobTaskStatus_latest(jt)),
           'Status Date': this.formatDate(this.dateOnly(this.getJobTaskCreationDate_latest(jt))),
           Qty: jt.qty,
-          Price: jt.cust_final_price
+          Price: jt.cust_final_price === 0 ? '0' : jt.cust_final_price
         }
       }
     },
@@ -1678,7 +1620,8 @@ export default {
     },
     needsApproval() {
       // TODO: use regular status values to check these
-      return this.bid.status === 'bid.sent'
+      const status = this.getJobStatus_latest(this.bid)
+      return status === 'sent'
     },
     formatPrice(price) {
       return '$ ' + Format.decimal(price)

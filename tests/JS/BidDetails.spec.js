@@ -49,7 +49,18 @@ describe('BidDetails', function () {
     let store
 
     beforeEach(() => {
-        vuetify = new Vuetify()
+        vuetify = new Vuetify({
+            breakpoint: {
+                name: null,
+                thresholds: {
+                    xs: 340,
+                    sm: 540,
+                    md: 800,
+                    lg: 1280,
+                },
+                scrollBarWidth: 24,
+            }
+        })
         storeOptions = {
             commit: jest.fn(),
             actions: {
@@ -63,6 +74,104 @@ describe('BidDetails', function () {
             }
         }
         store = new Vuex.Store(storeOptions)
+    })
+
+    test('test that when a tile is clicked the the dialog window shows up', async () => {
+
+        let wrapper = mount(BidDetails, {
+            vuetify,
+            localVue,
+            store,
+            methods: {
+                initAutocomplete() {
+                    return true;
+                }
+            },
+            directives: {
+                mask() {
+                }
+            },
+            propsData: {
+                isCustomer: true,
+                bid: {
+                    job_tasks: [
+                        {
+                            unit_price: 1,
+                            cust_final_price: 123,
+                            task: {
+                                name: 'Task 1',
+                                qty: 1,
+                                unit_price: 1,
+                                cust_final_price: 123,
+                                sub_final_price: 0
+                            },
+                            job_task_status: [
+                                {
+                                    status: "initiated"
+                                }, {
+                                    status: "waiting_for_customer_approval"
+                                }, {
+                                    status: "changed"
+                                },
+                            ]
+                        },
+                        {
+                            unit_price: 234,
+                            cust_final_price: 234,
+                            task: {
+                                name: 'Task 2',
+                                qty: 1,
+                                unit_price: 234,
+                                cust_final_price: 234,
+                                sub_final_price: 0
+                            },
+                            job_task_status: [
+                                {
+                                    status: "initiated"
+                                }, {
+                                    status: "waiting_for_customer_approval"
+                                }
+                            ]
+                        },
+                        {
+                            unit_price: 345,
+                            cust_final_price: 345,
+                            task: {
+                                name: 'Task 3',
+                                qty: 1,
+                                unit_price: 345,
+                                cust_final_price: 345,
+                                sub_final_price: 0
+                            },
+                            job_task_status: [
+                                {
+                                    status: "initiated"
+                                }, {
+                                    status: "waiting_for_customer_approval"
+                                }
+                            ]
+                        },
+                    ],
+                    job_status: [
+                        {
+                            status_number: 4
+                        }
+                    ]
+                }
+            }
+        })
+
+        wrapper.setData({
+            step: false
+        })
+
+        let stepTile = wrapper.find("#stepTile")
+        stepTile.trigger('click')
+
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find('#dialogTitle').text()).toBe('Current Steps')
+        expect(wrapper.vm.step).toBe(true)
+
     })
 
     test('test that if one task has the status changed then the approve button is not visible and all tasks that say ' +
@@ -183,6 +292,13 @@ describe('BidDetails', function () {
             methods: {
                 initAutocomplete() {
                     return true;
+                }
+            },
+            mocks: {
+                $vuetify: {
+                    breakpoint: {
+                        name: 'xs'
+                    }
                 }
             },
             directives: {
@@ -776,7 +892,7 @@ describe('BidDetails', function () {
             .attributes().class).toBe('v-icon notranslate nav-btn-position v-icon--link mdi mdi-plus-thick theme--light red--text')
 
     })
-    
+
     test('that assessor button appears for the address if the address is from AZ', async () => {
 
         const wrapper = shallowMount(BidDetails, {
@@ -832,7 +948,7 @@ describe('BidDetails', function () {
 
         await wrapper.vm.$nextTick()
         expect(wrapper.find({ref: 'assessor'}).exists()).toBe(false)
-        
+
     })
 
 })

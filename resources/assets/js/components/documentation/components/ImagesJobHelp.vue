@@ -15,7 +15,11 @@
 
 <script>
 export default {
-  name: "ImagesJobHelp"
+  name: "ImagesJobHelp",
+  mounted() {
+    this.$store.commit('setCurrentPage', '/image-association');
+    this.getSubs();
+  }
 }
 </script>
 

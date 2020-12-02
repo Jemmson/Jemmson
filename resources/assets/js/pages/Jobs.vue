@@ -7,7 +7,6 @@
     </v-overlay>
 
     <div v-if="bidsContractorSectionPicked" ref="jobs">
-      <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Jobs Page</h2>
       <search-bar>
         <input type="text" class="form-control" placeholder="Search Jobs" v-model="searchTerm" @keyup="search">
       </search-bar>
@@ -46,69 +45,40 @@
       </v-tabs>
 
       <v-card
+          class="mt-3"
           v-for="bid in sBids" v-bind:key="bid.id"
-          class="margins-quarter-rem"
           v-if="getJobStatus(bid) !== 'paid' && getJobStatus(bid) !== 'approved' && inProgress"
       >
-        <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
-        <v-card-subtitle class="uppercase">{{ getJobStatus(bid) }}</v-card-subtitle>
-        <v-card-subtitle
-            v-if="bid.payment_type === 'cash'"
-        >
-          <v-icon
-          >mdi-cash
-          </v-icon>
-          Cash Job
-        </v-card-subtitle>
-        <v-card-subtitle
-            v-else-if="bid.payment_type === 'creditCard'"
-        >
-          <v-icon
-          >mdi-credit-card
-          </v-icon>
-          Credit Card Job
-        </v-card-subtitle>
-
-        <v-card-text>
-          <v-card-subtitle v-if="isContractor()"
-                           class="p-0"
-          >
-                                     <span ref="total_number_of_subs"
-                                           class="float-right list-card-info">
-                                            {{ totalNumberOfSubsBiddingForTheJob(bid.job_tasks) }} Subs
-                                        <i class="fas fa-users"></i>
-                                     </span>
-
-            <span class="float-right mr-2 list-card-info"
-                  ref="show_number_of_job_tasks">
-                                            {{ bid.job_tasks_length }} Tasks
-                                        <i class="far fa-check-square"></i>
-                                    </span>
-          </v-card-subtitle>
-        </v-card-text>
-        <v-divider></v-divider>
+        <div class="flex justify-between align-center">
+          <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
+          <div class="mr-4">
+            <v-icon
+                v-if="bid.payment_type === 'cash'"
+            >mdi-cash
+            </v-icon>
+            <v-icon
+                v-else-if="bid.payment_type === 'creditCard'"
+            >mdi-credit-card
+            </v-icon>
+          </div>
+        </div>
         <v-card-actions>
           <v-btn
-              class="w-40"
               text
               color="red"
               @click="showDeleteJobModal(bid)"
           >
             DELETE JOB
           </v-btn>
-
           <v-spacer></v-spacer>
-
           <v-btn
               @click="goToJob(bid.id)"
               text
               color="primary"
-              class="w-40"
           >VIEW JOB
           </v-btn>
 
         </v-card-actions>
-
       </v-card>
 
       <v-simple-table

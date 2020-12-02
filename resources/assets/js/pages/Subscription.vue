@@ -222,9 +222,9 @@
 <script>
 import Feedback from '../components/shared/Feedback'
 
-let stripe = Stripe(Spark.stripeKey);
-let elements = stripe.elements();
-let card = undefined;
+// let stripe = Stripe(Spark.stripeKey);
+// let elements = stripe.elements();
+// let card = undefined;
 
 export default {
   name: "Subscription",

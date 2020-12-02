@@ -1,7 +1,7 @@
 <template>
   <v-container>
 
-    <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Home Page</h2>
+    <!--    <h2 class="text-center uppercase black&#45;&#45;text" style="margin-bottom: 2rem;">Home Page</h2>-->
 
     <section>
 
@@ -87,50 +87,49 @@
         <v-card-title>Welcome {{ getUserName() }}</v-card-title>
         <v-img :src="getPhoto()" aspect-ratio="1.7" alt="">
         </v-img>
-        <v-card-text>
-          <v-card-subtitle>Info</v-card-subtitle>
-          <v-list dense>
-            <v-list-item>
-              <v-list-item-content>Address:</v-list-item-content>
-              <v-list-item-content class="align-end">
-                <div>{{ getAddressLine1() }}</div>
-                <div>{{ getAddressLine2() }}</div>
-                <div class="flex">
-                  <div>{{ getCity() }},</div>
-                  <div
-                      style="margin-left: .2rem;"
-                  >{{ getState() }}
-                  </div>
-                  <div
-                      style="margin-left: .2rem;"
-                  >{{ getZip() }}
-                  </div>
-                </div>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-card-subtitle v-if="isContractor()">Licenses:</v-card-subtitle>
-          <v-list dense>
-            <template v-for="license in getLicenses()">
-              <v-list-item>
-                <v-list-item-content class="align-end">Name:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ license.name }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content class="align-end">Number:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ license.number }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content class="align-end">Type:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ license.type }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content class="align-end">State:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ license.state }}</v-list-item-content>
-              </v-list-item>
-            </template>
-          </v-list>
-        </v-card-text>
+        <!--        <v-card-text>-->
+        <!--          <v-list dense>-->
+        <!--            <v-list-item>-->
+        <!--              <v-list-item-content>Address:</v-list-item-content>-->
+        <!--              <v-list-item-content class="align-end">-->
+        <!--                <div>{{ getAddressLine1() }}</div>-->
+        <!--                <div>{{ getAddressLine2() }}</div>-->
+        <!--                <div class="flex">-->
+        <!--                  <div>{{ getCity() }},</div>-->
+        <!--                  <div-->
+        <!--                      style="margin-left: .2rem;"-->
+        <!--                  >{{ getState() }}-->
+        <!--                  </div>-->
+        <!--                  <div-->
+        <!--                      style="margin-left: .2rem;"-->
+        <!--                  >{{ getZip() }}-->
+        <!--                  </div>-->
+        <!--                </div>-->
+        <!--              </v-list-item-content>-->
+        <!--            </v-list-item>-->
+        <!--          </v-list>-->
+        <!--          <v-card-subtitle v-if="isContractor()">Licenses:</v-card-subtitle>-->
+        <!--          <v-list dense>-->
+        <!--            <template v-for="license in getLicenses()">-->
+        <!--              <v-list-item>-->
+        <!--                <v-list-item-content class="align-end">Name:</v-list-item-content>-->
+        <!--                <v-list-item-content class="align-end">{{ license.name }}</v-list-item-content>-->
+        <!--              </v-list-item>-->
+        <!--              <v-list-item>-->
+        <!--                <v-list-item-content class="align-end">Number:</v-list-item-content>-->
+        <!--                <v-list-item-content class="align-end">{{ license.number }}</v-list-item-content>-->
+        <!--              </v-list-item>-->
+        <!--              <v-list-item>-->
+        <!--                <v-list-item-content class="align-end">Type:</v-list-item-content>-->
+        <!--                <v-list-item-content class="align-end">{{ license.type }}</v-list-item-content>-->
+        <!--              </v-list-item>-->
+        <!--              <v-list-item>-->
+        <!--                <v-list-item-content class="align-end">State:</v-list-item-content>-->
+        <!--                <v-list-item-content class="align-end">{{ license.state }}</v-list-item-content>-->
+        <!--              </v-list-item>-->
+        <!--            </template>-->
+        <!--          </v-list>-->
+        <!--        </v-card-text>-->
         <v-card-actions>
           <v-btn
               id="editDemo"
@@ -219,7 +218,9 @@ export default {
     },
 
     goToContractorsPage() {
-      this.$router.push('/associatedContractors')
+      // this.$store.commit('setCurrentPage', '/associatedContractors');
+      // this.$router.push('/associatedContractors')
+      window.location.href = '/#/associatedContractors'
     },
 
     hasStripe() {

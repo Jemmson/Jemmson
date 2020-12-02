@@ -40,6 +40,7 @@ import UserAuthorizationPage from './pages/UserAuthorizationPage'
 import Terms from "./pages/Terms";
 import PasswordReset from "./pages/PasswordReset";
 import PasswordEmailVerification from "./pages/PasswordEmailVerification";
+import Tailwind from "./components/tailwind/tailwind"
 
 import Help from "./pages/Help"
 // import BidTask from './components/job/BidTask';
@@ -47,6 +48,10 @@ import Help from "./pages/Help"
 
 // vue routes
 const routes = [
+  {
+    path: '/tailwind',
+    component: Tailwind
+  },
   {
     path: '/assessor/:location',
     component: Assessor
