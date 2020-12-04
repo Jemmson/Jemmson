@@ -626,13 +626,13 @@ class JobController extends Controller
     private function isCustomerBidNotSent($job)
     {
         return Auth::user()->id == $job->customer_id &&
-            ($job->status != 'bid.sent' && $job->status != 'job.approved');
+            ($job->status != 'bid.sent' && $job->status != 'job.approved' && $job->status != 'job.completed');
     }
 
     private function isCustomerWithSubmittedBid($job)
     {
         return Auth::user()->id == $job->customer_id &&
-            ($job->status == 'bid.sent' || $job->status == 'job.approved');
+            ($job->status == 'bid.sent' || $job->status == 'job.approved' || $job->status == 'job.completed');
     }
 
     private function getCustomersJobLocation($job)
