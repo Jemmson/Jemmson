@@ -588,7 +588,7 @@
         id="submitDialog"
     >
       <div v-if="!isCustomer">
-        <card class="mb-4" v-if="getJobTasksLength() > 0">
+        <v-card class="mb-4" v-if="getJobTasksLength() > 0">
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
@@ -613,7 +613,18 @@
                 :bid="bid">
             </general-contractor-bid-actions>
           </v-card-text>
-        </card>
+        </v-card>
+        <v-card v-else height="100vh">
+          <v-card-title>You have not add a task to a the job</v-card-title>
+          <v-card-title>Please add a task</v-card-title>
+          <v-card-actions>
+            <v-btn
+                color="primary"
+                @click="$router.push('/job/add/task')"
+            >Add Task
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </div>
     </v-dialog>
 
