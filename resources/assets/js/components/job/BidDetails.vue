@@ -15,6 +15,7 @@
     </div>
 
     <v-card
+        :disabled="onMyWayEnabled"
         v-if="hasBeenApproved && hasNotBeenFinished"
         class="mt-1rem mb-1rem"
         @click="confirmNotification()"
@@ -23,7 +24,10 @@
                              padding-bottom: 5px; font-weight: 900;"
                    class="flex flex-column justify-center align-items-center">
         <v-icon>mdi-truck</v-icon>
-        <div class="uppercase text-center">on my way</div>
+        <div class="flex">
+          <div class="uppercase text-center">on my way</div>
+          <div v-if="onMyWayEnabled" class="ml-1 f-bold uppercase" style="color: green">-> Sent</div>
+        </div>
       </v-card-text>
     </v-card>
 
@@ -56,7 +60,6 @@
           :height="height" :width="width" title="Photos" icon="mdi-image" @openDialog="openDialog('photos')">
       </bid-details-option>
     </div>
-
 
 
     <v-dialog
@@ -820,6 +823,7 @@ export default {
   },
   data() {
     return {
+      onMyWayEnabled: false,
       showConfirmationDialog: false,
       showNotificationConfirmation: false,
       notificationResult: false,
@@ -1105,7 +1109,7 @@ export default {
   },
   methods: {
 
-    confirmNotification(){
+    confirmNotification() {
       this.showConfirmationDialog = true;
     },
 
@@ -1118,6 +1122,7 @@ export default {
 
       this.showNotificationConfirmation = true;
       this.showConfirmationDialog = false;
+      this.onMyWayEnabled = true;
       if (data.error) {
         this.notificationResult = 'There was a problem sending the notification. Please try again';
         this.notificationError = true;
