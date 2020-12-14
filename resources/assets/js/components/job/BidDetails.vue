@@ -14,6 +14,19 @@
       </card>
     </div>
 
+    <v-card
+        v-if="hasBeenApproved && hasNotBeenFinished"
+        class="mt-1rem mb-1rem"
+        @click="notify()"
+    >
+      <v-card-text style="color: black; padding-top: 5px;
+                             padding-bottom: 5px; font-weight: 900;"
+                   class="flex flex-column justify-center align-items-center">
+        <v-icon>mdi-truck</v-icon>
+        <div class="uppercase text-center">on my way</div>
+      </v-card-text>
+    </v-card>
+
     <div class="flex flex-wrap justify-content-around">
       <bid-details-option
           id="stepTile"
@@ -43,6 +56,19 @@
           :height="height" :width="width" title="Photos" icon="mdi-image" @openDialog="openDialog('photos')">
       </bid-details-option>
     </div>
+
+
+
+    <v-dialog
+        v-if="showNotificationConfirmation"
+        v-model="showNotificationConfirmation"
+        id="showNotificationConfirmation"
+    >
+      <v-card :class="notificationError ? 'notificationError': 'notificationSuccess'">
+        <v-card-title>Notification</v-card-title>
+        <v-card-text>{{ notificationResult }}</v-card-text>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
         v-if="step"
@@ -628,7 +654,7 @@
       </div>
     </v-dialog>
 
-    <v-card v-if="!isCustomer">
+    <v-card v-if="!isCustomer && hasNotBeenApproved && hasNotBeenFinished">
       <v-card-actions>
         <v-btn
             color="primary"
@@ -779,6 +805,9 @@ export default {
   },
   data() {
     return {
+      showNotificationConfirmation: false,
+      notificationResult: false,
+      notificationError: false,
       step: false,
       details: false,
       tasks: false,
@@ -890,6 +919,21 @@ export default {
       selectedJob: state => state.job.model,
     }),
     ...mapGetters(['getCustomerName']),
+
+    hasBeenApproved() {
+      let latestStatus = this.getJobStatus_latest(this.bid)
+      return latestStatus === 'approved'
+    },
+
+    hasNotBeenApproved() {
+      let latestStatus = this.getJobStatus_latest(this.bid)
+      return latestStatus !== 'approved'
+    },
+
+    hasNotBeenFinished() {
+      let latestStatus = this.getJobStatus_latest(this.bid)
+      return latestStatus !== 'paid'
+    },
 
     height() {
       if (this.$vuetify.breakpoint) {
@@ -1044,6 +1088,22 @@ export default {
     }
   },
   methods: {
+
+    async notify() {
+      this.notificationError = false;
+      const {data} = await axios.post('job/onyourway', {
+        customerId: this.bid.customer.id,
+        companyName: this.bid.contractor.contractor.company_name
+      })
+
+      this.showNotificationConfirmation = true;
+      if (data.error) {
+        this.notificationResult = 'There was a problem sending the notification. Please try again';
+        this.notificationError = true;
+      } else {
+        this.notificationResult = 'You have successfully notified the customer that you are on your way'
+      }
+    },
 
     bidHasNotBeenApproved() {
       const latestJobStatus = this.getJobStatus_latest(this.bid)
@@ -1860,6 +1920,14 @@ export default {
 //.card__title {
 //  padding: 0;
 //}
+
+.notificationError {
+  background-color: #ff5252 !important;
+}
+
+.notificationSuccess {
+  background-color: #4caf50 !important;
+}
 
 .b-brown {
   background-color: beige;

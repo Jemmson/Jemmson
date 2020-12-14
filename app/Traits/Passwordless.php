@@ -93,7 +93,11 @@ trait Passwordless
             }
         }
 
-        Log::info($token);
+//        if (gettype($token) == 'object') {
+//            Log::info($token->token);
+//        } else {
+//            Log::info($token);
+//        }
 
         return $token;
     }

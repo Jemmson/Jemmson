@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BidContractorJobTask;
 use App\Job;
 use App\JobTaskStatus;
+use App\Notifications\NotifyCustomerOfArrival;
 use App\SubStatus;
 use App\TaskImage;
 use App\TaskMessage;
@@ -45,6 +46,19 @@ class JobController extends Controller
     public function __construct()
     {
         $this->middleware('further.info', ['only' => 'edit']);
+    }
+
+    public function onyourway(Request $request)
+    {
+        $companyName = $request->companyName;
+        try {
+            $customer = User::find($request->customerId);
+            $customer->notify(new NotifyCustomerOfArrival($companyName));
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true
+            ], 200);
+        }
     }
 
     /**
