@@ -17,7 +17,7 @@
     <v-card
         v-if="hasBeenApproved && hasNotBeenFinished"
         class="mt-1rem mb-1rem"
-        @click="notify()"
+        @click="confirmNotification()"
     >
       <v-card-text style="color: black; padding-top: 5px;
                              padding-bottom: 5px; font-weight: 900;"
@@ -58,6 +58,21 @@
     </div>
 
 
+
+    <v-dialog
+        v-if="showConfirmationDialog"
+        v-model="showConfirmationDialog"
+        id="showConfirmationDialog"
+    >
+      <v-card>
+        <v-card-title>Would you like to let the customer know that you are on your way?</v-card-title>
+        <v-card-actions>
+          <v-btn @click="notify()" color="primary">Yes</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn @click="showConfirmationDialog = false" color="red">No</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
         v-if="showNotificationConfirmation"
@@ -805,6 +820,7 @@ export default {
   },
   data() {
     return {
+      showConfirmationDialog: false,
       showNotificationConfirmation: false,
       notificationResult: false,
       notificationError: false,
@@ -1089,6 +1105,10 @@ export default {
   },
   methods: {
 
+    confirmNotification(){
+      this.showConfirmationDialog = true;
+    },
+
     async notify() {
       this.notificationError = false;
       const {data} = await axios.post('job/onyourway', {
@@ -1097,6 +1117,7 @@ export default {
       })
 
       this.showNotificationConfirmation = true;
+      this.showConfirmationDialog = false;
       if (data.error) {
         this.notificationResult = 'There was a problem sending the notification. Please try again';
         this.notificationError = true;
