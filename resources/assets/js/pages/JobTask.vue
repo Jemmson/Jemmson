@@ -575,7 +575,7 @@
               @click="approveTaskHasBeenFinished(jobTask)"
               :loading="disabled.approve"
           >
-            Approve
+            Approve Subs Work
           </v-btn>
           <v-btn
               v-if="contractorWantsToChangeBid()"
@@ -1144,7 +1144,7 @@ export default {
     },
 
     contractorCanApproveSubsTask(jobTask) {
-      this.subHasFinishedWork(jobTask)
+      return this.subHasFinishedWork(jobTask)
     },
 
     customerWantsToDeleteTheTask(jobTask) {
@@ -1325,9 +1325,14 @@ export default {
 
     },
     showStripeToggle(jobTask) {
-      return this.authUser.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
+      return this.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
           'bid.in_progress')
     },
+
+    isAssignedToMe(jobTask, userId) {
+      return userId === jobTask.contractor_id
+    },
+
     updateMessage(jobTaskId, currentMessage, actor) {
       let message = document.getElementById('message-' + actor + '-' + jobTaskId)
       message = message.value
@@ -1404,7 +1409,7 @@ export default {
 
 
       if (this.isContractor() &&
-          this.authUser.isAssignedToMe(jobTask, this.user.id) &&
+          this.isAssignedToMe(jobTask, this.user.id) &&
           (jobTask.status === 'bid_task.approved_by_customer'
               || jobTask.status === 'bid_task.reopened'
               || jobTask.status === 'bid_task.finished_by_sub'
@@ -1416,7 +1421,7 @@ export default {
     },
     showApproveBtn(jobTask) {
       if (this.isGeneral() &&
-          !this.authUser.isAssignedToMe(jobTask, this.user.id) &&
+          !this.isAssignedToMe(jobTask, this.user.id) &&
           (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
       ) {
         return true

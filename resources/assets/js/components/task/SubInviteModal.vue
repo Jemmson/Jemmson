@@ -19,7 +19,7 @@
 
       <v-card-title class="flex flex-column pt-6 w-break"
                     v-if="initiateBidForSubForm.counter <= 0">Invite A Subcontractor - {{
-        taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase()
+          taskForSubInvite === undefined ? '' : jobTaskNameForSubInvite.toUpperCase()
         }}
       </v-card-title>
 
@@ -117,56 +117,28 @@
           <!--                      :key="sub.id"-->
           <!--          >-->
           <!--          </v-checkbox>-->
-
-          <v-data-table
-              v-model="selectedSubs"
-              :headers="headers"
-              :items="associatedSubs"
-              :single-select="singleSelect"
-              :item-key="associatedSubs.id"
-              show-select
-              class="elevation-1"
-          >
-            <!--            <template>-->
-            <!--              <td class="v-data-table__mobile-row">-->
-            <!--                <div class="v-data-table__checkbox v-simple-checkbox">-->
-            <!--                  <div class="v-input&#45;&#45;selection-controls__ripple"></div>-->
-            <!--                  <i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme&#45;&#45;light"></i>-->
-            <!--                </div>-->
-            <!--                <div class="v-data-table__mobile-row__cell">Sue the Tax Lady</div>-->
-            <!--              </td>-->
-            <!--            </template>-->
-            <template
-                v-slot:header.data-table-select="{}"
-            >
+          <v-simple-table>
+            <template>
               <thead>
+              <tr>
+                <th></th>
+                <th></th>
+              </tr>
               </thead>
-            </template>
-
-            <template
-                v-slot:body="{ items }"
-            >
               <tbody>
-              <tr
-                  v-for="item in associatedSubs"
-                  :key="item.id"
-              >
-                <td class="flex align-center">
+              <tr v-for="(item, i) in associatedSubs" :key="i">
+                <td>
                   <v-simple-checkbox
-                    color="green"
-                    :value="item.selected"
-                    @input="selectSub($event, item.id)"
-                    ></v-simple-checkbox>
-                  <v-spacer></v-spacer>
-                  {{ item.companyName }}
+                      color="green"
+                      :value="item.selected"
+                      @input="selectSub($event, item.id)"
+                  ></v-simple-checkbox>
                 </td>
+                <td>{{ item.companyName }}</td>
               </tr>
               </tbody>
             </template>
-
-
-          </v-data-table>
-
+          </v-simple-table>
           <v-btn
               text
               color="primary"
@@ -292,7 +264,7 @@ export default {
       return []
     },
 
-    selectSub(selectedSub, subId){
+    selectSub(selectedSub, subId) {
       for (let i = 0; i < this.associatedSubs.length; i++) {
         if (this.associatedSubs[i].id === subId) {
           this.associatedSubs[i].selected = selectedSub;
@@ -300,7 +272,7 @@ export default {
       }
     },
 
-    addSubs () {
+    addSubs() {
       let subArray = [];
       for (let i = 0; i < this.associatedSubs.length; i++) {
         if (this.associatedSubs[i].selected) {
@@ -340,11 +312,12 @@ export default {
 
     async getAssociatedSubs() {
       this.overlay = true
-      const jobTaskId = this.jobTask.id
+      const jobTaskId = this.$route.params.index
       const {data} = await axios.get('/task/getAssociatedSubs/' + jobTaskId)
       if (data.error) {
 
       } else {
+        console.log('associatedSubs', data[0])
         this.associatedSubs = data[0];
         this.newSub = false
         this.existingSub = true
@@ -596,9 +569,11 @@ export default {
   mounted: function () {
     this.$store.commit('setPhoneLoadingValue')
     this.user = Spark.state.user
-    this.getAssociatedSubs();
     Bus.$on('clearAndCloseForm', () => {
       this.clearAndCloseForm()
+    })
+    this.$nextTick(() => {
+      this.getAssociatedSubs();
     })
   }
 }

@@ -11,6 +11,7 @@
           style="color: black"
       >You will need to set up a credit card to bid on this job
       </v-card-title>
+
       <div class="flex justify-between" style="align-items: center;">
         <v-card-title v-if="bidTask && bidTask.job_task">{{ bidTask.job_task.job.job_name }}</v-card-title>
         <div class="flex flex-col nav-icon-spacing"
@@ -115,6 +116,37 @@
           </v-card-actions>
         </v-card>
 
+        <v-dialog
+            v-if="showConfirmationDialog"
+            v-model="showConfirmationDialog"
+            id="showConfirmationDialog"
+        >
+          <v-card>
+            <v-card-title style="word-wrap: break-word;">Would you like to let the customer know that you are on your way?</v-card-title>
+            <v-card-actions>
+              <v-btn @click="notify()" color="primary">Yes</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn @click="showConfirmationDialog = false" color="red">No</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-card
+            :disabled="onMyWayEnabled"
+            v-if="hasBeenApproved && hasNotBeenFinished"
+            class="mt-1rem mb-1rem"
+            @click="confirmNotification()"
+        >
+          <v-card-text style="color: black; padding-top: 5px;
+                             padding-bottom: 5px; font-weight: 900;"
+                       class="flex flex-column justify-center align-items-center">
+            <v-icon>mdi-truck</v-icon>
+            <div class="flex">
+              <div class="uppercase text-center">on my way</div>
+              <div v-if="onMyWayEnabled" class="ml-1 f-bold uppercase" style="color: green">-> Sent</div>
+            </div>
+          </v-card-text>
+        </v-card>
 
         <div v-show="showTheTask">
           <section class="mt-1rem"
@@ -167,7 +199,8 @@
                     <div class="flex flex-column align-center">
                       <v-card-subtitle
                           id="calculatedPrice"
-                      >{{ getPrice() !== NaN ? getPrice() : '0' }}</v-card-subtitle>
+                      >{{ getPrice() !== NaN ? getPrice() : '0' }}
+                      </v-card-subtitle>
                       <div>Proposed Price</div>
                     </div>
                   </div>
@@ -179,6 +212,7 @@
                   ></v-text-field>
                 </div>
                 <v-btn
+                    v-if="isBidOpen(bidTask)"
                     ref="submit"
                     id="submit"
                     class=""
@@ -432,6 +466,23 @@ export default {
     this.getStoredBidPrice
   },
   computed: {
+
+    hasBeenApproved() {
+      let latestStatus = this.getLatestStatus()
+      return latestStatus === 'approved by customer'
+    },
+
+    hasNotBeenApproved() {
+      let latestStatus = this.getLatestStatus()
+      return latestStatus !== 'approved by customer'
+    },
+
+    hasNotBeenFinished() {
+      let latestStatus = this.getLatestStatus()
+      return latestStatus !== 'paid'
+      return true;
+    },
+
     getStoredBidPrice() {
       // if (localStorage.getItem('bidPrice' + this.bidTask.id)) {
       //   this.bidTask.bid_price = localStorage.getItem('bidPrice' + this.bidTask.id)
@@ -443,6 +494,8 @@ export default {
   },
   data() {
     return {
+      showConfirmationDialog: false,
+      onMyWayEnabled: false,
       stripeVerified: true,
       show: {
         details: true,
@@ -472,9 +525,32 @@ export default {
     bidTask: Object,
     user: Object
   },
-  methods: {
 
-    jobHasNotBeenPaid(){
+
+  methods: {
+    async notify() {
+      this.notificationError = false;
+      const {data} = await axios.post('job/onyourway', {
+        customerId: this.bidTask.job_task.job.customer_id,
+        companyName: this.user.contractor.company_name
+      })
+
+      this.showNotificationConfirmation = true;
+      this.showConfirmationDialog = false;
+      this.onMyWayEnabled = true;
+      if (data.error) {
+        this.notificationResult = 'There was a problem sending the notification. Please try again';
+        this.notificationError = true;
+      } else {
+        this.notificationResult = 'You have successfully notified the customer that you are on your way'
+      }
+    },
+
+    confirmNotification() {
+      this.showConfirmationDialog = true;
+    },
+
+    jobHasNotBeenPaid() {
       if (
           this.bidTask
           && this.bidTask.job_task
@@ -493,9 +569,11 @@ export default {
       }
     },
 
-    getPrice(){
+    getPrice() {
       this.bidPrice = this.getTaskQuantityInteger(this.bidTask) * this.rawPrice(this.unitPrice)
-      if (this.bidPrice > 0) {return this.bidPrice}
+      if (this.bidPrice > 0) {
+        return this.bidPrice
+      }
       return 'Not Set'
     },
 
@@ -503,7 +581,7 @@ export default {
       if (price) {
         let digits = ''
         for (let i = 0; i < price.length; i++) {
-          if (!isNaN(price[i]) || price[i] === '.'){
+          if (!isNaN(price[i]) || price[i] === '.') {
             digits = digits + price[i]
           }
         }
@@ -746,7 +824,7 @@ export default {
       return this.startDate.length === 10 && bidPrice.length > 2;
     },
 
-    calculateBidPrice(id){
+    calculateBidPrice(id) {
       let bid_price = $('#price-' + id).val()
       console.log('bidprice', bid_price)
       console.log('bid_price', this.bidPrice)
@@ -827,9 +905,12 @@ export default {
     jobTaskHasBeenApproved() {
       if (this.bidTask && this.bidTask.job_task) {
         const status = this.getLatestJobTaskStatus1(this.bidTask.job_task);
-        return status == 'approved by customer'
+        const substatus = this.getLatestStatus();
+        return (
+            status == 'approved by customer'
             || status == 'declined subs work'
             || status == 'customer changes finished task'
+        ) && substatus !== 'denied'
       }
     },
 
@@ -936,6 +1017,7 @@ export default {
           && status !== 'finished job approved by contractor'
           && status !== 'waiting for customer payment'
           && status !== 'paid'
+          && status !== 'denied'
       ) {
         return true
       } else {
@@ -1048,9 +1130,12 @@ export default {
     showFinishedBtn(bid) {
       if (bid && bid.job_task) {
         let status = this.getLatestJobTaskStatus1(bid.job_task);
-        return status == 'approved by customer'
+        let substatus = this.getLatestStatus();
+        return (
+            status == 'approved by customer'
             || status == 'declined subs work'
             || status == 'customer changes finished task'
+        ) && substatus !== 'denied'
       }
     },
 

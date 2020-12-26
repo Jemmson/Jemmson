@@ -16,7 +16,7 @@
 
     <v-card
         :disabled="onMyWayEnabled"
-        v-if="hasBeenApproved && hasNotBeenFinished"
+        v-if="hasBeenApproved && hasNotBeenFinished && !isCustomer"
         class="mt-1rem mb-1rem"
         @click="confirmNotification()"
     >
@@ -68,7 +68,7 @@
         id="showConfirmationDialog"
     >
       <v-card>
-        <v-card-title>Would you like to let the customer know that you are on your way?</v-card-title>
+        <v-card-title style="word-wrap: break-word;">Would you like to let the customer know that you are on your way?</v-card-title>
         <v-card-actions>
           <v-btn @click="notify()" color="primary">Yes</v-btn>
           <v-spacer></v-spacer>

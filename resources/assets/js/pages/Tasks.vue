@@ -1,8 +1,5 @@
 <template>
-  <div class="main flex flex-col justify-between mt-1">
-
-    <h2 class="text-center uppercase black--text" style="margin-bottom: 2rem;">Sub Jobs Page</h2>
-
+  <div class="flex flex-col justify-between mt-1">
     <div>
       <v-btn
           @click="connectWithStripe($route.path)"
@@ -268,33 +265,20 @@
       </v-card>
 
       <v-card v-if="denied">
-        <v-card-title>Paid</v-card-title>
+        <v-card-title>Denied</v-card-title>
         <v-card-text>
           <v-simple-table>
             <template>
               <thead>
               <tr>
                 <th>Name</th>
-                <th>Type</th>
-                <th>Select</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="
-                  getLatestStatus(bid) === 'initiated'
-                  && getLatestStatus(bid) === 'accepted'
-                  && getLatestStatus(bid) === 'approved by customer'
-                  && getLatestStatus(bid) === 'paid'
+                  getLatestStatus(bid) === 'denied'
               ">
                 <td>{{ bid.job_task.task.name }}</td>
-                <td>{{ bid.payment_type }}</td>
-                <td>
-                  <v-btn
-                      color="primary"
-                      @click="showSelectedBid(bid)"
-                  >View
-                  </v-btn>
-                </td>
               </tr>
               </tbody>
             </template>
