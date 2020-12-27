@@ -63,26 +63,6 @@
                         id="qtyUnit"
                         name="qtyUnit"
                         ref="qtyUnit"></v-text-field>
-
-                <v-textarea
-                        v-model="addNewTaskForm.customer_message"
-                        id="customer_message"
-                        name="customer_message"
-                        auto-grow
-                        clearable
-                        clear-icon="mdi-cancel"
-                        label="Instructions For The Customer"
-                ></v-textarea>
-
-                <v-textarea
-                        v-model="addNewTaskForm.sub_message"
-                        id="sub_message"
-                        name="sub_message"
-                        auto-grow
-                        clearable
-                        clear-icon="mdi-cancel"
-                        label="Instructions For Sub Contractor"
-                ></v-textarea>
             </v-card-text>
 
             <v-card-actions>

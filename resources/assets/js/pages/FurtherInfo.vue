@@ -208,23 +208,12 @@
           </div>
         </div>
 
-        <v-textarea
-            v-if="!isContractor"
-            v-model="form.notes"
-            :auto-grow="true"
-            :clearable="true"
-            label="General Instructions For All Contractor"
-        ></v-textarea>
-
         <div v-if="isContractor">
-
           <add-license-box
               @add="addLicenses($event)"
           >
           </add-license-box>
-
         </div>
-
 
         <v-text-field
             id="password"
