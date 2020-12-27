@@ -574,7 +574,7 @@ export default {
     },
 
     unitPriceIsRequired() {
-      if (this.unitPrice && this.unitPrice.length > 3) {
+      if (this.unitPrice && this.unitPrice.length > 2) {
         return true;
       } else {
         return 'A Bid Is Required'
@@ -590,8 +590,23 @@ export default {
     },
 
     bidPriceIsRequiredCheck() {
-      const bidPrice = this.bidPrice + ''
-      return bidPrice.length > 2;
+
+      if (this.bidPrice) {
+        const bidPrice = this.bidPrice + ''
+
+        if (this.bidPriceContainsADot(bidPrice)) {
+          return bidPrice.length > 2;
+        } else {
+          return true
+        }
+      }
+
+      return false
+
+    },
+
+    bidPriceContainsADot(bidPrice) {
+      return bidPrice.split('.').length > 1;
     },
 
     startDateIsRequiredCheck() {
@@ -746,9 +761,13 @@ export default {
         }
         return pricef
       } else if (typeof input === 'number') {
-        let bidPrice = input / 100
-        this.formattedBidPrice = bidPrice
-        return bidPrice
+        // this.currencyMask(input)
+        // let bidPrice = input
+        // let bidPrice = input / 100
+        // this.formattedBidPrice = bidPrice
+        // return bidPrice
+        return input / 100
+        // return input
       }
     },
 
@@ -805,7 +824,7 @@ export default {
       } else {
         bidPrice = String(this.bidPrice)
       }
-      return this.startDate.length === 10 && bidPrice.length > 2;
+      return this.startDate.length === 10 && this.bidPriceIsRequiredCheck();
     },
 
     calculateBidPrice(id) {

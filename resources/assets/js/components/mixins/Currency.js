@@ -24,32 +24,68 @@ export default {
         currencyMask(price) {
 
             if (price !== undefined) {
-                price = price.toString()
+                if (price / 100) {
+                    if ((price / 100) < 1) {
+                        price = price.toString()
+                        if (price.length === 2) {
+                            return '$ .##'
+                        } else if (price.length === 1) {
+                            return '$ .0#'
+                        }
+                    } else {
+                        price = price.toString()
+                        if (price.length === 3) {
+                            return '$ #.##'
+                        } else if (price.length === 4) {
+                            return '$ ##.##'
+                        } else if (price.length === 5) {
+                            return '$ ###.##'
+                        } else if (price.length === 6) {
+                            return '$ #,###.##'
+                        } else if (price.length === 7) {
+                            return '$ ##,###.##'
+                        } else if (price.length === 8) {
+                            return '$ ###,###.##'
+                        } else if (price.length === 9) {
+                            return '$ #,###,###.##'
+                        } else if (price.length === 10) {
+                            return '$ ##,###,###.##'
+                        } else if (price.length === 11) {
+                            return '$ ###,###,###.##'
+                        } else if (price.length === 12) {
+                            return '$ #,###,###,###.##'
+                        } else if (price.length === 13) {
+                            return '$ ##,###,###,###.##'
+                        }
+                    }
 
-                if (price.length < 6) {
-                    return '$ .##'
-                } else if (price.length === 6) {
-                    return '$ #.##'
-                } else if (price.length === 7) {
-                    return '$ ##.##'
-                } else if (price.length === 8) {
-                    return '$ ###.##'
-                } else if (price.length === 9 || price.length === 10) {
-                    return '$ #,###.##'
-                } else if (price.length === 11) {
-                    return '$ ##,###.##'
-                } else if (price.length === 12) {
-                    return '$ ###,###.##'
-                } else if (price.length === 13 || price.length === 14) {
-                    return '$ #,###,###.##'
-                } else if (price.length === 15) {
-                    return '$ ##,###,###.##'
-                } else if (price.length === 16) {
-                    return '$ ###,###,###.##'
-                } else if (price.length === 17 || price.length === 18) {
-                    return '$ #,###,###,###.##'
-                } else if (price.length === 19) {
-                    return '$ ##,###,###,###.##'
+                } else {
+                    price = price.toString()
+                    if (price.length < 6) {
+                        return '$ .##'
+                    } else if (price.length === 6) {
+                        return '$ #.##'
+                    } else if (price.length === 7) {
+                        return '$ ##.##'
+                    } else if (price.length === 8) {
+                        return '$ ###.##'
+                    } else if (price.length === 9 || price.length === 10) {
+                        return '$ #,###.##'
+                    } else if (price.length === 11) {
+                        return '$ ##,###.##'
+                    } else if (price.length === 12) {
+                        return '$ ###,###.##'
+                    } else if (price.length === 13 || price.length === 14) {
+                        return '$ #,###,###.##'
+                    } else if (price.length === 15) {
+                        return '$ ##,###,###.##'
+                    } else if (price.length === 16) {
+                        return '$ ###,###,###.##'
+                    } else if (price.length === 17 || price.length === 18) {
+                        return '$ #,###,###,###.##'
+                    } else if (price.length === 19) {
+                        return '$ ##,###,###,###.##'
+                    }
                 }
             }
         },
