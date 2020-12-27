@@ -52,11 +52,6 @@
       </bid-details-option>
       <v-spacer></v-spacer>
       <bid-details-option
-          :height="height" :width="width" title="Notes" icon="mdi-note-text-outline"
-          @openDialog="openDialog('notes')">
-      </bid-details-option>
-      <v-spacer></v-spacer>
-      <bid-details-option
           :height="height" :width="width" title="Photos" icon="mdi-image" @openDialog="openDialog('photos')">
       </bid-details-option>
     </div>
@@ -563,66 +558,6 @@
           </v-card>
         </div>
       </v-card>
-    </v-dialog>
-
-    <v-dialog
-        v-if="notes"
-        v-model="notes"
-        fullscreen
-        id="notesDialog"
-    >
-      <v-card v-if="isCustomer">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-              color="primary"
-              @click="closeAllDialogs()"
-          >Close
-          </v-btn>
-        </v-card-actions>
-        <v-card-title class="card-title mt-4">Notes</v-card-title>
-        <v-card-text>
-          <div style="display: none;">{{ messageFromCustomer }}</div>
-          <div style="display: none;">{{ getPaidWithCashMessage }}</div>
-          <v-textarea
-              style="color:black;"
-              v-model="customerNotesMessage"
-              label="Your Notes For Your Contractor"
-              outlined
-              id="message">
-          </v-textarea>
-        </v-card-text>
-
-        <v-btn
-            :loading="submittedMessage"
-            v-if="isCustomer"
-            class="mt-1rem"
-            text
-            color="primary"
-            ref="update_customer_notes_button"
-            @click="updateGeneralContractorNotes"
-        >Submit
-        </v-btn>
-
-      </v-card>
-
-      <v-card v-if="!isCustomer">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-              color="primary"
-              @click="closeAllDialogs()"
-          >Close
-          </v-btn>
-        </v-card-actions>
-        <v-card-title class="card-title mt-4">Notes</v-card-title>
-        <v-card-text>
-          <div class="capitalize" style="color: black;">{{ messageFromCustomer }}</div>
-          <div style="display: none; color: black;">{{ getPaidWithCashMessage }}</div>
-        </v-card-text>
-      </v-card>
-
-
     </v-dialog>
 
     <v-dialog

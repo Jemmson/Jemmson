@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaskMessagesTable extends Migration
+class CreateJobTaskMessagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateTaskMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_messages', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('job_task_messages', function (Blueprint $table) {
+            $table->id();
             $table->integer('job_task_id');
             $table->integer('user_id');
             $table->string('message');
@@ -31,6 +31,6 @@ class CreateTaskMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_messages');
+        Schema::dropIfExists('job_task_messages');
     }
 }

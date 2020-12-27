@@ -432,32 +432,10 @@
         v-if="show.specialInstructions"
     >
       <v-card>
-        <v-card-title>Special Instructions</v-card-title>
-        <v-card-text v-if="isContractor()">
-          <message label="Notes for Subcontractor" :jobId="jobTask ? jobTask.id : -1"
-                   :server-message="jobTask && jobTask.sub_message ? jobTask.sub_message : ''"
-                   actor='sub'
-                   :disable-messages="disableMessages">
-          </message>
-
-          <message
-              class="mt-1rem"
-              label="Notes For Customer" :jobId="jobTask ? jobTask.id : -1"
-              :server-message="jobTask ? jobTask.customer_message : null"
-              actor='customer'
-              :disable-messages="disableMessages"></message>
-
-        </v-card-text>
-        <v-card-text v-if="!isContractor()">
-          <v-textarea
-              style="color: black !important"
-              outlined
-              auto-grow
-              label="Notes From Contractor"
-              v-model="getContractorNotesForCustomer"
-              readonly
-          ></v-textarea>
-        </v-card-text>
+        <messages
+            :messages="jobTaskMessages"
+            :is-general="isGeneral()"
+        ></messages>
       </v-card>
     </section>
 
@@ -717,6 +695,7 @@ import Status from '../components/mixins/Status'
 import Currency from '../components/mixins/Currency'
 import Utilities from '../components/mixins/Utilities'
 import InformationCard from '../components/shared/InformationCard'
+import Messages from "../components/shared/Messages";
 
 import {mapState} from 'vuex'
 
@@ -727,6 +706,7 @@ export default {
     Feedback,
     Card,
     Message,
+    Messages,
     ContentSection,
     TaskImages,
     InformationCard,
@@ -737,6 +717,7 @@ export default {
   ],
   data() {
     return {
+      jobTaskMessages: [],
       job: null,
       jobStatus: null,
       detailsLoading: false,
@@ -1507,8 +1488,8 @@ export default {
       // }
     },
     isGeneral() {
-      if (this.jobTask && this.jobTask.task) {
-        return this.jobTask.task.contractor_id === Spark.state.user.id
+      if (this.job) {
+        return this.job.contractor_id === Spark.state.user.id
       }
     },
     prettyDate(date) {
@@ -1721,6 +1702,7 @@ export default {
         this.unit_price = this.jobTask.unit_price
         this.job = this.jobTask.job;
         this.jobStatus = this.jobTask.job.status;
+        this.jobTaskMessages = this.jobTask.task_messages;
 
         // update the qty
         if (

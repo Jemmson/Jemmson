@@ -127,6 +127,10 @@ Route::group(['middleware' => ['auth', 'further.info']], function () {
     Route::post('/task/general/finished', 'TaskController@taskHasBeenFinished');
     Route::post('/task/approve', 'TaskController@approveTaskHasBeenFinished');
 
+    Route::post('/message/add', 'MessagesController@add');
+    Route::post('/message/update', 'MessagesController@update');
+    Route::post('/message/delete', 'MessagesController@delete');
+
     // Stripe routes
     Route::get('/stripe/express/connect', 'StripeController@connectExpress');
     Route::get('/stripe/express/auth', 'StripeController@expressAuth');
