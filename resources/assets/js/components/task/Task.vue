@@ -92,7 +92,6 @@
                 <v-icon
                     :color="show.messages ? 'success': ''"
                     class="nav-btn-position"
-                    color="error"
                     @click="showSection('messages')"
                 >mdi-message
                 </v-icon>
@@ -122,7 +121,9 @@
             id="showConfirmationDialog"
         >
           <v-card>
-            <v-card-title style="word-wrap: break-word;">Would you like to let the customer know that you are on your way?</v-card-title>
+            <v-card-title style="word-wrap: break-word;">Would you like to let the customer know that you are on your
+              way?
+            </v-card-title>
             <v-card-actions>
               <v-btn @click="notify()" color="primary">Yes</v-btn>
               <v-spacer></v-spacer>
@@ -278,35 +279,16 @@
                    v-if="show.messages"
           >
             <v-card>
-              <v-card-title>Messages</v-card-title>
-
-              <v-card-text v-if="subHasMessage(bidTask)">
-
-                <div class="flex flex-col"
-                     style="font-weight: bold;"
-                >
-                  <div>Sub Instructions:</div>
-                  <p style="margin-left: 10px; color: black;">{{ getSubMessage(bidTask) }}</p>
-                </div>
-
-                <hr>
-
-                <div v-if="showDeclinedMsg(bidTask)" class="flex flex-col"
-                     style="font-weight: bold;"
-                >
-                  <div>Declined Reason:</div>
-                  <p style="margin-left: 10px">{{ getDeclinedMessage(bidTask) }}</p>
-                </div>
-
-              </v-card-text>
-
+              <messages
+                  :is-general="isGeneral()"
+                  :job-task-id="bidTask.job_task_id"
+              ></messages>
             </v-card>
           </section>
 
           <section class="mt-1rem"
                    v-if="show.images"
           >
-
             <v-card>
               <v-card-title>Images</v-card-title>
               <v-card-text>
@@ -315,14 +297,12 @@
                 </task-images>
               </v-card-text>
             </v-card>
-
           </section>
 
           <section class="mt-1rem"
                    ref="actionSection"
                    v-if="jobTaskHasBeenApproved()"
           >
-
             <v-card>
               <v-card-title>Actions</v-card-title>
               <v-card-actions>
@@ -446,6 +426,7 @@ import Card from '../shared/Card'
 import Currency from '../../components/mixins/Currency'
 import StripeVerificationRequired from '../../components/stripe/StripeVerificationRequired'
 import StripeMixin from "../mixins/StripeMixin";
+import Messages from "../shared/Messages";
 
 export default {
   name: 'Task',
@@ -454,6 +435,7 @@ export default {
     ContentSection,
     ShowTaskModal,
     DeleteTaskModal,
+    Messages,
     Card,
     StripeVerificationRequired
   },
@@ -491,9 +473,11 @@ export default {
   },
   mounted() {
     this.bidTask ? this.paymentType = this.bidTask.payment_type : this.paymentType = null
+    this.jobTaskMessages = this.bidTask.job_task.taskMessages;
   },
   data() {
     return {
+      jobTaskMessages: [],
       showConfirmationDialog: false,
       onMyWayEnabled: false,
       stripeVerified: true,

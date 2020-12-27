@@ -182,6 +182,8 @@ class TaskController extends Controller
 
                 $bcjtask['job_task']['images'] = $bcjtask->jobTask()->get()->first()->images()->get();
 
+                $bcjtask['job_task']['taskMessages'] = $bcjtask->jobTask()->get()->first()->taskMessages()->get();
+
                 $bcjtask['job_task']['location'] = $bcjtask->jobTask()->get()->first()->location()->select([
                     'id',
                     'address_line_1',

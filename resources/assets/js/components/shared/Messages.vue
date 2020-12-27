@@ -9,8 +9,9 @@
         <tbody>
         <tr v-for="(item, i) in allMessages" :key="i">
           <message
-              @messages="allMessages = $event"
+              @messages="updateMessages($event)"
               :general="isGeneral"
+              :job-task-id="getJobTaskId()"
               :item="item"></message>
         </tr>
         </tbody>
@@ -76,14 +77,18 @@ export default {
     Message
   },
   props: {
-    messages: [Object, Array],
-    isGeneral: Boolean
+    isGeneral: Boolean,
+    jobTaskId: {
+      default: -1,
+      type: [Number, String]
+    }
   },
   methods: {
     async addNewMessage() {
       this.loadingNewMessage = true
+      const jobTaskId = this.getJobTaskId()
       const {data} = await axios.post('message/add', {
-        jobTaskId: this.$route.params.index,
+        jobTaskId: jobTaskId,
         userId: this.userId,
         username: this.username,
         message: this.newMessage,
@@ -93,14 +98,36 @@ export default {
       if (data.error) {
 
       } else {
+        this.allMessages = null;
         this.allMessages = data;
       }
       this.loadingNewMessage = false;
       this.add = false;
+    },
+    getJobTaskId(){
+      if (this.jobTaskId !== -1) {
+        return this.jobTaskId
+      } else {
+        return this.$route.params.index
+      }
+    },
+    updateMessages(messages){
+      this.allMessages = null;
+      this.$nextTick(() => {
+        this.allMessages = messages;
+      })
+    },
+    async getJobTaskMessages() {
+      const {data} = await axios.get('messages/all/' + this.getJobTaskId())
+      if (data.error) {
+
+      } else {
+        this.updateMessages(data)
+      }
     }
   },
   mounted() {
-    this.allMessages = this.messages;
+    this.getJobTaskMessages();
   }
 }
 </script>

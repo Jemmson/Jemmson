@@ -10,6 +10,12 @@ class MessagesController extends Controller
 {
     //
 
+    public function all($jobTaskId)
+    {
+        $messages = Message::where('job_task_id', '=', intval($jobTaskId))->get();
+        return $messages;
+    }
+
     public function add(Request $request)
     {
         $message = new Message();
@@ -29,7 +35,6 @@ class MessagesController extends Controller
                 "message" => "",
                 "error" => [$e->getMessage()]], 200);
         }
-
     }
 
     public function delete(Request $request)

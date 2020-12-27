@@ -433,7 +433,6 @@
     >
       <v-card>
         <messages
-            :messages="jobTaskMessages"
             :is-general="isGeneral()"
         ></messages>
       </v-card>
@@ -681,20 +680,20 @@
 
 <script>
 
-import SubInviteModal from '../components/task/SubInviteModal'
-import DenyTaskModal from '../components/task/DenyTaskModal'
-import UpdateTaskLocationModal from '../components/task/UpdateTaskLocationModal'
-import Message from '../components/job/Message.vue'
-import TaskImages from '../components/task/UploadTaskImages'
-import Format from '../classes/Format'
-import Card from '../components/shared/Card'
-import ContentSection from '../components/shared/ContentSection'
-import User from '../classes/User'
-import Feedback from '../components/shared/Feedback'
-import Status from '../components/mixins/Status'
-import Currency from '../components/mixins/Currency'
-import Utilities from '../components/mixins/Utilities'
-import InformationCard from '../components/shared/InformationCard'
+import SubInviteModal from '../components/task/SubInviteModal';
+import DenyTaskModal from '../components/task/DenyTaskModal';
+import UpdateTaskLocationModal from '../components/task/UpdateTaskLocationModal';
+import Message from '../components/job/Message.vue';
+import TaskImages from '../components/task/UploadTaskImages';
+import Format from '../classes/Format';
+import Card from '../components/shared/Card';
+import ContentSection from '../components/shared/ContentSection';
+import User from '../classes/User';
+import Feedback from '../components/shared/Feedback';
+import Status from '../components/mixins/Status';
+import Currency from '../components/mixins/Currency';
+import Utilities from '../components/mixins/Utilities';
+import InformationCard from '../components/shared/InformationCard';
 import Messages from "../components/shared/Messages";
 
 import {mapState} from 'vuex'

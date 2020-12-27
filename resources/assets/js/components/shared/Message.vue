@@ -9,7 +9,8 @@
         <v-spacer></v-spacer>
         <div class="flex justify-content-end">
           <v-icon v-if="iOwnMessage" @click="edit = true" color="primary" class="mr-3">mdi-comment-edit</v-icon>
-          <v-icon v-if="isGeneral || iOwnMessage" @click="deleteMessage = true" color="red" class="mr-3">mdi-delete</v-icon>
+          <v-icon v-if="isGeneral || iOwnMessage" @click="deleteMessage = true" color="red" class="mr-3">mdi-delete
+          </v-icon>
         </div>
       </div>
       <div style="margin-bottom: .25rem; font-size: 12pt; font-weight: bold">{{ currentMessage.message }}</div>
@@ -55,7 +56,7 @@
         id="deleteDialog"
     >
       <v-card>
-        <v-card-text>Delete Message</v-card-text>
+        <v-card-title>Delete Message</v-card-title>
         <v-card-text class="pt-10">
           <p style="color: black">
             {{ currentMessage.message }}
@@ -100,9 +101,13 @@ export default {
   props: {
     item: Object,
     general: Boolean,
+    jobTaskId: {
+      default: -1,
+      type: [Number, String]
+    }
   },
   computed: {
-    isGeneral(){
+    isGeneral() {
       return this.general;
     },
     iOwnMessage() {
@@ -112,8 +117,9 @@ export default {
   methods: {
     async deleteExistingMessage() {
       this.loadingDeleteMessage = true;
+      const jobTaskId = this.getJobTaskId()
       const {data} = await axios.post('message/delete', {
-        jobTaskId: this.$route.params.index,
+        jobTaskId: jobTaskId,
         messageId: this.item.id
       })
 
@@ -125,10 +131,18 @@ export default {
       this.deleteMessage = false
       this.loadingDeleteMessage = false;
     },
+    getJobTaskId() {
+      if (this.jobTaskId !== -1) {
+        return this.jobTaskId
+      } else {
+        return this.$route.params.index
+      }
+    },
     async updateExistingMessage() {
       this.loadingUpdateMessage = true;
+      const jobTaskId = this.getJobTaskId()
       const {data} = await axios.post('message/update', {
-        jobTaskId: this.$route.params.index,
+        jobTaskId: jobTaskId,
         updatedMessage: this.currentMessage
       })
 
