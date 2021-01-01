@@ -713,9 +713,38 @@ export default {
 
     getCurrencyMask() {
       if (this.unitPrice === null) {
+
+        let price = this.bidPrice
+
+        if (
+            price.length === 6
+            && price [3] === '0'
+        ) {
+          price = price[0]
+              + price [1]
+              + price [2]
+              + price [4]
+              + price [5]
+        }
+
+        this.bidPrice = price
+
         return this.currencyMask(this.bidPrice)
       } else {
-        return this.currencyMask(this.unitPrice)
+
+        let price = this.unitPrice
+
+        if (
+            price.length === 1
+        ) {
+          price = "$ .0" + this.unitPrice
+        }
+
+        this.unitPrice = price
+
+        let p = this.currencyMask(this.unitPrice)
+
+        return p
       }
     },
 
