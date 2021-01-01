@@ -652,7 +652,7 @@ class JobController extends Controller
     private function getCustomersJobLocation($job)
     {
         $locationResults = [];
-        $location = Location::where('user_id', '=', $job->customer_id)->get()->first();
+        $location = Location::where('id', '=', $job->location_id)->get()->first();
         array_push($locationResults, [
             "user_id" => $location->user_id,
             "default" => $location->default,

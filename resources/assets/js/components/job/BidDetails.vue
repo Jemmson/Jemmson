@@ -623,7 +623,7 @@
       </v-card-actions>
     </v-card>
 
-    <div v-if="isCustomer">
+    <div v-if="isCustomer && !hasNotBeenApproved">
       <div v-if="generalHasSentABid(bid)">
         <approve-bid
             v-if="needsApproval()"
