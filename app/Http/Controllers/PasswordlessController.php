@@ -71,7 +71,7 @@ class PasswordlessController {
 //                session(['task_id' => $task_id, 'prevDestination' => '/#/tasks?taskId=' . $task_id]);
 //                return redirect('/#/tasks?taskId=' . $task_id);
                 session(['task_id' => $jobTaskId, 'prevDestination' => '/#/bids']);
-                return redirect('/#/bids/subs');
+                return redirect('/#/bids');
 
             } else {
                 return redirect('/#/')->withErrors(__('passwordless.invalid'));

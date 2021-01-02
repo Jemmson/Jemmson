@@ -7,7 +7,7 @@
         name=""
     ></header-bio>
 
-    <v-tabs class="justify-center" style="margin-top: 3.5rem;">
+    <v-tabs v-model="activeTab" class="justify-center" style="margin-top: 3.5rem;">
       <v-tab
           style="margin-left: auto; margin-right: auto;"
           class="w-full"
@@ -59,7 +59,8 @@ export default {
   },
   data() {
     return {
-      logoutDialog: false
+      logoutDialog: false,
+      activeTab: 0
     }
   },
   computed: {

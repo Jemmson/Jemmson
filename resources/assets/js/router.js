@@ -81,7 +81,7 @@ const routes = [
   },
   {
     path: '/bids/subs',
-    component: Jobs
+    component: Tasks
   },
   {
     path: '/passwordEmailVerification',
