@@ -63,7 +63,8 @@
         id="showConfirmationDialog"
     >
       <v-card>
-        <v-card-title style="word-wrap: break-word;">Would you like to let the customer know that you are on your way?</v-card-title>
+        <v-card-title style="word-wrap: break-word;">Would you like to let the customer know that you are on your way?
+        </v-card-title>
         <v-card-actions>
           <v-btn @click="notify()" color="primary">Yes</v-btn>
           <v-spacer></v-spacer>
@@ -275,7 +276,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="(item, i) in getJobTasks()" :key="i">
-                  <td>{{ jobTaskObject(item).Name }}</td>
+                  <td class="uppercase">{{ jobTaskObject(item).Name }}</td>
                   <td
                       v-if="jobTaskObject(item).Price"
                       v-text="'$ ' + jobTaskObject(item).Price"
@@ -623,34 +624,46 @@
       </v-card-actions>
     </v-card>
 
-    <div v-if="isCustomer && !hasNotBeenApproved">
+    <div v-if="isCustomer && hasNotBeenApproved">
       <div v-if="generalHasSentABid(bid)">
         <approve-bid
             v-if="needsApproval()"
             :bid="bid"
         >
         </approve-bid>
-        <div v-if="customerHasCompletedTasks()">
-          <v-card>
-            <v-card-title>Completed Tasks</v-card-title>
-            <v-card-text style="padding-left: 0px; padding-right: 0px;">
-              <main class="row w-full ml-0">
-                <completed-tasks
-                    class="w-full"
-                    :bid="bid"
-                    :paid="checkIfPaid()"
-                >
-                </completed-tasks>
-              </main>
-            </v-card-text>
-          </v-card>
 
+        <div v-else>
+          waiting on work to be finished
         </div>
       </div>
-      <div v-else>
-        waiting on work to be finished
-      </div>
     </div>
+
+    <v-card v-if="isCustomer && customerHasCompletedTasks()">
+      <v-card-title>Completed Tasks</v-card-title>
+      <v-card-text style="padding-left: 0px; padding-right: 0px;">
+        <main class="row w-full ml-0">
+          <completed-tasks
+              class="w-full"
+              :bid="bid"
+              :paid="checkIfPaid()"
+          >
+          </completed-tasks>
+        </main>
+      </v-card-text>
+    </v-card>
+
+
+    <!--    <div>-->
+    <!--      <div>-->
+    <!--        <approve-bid-->
+    <!--            :bid="bid"-->
+    <!--        >-->
+    <!--        </approve-bid>-->
+    <!--      </div>-->
+    <!--      <div>-->
+    <!--        waiting on work to be finished-->
+    <!--      </div>-->
+    <!--    </div>-->
 
 
     <!-- / tasks -->

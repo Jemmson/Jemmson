@@ -128,7 +128,7 @@
               </thead>
               <tbody>
               <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="getLatestStatus(bid) === 'initiated'">
-                <td>{{ bid.job_task.task.name }}</td>
+                <td class="uppercase">{{ bid.job_task.task.name }}</td>
                 <td>{{ bid.payment_type }}</td>
                 <td>
                   <v-btn
@@ -158,7 +158,7 @@
               </thead>
               <tbody>
               <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="getLatestStatus(bid) === 'accepted'">
-                <td>{{ bid.job_task.task.name }}</td>
+                <td class="uppercase">{{ bid.job_task.task.name }}</td>
                 <td>{{ bid.payment_type }}</td>
                 <td>
                   <v-btn
@@ -188,7 +188,7 @@
               </thead>
               <tbody>
               <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="getLatestStatus(bid) === 'sent a bid'">
-                <td>{{ bid.job_task.task.name }}</td>
+                <td class="uppercase">{{ bid.job_task.task.name }}</td>
                 <td>{{ bid.payment_type }}</td>
                 <td>
                   <v-btn
@@ -218,7 +218,7 @@
               </thead>
               <tbody>
               <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="getLatestStatus(bid) === 'approved by customer'">
-                <td>{{ bid.job_task.task.name }}</td>
+                <td class="uppercase">{{ bid.job_task.task.name }}</td>
                 <td>{{ bid.payment_type }}</td>
                 <td>
                   <v-btn
@@ -248,7 +248,7 @@
               </thead>
               <tbody>
               <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="getLatestStatus(bid) === 'paid'">
-                <td>{{ bid.job_task.task.name }}</td>
+                <td class="uppercase">{{ bid.job_task.task.name }}</td>
                 <td>{{ bid.payment_type }}</td>
                 <td>
                   <v-btn
@@ -278,7 +278,7 @@
               <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="
                   getLatestStatus(bid) === 'denied'
               ">
-                <td>{{ bid.job_task.task.name }}</td>
+                <td class="uppercase">{{ bid.job_task.task.name }}</td>
               </tr>
               </tbody>
             </template>

@@ -13,3 +13,11 @@ export const getMobileValidResponse = state => {
 export const getQuickBooksState = state => {
   return state.features.quickbooks;
 }
+
+export const getRegisterInfo = state => {
+  return state.registerInfo;
+}
+
+export const getLicenses = state => {
+  return state.registerInfo.licenses;
+}

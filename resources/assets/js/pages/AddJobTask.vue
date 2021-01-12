@@ -220,6 +220,7 @@
         watch: {
             search(val) {
                 if (val) {
+                // if (val && val.length > 1) {
                     let tasks = this.getExistingTask()
                     if (tasks === undefined) {
                         this.addNewTaskForm.taskName = val

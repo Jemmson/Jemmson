@@ -86,9 +86,7 @@
                 </div>
               </div>
 
-              <div class="flex flex-col"
-                   v-if="showDeclinedMsg(bidTask) || subHasMessage(bidTask)"
-              >
+              <div class="flex flex-col">
                 <v-icon
                     :color="show.messages ? 'success': ''"
                     class="nav-btn-position"

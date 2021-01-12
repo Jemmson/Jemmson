@@ -13,6 +13,7 @@ export default class GeneralContractor {
             bidId: bid.id,
             price: bid.bid_price
         }).then((response) => {
+            // Bus.$emit('bidUpdated')
             User.emitChange('bidUpdated')
             Vue.toasted.success('Accepted Bid!')
             disabled.accept = false

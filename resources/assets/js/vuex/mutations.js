@@ -4,6 +4,10 @@
 
 export default {
 
+  registerInfo(state, payload) {
+    state.registerInfo = payload
+  },
+
   excluded(state, payload){
     state.excluded = payload
   },

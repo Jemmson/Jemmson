@@ -17,7 +17,7 @@
       <v-card-subtitle>Task Name:</v-card-subtitle>
       <v-card-title class="uppercase"
                     style="margin-top: -2rem;
-                        margin-bottom: -1.5rem;
+                        margin-bottom: -1rem;
                         margin-left: 10px;"
       >{{ getTaskName() }}
       </v-card-title>
@@ -1301,7 +1301,26 @@ export default {
       } else {
         generalId = jobTask.task.contractor_id
       }
-      GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled, generalId)
+
+
+      axios.post('/task/accept', {
+        jobId: jobTask.job_id,
+        jobTaskId: jobTask.id,
+        contractorId: bid.contractor_id,
+        generalId: generalId,
+        bidId: bid.id,
+        price: bid.bid_price
+      }).then((response) => {
+        // Bus.$emit('bidUpdated')
+        this.getTask()
+        Vue.toasted.success('Accepted Bid!')
+      }).catch((error) => {
+        Vue.toasted.error('Error Trying to Accept Bid!')
+        console.log('error', error.message)
+      })
+
+
+      // GeneralContractor.acceptSubBidForTask(jobTask, bid, this.disabled, generalId)
 
     },
     showStripeToggle(jobTask) {
