@@ -525,7 +525,7 @@
         <v-card-title>Actions</v-card-title>
         <v-card-subtitle v-if="subHasNotFinishedTask(jobTask)">Waiting For Sub
         </v-card-subtitle>
-        <v-card-actions v-if="isGeneral()">
+        <v-card-actions v-if="isGeneral()" class="flex flex-col">
           <v-btn
               v-if="jobIsNotComplete()"
               class="w-full mb-half-rem"
@@ -540,7 +540,7 @@
               class="w-full mb-half-rem"
               text
               color="primary"
-              v-if="jobTaskIsFinished(jobTask) && showFinishedBtn(jobTask)"
+              v-if="!jobTaskIsFinished(jobTask) && showFinishedBtn(jobTask)"
               @click="finishedTask(jobTask)" :loading="disabled.finished"
           >Click Me When Job Is Finished
           </v-btn>
@@ -1324,7 +1324,7 @@ export default {
 
     },
     showStripeToggle(jobTask) {
-      return this.isAssignedToMe(jobTask, this.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
+      return this.isAssignedToMe(jobTask, Spark.state.user.id) && (this.jobStatus === 'bid.initiated' || this.jobStatus ===
           'bid.in_progress')
     },
 
@@ -1408,7 +1408,7 @@ export default {
 
 
       if (this.isContractor() &&
-          this.isAssignedToMe(jobTask, this.user.id) &&
+          this.isAssignedToMe(jobTask, Spark.state.user.id) &&
           (jobTask.status === 'bid_task.approved_by_customer'
               || jobTask.status === 'bid_task.reopened'
               || jobTask.status === 'bid_task.finished_by_sub'
@@ -1420,7 +1420,7 @@ export default {
     },
     showApproveBtn(jobTask) {
       if (this.isGeneral() &&
-          !this.isAssignedToMe(jobTask, this.user.id) &&
+          !this.isAssignedToMe(jobTask, Spark.state.user.id) &&
           (jobTask.status === 'bid_task.finished_by_sub' || jobTask.status === 'bid_task.reopened')
       ) {
         return true

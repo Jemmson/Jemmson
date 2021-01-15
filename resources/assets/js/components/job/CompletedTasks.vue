@@ -1,7 +1,6 @@
 <template>
   <!-- / all tasks ready for payment -->
   <div>
-    <div v-if="show"><!---->
       <div class="flex flex-col">
         <div
             class="banner"
@@ -166,7 +165,6 @@
       <!--        >-->
       <!--        </stripe>-->
 
-    </div>
   </div>
 </template>
 

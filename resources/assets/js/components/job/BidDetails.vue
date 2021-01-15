@@ -1685,12 +1685,13 @@ export default {
           }
           if (status === 'approved_subs_work'
               || status === 'general_finished_work'
+              || status === 'sub_finished_work'
               || status === 'customer_changes_finished_task') {
             taskIsFinished = true
           }
         }
       }
-      return this.isCustomer && taskIsFinished
+      return taskIsFinished
     },
     getCompanyName() {
       if (this.getJob()) {
