@@ -99,31 +99,6 @@ describe('InitiateBid', () => {
         }
     }
 
-    test('is a Vue instance', () => {
-        wrapper = shallowMount(InitiateBid, {
-            localVue,
-            vuetify,
-            store,
-            router,
-            directives: {
-                mask() {
-                }
-            },
-            mocks: {
-                $store: {
-                    commit: jest.fn(),
-                    state: {
-                        busy: false
-                    }
-                },
-            },
-            data() {
-                return {}
-            }
-        })
-        expect(wrapper.isVueInstance()).toBeTruthy()
-    })
-
     test('test that there is no extra spaces in the name', async () => {
         wrapper.setData({
             form: {
@@ -201,7 +176,7 @@ describe('InitiateBid', () => {
                 return {}
             }
         })
-        expect(wrapper.find('#title').text()).toBe('Add New Job')
+        expect(wrapper.findComponent('#title').text()).toBe('Add New Job')
 
     })
 
@@ -223,7 +198,7 @@ describe('InitiateBid', () => {
                 return {}
             }
         })
-        let fname = wrapper.find({ref: 'firstName'})
+        let fname = wrapper.findComponent({ref: 'firstName'})
         wrapper.setData({
             fname: 'asdasdasdasdasdasd'
         })
@@ -359,12 +334,12 @@ describe('InitiateBid', () => {
     })
 
     test('that if customer name is by itself then it will still allow the submit button to be enabled', async () => {
-        const btn = wrapper.find({ref: 'submit'});
+        const btn = wrapper.findComponent({ref: 'submit'});
         // console.log('submit attributes', btn.attributes());
         // console.log('dataMustBeValid', wrapper.vm.dataMustBeValid())
 
         await wrapper.vm.$nextTick()
-        expect(wrapper.find({ref: 'submit'}).attributes().disabled).toBe('disabled')
+        expect(wrapper.findComponent({ref: 'submit'}).attributes().disabled).toBe('disabled')
     })
 
     test.skip('that when the radio button is selected that the isMobile value is true', async () => {
@@ -373,7 +348,7 @@ describe('InitiateBid', () => {
                 isMobile: false
             }
         })
-        const btn = wrapper.find('#isMobile')
+        const btn = wrapper.findComponent('#isMobile')
         await btn.setChecked();
         expect(wrapper.vm.$data.form.isMobile).toBe(true);
     })
@@ -387,11 +362,11 @@ describe('InitiateBid', () => {
             }
         })
 
-        let phone = wrapper.find('#phone')
+        let phone = wrapper.findComponent('#phone')
         phone.setValue('444-444-4444')
         phone.trigger('keydown.tab');
 
-        let cbx = wrapper.find('#customerName')
+        let cbx = wrapper.findComponent('#customerName')
         cbx.setValue('Shawn Pike');
         cbx.trigger('keydown.enter');
 
@@ -421,11 +396,11 @@ describe('InitiateBid', () => {
         //     // }
         // })
 
-        let cbx = wrapper.find('#customerName')
+        let cbx = wrapper.findComponent('#customerName')
         cbx.setValue('Shawn Pike');
         cbx.trigger('keydown.tab');
         debugger;
-        let mobile = wrapper.find('#phone')
+        let mobile = wrapper.findComponent('#phone')
         mobile.setValue('(5');
         // mobile.trigger('keydown', {
         //     key: 'a'
@@ -447,7 +422,7 @@ describe('InitiateBid', () => {
         // console.log('this.search', wrapper.vm.search)
         // console.log('this.form.firstName', wrapper.vm.form.firstName)
         // console.log('this.form.jobName', wrapper.vm.form.jobName)
-        // expect(wrapper.find({ref: 'submit'}).attributes().disabled).toBe('disabled')
+        // expect(wrapper.findComponent({ref: 'submit'}).attributes().disabled).toBe('disabled')
 
         // expect(wrapper.vm.form.phone).toBe('')
         // expect(wrapper.vm.form.phone).toBe('(555) 555-5555')
@@ -455,7 +430,7 @@ describe('InitiateBid', () => {
         // expect(wrapper.vm.allRequiredFieldsHaveAValue()).toBe(true)
         // expect(wrapper.vm.phoneNumberIsMobile()).toBe(true)
         // expect(wrapper.vm.dataMustBeValid()).toBe(true)
-        // expect(wrapper.find({ref: 'submit'}).attributes().disabled).toBe(undefined)
+        // expect(wrapper.findComponent({ref: 'submit'}).attributes().disabled).toBe(undefined)
 
     })
 

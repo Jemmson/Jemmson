@@ -22,7 +22,7 @@ localVue.use(Vuetify, {})
 describe('AddJobTask', () => {
     let vuetify = new Vuetify()
 
-    test('is a Vue instance', () => {
+    test.only('test that addnewtaskform.updateTask is false and addnewtaskform.createnew is true', () => {
 
         let wrapper = shallowMount(AddJobTask, {
             vuetify,
@@ -35,28 +35,6 @@ describe('AddJobTask', () => {
                 $router: {
                     push: jest.fn()
                 }
-            }
-        })
-
-        expect(wrapper.isVueInstance()).toBeTruthy()
-    })
-
-    test('test that addnewtaskform.updateTask is false and addnewtaskform.createnew os true', () => {
-
-        let wrapper = shallowMount(AddJobTask, {
-            vuetify,
-            localVue,
-            directives: {
-                mask() {
-                }
-            },
-            mocks: {
-                $router: {
-                    push: jest.fn()
-                }
-            },
-            methods: {
-                addNewTaskToBid: jest.fn()
             }
         })
 
