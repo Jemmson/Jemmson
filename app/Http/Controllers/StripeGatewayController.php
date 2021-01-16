@@ -24,7 +24,10 @@ class StripeGatewayController extends Controller
 //        redirect_uri=https://connect.stripe.com/connect/default/oauth/test
 //        &client_id=ca_32D88BD1qLklliziD7gYQvctJIhWBSQ7&state={STATE_VALUE}
 
-        \Stripe\Stripe::setApiKey('sk_test_519YZpRIX4qnobbHhhbsdPCMtc4OhFEVP6cCshbIlTSuwYnRBbpf2a230zaqkCuKbkKZYUL7zIoyHVI3wCf7B3p2y00GdnzPrEV');
+
+//        $stripe = new \Stripe\StripeClient(
+//            'sk_test_519YZpRIX4qnobbHhhbsdPCMtc4OhFEVP6cCshbIlTSuwYnRBbpf2a230zaqkCuKbkKZYUL7zIoyHVI3wCf7B3p2y00GdnzPrEV'
+//        );
 
         \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
@@ -104,10 +107,8 @@ class StripeGatewayController extends Controller
             $jt = JobTaskStatus::where('job_task_id', '=', $jobTask->id)->get();
             $latestStatus = JobTaskStatus::getLastStatus($jt);
 
-//            $jtApproved = $this->jobTaskHasBeenApprovedByContractor($latestStatus);
-            $jtApproved = true;
-//            $jtCompleted = $this->JobTaskHasBeenCompletedByGeneral($latestStatus);
-            $jtCompleted = true;
+            $jtApproved = $this->jobTaskHasBeenApprovedByContractor($latestStatus);
+            $jtCompleted = $this->JobTaskHasBeenCompletedByGeneral($latestStatus);
             $jtNotPaid = $this->JobTaskHasNotBeenPaid($latestStatus);
 
             if ($jtNotExcluded
@@ -153,7 +154,9 @@ class StripeGatewayController extends Controller
 
             // Set your secret key: remember to switch to your live secret key in production
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
             \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
             $customerId = Job::where('id', '=', ($jobTasks["jobTasks"][0]->job_id))->get()->first()->customer_id;
@@ -172,11 +175,10 @@ class StripeGatewayController extends Controller
 
             $generalCompanyName = $this->getGeneralCompanyName($jobTasks["jobTasks"][0]);
 
-            $intent = \Stripe\PaymentIntent::create([
+            $intent = $stripe->paymentIntents->create([
                 'amount' => $totalAmount,
                 'currency' => 'usd',
                 'customer' => $customerStripe->id,
-                'payment_method' => null,
                 'receipt_email' => $customer->email,
                 'on_behalf_of' => $general->customer_stripe_id,
                 'metadata' => [

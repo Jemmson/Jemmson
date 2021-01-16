@@ -1685,7 +1685,6 @@ export default {
           }
           if (status === 'approved_subs_work'
               || status === 'general_finished_work'
-              || status === 'sub_finished_work'
               || status === 'customer_changes_finished_task') {
             taskIsFinished = true
           }

@@ -1472,7 +1472,11 @@ export default {
       this.$emit('openTaskPanel', index)
     },
     finishedTask(jobTask) {
-      SubContractor.finishedTask(jobTask, this.disabled)
+      if (this.isGeneral()) {
+        GeneralContractor.finishedTask(jobTask, this.disabled)
+      } else {
+        SubContractor.finishedTask(jobTask, this.disabled)
+      }
     },
     approveTaskHasBeenFinished(jobTask) {
       GeneralContractor.approveTaskHasBeenFinished(jobTask, this.disabled)
