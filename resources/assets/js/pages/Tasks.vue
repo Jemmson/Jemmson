@@ -68,6 +68,17 @@
             </div>
             <div class="flex flex-col nav-icon-spacing">
               <v-icon
+                  :color="finished ? 'success': ''"
+                  class="nav-btn-position"
+                  @click="selectTab('finished')"
+              >mdi-details
+              </v-icon>
+              <div class="nav-icon-label" :class="finished ? 'nav-icon-label-selected': ''">
+                Finished
+              </div>
+            </div>
+            <div class="flex flex-col nav-icon-spacing">
+              <v-icon
                   :color="paid ? 'success': ''"
                   class="nav-btn-position"
                   @click="selectTab('paid')"
@@ -234,6 +245,36 @@
         </v-card-text>
       </v-card>
 
+      <v-card v-if="finished">
+        <v-card-title>Finished</v-card-title>
+        <v-card-text>
+          <v-simple-table>
+            <template>
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Select</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="bid in sTasks" v-bind:key="bid.id" v-if="getLatestStatus(bid) === 'finished job'">
+                <td class="uppercase">{{ bid.job_task.task.name }}</td>
+                <td>{{ bid.payment_type }}</td>
+                <td>
+                  <v-btn
+                      color="primary"
+                      @click="showSelectedBid(bid)"
+                  >View
+                  </v-btn>
+                </td>
+              </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-card-text>
+      </v-card>
+
       <v-card v-if="paid">
         <v-card-title>Paid</v-card-title>
         <v-card-text>
@@ -373,6 +414,7 @@ export default {
       sent: false,
       accepted: false,
       approved: false,
+      finished: false,
       paid: false,
       denied: false,
       current_user: null,
@@ -401,6 +443,7 @@ export default {
         this.accepted = false;
         this.sent = false;
         this.approved = false;
+        this.finished = false;
         this.paid = false;
         this.denied = false;
         this.initiated = true;
@@ -408,12 +451,14 @@ export default {
         this.initiated = false;
         this.sent = true;
         this.approved = false;
+        this.finished = false;
         this.paid = false;
         this.denied = false;
         this.accepted = false;
       } else if (status === 'accepted') {
         this.initiated = false;
         this.sent = false;
+        this.finished = false;
         this.approved = false;
         this.paid = false;
         this.denied = false;
@@ -422,13 +467,23 @@ export default {
         this.initiated = false;
         this.sent = false;
         this.accepted = false;
+        this.finished = false;
         this.paid = false;
         this.denied = false;
         this.approved = true;
+      } else if (status === 'finished') {
+        this.initiated = false;
+        this.sent = false;
+        this.accepted = false;
+        this.finished = true;
+        this.paid = false;
+        this.denied = false;
+        this.approved = false;
       } else if (status === 'paid') {
         this.initiated = false;
         this.sent = false;
         this.accepted = false;
+        this.finished = false;
         this.denied = false;
         this.approved = false;
         this.paid = true;
@@ -436,6 +491,7 @@ export default {
         this.initiated = false;
         this.sent = false;
         this.accepted = false;
+        this.finished = false;
         this.approved = false;
         this.paid = false;
         this.denied = true;

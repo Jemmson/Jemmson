@@ -1549,7 +1549,7 @@ class TaskController extends Controller
                 }
             }
             if ($request->updateBasePrice) {
-                $task->proposed_cust_price = $request->taskPrice;
+                $task->proposed_cust_price = $request->taskPrice * 100;
                 $task->save();
             }
         } else {

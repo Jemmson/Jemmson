@@ -577,7 +577,7 @@
         </v-card-actions>
         <v-card-actions>
           <v-btn
-              v-if="customerWantsToDeleteTheTask(jobTask)"
+              v-if="isCustomer && customerWantsToDeleteTheTask(jobTask)"
               class="w-full mb-half-rem error--text"
               text
               ref="deleteTask"
