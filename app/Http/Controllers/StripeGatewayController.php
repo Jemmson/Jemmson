@@ -24,11 +24,6 @@ class StripeGatewayController extends Controller
 //        redirect_uri=https://connect.stripe.com/connect/default/oauth/test
 //        &client_id=ca_32D88BD1qLklliziD7gYQvctJIhWBSQ7&state={STATE_VALUE}
 
-
-//        $stripe = new \Stripe\StripeClient(
-//            'sk_test_519YZpRIX4qnobbHhhbsdPCMtc4OhFEVP6cCshbIlTSuwYnRBbpf2a230zaqkCuKbkKZYUL7zIoyHVI3wCf7B3p2y00GdnzPrEV'
-//        );
-
         \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
         $user = Auth::user();
@@ -38,7 +33,6 @@ class StripeGatewayController extends Controller
         $scope = 'read_write';
         $stripeLanding = 'register';
         $stripeOauthEndpoint = 'https://connect.stripe.com/express/oauth/authorize';
-//        $stripeOauthEndpoint = 'https://connect.stripe.com/oauth/authorize';
         $state = "$path:" . uniqid() . "-" . uniqid() . "-" . uniqid() . "-" . uniqid();
 //        $capabilities = 'platform_payments';
 
@@ -47,8 +41,8 @@ class StripeGatewayController extends Controller
             "&redirect_uri=" . env('STRIPE_REDIRECT_URI') .
             "&client_id=$clientId" .
             "&scope=$scope" .
+            "&api_version=2019-08-14" .
 //            "&suggested_capabilities[]=$capabilities" .
-            "&stripe_user[business_type]=individual" .
             "&stripe_user[email]=$user->email" .
             "&stripe_user[country]=$user->billing_country" .
             "&stripe_user[phone_number]=$user->phone" .
@@ -56,18 +50,15 @@ class StripeGatewayController extends Controller
             "&stripe_user[business_name]=$contractor->company_name" .
             "&stripe_user[first_name]=$user->first_name" .
             "&stripe_user[last_name]=$user->last_name" .
+            "&stripe_user[street_address]=$user->billing_address" .
+            "&stripe_user[city]=$user->billing_city" .
+            "&stripe_user[state]=$user->billing_state" .
+            "&stripe_user[zip]=$user->billing_zip" .
             "&stripe_user[country]=US" .
+            "&stripe_user[currency]=usd" .
             "&state=$state";
+
     }
-
-
-//"&api_version=2019-08-14" .
-//"&stripe_user[street_address]=$user->billing_address" .
-//"&stripe_user[city]=$user->billing_city" .
-//"&stripe_user[state]=$user->billing_state" .
-//"&stripe_user[zip]=$user->billing_zip" .
-//"&stripe_user[currency]=usd" .
-
 
     public function jobTaskHasNotBeenExcluded($excluded, $jobTask)
     {
@@ -154,9 +145,7 @@ class StripeGatewayController extends Controller
 
             // Set your secret key: remember to switch to your live secret key in production
             // See your keys here: https://dashboard.stripe.com/account/apikeys
-
-            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             \Stripe\Stripe::$apiVersion = env('STRIPE_API_VERSION');
 
             $customerId = Job::where('id', '=', ($jobTasks["jobTasks"][0]->job_id))->get()->first()->customer_id;
@@ -175,10 +164,11 @@ class StripeGatewayController extends Controller
 
             $generalCompanyName = $this->getGeneralCompanyName($jobTasks["jobTasks"][0]);
 
-            $intent = $stripe->paymentIntents->create([
+            $intent = \Stripe\PaymentIntent::create([
                 'amount' => $totalAmount,
                 'currency' => 'usd',
                 'customer' => $customerStripe->id,
+                'payment_method' => null,
                 'receipt_email' => $customer->email,
                 'on_behalf_of' => $general->customer_stripe_id,
                 'metadata' => [

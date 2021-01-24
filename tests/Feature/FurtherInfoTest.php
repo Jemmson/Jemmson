@@ -8,5 +8,8 @@ use Tests\TestCase;
 
 class FurtherInfoTest extends TestCase
 {
-    
+    public function test_that_a_sub_can_register()
+    {
+        $this->assertTrue(true);
+    }
 }
