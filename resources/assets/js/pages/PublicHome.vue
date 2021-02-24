@@ -27,7 +27,7 @@
 
         </v-app-bar>
 
-        <v-content>
+        <v-main>
             <section id="hero">
                 <v-row no-gutters>
                     <v-img
@@ -254,7 +254,7 @@
 
                 <div class="py-12"></div>
             </section>
-        </v-content>
+        </v-main>
 
         <v-footer
                 class="flex flex-wrap justify-center section-height bg-black"

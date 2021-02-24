@@ -48,7 +48,7 @@
                     </v-list-item>
                 </v-list>
             </v-navigation-drawer>
-            <v-content>
+            <v-main>
                 <v-container
                         fluid
                         fill-height
@@ -114,7 +114,7 @@
                     </div>
 
                 </v-container>
-            </v-content>
+            </v-main>
         </v-flex>
 
         <v-dialog

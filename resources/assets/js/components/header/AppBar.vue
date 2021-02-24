@@ -6,7 +6,7 @@
                 height="100px"
                 :extended="extended"
         >
-            <v-content v-if="$vuetify.breakpoint.smAndDown">
+            <v-main v-if="$vuetify.breakpoint.smAndDown">
                 <template class="flex flex-column">
                     <div class="flex space-between">
                         <v-app-bar-nav-icon
@@ -24,8 +24,8 @@
                     >
                     </app-bar-buttons>
                 </template>
-            </v-content>
-            <v-content
+            </v-main>
+            <v-main
                     v-else
             >
                 <v-toolbar-title
@@ -35,7 +35,7 @@
                 <app-bar-buttons-sm
                         @appBtn="showContent($event)">
                 </app-bar-buttons-sm>
-            </v-content>
+            </v-main>
         </v-app-bar>
 
         <features
