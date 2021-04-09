@@ -1192,12 +1192,10 @@ export default {
         location = bid.location.address_line_1
             + ' ' + bid.location.address_line_2
             + ' ' + bid.location.city
-            + ' ' + bid.location.state
             + ' ' + bid.location.zip
       } else {
         location = bid.location.address_line_1
             + ' ' + bid.location.city
-            + ' ' + bid.location.state
             + ' ' + bid.location.zip
       }
 

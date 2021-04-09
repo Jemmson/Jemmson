@@ -5,7 +5,7 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
-    <v-container>
+    <v-container v-if="parcelFound">
 
       <h1 class="text-center">Assessor Information</h1>
 
@@ -110,85 +110,13 @@
                     <v-divider></v-divider>
 
                     <v-list dense>
-                      <v-list-item>
-                        <v-list-item-content>Full Cash Value:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.FullCashValue }}
+                      <v-list-item v-for="(value, name) in item" :key="name">
+                        <v-list-item-content>{{ name }}:</v-list-item-content>
+                        <v-list-item-content class="align-end">{{ value }}
                         </v-list-item-content>
                       </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Limited Property Value:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.LimitedPropertyValue }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Legal Classification Code:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{
-                            item.LegalClassificationCode
-                          }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Legal Classification:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.LegalClassification }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Assessment Ratio Percentage:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{
-                            item.AssessmentRatioPercentage
-                          }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Assessed FCV:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.AssessedFCV }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Assessed LPV:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.AssessedLPV }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Valuation Source:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.ValuationSource }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>PE Prop Use Desc:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.PEPropUseDesc }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Property Use Code:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.PropertyUseCode }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Notice Of Change Indicator:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{
-                            item.NoticeOfChangeIndicator
-                          }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Tax Area Code:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.TaxAreaCode }}
-                        </v-list-item-content>
-                      </v-list-item>
-
                     </v-list>
+
                   </v-card>
                 </v-col>
               </v-row>
@@ -210,211 +138,18 @@
 
             <v-list dense>
 
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Area Neighboorhood:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.AreaNeighboorhood
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Assessor Market:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.AssessorMarket
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Detached Living Area:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.DetachedLivingArea
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Main Living Area:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.MainLivingArea
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Carports:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.NumberOfCarports
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Full Cash Value:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.FullCashValue
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Covered Patios:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.NumberOfCoveredPatios
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Garages:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.NumberOfGarages
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Patios:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.NumberofPatios
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Uncovered Patios:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.NumberOfUncoveredPatios
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Construction Year:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.ConstructionYear
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Improvement Quality Grade:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.ImprovementQualityGrade
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>PE Improvement Quality Grade:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.PEImprovementQualityGrade
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Bath Fixtures:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.BathFixtures
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Covered Parking:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.CoveredParking
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Parking Type:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.ParkingType.ParkingDetail.ParkingType
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Parking Count:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.ParkingType.ParkingDetail.ParkingCount
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Pool:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.Pool
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Cooling:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.Cooling
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Heating:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.Heating
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Exterior Walls:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.ExteriorWalls
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Patios:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.NumberOfPatios
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Patio Type:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.PatioType
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Physical Condition:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.PhysicalCondition
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Roof Type:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.RoofType
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Other Structures:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.OtherStructures
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Locational Characteristics:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.LocationalCharacteristics
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Original Construction Year:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.OriginalConstructionYear
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Locational Factors:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.ResidentialPropertyData.LocationalFactors
-                  }}
-                </v-list-item-content>
-              </v-list-item>
+              <v-list dense>
+                <v-list-item v-if="name !== 'ParkingDetails'" v-for="(value, name) in locationData.ResidentialPropertyData" :key="name">
+                  <v-list-item-content>{{ name }}:</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ value }}
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-else="name !== 'ParkingDetails'" v-for="(value, name) in locationData.ResidentialPropertyData.ParkingDetails" :key="name">
+                  <v-list-item-content>{{ name }}:</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ value }}
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
 
             </v-list>
           </div>
@@ -444,8 +179,9 @@
                     lg="3"
                 >
                   <v-card>
+
                     <v-card-title class="subheading font-weight-bold">
-                      <a :href="'https://mcassessor.maricopa.gov/mcs.php?q=' + item.Parcel">{{
+                      <a :href="'https://preview.mcassessor.maricopa.gov/mcs/?q=' + item.Parcel">{{
                           item.Parcel
                         }}</a>
                     </v-card-title>
@@ -453,62 +189,13 @@
                     <v-divider></v-divider>
 
                     <v-list dense>
-                      <v-list-item>
-                        <v-list-item-content>Parcel:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.Parcel }}
+                      <v-list-item v-for="(value, name) in item" :key="name">
+                        <v-list-item-content>{{ name }}:</v-list-item-content>
+                        <v-list-item-content class="align-end">{{ value }}
                         </v-list-item-content>
                       </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Land Size:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.LandSize }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Sales Price Date:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.SalesPriceDate }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Full Cash Value:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.FullCashValue }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Livable Sq Footage:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.LivableSqFootage }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Construction Year:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.ConstructionYear }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Pool Area:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.PoolArea }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Situs Address:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.SitusAddress }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-                      <v-list-item>
-                        <v-list-item-content>Fore Closed:</v-list-item-content>
-                        <v-list-item-content class="align-end">{{ item.ForeClosed }}
-                        </v-list-item-content>
-                      </v-list-item>
-
-
                     </v-list>
+
                   </v-card>
                 </v-col>
               </v-row>
@@ -529,49 +216,13 @@
             <v-divider></v-divider>
 
             <v-list dense>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Owner Name:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.Owner.OwnerName
-                  }}
+              <v-list-item v-for="(value, name) in locationData.Owner" :key="name">
+                <v-list-item-content>{{ name }}:</v-list-item-content>
+                <v-list-item-content class="align-end">{{ value }}
                 </v-list-item-content>
               </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Full Mailing Address:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.Owner.FullMailingAddress
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Sale Price:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.Owner.SalePrice
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Sale Date:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.Owner.SaleDate
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Deed Date:</v-list-item-content>
-                <v-list-item-content class="align-end">{{
-                    locationData.Owner.DeedDate
-                  }}
-                </v-list-item-content>
-              </v-list-item>
-
-
             </v-list>
+
           </div>
 
         </v-card-text>
@@ -588,110 +239,27 @@
             <v-divider></v-divider>
 
             <v-list dense>
+              <v-list-item
 
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Associated Parcels:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.AssociatedParcels }}
+                  v-if="name !== 'ParcelStatus'
+                    && name !== 'Owner'
+                    && name !== 'Geo'
+                    && name !== 'McrTransitionUrl'
+                    && name !== 'TreasurersTransitionUrl'
+                    && name !== 'DeedTransitionUrl'
+                    && name !== 'Valuations'
+                    && name !== 'ResidentialPropertyData'
+                    && name !== 'SimilarParcels'
+                    && name !== 'Sketches'
+                    && name !== 'MapIDs'"
+
+                  v-for="(value, name) in locationData" :key="name">
+                <v-list-item-content>{{ name }}:</v-list-item-content>
+                <v-list-item-content class="align-end">{{ value }}
                 </v-list-item-content>
               </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Property Address:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.PropertyAddress }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Property Description:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.PropertyDescription }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Section Township Range:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.SectionTownshipRange }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Subdivision Name:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.SubdivisionName }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Parcels In Subdivision:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.NumberOfParcelsInSubdivision }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Parcels In MCR:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.NumberOfParcelsInMCR }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Number Of Parcels In STR:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.NumberOfParcelsInSTR }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Lot:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.Lot }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Elementary School District:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.ElementarySchoolDistrict }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>PEProperty Use Description:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.PEPropertyUseDescription }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Lot Size:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.LotSize }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Is Commercial:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.IsCommercial }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <a :href="locationData.DeedTransitionUrl">Deed Transition Url</a>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <a :href="locationData.McrTransitionUrl">Mcr Transition Url</a>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <a :href="locationData.TreasurersTransitionUrl">Treasurers Transition Url</a>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Property Type:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.PropertyType }}
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item class="flex justify-content-between">
-                <v-list-item-content>Is Rental:</v-list-item-content>
-                <v-list-item-content class="align-end">{{ locationData.IsRental }}
-                </v-list-item-content>
-              </v-list-item>
-
             </v-list>
+
           </div>
 
         </v-card-text>
@@ -701,6 +269,34 @@
       </v-card>
 
     </v-container>
+
+    <v-container v-if="showResults">
+
+
+      <v-card>
+        <v-card-title>Please Pick an Address</v-card-title>
+        <v-card-text>
+          <div>
+
+            <v-divider></v-divider>
+
+            <v-list dense>
+              <v-list-item
+                  @click="getParcel(value.APN)"
+                  v-for="(value, name) in multipleResults"
+                  :key="name">
+                <v-list-item-content class="align-end">
+                  {{ value.SitusAddress }}
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
+          </div>
+        </v-card-text>
+      </v-card>
+
+    </v-container>
+
     <feedback
         page="assessor"
     ></feedback>
@@ -718,7 +314,7 @@ export default {
   },
   data() {
     return {
-      locationData: {},
+      locationData: null,
       show: {
         details: false,
         valuations: false,
@@ -727,6 +323,9 @@ export default {
         residentialPropertyData: false,
         owner: true
       },
+      showResults: false,
+      parcelFound: true,
+      multipleResults: null,
       overlay: true,
       dataReturned: false
     }
@@ -767,6 +366,28 @@ export default {
       const {data} = await axios.get('/assessor/' + this.$route.params.location);
       if (data.error) {
       } else {
+
+        if (data.length > 1) {
+          this.parcelFound = false;
+          this.showResults = true;
+          this.multipleResults = data;
+        }
+
+        if (data.length === 1) {
+          this.parcelFound = true;
+          this.showResults = false;
+        }
+
+      }
+      this.overlay = false;
+    },
+    async getParcel(apn) {
+      this.overlay = true;
+      const {data} = await axios.get('/parcel/' + apn);
+      if (data.error) {
+      } else {
+        this.parcelFound = true;
+        this.showResults = false;
         this.locationData = data;
         this.dataReturned = true;
       }

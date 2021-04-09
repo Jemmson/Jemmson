@@ -12,79 +12,35 @@ class AssessorController extends Controller
 {
     //
 
-    protected $baseUrl = 'https://api.mcassessor.maricopa.gov/';
+    protected $baseUrl = 'https://preview.mcassessor.maricopa.gov/';
 
     public function getLocation($location)
     {
 
-        $location = '/api/search/property/' . $location;
+        $location = '/search/' .  str_replace('+', ' ', $location);
 
         $response = $this->getAssessorData($location);
 
         $result = json_decode($response);
 
-        $totalFound = (int)$result->TotalFound;
+        $totalFound = (int)$result->rp->TOTAL;
 
         if ($totalFound === 0) {
             return response()->json([
                 'error' => 'There was no assessor information available'
             ]);
         } else if ($totalFound === 1) {
-            return $this->getAssessorData($result->Results[0]->APN->link);
+            $parcel = 'parcel/' . $result->Results[0]->APN;
+            return $this->getAssessorData($parcel);
         } else {
-            $bestGuess = self::bestGuessOption($result->Results, $location);
-            return $this->getAssessorData($bestGuess->APN->link);
-
+            return $result->rp->Results;
         }
-
     }
 
-    public function bestGuessOption($results, $location)
+    public function getParcel($apn)
     {
-        try {
-            $situsAddress = [];
-            $locationArray = explode('+', $location);
-            $houseNumberArray = explode('/', $locationArray[0]);
-            $houseNumber = $houseNumberArray[count($houseNumberArray) - 1];
-            $locationArray[0] = $houseNumber;
-            for ($i = 0; $i < count($results); $i++){
-                $addressArray = explode(' ', $results[$i]->SitusAddress);
-                if ($results[$i]->SitusAddress === '2345 S ALMA SCHOOL RD MESA, AZ 85210') {
-                    $found = true;
-                }
-                $matchedAddress = [];
-                foreach ($addressArray as $address) {
-                    if (strlen($address) > 0) {
-                        foreach ($locationArray as $item) {
-                            if (strtolower($item) === strtolower($address)) {
-                                array_push($matchedAddress, $item);
-                                break;
-                            } else if (
-                                $item[0] &&
-                                strtolower($item[0]) === strtolower($address[0])
-                            ) {
-                                array_push($matchedAddress, $item);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (count($matchedAddress) === count($locationArray)) {
-                    array_push($situsAddress, $results[$i]);
-                }
-            }
-        } catch (\Exception $e) {
-            Log::debug($e->getMessage());
-        }
-
-
-
-        if (count($situsAddress) === 1) {
-            return $situsAddress[0];
-        } else {
-            return $situsAddress[0];
-        }
+        $parcel = 'parcel/' . $apn;
+        return $this->getAssessorData($parcel);
     }
 
     private function getAssessorData($location)
@@ -94,7 +50,7 @@ class AssessorController extends Controller
         try {
             return $client->request('GET', $url, [
                 'headers' => [
-                    'X-MC-AUTH' => '1034e75e-89c6-11e8-8a04-00155da2c015'
+                    'AUTHORIZATION' => '1034e75e-89c6-11e8-8a04-00155da2c015'
                 ]
             ])
                 ->getBody()
