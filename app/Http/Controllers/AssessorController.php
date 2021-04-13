@@ -30,7 +30,7 @@ class AssessorController extends Controller
                 'error' => 'There was no assessor information available'
             ]);
         } else if ($totalFound === 1) {
-            $parcel = 'parcel/' . $result->Results[0]->APN;
+            $parcel = 'parcel/' . $result->rp->Results[0]->APN;
             return $this->getAssessorData($parcel);
         } else {
             return $result->rp->Results;

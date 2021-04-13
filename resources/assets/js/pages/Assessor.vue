@@ -373,9 +373,11 @@ export default {
           this.multipleResults = data;
         }
 
-        if (data.length === 1) {
+        if (data.IsResidential) {
           this.parcelFound = true;
           this.showResults = false;
+          this.locationData = data;
+          this.dataReturned = true;
         }
 
       }
