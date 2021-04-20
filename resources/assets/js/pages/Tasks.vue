@@ -30,7 +30,14 @@
               >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="initiated ? 'nav-icon-label-selected': ''">
-                Initiated
+                <v-badge
+                    v-if="count.initiated"
+                    :color="initiated ? 'success': 'grey'"
+                    :content="count.initiated"
+                >
+                  Initiated
+                </v-badge>
+                <div v-else>Initiated</div>
               </div>
             </div>
             <div class="flex flex-col nav-icon-spacing">
@@ -41,7 +48,14 @@
               >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="sent ? 'nav-icon-label-selected': ''">
-                Sent
+                <v-badge
+                    v-if="count.sent"
+                    :color="sent ? 'success': 'grey'"
+                    :content="count.sent"
+                >
+                  Sent
+                </v-badge>
+                <div v-else>Sent</div>
               </div>
             </div>
             <div class="flex flex-col nav-icon-spacing">
@@ -52,7 +66,14 @@
               >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="accepted ? 'nav-icon-label-selected': ''">
-                Accepted
+                <v-badge
+                    v-if="count.accepted"
+                    :color="accepted ? 'success': 'grey'"
+                    :content="count.accepted"
+                >
+                  Accepted
+                </v-badge>
+                <div v-else>Accepted</div>
               </div>
             </div>
             <div class="flex flex-col nav-icon-spacing">
@@ -63,7 +84,14 @@
               >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="approved ? 'nav-icon-label-selected': ''">
-                Approved
+                <v-badge
+                    v-if="count.approved"
+                    :color="approved ? 'success': 'grey'"
+                    :content="count.approved"
+                >
+                  Approved
+                </v-badge>
+                <div v-else>Approved</div>
               </div>
             </div>
             <div class="flex flex-col nav-icon-spacing">
@@ -74,7 +102,14 @@
               >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="finished ? 'nav-icon-label-selected': ''">
-                Finished
+                <v-badge
+                    v-if="count.finished"
+                    :color="finished ? 'success': 'grey'"
+                    :content="count.finished"
+                >
+                  Finished
+                </v-badge>
+                <div v-else>Finished</div>
               </div>
             </div>
             <div class="flex flex-col nav-icon-spacing">
@@ -85,7 +120,14 @@
               >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="paid ? 'nav-icon-label-selected': ''">
-                Paid
+                <v-badge
+                    v-if="count.paid"
+                    :color="paid ? 'success': 'grey'"
+                    :content="count.paid"
+                >
+                  Paid
+                </v-badge>
+                <div v-else>Paid</div>
               </div>
             </div>
             <div class="flex flex-col nav-icon-spacing">
@@ -96,7 +138,14 @@
               >mdi-details
               </v-icon>
               <div class="nav-icon-label" :class="denied ? 'nav-icon-label-selected': ''">
-                Denied
+                <v-badge
+                    v-if="count.denied"
+                    :color="denied ? 'success': 'grey'"
+                    :content="count.denied"
+                >
+                  Denied
+                </v-badge>
+                <div v-else>Denied</div>
               </div>
             </div>
           </div>
@@ -424,6 +473,15 @@ export default {
       location: {
         location: []
       },
+      count: {
+        initiated: null,
+        sent: null,
+        accepted: null,
+        approved: null,
+        finished: null,
+        paid: null,
+        denied: null
+      },
       localArea: '',
       area: {
         area: ''
@@ -496,6 +554,41 @@ export default {
         this.paid = false;
         this.denied = true;
       }
+    },
+
+    getCount() {
+      let initiated = 0;
+      let sent = 0;
+      let accepted = 0;
+      let approved = 0;
+      let finished = 0;
+      let paid = 0;
+      let denied = 0;
+      for (let i = 0; i < this.sTasks.length; i++) {
+        const status = this.sTasks[i].job_task.job.sub_status[this.sTasks[i].job_task.job.sub_status.length - 1].status
+        if (status === "initiated") {
+          initiated++;
+        } else if (status === "sent_a_bid") {
+          sent++
+        } else if (status === "accepted") {
+          accepted++;
+        } else if (status === "waiting_for_customer_approval") {
+          approved++;
+        } else if (status === "finished_job") {
+          finished++;
+        } else if (status === "paid") {
+          paid++;
+        } else if (status === "denied") {
+          denied++;
+        }
+      }
+      this.count.initiated = initiated;
+      this.count.sent = sent;
+      this.count.accepted = accepted;
+      this.count.approved = approved;
+      this.count.finished = finished;
+      this.count.paid = paid;
+      this.count.denied = denied;
     },
 
     showSelectedBid(bid) {
@@ -595,6 +688,7 @@ export default {
             this.tasks = data;
             this.sTasks = this.tasks;
             this.bid = data[0]
+            this.getCount();
           }
         }
 
@@ -616,6 +710,8 @@ export default {
 
   },
   mounted() {
+
+    this.getCount()
 
     this.$store.commit('setCurrentPage', '/tasks');
 
@@ -643,6 +739,11 @@ export default {
 </script>
 
 <style scoped>
+
+.inactive {
+  background-color: #8d8d8d !important;
+  border-color: #8d8d8d !important;
+}
 
 ul {
   padding: 0px !important;
