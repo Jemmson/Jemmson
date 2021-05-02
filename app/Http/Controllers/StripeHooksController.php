@@ -36,6 +36,9 @@ class StripeHooksController extends Controller
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
             // Invalid signature
             return response([], 400);
+        } catch (\Exception $e) {
+            // Invalid signature
+            return response([], 400);
         };
 
         if ($this->checkForDuplicateEvent($event)) {
@@ -129,6 +132,8 @@ class StripeHooksController extends Controller
 
     public function processPaymentIntentSucceeded($event)
     {
+//        dd($event);
+
         $paymentIntentId = $event->data->object['id'];
 
         $jobTasks = JobTask::where('payment_intent_id', '=', $paymentIntentId)->get();

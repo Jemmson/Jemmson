@@ -30,17 +30,47 @@
           center-active
           class="flex justify-content-center"
       >
+
         <v-tab
             @click="selectTab('inProgress')"
-        >In Progress
+        >
+          <v-badge
+              v-if="count.in_progress"
+              :content="count.in_progress"
+          >
+            In Progress
+          </v-badge>
+          <div v-else>
+            In Progress
+          </div>
         </v-tab>
         <v-tab
             @click="selectTab('approved')"
-        >Approved
+        >
+          <v-badge
+              v-if="count.approved"
+              :content="count.approved"
+          >
+            Approved
+          </v-badge>
+          <div v-else>
+            Approved
+          </div>
+
         </v-tab>
         <v-tab
             @click="selectTab('paid')"
-        >Paid
+        >
+          <v-badge
+              v-if="count.paid"
+              :content="count.paid"
+          >
+            Paid
+          </v-badge>
+          <div v-else>
+            Paid
+          </div>
+
         </v-tab>
       </v-tabs>
 
@@ -187,6 +217,11 @@ export default {
   },
   data() {
     return {
+      count: {
+        in_progress: null,
+        approved: null,
+        paid: null,
+      },
       inProgress: true,
       approved: false,
       paid: false,
@@ -225,6 +260,22 @@ export default {
     })
   },
   methods: {
+
+    getCounts() {
+      this.count.in_progress = null;
+      this.count.approved = null;
+      this.count.paid = null;
+      for (let i = 0; i < this.bids.length; i++) {
+        let status = this.bids[i].job_statuses[this.bids[i].job_statuses.length - 1].status
+        if (status === 'in_progress' || status === 'sent') {
+          this.count.in_progress++;
+        } else if (status === 'approved') {
+          this.count.approved++;
+        } else if (status === 'paid') {
+          this.count.paid++;
+        }
+      }
+    },
 
     selectTab(status) {
       if (status === 'inProgress') {
@@ -398,7 +449,7 @@ export default {
     //   }
     // },
 
-     getBids() {
+    getBids() {
       let url = ''
       if (User.isCustomer()) {
         url = '/getJobsForCustomer'
@@ -409,6 +460,7 @@ export default {
         if (Array.isArray(response.data)) {
           this.bids = response.data
           this.sBids = this.bids
+          this.getCounts()
         }
         this.overlay = false;
       })

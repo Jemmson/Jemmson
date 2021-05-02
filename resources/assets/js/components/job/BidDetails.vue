@@ -42,7 +42,7 @@
       </bid-details-option>
       <v-spacer></v-spacer>
       <bid-details-option
-          :height="height" :width="width" title="Tasks" icon="mdi-briefcase" @openDialog="openDialog('tasks')">
+          :height="height" :width="width" :num="getNumberOfTasks()" title="Tasks" icon="mdi-briefcase" @openDialog="openDialog('tasks')">
       </bid-details-option>
     </div>
     <div class="flex flex-wrap justify-content-around">
@@ -52,7 +52,7 @@
       </bid-details-option>
       <v-spacer></v-spacer>
       <bid-details-option
-          :height="height" :width="width" title="Photos" icon="mdi-image" @openDialog="openDialog('photos')">
+          :height="height" :width="width" title="Photos" :num="getNumberOfPhotos()" icon="mdi-image" @openDialog="openDialog('photos')">
       </bid-details-option>
     </div>
 
@@ -1056,6 +1056,14 @@ export default {
     }
   },
   methods: {
+
+    getNumberOfPhotos() {
+      return this.bid.images.length;
+    },
+
+    getNumberOfTasks() {
+      return this.bid.job_tasks.length;
+    },
 
     confirmNotification() {
       this.showConfirmationDialog = true;

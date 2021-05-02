@@ -31,7 +31,7 @@
     "pusher/pusher-php-server": "~3.0",
     "quickbooks/v3-php-sdk": "^5.0",
     "simplesoftwareio/simple-sms": "3.0.*",
-    "stripe/stripe-php": "^7.19"
+    "stripe/stripe-php": "^7.77"
   },
   "require-dev": {
     "composer/composer": "^1.8",

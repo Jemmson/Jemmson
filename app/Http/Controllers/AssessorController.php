@@ -17,7 +17,18 @@ class AssessorController extends Controller
     public function getLocation($location)
     {
 
-        $location = '/search/' .  str_replace('+', ' ', $location);
+        $address = str_replace('+', ' ', $location);
+        if (strpos($address, 'east')) {
+            $address = str_replace_first('east', 'e', $address);
+        } else if (strpos($address, 'south')) {
+            $address = str_replace_first('south', 's', $address);
+        } else if (strpos($address, 'west')) {
+            $address = str_replace_first('west', 'w', $address);
+        } else if (strpos($address, 'north')) {
+            $address = str_replace_first('north', 'n', $address);
+        }
+
+        $location = '/search/' . str_replace('+', ' ', $address);
 
         $response = $this->getAssessorData($location);
 
