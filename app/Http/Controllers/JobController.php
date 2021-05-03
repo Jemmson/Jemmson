@@ -454,6 +454,7 @@ class JobController extends Controller
                     ->select(['company_name'])->get()->first();
             } else {
                 $jt['general'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'id',
                     'name'
                 ])->get()->first();
                 $jt['general']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
@@ -519,6 +520,7 @@ class JobController extends Controller
                     ->select(['company_name'])->get()->first();
             } else {
                 $jt['general'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'id',
                     'name'
                 ])->get()->first();
                 $jt['general']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)
@@ -581,6 +583,7 @@ class JobController extends Controller
                     ->select(['company_name'])->get()->first();
             } else {
                 $jt['general'] = User::where('id', '=', $jt->contractor_id)->select([
+                    'id',
                     'name'
                 ])->get()->first();
                 $jt['general']['company'] = Contractor::where('user_id', '=', $jt->contractor_id)

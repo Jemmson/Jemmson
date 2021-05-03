@@ -895,7 +895,7 @@ export default {
 
     hasNotBeenApproved() {
       let latestStatus = this.getJobStatus_latest(this.bid)
-      return latestStatus !== 'approved'
+      return latestStatus !== 'approved' && latestStatus !== 'paid'
     },
 
     hasNotBeenFinished() {
@@ -1058,11 +1058,19 @@ export default {
   methods: {
 
     getNumberOfPhotos() {
-      return this.bid.images.length;
+      if (this.bid.images){
+        return this.bid.images.length;
+      } else {
+        return null;
+      }
     },
 
     getNumberOfTasks() {
-      return this.bid.job_tasks.length;
+      if (this.bid.job_tasks){
+        return this.bid.job_tasks.length;
+      } else {
+        return null;
+      }
     },
 
     confirmNotification() {
