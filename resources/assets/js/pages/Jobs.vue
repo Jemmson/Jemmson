@@ -267,11 +267,11 @@ export default {
       this.count.paid = null;
       for (let i = 0; i < this.bids.length; i++) {
         let status = this.bids[i].job_statuses[this.bids[i].job_statuses.length - 1].status
-        if (status === 'initiated' || 'in_progress' || status === 'sent') {
+        if (status === 'initiated' || status === 'in_progress' || status === 'sent') {
           this.count.in_progress++;
         } else if (status === 'approved') {
           this.count.approved++;
-        } else if (status === 'paid') { 
+        } else if (status === 'paid') {
           this.count.paid++;
         }
       }

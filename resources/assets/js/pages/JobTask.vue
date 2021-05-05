@@ -173,7 +173,7 @@
             <div>Task Status</div>
             <div class="float-right font-weight-bold capitalize"
                  :class="jobTask ? getLabelClass(jobTask.status) : 0">
-              {{ getLatestJobStatus(jobTask) }}
+              {{ getLatestJobTaskStatus(jobTask) }}
             </div>
           </div>
           <div class="flex justify-content-between">
@@ -520,7 +520,7 @@
       </v-card>
     </section>
 
-    <section>
+    <section v-if="!jobTaskPaid()">
       <v-card>
         <v-card-title>Actions</v-card-title>
         <v-card-subtitle v-if="subHasNotFinishedTask(jobTask)">Waiting For Sub
@@ -892,6 +892,10 @@ export default {
     //     let date = startDate.split(' ')
     //     return date[0]
     // },
+
+    jobTaskPaid() {
+      return this.getLatestJobTaskStatus(this.jobTask) === 'paid';
+    },
 
     async submitEditDetails() {
       this.detailsLoading = true;
