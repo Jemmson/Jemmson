@@ -15,6 +15,8 @@
                 <v-combobox
                         label="Task Description *"
                         id="taskNameComboBox"
+                        :error="noNameError()"
+                        :error-messages="noNameErrorMessage()"
                         v-model="selected"
                         :search-input.sync="search"
                         :rules="[
@@ -28,6 +30,8 @@
                     <v-text-field
                             @focus="clearTaskPrice()"
                             type="text"
+                            :error="noPriceError()"
+                            :error-messages="noPriceErrorMessage()"
                             v-model="addNewTaskForm.taskPrice"
                             class="input-margins"
                             id="custTaskPrice"
@@ -240,6 +244,26 @@
             }
         },
         methods: {
+
+          noNameError(){
+            return this.addNewTaskForm.taskName ? false : true;
+          },
+
+          noNameErrorMessage(){
+            if (this.addNewTaskForm.taskName === '') {
+              return 'Task requires a name';
+            }
+          },
+
+          noPriceError(){
+            return this.addNewTaskForm.taskPrice ? false : true;
+          },
+
+          noPriceErrorMessage(){
+            if (this.addNewTaskForm.taskPrice === '') {
+              return 'Task Price is Required';
+            }
+          },
 
             clearTaskPrice(){
               if (this.addNewTaskForm.taskPrice === '$ 0.00') {
@@ -688,6 +712,8 @@
             },
 
             changeTask(message) {
+
+
                 let taskIsNewOrNeedsToBeAdded = {
                     'New': true,
                     'Add': true

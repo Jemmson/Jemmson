@@ -400,23 +400,14 @@ var app = new Vue({
 axios.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    console.log('============================================')
-    console.log('axios middle ware is being used')
-    console.log('============================================')
-
     return response;
 }, function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    console.log('============================================')
-    console.log('axios middle ware error occurred')
-    console.log('============================================')
-
     if (error.response.status === 419) {
         Vue.toasted.error("Session Has Expired. Please log in again.");
         window.location = '/logout';
     }
-
     return Promise.reject(error);
 });
 
