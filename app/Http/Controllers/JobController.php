@@ -1315,10 +1315,6 @@ class JobController extends Controller
     {
         // load jobs and all their tasks along with those tasks relationships
 
-        return response()->json([
-            'error' => 'error'
-        ], 419);
-
         if ($this->isCustomer()) {
             // only load tasks on jobs that are approved or need approval
 
