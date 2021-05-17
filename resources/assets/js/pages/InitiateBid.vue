@@ -92,6 +92,8 @@
               id="jobName"
               data-cy="jobName"
               label="Job Name"
+              :error="jobNameError()"
+              :error-messages="jobNameMessages()"
               v-model="form.jobName"
           >
           </v-text-field>
@@ -205,6 +207,7 @@ export default {
         paymentTypeInfoDialog: false,
         createJobDialog: false,
       },
+      showErrors: null,
       modalText: {
         paymentTypeText: `Every job is either a cash job or a credit card job.
                         To handle credit payments you will need to setup with Stripe. Stripe handles all of our
@@ -566,6 +569,10 @@ export default {
       }
     },
 
+    jobNameError() {
+      return this.errors && this.errors.jobName
+    },
+
     isMobile() {
       if (this.phoneNumberIsValid()) {
         return this.getMobileValidResponse[1] === 'mobile'
@@ -590,6 +597,12 @@ export default {
     phoneErrorMessages() {
       if (this.phoneError() && this.getMobileValidResponse[1]) {
         return this.getMobileValidResponse[1]
+      }
+    },
+
+    jobNameMessages() {
+      if (this.errors && this.errors.jobName) {
+        return this.errors.jobName[0]
       }
     },
 
@@ -633,10 +646,15 @@ export default {
 
     },
 
-    submit() {
+    async submit() {
+      this.showErrors = false;
       if (this.setCustomerName()) {
         console.log('submit')
-        GeneralContractor.initiateBid(this.form, this.disabled)
+        const result = await GeneralContractor.initiateBid(this.form, this.disabled)
+        if (result) {
+          this.showErrors = true;
+          this.errors = result.errors;
+        }
       }
     },
 

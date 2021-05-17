@@ -222,6 +222,7 @@ export default class GeneralContractor {
             localStorage.setItem('mobile', '');
             localStorage.setItem('isMobile', 'false');
             localStorage.setItem('jobName', '');
+            return null;
         } catch (error) {
             localStorage.setItem('customerName', '');
             localStorage.setItem('mobile', '');
@@ -234,6 +235,7 @@ export default class GeneralContractor {
             if (error.errors['no_free_jobs'] !== undefined) {
                 router.push('/settings')
             }
+            return error;
         }
     }
 

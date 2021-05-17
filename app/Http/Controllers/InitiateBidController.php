@@ -40,7 +40,7 @@ class InitiateBidController extends Controller
         $this->validate($request, [
             'phone' => 'required|min:10|max:14',
             'customerName' => 'required',
-            'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#,]+$/i'
+            'jobName' => 'nullable|regex:/^[a-zA-Z0-9 .\-#\',]+$/i'
         ]);
 
 
