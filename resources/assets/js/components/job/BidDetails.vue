@@ -271,6 +271,7 @@
                 <tr>
                   <th>Name</th>
                   <th>Price</th>
+                  <th>Status</th>
                   <th>View</th>
                 </tr>
                 </thead>
@@ -281,6 +282,7 @@
                       v-if="jobTaskObject(item).Price"
                       v-text="'$ ' + jobTaskObject(item).Price"
                   ></td>
+                  <td class="uppercase">{{ item.job_task_statuses[item.job_task_statuses.length - 1].status }}</td>
                   <td>
                     <v-btn
                         class="btn-size btn-weight primary--text"
