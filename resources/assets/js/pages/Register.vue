@@ -4,31 +4,10 @@
 
     <v-container>
       <v-card>
-        <v-card-title class="w-break">Who Are You?</v-card-title>
-        <v-card-actions>
-          <v-btn
-              class="w-1/2"
-              color="primary"
-              text
-              id="customerButton"
-              ref="customerButton"
-              :class="userTypeSelected === 'customer' ? 'selected-button' : ''"
-              v-on:click="userSelected('customer')">Customer
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
-              id="contractorButton"
-              class="w-1/2"
-              color="primary"
-              text
-              ref="contractorButton"
-              :class="userTypeSelected === 'contractor' ? 'selected-button' : ''"
-              v-on:click="userSelected('contractor')">Contractor
-          </v-btn>
-        </v-card-actions>
+        <v-card-title class="w-break">Contractor Registration</v-card-title>
       </v-card>
 
-      <div v-show="showRegistration" class="mt-1rem">
+      <div class="mt-1rem">
         <v-card>
           <v-card-text>
             <v-text-field
@@ -73,7 +52,6 @@
                 id="companyName"
                 v-model="registerForm.companyName"
                 label="Company Name *"
-                v-if="registerForm.usertype === 'contractor'"
             >
             </v-text-field>
             <span
@@ -86,7 +64,6 @@
             <add-license-box
                 width="100%"
                 @add="addLicenses($event)"
-                v-if="registerForm.usertype === 'contractor'"
             ></add-license-box>
 
             <div>
@@ -280,7 +257,7 @@ export default {
         city: '',
         state: '',
         zip: '',
-        country: '',
+        country: 'US',
         password: '',
         password_confirmation: '',
         terms: false,
@@ -300,7 +277,7 @@ export default {
           password_confirmation: '',
           terms: false,
         },
-        usertype: '',
+        usertype: 'contractor',
         busy: false,
         disabled: true
       },
@@ -662,13 +639,13 @@ export default {
     if (this.getRegisterInfo) {
 
       if (this.getRegisterInfo.zip === '') {
-        console.log('getregisterInfo Zip is empty top', )
+        console.log('getregisterInfo Zip is empty top',)
       }
 
       this.registerForm = this.getRegisterInfo
 
       if (this.getRegisterInfo.zip === '') {
-        console.log('getregisterInfo Zip is bottom', )
+        console.log('getregisterInfo Zip is bottom',)
       }
     }
 
@@ -704,9 +681,9 @@ export default {
   },
 
   watch: {
-    checkZip(val){
+    checkZip(val) {
       if (val && val.length === 0) {
-        console.log('zip is zero', )
+        console.log('zip is zero',)
       }
     }
   },
@@ -714,25 +691,31 @@ export default {
   methods: {
 
     zipMustHaveAtleast5characters() {
-      return this.registerForm.zip.length > 4 || 'Zip Code Must Be At Least 5 Characters'
+      if (this.registerForm.zip) {
+        return (this.registerForm.zip.length > 4) || 'Zip Code Must Be At Least 5 Characters'
+      } else {
+        return true
+      }
     },
 
     formatZip() {
 
-      this.registerForm.zip = localStorage.getItem('zip')
+      if (localStorage.getItem('zip')) {
+        this.registerForm.zip = localStorage.getItem('zip')
+      } else {
+        let zip = this.registerForm.zip.split('-')
 
-      let zip = this.registerForm.zip.split('-')
-
-      if (zip.length === 1) {
-        return this.registerForm.zip
-      }
-
-      if (zip.length === 2) {
-
-        if (zip[zip.length - 1] === '') {
-          return zip[0]
-        } else {
+        if (zip.length === 1) {
           return this.registerForm.zip
+        }
+
+        if (zip.length === 2) {
+
+          if (zip[zip.length - 1] === '') {
+            return zip[0]
+          } else {
+            return this.registerForm.zip
+          }
         }
       }
 
