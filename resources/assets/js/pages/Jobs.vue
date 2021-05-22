@@ -120,6 +120,7 @@
             <th class="text-left">Job Name</th>
             <th class="text-left">Date Approved</th>
             <th class="text-left"></th>
+            <th class="text-left"></th>
           </tr>
           </thead>
           <tbody>
@@ -137,6 +138,7 @@
               >VIEW
               </v-btn>
             </td>
+            <td><v-icon color="red" @click="showDeleteJobModal(item)">mdi-delete</v-icon></td>
           </tr>
           </tbody>
         </template>
