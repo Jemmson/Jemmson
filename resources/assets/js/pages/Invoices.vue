@@ -108,7 +108,15 @@
         <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
                   class="flex justify-content-around align-center border-bottom select-item">
           <div>{{ item.job_name }}</div>
+          <hr>
+        </template>
+        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
+                  class="flex justify-content-around align-center border-bottom select-item">
           <div>{{ item.general }}</div>
+          <hr>
+        </template>
+        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
+                  class="flex justify-content-around align-center border-bottom select-item">
           <div>{{ item.finished }}</div>
           <hr>
         </template>
