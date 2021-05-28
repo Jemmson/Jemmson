@@ -108,6 +108,7 @@
           :search="search"
           @click:row="goToInvoice('/invoice/'+ $event.id)"
       >
+        <hr>
         <template v-slot:item="{ item }">
           <div class="flex justify-content-around align-center border-bottom select-item"
                @click="goToInvoice('/invoice/'+ item.id)">
@@ -149,8 +150,6 @@ export default {
       customerHeaders: [
         {text: 'Job Name', value: 'job_name'},
         {text: 'General', value: 'general'},
-        {text: 'Customer', value: 'customer'},
-        {text: 'Price', value: 'price'},
         {text: 'Finished', value: 'finished'}
       ],
       customerReceipts: [],

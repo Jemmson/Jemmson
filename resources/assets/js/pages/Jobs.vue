@@ -80,35 +80,30 @@
           v-if="getJobStatus(bid) !== 'paid' && getJobStatus(bid) !== 'approved' && inProgress"
       >
         <div class="flex justify-between align-center">
-          <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
-          <div class="mr-4">
-            <v-icon
-                v-if="bid.payment_type === 'cash'"
-            >mdi-cash
-            </v-icon>
-            <v-icon
-                v-else-if="bid.payment_type === 'creditCard'"
-            >mdi-credit-card
-            </v-icon>
+          <div class="flex align-center">
+            <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
+            <div>
+              <v-icon
+                  v-if="bid.payment_type === 'cash'"
+              >mdi-cash
+              </v-icon>
+              <v-icon
+                  v-else-if="bid.payment_type === 'creditCard'"
+              >mdi-credit-card
+              </v-icon>
+            </div>
+          </div>
+          <v-spacer></v-spacer>
+          <div class="flex align-center ml-36">
+            <v-btn
+                @click="goToJob(bid.id)"
+                text
+                color="primary"
+            >VIEW
+            </v-btn>
+            <v-icon color="red" @click="showDeleteJobModal(bid)">mdi-delete</v-icon>
           </div>
         </div>
-        <v-card-actions>
-          <v-btn
-              text
-              color="red"
-              @click="showDeleteJobModal(bid)"
-          >
-            DELETE JOB
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn
-              @click="goToJob(bid.id)"
-              text
-              color="primary"
-          >VIEW JOB
-          </v-btn>
-
-        </v-card-actions>
       </v-card>
 
       <v-simple-table
