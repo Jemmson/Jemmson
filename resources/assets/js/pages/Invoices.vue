@@ -48,14 +48,12 @@
           @click:row="goToInvoice('/invoice/'+ $event.id)"
       >
         <hr>
-        <template v-slot:item="{ item }">
-          <div class="flex justify-content-around align-center border-bottom select-item"
-               @click="goToInvoice('/invoice/'+ item.id)">
+        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
+                  class="flex justify-content-around align-center border-bottom select-item">
             <div>{{ item.job_name }}</div>
             <div>{{ item.customer }}</div>
             <div>{{ item.finished }}</div>
             <hr>
-          </div>
         </template>
       </v-data-table>
     </v-card>
@@ -77,14 +75,12 @@
           :search="search"
           @click:row="goToInvoice('/invoice/'+ $event.job_id)"
       >
-        <template v-slot:item="{ item }">
-          <div class="flex justify-content-around align-center border-bottom select-item"
-               @click="goToInvoice('/invoice/'+ item.job_id)">
+        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
+                  class="flex justify-content-around align-center border-bottom select-item">
             <div>{{ item.job_name }}</div>
             <div>{{ item.customer }}</div>
             <div>{{ item.finished }}</div>
             <hr>
-          </div>
         </template>
       </v-data-table>
     </v-card>
@@ -109,14 +105,12 @@
           @click:row="goToInvoice('/invoice/'+ $event.id)"
       >
         <hr>
-        <template v-slot:item="{ item }">
-          <div class="flex justify-content-around align-center border-bottom select-item"
-               @click="goToInvoice('/invoice/'+ item.id)">
-            <div>{{ item.job_name }}</div>
-            <div>{{ item.general }}</div>
-            <div>{{ item.finished }}</div>
-            <hr>
-          </div>
+        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
+                  class="flex justify-content-around align-center border-bottom select-item">
+          <div>{{ item.job_name }}</div>
+          <div>{{ item.general }}</div>
+          <div>{{ item.finished }}</div>
+          <hr>
         </template>
       </v-data-table>
     </v-card>
@@ -264,7 +258,7 @@ export default {
         for (let i = 0; i < jobs[0].customerJobs.length; i++) {
           job = jobs[0].customerJobs[i]
           status = job.statuses[job.statuses.length - 1]
-          if (status.status === 'paid'){
+          if (status.status === 'paid') {
             this.customerReceipts.push({
               id: job.id,
               job_name: job.job_name,
@@ -278,8 +272,10 @@ export default {
       }
     },
 
-    jobHasNotBeenAdded(val){
-      return this.subReceipts.filter(val => {return val.job_name === "2020-100-Pike-Shawn"}).length === 0
+    jobHasNotBeenAdded(val) {
+      return this.subReceipts.filter(val => {
+        return val.job_name === "2020-100-Pike-Shawn"
+      }).length === 0
     },
 
     createSubReceipts(jobs) {
@@ -293,7 +289,9 @@ export default {
           jobName = job.job_name;
           if (
               status.status === 'paid'
-              && this.subReceipts.filter(val => {return val.job_name === job.job_name}).length === 0
+              && this.subReceipts.filter(val => {
+                return val.job_name === job.job_name
+              }).length === 0
           ) {
             this.subReceipts.push({
               id: job.id,
