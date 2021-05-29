@@ -171,7 +171,8 @@
           </div>
           <div class="flex justify-content-between">
             <div>Task Status</div>
-            <div class="float-right font-weight-bold capitalize"
+            <div class="float-right font-weight-bold"
+                 style="font-size: 10px"
                  :class="jobTask ? getLabelClass(jobTask.status) : 0">
               {{ getLatestJobTaskStatus(jobTask) }}
             </div>
@@ -361,18 +362,23 @@
         <v-card-title>Job Task Location</v-card-title>
         <v-card-text v-if="getAddress() !== 'Address Not Available'">
           <v-list dense>
-            <v-list-item>
-              <v-list-item-content>Address:</v-list-item-content>
-              <v-list-item-content class="align-end">
-                <div>{{ getAddressLine1 }}</div>
-                <div class="flex">
-                  <div>{{ getCity }},</div>
+            <v-list-item style="display: block">
+              <v-list-item-content class="f-bold fs-1rem">Address:</v-list-item-content>
+              <v-list-item-content class="align-end" style="margin-top: -.75rem;">
+                <div
+                    style="font-size: .75rem;"
+                    class="uppercase">{{ getAddressLine1 }}</div>
+                <div class="flex justify-start">
                   <div
-                      style="margin-left: .2rem;"
+                      style="font-size: .75rem;"
+                      class="uppercase">{{ getCity }},</div>
+                  <div
+                      class="uppercase"
+                      style="margin-left: .2rem; font-size: .75rem;"
                   >{{ getLocationState }}
                   </div>
                   <div
-                      style="margin-left: .2rem;"
+                      style="margin-left: .2rem; font-size: .75rem;"
                   >{{ getZip }}
                   </div>
                 </div>
@@ -1157,7 +1163,8 @@ export default {
 
     getLatestJobTaskStatus(jobTask) {
       if (jobTask && (jobTask.job_task_statuses || jobTask.job_task_status)) {
-        return this.getJobTaskStatus_latest(jobTask)
+        let status = this.getJobTaskStatus_latest(jobTask)
+        return status.replaceAll('_', ' ').toUpperCase();
       }
     },
 

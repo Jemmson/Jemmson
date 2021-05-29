@@ -79,22 +79,17 @@
           v-for="bid in sBids" v-bind:key="bid.id"
           v-if="getJobStatus(bid) !== 'paid' && getJobStatus(bid) !== 'approved' && inProgress"
       >
-        <div class="flex justify-between align-center">
-          <div class="flex align-center">
-            <v-card-title>{{ jobName(bid.job_name) }}</v-card-title>
-            <div>
-              <v-icon
-                  v-if="bid.payment_type === 'cash'"
-              >mdi-cash
-              </v-icon>
-              <v-icon
-                  v-else-if="bid.payment_type === 'creditCard'"
-              >mdi-credit-card
-              </v-icon>
-            </div>
-          </div>
-          <v-spacer></v-spacer>
-          <div class="flex align-center ml-36">
+        <div class="flex-col align-center">
+          <v-card-title style="font-size: 1rem">{{ jobName(bid.job_name) }}</v-card-title>
+          <div class="flex align-start" style="padding-left: 16px">
+            <v-icon
+                v-if="bid.payment_type === 'cash'"
+            >mdi-cash
+            </v-icon>
+            <v-icon
+                v-else
+            >mdi-credit-card
+            </v-icon>
             <v-btn
                 @click="goToJob(bid.id)"
                 text
@@ -133,7 +128,9 @@
               >VIEW
               </v-btn>
             </td>
-            <td><v-icon color="red" @click="showDeleteJobModal(item)">mdi-delete</v-icon></td>
+            <td>
+              <v-icon color="red" @click="showDeleteJobModal(item)">mdi-delete</v-icon>
+            </td>
           </tr>
           </tbody>
         </template>

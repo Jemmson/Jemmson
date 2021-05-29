@@ -42,7 +42,8 @@
       </bid-details-option>
       <v-spacer></v-spacer>
       <bid-details-option
-          :height="height" :width="width" :num="getNumberOfTasks()" title="Tasks" icon="mdi-briefcase" @openDialog="openDialog('tasks')">
+          :height="height" :width="width" :num="getNumberOfTasks()" title="Tasks" icon="mdi-briefcase"
+          @openDialog="openDialog('tasks')">
       </bid-details-option>
     </div>
     <div class="flex flex-wrap justify-content-around">
@@ -52,7 +53,8 @@
       </bid-details-option>
       <v-spacer></v-spacer>
       <bid-details-option
-          :height="height" :width="width" title="Photos" :num="getNumberOfPhotos()" icon="mdi-image" @openDialog="openDialog('photos')">
+          :height="height" :width="width" title="Photos" :num="getNumberOfPhotos()" icon="mdi-image"
+          @openDialog="openDialog('photos')">
       </bid-details-option>
     </div>
 
@@ -269,27 +271,32 @@
               <template>
                 <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Price</th>
-                  <th>Status</th>
-                  <th>View</th>
+                  <th>Tasks</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(item, i) in getJobTasks()" :key="i">
-                  <td class="uppercase">{{ jobTaskObject(item).Name }}</td>
-                  <td
-                      v-if="jobTaskObject(item).Price"
-                      v-text="'$ ' + jobTaskObject(item).Price"
-                  ></td>
-                  <td class="uppercase">{{ item.job_task_statuses[item.job_task_statuses.length - 1].status }}</td>
                   <td>
-                    <v-btn
-                        class="btn-size btn-weight primary--text"
-                        :to="'/job/task/' + item.id"
-                        text
-                    >Edit
-                    </v-btn>
+                    <div class="flex justify-between"
+                         style="margin-top: 0.5rem;"
+                    >
+                      <div class="uppercase" style="font-size: 15px;">{{ jobTaskObject(item).Name }}</div>
+                      <div v-if="jobTaskObject(item).Price"
+                           v-text="'$ ' + jobTaskObject(item).Price">{{ jobTaskObject(item).Name }}
+                      </div>
+                    </div>
+                    <div class="flex justify-between align-center">
+                      <div class="uppercase"
+                           style="font-size: 11px;"
+                      >{{ currentStatus(item) }}
+                      </div>
+                      <v-btn
+                          class="btn-size btn-weight primary--text"
+                          :to="'/job/task/' + item.id"
+                          text
+                      >Edit
+                      </v-btn>
+                    </div>
                   </td>
                 </tr>
                 </tbody>
@@ -415,6 +422,7 @@
             <v-text-field
                 id="route"
                 :class="{'has-error': form.errors.has('address_line_1')}"
+                style="font-size: 1.2rem;"
                 v-model="form.address_line_1"
                 label=""
                 required
@@ -426,6 +434,7 @@
 
             <v-text-field
                 id="addressLine2"
+                style="font-size: 1.2rem;"
                 v-model="form.address_line_2"
                 label="Address Line 2"
             >
@@ -434,6 +443,7 @@
             <v-text-field
                 id="administrative_area_level_1"
                 :class="{'has-error': form.errors.has('city')}"
+                style="font-size: 1.2rem;"
                 v-model="form.city"
                 required
                 :rules="[cityCantBeBlank()]"
@@ -446,6 +456,7 @@
             <v-text-field
                 id="locality"
                 :class="{'has-error': form.errors.has('state')}"
+                style="font-size: 1.2rem;"
                 v-model="form.state"
                 :rules="[stateCantBeBlank()]"
                 required
@@ -459,6 +470,7 @@
             <v-text-field
                 id="postal_code"
                 :class="{'has-error': form.errors.has('zip')}"
+                style="font-size: 1.2rem;"
                 :rules="[this.zipMustHaveAtleast5characters(), zipCantBeBlank()]"
                 v-model="form.zip"
                 required
@@ -521,10 +533,16 @@
             </v-card-actions>
 
             <div class="flex flex-col">
-              <div>
+              <div
+                  class="uppercase"
+                  style="font-size: 1.2rem;"
+              >
                 {{ bid.location.address_line_1 }}
               </div>
-              <div>
+              <div
+                  class="uppercase"
+                  style="font-size: 1.2rem;"
+              >
                 {{ bid.location.city }}, {{ bid.location.state }} {{ bid.location.zip }}
               </div>
             </div>
@@ -1059,8 +1077,15 @@ export default {
   },
   methods: {
 
+    currentStatus(item) {
+      if (item) {
+        let status = item.job_task_statuses[item.job_task_statuses.length - 1].status
+        return status.replaceAll('_', ' ');
+      }
+    },
+
     getNumberOfPhotos() {
-      if (this.bid.images){
+      if (this.bid.images) {
         return this.bid.images.length;
       } else {
         return null;
@@ -1068,7 +1093,7 @@ export default {
     },
 
     getNumberOfTasks() {
-      if (this.bid.job_tasks){
+      if (this.bid.job_tasks) {
         return this.bid.job_tasks.length;
       } else {
         return null;
