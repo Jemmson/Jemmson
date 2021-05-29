@@ -81,21 +81,25 @@
       >
         <div class="flex-col align-center">
           <v-card-title style="font-size: 1rem">{{ jobName(bid.job_name) }}</v-card-title>
-          <div class="flex align-start" style="padding-left: 16px">
-            <v-icon
-                v-if="bid.payment_type === 'cash'"
-            >mdi-cash
-            </v-icon>
-            <v-icon
-                v-else
-            >mdi-credit-card
-            </v-icon>
-            <v-btn
-                @click="goToJob(bid.id)"
-                text
-                color="primary"
-            >VIEW
-            </v-btn>
+          <div class="flex justify-content-between align-start" style="padding-left: 16px; padding-right: 16px">
+            <div class="flex align-start">
+              <v-icon
+                  v-if="bid.payment_type === 'cash'"
+              >mdi-cash
+              </v-icon>
+              <v-icon
+                  v-else
+              >mdi-credit-card
+              </v-icon>
+              <v-btn
+                  @click="goToJob(bid.id)"
+                  text
+                  style="margin-top: -5px;"
+                  color="primary"
+              >VIEW
+              </v-btn>
+            </div>
+            <v-spacer></v-spacer>
             <v-icon color="red" @click="showDeleteJobModal(bid)">mdi-delete</v-icon>
           </div>
         </div>
