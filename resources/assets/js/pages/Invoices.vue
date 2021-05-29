@@ -47,14 +47,6 @@
           disable-sort
           @click:row="goToInvoice('/invoice/'+ $event.id)"
       >
-        <hr>
-        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
-                  class="flex justify-content-around align-center border-bottom select-item">
-            <div>{{ item.job_name }}</div>
-            <div>{{ item.customer }}</div>
-            <div>{{ item.finished }}</div>
-            <hr>
-        </template>
       </v-data-table>
     </v-card>
 
@@ -75,13 +67,6 @@
           :search="search"
           @click:row="goToInvoice('/invoice/'+ $event.job_id)"
       >
-        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
-                  class="flex justify-content-around align-center border-bottom select-item">
-            <div>{{ item.job_name }}</div>
-            <div>{{ item.customer }}</div>
-            <div>{{ item.finished }}</div>
-            <hr>
-        </template>
       </v-data-table>
     </v-card>
 
@@ -104,22 +89,6 @@
           :search="search"
           @click:row="goToInvoice('/invoice/'+ $event.id)"
       >
-        <hr>
-        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
-                  class="flex justify-content-around align-center border-bottom select-item">
-          <div>{{ item.job_name }}</div>
-          <hr>
-        </template>
-        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
-                  class="flex justify-content-around align-center border-bottom select-item">
-          <div>{{ item.general }}</div>
-          <hr>
-        </template>
-        <template v-slot:item="{ item }" @click="goToInvoice('/invoice/'+ item.id)"
-                  class="flex justify-content-around align-center border-bottom select-item">
-          <div>{{ item.finished }}</div>
-          <hr>
-        </template>
       </v-data-table>
     </v-card>
 
