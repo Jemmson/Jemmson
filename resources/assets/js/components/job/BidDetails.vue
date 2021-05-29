@@ -319,7 +319,9 @@
               </v-btn>
             </v-card-actions>
             <v-card-title>Job Tasks</v-card-title>
-            <v-card-subtitle>{{ getJobStatus_latest(bid) }}</v-card-subtitle>
+            <v-card-subtitle
+                class="uppercase"
+            >{{ getJobStatus_latest(bid) }}</v-card-subtitle>
             <v-card-text>
               <v-simple-table>
                 <template>
@@ -327,19 +329,20 @@
                   <tr>
                     <th>Name</th>
                     <th>Price</th>
-                    <th>View</th>
+                    <th></th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr v-for="(item, i) in getJobTasks()" :key="i">
-                    <td>{{ jobTaskObject(item).Name }}</td>
+                    <td class="uppercase">{{ jobTaskObject(item).Name }}</td>
                     <td
+                        class="uppercase"
                         v-if="jobTaskObject(item).Price"
                         v-text="'$ ' + jobTaskObject(item).Price"
                     ></td>
                     <td>
                       <v-btn
-                          class="btn-size btn-weight primary--text"
+                          class="btn-size btn-weight primary--text uppercase"
                           :to="'/job/task/' + item.id"
                           text
                       >View

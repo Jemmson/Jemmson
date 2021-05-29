@@ -24,9 +24,11 @@ export default {
         getJobStatus_latest(bid) {
 
             if (bid.job_status) {
-                return bid.job_status[bid.job_status.length - 1].status
+                let status = bid.job_status[bid.job_status.length - 1].status
+                return status.replaceAll('_',' ')
             } else if (bid.job_statuses) {
-                return bid.job_statuses[bid.job_statuses.length - 1].status
+                let status = bid.job_statuses[bid.job_statuses.length - 1].status
+                return status.replaceAll('_',' ')
             }
         },
 
