@@ -1285,6 +1285,18 @@ class JobController extends Controller
     }
 
 
+    public function saveJobName(Request $request)
+    {
+        $job = Job::find($request->jobId);
+        $job->job_name = $request->jobName;
+        $job->save();
+
+        return response()->json([
+            'jobName' => $job->job_name
+        ], 200);
+
+    }
+
     public
     function getJobsForCustomer()
     {

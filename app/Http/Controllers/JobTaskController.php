@@ -113,7 +113,7 @@ class JobTaskController extends Controller
 
         //        does the location exist
         $locationExists = self::locationExists($request);
-        $jobTask = JobTask::find($request->jobTaskId);
+        $jobTask = JobTask::find($request->id);
         $jobTaskId = $request->id;
         if ($locationExists) {
             if (!self::jobTaskAlreadyAssociatedToLocation($jobTask->location_id, $locationExists->id)) {
