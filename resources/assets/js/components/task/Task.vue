@@ -9,7 +9,7 @@
           v-if="needsStripeForCreditCardPayments() && isCreditCardJob()"
           class="w-break text-center uppercase error--text p-2"
           style="color: black"
-      >You will need to set up a credit card to bid on this job
+      >You will need to enroll with Stripe to bid on this job
       </v-card-title>
 
       <div class="flex justify-between" style="align-items: center;">

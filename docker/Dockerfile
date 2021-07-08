@@ -1,4 +1,4 @@
-FROM php:7.3.5-apache-stretch
+    FROM php:7.3.5-apache-stretch
 
 ENV PATH="./vendor/bin:$PATH"
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS=0

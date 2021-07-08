@@ -367,11 +367,13 @@
               <v-list-item-content class="align-end" style="margin-top: -.75rem;">
                 <div
                     style="font-size: .75rem;"
-                    class="uppercase">{{ getAddressLine1 }}</div>
+                    class="uppercase">{{ getAddressLine1 }}
+                </div>
                 <div class="flex justify-start">
                   <div
                       style="font-size: .75rem;"
-                      class="uppercase">{{ getCity }},</div>
+                      class="uppercase">{{ getCity }},
+                  </div>
                   <div
                       class="uppercase"
                       style="margin-left: .2rem; font-size: .75rem;"
@@ -677,6 +679,23 @@
         :id="jobTask ? jobTask.id : null">
     </update-task-location-modal>
 
+    <v-dialog
+        v-if="customerNotRegistered"
+        v-model="customerNotRegistered"
+    >
+      <v-card>
+        <v-card-title style="word-wrap: break-word;">
+          Cannot Add A Sub
+        </v-card-title>
+        <v-card-text>
+          Customer Has Not Registered
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="customerNotRegistered = false" color="primary">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <feedback
         page="jobTask"
     ></feedback>
@@ -722,6 +741,7 @@ export default {
   ],
   data() {
     return {
+      customerNotRegistered: false,
       jobTaskMessages: [],
       job: null,
       jobStatus: null,
@@ -1561,7 +1581,20 @@ export default {
     openSubInvite(jobTaskId) {
       // debugger;
       // this.currentJobTask = jobTask;
-      $('#sub-invite-modal_' + jobTaskId).modal('show')
+
+      if (this.customerHasRegistered()) {
+        this.customerNotRegistered = false
+        $('#sub-invite-modal_' + jobTaskId).modal('show')
+      } else {
+        this.customerNotRegistered = true
+      }
+
+    },
+    customerHasRegistered() {
+      return this.jobTask
+          && this.jobTask.job
+          && this.jobTask.job.customer
+          && this.jobTask.job.customer.email !== null;
     },
     location(jobTask, bid) {
       if (this.job && jobTask && jobTask.location) {
