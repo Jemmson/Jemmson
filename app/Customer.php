@@ -13,6 +13,8 @@ class Customer extends Model
     //
     use SoftDeletes;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'user_id',
         'notes',

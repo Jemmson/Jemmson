@@ -347,7 +347,9 @@ class User extends SparkUser
     )
     {
         $task = $jobTask->task()->first();
+
         self::changeSubStatus($jobTaskId, $subId);
+
         self::updateJobTaskWithAcceptedBid($jobTask, $price, $subId, $bidId);
         self::notifySubOfAcceptedBid($subId, $task, Auth::user()->getAuthIdentifier());
     }

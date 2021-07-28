@@ -31,6 +31,8 @@ class Job extends Model
         'id',
     ];
 
+    public $timestamps = false;
+
     protected $fillable = [
         'actual_end_date',
         'address_line_1',

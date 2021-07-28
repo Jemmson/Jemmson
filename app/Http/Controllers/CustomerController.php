@@ -205,9 +205,22 @@ class CustomerController extends Controller
             $associatedUsers = ContractorCustomer::getAssociatedCustomers($users, Auth::user()->getAuthIdentifier());
             $jobNumber = self::getLatestJobNumber();
             $users = [];
+
+//            pull back all users with query param
+//            $allUsers = DB::table('users')
+//                ->where('first_name', 'like', $query)
+//                ->get();
+//            dd($allUsers);
+
+
+//            compare the user ids with ids of associated users
+//            create return amount with only associated users that have that query
+
             foreach ($associatedUsers as $user) {
                 $u = User::select(['id', 'name', 'first_name', 'last_name', 'phone', 'email'])
-                    ->where('id', '=', $user['user_id'])->get()->first()
+                    ->where('id', '=', $user['user_id'])
+                    ->get()
+                    ->first()
                     ->toArray();
                 $u['payment_type'] = $user['quickbooks_id'];
                 $u['quickbooks_id'] = $user['quickbooks_id'];

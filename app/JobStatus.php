@@ -9,6 +9,7 @@ use Carbon\Carbon;
 class JobStatus extends Model
 {
     protected $table = 'job_status';
+    public $timestamps = false;
     protected $fillable = [
         'job_id',
         'status_number',
