@@ -9,6 +9,8 @@ class Location extends Model
 {
     //
     use SoftDeletes;
+    public $timestamps = false;
+
     protected $fillable = [
         'id',
         'user_id',

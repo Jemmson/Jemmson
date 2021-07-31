@@ -22,6 +22,7 @@ class JobTask extends Model
 
     protected $table = "job_task";
     protected $guarded = [];
+    public $timestamps = false;
 
     /*
      * *********************************

@@ -18,6 +18,7 @@ class Contractor extends Model
     use Utilities;
     use SoftDeletes;
     use QuickbookContractor;
+    public $timestamps = false;
 
 
 //    protected $fillable = [
