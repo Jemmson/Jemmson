@@ -1303,6 +1303,7 @@ class JobController extends Controller
         $jobs = Auth::user()->jobs()->select([
             'job_name',
             'id',
+            'payment_type'
         ])->get();
 
         foreach ($jobs as $j) {
