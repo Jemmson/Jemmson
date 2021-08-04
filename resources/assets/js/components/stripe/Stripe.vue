@@ -93,9 +93,9 @@
             showStripeExpress() {
                 if (User.contractor === null)
                     return false
-                if (Spark.state.user.contractor) {
-                    return Spark.state.user.contractor.stripe_express === null
-                }
+                // if (Spark.state.user.contractor) {
+                //     return Spark.state.user.contractor.stripe_express === null
+                // }
 
             }
         },

@@ -618,8 +618,8 @@
           </v-card-text>
         </v-card>
         <v-card v-else height="100vh">
-          <v-card-title>You have not add a task to a the job</v-card-title>
-          <v-card-title>Please add a task</v-card-title>
+          <v-card-title>No Tasks</v-card-title>
+          <v-card-subtitle>Please add a task</v-card-subtitle>
           <v-card-actions>
             <v-btn
                 color="primary"
