@@ -269,29 +269,61 @@ export default {
     },
     openModal(forBtn) {
       // update model header and body
-      switch (forBtn) {
-        case 'approveBid':
-          this.updateModal(
-              'Confirm Approval',
-              'The bid price includes an application fee of $2.50 for all credit card jobs.',
-              'approveBid',
-              'Approve Bid',
-              'Back'
-          )
-          this.modalCurrentlyOpenFor = 'approveBid'
-          break
-        case 'cancelBid':
-          this.updateModal(
-              'Confirm Cancellation',
-              'Are you sure you want to cancel this job? ' +
-              ' To confirm please select Delete Job.',
-              'cancelBid',
-              'Delete Job',
-              'Back'
-          )
-          this.modalCurrentlyOpenFor = 'cancelBid'
-          break
+
+      if (forBtn === 'approveBid' && this.creditCardJob()) {
+        this.updateModal(
+            'Confirm Approval',
+            'The bid price includes an application fee of $2.50 for all credit card jobs.',
+            'approveBid',
+            'Approve Bid',
+            'Back'
+        )
+        this.modalCurrentlyOpenFor = 'approveBid'
+      } else if (forBtn === 'approveBid' && !this.creditCardJob()) {
+        this.updateModal(
+            'Confirm Approval',
+            'Do you wish to approve the Bid?',
+            'approveBid',
+            'Approve Bid',
+            'Back'
+        )
+        this.modalCurrentlyOpenFor = 'approveBid'
+      } else if (forBtn === 'cancelBid') {
+        this.updateModal(
+            'Confirm Cancellation',
+            'Are you sure you want to cancel this job? ' +
+            ' To confirm please select Delete Job.',
+            'cancelBid',
+            'Delete Job',
+            'Back'
+        )
+        this.modalCurrentlyOpenFor = 'cancelBid'
       }
+
+
+      // switch (forBtn) {
+      //   case 'approveBid':
+      //     this.updateModal(
+      //         'Confirm Approval',
+      //         'The bid price includes an application fee of $2.50 for all credit card jobs.',
+      //         'approveBid',
+      //         'Approve Bid',
+      //         'Back'
+      //     )
+      //     this.modalCurrentlyOpenFor = 'approveBid'
+      //     break
+      //   case 'cancelBid':
+      //     this.updateModal(
+      //         'Confirm Cancellation',
+      //         'Are you sure you want to cancel this job? ' +
+      //         ' To confirm please select Delete Job.',
+      //         'cancelBid',
+      //         'Delete Job',
+      //         'Back'
+      //     )
+      //     this.modalCurrentlyOpenFor = 'cancelBid'
+      //     break
+      // }
 
       // open model after content has been updated
       $('#modal').modal()
