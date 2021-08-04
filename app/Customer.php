@@ -78,6 +78,7 @@ class Customer extends Model
 
     public function updateLocation($request)
     {
+        $this->timestamps = true;
         if ($this->location_id === null) {
             $location = new Location();
             $location->user_id = $this->user()->first()->id;
@@ -114,7 +115,10 @@ class Customer extends Model
 
         } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
+        } finally {
+            $this->timestamps = false;
         }
+
 
     }
 

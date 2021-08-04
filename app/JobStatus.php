@@ -25,7 +25,7 @@ class JobStatus extends Model
 
     public function setStatus($jobId, $status)
     {
-
+        $this->timestamps = true;
         $js = JobStatus::where('job_id', '=', $jobId)
             ->orderBy('created_at', 'desc')
             ->get()->first();
@@ -44,6 +44,7 @@ class JobStatus extends Model
             $js->sent_on = $date->format('yy-m-d h:m:s');
             $js->save();
         }
+        $this->timestamps = false;
     }
 
     private function checkStatus($job_id, $status)

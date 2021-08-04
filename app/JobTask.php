@@ -105,6 +105,7 @@ class JobTask extends Model
 
     public function updateTaskStartDate($date)
     {
+        $this->timestamps = true;
         $this->start_date = $date;
 
         try {
@@ -114,6 +115,8 @@ class JobTask extends Model
             return response()->json([
                 "message" => "couldn't update job task start date.",
                 "errors" => ["error" => [$e->getMessage()]]], 404);
+        } finally {
+            $this->timestamps = false;
         }
 
     }
@@ -176,6 +179,7 @@ class JobTask extends Model
         $useStripe
     )
     {
+        $this->timestamps = true;
         // standard task column = new column value
         $this->job_id = $jobId;
         $this->task_id = $taskId;
@@ -201,15 +205,19 @@ class JobTask extends Model
             return response()->json([
                 "message" => "Couldn't add Job Task.",
                 "errors" => ["error" => [$e->getMessage()]]], 404);
+        } finally {
+            $this->timestamps = false;
         }
     }
 
     public function setLocation(Job $job)
     {
+        $this->timestamps = true;
         if ($job->location_id != null) {
             $this->location_id = $job->location_id;
             $this->save();
         }
+        $this->timestamps = false;
     }
 
     /**
@@ -220,6 +228,7 @@ class JobTask extends Model
      */
     public function paid(String $id)
     {
+        $this->timestamps = true;
         if ($id === null || $id === '' || $id === ' ') {
             return;
         }
@@ -231,6 +240,8 @@ class JobTask extends Model
             $this->save();
         } catch (\Exception $e) {
             Log::error('Update JobTask: ' . $e->getMessage());
+        } finally {
+            $this->timestamps = false;
         }
     }
 
@@ -242,6 +253,7 @@ class JobTask extends Model
      */
     public function setStripeTransferId(String $id)
     {
+        $this->timestamps = true;
         if ($id === null || $id === '' || $id === ' ') {
             return;
         }
@@ -252,6 +264,8 @@ class JobTask extends Model
             $this->save();
         } catch (\Exception $e) {
             Log::error('Update JobTask: ' . $e->getMessage());
+        } finally {
+            $this->timestamps = false;
         }
     }
 
@@ -359,6 +373,7 @@ class JobTask extends Model
 
     public function updateLocation($request)
     {
+        $this->timestamps = true;
         if ($this->location_id === null) {
             $location = new Location();
             $location->address_line_1 = $request->address_line_1;
@@ -383,11 +398,14 @@ class JobTask extends Model
         } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
             return $e;
+        } finally {
+            $this->timestamps = false;
         }
     }
 
     public function toggleStripe()
     {
+        $this->timestamps = true;
         $this->stripe = !$this->stripe;
 
         try {
@@ -395,12 +413,15 @@ class JobTask extends Model
         } catch (\Exception $e) {
             Log::error('Toggle Stripe: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
         return true;
     }
 
     public function updateStatus($status)
     {
+        $this->timestamps = true;
         if (!$this->updatable($status)) {
             return false;
         }
@@ -412,6 +433,8 @@ class JobTask extends Model
         } catch (\Exception $e) {
             Log::error('Updating JobStatus Status: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
         return true;
     }
@@ -442,6 +465,7 @@ class JobTask extends Model
      */
     public function setDeclinedMessage(String $msg)
     {
+        $this->timestamps = true;
         $this->declined_message = $msg;
 
         try {
@@ -449,12 +473,15 @@ class JobTask extends Model
         } catch (\Exception $e) {
             Log::error('Set Declined Message: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
         return true;
     }
 
     public function add(Request $request)
     {
+        $this->timestamps = true;
         // standard task column = new column value
         $this->job_id = $request->jobId;
         $this->task_id = $request->taskId;
@@ -479,11 +506,14 @@ class JobTask extends Model
             return response()->json([
                 "message" => "Couldn't add task.",
                 "errors" => ["error" => [$e->getMessage()]]], 404);
+        } finally {
+            $this->timestamps = false;
         }
     }
 
     public function resetDeclinedMessage()
     {
+        $this->timestamps = true;
         $this->declined_message = null;
 
         try {
@@ -491,6 +521,8 @@ class JobTask extends Model
         } catch (\Exception $e) {
             Log::error('Reset Declined Message: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
         return true;
     }

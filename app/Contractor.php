@@ -83,8 +83,10 @@ class Contractor extends Model
 
     public function usesAccountingSoftware($softwareName)
     {
+        $this->timestamps = true;
         $this->accounting_software = $softwareName;
         $this->save();
+        $this->timestamps = false;
     }
 
     public function user()
@@ -197,7 +199,7 @@ class Contractor extends Model
 
     public function updateLocation($request)
     {
-
+        $this->timestamps = true;
         if ($this->location_id === null) {
             $location = new Location();
             $location->user_id = $this->user_id;
@@ -225,7 +227,7 @@ class Contractor extends Model
         } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
         }
-
+        $this->timestamps = false;
 
     }
 

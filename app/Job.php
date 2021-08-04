@@ -161,6 +161,8 @@ class Job extends Model
         $jobLocationSameAsHome
     )
     {
+
+        $this->timestamps = true;
         // TODO: what date needs to be updated here?
         $this->agreed_start_date = $agreedStartDate;
         $this->status = __('job.approved');
@@ -180,6 +182,8 @@ class Job extends Model
                 ->where('start_when_accepted', true)
                 ->update(['start_date' => Carbon::now()]);
         });
+
+        $this->timestamps = false;
     }
 
     public static function jobName($jobName = '')
@@ -198,6 +202,7 @@ class Job extends Model
 
     public function updateJobPrice()
     {
+        $this->timestamps = true;
         $jobTasks = $this->jobTasks()->get();
         $totalPrice = 0;
         foreach ($jobTasks as $jobTask) {
@@ -212,6 +217,8 @@ class Job extends Model
                 'message' => $e->getMessage(),
                 'code' => $e->getCode()
             ], 200);
+        } finally {
+            $this->timestamps = false;
         }
 
     }
@@ -305,6 +312,7 @@ class Job extends Model
                                    $paymentType)
     {
 
+        $this->timestamps = true;
         $jobId = $this->getJobId();
 
         if (empty(User::find($customer_id)->customer()->first()->location_id)) {
@@ -336,6 +344,8 @@ class Job extends Model
         } catch (\Exception $e) {
             Log::critical('Failed to create a bid: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
 
         return true;
@@ -393,6 +403,8 @@ class Job extends Model
 
     public function newLocation($address)
     {
+        $this->timestamps = true;
+
         $location = new Location();
         $location->address_line_1 = $address['addressLine1'];
         $location->address_line_2 = $address['addressLine2'];
@@ -406,6 +418,8 @@ class Job extends Model
             $this->save();
         } catch (\Exception $e) {
             Log::error('Saving Location: ' . $e->getMessage());
+        } finally {
+            $this->timestamps = false;
         }
     }
 
@@ -421,6 +435,7 @@ class Job extends Model
      */
     public function setJobAsCompleted()
     {
+        $this->timestamps = true;
         if ($this->getCountOfUnpaidTasks() >= 1) {
             return;
         }
@@ -431,17 +446,22 @@ class Job extends Model
             $this->save();
         } catch (\Exception $e) {
             Log::error('Update Job' . $e->getMessage());
+        } finally {
+            $this->timestamps = false;
         }
     }
 
     public function updateJobAgreedStartDate($date)
     {
+        $this->timestamps = true;
         $this->agreed_start_date = $date;
 
         try {
             $this->save();
         } catch (\Exception $e) {
             Log::error('Updating Job Start Date was unsuccessful: ' . $e->getMessage());
+        } finally {
+            $this->timestamps = false;
         }
     }
 
@@ -526,6 +546,7 @@ class Job extends Model
     public function changeJobStatus($job, $message)
     {
         $this->status = $message;
+        $this->timestamps = true;
 
         try {
             $this->save();
@@ -534,11 +555,15 @@ class Job extends Model
             return response()->json([
                 "message" => "Couldn't update job status message.",
                 "errors" => ["error" => [$e->getMessage()]]], 404);
+        } finally {
+            $this->timestamps = false;
         }
     }
 
     public function jobTotal()
     {
+
+        $this->timestamps = true;
         // for each task that is related to the job -> SUM(qty * cust_final_price)
         $jt = $this->jobTasks()->where("deleted_at", "=", NULL)->get();
 
@@ -555,6 +580,8 @@ class Job extends Model
         } catch (\Exception $e) {
             Log::error('Job total could not be updated: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
         return true;
 
@@ -592,6 +619,7 @@ class Job extends Model
      */
     public function updateStatus($status)
     {
+        $this->timestamps = true;
         if (!$this->updatable($status)) {
             return false;
         }
@@ -603,6 +631,8 @@ class Job extends Model
         } catch (\Exception $e) {
             Log::error('Updating Job Status: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
         return true;
     }
@@ -654,13 +684,15 @@ class Job extends Model
      */
     public function setJobDeclinedMessage(String $message)
     {
+        $this->timestamps = true;
         $this->declined_Message = $message;
-
         try {
             $this->save();
         } catch (\Exception $e) {
             Log::error('Set Declined Job Message: ' . $e->getMessage());
             return false;
+        } finally {
+            $this->timestamps = false;
         }
         return true;
     }

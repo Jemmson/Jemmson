@@ -41,6 +41,7 @@ class Location extends Model
 
     public function addNewLocation($address_line_1, $address_line_2, $city, $state, $zip, $userId)
     {
+        $this->timestamps = true;
         $this->user_id = $userId;
         $this->address_line_1 = $address_line_1;
         $this->address_line_2 = $address_line_2;
@@ -51,6 +52,8 @@ class Location extends Model
         $this->country = 'US';
 
         $this->save();
+
+        $this->timestamps = false;
 
         return $this;
     }
