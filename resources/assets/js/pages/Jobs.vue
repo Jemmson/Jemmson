@@ -80,7 +80,10 @@
           v-if="getJobStatus(bid) !== 'paid' && getJobStatus(bid) !== 'approved' && inProgress"
       >
         <div class="flex-col align-center">
-          <v-card-title style="font-size: 1rem">{{ jobName(bid.job_name) }}</v-card-title>
+          <div class="flex justify-between align-baseline">
+            <v-card-title style="font-size: 1rem">{{ jobName(bid.job_name) }}</v-card-title>
+            <v-card-subtitle class="uppercase">{{ getJobStatus(bid) }}</v-card-subtitle>
+          </div>
           <div class="flex justify-content-between align-start" style="padding-left: 16px; padding-right: 16px">
             <div class="flex align-start">
               <v-icon
@@ -109,33 +112,55 @@
           v-if="approved"
       >
         <template v-slot:default>
-          <thead>
-          <tr>
-            <th class="text-left">Job Name</th>
-            <th class="text-left">Date Approved</th>
-            <th class="text-left"></th>
-            <th class="text-left"></th>
-          </tr>
-          </thead>
+          <!--          <thead>-->
+          <!--          <tr>-->
+          <!--            <th class="text-left">Job Name</th>-->
+          <!--            <th class="text-left">Date Approved</th>-->
+          <!--            <th class="text-left"></th>-->
+          <!--            <th class="text-left"></th>-->
+          <!--          </tr>-->
+          <!--          </thead>-->
           <tbody>
           <tr
               v-if="getJobStatus(item) === 'approved'"
               v-for="item in sBids" :key="item.id">
-            <td>{{ jobName(item.job_name) }}</td>
-            <td>{{ dateOnlyHyphenDBTimestampFromLatestStatus(item.job_statuses) }}</td>
-            <td>
-              <v-btn
-                  @click="goToJob(item.id)"
-                  text
-                  color="primary"
-                  class="w-40"
-              >VIEW
-              </v-btn>
-            </td>
-            <td>
-              <v-icon color="red" @click="showDeleteJobModal(item)">mdi-delete</v-icon>
+            <td colspan="4">
+              <hr>
+              <div class="mt-4 flex justify-between align-baseline">
+                <div>{{ jobName(item.job_name) }}</div>
+                <div>{{ dateOnlyHyphenDBTimestampFromLatestStatus(item.job_statuses) }}</div>
+              </div>
+              <div class="flex justify-between align-baseline">
+                <v-card-subtitle style="padding: 0" class="uppercase">{{ getJobStatus(item) }}</v-card-subtitle>
+                <div>
+                  <v-icon color="blue" class="mr-16" @click="goToJob(item.id)">mdi-open-in-app</v-icon>
+                  <v-icon color="red" @click="showDeleteJobModal(item)">mdi-delete</v-icon>
+                </div>
+              </div>
             </td>
           </tr>
+
+          <!--          <tr-->
+          <!--              v-if="getJobStatus(item) === 'approved'"-->
+          <!--              v-for="item in sBids" :key="item.id">-->
+          <!--            <td>{{ jobName(item.job_name) }}</td>-->
+          <!--            <td>{{ dateOnlyHyphenDBTimestampFromLatestStatus(item.job_statuses) }}</td>-->
+          <!--            <td>-->
+          <!--              <v-card-subtitle style="padding: 0" class="uppercase">{{ getJobStatus(item) }}</v-card-subtitle>-->
+          <!--&lt;!&ndash;              <v-icon color="blue" @click="showDeleteJobModal(item)">mdi-open-in-app</v-icon>&ndash;&gt;-->
+          <!--&lt;!&ndash;              <v-btn&ndash;&gt;-->
+          <!--&lt;!&ndash;                  @click="goToJob(item.id)"&ndash;&gt;-->
+          <!--&lt;!&ndash;                  text&ndash;&gt;-->
+          <!--&lt;!&ndash;                  color="primary"&ndash;&gt;-->
+          <!--&lt;!&ndash;                  class="w-40"&ndash;&gt;-->
+          <!--&lt;!&ndash;              >VIEW&ndash;&gt;-->
+          <!--&lt;!&ndash;              </v-btn>&ndash;&gt;-->
+          <!--            </td>-->
+          <!--            <td class="flex">-->
+          <!--              <v-icon color="blue" @click="goToJob(item.id)">mdi-open-in-app</v-icon>-->
+          <!--              <v-icon color="red" @click="showDeleteJobModal(item)">mdi-delete</v-icon>-->
+          <!--            </td>-->
+          <!--          </tr>-->
           </tbody>
         </template>
       </v-simple-table>
