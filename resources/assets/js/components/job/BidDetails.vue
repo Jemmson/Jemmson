@@ -1128,7 +1128,7 @@ export default {
     bidHasNotBeenApproved() {
       const latestJobStatus = this.getJobStatus_latest(this.bid)
       return latestJobStatus === 'initiated'
-          || latestJobStatus === 'in_progress'
+          || latestJobStatus === 'in progress'
           || latestJobStatus === 'sent'
           || latestJobStatus === 'changed'
     },
