@@ -1227,7 +1227,7 @@ export default {
 
     jobHasNotBeenApproved() {
       const latestStatus = this.getJobStatus_latest(this.job)
-      return latestStatus === 'in_progress' || latestStatus === 'initiated'
+      return latestStatus === 'in_progress' || latestStatus === 'initiated' || latestStatus === 'in progress'
     },
     jobIsNotComplete() {
       const latestStatus = this.getTheLatestJobTaskStatus()
@@ -1677,12 +1677,21 @@ export default {
       //     this.jobStatus === 'bid.declined')
     },
     showTaskQuantityInput() {
+      if (this.jobHasSubStatuses) {
+
+      } else {
+        
+      }
       return this.isGeneral() && this.jobHasNotBeenApproved() && this.subHasNotBeenAccepted();
+    },
+
+    jobHasSubStatuses(){
+      return this.jobTask.sub_statuses.length > 0;
     },
 
     subHasNotBeenAccepted() {
 
-      if (this.jobTask.sub_statuses.length > 0) {
+      if (this.jobHasSubStatuses()) {
         let currentSubStatus = this.jobTask.sub_statuses[this.jobTask.sub_statuses.length - 1].status;
         return currentSubStatus === 'initiated'
             || currentSubStatus === 'sent_a_bid'

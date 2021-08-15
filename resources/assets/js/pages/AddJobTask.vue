@@ -51,7 +51,6 @@
                 <v-text-field
                         v-model="addNewTaskForm.qty"
                         label="Quantity"
-                        v-mask="'#########'"
                         id="qty"
                         name="qty"
                         :rules="[
