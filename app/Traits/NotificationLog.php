@@ -7,7 +7,7 @@ trait NotificationLog {
 
     public static function info($message) {
         if (env('APP_ENV') != 'production') {
-//            Log::info($message);
+            Log::info($message);
         }
     }
 

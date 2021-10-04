@@ -13,20 +13,39 @@
       This job does not have any tasks. Please add a task
     </div>
     <div class="flex flex-col">
-      <v-btn
-          v-if="jobHasNotBeenSubmittedOrAChangeIsRequested()"
-          ref="submitBid"
-          color="green"
-          text
-          class="btn btn-normal-green btn-lg w-full"
-          @click="submitBid()"
-          :disabled="subTaskWarning || disableButton"
-          :loading="disabled.submitBid"
-      >
+      <div v-if="jobHasNotBeenSubmittedOrAChangeIsRequested()">
+        <v-btn
+            ref="submitBid"
+            color="green"
+            text
+            class="btn btn-normal-green btn-lg w-full"
+            @click="submitBid()"
+            :disabled="subTaskWarning || disableButton"
+            :loading="disabled.submitBid"
+        >
 
-        <div v-if="bidHasBeenSentBefore()">Resubmit Bid</div>
-        <div v-else>Submit Bid</div>
-      </v-btn>
+          <div v-if="bidHasBeenSentBefore()">Resubmit Bid</div>
+          <div v-else>Submit Bid</div>
+        </v-btn>
+        <div class="flex justify-around align-baseline">
+          <h5>Does Job Have Customer Approval?</h5>
+          <v-checkbox
+              v-model="approved"
+              :value="true"
+              color="blue"
+          >
+          </v-checkbox>
+        </div>
+        <div class="flex justify-around align-baseline">
+          <h5>Has Job Been Finished?</h5>
+          <v-checkbox
+              v-model="finished"
+              :value="true"
+              color="blue"
+          >
+          </v-checkbox>
+        </div>
+      </div>
       <div v-else-if="jobIsApproved()">
                 <span class="capitalize w-break"
                 >Bid Has Been Approved By The Customer. Please refer to individual tasks for Task Completion.</span>
@@ -64,17 +83,17 @@
                   </v-btn>
                 </template>
                 <span>Profit Does Not Cover Estimated Credit Card Fee of {{ item.ccFee ? item.ccFee.toFixed(2) : '' }}.
-                  Minimum price should be at least {{ item.minimumPrice ?  item.minimumPrice.toFixed(2) : '' }}</span>
+                  Minimum price should be at least {{ item.minimumPrice ? item.minimumPrice.toFixed(2) : '' }}</span>
               </v-tooltip>
             </td>
-            <td>${{ item.sub ?  item.sub.toFixed(2) : '' }}</td>
-            <td>${{ item.profit ?  item.profit.toFixed(2) : '' }}</td>
+            <td>${{ item.sub ? item.sub.toFixed(2) : '' }}</td>
+            <td>${{ item.profit ? item.profit.toFixed(2) : '' }}</td>
           </tr>
           <tr>
             <td><strong>Totals:</strong></td>
-            <td><strong>${{ tasksTotal.general ?  tasksTotal.general.toFixed(2) : '' }}</strong></td>
-            <td><strong>${{ tasksTotal.sub ?  tasksTotal.sub.toFixed(2) : '' }}</strong></td>
-            <td><strong>${{ tasksTotal.profit ?  tasksTotal.profit.toFixed(2) : '' }}</strong></td>
+            <td><strong>${{ tasksTotal.general ? tasksTotal.general.toFixed(2) : '' }}</strong></td>
+            <td><strong>${{ tasksTotal.sub ? tasksTotal.sub.toFixed(2) : '' }}</strong></td>
+            <td><strong>${{ tasksTotal.profit ? tasksTotal.profit.toFixed(2) : '' }}</strong></td>
           </tr>
           <tr v-if="creditCardJob()">
             <td></td>
@@ -158,6 +177,8 @@ export default {
   data() {
     return {
       tasks: [],
+      approved: false,
+      finished: false,
       tasksTotal: {
         general: 0,
         sub: 0,
@@ -306,11 +327,13 @@ export default {
       console.log('notifyCustomerOfFinishedBid', bid)
       axios.post('/api/task/finishedBidNotification', {
         jobId: bid.id,
-        customerId: bid.customer_id
+        customerId: bid.customer_id,
+        approved: this.approved,
+        finished: this.finished,
       }).then((response) => {
         console.log(response)
         disabled.submitBid = false
-        User.emitChange('bidUpdated')
+        User.emitChange('bidUpdated');
         Vue.toasted.success('Bid has been submitted and notification sent!')
         this.$emit('bid-submitted');
       }).catch((error) => {

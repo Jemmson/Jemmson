@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\NotifyJobHasBeenApproved;
 use App\Notifications\JobBidDeclined;
 use App\Notifications\NotifyCustomerThatBidIsFinished;
+use App\Notifications\JobFinished;
 use App\Notifications\NotifyContractorOfDeclinedBid;
 use App\Notifications\JobCanceled;
 use App\Traits\ConvertPrices;
@@ -1554,22 +1555,84 @@ class JobController extends Controller
     public
     function finishedBidNotification(Request $request)
     {
-        $jobId = $request->jobId;
-        $customerId = $request->customerId;
+
+        $customer = User::find($request->customerId);
+        $job = Job::find($request->jobId);
+        self::updateSentStatuses($job);
+
+        if ($request->finished) {
+            self::updateApprovedStatuses($job);
+            self::chargeGeneralIfCashJob($job);
+            self::updateFinishedStatuses($job);
+            self::notifyCustomerFinishedJob($customer, $job);
+        } else if ($request->approved) {
+            self::updateApprovedStatuses($job);
+            self::chargeGeneralIfCashJob($job);
+            self::notifyCustomerSentBid($job, $customer);
+        } else {
+            self::notifyCustomerSentBid($job, $customer);
+        }
 
 
-        $user = User::find($customerId);
-        $job = Job::find($jobId);
+    }
 
+    private function updateFinishedStatuses($job)
+    {
+        JobTask::where('job_id', $job->id)
+            //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+            ->update(['status' => __('bid_task.finished_by_general'), 'declined_message' => null]);
+
+//        get all job task ids associated to a job
+        $jobTaskIds = JobTask::select('id')->where('job_id', $job->id)->get();
+
+        foreach ($jobTaskIds as $jobTaskId) {
+            $jts = new JobTaskStatus();
+            $jts->setStatus($jobTaskId->id, 'general_finished_work');
+        }
+
+    }
+    
+    private function updateApprovedStatuses($job)
+    {
+        $this->setJobTasksAndSubStatuses($job, 'approved_by_customer');
+        $this->setJobStatus($job->id, 'approved');
+        JobTask::where('job_id', $job->id)
+            //->where('bid_id', '!=', 'NULL') // update unless no bid connected to the job task
+            ->update(['status' => __('bid_task.approved_by_customer')]);
+        JobTask::where('job_id', $job->id)
+            ->where('start_when_accepted', true)
+            ->update(['start_date' => Carbon::now()]);
+    }
+
+    private function chargeGeneralIfCashJob($job)
+    {
+        $contractor = Contractor::find($job->contractor_id)->first();
+        $contractorUser = User::find($job->contractor_id)->first();
+
+        if ($contractor->free_jobs === 0 && !\is_null($contractorUser->stripe_id)) {
+            if ($job->payment_type == 'cash') {
+                $contractorUser->invoiceFor($job->job_name, 100);
+            }
+        }
+    }
+
+    private function updateSentStatuses($job)
+    {
         $this->switchJobStatusToInProgress($job, __('bid.sent'));
-        $companyName = $job->contractor()->get()->first()->contractor->company_name;
-
-        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user, $companyName));
-
         $this->setJobTasksAndSubStatuses($job, 'waiting_for_customer_approval');
-
         $this->setJobStatus($job->id, 'sent');
+    }
 
+    private function notifyCustomerSentBid($job, $user)
+    {
+        $companyName = $job->contractor()->get()->first()->contractor->company_name;
+        $user->notify(new NotifyCustomerThatBidIsFinished($job, $user, $companyName));
+    }
+
+    private function notifyCustomerFinishedJob($customer, $job)
+    {
+        $companyName = $job->contractor()->get()->first()->contractor->company_name;
+        $customer->notify(new JobFinished($job, $customer, $companyName));
     }
 
     public function updateArea(Request $request)

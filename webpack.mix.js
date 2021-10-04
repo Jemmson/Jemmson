@@ -67,7 +67,7 @@ mix.extend('vuetify', new class {
 mix.less('resources/assets/less/app.less', 'public/css')
     .js('resources/assets/js/app.js', 'public/js')
     .copy('node_modules/sweetalert2/dist/sweetalert2.min.js', 'public/js/sweetalert.min.js')
-    .browserSync()
+    .browserSync('localhost:9500')
     .tailwind()
     .webpackConfig({
         resolve: {

@@ -1,4 +1,4 @@
-    FROM php:7.3.5-apache-stretch
+FROM php:7.3.5-apache-stretch
 
 ENV PATH="./vendor/bin:$PATH"
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
@@ -11,16 +11,16 @@ COPY docker/config/php/conf.d/*.ini /usr/local/etc/php/conf.d/
 COPY docker/start.sh /usr/local/bin/start
 COPY docker/config/php/php.ini /usr/local/etc/php/php.ini
 
-RUN chown -R www-data:www-data /var/www/html \
-    && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install bcmath \
-    && apt update \
-    && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) mbstring exif gd \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug opcache \
-    && a2enmod rewrite negotiation \
-    && chmod +x /usr/local/bin/start
+RUN chown -R www-data:www-data /var/www/html
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install bcmath
+RUN apt-get update
+RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-install -j$(nproc) mbstring exif gd
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug opcache
+RUN a2enmod rewrite negotiation
+RUN chmod +x /usr/local/bin/start
 
 CMD ["/usr/local/bin/start"]
