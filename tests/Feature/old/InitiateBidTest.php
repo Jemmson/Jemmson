@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Notifications\AnonymousNotifiable;
 
 
-class InitiateBidTest extends TestCase
+class InitiateBidTest1 extends TestCase
 {
 
     use WithFaker;

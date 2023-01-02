@@ -21,7 +21,7 @@ return [
     'jobIsDeclined' => 'The Job Has Been Declined',
     'taskIsInitiated' => 'initiated',
     'taskIsAccepted' => 'accepted',
-    'quickBooks' => true,
+    'quickBooks' => false,
 
 
     /***************

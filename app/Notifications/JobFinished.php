@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Facades\Log;
+
 
 use App\User;
 use App\Job;
@@ -54,7 +56,6 @@ class JobFinished extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
         $url = url('/login/customer/' . $this->bid->id . '/' .
             $this->user->generateToken(
                 $this->user->id,
@@ -98,7 +99,6 @@ class JobFinished extends Notification implements ShouldQueue
      */
     public function toNexmo($notifiable)
     {
-
         $url = url('/login/customer/' . $this->bid->id . '/' .
             $this->user->generateToken(
                 $this->user->id,
@@ -109,7 +109,7 @@ class JobFinished extends Notification implements ShouldQueue
                 'not set',
                 'text')->token, [], true);
 
-        $text = $this->company_name . " has finished you job. Please pay for the job using the link below " . $url;
+        $text = $this->company_name . " has finished your job. Please pay for the job using the link below " . $url;
 
         NotificationLog::info('NotifyCustomerThatBidIsFinished Notification Message: ' . $text);
         NotificationLog::info('NotifyCustomerThatBidIsFinished Notification Link: ' . $url);

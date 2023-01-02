@@ -40,6 +40,34 @@ class Task extends Model
         'customer_instructions'
     ];
 
+    public function automationCreateTask(
+        $taskName,
+        $contractorId,
+        $taskPrice,
+        $subTaskPrice,
+        $qtyUnit,
+        $sub_message,
+        $customer_message
+    )
+    {
+        $this->name = strtolower($taskName);
+        $this->contractor_id = $contractorId;
+        $this->proposed_cust_price = $this->convertToCents($taskPrice);
+        $this->proposed_sub_price = $this->convertToCents($subTaskPrice);
+        $this->qtyUnit = $qtyUnit;
+        $this->sub_instructions = $sub_message;
+        $this->customer_instructions = $customer_message;
+
+        try {
+            $this->save();
+        } catch (\Exception $e) {
+            Log::error('Add Task: ' . $e->getMessage());
+            return response()->json([
+                "message" => "Couldn't add/update task.",
+                "errors" => ["error" => [$e->getMessage()]]], 404);
+        }
+    }
+
     public function createTask($request)
     {
         $this->name = strtolower($request->taskName);

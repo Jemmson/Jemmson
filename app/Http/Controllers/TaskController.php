@@ -618,7 +618,7 @@ class TaskController extends Controller
             $request->subId,
             $job,
             $request->start_date,
-            $request->unitPrice,
+            $request->unitPrice
         );
 
 //        $bidContractorJobTask = BidContractorJobTask::find($request->id);
@@ -1515,6 +1515,99 @@ class TaskController extends Controller
         return $tasks;
     }
 
+
+    public function automationAddTask(
+        $taskName,
+        $jobId,
+        $customerId,
+        $contractorId,
+        $quantity,
+        $taskPrice = 0,
+        $customerPrice = 0,
+        $subMessage = "",
+        $customerMessage = "",
+        $subTaskPrice = 0,
+        $usesStripe = true,
+        $subPrice = 0,
+        $qtyUnit = "",
+        $updateBasePrice = false,
+        $subInstructions = "",
+        $custInstruction = ""
+    )
+    {
+
+//        Get the task, job and customer
+        $task = Task::where('name', '=', $taskName)
+            ->where('contractor_id', '=', 1)
+            ->get()->first();
+        $job = Job::find($jobId);
+        $customer = User::find($customerId);
+
+        if ($task) {
+            $taskId = $task->id;
+        }
+
+        $jobTaskId = null;
+
+        if (!empty($task)) {
+            $jobTask = new JobTask();
+            $jobTaskId = $jobTask->automationAddJobTask(
+                $jobId,
+                $taskId,
+                $contractorId,
+                $quantity,
+                $taskPrice,
+                $subTaskPrice,
+                $customerMessage,
+                $subMessage,
+                $usesStripe
+            );
+
+            if ($updateBasePrice) {
+                $task->proposed_cust_price = $customerPrice * 100;
+                $task->save();
+            }
+        } else {
+            $task = new Task();
+            $task->automationCreateTask(
+                $taskName,
+                $contractorId,
+                $taskPrice,
+                $subTaskPrice,
+                $qtyUnit,
+                $subMessage,
+                $customerMessage
+            );
+            $jobTask = new JobTask();
+            $jobTaskId = $jobTask->automationAddJobTaskFromNewJob(
+                $jobId,
+                $task->id,
+                $contractorId,
+                $quantity,
+                $taskPrice,
+                $subTaskPrice,
+                $customerMessage,
+                $subMessage,
+                $usesStripe
+            );
+        }
+
+        $jobTask->setLocation($job);
+        $job->changeJobStatus($job, __('bid.in_progress'));
+        $job->jobTotal();
+        $job->setEarliestStartDateToTask($jobTask);
+
+        $jobStatus = DB::select("select status from job_status where job_id 
+                                        = " . $job->id . " and status = 'in_progress'");
+
+        if (empty($jobStatus)) {
+            $this->setJobStatus($job->id, 'in_progress');
+        }
+
+        $this->setJobTaskStatus($jobTask->id, 'initiated');
+
+        return response()->json($job->tasks()->get(), 200);
+    }
 
     public function addTask(Request $request)
     {

@@ -1,0 +1,10 @@
+ContractorId,CustomerID,Automate,Customer First Name,Customer Last Name,Phone,address_line_1,Job Name,Payment Type,Chems Included,Chlorine Tabs,Liquid Chlorine,Acid,Service Price,Quantity of Service,Repair Name,Repair Amount,Repair Quantity,Repair Name,Repair Amount,Repair Quantity,Repair Name,Repair Amount,Repair Quantity
+1,2,Y,Kristen,Battafarano,6023508801,2248 S Catarina Cir,Battafarano_2248 S Catarina Cir_November_22_796,creditCard,1,12,0,0,100,4,Monthly Service December,150,1,,,,,,
+1,4,Y,Shawn,Pike,4807034902,14026 S 8TH ST,PIKE_14026 S 8TH ST_November_22_797,creditCard,0,11,0,0,100,4,Monthly Service December,50,1,,,,,,
+1,98,Y,Jim,Rast,6023326876,3519 E Keresen Dr,Rast_3519 E Keresen Dr_November_22_839,creditCard,0,25,0,1,150,5,Monthly Service December,150,1,trichlor,13.56,1,,,
+1,115,Y,Oscar,SADEGI,8584051282,4424 E Mountain Sage Dr,SADEGI_4424 E Mountain Sage Dr_November_22_840,creditCard,1,1,0,0.5,100,4,Monthly Service December,50,1,,,,,,
+1,101,Y,Dennis,Schwesinger,4802418361,1945 E VAUGHN ST,MIRON_1945 E VAUGHN ST_November_22_822,cash,1,12,0,1,110,4,Monthly Service December,110,1,,,,,,
+1,101,Y,Dennis,Schwesinger,4802418361,2012 E Duke Dr,MIRON_2012 E Duke Dr_November_22_823,cash,1,18,0,0,115,4,Monthly Service December,115,1,,,,,,
+1,94,Y,Jennifer,Shelley,4803903454,2458 E Page,Shelley_2458 E Page_November_22_841,creditCard,1,8,0,0,100,4,Monthly Service December,100,1,Plumbing Repair,225,1,pro grid manual air relief assy,167.54,1,application fee refund,-2.50,1
+1,67,N,Kenneth,Drake,6023708144,14237 S CANYON DR,Drake_14237 S CANYON DR_November_22_806,creditCard,1,28,0,0,130,4,Monthly Service December,130,1,,,,,,
+1,67,N,Kenneth,Drake,6023708144,14243 S CANYON DR,Drake_14243 S CANYON DR_November_22_807,creditCard,1,10,0,0,110,4,Monthly Service December,110,1,,,,,,

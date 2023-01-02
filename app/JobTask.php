@@ -137,6 +137,31 @@ class JobTask extends Model
 
     }
 
+    public function automationAddJobTask(
+        $jobId,
+        $taskId,
+        $contractorId,
+        $qty,
+        $taskPrice,
+        $subTaskPrice,
+        $customer_message,
+        $sub_message,
+        $useStripe
+    )
+    {
+        return self::createJobTask(
+            $jobId,
+            $taskId,
+            $contractorId,
+            $qty,
+            $taskPrice,
+            $subTaskPrice,
+            $customer_message,
+            $sub_message,
+            $useStripe
+        );
+    }
+
     public function addJobTask($request, $taskId)
     {
         return self::createJobTask(
@@ -164,6 +189,31 @@ class JobTask extends Model
             $request->customer_message,
             $request->sub_message,
             $request->useStripe
+        );
+    }
+
+    public function automationAddJobTaskFromNewJob(
+        $jobId,
+        $taskId,
+        $contractorId,
+        $qty,
+        $taskPrice,
+        $subTaskPrice,
+        $customer_message,
+        $sub_message,
+        $useStripe
+    )
+    {
+       return self::createJobTask(
+            $jobId,
+            $taskId,
+            $contractorId,
+            $qty,
+            $taskPrice,
+            $subTaskPrice,
+            $customer_message,
+            $sub_message,
+            $useStripe
         );
     }
 
@@ -208,6 +258,8 @@ class JobTask extends Model
         } finally {
             $this->timestamps = false;
         }
+
+        return $this->id;
     }
 
     public function setLocation(Job $job)

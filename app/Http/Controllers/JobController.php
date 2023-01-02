@@ -1364,6 +1364,7 @@ class JobController extends Controller
                     'id'
                 ])->get();
 
+
             foreach ($jobs as $j) {
                 $j['job_statuses'] = $j->jobStatuses()->get();
                 $j['job_tasks'] = $j->jobTasks()->select(['id'])->get();
@@ -1576,6 +1577,42 @@ class JobController extends Controller
 
     }
 
+    /**
+     * Notify customer that a contractor has finished
+     * his bid for the specific job
+     *
+     * @param Request $request
+     * @return void
+     */
+    public
+    function automationFinishedBidNotification(
+        $customerId,
+        $jobId,
+        $finished,
+        $approved
+    )
+    {
+
+        $customer = User::find($customerId);
+        $job = Job::find($jobId);
+        self::updateSentStatuses($job);
+
+        if ($finished) {
+            self::updateApprovedStatuses($job);
+            self::chargeGeneralIfCashJob($job);
+            self::updateFinishedStatuses($job);
+            self::automationNotifyCustomerFinishedJob($customer, $job);
+        } else if ($approved) {
+            self::updateApprovedStatuses($job);
+            self::chargeGeneralIfCashJob($job);
+            self::automationNotifyCustomerFinishedJob($job, $customer);
+        } else {
+            self::automationNotifyCustomerFinishedJob($job, $customer);
+        }
+
+
+    }
+
     private function updateFinishedStatuses($job)
     {
         JobTask::where('job_id', $job->id)
@@ -1634,6 +1671,23 @@ class JobController extends Controller
         $companyName = $job->contractor()->get()->first()->contractor->company_name;
         $customer->notify(new JobFinished($job, $customer, $companyName));
     }
+
+    private function automationNotifyCustomerFinishedJob($customer, $job)
+    {
+        $companyName = $job->contractor()->get()->first()->contractor->company_name;
+        $customer->notify(new JobFinished($job, $customer, $companyName));
+        $url = url('/login/customer/' . $job->id . '/' .
+            $customer->generateToken(
+                $customer->id,
+                true,
+                $job->id,
+                'sent',
+                'finished',
+                'not set',
+                'text')->token, [], true);
+        Log::debug($customer->first_name . " " . $customer->last_name . ": " .$url);
+    }
+
 
     public function updateArea(Request $request)
     {

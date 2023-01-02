@@ -13,9 +13,11 @@ use App\Job;
 use App\Customer;
 use App\Notifications\BidInitiated;
 use App\Services\SanatizeService;
+use Illuminate\Support\Facades\DB;
 
 class InitiateBidController extends Controller
 {
+
     /**
      * Returning the initial page to initiate the view
      *
@@ -25,6 +27,107 @@ class InitiateBidController extends Controller
     {
         return view('initiate-bid');
     }
+
+    public function automationSend(
+        $customerId,
+        $phone,
+        $contractorId,
+        $jobName,
+        $paymentType
+    )
+    {
+
+
+        $customerId = intval($customerId);
+
+//                dd($customerId);
+
+        $customer = User::find($customerId);
+
+//        $customer = DB::select('select * from users where id = ' . $customerId)->get;
+
+
+        $contractor = User::find($contractorId);
+
+//        dd($contractor);
+
+        // create a new customer if the customer is not in the database
+        $customerName = $customer->first_name . " " . $customer->last_name;
+
+        $phone = SanatizeService::phone($phone);
+        $customer = User::checkIfUserExistsByPhoneNumber($phone);
+
+//        dd($customerName . "\n ". $phone . "\n ". $customer);
+
+        if (empty($customer)) {
+            dd($customer->first_name . "\n" . $customer->last_name . "\n" . $customerName);
+        }
+
+        if (empty($customer)) {
+            // quickbooks feature must be turned on
+            // contractor must have a quickbooks account
+            if (config('app.quickBooks')) {
+                $accountingSoftware = $contractor->checkAccountingSoftware();
+                if ($accountingSoftware != null) {
+                    // customer exists in QB but not in Jemmson
+                    if (!empty($request->quickbooks_id)) {
+                        $customer = $contractor->firstOrCreateAccountingSoftwareCustomer(
+                            $accountingSoftware,
+                            Auth::user()->getAuthIdentifier(),
+                            $customerName, $phone, $request->quickbooks_id
+                        );
+                    } else {
+                        // customer is new but is added in Jemmson and not from Quickbooks
+                        $customer = Customer::createNewCustomer(
+                            $phone, $customerName, Auth::user()->getAuthIdentifier(), $customer->first_name, $customer->last_name);
+                        $quickbookId = Quickbook::addNewCustomerToQuickBooks($customer);
+                        ContractorCustomer::addQuickBookIdToAssociation(Auth::user()->getAuthIdentifier(), $customer->id, $quickbookId);
+                        CustomerNeedsUpdating::addEntryToCustomerNeedsUpdatingIfNeeded(
+                            Auth::user()->getAuthIdentifier(),
+                            $customer->id,
+                            $quickbookId
+                        );
+                    }
+                } else {
+                    $customer = Customer::createNewCustomer(
+                        $phone, $customerName, Auth::user()->getAuthIdentifier(), $customer->first_name, $customer->last_name);
+                }
+            } else {
+                $customer = Customer::createNewCustomer(
+                    $phone, $customerName, 1, $customer->first_name, $customer->last_name);
+            }
+
+        }
+
+//        associating the new customer to the contractor
+        $cc = new ContractorCustomer();
+        $cc->associateCustomer(1, $customer->id);
+
+        // create the job
+        $job = new Job();
+        $jobName = $job->jobName($jobName);
+
+//        $job = $job->createBid($customer->id, $jobName, Auth::user()->id);
+        if (
+            !$job->createEstimate(
+                $customer->id, $jobName, 1,
+                $paymentType
+            )) {
+            return response()->json(
+                [
+                    'message' => 'Unable to create new job.',
+                    'errors' => ['job_creation_failed' => 'Estimate could not be created. Please try initiating the bid again']
+                ], 422);
+        }
+
+        $this->updatePaymentType($contractor, $paymentType);
+
+        $js = new JobStatus();
+        $js->setStatus($job->id, config("app.initiated"));
+
+        return $job->id;
+    }
+
 
     /**
      * Initiate a bid
@@ -151,6 +254,7 @@ class InitiateBidController extends Controller
 
     private function updatePaymentType($contractor, $requestPaymentType)
     {
+
         $contractor->payment_type = $requestPaymentType;
         try {
             $contractor->save();
