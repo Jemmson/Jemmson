@@ -31,8 +31,9 @@ class PasswordlessToken extends Model
      */
     public function isExpired()
     {
-        return $this->created_at
-            ->diffInMinutes(Carbon::now()) > (int)config("passwordless.expire_in");
+        return false;
+//        return $this->created_at
+//            ->diffInMinutes(Carbon::now()) > (int)config("passwordless.expire_in");
     }
     /**
      * Ignore the updated_at column.
