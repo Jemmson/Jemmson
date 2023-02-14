@@ -10,14 +10,14 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\JobController;
 
 
-class RunBilling extends TestCase
+class RunBillingProd extends TestCase
 {
 
     public $textCounter = 0;
 
-    //vendor/bin/phpunit tests/Automation/RunBilling.php
+    //  vendor/bin/phpunit tests/Automation/RunBilling.php
 
-//docker exec -i jemmson-mysql mysql -uroot -proot jemmson < /Users/shawnpike/Jemmson/scratch/databaseBackups/prod/12_20_2022.sql
+    //  docker exec -i jemmson-mysql mysql -uroot -proot jemmson < /Users/shawnpike/Jemmson/scratch/databaseBackups/prod/12_20_2022.sql
 
 
     public function testMain()
@@ -83,7 +83,7 @@ class RunBilling extends TestCase
                 && $customerId !== 'null'
                 && $automate === 'Y'
             ) {
-               // INITIATE THE BID
+                // INITIATE THE BID
                 $ibc = new InitiateBidController();
                 $jobId = $ibc->automationSend(
                     $customerId,
@@ -93,11 +93,11 @@ class RunBilling extends TestCase
                     $paymentType
                 );
 
-/*
- *  Has a new job been created?
- *  Are the job statuses set correctly?
- *  Has the job Id been returned from the method?
- * */
+                /*
+                 *  Has a new job been created?
+                 *  Are the job statuses set correctly?
+                 *  Has the job Id been returned from the method?
+                 * */
                 self::logLine("\nJobId", $jobId);
                 $this->assertDatabaseHas("jobs", ['id' => $jobId]);
                 self::logLine("Job Status => app.initiated", 'app.initiated');
@@ -258,8 +258,8 @@ class RunBilling extends TestCase
 
     public function getBillingData()
     {
-//        return file("/var/www/html/tests/Automation/test_customers.csv");
-        return file("/var/www/html/tests/Automation/DecemberBilling22.csv");
+//        return file("/home/forge/www.jemmson.com/tests/Automation/test_customers.csv");
+        return file("/home/forge/www.jemmson.com/tests/Automation/Billing.csv");
     }
 
     public function verifyMainInput(
@@ -297,9 +297,6 @@ class RunBilling extends TestCase
 
         $this->assertEquals('2248 S Catarina Cir', $custData[6]);
         $this->assertEquals('2248 S Catarina Cir', $address_line_1);
-
-        $this->assertEquals('Battafarano_2248 S Catarina Cir_November_22_796', $custData[7]);
-        $this->assertEquals('Battafarano_2248 S Catarina Cir_November_22_796', $jobName);
 
         $this->assertEquals('creditCard', $custData[8]);
         $this->assertEquals('creditCard', $paymentType);

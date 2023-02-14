@@ -12,7 +12,7 @@ class AssessorController extends Controller
 {
     //
 
-    protected $baseUrl = 'https://preview.mcassessor.maricopa.gov/';
+    protected $baseUrl = 'https://api.mcassessor.maricopa.gov/';
 
     public function getLocation($location)
     {
@@ -31,6 +31,8 @@ class AssessorController extends Controller
         $location = '/search/' . str_replace('+', ' ', $address);
 
         $response = $this->getAssessorData($location);
+
+        dd($response);
 
         $result = json_decode($response);
 

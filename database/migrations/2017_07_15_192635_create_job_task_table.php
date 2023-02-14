@@ -23,7 +23,7 @@ class CreateJobTaskTable extends Migration
             $table->integer('contractor_id')->nullable();
             $table->string('payment_intent_id')->nullable();
             $table->bigInteger('transfer_group_id')->nullable();
-            $table->bigInteger('cust_final_price')->unsigned()->nullable();
+            $table->bigInteger('cust_final_price')->nullable();
             $table->text('customer_message')->nullable();
             $table->text('declined_message')->nullable();
             $table->text('details')->nullable();
@@ -36,11 +36,11 @@ class CreateJobTaskTable extends Migration
             $table->string('status')->nullable();
             $table->boolean('stripe')->default(false);
             $table->string('stripe_transfer_id')->nullable();
-            $table->bigInteger('sub_final_price')->unsigned()->nullable();
+            $table->bigInteger('sub_final_price')->nullable();
             $table->text('sub_message')->nullable();
             $table->boolean('sub_sets_own_price_for_job')->default(1);
             $table->integer('task_id')->unsigned();
-            $table->bigInteger('unit_price')->unsigned()->default(0);
+            $table->bigInteger('unit_price')->default(0);
             $table->foreign('job_id')->references('id')->on('jobs');
             $table->foreign('task_id')->references('id')->on('tasks');
             $table->softDeletes();
