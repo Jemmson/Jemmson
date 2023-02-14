@@ -244,19 +244,39 @@
 
         <hr style="margin-top: 3rem">
 
-        <v-switch
-            v-model="form.terms"
-            :class="{'has-error': form.errors.has('terms')}"
-            label="I Accept The Terms Of Service *"
-        ></v-switch>
-        <v-btn
-            id="terms"
-            ref="terms"
-            label="Terms"
-            @click="goToTerms()"
-            color="blue"
-            text="">Terms
-        </v-btn>
+
+        <v-checkbox
+            class="mt-4"
+            v-model="form.sms_text"
+        ></v-checkbox>
+
+        <p style="color: black;
+                  margin-top: -4rem;
+                  margin-left: 1rem;
+                  font-size: medium;">
+          By selecting this checkbox, you agree to receive mobile messages. Message frequency varies. Message and data rates apply. View our
+          <a href="/privacy_policy">Privacy Policy</a> and <a href="/terms_of_service">Terms Of Service</a>.
+        </p>
+
+
+
+        <div v-if="user.contractor">
+          <v-switch
+              v-model="form.terms"
+              :class="{'has-error': form.errors.has('terms')}"
+              label="I Accept The Terms Of Service *"
+          ></v-switch>
+          <v-btn
+              id="terms"
+              ref="terms"
+              label="Terms"
+              @click="goToTerms()"
+              color="blue"
+              text="">Terms
+          </v-btn>
+        </div>
+
+
         <span class="help-block" v-show="form.errors.has('terms')">{{ form.errors.get('terms') }}</span>
 
         <v-card-actions>
@@ -269,6 +289,7 @@
               @click.prevent="submitFurtherInfo()"
               :disabled="checkValidData()"
               :loading="overlay"
+              style="border: black solid thin; padding: .5rem;"
           >
             Register
           </v-btn>
@@ -513,6 +534,9 @@ export default {
       }
       this.form.email = this.form.email.trim()
       this.form.zip = this.formatZip()
+      if (this.user.customer) {
+        this.form.terms = true
+      }
       this.getFurtherInfo()
     },
 
