@@ -215,12 +215,6 @@ function handleSuccessfulAuth(to, from, next) {
         if (store.state.user.user.password_updated === 0) {
             if (to.fullPath === '/furtherInfo') {
                 next()
-            } else if (to.fullPath === '/termsAuth') {
-                next()
-            } else if (to.fullPath === '/termsOfUse') {
-                next()
-            } else if (to.fullPath === '/privacyPolicy') {
-                next()
             } else {
                 next('/furtherInfo')
             }
@@ -323,6 +317,15 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
     if (window.location.pathname === '/' && Object.keys(User).length > 0) {
         window.location = '/home'
+    }
+    if (window.location.pathname === '/termsAuth' && Object.keys(User).length > 0) {
+        window.location = '/termsAuth'
+    }
+    if (window.location.pathname === '/termsOfUse' && Object.keys(User).length > 0) {
+        window.location = '/termsOfUse'
+    }
+    if (window.location.pathname === '/privacyPolicy' && Object.keys(User).length > 0) {
+        window.location = '/privacyPolicy'
     }
 })
 
