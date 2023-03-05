@@ -31,6 +31,8 @@ Route::get('/', 'WebController@index');
 Route::get('/home', 'WebController@index');
 Route::post('/loadFeatures', 'LoadController@load');
 Route::post('/hooks', 'StripeHooksController@hooks');
+Route::post('/inbound', 'VonageMessageController@inbound');
+Route::post('/status', 'VonageMessageController@status');
 
 Route::get('/loggedIn', 'UserController@loggedIn');
 

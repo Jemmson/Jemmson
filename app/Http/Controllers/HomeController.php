@@ -189,6 +189,7 @@ class HomeController extends Controller
         $user->billing_zip = trim($request->zip);
         $user->billing_country = 'US';
         $user->terms = true;
+        $user->sms = $request->sms_text;
 
         try {
             $user->save();

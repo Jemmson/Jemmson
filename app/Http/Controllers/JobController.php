@@ -1668,14 +1668,19 @@ class JobController extends Controller
 
     private function notifyCustomerFinishedJob($customer, $job)
     {
-        $companyName = $job->contractor()->get()->first()->contractor->company_name;
-        $customer->notify(new JobFinished($job, $customer, $companyName));
+        if ($customer->sms) {
+            $companyName = $job->contractor()->get()->first()->contractor->company_name;
+            $customer->notify(new JobFinished($job, $customer, $companyName));
+        }
     }
 
     private function automationNotifyCustomerFinishedJob($customer, $job)
     {
-        $companyName = $job->contractor()->get()->first()->contractor->company_name;
-        $customer->notify(new JobFinished($job, $customer, $companyName));
+        if ($customer->sms) {
+            $companyName = $job->contractor()->get()->first()->contractor->company_name;
+            $customer->notify(new JobFinished($job, $customer, $companyName));
+        }
+
         $url = url('/login/customer/' . $job->id . '/' .
             $customer->generateToken(
                 $customer->id,

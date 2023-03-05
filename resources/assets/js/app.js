@@ -217,6 +217,10 @@ function handleSuccessfulAuth(to, from, next) {
                 next()
             } else if (to.fullPath === '/termsAuth') {
                 next()
+            } else if (to.fullPath === '/termsOfUse') {
+                next()
+            } else if (to.fullPath === '/privacyPolicy') {
+                next()
             } else {
                 next('/furtherInfo')
             }

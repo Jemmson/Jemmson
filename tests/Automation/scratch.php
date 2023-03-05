@@ -10,7 +10,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\JobController;
 
 
-class RunBillingProd extends TestCase
+class RunBilling extends TestCase
 {
 
     public $textCounter = 0;

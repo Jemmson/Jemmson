@@ -254,10 +254,11 @@
                   margin-top: -4rem;
                   margin-left: 1rem;
                   font-size: medium;">
-          By selecting this checkbox, you agree to receive mobile messages. Message frequency varies. Message and data rates apply. View our
-          <a href="/privacy_policy">Privacy Policy</a> and <a href="/terms_of_service">Terms Of Service</a>.
-        </p>
+          By selecting this checkbox, you agree to receive mobile messages. Message frequency varies. Message and data
+          rates apply. View our <router-link to="/privacyPolicy">Privacy Policy</router-link> and <router-link to="/termsOfUse">Terms Of Use</router-link>
+          <br>
 
+        </p>
 
 
         <div v-if="user.contractor">
@@ -271,13 +272,12 @@
               ref="terms"
               label="Terms"
               @click="goToTerms()"
-              color="blue"
-              text="">Terms
+              color="blue">
+            Terms
           </v-btn>
+          <span class="help-block" v-show="form.errors.has('terms')">{{ form.errors.get('terms') }}</span>
         </div>
 
-
-        <span class="help-block" v-show="form.errors.has('terms')">{{ form.errors.get('terms') }}</span>
 
         <v-card-actions>
           <v-btn
@@ -474,6 +474,13 @@ export default {
       this.$router.push('/termsAuth')
     },
 
+    goToPrivacyPolicy() {
+      this.$router.push('/privacyPolicy')
+    },
+    goToTermsOfUse() {
+      this.$router.push('/termsOfUse')
+    },
+
     goHome() {
       this.$router.push('/home')
     },
@@ -588,7 +595,7 @@ export default {
     update(e) {
       e.preventDefault()
 
-      var self = this
+      let self = this
 
       this.form.startProcessing()
 

@@ -109,7 +109,7 @@ class JobFinished extends Notification implements ShouldQueue
                 'not set',
                 'text')->token, [], true);
 
-        $text = $this->company_name . " has finished your job. Please pay for the job using the link below " . $url;
+        $text = "Jemmson: " . $this->company_name . " has finished your job. Please pay for the job using the link below " . $url;
 
         NotificationLog::info('NotifyCustomerThatBidIsFinished Notification Message: ' . $text);
         NotificationLog::info('NotifyCustomerThatBidIsFinished Notification Link: ' . $url);
