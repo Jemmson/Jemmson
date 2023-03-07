@@ -60,6 +60,9 @@
             style="font-size: 15px;"><span data-custom-class="body_text"><strong><em>&nbsp;to go directly to our table of contents.</em></strong></span></span>
         </div>
         <div style="line-height: 1.5;"><br></div>
+        <div style="line-height: 1.5;"><span style="font-size: 15px;"><span data-custom-class="body_text">
+          <strong>No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</strong>
+        <div style="line-height: 1.5;"><br></div> <div style="line-height: 1.5;"><br></div>
         <div style="line-height: 1.5;"><span style="font-size: 15px;"><span data-custom-class="body_text"><strong>What personal information do we process?</strong> When you visit, use, or navigate our Services, we may process personal information depending on how you interact with <span
           class="block-component"></span><span class="question">Jemmson Inc</span><span
           class="statement-end-if-in-editor"></span> and the Services, the choices you make, and the products and features you use. Click&nbsp;</span></span><a
