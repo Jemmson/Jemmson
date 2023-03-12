@@ -5,8 +5,8 @@
 /storage/app/public/profiles
 /storage/app/public/tasks
 /storage/framework/cache/data
-/storage/framework/sessions
-/storage/framework/views
+#/storage/framework/sessions
+#/storage/framework/views
 /storage/logs
 /vendor
 /.idea
