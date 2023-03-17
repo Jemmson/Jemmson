@@ -18,7 +18,7 @@ use App\Job;
 class CustomerPaidForTask extends Notification implements ShouldQueue
 {
     use Queueable;
-    protected $task, $user, $job;
+    protected $task, $user, $job, $customer;
 
     /**
      * Create a new notification instance.
@@ -26,12 +26,14 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
      * @param Task $task
      * @param User $user
      * @param Job $job
+     * @param User $customer
      */
-    public function __construct(Task $task, User $user, Job $job)
+    public function __construct(Task $task, User $user, Job $job, User $customer)
     {
         $this->task = $task;
         $this->user = $user;
         $this->job = $job;
+        $this->customer = $customer;
     }
 
     /**
@@ -57,7 +59,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
 
         if ($isGeneral) {
             return (new MailMessage)
-                    ->line('Customer has sent you a payment for : '. $this->task->name . '.')
+                    ->line($this->customer->first_name . ' ' . $this->customer->last_name . ' has sent you a payment for : '. $this->task->name . '.')
                     ->action('View Job Receipt ',
                         url('/login/general/receipt/' . $this->job->id . '/'
                             .  $this->user->generateToken(
@@ -72,7 +74,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                     ->line('Thank you for using our application!');
         } else {
             return (new MailMessage)
-                    ->line('Customer has sent you a payment for : ' .$this->task->name . '.')
+                    ->line($this->customer->first_name . ' ' . $this->customer->last_name . ' has sent you a payment for : ' .$this->task->name . '.')
                     ->action('View Task ',
                         url('/login/sub/receipt/' . $this->job->id . '/'
                             .  $this->user->generateToken(
@@ -114,7 +116,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                 )->token, [], true);
 
 
-            $text = 'Customer has sent you a payment for : '. $this->task->name . '. '
+            $text = $this->customer->first_name . ' ' . $this->customer->last_name . ' has sent you a payment for : '. $this->task->name . '. '
                 . $url
             . ' Thank you for using our application!';
         } else {
@@ -130,7 +132,7 @@ class CustomerPaidForTask extends Notification implements ShouldQueue
                     'email'
                 )->token, [], true);
 
-            $text = 'Customer has sent you a payment for : '. $this->task->name . '. '
+            $text = $this->customer->first_name . ' ' . $this->customer->last_name . ' has sent you a payment for : '. $this->task->name . '. '
                 . $url
             . ' Thank you for using our application!';
         }

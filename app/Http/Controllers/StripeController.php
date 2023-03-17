@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contractor;
+use App\Customer;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Stripe\Account;
@@ -417,7 +418,8 @@ class StripeController extends Controller
 
     public function notifyGeneral($general_contractor, $task, $job)
     {
-        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor, $job));
+        $customer = User::find($job->customer_id);
+        $general_contractor->notify(new CustomerPaidForTask($task, $general_contractor, $job, $customer));
     }
 
     public function isSub($sub_contractor_id, $general_contractor_id)
