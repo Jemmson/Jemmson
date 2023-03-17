@@ -71,14 +71,18 @@ class StripeExpress extends Model
     public function notifyGeneralAndSubs($jobTasks, $generalId)
     {
         $general = User::find($generalId);
+
+
+
         foreach ($jobTasks as $jobTask) {
             $task = $jobTask->task()->get()->first();
             $job = Job::find($jobTask->job_id);
+            $customer = User::find($job->customer_id);
             if ($this->isASub($general->id, $jobTask->contractor_id)) {
                 $sub_contractor = User::find($jobTask->contractor_id);
-                $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job));
+                $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job, $customer));
             }
-            $general->notify(new CustomerPaidForTask($task, $general, $job));
+            $general->notify(new CustomerPaidForTask($task, $general, $job, $customer));
         }
     }
 

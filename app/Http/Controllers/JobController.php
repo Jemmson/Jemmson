@@ -1329,10 +1329,13 @@ class JobController extends Controller
     {
         // load jobs and all their tasks along with those tasks relationships
 
+        $c = Carbon::now();
+        $monthAgo = $c->subWeek(8);
+
         if ($this->isCustomer()) {
             // only load tasks on jobs that are approved or need approval
 
-            $jobs = Job::where('customer_id', '=', Auth::user()->getAuthIdentifier())->get();
+            $jobs = Job::where('customer_id', '=', Auth::user()->getAuthIdentifier())->where('created_at', '>', $monthAgo->toDateTimeString())->get();
 
             foreach ($jobs as $j) {
                 if (
@@ -1362,8 +1365,7 @@ class JobController extends Controller
                     'job_name',
                     'payment_type',
                     'id'
-                ])->get();
-
+                ])->where('created_at', '>', $monthAgo->toDateTimeString())->get();
 
             foreach ($jobs as $j) {
                 $j['job_statuses'] = $j->jobStatuses()->get();
