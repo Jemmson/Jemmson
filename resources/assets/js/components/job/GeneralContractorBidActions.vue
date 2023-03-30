@@ -379,7 +379,11 @@ export default {
       return false
     },
     acceptedSubPriceTooHigh(task) {
-      return this.subPrice(task) > (this.generalPrice(task) - this.stripeFee(this.generalPrice(task)) - .01);
+      if (this.bid.payment_type === 'cash') {
+        return this.subPrice(task) > this.generalPrice(task);
+      } else {
+        return this.subPrice(task) > (this.generalPrice(task) - this.stripeFee(this.generalPrice(task)) - .01);
+      }
     },
     stripeFee(price) {
       return price * .029 + .30;

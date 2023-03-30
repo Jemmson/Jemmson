@@ -439,7 +439,8 @@ class StripeController extends Controller
 
     public function notifySub($sub_contractor, $task, $job)
     {
-        $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job));
+        $customer = User::find($job->customer_id);
+        $sub_contractor->notify(new CustomerPaidForTask($task, $sub_contractor, $job, $customer));
     }
 
     /**
