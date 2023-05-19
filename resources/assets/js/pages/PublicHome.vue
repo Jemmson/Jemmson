@@ -18,11 +18,12 @@
             </v-avatar>
 
             <v-spacer></v-spacer>
-            <v-app-bar-nav-icon
-                    id="loginModalButton"
-                    data-cy="loginModalButton"
-                    @click="openMenu()"
-            ></v-app-bar-nav-icon>
+          <v-btn @click="openMenu()">LOGIN</v-btn>
+<!--            <v-app-bar-nav-icon-->
+<!--                    id="loginModalButton"-->
+<!--                    data-cy="loginModalButton"-->
+<!--                    @click="openMenu()"-->
+<!--            ></v-app-bar-nav-icon>-->
 
 
         </v-app-bar>
