@@ -1330,7 +1330,7 @@ class JobController extends Controller
         // load jobs and all their tasks along with those tasks relationships
 
         $c = Carbon::now();
-        $monthAgo = $c->subWeek(8);
+        $monthAgo = $c->subWeek(23);
 
         if ($this->isCustomer()) {
             // only load tasks on jobs that are approved or need approval

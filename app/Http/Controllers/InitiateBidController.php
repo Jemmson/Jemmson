@@ -139,6 +139,8 @@ class InitiateBidController extends Controller
     public function send(Request $request)
     {
 
+//        dd($request);
+
         // validate the input
         $this->validate($request, [
             'phone' => 'required|min:10|max:14',
@@ -233,7 +235,9 @@ class InitiateBidController extends Controller
         $js->setStatus($job->id, config("app.initiated"));
 
         //notify the customer the job was created
-        $customer->notify(new BidInitiated($job, $customer));
+        if (is_null($customer->email)) {
+            $customer->notify(new BidInitiated($job, $customer));
+        }
 
         // notify the user
         $request->session()->flash('status', 'Your bid was created');
