@@ -572,7 +572,7 @@ export default {
           sent++
         } else if (status === "accepted") {
           accepted++;
-        } else if (status === "waiting_for_customer_approval") {
+        } else if (status === "approved_by_customer") {
           approved++;
         } else if (status === "finished_job") {
           finished++;
