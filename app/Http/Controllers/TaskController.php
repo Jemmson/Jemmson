@@ -1089,7 +1089,7 @@ class TaskController extends Controller
             $jobTask,
             $job
         ));
-        $subContractor->notify(new TaskApproved($task, $subContractor));
+        $subContractor->notify(new TaskApproved($jobTask, $subContractor, $task));
 
         $this->setJobTaskStatus($jobTask->id, 'approved_subs_work');
         $this->setSubStatus($jobTask->contractor_id, $jobTask->id, 'finished_job_approved_by_contractor');

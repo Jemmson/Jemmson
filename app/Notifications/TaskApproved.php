@@ -10,23 +10,24 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\Task;
+use App\JobTask;
 use App\User;
 
 
 class TaskApproved extends Notification implements ShouldQueue
 {
     use Queueable;
-    protected $task, $customer, $user;
+    protected $jobTask, $customer, $user, $task;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Task $task, User $user)
+    public function __construct(JobTask $jobTask, User $user, Task $task)
     {
-        $this->task = $task;
+        $this->jobTask = $jobTask;
         $this->user = $user;
+        $this->task = $task;
     }
 
     /**
@@ -52,11 +53,11 @@ class TaskApproved extends Notification implements ShouldQueue
                     ->line("The task: " . $this->task->name . " has been Approved.")
                     ->line('Now waiting on customer to approve the task & send payment.')
                     ->action('View Task ', url('/login/sub/task/' .
-                        $this->task->id . '/' .
+                        $this->jobTask->id . '/' .
                         $this->user->generateToken(
                             $this->user->id,
                             true,
-                            $this->task->id,
+                            $this->jobTask->id,
                             'approved',
                             'approved_by_customer',
                             'finished_job_approved_by_contractor',
@@ -75,11 +76,11 @@ class TaskApproved extends Notification implements ShouldQueue
     {
 
         $url = url('/login/sub/task/' .
-            $this->task->id . '/' .
+            $this->jobTask->id . '/' .
             $this->user->generateToken(
                 $this->user->id,
                 true,
-                $this->task->id,
+                $this->jobTask->id,
                 'approved',
                 'approved_by_customer',
                 'finished_job_approved_by_contractor',
