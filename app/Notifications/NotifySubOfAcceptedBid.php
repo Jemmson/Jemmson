@@ -18,6 +18,7 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
     protected $bid;
     protected $user;
     protected $general;
+    protected $jobTaskId;
 
     /**
      * Construct
@@ -25,11 +26,12 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
      * @param Task $bid
      * @param User $user
      */
-    public function __construct($bid, $sub, $general)
+    public function __construct($bid, $sub, $general, $jobTaskId)
     {
         $this->bid = $bid;
         $this->user = $sub;
         $this->general = $general;
+        $this->jobTaskId = $jobTaskId;
     }
 
     /**
@@ -55,7 +57,7 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line('Your bid for ' . $this->bid->name . ' has been accepted')
                     ->action('View Job ',
-                        url('/login/sub/task/'. $this->bid->id . '/'
+                        url('/login/sub/task/'. $this->jobTaskId . '/'
                             . $this->user->generateToken(
                                 $this->user->id,
                                 true,
@@ -90,7 +92,7 @@ class NotifySubOfAcceptedBid extends Notification implements ShouldQueue
     public function toNexmo($notifiable)
     {
 
-        $url = url('/login/sub/task/'. $this->bid->id . '/' .
+        $url = url('/login/sub/task/'. $this->jobTaskId . '/' .
             $this->user->generateToken(
                 $this->user->id,
                 true,

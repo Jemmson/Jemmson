@@ -349,9 +349,8 @@ class User extends SparkUser
         $task = $jobTask->task()->first();
 
         self::changeSubStatus($jobTaskId, $subId);
-
         self::updateJobTaskWithAcceptedBid($jobTask, $price, $subId, $bidId);
-        self::notifySubOfAcceptedBid($subId, $task, Auth::user()->getAuthIdentifier());
+        self::notifySubOfAcceptedBid($subId, $task, Auth::user()->getAuthIdentifier(), $jobTaskId);
     }
 
     public function changeSubStatus(
@@ -438,11 +437,11 @@ class User extends SparkUser
         }
     }
 
-    public function notifySubOfAcceptedBid($subId, $task, $generalId)
+    public function notifySubOfAcceptedBid($subId, $task, $generalId, $jobTaskId)
     {
         $user = User::find($subId);
         $general = User::find($generalId);
-        $user->notify(new NotifySubOfAcceptedBid($task, $user, $general));
+        $user->notify(new NotifySubOfAcceptedBid($task, $user, $general, $jobTaskId));
     }
 
     public function notifySubOfBidNotAcceptedBid($subId, $task)
@@ -537,11 +536,29 @@ class User extends SparkUser
 
     {
         $gContractor = User::find($generalId);
+//        $jobTask = JobTask::find($bidContractorJobTask->job_task_id);
+//        $sub = Contractor::find($bidContractorJobTask->contractor_id);
+//        $task = Task::find($jobTask->task_id);
+//        $customer = User::find($jobTask->customer_id);
         $gContractor->notify(
             new NotifyContractorOfSubBid(
                 $job,
                 User::find($bidContractorJobTask->contractor_id)->name,
                 $gContractor));
+
+//        $gContractor = User::find($generalId);
+//        $jobTask = JobTask::find($bidContractorJobTask->job_task_id);
+////        $sub = Contractor::find($bidContractorJobTask->contractor_id);
+//        $task = Task::find($jobTask->task_id);
+//        $customer = User::find($jobTask->customer_id);
+//        $gContractor->notify(
+//            new NotifyContractorOfSubBid(
+//                $job,
+//                User::find($bidContractorJobTask->contractor_id)->name,
+//                $gContractor,
+//                $task,
+//                $customer
+//                ));
 
     }
 

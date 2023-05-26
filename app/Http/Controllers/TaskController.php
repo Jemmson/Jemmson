@@ -946,17 +946,16 @@ class TaskController extends Controller
     {
         $bidId = $request->bidId;
         // find the sub that I am trying to notify
-
-        $con = DB::select("select contractor_id 
+        $subId = DB::select("select contractor_id 
                            from bid_contractor_job_task 
                            where id = ?", [$bidId]);
-        $user_id = Contractor::where('id', $con[0]->contractor_id)
+        $user_id = Contractor::where('id', $subId[0]->contractor_id)
             ->get()
             ->first()
             ->user_id;
         $user = User::where('id', $user_id)->get()->first();
 
-        $user->notify(new NotifySubOfAcceptedBid());
+        $user->notify(new NotifySubOfAcceptedBid($bidId));
     }
 
     /**
