@@ -1571,7 +1571,7 @@ class JobController extends Controller
         } else if ($request->approved) {
             self::updateApprovedStatuses($job);
             self::chargeGeneralIfCashJob($job);
-            self::notifyCustomerSentBid($job, $customer);
+            self::notifySubsApprovedBidByCustomer($job, $customer);
         } else {
             self::notifyCustomerSentBid($job, $customer);
         }
@@ -1666,6 +1666,21 @@ class JobController extends Controller
     {
         $companyName = $job->contractor()->get()->first()->contractor->company_name;
         $user->notify(new NotifyCustomerThatBidIsFinished($job, $user, $companyName));
+    }
+
+    private function notifySubsApprovedBidByCustomer($job)
+    {
+        $subContractors = $job->subs();
+        $notified = [];
+        foreach ($subContractors as $sub) {
+            $sub = $sub->first();
+            if (!isset($notified[$sub->id])) {
+                $notified[$sub->id] = true;
+                $notification = new NotifyJobHasBeenApproved($job, $sub);
+                $notification->setSub(true);
+                $sub->notify($notification);
+            }
+        }
     }
 
     private function notifyCustomerFinishedJob($customer, $job)
