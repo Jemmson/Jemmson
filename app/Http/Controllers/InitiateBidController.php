@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contractor;
 use App\ContractorCustomer;
 use App\JobStatus;
 use App\Quickbook;
@@ -27,6 +28,65 @@ class InitiateBidController extends Controller
     {
         return view('initiate-bid');
     }
+
+
+    public function automationSendUpdated($customerId,
+                                          $phone,
+                                          $contractorId,
+                                          $jobName,
+                                          $paymentType,
+                                          $first_name, $last_name
+    )
+    {
+
+//        does customer exist in DB
+        $customer = self::customerExists($customerId, $phone, $first_name, $last_name);
+        $job = self::createJob($jobName, $contractorId, $customer->id);
+        $contractor = self::getContractor($contractorId);
+        self::updatePaymentType($job, $paymentType);
+        self::setJobStatus($job);
+
+        return [
+            'jobId' => $job->id,
+            'customerId' => $customer->id
+        ];
+    }
+
+    private function setJobStatus($job)
+    {
+        $js = new JobStatus();
+        $js->setStatus($job->id, config("app.initiated"));
+    }
+
+    private function getContractor($contractorId)
+    {
+        return User::find($contractorId);
+    }
+
+    private function createJob($jobName, $contractorId, $customerId)
+    {
+        // create the job
+        $job = new Job();
+        $job->job_name = $jobName;
+        $job->contractor_id = $contractorId;
+        $job->customer_id = $customerId;
+        $job->save();
+        return $job;
+    }
+
+    private function customerExists($customerId, $phone, $first_name, $last_name)
+    {
+        if ($customerId != 'new') {
+            $customer = User::find($customerId);
+        } else {
+            $customerName = $first_name . " " . $last_name;
+            $customer = Customer::createNewCustomer(
+                $phone, $customerName, 1, $first_name, $last_name);
+        }
+
+        return $customer;
+    }
+
 
     public function automationSend(
         $customerId,
@@ -256,12 +316,12 @@ class InitiateBidController extends Controller
     }
 
 
-    private function updatePaymentType($contractor, $requestPaymentType)
+    private function updatePaymentType($job, $requestPaymentType)
     {
 
-        $contractor->payment_type = $requestPaymentType;
+        $job->payment_type = $requestPaymentType;
         try {
-            $contractor->save();
+            $job->save();
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
