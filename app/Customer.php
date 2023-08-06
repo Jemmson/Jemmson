@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use mysql_xdevapi\Exception;
 use App\Services\RandomPasswordService;
 use Illuminate\Support\Facades\Log;
+use App\User;
 
 class Customer extends Model
 {
@@ -168,6 +169,7 @@ class Customer extends Model
             $customer = User::create(
                 [
                     'name' => $customerName,
+                    'sms' => 1,
 //                    'email' => $email,
                     'phone' => $phone,
                     'first_name' => $firstName,
@@ -181,7 +183,6 @@ class Customer extends Model
             Log::error($exception);
             return ["message" => $exception->getMessage(), "code" => $exception->getCode()];
         }
-
 
         if (empty(Customer::select()->where("user_id", "=", $customer->id)->get()->first())) {
             Customer::create(

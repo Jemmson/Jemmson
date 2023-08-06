@@ -58,7 +58,8 @@ class User extends SparkUser
         'phone',
         'usertype',
         'password',
-        'password_updated'
+        'password_updated',
+        'sms'
     ];
 
     /**
