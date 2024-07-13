@@ -50,7 +50,8 @@ Route::post('job/completed', 'JobController@jobCompleted');
 Route::get('/invoices', 'JobController@getInvoices');
 Route::post('/task/acceptJob', 'JobController@acceptJob');
 Route::post('/task/declineJob', 'JobController@declineJob');
-Route::post('/task/finishedBidNotification', 'JobController@finishedBidNotification');
+Route::post('/task/finishedBidNotification', 'JobController@apiFinishedBidNotification');
+Route::post('/task/addTask', 'TaskController@apiAddTask');
 
 
 // Tasks
@@ -61,6 +62,8 @@ Route::post('/task/updateTaskQuantity', 'TaskController@updateTaskQuantity');
 Route::post('/task/updateCustomerPrice', 'TaskController@updateCustomerPrice');
 Route::post('/task/acceptTask', 'TaskController@acceptTask');
 Route::post('/task/updateTaskStartDate', 'TaskController@updateTaskStartDate');
+Route::post('/apiLogin', 'TokenController@store');
+Route::post('/initiate-bid', 'InitiateBidController@apiSend');
 
 //Route::post('/task/updateJobStartDate', function (Request $request) {
 //

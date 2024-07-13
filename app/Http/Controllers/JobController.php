@@ -1548,15 +1548,21 @@ class JobController extends Controller
         $user->notify(new NotifyContractorOfDeclinedBid());
     }
 
+    public function apiFinishedBidNotification(Request $request)
+    {
+        $user = User::find(1);
+        Auth::login($user);
+        return self::finishedBidNotification($request);
+    }
+
     /**
      * Notify customer that a contractor has finished
      * his bid for the specific job
      *
      * @param Request $request
-     * @return void
+     * @return string
      */
-    public
-    function finishedBidNotification(Request $request)
+    public function finishedBidNotification(Request $request)
     {
 
         $customer = User::find($request->customerId);
@@ -1576,6 +1582,7 @@ class JobController extends Controller
             self::notifyCustomerSentBid($job, $customer);
         }
 
+        return "sent";
 
     }
 
@@ -1612,7 +1619,6 @@ class JobController extends Controller
             self::automationNotifyCustomerFinishedJob($job, $customer);
         }
 
-
     }
 
     private function updateFinishedStatuses($job)
@@ -1630,7 +1636,7 @@ class JobController extends Controller
         }
 
     }
-    
+
     private function updateApprovedStatuses($job)
     {
         $this->setJobTasksAndSubStatuses($job, 'approved_by_customer');
@@ -1707,7 +1713,7 @@ class JobController extends Controller
                 'finished',
                 'not set',
                 'text')->token, [], true);
-        Log::debug($customer->first_name . " " . $customer->last_name . ": " .$url);
+        Log::debug($customer->first_name . " " . $customer->last_name . ": " . $url);
     }
 
 

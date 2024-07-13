@@ -1608,6 +1608,13 @@ class TaskController extends Controller
         return response()->json($job->tasks()->get(), 200);
     }
 
+    public function apiAddTask(Request $request)
+    {
+        $user = User::find(1);
+        Auth::login($user);
+        return self::addTask($request);
+    }
+
     public function addTask(Request $request)
     {
 

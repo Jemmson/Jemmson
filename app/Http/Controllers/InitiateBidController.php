@@ -188,6 +188,13 @@ class InitiateBidController extends Controller
         return $job->id;
     }
 
+    public function apiSend(Request $request)
+    {
+        $user = User::find(1);
+        Auth::login($user);
+//        return Auth::user();
+        return self::send($request);
+    }
 
     /**
      * Initiate a bid
@@ -300,7 +307,7 @@ class InitiateBidController extends Controller
         }
 
         // notify the user
-        $request->session()->flash('status', 'Your bid was created');
+//        $request->session()->flash('status', 'Your bid was created');
         return response()->json([
             "job" => $job,
             "customer" => $customer,
