@@ -236,7 +236,9 @@ class JobController extends Controller
     {
 
         $jobs = Job::where(
-            'contractor_id', '=', Auth::user()->getAuthIdentifier())->where('deleted_at', '=', null)
+            'contractor_id', '=', Auth::user()->getAuthIdentifier())->
+        where('deleted_at', '=', null)->
+        where('created_at', '>', '2023-07-07 00:00:00')
             ->get();
 
         foreach ($jobs as $job) {
@@ -1082,49 +1084,49 @@ class JobController extends Controller
 //        need to delete any job tasks
 
 
-        $job = Job::find($request->id);
+//        $job = Job::find($request->id);
+//
+//        $this->setCancelJobStatuses($job, 'canceled_by_general');
+//
+////        are there any tasks associated to the job
+//        $jobTasks = JobTask::where('job_id', '=', $request->id)->get();
+//
+//        if (!empty($jobTasks)) {
+//            foreach ($jobTasks as $jt) {
+////                are there any tasks being bid on
+//                $bcjt = BidContractorJobTask::where('job_task_id', '=', $jt->id)->get();
+//                if (!empty($bcjt)) {
+//                    foreach ($bcjt as $subBid) {
+//                        try {
+//                            $subBid->delete();
+//                        } catch (\Exception $e) {
+//                            return response()->json([
+//                                'message' => $e->getMessage(),
+//                                'code' => $e->getCode()
+//                            ], 200);
+//                        }
+//                    }
+//                }
+//
+//                try {
+//                    $jt->delete();
+//                } catch (\Exception $e) {
+//                    return response()->json([
+//                        'message' => $e->getMessage(),
+//                        'code' => $e->getCode()
+//                    ], 200);
+//                }
+//            }
+//        }
 
-        $this->setCancelJobStatuses($job, 'canceled_by_general');
-
-//        are there any tasks associated to the job
-        $jobTasks = JobTask::where('job_id', '=', $request->id)->get();
-
-        if (!empty($jobTasks)) {
-            foreach ($jobTasks as $jt) {
-//                are there any tasks being bid on
-                $bcjt = BidContractorJobTask::where('job_task_id', '=', $jt->id)->get();
-                if (!empty($bcjt)) {
-                    foreach ($bcjt as $subBid) {
-                        try {
-                            $subBid->delete();
-                        } catch (\Exception $e) {
-                            return response()->json([
-                                'message' => $e->getMessage(),
-                                'code' => $e->getCode()
-                            ], 200);
-                        }
-                    }
-                }
-
-                try {
-                    $jt->delete();
-                } catch (\Exception $e) {
-                    return response()->json([
-                        'message' => $e->getMessage(),
-                        'code' => $e->getCode()
-                    ], 200);
-                }
-            }
-        }
-
-        $job->delete();
+//        $job->delete();
 
 //        $user = Auth::user();
 
 //        $user->notify(new CustomerUnableToSendPaymentWithStripe());
 
 
-        return response()->json(null, 204);
+//        return response()->json(null, 204);
     }
 
     /**
@@ -1548,21 +1550,15 @@ class JobController extends Controller
         $user->notify(new NotifyContractorOfDeclinedBid());
     }
 
-    public function apiFinishedBidNotification(Request $request)
-    {
-        $user = User::find(1);
-        Auth::login($user);
-        return self::finishedBidNotification($request);
-    }
-
     /**
      * Notify customer that a contractor has finished
      * his bid for the specific job
      *
      * @param Request $request
-     * @return string
+     * @return void
      */
-    public function finishedBidNotification(Request $request)
+    public
+    function finishedBidNotification(Request $request)
     {
 
         $customer = User::find($request->customerId);
@@ -1582,7 +1578,6 @@ class JobController extends Controller
             self::notifyCustomerSentBid($job, $customer);
         }
 
-        return "sent";
 
     }
 
@@ -1618,6 +1613,7 @@ class JobController extends Controller
         } else {
             self::automationNotifyCustomerFinishedJob($job, $customer);
         }
+
 
     }
 
